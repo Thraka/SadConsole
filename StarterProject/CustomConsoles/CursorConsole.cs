@@ -18,6 +18,7 @@
 
             // Print some intro text
             _cellData.Print(0, 0, "This console can be typed on. Use the arrow keys to move the cursor.");
+            _cellData.Print(0, 2, "Use the F1 key to cycle the active console.");
 
             IsVisible = false;
         }
