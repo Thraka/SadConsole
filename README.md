@@ -6,3 +6,8 @@ SadConsole is an MonoGame 3.2 and XNA 4.0 based game library that provides an en
 Right now, SadConsole only targets the Windows platform using MonoGame and XNA 4.0. Eventually, the engine will be compiled for all of the platforms that MonoGame supports. 
 
 For more information, see http://sadconsole.sadlogic.com
+
+Compiling
+=========
+
+The .\Binaries folder is included because it was the exact flavor of MonoGame I compiled the engine with. It was a daily build, not the publicly released version. Once a newer official release of MonoGame is available, I'll remove this folder.

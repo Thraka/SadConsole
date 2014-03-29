@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Core.XNA", "SadConsole.Core.XNA.csproj", "{FBAA6E4D-42A6-447D-9747-2FB22A5065D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Controls.XNA", "SadConsole8.Controls\SadConsole.Controls.XNA.csproj", "{FF6CF8B4-A698-43D0-9438-642DD51D61B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGame", "TestGame\TestGame.XNA.csproj", "{47848107-F6BE-4378-B07F-5A85F024C072}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGameContent", "TestGameContentXNA\TestGameContent.XNA.contentproj", "{38C79535-B7E7-46AE-897D-5DDA9FF6D6E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Ansi", "SadConsole.Ansi\SadConsole.Ansi.XNA.csproj", "{2B3FD84A-662E-42D0-8AFE-05B5ABFF4F37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject", "StarterProject\StarterProject.XNA.csproj", "{775C9D02-D2B7-46F8-982F-37ABA792BC61}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "StarterProjectContent", "StarterProjectContentXNA\StarterProjectContent.XNA.contentproj", "{2288176F-EE17-44A3-BED7-04967EDB6CF5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBAA6E4D-42A6-447D-9747-2FB22A5065D3}.Debug|x86.ActiveCfg = Debug|x86
+		{FBAA6E4D-42A6-447D-9747-2FB22A5065D3}.Debug|x86.Build.0 = Debug|x86
+		{FBAA6E4D-42A6-447D-9747-2FB22A5065D3}.Release|x86.ActiveCfg = Release|x86
+		{FBAA6E4D-42A6-447D-9747-2FB22A5065D3}.Release|x86.Build.0 = Release|x86
+		{A55736E0-9C4E-4D2F-89A5-EC2701887027}.Debug|x86.ActiveCfg = Debug|x86
+		{A55736E0-9C4E-4D2F-89A5-EC2701887027}.Debug|x86.Build.0 = Debug|x86
+		{A55736E0-9C4E-4D2F-89A5-EC2701887027}.Release|x86.ActiveCfg = Release|x86
+		{A55736E0-9C4E-4D2F-89A5-EC2701887027}.Release|x86.Build.0 = Release|x86
+		{39FC07F0-89AB-48EB-AAAF-6CD5E2C72032}.Debug|x86.ActiveCfg = Debug|x86
+		{39FC07F0-89AB-48EB-AAAF-6CD5E2C72032}.Debug|x86.Build.0 = Debug|x86
+		{39FC07F0-89AB-48EB-AAAF-6CD5E2C72032}.Release|x86.ActiveCfg = Release|x86
+		{39FC07F0-89AB-48EB-AAAF-6CD5E2C72032}.Release|x86.Build.0 = Release|x86
+		{FF6CF8B4-A698-43D0-9438-642DD51D61B7}.Debug|x86.ActiveCfg = Debug|x86
+		{FF6CF8B4-A698-43D0-9438-642DD51D61B7}.Debug|x86.Build.0 = Debug|x86
+		{FF6CF8B4-A698-43D0-9438-642DD51D61B7}.Release|x86.ActiveCfg = Release|x86
+		{FF6CF8B4-A698-43D0-9438-642DD51D61B7}.Release|x86.Build.0 = Release|x86
+		{47848107-F6BE-4378-B07F-5A85F024C072}.Debug|x86.ActiveCfg = Debug|x86
+		{47848107-F6BE-4378-B07F-5A85F024C072}.Debug|x86.Build.0 = Debug|x86
+		{47848107-F6BE-4378-B07F-5A85F024C072}.Release|x86.ActiveCfg = Release|x86
+		{47848107-F6BE-4378-B07F-5A85F024C072}.Release|x86.Build.0 = Release|x86
+		{38C79535-B7E7-46AE-897D-5DDA9FF6D6E6}.Debug|x86.ActiveCfg = Debug|x86
+		{38C79535-B7E7-46AE-897D-5DDA9FF6D6E6}.Release|x86.ActiveCfg = Release|x86
+		{2B3FD84A-662E-42D0-8AFE-05B5ABFF4F37}.Debug|x86.ActiveCfg = Debug|x86
+		{2B3FD84A-662E-42D0-8AFE-05B5ABFF4F37}.Debug|x86.Build.0 = Debug|x86
+		{2B3FD84A-662E-42D0-8AFE-05B5ABFF4F37}.Release|x86.ActiveCfg = Release|x86
+		{2B3FD84A-662E-42D0-8AFE-05B5ABFF4F37}.Release|x86.Build.0 = Release|x86
+		{775C9D02-D2B7-46F8-982F-37ABA792BC61}.Debug|x86.ActiveCfg = Debug|x86
+		{775C9D02-D2B7-46F8-982F-37ABA792BC61}.Debug|x86.Build.0 = Debug|x86
+		{775C9D02-D2B7-46F8-982F-37ABA792BC61}.Release|x86.ActiveCfg = Release|x86
+		{775C9D02-D2B7-46F8-982F-37ABA792BC61}.Release|x86.Build.0 = Release|x86
+		{2288176F-EE17-44A3-BED7-04967EDB6CF5}.Debug|x86.ActiveCfg = Debug|x86
+		{2288176F-EE17-44A3-BED7-04967EDB6CF5}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
