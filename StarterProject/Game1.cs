@@ -49,13 +49,16 @@
 
             string text = defaultConsole.CellData.GetString(2, 0, 27);
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
-            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { new CustomConsoles.CursorConsole(), 
+            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { 
+                                                                       new CustomConsoles.CursorConsole(), 
                                                                        new CustomConsoles.StaticConsole(), 
                                                                        new CustomConsoles.StretchedConsole(), 
                                                                        new CustomConsoles.BorderedConsole(80, 25), 
                                                                        new CustomConsoles.DOSConsole(),
                                                                        new CustomConsoles.WindowTestConsole(),
-                                                                       new CustomConsoles.SplashScreen() };
+                                                                       new CustomConsoles.EntityAndConsole(),
+                                                                       new CustomConsoles.SplashScreen(),
+                                                                     };
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.

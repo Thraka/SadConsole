@@ -4,8 +4,12 @@
 
 === Core ===
 * Added a new virtual method for CellRenderer: OnCellDataChanged. This is called when the CellData property changes, passing references to the new and old CellSurfaces.
-* Loading/Saving a cellsurface was not processing the effect information
-* 
+* Loading/Saving a cellsurface was not processing the effect information.
+* Entities now implement some of the IConsole interface (those relating to input) as virtual methods so you can override them in derived classes.
+* Entities now correctly create a default animation that can render. (though it is blank)
+* Some ground work for rendering an entity using another consoles sprite batch.
+* CellsRenderer.Batch set has been promoted to protected from private.
+
 
 === Controls ===
 * When a window is shown, and then shown again in the future, it will pop back up to the top of the screen when not removed from its parent.

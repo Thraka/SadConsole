@@ -55,6 +55,7 @@
     <Compile Include="CustomConsoles\BorderedConsole.cs" />
     <Compile Include="CustomConsoles\CursorConsole.cs" />
     <Compile Include="CustomConsoles\DOSConsole.cs" />
+    <Compile Include="CustomConsoles\EntityAndConsole.cs" />
     <Compile Include="CustomConsoles\SplashScreen.cs" />
     <Compile Include="CustomConsoles\StaticConsole.cs" />
     <Compile Include="CustomConsoles\StretchedConsole.cs" />

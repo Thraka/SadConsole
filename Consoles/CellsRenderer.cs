@@ -22,6 +22,7 @@
         protected Point _position;
         protected bool _isVisible;
         protected bool _isReady;
+        protected bool _skipBatchBeginEnd;
 
         [DataMember(Name="UsingCustomArea")]
         private bool _renderAreaCustomSet;
@@ -86,7 +87,7 @@
         /// <summary>
         /// The SpriteBatch used when rendering cell data.
         /// </summary>
-        public SpriteBatch Batch { get; private set; }
+        public SpriteBatch Batch { get; protected set; }
 
 
         /// <summary>
@@ -249,7 +250,8 @@
                 else
                     transform = GetPositionTransform();
 
-                Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, transform);
+                if (!_skipBatchBeginEnd)
+                    Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, transform);
 
                 OnBeforeRender();
 
@@ -293,7 +295,8 @@
                     Batch.Draw(Engine.BackgroundCell, _tintArea, null, Tint);
                 }
 
-                Batch.End();
+                if (!_skipBatchBeginEnd)
+                    Batch.End();
             }
         }
 

@@ -38,6 +38,16 @@
         /// A bounding box that represents the entire size of the current animation frame.
         /// </summary>
         protected Rectangle _animationBoundingBox = Rectangle.Empty;
+
+        /// <summary>
+        /// Backing field for CanUseKeyboard property;
+        /// </summary>
+        protected bool _canUseKeyboard;
+
+        /// <summary>
+        /// Backing field for CanUseMouse property;
+        /// </summary>
+        protected bool _canUseMouse;
         #endregion
 
         #region Properties
@@ -84,12 +94,29 @@
             
             _currentAnimation = new Animation("default", 1, 1);
             _currentAnimation.Font = font;
+            _currentAnimation.CreateFrame();
+            _currentAnimation.Commit();
+
             _animations.Add("default", CurrentAnimation);
             _animationBoundingBox = new Rectangle(0, 0, 1, 1);
         }
         #endregion
 
         #region Methods
+
+        ///// <summary>
+        ///// Renders the entity using the specified sprite batch. This method will not call Batch.Begin and Batch.End.
+        ///// </summary>
+        ///// <param name="batch">The sprite batch to render the entity.</param>
+        //public void Render(SpriteBatch batch)
+        //{
+        //    var oldBatch = base.Batch;
+        //    base.Batch = batch;
+        //    base._skipBatchBeginEnd = true;
+        //    base.Render();
+        //    base.Batch = oldBatch;
+        //    base._skipBatchBeginEnd = false;
+        //}
 
         /// <summary>
         /// Renders the current entity's animation frame to a surface using the <see cref="Position"/> property for the location.
@@ -111,7 +138,6 @@
             Frame frame = _currentAnimation.CurrentFrame;
             frame.Copy(location.X, location.Y, surface);
         }
-
 
         ////TODO: This is not really working well now. Since positioning changed to be transform based, entity will always render 0,0 if you do not call begin and end.
         ///// <summary>
@@ -346,9 +372,11 @@
             }
         }
 
-        public bool CanUseKeyboard { get { return false; } set { } }
+        [DataMember]
+        public bool CanUseKeyboard { get { return _canUseKeyboard; } set { _canUseKeyboard = value; } }
 
-        public bool CanUseMouse { get { return false; } set { } }
+        [DataMember]
+        public bool CanUseMouse { get { return _canUseMouse; } set { _canUseMouse = value; } }
 
         public bool CanFocus { get { return false; } set { } }
 
@@ -356,12 +384,12 @@
 
         public bool ExclusiveFocus { get { return false; } set { } }
 
-        public bool ProcessMouse(Input.MouseInfo info)
+        public virtual bool ProcessMouse(Input.MouseInfo info)
         {
             return false;
         }
 
-        public bool ProcessKeyboard(Input.KeyboardInfo info)
+        public virtual bool ProcessKeyboard(Input.KeyboardInfo info)
         {
             return false;
         }
