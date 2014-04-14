@@ -216,13 +216,13 @@
         }
         #endregion
 
-        protected virtual void OnMouseEnter(Input.MouseInfo info)
+        protected virtual void OnMouseEnter(MouseInfo info)
         {
             if (MouseEnter != null)
                 MouseEnter(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnMouseExit(Input.MouseInfo info)
+        protected virtual void OnMouseExit(MouseInfo info)
         {
             // Force mouse off just incase
             _isMouseOver = false;
@@ -231,19 +231,19 @@
                 MouseExit(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnMouseIn(Input.MouseInfo info)
+        protected virtual void OnMouseIn(MouseInfo info)
         {
             if (MouseMove != null)
                 MouseMove(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnMouseLeftClicked(Input.MouseInfo info)
+        protected virtual void OnMouseLeftClicked(MouseInfo info)
         {
             if (MouseButtonClicked != null)
                 MouseButtonClicked(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnRightMouseClicked(Input.MouseInfo info)
+        protected virtual void OnRightMouseClicked(MouseInfo info)
         {
             if (MouseButtonClicked != null)
                 MouseButtonClicked(this, new MouseEventArgs(info));

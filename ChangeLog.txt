@@ -2,6 +2,8 @@
 = Version 1.3.111 =
 ===============================================================================
 
+* Upgraded the references to MonoGame to the official 3.2.
+
 === Core ===
 * Added a new virtual method for CellRenderer: OnCellDataChanged. This is called when the CellData property changes, passing references to the new and old CellSurfaces.
 * Loading/Saving a cellsurface was not processing the effect information.

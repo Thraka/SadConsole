@@ -2,6 +2,7 @@
 {
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
+    using SadConsole.Input;
     using SadConsole.Themes;
     using System;
     using System.Runtime.Serialization;
@@ -290,7 +291,7 @@
         /// </summary>
         /// <param name="info">The keyboard information.</param>
         /// <returns>True if the keyboard was handled by this control.</returns>
-        public override bool ProcessKeyboard(Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(KeyboardInfo info)
         {
             if (info.KeysPressed.Count != 0)
             {
@@ -383,7 +384,7 @@
             IsDirty = true;
         }
 
-        protected override void OnLeftMouseClicked(Input.MouseInfo info)
+        protected override void OnLeftMouseClicked(MouseInfo info)
         {
             if (!DisableMouse)
             {
