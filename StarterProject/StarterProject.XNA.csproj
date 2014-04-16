@@ -113,10 +113,12 @@
     <Compile Include="CustomConsoles\SplashScreen.cs" />
     <Compile Include="CustomConsoles\StaticConsole.cs" />
     <Compile Include="CustomConsoles\StretchedConsole.cs" />
+    <Compile Include="EntityAndConsole.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="InputHandling\ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.XNA.cs" />
     <Compile Include="Program.XNA.cs" />
+    <Compile Include="WindowTestConsole.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\IBM8x16.png">

@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SadConsole.Core.XNA</RootNamespace>
-    <AssemblyName>SadConsole.Core.XNA</AssemblyName>
+    <RootNamespace>SadConsole.Core</RootNamespace>
+    <AssemblyName>SadConsole.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
@@ -29,7 +29,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>false</XnaCompressContent>
-    <DocumentationFile>bin\x86\DebugXNA\SadConsole.Core.XNA.XML</DocumentationFile>
+    <DocumentationFile>bin\x86\DebugXNA\SadConsole.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -42,7 +42,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
-    <DocumentationFile>bin\x86\ReleaseXNA\SadConsole.Core.XNA.XML</DocumentationFile>
+    <DocumentationFile>bin\x86\ReleaseXNA\SadConsole.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
