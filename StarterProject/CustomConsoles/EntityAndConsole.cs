@@ -55,7 +55,7 @@ namespace StarterProject.CustomConsoles
             // the keyboard data should be sent to the entity.
             if (_player.ProcessKeyboard(info))
             {
-                // Entity movied. Let's draw a trail of where they moved from.
+                // Entity moved. Let's draw a trail of where they moved from.
 
                 // We are not detecting when the player tries to move off the console area.
                 // We could detected that though and then move the player back to where they were.
