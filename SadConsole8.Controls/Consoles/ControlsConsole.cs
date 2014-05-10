@@ -515,7 +515,12 @@
                                 rect = _renderAreaRects[base.CellData.GetIndexFromPoint(point)];
 
                                 if (cell.ActualForeground != Color.Transparent)
-                                    Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                                {
+                                    if (control.AlternateFont == null)
+                                        Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                                    else
+                                        Batch.Draw(control.AlternateFont.Image, rect, control.AlternateFont.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                                }
                             }
                         }
                     }

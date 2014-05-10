@@ -313,4 +313,39 @@ namespace SadConsole
             return new Point(WindowWidth / surface.CellSize.X, WindowHeight / surface.CellSize.Y);
         }
     }
+
+    /// <summary>
+    /// A game component to handle the SadConsole engine initialization, update, and drawing.
+    /// </summary>
+    public class EngineGameComponent: DrawableGameComponent
+    {
+        private Action _initializationCallback;
+
+        public EngineGameComponent(Game game, Action initializeCallback): base(game)
+        {
+            _initializationCallback = initializeCallback;
+        }
+
+        public override void Initialize()
+        {
+            SadConsole.Engine.Initialize(this.Game.GraphicsDevice);
+
+            if (_initializationCallback != null)
+                _initializationCallback();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            SadConsole.Engine.Update(gameTime, this.Game.IsActive);
+
+            base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            SadConsole.Engine.Draw(gameTime);
+
+            base.Draw(gameTime);
+        }
+    }
 }

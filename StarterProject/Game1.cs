@@ -9,14 +9,15 @@
 
     public class Game1: Game
     {
-        GraphicsDeviceManager graphics;
-        Console defaultConsole;
+        GraphicsDeviceManager _graphics;
+        Console _defaultConsole;
+        Windows.CharacterViewer _characterWindow;
 
         int currentConsoleIndex = 0;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -37,17 +38,17 @@
                 SadConsole.Engine.DefaultFont = SadConsole.Serializer.Deserialize<Font>(stream);
 
             // Using the default font, resize the window to a Width,Height of cells. This example uses the MS-DOS default of 80 columns by 25 rows.
-            SadConsole.Engine.DefaultFont.ResizeGraphicsDeviceManager(graphics, 80, 25, 0, 0);
+            SadConsole.Engine.DefaultFont.ResizeGraphicsDeviceManager(_graphics, 80, 25, 0, 0);
 
             // Create the default console, show the cursor, and let the console accept keyboard input.
-            defaultConsole = new Console(80, 25);
-            defaultConsole.VirtualCursor.IsVisible = true;
-            defaultConsole.CanUseKeyboard = true;
+            _defaultConsole = new Console(80, 25);
+            _defaultConsole.VirtualCursor.IsVisible = true;
+            _defaultConsole.CanUseKeyboard = true;
 
             // Add the default console to the list of consoles.
-            SadConsole.Engine.ConsoleRenderStack.Add(defaultConsole);
+            SadConsole.Engine.ConsoleRenderStack.Add(_defaultConsole);
 
-            string text = defaultConsole.CellData.GetString(2, 0, 27);
+            string text = _defaultConsole.CellData.GetString(2, 0, 27);
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
             SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { 
                                                                        new CustomConsoles.CursorConsole(), 
@@ -64,6 +65,9 @@
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
 
+            // Initialize the windows
+            _characterWindow = new Windows.CharacterViewer();
+
             // Call the default initialize of the base class.
             base.Initialize();
         }
@@ -73,20 +77,27 @@
             // Update the SadConsole engine, handles the mouse, keyboard, and any special effects. You must call this.
             SadConsole.Engine.Update(gameTime, this.IsActive);
 
-            // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
-            // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
-            // in the Initialize method above.
-            if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F1))
+            if (!_characterWindow.IsVisible)
             {
-                currentConsoleIndex++;
+                // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
+                // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
+                // in the Initialize method above.
+                if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F1))
+                {
+                    currentConsoleIndex++;
 
-                if (currentConsoleIndex >= SadConsole.Engine.ConsoleRenderStack.Count)
-                    currentConsoleIndex = 0;
+                    if (currentConsoleIndex >= SadConsole.Engine.ConsoleRenderStack.Count)
+                        currentConsoleIndex = 0;
 
-                for (int i = 0; i < SadConsole.Engine.ConsoleRenderStack.Count; i++)
-                    SadConsole.Engine.ConsoleRenderStack[i].IsVisible = currentConsoleIndex == i;
+                    for (int i = 0; i < SadConsole.Engine.ConsoleRenderStack.Count; i++)
+                        SadConsole.Engine.ConsoleRenderStack[i].IsVisible = currentConsoleIndex == i;
 
-                Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[currentConsoleIndex];
+                    Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[currentConsoleIndex];
+                }
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F2))
+                {
+                    _characterWindow.Show(true);
+                }
             }
 
             base.Update(gameTime);

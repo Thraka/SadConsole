@@ -28,30 +28,30 @@
                 Item = item;
             }
         }
-
-        private bool _initialized;
+        protected bool _hideBorder;
+        protected bool _initialized;
         [DataMember(Name="SelectedIndex")]
-        private int _selectedIndex;
+        protected int _selectedIndex;
 
         [DataMember(Name="Theme")]
         protected ListBoxTheme _theme;
-        private List<TItemContainer> _containers;
+        protected List<TItemContainer> _containers;
         protected object _selectedItem;
         protected TItemContainer _selectedItemContainer;
         [DataMember(Name = "Slider")]
-        private ScrollBar _slider;
-        private Point _sliderRenderLocation;
+        protected ScrollBar _slider;
+        protected Point _sliderRenderLocation;
         [DataMember(Name = "ShowSlider")]
-        private bool _showSlider = false;
+        protected bool _showSlider = false;
         [DataMember(Name = "Border")]
-        private Shapes.Box _border;
-        private bool _mouseIn = false;
-        private DateTime _leftMouseLastClick = DateTime.Now;
+        protected Shapes.Box _border;
+        protected bool _mouseIn = false;
+        protected DateTime _leftMouseLastClick = DateTime.Now;
 
         [DataMember(Name = "ScrollBarOffset")]
-        private Point _scrollBarOffset = new Point(0, 0);
+        protected Point _scrollBarOffset = new Point(0, 0);
         [DataMember(Name = "ScrollBarSizeAdjust")]
-        private int _scrollBarSizeAdjust = 0;
+        protected int _scrollBarSizeAdjust = 0;
 
         public event EventHandler<SelectedItemEventArgs> SelectedItemChanged;
         public event EventHandler<SelectedItemEventArgs> SelectedItemExecuted;
@@ -61,6 +61,12 @@
         /// </summary>
         [DataMember]
         public bool CompareByReference { get; set; }
+
+        /// <summary>
+        /// When set to true, does not render the border.
+        /// </summary>
+        [DataMember]
+        public bool HideBorder { get { return _hideBorder; } set { _hideBorder = value; ShowHideSlider(); } }
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -138,6 +144,8 @@
 
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
             Resize(width, height);
+
+            DetermineAppearance();
         }
         #endregion
 
@@ -310,8 +318,21 @@
                 _containers.Clear();
             }
 
+            ShowHideSlider();
+
+            this.IsDirty = true;
+        }
+
+        private void ShowHideSlider()
+        {
+            int heightOffset;
+            if (HideBorder)
+                heightOffset = 0;
+            else
+                heightOffset = 2;
+
             // process the slider
-            int sliderItems = _containers.Count - (this.Height - 2);
+            int sliderItems = _containers.Count - (_height - heightOffset);
 
             if (sliderItems > 0)
             {
@@ -323,8 +344,6 @@
                 _slider.Maximum = 0;
                 _showSlider = false;
             }
-
-            this.IsDirty = true;
         }
 
         void ItemContainer_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -408,18 +427,22 @@
             foreach (var item in _containers)
                 item.IsMouseOver = false;
 
+            int rowOffset = HideBorder ? 0 : 1;
+            int rowOffsetReverse = HideBorder ? 1 : 0;
+            int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
+
             Point mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
 
-            if (mouseControlPosition.Y > 0 && mouseControlPosition.Y < this.Height - 1 &&
-                mouseControlPosition.X > 0 && mouseControlPosition.X < this.Width - 1)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
             {
                 if (_showSlider)
                 {
-                    _containers[mouseControlPosition.Y - 1 + _slider.Value].IsMouseOver = true;
+                    _containers[mouseControlPosition.Y - rowOffset + _slider.Value].IsMouseOver = true;
                 }
-                else if (mouseControlPosition.Y <= _containers.Count)
+                else if (mouseControlPosition.Y <= _containers.Count - rowOffsetReverse)
                 {
-                    _containers[mouseControlPosition.Y - 1].IsMouseOver = true;
+                    _containers[mouseControlPosition.Y - rowOffset].IsMouseOver = true;
                 }
             }
         }
@@ -432,18 +455,22 @@
             bool doubleClicked = (click - _leftMouseLastClick).TotalSeconds <= 0.5;
             _leftMouseLastClick = click;
 
+            int rowOffset = HideBorder ? 0 : 1;
+            int rowOffsetReverse = HideBorder ? 1 : 0;
+            int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
+
             Point mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
 
-            if (mouseControlPosition.Y > 0 && mouseControlPosition.Y < this.Height - 1 &&
-                mouseControlPosition.X > 0 && mouseControlPosition.X < this.Width - 1)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
             {
                 object oldItem = _selectedItem;
                 bool noItem = false;
 
                 if (_showSlider)
-                    SelectedItem = Items[mouseControlPosition.Y - 1 + _slider.Value];
-                else if (mouseControlPosition.Y <= _containers.Count)
-                    SelectedItem = Items[mouseControlPosition.Y - 1];
+                    SelectedItem = Items[mouseControlPosition.Y - rowOffset + _slider.Value];
+                else if (mouseControlPosition.Y <= _containers.Count - rowOffsetReverse)
+                    SelectedItem = Items[mouseControlPosition.Y - rowOffset];
                 else
                     noItem = true;
 
@@ -479,21 +506,39 @@
         {
             if (IsDirty)
             {
-                DefaultBackground = Theme.Normal.Background;
-                DefaultForeground = Theme.Normal.Foreground;
+                int columnOffset;
+                int columnEnd;
+                int startingRow;
+                int endingRow;
+
+
                 Clear();
 
-
-                _border.Foreground = this.Theme.Border.Foreground;
-                _border.BorderBackground = this.Theme.Border.Background;
-                _border.FillColor = this.Theme.Border.Background;
-                _border.Draw(this);
+                if (!HideBorder)
+                {
+                    endingRow = _height - 2;
+                    startingRow = 1;
+                    columnOffset = 1;
+                    columnEnd = _width - 2;
+                    _border.Foreground = this.Theme.Border.Foreground;
+                    _border.BorderBackground = this.Theme.Border.Background;
+                    _border.FillColor = this.Theme.Border.Background;
+                    _border.Draw(this);
+                }
+                else
+                {
+                    endingRow = _height;
+                    startingRow = 0;
+                    columnOffset = 0;
+                    columnEnd = _width;
+                    this.Fill(this.Theme.Border.Foreground, this.Theme.Border.Background, 0, null);
+                }
 
                 int offset = _showSlider ? _slider.Value : 0;
-                for (int i = 0; i < this.Height - 2; i++)
+                for (int i = 0; i < endingRow; i++)
                 {
                     if (i + offset < _containers.Count)
-                        _containers[i + offset].Draw(this, new Rectangle(1, i + 1, this.Width - 2, 1));
+                        _containers[i + offset].Draw(this, new Rectangle(columnOffset, i + startingRow, columnEnd, 1));
                 }
 
                 if (_showSlider)
@@ -625,7 +670,7 @@
         public bool IsDirty
         {
             get { return _isDirty; }
-            set { _isDirty = value; OnPropertyChanged("IsDirty"); }
+            set { _isDirty = value; OnPropertyChanged("IsDirty"); if (value) DetermineAppearance(); }
         }
 
         public virtual void Draw(CellSurface surface, Rectangle area)
