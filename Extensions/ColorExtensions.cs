@@ -50,12 +50,22 @@ namespace Microsoft.Xna.Framework
             };
         }
 
-        public static Color[] LerpSteps(this Color color, Color endingColor, byte steps)
+        public static Color[] LerpSteps(this Color color, Color endingColor, int steps)
         {
             Color[] colors = new Color[steps];
-            for (int i = 0; i < steps; i++)
+
+            float stopStrength = 1f / (steps - 1);
+
+            float lerpTotal = 0f;
+
+            colors[0] = color;
+            colors[steps - 1] = endingColor;
+
+            for (int i = 1; i < steps - 1; i++)
             {
-                colors[i] = Color.Lerp(color, endingColor, (float)i / steps);
+                lerpTotal += stopStrength;
+                
+                colors[i] = Color.Lerp(color, endingColor, lerpTotal);
             }
 
             return colors;
@@ -65,6 +75,71 @@ namespace Microsoft.Xna.Framework
         {
             return new Color(random.Next(255), random.Next(255), random.Next(255));
         }
+
+        #region Color methods taken from mono source code
+        public static float GetBrightness(this Color color)
+        {
+            byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
+            byte maxval = Math.Max(color.R, Math.Max(color.G, color.B));
+
+
+            return (float)(maxval + minval) / 510;
+        }
+
+
+        public static float GetSaturation(this Color color)
+        {
+            byte minval = (byte)Math.Min(color.R, Math.Min(color.G, color.B));
+            byte maxval = (byte)Math.Max(color.R, Math.Max(color.G, color.B));
+
+
+            if (maxval == minval)
+                return 0.0f;
+
+
+            int sum = maxval + minval;
+            if (sum > 255)
+                sum = 510 - sum;
+
+
+            return (float)(maxval - minval) / sum;
+        }
+
+
+        public static float GetHue(this Color color)
+        {
+            int r = color.R;
+            int g = color.G;
+            int b = color.B;
+            byte minval = (byte)Math.Min(r, Math.Min(g, b));
+            byte maxval = (byte)Math.Max(r, Math.Max(g, b));
+
+
+            if (maxval == minval)
+                return 0.0f;
+
+
+            float diff = (float)(maxval - minval);
+            float rnorm = (maxval - r) / diff;
+            float gnorm = (maxval - g) / diff;
+            float bnorm = (maxval - b) / diff;
+
+
+            float hue = 0.0f;
+            if (r == maxval)
+                hue = 60.0f * (6.0f + bnorm - gnorm);
+            if (g == maxval)
+                hue = 60.0f * (2.0f + rnorm - bnorm);
+            if (b == maxval)
+                hue = 60.0f * (4.0f + gnorm - rnorm);
+            if (hue > 360.0f)
+                hue = hue - 360.0f;
+
+
+            return hue;
+        }
+        #endregion
+
     }
 
 #if SILVERLIGHT

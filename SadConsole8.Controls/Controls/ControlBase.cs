@@ -307,6 +307,16 @@
         }
 
         /// <summary>
+        /// Helper method that returns the mouse x,y position for the control.
+        /// </summary>
+        /// <param name="info">The mouse information as used by a mouse event.</param>
+        /// <returns>The x,y position of the mouse over the control.</returns>
+        protected Point TransformConsolePositionByControlPosition(Input.MouseInfo info)
+        {
+            return new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+        }
+
+        /// <summary>
         /// Redraw the lastest appearance of the control.
         /// </summary>
         /// <remarks>This method is implemented by each derived control.</remarks>
