@@ -71,9 +71,76 @@ namespace Microsoft.Xna.Framework
             return colors;
         }
 
+        // Taken from http://www.easyrgb.com/index.php?X=MATH&H=19#text19
+        public static void SetHSL(this Color color, float h, float s, float l)
+        {
+            if (s == 0f)
+            {
+                color.R = (byte)(l * 255);
+                color.G = (byte)(l * 255);
+                color.B = (byte)(l * 255);
+            }
+            else
+            {
+                float var_2;
+                float var_1;
+
+                if (l < 0.5)
+                    var_2 = l * (1 + s);
+                else
+                    var_2 = (l + s) - (s * l);
+
+                var_1 = 2 * l - var_2;
+
+                color.R = (byte)(255 * Hue_2_RGB(var_1, var_2, h + (1 / 3)));
+                color.G = (byte)(255 * Hue_2_RGB(var_1, var_2, h));
+                color.B = (byte)(255 * Hue_2_RGB(var_1, var_2, h - (1 / 3)));
+            }
+        }
+
+        private static float Hue_2_RGB(float v1, float v2, float vH)
+        {
+            if (vH < 0) vH += 1;
+            if (vH > 1) vH -= 1;
+            if ((6 * vH) < 1) return (v1 + (v2 - v1) * 6 * vH);
+            if ((2 * vH) < 1) return (v2);
+            if ((3 * vH) < 2) return (v1 + (v2 - v1) * ((2 / 3) - vH) * 6);
+            return (v1);
+        }
+
         public static Color GetRandomColor(this Color color, Random random)
         {
             return new Color(random.Next(255), random.Next(255), random.Next(255));
+        }
+
+        /// <summary>
+        /// Returns a new Color using only the Red value of this color.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns></returns>
+        public static Color RedOnly(this Color color)
+        {
+            return new Color(color.R, 0, 0);
+        }
+
+        /// <summary>
+        /// Returns a new Color using only the Green value of this color.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns></returns>
+        public static Color GreenOnly(this Color color)
+        {
+            return new Color(0, color.G, 0);
+        }
+
+        /// <summary>
+        /// Returns a new Color using only the Blue value of this color.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns></returns>
+        public static Color BlueOnly(this Color color)
+        {
+            return new Color(0, 0, color.B);
         }
 
         #region Color methods taken from mono source code

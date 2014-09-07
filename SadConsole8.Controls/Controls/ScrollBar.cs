@@ -308,14 +308,16 @@
             {
                 base.ProcessMouse(info);
 
-                if (info.ConsoleLocation.X >= this.Position.X && info.ConsoleLocation.X < this.Position.X + this.Width &&
-                    info.ConsoleLocation.Y >= this.Position.Y && info.ConsoleLocation.Y < this.Position.Y + this.Height)
-                {
-                    var mouseControlPosition = new Microsoft.Xna.Framework.Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
 
-                    // This becomes the active mouse subject when the bar is being dragged.
-                    if (Parent.CapturedControl != this)
+                var mouseControlPosition = new Microsoft.Xna.Framework.Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+
+                // This becomes the active mouse subject when the bar is being dragged.
+                if (Parent.CapturedControl == null)
+                {
+                    if (info.ConsoleLocation.X >= this.Position.X && info.ConsoleLocation.X < this.Position.X + this.Width &&
+                        info.ConsoleLocation.Y >= this.Position.Y && info.ConsoleLocation.Y < this.Position.Y + this.Height)
                     {
+
                         if (info.LeftClicked)
                         {
                             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
@@ -360,20 +362,24 @@
                             Parent.FocusedControl = this;
                         }
                     }
-                    else if (Parent.CapturedControl == this)
+                }
+                else if (Parent.CapturedControl == this)
+                {
+                    if (info.ConsoleLocation.X >= this.Position.X - 2 && info.ConsoleLocation.X < this.Position.X + this.Width + 2 &&
+                        info.ConsoleLocation.Y >= this.Position.Y - 3 && info.ConsoleLocation.Y < this.Position.Y + this.Height + 3)
                     {
                         if (info.LeftButtonDown)
                         {
                             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
                             {
-                                if (mouseControlPosition.Y == 0)
-                                {
-                                    if (mouseControlPosition.X == _currentSliderPosition + 1)
-                                        Value -= Step;
-                                }
+                                //if (mouseControlPosition.Y == 0)
+                                //{
+                                //    if (mouseControlPosition.X == _currentSliderPosition + 1)
+                                //        Value -= Step;
+                                //}
 
 
-                                if (mouseControlPosition.Y == 0 && mouseControlPosition.X >= 1 && mouseControlPosition.X <= _sliderBarSize)
+                                if (mouseControlPosition.X >= 1 && mouseControlPosition.X <= _sliderBarSize)
                                 {
 
                                     _currentSliderPosition = mouseControlPosition.X - 1;
@@ -391,7 +397,7 @@
                             }
                             else
                             {
-                                if (mouseControlPosition.X == 0 && mouseControlPosition.Y >= 1 && mouseControlPosition.Y <= _sliderBarSize)
+                                if (mouseControlPosition.Y >= 1 && mouseControlPosition.Y <= _sliderBarSize)
                                 {
 
                                     _currentSliderPosition = mouseControlPosition.Y - 1;
@@ -410,13 +416,14 @@
                         else
                             Parent.ReleaseControl();
                     }
+                }
 
-                    return true;
-                }
-                else if(Parent.CapturedControl == this && !info.LeftButtonDown)
-                {
-                    Parent.ReleaseControl();
-                }
+                return true;
+
+                //else if(Parent.CapturedControl == this && !info.LeftButtonDown)
+                //{
+                //    Parent.ReleaseControl();
+                //}
 
 
             }

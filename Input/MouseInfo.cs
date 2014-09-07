@@ -179,7 +179,7 @@ namespace SadConsole.Input
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>The clone.</returns>
-        public MouseInfo Clone()
+        public virtual MouseInfo Clone()
         {
             var returnValue = new MouseInfo();
 

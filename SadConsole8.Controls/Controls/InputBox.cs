@@ -82,6 +82,8 @@
         [DataMember(Name = "DisableKeyboardInput")]
         public bool DisableKeyboard;
 
+        private string _editingText = "";
+
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
@@ -136,19 +138,23 @@
             get { return _text; }
             set
             {
-                TextChangedEventArgs args = new TextChangedEventArgs();
-                args.NewValue = value;
-                args.OldValue = _text;
+                if (value != _text)
+                {
+                    TextChangedEventArgs args = new TextChangedEventArgs();
+                    args.NewValue = value;
+                    args.OldValue = _text;
 
-                if (TextChangedPreview != null)
-                    TextChangedPreview(this, args);
+                    if (TextChangedPreview != null)
+                        TextChangedPreview(this, args);
 
-                _text = args.NewValue ?? "";
+                    _text = args.NewValue ?? "";
 
-                Validate();
+                    Validate();
+                    _editingText = _text;
 
-                if (TextChanged != null)
-                    TextChanged(this, EventArgs.Empty);
+                    if (TextChanged != null)
+                        TextChanged(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -201,15 +207,15 @@
             {
                 this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
 
-                this.Print(0, 0, Text.Align(TextAlignment, this.Width));
 
                 if (base.IsFocused && !DisableKeyboard)
                 {
+                    this.Print(0, 0, _editingText);
                     SetEffect(this[this._carrotPos, 0], Theme.CarrotEffect.Clone());
                 }
                 else
                 {
-
+                    this.Print(0, 0, _text.Align(TextAlignment, this.Width));
                 }
 
                 this.IsDirty = false;
@@ -265,22 +271,49 @@
             this.IsDirty = true;
         }
 
+        protected void ValidateEdit()
+        {
+            if (_isNumeric)
+            {
+                if (_allowDecimalPoint)
+                {
+                    float value;
+                    if (_editingText != null & float.TryParse(_editingText, out value))
+                        _editingText = value.ToString();
+                    else
+                        _editingText = "0.0";
+                }
+                else
+                {
+                    int value;
+                    if (_editingText != null & int.TryParse(_editingText, out value))
+                        _editingText = value.ToString();
+                    else
+                        _editingText = "0";
+                }
+            }
+
+            PositionCursor();
+
+            this.IsDirty = true;
+        }
+
         /// <summary>
         /// Correctly positions the cursor within the text.
         /// </summary>
         protected void PositionCursor()
         {
-            if (MaxLength != 0 && _text.Length > MaxLength)
+            if (MaxLength != 0 && _editingText.Length > MaxLength)
             {
-                _text = _text.Substring(0, MaxLength);
+                _editingText = _editingText.Substring(0, MaxLength);
 
-                if (_text.Length == MaxLength)
-                    _carrotPos = _text.Length - 1;
+                if (_editingText.Length == MaxLength)
+                    _carrotPos = _editingText.Length - 1;
                 else
-                    _carrotPos = _text.Length;
+                    _carrotPos = _editingText.Length;
             }
             else
-                _carrotPos = _text.Length;
+                _carrotPos = _editingText.Length;
 
             if (_carrotPos >= this.Width)
                 _carrotPos = this.Width - 1;
@@ -303,13 +336,14 @@
                         {
                             this.IsDirty = true;
                             DisableKeyboard = false;
+                            Text = _editingText;
                         }
                     }
                     return true;
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_text, this.Width - 1);
+                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, this.Width - 1);
 
                     this.IsDirty = true;
 
@@ -320,13 +354,17 @@
                             if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
                                 newText.Remove(newText.Length - 1, 1);
 
-                            else if (info.KeysPressed[i].XnaKey == Keys.Enter || info.KeysPressed[i].XnaKey == Keys.Escape)
+                            else if (info.KeysPressed[i].XnaKey == Keys.Enter)
                             {
                                 DisableKeyboard = true;
 
-                                Validate();
-                                Text = _text;
+                                Text = _editingText;
 
+                                return true;
+                            }
+                            else if (info.KeysPressed[i].XnaKey == Keys.Escape)
+                            {
+                                DisableKeyboard = true;
                                 return true;
                             }
 
@@ -344,17 +382,26 @@
                                 newText.Append(' ');
                             else if (info.KeysPressed[i].Character != 0)
                                 newText.Append(info.KeysPressed[i].Character);
-                            else if (info.KeysPressed[i].XnaKey == Keys.Enter || info.KeysPressed[i].XnaKey == Keys.Escape)
+                            else if (info.KeysPressed[i].XnaKey == Keys.Enter)
+                            {
+                                Text = _editingText;
                                 DisableKeyboard = true;
+                                return true;
+                            }
+                            else if (info.KeysPressed[i].XnaKey == Keys.Escape)
+                            {
+                                DisableKeyboard = true;
+                                return true;
+                            }
                         }
 
                     }
 
                     string newString = newText.ToString();
-                    if (newString != _text)
-                        _text = newString;
+                    if (newString != _editingText)
+                        _editingText = newString;
 
-                    PositionCursor();
+                    ValidateEdit();
                 }
 
                 return true;
@@ -369,9 +416,9 @@
         public override void FocusLost()
         {
             base.FocusLost();
-            Validate();
             DisableKeyboard = true;
-            Text = _text;
+            Text = _editingText;
+            IsDirty = true;
         }
 
         /// <summary>
@@ -381,7 +428,9 @@
         {
             base.Focused();
             DisableKeyboard = false;
+            _editingText = _text;
             IsDirty = true;
+            PositionCursor();
         }
 
         protected override void OnLeftMouseClicked(MouseInfo info)
