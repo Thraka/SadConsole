@@ -66,7 +66,7 @@
         /// When set to true, does not render the border.
         /// </summary>
         [DataMember]
-        public bool HideBorder { get { return _hideBorder; } set { _hideBorder = value; ShowHideSlider(); } }
+        public bool HideBorder { get { return _hideBorder; } set { _hideBorder = value; ShowHideSlider(); IsDirty = true; } }
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
