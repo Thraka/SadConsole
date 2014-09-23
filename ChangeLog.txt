@@ -1,4 +1,9 @@
-﻿## Version 1.3.112 (9/7/2014)
+﻿## Version 1.3.113 (9/23/2014)
+* Added Entity.PositionOffset which is now taken into consideration when rendering an entity.
+** By setting this property to the position of a console (when the console and entity have the same cellsize) will cause the entity to look as if it's hosted by the console.
+
+
+## Version 1.3.112 (9/7/2014)
 
 ## Core
 * Added the SadConsole.EngineGameComponent XNA-based GameComponent.

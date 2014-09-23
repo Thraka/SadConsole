@@ -75,6 +75,11 @@
         /// </summary>
         public Animation CurrentAnimation { get { return _currentAnimation; } }
 
+        /// <summary>
+        /// Gets or sets a point that is used to offset the position of the entity.
+        /// </summary>
+        public Point PositionOffset { get; set; }
+
         #endregion
 
         #region Constructors
@@ -332,9 +337,9 @@
             Point worldLocation;
 
             if (UseAbsolutePositioning)
-                worldLocation = Position;
+                worldLocation = Position + PositionOffset;
             else
-                worldLocation = Position.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
+                worldLocation = Position.ConsoleLocationToWorld(CellSize.X, CellSize.Y) + PositionOffset.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
 
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f) * Matrix.CreateTranslation(-_currentAnimation.Center.X * _font.CellWidth, -_currentAnimation.Center.Y * _font.CellHeight, 0f);
         }
