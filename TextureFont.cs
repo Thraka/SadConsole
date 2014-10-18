@@ -8,13 +8,14 @@ namespace SadConsole
 {
     public class TextureFont : FontBase
     {
-        public TextureFont(string name, int cellWidth, int cellHeight, Texture2D texture)
+        public TextureFont(string name, int cellWidth, int cellHeight, Texture2D texture, int cellPadding = 0)
         {
             Name = name;
             Image = texture;
             CellWidth = cellWidth;
             CellHeight = cellHeight;
-    
+            CellPadding = cellPadding;
+
             ConfigureRects();
         }
     }
