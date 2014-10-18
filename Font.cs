@@ -27,9 +27,6 @@ namespace SadConsole
         public Texture2D Image { get; private set; }
 
         [IgnoreDataMember]
-        public Point[] CharacterIndexPoints;
-
-        [IgnoreDataMember]
         public Rectangle[] CharacterIndexRects;
 
         #region Constructors
@@ -78,16 +75,17 @@ namespace SadConsole
         public void ConfigureRects()
         {
             CharacterIndexRects = new Rectangle[Rows * Engine.FontColumns];
-            CharacterIndexPoints = new Point[CharacterIndexRects.Length];
 
             for (int i = 0; i < CharacterIndexRects.Length; i++)
             {
-                CharacterIndexPoints[i] = new Point(i % Engine.FontColumns, i / Engine.FontColumns);
+                var cx = i % Engine.FontColumns;
+                var cy = i / Engine.FontColumns;
+
                 if (CellPadding != 0)
-                    CharacterIndexRects[i] = new Rectangle((CharacterIndexPoints[i].X * CellWidth) + ((CharacterIndexPoints[i].X + 1) * CellPadding),
-                                                           (CharacterIndexPoints[i].Y * CellHeight) + ((CharacterIndexPoints[i].Y + 1) * CellPadding), CellWidth, CellHeight);
+                    CharacterIndexRects[i] = new Rectangle((cx * CellWidth) + ((cx + 1) * CellPadding),
+                                                           (cy * CellHeight) + ((cy + 1) * CellPadding), CellWidth, CellHeight);
                 else
-                    CharacterIndexRects[i] = new Rectangle(CharacterIndexPoints[i].X * CellWidth, CharacterIndexPoints[i].Y * CellHeight, CellWidth, CellHeight);
+                    CharacterIndexRects[i] = new Rectangle(cx * CellWidth, cy * CellHeight, CellWidth, CellHeight);
             }
         }
 
