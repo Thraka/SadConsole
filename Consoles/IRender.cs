@@ -52,7 +52,7 @@
         /// <summary>
         /// Gets or sets the font used when rendering this surface.
         /// </summary>
-        Font Font { get; set; }
+        FontBase Font { get; set; }
 
         /// <summary>
         /// Renders the cell data to the screen.

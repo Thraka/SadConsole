@@ -108,7 +108,7 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the default font to be used with the console. There must always be a default font set.
         /// </summary>
-        public static Font DefaultFont { get; set; }
+        public static FontBase DefaultFont { get; set; }
 
         /// <summary>
         /// Gets a collection of effects currently registered with the engine.
@@ -272,14 +272,14 @@ namespace SadConsole
 
         public static void Save()
         {
-            System.Runtime.Serialization.DataContractSerializer serializer = 
-                new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
+            System.Runtime.Serialization.DataContractSerializer serializer =
+                new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(FontBase), typeof(Font) });
             System.IO.MemoryStream mem = new System.IO.MemoryStream();
-            
+
             var fonts = Fonts["C64"];
             var font = fonts[0];
 
-            
+
 
             serializer.WriteObject(mem, Fonts);
 
@@ -287,18 +287,18 @@ namespace SadConsole
             System.IO.StreamReader reader = new System.IO.StreamReader(mem);
             string output = reader.ReadToEnd();
 
-            serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
+            serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(FontBase), typeof(Font) });
 
             mem.Position = 0;
             object obj = serializer.ReadObject(mem);
         }
 
         /// <summary>
-        /// Returns the amount of cells (X,Y) given the specified <see cref="Font"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
+        /// Returns the amount of cells (X,Y) given the specified <see cref="FontBase"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
         /// </summary>
         /// <param name="font">The font.</param>
         /// <returns>The amount of cells along the X and Y axis.</returns>
-        public static Point GetScreenSizeInCells(Font font)
+        public static Point GetScreenSizeInCells(FontBase font)
         {
             return new Point(WindowWidth / font.CellWidth, WindowHeight / font.CellHeight);
         }
