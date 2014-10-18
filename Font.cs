@@ -52,10 +52,6 @@ namespace SadConsole
             if (!int.TryParse(xheight.Value, out height))
                 throw new Exception("Height value is invalid: " + xheight.Value);
 
-            System.IO.Stream fontStream = System.IO.File.OpenRead(filename);
-            this.Image = Texture2D.FromStream(device, fontStream);
-            fontStream.Dispose();
-
             FilePath = filename;
             Name = name;
             CellWidth = width;
