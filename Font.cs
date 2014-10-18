@@ -67,10 +67,10 @@ namespace SadConsole
         /// </summary>
         public void Generate()
         {
-            System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath);
-            
-            this.Image = Texture2D.FromStream(Engine.Device, fontStream);
-            fontStream.Dispose();
+            using (System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath))
+            {
+                Image = Texture2D.FromStream(Engine.Device, fontStream);
+            }
 
             ConfigureRects();
         }
