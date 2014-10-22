@@ -51,7 +51,7 @@
             IsVisible = true;
         }
 
-        public void Render()
+        public virtual void Render()
         {
             if (IsVisible)
             {
@@ -64,7 +64,7 @@
             }
         }
 
-        public void Update()
+        public virtual void Update()
         {
             var copyList = new List<IConsole>(_consoles);
 
@@ -74,7 +74,7 @@
             }
         }
 
-        public bool ProcessKeyboard(Input.KeyboardInfo info)
+        public virtual bool ProcessKeyboard(Input.KeyboardInfo info)
         {
             if (IsVisible)
             {
@@ -90,7 +90,7 @@
             return false;
         }
 
-        public bool ProcessMouse(Input.MouseInfo info)
+        public virtual bool ProcessMouse(Input.MouseInfo info)
         {
             info.Console = null;
 

@@ -603,6 +603,8 @@
     [DataContract]
     public class ListBoxItem : INotifyPropertyChanged
     {
+        protected ThemePartSelected _theme;
+
         protected bool _isDirty = false;
         protected bool _isSelected = false;
         protected bool _isMouseOver = false;
@@ -612,7 +614,11 @@
         /// <summary>
         /// The theme of this control.
         /// </summary>
-        public ThemePartSelected Theme;
+        public ThemePartSelected Theme
+        {
+            get { return _theme; }
+            set { _theme = value; DetermineAppearance(); }
+        }
 
         public ListBoxItem()
         {
@@ -670,7 +676,7 @@
         public bool IsDirty
         {
             get { return _isDirty; }
-            set { _isDirty = value; OnPropertyChanged("IsDirty"); if (value) DetermineAppearance(); }
+            set { _isDirty = value; OnPropertyChanged("IsDirty"); }
         }
 
         public virtual void Draw(CellSurface surface, Rectangle area)

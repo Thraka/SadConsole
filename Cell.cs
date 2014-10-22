@@ -94,6 +94,12 @@ namespace SadConsole
         [DataMember]
         public bool IsVisible { get; set; }
 
+        [DataMember]
+        /// <summary>
+        /// The SpriteBatch Sprite Effect used when rendering the cell. Defaults to None.
+        /// </summary>
+        public Microsoft.Xna.Framework.Graphics.SpriteEffects SpriteEffect { get; set; }
+
         #region Constructors
         public Cell()
         {

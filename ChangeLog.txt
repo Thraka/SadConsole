@@ -1,6 +1,13 @@
 ﻿## Version 1.3.113 (9/23/2014)
+
+## Core
 * Added Entity.PositionOffset which is now taken into consideration when rendering an entity.
 ** By setting this property to the position of a console (when the console and entity have the same cellsize) will cause the entity to look as if it's hosted by the console.
+* Cell now has a SpriteEffect property which allows you to mirror and flip the cell to create more characters.
+
+## Controls
+* Fixed a bug in rendering a controls console with the ViewArea changed to start at something other than 0,0
+* Fixed some drawing bugs in ListBox
 
 
 ## Version 1.3.112 (9/7/2014)

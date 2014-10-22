@@ -190,10 +190,11 @@
             _isVisible = true;
             Position = new Point(0, 0);
             Tint = Color.Transparent;
-            CellData = cellData;
-            ResetViewArea();
             Font = Engine.DefaultFont;
             UpdateOnlyViewCells = true;
+
+            CellData = cellData;
+            ResetViewArea();
         }
 
         /// <summary>
@@ -281,7 +282,7 @@
                         {
                             // "Print" the foreground of the cell on top of the background
                             if (cell.ActualForeground != Color.Transparent)
-                                Batch.Draw(this.Font.Image, _renderAreaRects[i], Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                                Batch.Draw(this.Font.Image, _renderAreaRects[i], Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.SpriteEffect, 0.1f);
                         }
                     }
 

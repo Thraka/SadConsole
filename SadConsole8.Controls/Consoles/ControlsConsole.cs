@@ -492,6 +492,7 @@
 
                             if (base._renderArea.Contains(point))
                             {
+                                point = new Point(point.X - _renderArea.X, point.Y - _renderArea.Y);
                                 rect = _renderAreaRects[base.CellData.GetIndexFromPoint(point)];
 
                                 if (cell.ActualBackground != Color.Transparent)
@@ -512,14 +513,15 @@
 
                             if (base._renderArea.Contains(point))
                             {
+                                point = new Point(point.X - _renderArea.X, point.Y - _renderArea.Y);
                                 rect = _renderAreaRects[base.CellData.GetIndexFromPoint(point)];
 
                                 if (cell.ActualForeground != Color.Transparent)
                                 {
                                     if (control.AlternateFont == null)
-                                        Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                                        Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.SpriteEffect, 0.1f);
                                     else
-                                        Batch.Draw(control.AlternateFont.Image, rect, control.AlternateFont.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                                        Batch.Draw(control.AlternateFont.Image, rect, control.AlternateFont.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.SpriteEffect, 0.1f);
                                 }
                             }
                         }
