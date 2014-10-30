@@ -11,6 +11,7 @@
     /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
     /// </summary>
     [DataContract]
+    [KnownType(typeof(CellAppearance))]
     public partial class Console : CellsRenderer, IConsole
     {
         #region Events
@@ -35,12 +36,6 @@
         public event EventHandler<MouseEventArgs> MouseEnter;
         #endregion
 
-        [DataMember(Name="VirtualCursorPosition")]
-        private Point _virtualCursorPosition
-        {
-            get { return _virtualCursor.Position; }
-        }
-
         /// <summary>
         /// The parent console.
         /// </summary>
@@ -54,7 +49,8 @@
         /// <summary>
         /// The private virtual curser reference.
         /// </summary>
-        protected Console.Cursor _virtualCursor;
+        [DataMember(Name = "VirtualCursor")]
+        protected Cursor _virtualCursor;
 
         /// <summary>
         /// Toggles the _virtualCursor as visible\hidden when the console if focused\unfocused.
@@ -487,9 +483,7 @@
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            _virtualCursor = new Cursor(this);
-
-            _virtualCursor.Position = _virtualCursorPosition;
+            _virtualCursor.AttachConsole(this);
         }
     }
 }

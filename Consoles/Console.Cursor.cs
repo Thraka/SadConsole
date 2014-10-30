@@ -58,12 +58,15 @@ using SadConsole.Effects;
                 get { return _position; }
                 set
                 {
-                    Console console = (Console)_console.Target;
+                    if (_console != null)
+                    {
+                        Console console = (Console)_console.Target;
 
-                    if (!(value.X < 0 || value.X >= console.CellData.Width))
-                        _position.X = value.X;
-                    if (!(value.Y < 0 || value.Y >= console.CellData.Height))
-                        _position.Y = value.Y;
+                        if (!(value.X < 0 || value.X >= console.CellData.Width))
+                            _position.X = value.X;
+                        if (!(value.Y < 0 || value.Y >= console.CellData.Height))
+                            _position.Y = value.Y;
+                    }
                 }
             }
 
@@ -93,6 +96,16 @@ using SadConsole.Effects;
                 CursorRenderCell.Effect = blinkEffect;
                 CursorRenderCell.Foreground = Color.White;
                 CursorRenderCell.Background = Color.Transparent;
+            }
+            
+            internal Cursor()
+            {
+
+            }
+
+            internal void AttachConsole(Console console)
+            {
+                _console = new WeakReference(console);
             }
 
             /// <summary>
