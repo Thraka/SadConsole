@@ -48,6 +48,10 @@
             // Add the default console to the list of consoles.
             SadConsole.Engine.ConsoleRenderStack.Add(_defaultConsole);
 
+            var randomStuffConsole = new SadConsole.Consoles.Console(80, 25);
+            randomStuffConsole.FillWithRandomGarbage(true);
+            randomStuffConsole.IsVisible = false;
+
             string text = _defaultConsole.CellData.GetString(2, 0, 27);
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
             SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { 
@@ -58,6 +62,7 @@
                                                                        new CustomConsoles.DOSConsole(),
                                                                        new CustomConsoles.WindowTestConsole(),
                                                                        new CustomConsoles.EntityAndConsole(),
+                                                                       randomStuffConsole,
                                                                        new CustomConsoles.SplashScreen(),
                                                                      };
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;

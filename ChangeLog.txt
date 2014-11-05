@@ -4,6 +4,7 @@
 * Added Entity.PositionOffset which is now taken into consideration when rendering an entity.
 ** By setting this property to the position of a console (when the console and entity have the same cellsize) will cause the entity to look as if it's hosted by the console.
 * Cell now has a SpriteEffect property which allows you to mirror and flip the cell to create more characters.
+** Also implemented on the ICellAppearence 
 
 ## Controls
 * Fixed a bug in rendering a controls console with the ViewArea changed to start at something other than 0,0

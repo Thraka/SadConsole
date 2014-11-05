@@ -519,9 +519,9 @@
                                 if (cell.ActualForeground != Color.Transparent)
                                 {
                                     if (control.AlternateFont == null)
-                                        Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.SpriteEffect, 0.1f);
+                                        Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.1f);
                                     else
-                                        Batch.Draw(control.AlternateFont.Image, rect, control.AlternateFont.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.SpriteEffect, 0.1f);
+                                        Batch.Draw(control.AlternateFont.Image, rect, control.AlternateFont.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.1f);
                                 }
                             }
                         }

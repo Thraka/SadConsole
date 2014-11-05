@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Effects;
 using System;
 using System.Collections.Generic;
@@ -672,6 +673,28 @@ namespace SadConsole
             CellAppearance appearance = new CellAppearance();
             Cells[y * Width + x].CopyAppearanceTo(appearance);
             return appearance;
+        }
+
+        /// <summary>
+        /// Gets the sprite effect of a specified cell.
+        /// </summary>
+        /// <param name="x">The x location of the cell.</param>
+        /// <param name="y">The y location of the cell.</param>
+        /// <returns>The color.</returns>
+        public SpriteEffects GetSpriteEffect(int x, int y)
+        {
+            return Cells[y * Width + x].SpriteEffect;
+        }
+
+        /// <summary>
+        /// Sets the sprite effect of a specified cell.
+        /// </summary>
+        /// <param name="x">The x location of the cell.</param>
+        /// <param name="y">The y location of the cell.</param>
+        /// <returns>The color.</returns>
+        public void SetSpriteEffect(int x, int y, SpriteEffects spriteEffect)
+        {
+            Cells[y * Width + x].SpriteEffect = spriteEffect;
         }
         #endregion
 

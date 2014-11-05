@@ -34,7 +34,15 @@
             CanUseKeyboard = true;
             VirtualCursor.IsVisible = true;
             Prompt = "DOS Prompt> ";
-            Clear();
+
+
+            // Startup description
+            CellData.Clear();
+            VirtualCursor.Position = new Point(0, 24);
+            VirtualCursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
+            _keyboardHandlerObject.VirtualCursorLastY = 24;
+            _cellData.TimesShiftedUp = 0;
+            VirtualCursor.Print(Prompt);
         }
 
         public void Clear()
@@ -42,7 +50,6 @@
             CellData.Clear();
             VirtualCursor.Position = new Point(0, 24);
             _keyboardHandlerObject.VirtualCursorLastY = 24;
-            VirtualCursor.Print(Prompt);
         }
 
         private void EnterPressedActionHandler(string value)
@@ -52,6 +59,12 @@
 
             else if (value.ToLower() == "ver")
                 VirtualCursor.Print("  SadConsole for MonoGame and XNA 4.0").NewLine();
+
+            else if (value.ToLower() == "cls")
+                Clear();
+
+            else if (value.ToLower() == "look")
+                VirtualCursor.Print("  Looking around you discover that you are in a dark and empty room. There is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
 
             else if (value.ToLower() == "exit" || value.ToLower() == "quit")
                 Program.Game.Exit();

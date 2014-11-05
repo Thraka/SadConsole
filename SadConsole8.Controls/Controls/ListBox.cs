@@ -548,7 +548,7 @@
 
                     for (int ycell = 0; ycell < _slider.Height; ycell++)
                     {
-                        this.SetCharacter(_sliderRenderLocation.X, y, _slider[0, ycell].ActualCharacterIndex);
+                        this.SetCharacter(_sliderRenderLocation.X, y, _slider[0, ycell].CharacterIndex);
                         this.SetCellAppearance(_sliderRenderLocation.X, y, _slider[0, ycell]);
                         y++;
                     }

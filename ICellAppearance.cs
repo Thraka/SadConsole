@@ -1,6 +1,7 @@
 ﻿namespace SadConsole
 {
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
     using SadConsole.Effects;
 
     /// <summary>
@@ -20,6 +21,12 @@
         /// The character index from a font sheet.
         /// </summary>
         int CharacterIndex { get; set; }
+
+        /// <summary>
+        /// The SpriteBatch sprite mirror effect used when rendering the cell.
+        /// </summary>
+        SpriteEffects SpriteEffect { get; set; }
+
         /// <summary>
         /// Copy the current appearance to another.
         /// </summary>

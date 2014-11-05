@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Effects;
 using System.Runtime.Serialization;
 
@@ -29,9 +30,15 @@ namespace SadConsole
         public int CharacterIndex { get; set; }
 
         /// <summary>
+        /// The SpriteBatch sprite mirror effect used when rendering the cell.
+        /// </summary>
+        [DataMember]
+        public SpriteEffects SpriteEffect { get; set; }
+
+        /// <summary>
         /// Creates a new instance of the cell appearance with a white foreground and transparent background.
         /// </summary>
-        public CellAppearance() : this(Color.White, Color.Transparent, 0) { CharacterIndex = -1; }
+        public CellAppearance() : this(Color.White, Color.Transparent, -1) { }
 
         /// <summary>
         /// Creates a new instance of the cell appearance with the specified colors and effect.

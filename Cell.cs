@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
 namespace SadConsole
@@ -12,6 +13,7 @@ namespace SadConsole
         private int _characterIndex;
         private Color _foreground;
         private Color _background;
+        private SpriteEffects _spriteEffect;
 
         /// <summary>
         /// The desired foreground color of this cell. When set, copies the value to ActualForeground.
@@ -52,6 +54,16 @@ namespace SadConsole
                 _characterIndex = value;
                 ActualCharacterIndex = value;
             }
+        }
+
+        /// <summary>
+        /// The SpriteBatch sprite mirror effect used when rendering the cell. Defaults to None.
+        /// </summary>
+        [DataMember]
+        public SpriteEffects SpriteEffect
+        {
+            get { return _spriteEffect; }
+            set { _spriteEffect = value; ActualSpriteEffect = value; }
         }
 
         /// <summary>
@@ -96,9 +108,10 @@ namespace SadConsole
 
         [DataMember]
         /// <summary>
-        /// The SpriteBatch Sprite Effect used when rendering the cell. Defaults to None.
+        /// The SpriteBatch sprite mirror effect used when rendering the cell.
+        /// <remarks>The actual sprite effect may or may not match the desired sprite effect. When cell effects are processed, they may change this value. If the cell effect is removed, the actual sprite effect is taken from desired sprite effect.</remarks>
         /// </summary>
-        public Microsoft.Xna.Framework.Graphics.SpriteEffects SpriteEffect { get; set; }
+        public SpriteEffects ActualSpriteEffect { get; set; }
 
         #region Constructors
         public Cell()
@@ -142,6 +155,7 @@ namespace SadConsole
             destination.ActualCharacterIndex = this.ActualCharacterIndex;
             destination.ActualBackground = this.ActualBackground;
             destination.ActualForeground = this.ActualForeground;
+            destination.ActualSpriteEffect = this.ActualSpriteEffect;
         }
 
         /// <summary>
@@ -153,10 +167,11 @@ namespace SadConsole
             destination.Foreground = this.Foreground;
             destination.Background = this.Background;
             destination.CharacterIndex = this.CharacterIndex;
+            destination.SpriteEffect = this.SpriteEffect;
         }
 
         /// <summary>
-        /// Updates and applies the <see cref="P:SadConsole.Cell.Effect"/> to this cell. WARNING: Do not use with CellSurface.
+        /// Updates and applies the <see cref="P:SadConsole.Cell.Effect"/> to this cell. WARNING: Do not use with CellSurface. This should only be called when the cell has a standalone effect that isn't managed by the CellSurface.
         /// </summary>
         public void UpdateAndApplyEffect(double elapsedTime)
         {

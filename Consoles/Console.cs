@@ -388,10 +388,15 @@
             return handlerResult;
         }
 
-        public void FillWithRandomGarbage()
+        /// <summary>
+        /// Fills a console with random colors and characters.
+        /// </summary>
+        public void FillWithRandomGarbage(bool useEffect = false)
         {
-            Random rand = new Random(2523);
+            Random rand = new Random();
             SadConsole.Effects.Blink pulse = new SadConsole.Effects.Blink();
+            pulse.CloneOnApply = true;
+
             //pulse.Reset();
             int charCounter = 0;
             for (int y = 0; y < CellData.Height; y++)
@@ -399,11 +404,15 @@
                 for (int x = 0; x < CellData.Width; x++)
                 {
                     CellData.SetCharacter(x, y, charCounter);
-                    CellData.SetForeground(x, y, new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255), 255));
+                    CellData.SetForeground(x, y, new Color(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256), 255));
                     CellData.SetBackground(x, y, CellData.DefaultBackground);
-                    CellData.SetBackground(x, y, new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255), 255));
-                    pulse.BlinkSpeed = ((float)rand.NextDouble() * 3f);
-                    
+                    CellData.SetBackground(x, y, new Color(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256), 255));
+                    CellData.SetSpriteEffect(x, y, (SpriteEffects)rand.Next(0, 4));
+                    if (useEffect)
+                    {
+                        pulse.BlinkSpeed = ((float)rand.NextDouble() * 3f);
+                        CellData.SetEffect(x, y, pulse);
+                    }
                     charCounter++;
                     if (charCounter > 255)
                         charCounter = 0;
