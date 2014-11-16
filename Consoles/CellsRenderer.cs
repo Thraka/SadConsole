@@ -144,7 +144,7 @@
                     if (_cellData != null)
                         _cellData.Resized += cellData_Resized;
 
-                    if (!_renderAreaCustomSet)
+                    if (!_renderAreaCustomSet || _renderArea == new Rectangle(0, 0, _cellData.Width, _cellData.Height))
                         ResetViewArea();
                     else
                         CalculateRenderArea();
@@ -166,9 +166,14 @@
             }
             set
             {
-                _renderAreaCustomSet = true;
-                _renderArea = value;
-                CalculateRenderArea();
+                if (_cellData == null || value != new Rectangle(0, 0, _cellData.Width, _cellData.Height))
+                {
+                    _renderAreaCustomSet = true;
+                    _renderArea = value;
+                    CalculateRenderArea();
+                }
+                else
+                    ResetViewArea();
             }
         }
 
