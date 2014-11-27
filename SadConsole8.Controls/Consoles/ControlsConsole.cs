@@ -370,7 +370,7 @@
                         return false;
                     }
 
-                if (FocusedControl != null && FocusedControl.IsEnabled)
+                if (FocusedControl != null && FocusedControl.IsEnabled && FocusedControl.CanUseKeyboard)
                     return FocusedControl.ProcessKeyboard(info);
             }
 

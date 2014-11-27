@@ -167,6 +167,7 @@
             FocusOnClick = true;
             _position = new Point();
             CanUseMouse = true;
+            CanUseKeyboard = true;
         }
         #endregion
 

@@ -6,7 +6,7 @@ namespace SadConsole.Input
     /// <summary>
     /// Event arguments for mouse events.
     /// </summary>
-    public class MouseEventArgs: EventArgs
+    public class MouseEventArgs : EventArgs
     {
         /// <summary>
         /// The current console under the mouse.
@@ -42,6 +42,8 @@ namespace SadConsole.Input
         public int ScrollWheelValue { get; private set; }
         public int ScrollWheelValueChange { get; private set; }
 
+        public MouseInfo OriginalMouseInfo { get; private set; }
+
         public MouseEventArgs(MouseInfo info)
         {
             this.Console = info.Console;
@@ -59,6 +61,8 @@ namespace SadConsole.Input
 
             this.ScrollWheelValue = info.ScrollWheelValue;
             this.ScrollWheelValueChange = info.ScrollWheelValueChange;
+
+            this.OriginalMouseInfo = info;
         }
     }
 }

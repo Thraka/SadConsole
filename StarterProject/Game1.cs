@@ -25,7 +25,7 @@
         {
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
 
             // Initialize the SadConsole engine and the first effects library (provided by the SadConsole.Effects.dll binary)
             SadConsole.Engine.Initialize(GraphicsDevice);
