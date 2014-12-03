@@ -52,6 +52,12 @@ namespace SadConsole.Themes
         public ListBoxTheme ListBoxTheme;
 
         /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.CheckBox"/> control.
+        /// </summary>
+        [DataMember]
+        public CheckBoxTheme CheckBoxTheme;
+
+        /// <summary>
         /// Theme for the <see cref="SadConsole.Controls.InputBox"/> control.
         /// </summary>
         [DataMember]
@@ -98,6 +104,23 @@ namespace SadConsole.Themes
             WindowTheme.TitleStyle = new CellAppearance(ColorAnsi.Black, ColorAnsi.WhiteBright);
             WindowTheme.BorderStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
             WindowTheme.FillStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
+
+            CheckBoxTheme = new CheckBoxTheme();
+            CheckBoxTheme.CheckedIcon = 251;
+            CheckBoxTheme.UncheckedIcon = 0;
+            CheckBoxTheme.Button = new ThemePartSelected();
+            CheckBoxTheme.Button.Normal = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
+            CheckBoxTheme.Button.Focused = new CellAppearance(ColorAnsi.Blue, Color.Transparent);
+            CheckBoxTheme.Button.MouseOver = new CellAppearance(ColorAnsi.White, ColorAnsi.WhiteBright);
+            CheckBoxTheme.Button.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
+            CheckBoxTheme.Button.Disabled = new CellAppearance(ColorAnsi.Black, Color.Transparent);
+            CheckBoxTheme.Button.Selected = new CellAppearance(ColorAnsi.YellowBright, Color.Transparent);
+            CheckBoxTheme.Normal = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
+            CheckBoxTheme.Focused = new CellAppearance(ColorAnsi.Blue, Color.Transparent);
+            CheckBoxTheme.MouseOver = new CellAppearance(ColorAnsi.White, ColorAnsi.WhiteBright);
+            CheckBoxTheme.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
+            CheckBoxTheme.Disabled = new CellAppearance(ColorAnsi.Black, Color.Transparent);
+            CheckBoxTheme.Selected = new CellAppearance(ColorAnsi.YellowBright, Color.Transparent);
 
             RadioButtonTheme = new RadioButtonTheme();
             RadioButtonTheme.CheckedIcon = 7;

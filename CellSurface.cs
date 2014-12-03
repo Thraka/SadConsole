@@ -413,20 +413,24 @@ namespace SadConsole
             if (x + width > this._width || y + height > this._height)
                 throw new Exception("Invalid x,y,width,height combination.");
 
-            int maxX = destinationX + width > destination._width ? destinationX - destination._width : width;
-            int maxY = destinationY + height > destination._height ? destination._height : height;
-
             int destX = destinationX;
             int destY = destinationY;
 
-            for (int curx = 0; curx < maxX; curx++)
+            for (int curx = 0; curx < width; curx++)
             {
-                for (int cury = 0; cury < maxY; cury++)
+                for (int cury = 0; cury < height; cury++)
                 {
-                    var sourceCell = this[curx + x, cury + y];
-                    var desCell = destination[destX, destY];
-                    sourceCell.CopyAppearanceTo(desCell);
-                    destination.SetEffect(desCell, sourceCell.Effect);
+                    if (IsValidCell(curx + x, cury + y))
+                    {
+                        var sourceCell = this[curx + x, cury + y];
+
+                        if (destination.IsValidCell(destX, destY))
+                        {
+                            var desCell = destination[destX, destY];
+                            sourceCell.CopyAppearanceTo(desCell);
+                            destination.SetEffect(desCell, sourceCell.Effect);
+                        }
+                    }
                     destY++;
                 }
                 destY = destinationY;

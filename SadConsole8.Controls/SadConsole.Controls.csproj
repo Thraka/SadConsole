@@ -53,6 +53,7 @@
     <Compile Include="Consoles\ControlsConsole.cs" />
     <Compile Include="Consoles\Window.cs" />
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\CheckBox.cs" />
     <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\DrawingSurface.cs" />
     <Compile Include="Controls\InputBox.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Controls\SelectionButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializer.cs" />
+    <Compile Include="Themes\CheckBoxTheme.cs" />
     <Compile Include="Themes\ButtonTheme.cs" />
     <Compile Include="Themes\InputBoxTheme.cs" />
     <Compile Include="Themes\Library.cs" />
