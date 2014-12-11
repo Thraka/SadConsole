@@ -53,6 +53,8 @@
                     ResetViewArea();
                 else
                     CalculateRenderArea();
+
+                OnFontChanged();
             }
         }
 
@@ -411,7 +413,7 @@
         }
 
         /// <summary>
-        /// Called when the <see cref="Location" /> property changes.
+        /// Called when the <see cref="Position" /> property changes.
         /// </summary>
         /// <param name="oldLocation">The location before the change.</param>
         protected virtual void OnPositionChanged(Point oldLocation) { }
@@ -421,12 +423,22 @@
         /// </summary>
         protected virtual void OnResize() { }
 
+        /// <summary>
+        /// Called when the <see cref="CellData"/> property changes.
+        /// </summary>
+        /// <param name="oldCells">Previous cell surface.</param>
+        /// <param name="newCells">New cell surface.</param>
         protected virtual void OnCellDataChanged(CellSurface oldCells, CellSurface newCells) { }
 
         /// <summary>
         /// Called when the visibility of the console changes.
         /// </summary>
         protected virtual void OnVisibleChanged() { }
+
+        /// <summary>
+        /// Called when the font changes.
+        /// </summary>
+        protected virtual void OnFontChanged() { }
 
         private void cellData_Resized(object sender, EventArgs e)
         {
