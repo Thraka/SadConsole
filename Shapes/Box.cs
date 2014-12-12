@@ -25,210 +25,69 @@ namespace SadConsole.Shapes
 
         public void Draw(CellSurface surface)
         {
-            // box is on the console area
-            if (Location.X < surface.Width && Location.Y < surface.Height)
+            for (int x = Location.X; x < Location.X + Width; x++)
             {
-                // box is on the console area
-                if (Location.X + Width > 0 && Location.Y + Height > 0)
+                for (int y = Location.Y; y < Location.Y + Height; y++)
                 {
-                    int workingWidth;
-                    int workingHeight;
-                    int workingX;
-                    int workingY;
-
-                    // Flags for drawing sides of the box
-                    bool drawLeft = Location.X >= 0 && Location.X < surface.Width;
-                    bool drawRight = Location.X + Width >= 0 && Location.X + Width <= surface.Width;
-                    bool drawTop = Location.Y >= 0 && Location.Y < surface.Height;
-                    bool drawBottom = Location.Y + Height >= 0 && Location.Y + Height <= surface.Height;
-
-                    // Predict X and Y start.
-                    if (drawLeft)
-                        workingX = Location.X;
-                    else
-                        workingX = 0;
-
-                    if (drawTop)
-                        workingY = Location.Y;
-                    else
-                        workingY = 0;
-
-                    // Predict the width and height.
-                    if (workingX + Width <= surface.Width)
-                        workingWidth = Width;
-                    else
-                        workingWidth = surface.Width - workingX;
-
-                    if (workingY + Height <= surface.Height)
-                        workingHeight = Height;
-                    else
-                        workingHeight = surface.Height - workingY;
-
-                    // Fill
-                    if (Fill)
-                        surface.FillArea(new Rectangle(workingX, workingY, workingWidth, workingHeight), Foreground, FillColor, 0, null);
-
-                    // Drawing top\bottom
-                    if (drawTop && drawBottom)
+                    // Top row
+                    if (y == Location.Y)
                     {
-                        int topStartingIndex = surface.GetIndexFromPoint(workingX, workingY);
-                        int bottomStartingIndex = topStartingIndex + (surface.Width * (workingHeight - 1));
-
-                        for (int x = 0; x < workingWidth; x++)
-                        {
-                            if (Foreground != Color.Transparent || DrawTransparency)
-                            {
-                                surface[topStartingIndex + x].Foreground = Foreground;
-                                surface[bottomStartingIndex + x].Foreground = Foreground;
-                            }
-                            if (BorderBackground != Color.Transparent || DrawTransparency)
-                            {
-                                surface[topStartingIndex + x].Background = BorderBackground;
-                                surface[bottomStartingIndex + x].Background = BorderBackground;
-                            }
-
-                            surface[topStartingIndex + x].CharacterIndex = TopSideCharacter;
-                            surface[bottomStartingIndex + x].CharacterIndex = BottomSideCharacter;
-                        }
+                        if (x == Location.X)
+                            PlotCell(surface, x, y, TopLeftCharacter);
+                        else if (x == Location.X + Width - 1)
+                            PlotCell(surface, x, y, TopRightCharacter);
+                        else
+                            PlotCell(surface, x, y, TopSideCharacter);
                     }
-                    else if (drawTop)
+
+                    // Bottom row
+                    else if (y == Location.Y + Height - 1)
                     {
-                        int topStartingIndex = surface.GetIndexFromPoint(workingX, workingY);
-
-                        for (int x = 0; x < workingWidth; x++)
-                        {
-                            if (Foreground != Color.Transparent || DrawTransparency)
-                                surface[topStartingIndex + x].Foreground = Foreground;
-
-                            if (BorderBackground != Color.Transparent || DrawTransparency)
-                                surface[topStartingIndex + x].Background = BorderBackground;
-
-                            surface[topStartingIndex + x].CharacterIndex = TopSideCharacter;
-                        }
+                        if (x == Location.X)
+                            PlotCell(surface, x, y, BottomLeftCharacter);
+                        else if (x == Location.X + Width - 1)
+                            PlotCell(surface, x, y, BottomRightCharacter);
+                        else
+                            PlotCell(surface, x, y, BottomSideCharacter);
                     }
+
+                    // Other rows
                     else
                     {
-                        int bottomStartingIndex = surface.GetIndexFromPoint(workingX, workingY + workingHeight - 1);
-
-                        for (int x = 0; x < workingWidth; x++)
-                        {
-                            if (Foreground != Color.Transparent || DrawTransparency)
-                                surface[bottomStartingIndex + x].Foreground = Foreground;
-
-                            if (BorderBackground != Color.Transparent || DrawTransparency)
-                                surface[bottomStartingIndex + x].Background = BorderBackground;
-
-                            surface[bottomStartingIndex + x].CharacterIndex = BottomSideCharacter;
-                        }
+                        if (x == Location.X)
+                            PlotCell(surface, x, y, LeftSideCharacter);
+                        else if (x == Location.X + Width - 1)
+                            PlotCell(surface, x, y, RightSideCharacter);
+                        else if (Fill)
+                            PlotCell(surface, x, y, 0, Fill);
                     }
-
-                    // Draw left\right
-                    if (drawLeft && drawRight)
-                    {
-                        int leftStartingIndex = surface.GetIndexFromPoint(workingX, workingY);
-                        int rightStartingIndex = leftStartingIndex + workingWidth - 1;
-
-                        for (int y = 0; y < workingHeight; y++)
-                        {
-                            if (Foreground != Color.Transparent || DrawTransparency)
-                            {
-                                surface[leftStartingIndex + (y * surface.Width)].Foreground = Foreground;
-                                surface[rightStartingIndex + (y * surface.Width)].Foreground = Foreground;
-                            }
-                            if (BorderBackground != Color.Transparent || DrawTransparency)
-                            {
-                                surface[leftStartingIndex + (y * surface.Width)].Background = BorderBackground;
-                                surface[rightStartingIndex + (y * surface.Width)].Background = BorderBackground;
-                            }
-
-                            surface[leftStartingIndex + (y * surface.Width)].CharacterIndex = LeftSideCharacter;
-                            surface[rightStartingIndex + (y * surface.Width)].CharacterIndex = RightSideCharacter;
-                        }
-                    }
-                    else if (drawLeft)
-                    {
-                        int leftStartingIndex = surface.GetIndexFromPoint(workingX, workingY);
-
-                        for (int y = 0; y < workingHeight; y++)
-                        {
-                            if (Foreground != Color.Transparent || DrawTransparency)
-                                surface[leftStartingIndex + (y * surface.Width)].Foreground = Foreground;
-
-                            if (BorderBackground != Color.Transparent || DrawTransparency)
-                                surface[leftStartingIndex + (y * surface.Width)].Background = BorderBackground;
-
-                            surface[leftStartingIndex + (y * surface.Width)].CharacterIndex = LeftSideCharacter;
-                        }
-                    }
-                    else
-                    {
-                        int rightStartingIndex = surface.GetIndexFromPoint(workingX + workingWidth - 1, workingY);
-
-                        for (int y = 0; y < workingHeight; y++)
-                        {
-                            if (Foreground != Color.Transparent || DrawTransparency)
-                                surface[rightStartingIndex + (y * surface.Width)].Foreground = Foreground;
-
-                            if (BorderBackground != Color.Transparent || DrawTransparency)
-                                surface[rightStartingIndex + (y * surface.Width)].Background = BorderBackground;
-
-                            surface[rightStartingIndex + (y * surface.Width)].CharacterIndex = RightSideCharacter;
-                        }
-                    }
-
-                    // Corners
-                    if (drawTop && drawLeft)
-                    {
-                        int index = surface.GetIndexFromPoint(workingX, workingY);
-
-                        if (Foreground != Color.Transparent || DrawTransparency)
-                            surface[index].Foreground = Foreground;
-
-                        if (BorderBackground != Color.Transparent || DrawTransparency)
-                            surface[index].Background = BorderBackground;
-
-                        surface[index].CharacterIndex = TopLeftCharacter;
-                    }
-
-                    if (drawTop && drawRight)
-                    {
-                        int index = surface.GetIndexFromPoint(workingX + workingWidth - 1, workingY);
-
-                        if (Foreground != Color.Transparent || DrawTransparency)
-                            surface[index].Foreground = Foreground;
-
-                        if (BorderBackground != Color.Transparent || DrawTransparency)
-                            surface[index].Background = BorderBackground;
-
-                        surface[index].CharacterIndex = TopRightCharacter;
-                    }
-
-                    if (drawBottom && drawLeft)
-                    {
-                        int index = surface.GetIndexFromPoint(workingX, workingY + workingHeight - 1);
-
-                        if (Foreground != Color.Transparent || DrawTransparency)
-                            surface[index].Foreground = Foreground;
-
-                        if (BorderBackground != Color.Transparent || DrawTransparency)
-                            surface[index].Background = BorderBackground;
-
-                        surface[index].CharacterIndex = BottomLeftCharacter;
-                    }
-
-                    if (drawBottom && drawRight)
-                    {
-                        int index = surface.GetIndexFromPoint(workingX + workingWidth - 1, workingY + workingHeight - 1);
-
-                        if (Foreground != Color.Transparent || DrawTransparency)
-                            surface[index].Foreground = Foreground;
-
-                        if (BorderBackground != Color.Transparent || DrawTransparency)
-                            surface[index].Background = BorderBackground;
-
-                        surface[index].CharacterIndex = BottomRightCharacter;
-                    }
+                    
                 }
+            }
+
+        }
+
+        private void PlotCell(CellSurface surface, int x, int y, int character, bool fillMe = false)
+        {
+            if (surface.IsValidCell(x,y))
+            {
+                var cell = surface[x, y];
+
+                if (fillMe)
+                {
+                    cell.Background = FillColor;
+                    cell.Foreground = Foreground;
+                    cell.CharacterIndex = character;
+                    return;
+                }
+
+                if (Foreground != Color.Transparent || DrawTransparency)
+                    cell.Foreground = Foreground;
+
+                if (BorderBackground != Color.Transparent || DrawTransparency)
+                    cell.Background = BorderBackground;
+
+                cell.CharacterIndex = character;
             }
         }
 
