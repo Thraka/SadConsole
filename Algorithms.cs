@@ -153,6 +153,51 @@ namespace SadConsole
             }
         }
 
+        public static void Circle(int centerX, int centerY, int radius, Action<int, int> plot)
+        {
+            int xi = -radius, yi = 0, err = 2 - 2 * radius; /* II. Quadrant */
+            do
+            {
+                plot(centerX - xi, centerY + yi); /*   I. Quadrant */
+                plot(centerX - yi, centerY - xi); /*  II. Quadrant */
+                plot(centerX + xi, centerY - yi); /* III. Quadrant */
+                plot(centerX + yi, centerY + xi); /*  IV. Quadrant */
+                radius = err;
+                if (radius <= yi) err += ++yi * 2 + 1;           /* e_xy+e_y < 0 */
+                if (radius > xi || err > yi) err += ++xi * 2 + 1; /* e_xy+e_x > 0 or no 2nd y-step */
+            } while (xi < 0);
+        }
+
+        public static void Ellipse(int x0, int y0, int x1, int y1, Action<int, int> plot)
+        {
+            int a = Math.Abs(x1 - x0), b = Math.Abs(y1 - y0), b1 = b & 1; /* values of diameter */
+            long dx = 4 * (1 - a) * b * b, dy = 4 * (b1 + 1) * a * a; /* error increment */
+            long err = dx + dy + b1 * a * a, e2; /* error of 1.step */
+
+            if (x0 > x1) { x0 = x1; x1 += a; } /* if called with swapped points */
+            if (y0 > y1) y0 = y1; /* .. exchange them */
+            y0 += (b + 1) / 2; y1 = y0 - b1;   /* starting pixel */
+            a *= 8 * a; b1 = 8 * b * b;
+
+            do
+            {
+                plot(x1, y0); /*   I. Quadrant */
+                plot(x0, y0); /*  II. Quadrant */
+                plot(x0, y1); /* III. Quadrant */
+                plot(x1, y1); /*  IV. Quadrant */
+                e2 = 2 * err;
+                if (e2 <= dy) { y0++; y1--; err += dy += a; }  /* y step */
+                if (e2 >= dx || 2 * err > dy) { x0++; x1--; err += dx += b1; } /* x step */
+            } while (x0 <= x1);
+
+            while (y0 - y1 < b)
+            {  /* too early stop of flat ellipses a=1 */
+                plot(x0 - 1, y0); /* -> finish tip of ellipse */
+                plot(x1 + 1, y0++);
+                plot(x0 - 1, y1);
+                plot(x1 + 1, y1--);
+            }
+        }
 
         /// <summary>
         /// Describes the 4-way connections of a node.
