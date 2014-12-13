@@ -1,41 +1,41 @@
 ﻿## Version 1.3.114 (12/12/2014)
 
-## Core
+#### Core
 * Fixed logic flaw in CellSurface.Copy which caused invalid cells to be requested for copy.
 * Other misc fixes discovered or needed by the SadConsoleEditor project.
 * Added Circle and Ellipse shapes along with Algorithms.
 
-## Controls
+#### Controls
 * Added CheckBox.
 
-## Starter Project
+#### Starter Project
 * Fixed bug that caused the splash screen to run too fast.
 * Added another console which is just displays the output of the RandomGarbage method.
 
 ## Version 1.3.113 (9/23/2014)
 
-## Core
+#### Core
 * Added Entity.PositionOffset which is now taken into consideration when rendering an entity.
 ** By setting this property to the position of a console (when the console and entity have the same cellsize) will cause the entity to look as if it's hosted by the console.
 * Cell now has a SpriteEffect property which allows you to mirror and flip the cell to create more characters.
 ** Also implemented on the ICellAppearence 
 * CellsRenderer now correctly resets the "custom view" flag if a custom view is set to the exact dimensions of the surface.
 
-## Controls
+#### Controls
 * Fixed a bug in rendering a controls console with the ViewArea changed to start at something other than 0,0
 * Fixed some drawing bugs in ListBox
 
 
 ## Version 1.3.112 (9/7/2014)
 
-## Core
+#### Core
 * Added the SadConsole.EngineGameComponent XNA-based GameComponent.
 ** This simplifies initialization and framework code you need to hook up in your Game class. Added just like any other GameComponent object. 
 * Added some new methods to the Color extensions provided by this library
 ** RedOnly, GreenOnly, and BlueOnly. These methods will return a new color with only the appropriate RGB channel set from the existing color.
 
 
-## Controls
+#### Controls
 * Fixed a bug with the listbox.items that caused newly added items to render only in black & white until the mouse moved into the control area.
 * Added Listbox.ideBorder property to show/hide the border of the box.
 * Added ControlBase.AlternateFont property which allows a control to render with a different font than the ControlsConsole has.
@@ -43,7 +43,7 @@
 * Fixed bug in inputbox which triggered the TextChanged event when the Text property was set to the same value it already was.
 * Slider control is easier to use when dragging the current position.
 
-## Starter Project
+#### Starter Project
 * Added an example character viewer window which is shown by pressing F2
 
 
@@ -52,7 +52,7 @@
 
 * Upgraded the references to MonoGame to the official 3.2.
 
-## Core
+#### Core
 * Added a new virtual method for CellRenderer: OnCellDataChanged. This is called when the CellData property changes, passing references to the new and old CellSurfaces.
 * Loading/Saving a cellsurface was not processing the effect information.
 * Entities now implement some of the IConsole interface (those relating to input) as virtual methods so you can override them in derived classes.
@@ -61,17 +61,17 @@
 * CellsRenderer.Batch set has been promoted to protected from private.
 
 
-### Controls
+#### Controls
 * When a window is shown, and then shown again in the future, it will pop back up to the top of the screen when not removed from its parent.
 
 
 
 ## Version 1.3.110 (2/11/2014)
 
-### Core
+#### Core
 * Resizing a surface had a crash bug in it in certain edge cases where when you resized one edge smaller than the opposite side.
 
-### Effects
+#### Effects
 * Fixed bug with Recolor that when it was removed from a cell would set the background to the original foreground.
 * Fixed a bug with the cellsurface which was causing it not to call the Effect.Clear method when an effect was removed.
 
@@ -85,7 +85,7 @@
 * SadConsole splash screen now provided by the engine. Must be called at the start of any application using SadConsole.
 * Starter project updated with the SadConsole splash screen.
 
-### Core
+#### Core
 * Changes to Console.Cursor:
     * Added AutomaticallyShiftRowsUp property. Defaults to true. Set to false if you do not want the console to shift its rows up when the cursor travels past the last cell.
     * Promoted CursorRenderCell from a field to a property.
@@ -107,7 +107,7 @@
 * Added explicit serialization to all effects.
 * Fixed bug in the input library that detected the ? as / and / as ?
 
-### Effects
+#### Effects
 * ICellEffect now has a property named CloneOnApply which flags the effect that when applied to a CellSurface Cell, it should be cloned rather than used directly.
 * Added a new base class which implements ICellEffect, named CellEffectBase. All the existing effects no inherit from it instead of implementing ICellEffect directly.
 * FadeForeground, FadeBackground, and Pulse effects have been removed.
@@ -118,7 +118,7 @@
 * Created the ConcurrentEffect which allows you to add more than one effect to it, all of which process and apply at the same time.
 * Added explicit serialization to all effects.
 
-### Animation
+#### Animation
 * Added the DoubleAnimation type which calculates a double value over time using an easing function
 * Added the CodeInstruction instruction which calls a delegate method.
 * Added the DoubleInstruction instruction which calls a delegate using a DoubleAnimation object.
@@ -138,21 +138,21 @@
 
 ## Version 1.3.108
 
-### Core
+#### Core
 * The virtual cursors position is now serialized.
 * VirtualCursor now has the LeftWrap method which behaves like the existing RightWrap method.
 * VirtualCursor now has the NewLine method which just calls the CarriageReturn and LineFeed methods in a single call.
 * Backspace on the console keyboard input uses VirtualCursor.LeftWrap instead of VirtualCursor.Left for moving the cursor.
 * The input key processing incorrectly assigned character 0 (null) to the character used by the SPACE key. Now it correctly assigns the ' ' character (#32 I think).
 
-### Controls
+#### Controls
 * Added ControlBase.OnPositionChanged() protected method that is called whenever a control moves.
 * Fixed bug in List control where the scrollbar didn't scroll anymore with the mouse.
 
 ## Version 1.3.107
 * Created Starter Project.
 
-### Core
+#### Core
 * Fixed bug with "string".CreateGradient where the string would be empty.
 * Fixed bug with printing text that runs off the end of a console not printing.
 * Keyboard input on Console no longer prints a blank character for the F1-F24 function keys, ESC, and PAUSE keys.
@@ -167,7 +167,7 @@
         * 4 - XNA 4.0 XBOX 360
         * 5 - XNA 4.0 Windows Phone 8
 
-### Core
+#### Core
 * Overhaul of cell and effect system.
 * CellSurface now manages the effects for cells.
 * The Cell.Effect property is just a placeholder for quick reference.
@@ -188,11 +188,11 @@
 * MAY CONTAIN BREAKING CHANGES
 * DataContract serialization added for the Controls, Effects, Animation, and Core libraries.
 
-### Core
+#### Core
 * Blink, EffectsChain, and Delay were not registered with the engine.
 * Serializer class has a ConsoleTypes property which is an array of all the types used by default when serializing anything related to a console, including all registered effects.
 
-### Controls
+#### Controls
 * Theme library has changed to be a non-static class with a static property: Default. Use this Default property as the static accessor to the themes instead of the class itself.
     * Allows the entire theme library to be [de]serialized and replaced at any momemt.
 * Fixed a bug where the InputBox when IsNumeric true and AllowDecimal false, the . key could be used.
@@ -201,7 +201,7 @@
 ## Version 1.3.0.104
 * CONTAINS BREAKING CHANGES
 
-### Core
+#### Core
 * Revamped the entire Console inherits from CellSurface system.
 * The Console class now inherits from CellRenderer which handles rendering cell data
 * The CellSurface is implemented as a property on the CellRenderer, allowing you to
@@ -222,7 +222,7 @@
 * Converted SadConsole.Consoles.Window public fields to properties and added documentation comments.
 * Finished converting all SadConsole.Console.Console public fields to properties.
 
-### Core
+#### Core
 * Engine sprite rendering performance increased untold amount (thanks Shawn Hargreaves)
 * The DefaultBackground of a console is now drawn (very very low impact) to cover the entire console before rendering. Then, any background cell render that matches the DefaultBackground is skipped
 * Cells that are using character index 0 will skip foreground character rendering.
@@ -251,7 +251,7 @@
 * Print(int x, int y, string text, CellAppearance appearance) has changed to use ICellAppearance
 * Perf improvements for ViewPortConsole and Console rendering
 
-### Controls
+#### Controls
 * Perf improvements for ControlsConsole rendering
 * ControlsConsole.AutoCursorOnFocus defaults to false
 * Console.Parent and IParent management methods all work together now
@@ -276,14 +276,14 @@
 * Window will try to show a second time if the Show() method is called while it has a parent and is visible
 * Window will detect if it automatically added itself to the render stack and automatically remove itself when closed
 
-### Input
+#### Input
 * MouseEventArgs did not properly set RightClick.
 * MouseEventArgs all fields convereted to properties.
 * Mouse.RightClicked was not working. (thanks Jannis)
 
 ## Version 1.1.0.102
 
-### Core
+#### Core
 * Added RenderTransform property to Console type. If used, the automatic positioning transform will not be used, so the Location property will have no effect.
 * Added GetLocationTransform method to Console type. This will return the positioning matrix used by the console render method.
 * ColoredString now has four fields that control whether or not the character, foreground, background, or effect should be drawn. These fields should be respected when something uses ColoredString to draw
@@ -291,7 +291,7 @@
 * Fixed exception text on CellSurface where it said DrawString. Correctly says Print.
 * Replaced IReadOnly<> with System.Collections.ObjectModel.ReadOnlyCollection<> for XNA compatibility.
 
-### Controls
+#### Controls
 * TextAlignment on the Button control defaults to HorizontalAlignment.Center.
 * WindowStyle now has a FillStyle property which styles the inside of the window.
 * Window.Redraw() method updates the border drawing box to use the current theme at time of redraw
@@ -314,7 +314,7 @@
 * Added\Fixed more documentation code comments.
 * Refactored and renamed quite a few methods. See the rest of the changes for more information.
 
-### Core
+#### Core
 * When cloning an EffectsChain, the active effect on the clone referenced the clone source instead of the new cloned chain
 * Added Delay effect.
 * Fixed bug where CellAppearance's effect property didn't behave like Cell.
@@ -337,10 +337,10 @@
     * DrawCharacter(int x, int y, int character, Color foreground)
     * DrawCharacter(int x, int y, int character, Color foreground, Color background)
 
-### Effects
+#### Effects
 * CellEffects are all using double for time counting instead of float.
 
-### Animation
+#### Animation
 * Moved cell.effect update to the Update method. Was calling it in the Render method for Entity.
 
 ## Version 1.1.0.100
@@ -348,7 +348,7 @@
 * Renamed namespaces and binaries from SadConsole8 to SadConsole.
 * Version # changed to be more in line with the previous SadConsoleXNA engine.
 
-### Core
+#### Core
 * Completed code comments on Cursor and CellApperance.
 * Added some helper methods to Cursor, CellSurface, and Appearance.
 * Refactored cursor methods that were created only for ansi processing.
@@ -367,13 +367,13 @@
 * Enhancements to String extensions to help with building ColoredString objects.
 * Minor updates cell effects, fixed bugs not respecting Finished flag.
 
-### Controls
+#### Controls
 * Listbox\input\window updates
 * Updated default theme colors.
 * Minor adjustment to controlsconsole to use the passed in spritebatch during render.
 * Minor theme issues fixed with some controls.
 
-### Animation
+#### Animation
 * Minor updates on trying to track down bugs on showing entity on top of console.
 * EntityRenderer added new render method where you can pass the spritebatch.
 * InstructionBase altered.
