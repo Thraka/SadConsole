@@ -976,6 +976,13 @@ namespace SadConsole
         #endregion
 
         #region Fill
+        /// <summary>
+        /// Fills the console.
+        /// </summary>
+        /// <param name="foreground">Foregorund of every cell.</param>
+        /// <param name="background">Foregorund of every cell.</param>
+        /// <param name="character">Character of every cell.</param>
+        /// <param name="effect">Effect of every cell.</param>
         public void Fill(Color foreground, Color background, int character, Effects.ICellEffect effect)
         {
             for (int i = 0; i < Cells.Length; i++)
@@ -988,6 +995,35 @@ namespace SadConsole
             SetEffect(Cells, effect);
         }
 
+        /// <summary>
+        /// Fills the console.
+        /// </summary>
+        /// <param name="foreground">Foregorund of every cell.</param>
+        /// <param name="background">Foregorund of every cell.</param>
+        /// <param name="character">Character of every cell.</param>
+        /// <param name="effect">Effect of every cell.</param>
+        /// <param name="spriteEffect">Sprite effect of every cell.</param>
+        public void Fill(Color foreground, Color background, int character, Effects.ICellEffect effect, SpriteEffects spriteEffect)
+        {
+            for (int i = 0; i < Cells.Length; i++)
+            {
+                Cells[i].Foreground = foreground;
+                Cells[i].Background = background;
+                Cells[i].CharacterIndex = character;
+                Cells[i].SpriteEffect = spriteEffect;
+            }
+
+            SetEffect(Cells, effect);
+        }
+
+        /// <summary>
+        /// Fills the specified area.
+        /// </summary>
+        /// <param name="area">The area to fill.</param>
+        /// <param name="foreground">Foregorund of every cell.</param>
+        /// <param name="background">Foregorund of every cell.</param>
+        /// <param name="character">Character of every cell.</param>
+        /// <param name="effect">Effect of every cell.</param>
         public void FillArea(Rectangle area, Color foreground, Color background, int character, Effects.ICellEffect effect)
         {
             List<Cell> cells = new List<Cell>(area.Width * area.Height);
@@ -1004,6 +1040,40 @@ namespace SadConsole
                         cell.Foreground = foreground;
                         cell.Background = background;
                         cell.CharacterIndex = character;
+                        cells.Add(cell);
+                    }
+                }
+            }
+
+            SetEffect(cells, effect);
+        }
+
+        /// <summary>
+        /// Fills the specified area.
+        /// </summary>
+        /// <param name="area">The area to fill.</param>
+        /// <param name="foreground">Foregorund of every cell.</param>
+        /// <param name="background">Foregorund of every cell.</param>
+        /// <param name="character">Character of every cell.</param>
+        /// <param name="effect">Effect of every cell.</param>
+        /// <param name="spriteEffect">Sprite effect of every cell.</param>
+        public void FillArea(Rectangle area, Color foreground, Color background, int character, Effects.ICellEffect effect, SpriteEffects spriteEffect)
+        {
+            List<Cell> cells = new List<Cell>(area.Width * area.Height);
+
+            // Check for valid rect
+            Rectangle consoleArea = new Rectangle(0, 0, Width, Height);
+            if (consoleArea.Contains(area))
+            {
+                for (int x = area.X; x < area.Right; x++)
+                {
+                    for (int y = area.Y; y < area.Bottom; y++)
+                    {
+                        Cell cell = Cells[y * Width + x];
+                        cell.Foreground = foreground;
+                        cell.Background = background;
+                        cell.CharacterIndex = character;
+                        cell.SpriteEffect = spriteEffect;
                         cells.Add(cell);
                     }
                 }

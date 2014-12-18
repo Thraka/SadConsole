@@ -53,11 +53,21 @@ namespace SadConsole
         /// <param name="foreground">The foreground color of the cell appearance.</param>
         /// <param name="background">The background color of the cell appearance.</param>
         /// <param name="characterIndex">The character of the cell appearance.</param>
-        public CellAppearance(Color foreground, Color background, int characterIndex)
+        public CellAppearance(Color foreground, Color background, int characterIndex): this(foreground, background, characterIndex, SpriteEffects.None) { }
+
+        /// <summary>
+        /// Creates a new instance of the cell appearance with the specified colors and effect.
+        /// </summary>
+        /// <param name="foreground">The foreground color of the cell appearance.</param>
+        /// <param name="background">The background color of the cell appearance.</param>
+        /// <param name="characterIndex">The character of the cell appearance.</param>
+        /// <param name="spriteEffect">The sprite mirror effect of the cell appearance.</param>
+        public CellAppearance(Color foreground, Color background, int characterIndex, SpriteEffects spriteEffect)
         {
             this.Foreground = foreground;
             this.Background = background;
             this.CharacterIndex = characterIndex;
+            this.SpriteEffect = spriteEffect;
         }
 
         /// <summary>
@@ -68,6 +78,7 @@ namespace SadConsole
         {
             destination.Foreground = this.Foreground;
             destination.Background = this.Background;
+            destination.SpriteEffect = this.SpriteEffect;
 
             if (this.CharacterIndex != -1)
                 destination.CharacterIndex = this.CharacterIndex;

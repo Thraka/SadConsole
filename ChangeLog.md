@@ -1,4 +1,10 @@
-﻿## Version 1.3.114 (12/12/2014)
+﻿## Version 1.3.115 ()
+
+#### Core
+* Added some CellSurface.Fill aand FillArea overloads.
+* Fixed bug in CellApperance where it copy the SpriteEffect.
+
+## Version 1.3.114 (12/12/2014)
 
 #### Core
 * Fixed logic flaw in CellSurface.Copy which caused invalid cells to be requested for copy.
