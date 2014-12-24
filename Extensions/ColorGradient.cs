@@ -67,16 +67,14 @@
                 colors[1] = color;
             }
             
-            if (colors.Length > 2)
+            if (colors.Length >= 2)
             {
                 Stops = new ColorGradientStop[colors.Length];
                 float stopStrength = 1f / (colors.Length - 1);
 
                 for (int i = 0; i < colors.Length; i++)
                 {
-                    Stops[i] = new ColorGradientStop();
-                    Stops[i].Color = colors[i];
-                    Stops[i].Stop = i * stopStrength;
+                    Stops[i] = new ColorGradientStop {Color = colors[i], Stop = i*stopStrength};
                 }
             }
 
