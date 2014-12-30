@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Consoles\ControlsConsole.cs" />
     <Compile Include="Consoles\Window.cs" />
+    <Compile Include="Consoles\Window.Static.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="Controls\CheckBox.cs" />
     <Compile Include="Controls\ControlBase.cs" />

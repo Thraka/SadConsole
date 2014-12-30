@@ -8,7 +8,7 @@
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class Window: ControlsConsole
+    public partial class Window: ControlsConsole
     {
         /// <summary>
         /// Raised when the window is closed.

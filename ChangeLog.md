@@ -3,6 +3,11 @@
 #### Core
 * Added some CellSurface.Fill aand FillArea overloads.
 * Fixed bug in CellApperance where it copy the SpriteEffect.
+* Added CellsRenderer.RenderBox which returns a rectangle of the area of the screen that will be drawn on.
+
+#### Controls
+* Fixed a bug when removing items from a listbox.
+* Added a new quick helper dialog to Window. It's static and displays a yes/no type question. SadConsole.Window.Controls.Prompt is the type.
 
 ## Version 1.3.114 (12/12/2014)
 

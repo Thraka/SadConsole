@@ -34,6 +34,11 @@
         public Color Tint { get; set; }
 
         /// <summary>
+        /// Returns a rectangle of the entire area of the console that will be rendered every frame. This is in absolute pixels.
+        /// </summary>
+        public Rectangle RenderBox { get { return _tintArea; } }
+
+        /// <summary>
         /// Gets or sets the font used when rendering this surface.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when the value is set to null.</exception>
@@ -268,7 +273,7 @@
                     Cell cell;
 
                     if (CellData.DefaultBackground.A != 0)
-                        Batch.Draw(Engine.BackgroundCell, new Rectangle(0, 0, _renderArea.Width * CellSize.X, _renderArea.Height * CellSize.Y), null, CellData.DefaultBackground);
+                        Batch.Draw(Engine.BackgroundCell, _tintArea, null, CellData.DefaultBackground);
 
                     for (int i = 0; i < _renderAreaRects.Length; i++)
                     {

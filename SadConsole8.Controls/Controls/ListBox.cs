@@ -300,12 +300,11 @@
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
-                foreach (var item in e.NewItems)
+                foreach (var item in e.OldItems)
                 {
-                    TItemContainer cont = GetContainer(item);
+                    TItemContainer cont = _containers[e.OldStartingIndex];
                     cont.PropertyChanged -= ItemContainer_PropertyChanged;
-                    if (cont != null)
-                        _containers.Remove(cont);
+                    _containers.Remove(cont);
                 }
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
@@ -317,6 +316,9 @@
                 _slider.Value = 0;
                 _containers.Clear();
             }
+
+            if (SelectedItem != null && !Items.Contains(_selectedItem))
+                SelectedItem = null;
 
             ShowHideSlider();
 
