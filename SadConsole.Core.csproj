@@ -65,6 +65,7 @@
     <Compile Include="Consoles\IConsole.cs" />
     <Compile Include="Consoles\IParentConsole.cs" />
     <Compile Include="Consoles\IRender.cs" />
+    <Compile Include="Consoles\LayeredConsole.cs" />
     <Compile Include="DoubleAnimation.cs" />
     <Compile Include="EasingFunctions\Bounce.cs" />
     <Compile Include="EasingFunctions\Circle.cs" />

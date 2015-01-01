@@ -4,10 +4,19 @@
 * Added some CellSurface.Fill aand FillArea overloads.
 * Fixed bug in CellApperance where it copy the SpriteEffect.
 * Added CellsRenderer.RenderBox which returns a rectangle of the area of the screen that will be drawn on.
+* Added Consoles.LayeredConsole which uses multiple cellsurfaces in a single renderpass. You set the current CellData property by calling .SetActiveLayer(index).
+** It's not much more effecient than using multiple consoles, however it cuts down on the overhead slightly. The console editor tool uses this type.
+* Added static load/save methods to console, cellsurface, and layeredconsole. More to come.
 
 #### Controls
 * Fixed a bug when removing items from a listbox.
 * Added a new quick helper dialog to Window. It's static and displays a yes/no type question. SadConsole.Window.Controls.Prompt is the type.
+
+#### GameHelpers
+* Created new binary called SadConsole.GameHelpers.
+* A GameObject type has been created (along with a collection type) which represents a point on the console. 
+** Generally these aren't rendered, but they allow you to query the collection for a GameObject named X or one located at a specific point. You can also do queries that return all GameObjects with a specific color or character for example, using lync.
+** GameObjects have a Settings collection which represent name-value-pairs. For example, create a Door GameObject which a setting named Destination and a value of the name of another file. Then code your game to look for when something touches the same location as the GameObject and then move it to the appropriate screen.
 
 ## Version 1.3.114 (12/12/2014)
 

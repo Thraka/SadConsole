@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30324.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Core", "SadConsole.Core.csproj", "{95C182E9-410A-4F76-8777-D7FA95D63552}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Ansi", "SadConsole.Ansi\SadConsole.Ansi.csproj", "{91F344AC-9742-41BF-9EEE-1FAE9F22AD45}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject", "StarterProject\StarterProject.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.GameHelpers", "SadConsole.GameHelpers\SadConsole.GameHelpers.csproj", "{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
