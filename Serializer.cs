@@ -47,7 +47,7 @@
         /// <typeparam name="T">The type of object to deserialize.</typeparam>
         /// <param name="input">The input stream to read.</param>
         /// <param name="knownTypes">Known types used during deserialization.</param>
-        /// <returns></returns>
+        /// <returns>A new object instance.</returns>
         public static T Deserialize<T>(System.IO.Stream input, IEnumerable<Type> knownTypes = null)
             where T : class
         {
@@ -58,6 +58,57 @@
 
             var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), allTypes);
             return serializer.ReadObject(input) as T;
+        }
+
+        /// <summary>
+        /// Serializes the <paramref name="instance"/> instance to the specified file.
+        /// </summary>
+        /// <typeparam name="T">Type of object to serialize</typeparam>
+        /// <param name="instance">The object to serialize.</param>
+        /// <param name="file">The file to save the object to.</param>
+        /// <param name="knownTypes">Optional list of known types for serialization.</param>
+        public static void Save<T>(T instance, string file, IEnumerable<Type> knownTypes = null)
+        {
+            if (System.IO.File.Exists(file))
+                System.IO.File.Delete(file);
+
+            System.Runtime.Serialization.Json.DataContractJsonSerializer serializer;
+
+            if (knownTypes != null)
+                serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
+            else
+                serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
+
+
+            using (var stream = System.IO.File.OpenWrite(file))
+                serializer.WriteObject(stream, instance);
+        }
+
+        /// <summary>
+        /// Deserializes a new instance of <typeparamref name="T"/> from the specified file.
+        /// </summary>
+        /// <typeparam name="T">The type of object to deserialize.</typeparam>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="knownTypes">Known types used during deserialization.</param>
+        /// <returns>A new object instance.</returns>
+        public static T Load<T>(string file, IEnumerable<Type> knownTypes = null) where T : class
+        {
+            if (System.IO.File.Exists(file))
+            {
+                using (var fileObject = System.IO.File.OpenRead(file))
+                {
+                    System.Runtime.Serialization.Json.DataContractJsonSerializer serializer;
+
+                    if (knownTypes != null)
+                        serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
+                    else
+                        serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
+
+                    return serializer.ReadObject(fileObject) as T;
+                }
+            }
+
+            throw new System.IO.FileNotFoundException("File not found.", file);
         }
     }
 }

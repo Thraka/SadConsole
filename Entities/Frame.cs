@@ -30,5 +30,15 @@
             //}
             
         }
+
+        public void Save(Frame instance, string file)
+        {
+            SadConsole.Serializer.Save<Frame>(instance, file);
+        }
+
+        public static Frame Load(string file)
+        {
+            return SadConsole.Serializer.Load<Frame>(file);
+        }
     }
 }

@@ -237,5 +237,15 @@
         {
             Commit();
         }
+
+        public void Save(string file)
+        {
+            SadConsole.Serializer.Save<Animation>(this, file);
+        }
+
+        public static Animation Load(string file)
+        {
+            return SadConsole.Serializer.Load<Animation>(file);
+        }
     }
 }

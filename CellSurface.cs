@@ -1189,31 +1189,14 @@ namespace SadConsole
             _effectSerialized = null;
         }
 
-        public static void Save(CellSurface instance, string file)
+        public void Save(string file)
         {
-            if (System.IO.File.Exists(file))
-                System.IO.File.Delete(file);
-
-            var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(CellSurface));
-            using (var stream = System.IO.File.OpenWrite(file))
-            {
-                serializer.WriteObject(stream, instance);
-            }
+            SadConsole.Serializer.Save<CellSurface>(this, file);
         }
 
         public static CellSurface Load(string file)
         {
-            if (System.IO.File.Exists(file))
-            {
-                using (var fileObject = System.IO.File.OpenRead(file))
-                {
-                    var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(CellSurface));
-
-                    return serializer.ReadObject(fileObject) as CellSurface;
-                }
-            }
-
-            throw new System.IO.FileNotFoundException("File not found.", file);
+            return SadConsole.Serializer.Load<CellSurface>(file);
         }
 
         private class CellEffectData

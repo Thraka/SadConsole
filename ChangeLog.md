@@ -6,7 +6,8 @@
 * Added CellsRenderer.RenderBox which returns a rectangle of the area of the screen that will be drawn on.
 * Added Consoles.LayeredConsole which uses multiple cellsurfaces in a single renderpass. You set the current CellData property by calling .SetActiveLayer(index).
 ** It's not much more effecient than using multiple consoles, however it cuts down on the overhead slightly. The console editor tool uses this type.
-* Added static load/save methods to console, cellsurface, and layeredconsole. More to come.
+* Added load/save methods to console, cellsurface, and layeredconsole. More to come.
+* Engine.Serializer now has a Save/Load method that does file handling for you. The other Serialize/Deserialize methods only use a stream.
 
 #### Controls
 * Fixed a bug when removing items from a listbox.

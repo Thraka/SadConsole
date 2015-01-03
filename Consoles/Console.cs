@@ -495,31 +495,14 @@
             _virtualCursor.AttachConsole(this);
         }
 
-        public static void Save(Console instance, string file)
+        public void Save(string file)
         {
-            if (System.IO.File.Exists(file))
-                System.IO.File.Delete(file);
-
-            var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(Console));
-            using (var stream = System.IO.File.OpenWrite(file))
-            {
-                serializer.WriteObject(stream, instance);
-            }
+            SadConsole.Serializer.Save<Console>(this, file);
         }
 
         public static Console Load(string file)
         {
-            if (System.IO.File.Exists(file))
-            {
-                using (var fileObject = System.IO.File.OpenRead(file))
-                {
-                    var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(Console));
-
-                    return serializer.ReadObject(fileObject) as Console;
-                }
-            }
-
-            throw new System.IO.FileNotFoundException("File not found.", file);
+            return SadConsole.Serializer.Load<Console>(file);
         }
     }
 }

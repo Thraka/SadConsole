@@ -413,5 +413,15 @@
             if (_currentAnimationName != null)
                 SetActiveAnimation(_currentAnimationName);
         }
+
+        public void Save(string file)
+        {
+            SadConsole.Serializer.Save<Entity>(this, file);
+        }
+
+        public static Entity Load(string file)
+        {
+            return SadConsole.Serializer.Load<Entity>(file);
+        }
     }
 }
