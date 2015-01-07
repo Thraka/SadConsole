@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Debug\SadConsole.Core.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -95,6 +96,7 @@
     <Compile Include="Extensions\TextureExtensions.cs" />
     <Compile Include="Extensions\XamlExtensions.cs" />
     <Compile Include="Font.cs" />
+    <Compile Include="FontBase.cs" />
     <Compile Include="FontCollection.cs" />
     <Compile Include="ICellAppearance.cs" />
     <Compile Include="Input\AsciiKey.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Shapes\Circle.cs" />
     <Compile Include="Shapes\IShape.cs" />
     <Compile Include="Shapes\Line.cs" />
+    <Compile Include="TextureFont.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CHANGELOG.md" />

@@ -16,7 +16,7 @@
         protected Cell[] _renderAreaCells;
         protected Rectangle[] _renderAreaRects;
         [DataMember(Name="Font")]
-        protected Font _font;
+        protected FontBase _font;
         protected Rectangle _tintArea;
         protected CellSurface _cellData;
         protected Point _position;
@@ -42,7 +42,7 @@
         /// Gets or sets the font used when rendering this surface.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when the value is set to null.</exception>
-        public Font Font
+        public FontBase Font
         {
             // TODO: If font is changed, all cells should double check that the character index is still valid.
             get { return _font; }

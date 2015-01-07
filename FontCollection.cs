@@ -10,10 +10,10 @@ namespace SadConsole
     [DataContract]
     public class FontCollection
     {
-        private Dictionary<string, Font> _defaultFonts = new Dictionary<string, Font>();
+        private Dictionary<string, FontBase> _defaultFonts = new Dictionary<string, FontBase>();
 
         [DataMember(Name = "Families")]
-        private Dictionary<string, List<Font>> _fontFamilies = new Dictionary<string, List<Font>>();
+        private Dictionary<string, List<FontBase>> _fontFamilies = new Dictionary<string, List<FontBase>>();
 
         /// <summary>
         /// Adds the console font to a new list of console fonts with the specified family name. If the list already exists, the font will be added to it.
@@ -21,7 +21,7 @@ namespace SadConsole
         /// <param name="familyName">The family name for the font.</param>
         /// <param name="font">The console font.</param>
         /// <param name="defaultFont">Mark this font as default for the family.</param>
-        public void Add(string familyName, Font font, bool defaultFont)
+        public void Add(string familyName, FontBase font, bool defaultFont)
         {
             if (_fontFamilies.ContainsKey(familyName))
             {
@@ -31,7 +31,7 @@ namespace SadConsole
             }
             else
             {
-                var fonts = new List<Font>();
+                var fonts = new List<FontBase>();
                 fonts.Add(font);
                 _fontFamilies.Add(familyName, fonts);
             }
@@ -53,7 +53,7 @@ namespace SadConsole
         {
             if (_fontFamilies.ContainsKey(familyName))
             {
-                for(int i = 0; i < _fontFamilies[familyName].Count; i++)
+                for (int i = 0; i < _fontFamilies[familyName].Count; i++)
                 {
                     var item = _fontFamilies[familyName][i];
                     if (item.CellHeight == cellHeight && item.CellWidth == cellWidth)
@@ -65,18 +65,18 @@ namespace SadConsole
             }
         }
 
-        public System.Collections.ObjectModel.ReadOnlyCollection<Font> this[string familyName]
+        public System.Collections.ObjectModel.ReadOnlyCollection<FontBase> this[string familyName]
         {
             get
             {
                 if (_fontFamilies.ContainsKey(familyName))
                     return _fontFamilies[familyName].AsReadOnly();
                 else
-                    return new List<Font>().AsReadOnly();
+                    return new List<FontBase>().AsReadOnly();
             }
         }
 
-        public Font this[string familyName, int cellWidth, int cellHeight]
+        public FontBase this[string familyName, int cellWidth, int cellHeight]
         {
             get
             {
@@ -93,7 +93,7 @@ namespace SadConsole
             }
         }
 
-        public Font GetDefaultFont(string familyName)
+        public FontBase GetDefaultFont(string familyName)
         {
             if (_defaultFonts.ContainsKey(familyName))
                 return _defaultFonts[familyName];
@@ -121,7 +121,7 @@ namespace SadConsole
 
         public void Save(string fontCollectionFile)
         {
-            System.Runtime.Serialization.DataContractSerializer serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
+            System.Runtime.Serialization.DataContractSerializer serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(FontBase), typeof(Font) });
             var stream = System.IO.File.OpenWrite(fontCollectionFile);
 
             serializer.WriteObject(stream, this);
@@ -131,7 +131,7 @@ namespace SadConsole
         public static FontCollection Load(string fontCollectionFile)
         {
             var file = System.IO.File.OpenRead(fontCollectionFile);
-            var serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
+            var serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(FontBase), typeof(Font) });
 
             return serializer.ReadObject(file) as FontCollection;
         }

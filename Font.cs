@@ -6,31 +6,9 @@ using System.Xml.Linq;
 
 namespace SadConsole
 {
-    public class Font
+    public class Font : FontBase
     {
-        public string Name { get; set; }
-
         public string FilePath { get; set; }
-
-        public int CellHeight { get; set; }
-
-        public int CellWidth { get; set; }
-
-        public int CellPadding { get; set; }
-
-        public bool IsDefault { get; set; }
-
-        [IgnoreDataMember]
-        public int Rows { get { return Image.Height / (CellHeight + CellPadding); } }
-
-        [IgnoreDataMember]
-        public Texture2D Image { get; private set; }
-
-        [IgnoreDataMember]
-        public Point[] CharacterIndexPoints;
-
-        [IgnoreDataMember]
-        public Rectangle[] CharacterIndexRects;
 
         #region Constructors
         public Font() { }
@@ -52,10 +30,6 @@ namespace SadConsole
             if (!int.TryParse(xheight.Value, out height))
                 throw new Exception("Height value is invalid: " + xheight.Value);
 
-            System.IO.Stream fontStream = System.IO.File.OpenRead(filename);
-            this.Image = Texture2D.FromStream(device, fontStream);
-            fontStream.Dispose();
-
             FilePath = filename;
             Name = name;
             CellWidth = width;
@@ -71,56 +45,12 @@ namespace SadConsole
         /// </summary>
         public void Generate()
         {
-            System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath);
-            
-            this.Image = Texture2D.FromStream(Engine.Device, fontStream);
-            fontStream.Dispose();
+            using (System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath))
+            {
+                Image = Texture2D.FromStream(Engine.Device, fontStream);
+            }
 
             ConfigureRects();
-        }
-
-        public void ConfigureRects()
-        {
-            CharacterIndexRects = new Rectangle[Rows * Engine.FontColumns];
-            CharacterIndexPoints = new Point[CharacterIndexRects.Length];
-
-            for (int i = 0; i < CharacterIndexRects.Length; i++)
-            {
-                CharacterIndexPoints[i] = new Point(i % Engine.FontColumns, i / Engine.FontColumns);
-                if (CellPadding != 0)
-                    CharacterIndexRects[i] = new Rectangle((CharacterIndexPoints[i].X * CellWidth) + ((CharacterIndexPoints[i].X + 1) * CellPadding),
-                                                           (CharacterIndexPoints[i].Y * CellHeight) + ((CharacterIndexPoints[i].Y + 1) * CellPadding), CellWidth, CellHeight);
-                else
-                    CharacterIndexRects[i] = new Rectangle(CharacterIndexPoints[i].X * CellWidth, CharacterIndexPoints[i].Y * CellHeight, CellWidth, CellHeight);
-            }
-        }
-
-        private void GetImageMask()
-        {
-            Texture2D texture = new Texture2D(Engine.Device, Image.Width, Image.Height,
-                                                false, SurfaceFormat.Color);
-            Color[] newPixels = new Color[texture.Width * texture.Height];
-            Color[] oldPixels = new Color[texture.Width * texture.Height];
-            texture.GetData<Color>(newPixels);
-            Image.GetData<Color>(oldPixels);
-        }
-
-        /// <summary>
-        /// Resizes the graphics device manager to this font cell size.
-        /// </summary>
-        /// <param name="manager">Graphics device manager to resize.</param>
-        /// <param name="width">The width in cell count.</param>
-        /// <param name="height">The height in cell count.</param>
-        /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
-        /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
-        public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
-        {
-            manager.PreferredBackBufferWidth = (CellWidth * width) + additionalWidth;
-            manager.PreferredBackBufferHeight = (CellHeight * height) + additionalHeight;
-            manager.ApplyChanges();
-
-            Engine.WindowWidth = manager.PreferredBackBufferWidth;
-            Engine.WindowHeight = manager.PreferredBackBufferHeight;
         }
 
         [OnDeserialized]
