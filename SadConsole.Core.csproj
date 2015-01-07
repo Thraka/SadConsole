@@ -96,7 +96,6 @@
     <Compile Include="Extensions\TextureExtensions.cs" />
     <Compile Include="Extensions\XamlExtensions.cs" />
     <Compile Include="Font.cs" />
-    <Compile Include="FontBase.cs" />
     <Compile Include="FontCollection.cs" />
     <Compile Include="ICellAppearance.cs" />
     <Compile Include="Input\AsciiKey.cs" />
@@ -123,7 +122,6 @@
     <Compile Include="Shapes\Circle.cs" />
     <Compile Include="Shapes\IShape.cs" />
     <Compile Include="Shapes\Line.cs" />
-    <Compile Include="TextureFont.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CHANGELOG.md" />

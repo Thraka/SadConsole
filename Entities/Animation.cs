@@ -45,7 +45,7 @@
         /// <summary>
         /// The font to use with all frames.
         /// </summary>
-        protected FontBase _font;
+        protected Font _font;
 
         /// <summary>
         /// All frames of the animation
@@ -90,7 +90,7 @@
         }
 
         [DataMember]
-        public FontBase Font
+        public Font Font
         {
             get { return _font; }
             set

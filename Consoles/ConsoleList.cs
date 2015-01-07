@@ -352,7 +352,7 @@
         public CellSurface CellData { get; set; }
 
 
-        public FontBase Font { get; set; }
+        public Font Font { get; set; }
 
     }
 }

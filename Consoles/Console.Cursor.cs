@@ -379,7 +379,7 @@ using SadConsole.Effects;
                 return this;
             }
 
-            public virtual void Render(SpriteBatch batch, FontBase font, Rectangle renderArea)
+            public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
             {
                 batch.Draw(Engine.BackgroundCell, renderArea, null, CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
                 batch.Draw(font.Image, renderArea, font.CharacterIndexRects[CursorRenderCell.ActualCharacterIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);

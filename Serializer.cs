@@ -18,7 +18,7 @@
         {
             get
             {
-                return (new Type[] { typeof(Consoles.Console), typeof(Consoles.CellsRenderer), typeof(Consoles.ConsoleList), typeof(CellSurface), typeof(Cell), typeof(FontBase), typeof(Font) }).Union(SadConsole.Engine.RegisteredEffects);
+                return (new Type[] { typeof(Consoles.Console), typeof(Consoles.CellsRenderer), typeof(Consoles.ConsoleList), typeof(CellSurface), typeof(Cell), typeof(Font) }).Union(SadConsole.Engine.RegisteredEffects);
             }
         }
 

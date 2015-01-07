@@ -29,7 +29,7 @@
         public bool ExclusiveFocus { get; set; }
 
         [DataMember]
-        public FontBase AlternateFont { get; set; }
+        public Font AlternateFont { get; set; }
 
         /// <summary>
         /// Indicates he rendering location of this control.

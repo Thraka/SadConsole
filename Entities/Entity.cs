@@ -92,7 +92,7 @@
         /// Creates a new entity with the specified font.
         /// </summary>
         /// <param name="font">The font to use when rendering this entity.</param>
-        public Entity(FontBase font): base(null, new SpriteBatch(Engine.Device))
+        public Entity(Font font): base(null, new SpriteBatch(Engine.Device))
         {
             Font = font;
             IsVisible = true;
