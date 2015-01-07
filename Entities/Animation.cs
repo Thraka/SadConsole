@@ -33,7 +33,7 @@
         protected float _animatedTime;
 
         /// <summary>
-        /// How much time per animated frame shulld be used.
+        /// How much time per animated frame should be used.
         /// </summary>
         protected float _timePerFrame;
 
@@ -62,7 +62,7 @@
         public Point Center { get; set; }
 
         /// <summary>
-        /// Indicates weather or not this animation will repeat once it has finished animating.
+        /// Indicates whether or not this animation will repeat once it has finished animating.
         /// </summary>
         [DataMember]
         public bool Repeat { get; set; }
