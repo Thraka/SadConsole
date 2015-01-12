@@ -93,21 +93,60 @@
 
         [DataMember]
         public ObservableCollection<object> Items { get; private set; }
+
+        public int SelectedIndex
+        {
+            get
+            {
+                int index = -1;
+                if (_selectedItem != null)
+                {
+                    for (int i = 0; i < Items.Count; i++)
+                    {
+                        if (CompareByReference)
+                        {
+                            if (object.ReferenceEquals(Items[i], _selectedItem))
+                            {
+                                index = i;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (object.Equals(Items[i], _selectedItem))
+                            {
+                                index = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                return index;
+            }
+        }
+
         public object SelectedItem
         {
             get { return _selectedItem; }
             set
             {
-                if (_selectedItemContainer != null)
-                    _selectedItemContainer.IsSelected = false;
+                // Check if we'll get the same container or not.
+                var newContainer = GetContainer(value);
+                if (newContainer != null && newContainer != _selectedItemContainer)
+                {
+                    if (_selectedItemContainer != null)
+                        _selectedItemContainer.IsSelected = false;
 
-                _selectedItem = value;
-                _selectedItemContainer = GetContainer(_selectedItem);
+                    _selectedItem = value;
+                    _selectedItemContainer = newContainer;
+                    _selectedIndex = Items.IndexOf(_selectedItem);
 
-                OnSelectedItemChanged();
-
-                if (_selectedItemContainer != null)
                     _selectedItemContainer.IsSelected = true;
+
+                    OnSelectedItemChanged();
+
+                }
             }
         }
 
@@ -196,7 +235,7 @@
                 Compose();
             }
         }
-
+        
         public TItemContainer GetContainer(object item)
         {
             int index = -1;
@@ -470,9 +509,15 @@
                 bool noItem = false;
 
                 if (_showSlider)
-                    SelectedItem = Items[mouseControlPosition.Y - rowOffset + _slider.Value];
+                {
+                    _selectedIndex = mouseControlPosition.Y - rowOffset + _slider.Value;
+                    SelectedItem = Items[_selectedIndex];
+                }
                 else if (mouseControlPosition.Y <= _containers.Count - rowOffsetReverse)
-                    SelectedItem = Items[mouseControlPosition.Y - rowOffset];
+                {
+                    _selectedIndex = mouseControlPosition.Y - rowOffset;
+                    SelectedItem = Items[_selectedIndex];
+                }
                 else
                     noItem = true;
 

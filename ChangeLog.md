@@ -9,9 +9,16 @@
 * Added load/save methods to console, cellsurface, and layeredconsole. More to come.
 * Engine.Serializer now has a Save/Load method that does file handling for you. The other Serialize/Deserialize methods only use a stream.
 
+#### Entities
+* BREAKING CHANGES
+* Entity no longer uses a dictionary to hold the animations, it now just uses a list.
+* Animation supports changing the name now.
+* Entity can play an animation that is not part of the added animations.
+* Added Animation.Restart method.
+
 #### Controls
 * Fixed a bug when removing items from a listbox.
-* Added a new quick helper dialog to Window. It's static and displays a yes/no type question. SadConsole.Window.Controls.Prompt is the type.
+* Added some quick helper dialogs to Window. Static methods for prompting a yes/no question and notification.
 
 #### GameHelpers
 * Created new binary called SadConsole.GameHelpers.

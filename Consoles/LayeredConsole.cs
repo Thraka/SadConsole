@@ -152,9 +152,14 @@ namespace SadConsoleEditor.Consoles
 
         public void RemoveLayer(int layer)
         {
+            var layerObject = _layers[layer];
+
             _layers.RemoveAt(layer);
             _layerMetadata.RemoveAt(layer);
             SyncLayerIndex();
+
+            if (ActiveLayer == layerObject.CellData)
+                ActiveLayer = null;
         }
 
         public CellsRenderer AddLayer(string name)

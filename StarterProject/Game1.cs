@@ -54,7 +54,7 @@
 
             string text = _defaultConsole.CellData.GetString(2, 0, 27);
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
-            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { 
+            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { new CustomConsoles.StreamConsole(),
                                                                        new CustomConsoles.CursorConsole(), 
                                                                        new CustomConsoles.StaticConsole(), 
                                                                        new CustomConsoles.StretchedConsole(), 

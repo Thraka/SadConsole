@@ -107,16 +107,19 @@
         /// <summary>
         /// Gets the name of this animation.
         /// </summary>
-        public string Name { get; private set; }
+        [DataMember]
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the width of the animation frames.
         /// </summary>
+        [DataMember]
         public int Width { get; private set; }
 
         /// <summary>
         /// Gets the height of the animation frames.
         /// </summary>
+        [DataMember]
         public int Height { get; private set; }
 
         /// <summary>
@@ -203,6 +206,15 @@
         }
 
         /// <summary>
+        /// Restarts the animation from the first frame.
+        /// </summary>
+        public void Restart()
+        {
+            _isPlaying = true;
+            _currentFrameIndex = 0;
+        }
+
+        /// <summary>
         /// Updates the animation frames based on the time passed since the last call to this method.
         /// </summary>
         public void Update()
@@ -228,6 +240,32 @@
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Resizes all frames in the animation to the specified width and height.
+        /// </summary>
+        /// <param name="width">The new width.</param>
+        /// <param name="height">The new height.</param>
+        public void Resize(int width, int height)
+        {
+            Width = width;
+            Height = height;
+
+            foreach (var frame in _animatedFrames)
+                frame.Resize(width, height);
+
+            foreach (var frame in Frames)
+                frame.Resize(width, height);
+        }
+
+        /// <summary>
+        /// Returns the name of the animation.
+        /// </summary>
+        /// <returns>The name.</returns>
+        public override string ToString()
+        {
+            return Name;
         }
 
         #endregion

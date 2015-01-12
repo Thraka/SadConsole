@@ -27,7 +27,7 @@
         /// The animations.
         /// </summary>
         [DataMember(Name="Animations")]
-        protected Dictionary<string, Animation> _animations = new Dictionary<string, Animation>();
+        protected List<Animation> _animations = new List<Animation>();
 
         /// <summary>
         /// The currently animating animation.
@@ -67,7 +67,7 @@
         /// </summary>
         public System.Collections.ObjectModel.ReadOnlyCollection<Animation> Animations
         {
-            get { return _animations.Values.ToList().AsReadOnly(); }
+            get { return _animations.ToList().AsReadOnly(); }
         }
 
         /// <summary>
@@ -102,7 +102,7 @@
             _currentAnimation.CreateFrame();
             _currentAnimation.Commit();
 
-            _animations.Add("default", CurrentAnimation);
+            _animations.Add(CurrentAnimation);
             _animationBoundingBox = new Rectangle(0, 0, 1, 1);
         }
         #endregion
@@ -141,7 +141,7 @@
         {
             // copy the current frame of the animation to the console at the specified location
             Frame frame = _currentAnimation.CurrentFrame;
-            frame.Copy(location.X, location.Y, surface);
+            frame.Copy(0, 0, frame.Width, frame.Height, surface, location.X, location.Y);
         }
 
         ////TODO: This is not really working well now. Since positioning changed to be transform based, entity will always render 0,0 if you do not call begin and end.
@@ -236,10 +236,30 @@
         /// <param name="name">The name of the animation to activate.</param>
         public void SetActiveAnimation(string name)
         {
-            if (_animations.ContainsKey(name))
-                _currentAnimation = _animations[name];
-            else
+            var animation = _animations.Where(a => a.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            if (animation == null)
                 return;
+
+            _currentAnimation = animation;
+
+            if (_currentAnimation.Font != null)
+                base.Font = _currentAnimation.Font;
+            else
+                base.Font = Engine.DefaultFont;
+
+            UpdateAnimationBoundingBox();
+            ResetViewArea();
+        }
+
+        /// <summary>
+        /// Sets the active animation.
+        /// </summary>
+        /// <param name="name">The name of the animation to activate.</param>
+        /// <remarks>This animation does not have to be part of the named animations added to the entity.</remarks>
+        public void SetActiveAnimation(Animation animation)
+        {
+            _currentAnimation = animation;
 
             if (_currentAnimation.Font != null)
                 base.Font = _currentAnimation.Font;
@@ -272,10 +292,7 @@
         /// <returns>The animation if found, otherwise returns null.</returns>
         public Animation GetAnimation(string name)
         {
-            if (_animations.ContainsKey(name))
-                return _animations[name];
-            else
-                return null;
+            return _animations.Where(a => a.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         }
 
         /// <summary>
@@ -284,20 +301,16 @@
         /// <param name="animation">The animation.</param>
         public void AddAnimation(Animation animation)
         {
-            if (_animations.ContainsKey(animation.Name))
-            {
-                if (_currentAnimation.Name == animation.Name)
-                {
-                    _currentAnimation = animation;
-                    UpdateAnimationBoundingBox();
-                }
+            var oldAnimation = _animations.Where(a => a.Name.Equals(animation.Name, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
-                _animations.Remove(animation.Name);
-            }
+            if (oldAnimation != null)
+                _animations.Remove(oldAnimation);
+
+            _currentAnimation = animation;
 
             animation.Font = _font;
 
-            _animations.Add(animation.Name, animation);
+            _animations.Add(animation);
         }
 
         /// <summary>
@@ -309,13 +322,34 @@
             if (name == "default")
                 throw new System.Exception("Cannot remove default animation. Replace it by adding a new animation with the name 'default'");
 
-            if (_animations.ContainsKey(name))
-            {
-                var anim = _animations[name];
-                _animations.Remove(name);
+            var oldAnimation = _animations.Where(a => a.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
-                if (_currentAnimation == anim)
+            if (oldAnimation != null)
+            {
+                _animations.Remove(oldAnimation);
+
+                if (_currentAnimation == oldAnimation)
                     SetActiveAnimation("default");
+            }
+        }
+
+        /// <summary>
+        /// Removes an animation from this entity.
+        /// </summary>
+        /// <param name="animation">The animation to remove. If you try to remove the "default" animation, an exception will be thrown.</param>
+        public void RemoveAnimation(Animation animation)
+        {
+            if (_animations.Contains(animation))
+            {
+                if (animation.Name == "default")
+                    throw new System.Exception("Cannot remove default animation. Replace it by adding a new animation with the name 'default'");
+                else
+                {
+                    _animations.Remove(animation);
+
+                    if (_currentAnimation == animation)
+                        SetActiveAnimation("default");
+                }
             }
         }
 
@@ -324,10 +358,9 @@
         /// </summary>
         protected void UpdateAnimationFont()
         {
-            var items = _animations.Values.ToList();
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < _animations.Count; i++)
             {
-                items[i].Font = _font;
+                _animations[i].Font = _font;
             }
         }
         #endregion

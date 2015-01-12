@@ -40,5 +40,27 @@ namespace SadConsole.Consoles
             window.Show(true);
             window.Center();
         }
+
+        public static void Message(ColoredString message, string closeButtonText)
+        {
+            Window window = new Window(message.ToString().Length + 4, 6);
+
+            message.IgnoreBackground = true;
+
+            window._cellData.Print(2, 2, message);
+
+            Button closeButton = new Button(closeButtonText.Length + 2, 1);
+
+            closeButton.Position = new Microsoft.Xna.Framework.Point(2, window._cellData.Height - 2);
+
+            closeButton.Text = closeButtonText;
+
+            closeButton.ButtonClicked += (o, e) => { window.DialogResult = true; window.Hide(); };
+
+            window.Add(closeButton);
+
+            window.Show(true);
+            window.Center();
+        }
     }
 }

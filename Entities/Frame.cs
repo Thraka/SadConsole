@@ -31,12 +31,12 @@
             
         }
 
-        public void Save(Frame instance, string file)
+        public new void Save(string file)
         {
-            SadConsole.Serializer.Save<Frame>(instance, file);
+            SadConsole.Serializer.Save<Frame>(this, file);
         }
 
-        public static Frame Load(string file)
+        public new static Frame Load(string file)
         {
             return SadConsole.Serializer.Load<Frame>(file);
         }
