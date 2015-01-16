@@ -120,7 +120,24 @@ namespace SadConsole
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {
-            Generate();
+            var specificFont = Engine.Fonts[Name, CellWidth, CellHeight];
+
+            if (specificFont != null)
+            {
+                Image = specificFont.Image;
+                ConfigureRects();
+            }
+            else
+                foreach (var font in Engine.Fonts[Name])
+                {
+                    Image = font.Image;
+                    ConfigureRects();
+                    break;
+                }
+
+            // Existing font was not found, try to load the one specified by this font.
+            if (Image == null)
+                Generate();
         }
         #endregion
     }
