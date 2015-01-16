@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 
-namespace SadConsoleEditor.Consoles
+namespace SadConsole.Consoles
 {
     [DataContract]
     public class LayeredConsole: Console

@@ -327,10 +327,37 @@ namespace SadConsole
             {
                 for (int y = 0; y < maxY; y++)
                 {
-                    var sourceCell = this[x, y];
-                    var desCell = destination[x, y];
-                    sourceCell.CopyAppearanceTo(desCell);
-                    destination.SetEffect(desCell, sourceCell.Effect);
+                    if (IsValidCell(x, y) && destination.IsValidCell(x, y))
+                    {
+                        var sourceCell = this[x, y];
+                        var desCell = destination[x, y];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        destination.SetEffect(desCell, sourceCell.Effect);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies the contents of this cell surface to the destination at the specified x,y.
+        /// </summary>
+        /// <param name="x">The x coordinate of the destination.</param>
+        /// <param name="y">The y coordinate of the destination.</param>
+        /// <param name="destination">The destination surface.</param>
+        public void Copy(CellSurface destination, int x, int y)
+        {
+            for (int curx = 0; curx < _width; curx++)
+            {
+                for (int cury = 0; cury < _height; cury++)
+                {
+                    var sourceCell = this[curx, cury];
+
+                    if (destination.IsValidCell(x + curx, y + cury))
+                    {
+                        var desCell = destination[x + curx, y + cury];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        destination.SetEffect(desCell, sourceCell.Effect);
+                    }
                 }
             }
         }
@@ -353,11 +380,14 @@ namespace SadConsole
             {
                 for (int cury = y; cury < maxY; cury++)
                 {
-                    var sourceCell = this[curx, cury];
-                    var desCell = destination[destX, destY];
-                    sourceCell.CopyAppearanceTo(desCell);
-                    destination.SetEffect(desCell, sourceCell.Effect);
-                    destY++;
+                    if (IsValidCell(curx, cury) && destination.IsValidCell(destX, destY))
+                    {
+                        var sourceCell = this[curx, cury];
+                        var desCell = destination[destX, destY];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        destination.SetEffect(desCell, sourceCell.Effect);
+                        destY++;
+                    }
                 }
                 destY = 0;
                 destX++;
@@ -374,9 +404,6 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         public void Copy(int x, int y, int width, int height, CellSurface destination)
         {
-            if (x + width > this._width || y + height > this._height)
-                throw new Exception("Invalid x,y,width,height combination.");
-
             int maxX = width > destination._width ? destination._width : x + width;
             int maxY = height > destination._height ? destination._height : y + height;
 
@@ -387,11 +414,14 @@ namespace SadConsole
             {
                 for (int cury = 0; cury < maxY; cury++)
                 {
-                    var sourceCell = this[curx + x, cury + y];
-                    var desCell = destination[destX, destY];
-                    sourceCell.CopyAppearanceTo(desCell);
-                    destination.SetEffect(desCell, sourceCell.Effect);
-                    destY++;
+                    if (IsValidCell(curx + x, cury + y) && destination.IsValidCell(destX, destY))
+                    {
+                        var sourceCell = this[curx + x, cury + y];
+                        var desCell = destination[destX, destY];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        destination.SetEffect(desCell, sourceCell.Effect);
+                        destY++;
+                    }
                 }
                 destY = 0;
                 destX++;
@@ -410,9 +440,6 @@ namespace SadConsole
         /// <param name="destinationY">The y coordinate to copy to.</param>
         public void Copy(int x, int y, int width, int height, CellSurface destination, int destinationX, int destinationY)
         {
-            if (x + width > this._width || y + height > this._height)
-                throw new Exception("Invalid x,y,width,height combination.");
-
             int destX = destinationX;
             int destY = destinationY;
 
@@ -420,16 +447,12 @@ namespace SadConsole
             {
                 for (int cury = 0; cury < height; cury++)
                 {
-                    if (IsValidCell(curx + x, cury + y))
+                    if (IsValidCell(curx + x, cury + y) && destination.IsValidCell(destX, destY))
                     {
                         var sourceCell = this[curx + x, cury + y];
-
-                        if (destination.IsValidCell(destX, destY))
-                        {
-                            var desCell = destination[destX, destY];
-                            sourceCell.CopyAppearanceTo(desCell);
-                            destination.SetEffect(desCell, sourceCell.Effect);
-                        }
+                        var desCell = destination[destX, destY];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        destination.SetEffect(desCell, sourceCell.Effect);
                     }
                     destY++;
                 }

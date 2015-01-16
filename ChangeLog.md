@@ -8,6 +8,7 @@
 ** It's not much more effecient than using multiple consoles, however it cuts down on the overhead slightly. The console editor tool uses this type.
 * Added load/save methods to console, cellsurface, and layeredconsole. More to come.
 * Engine.Serializer now has a Save/Load method that does file handling for you. The other Serialize/Deserialize methods only use a stream.
+* CellSurface Copy Fixes.
 
 #### Entities
 * BREAKING CHANGES
