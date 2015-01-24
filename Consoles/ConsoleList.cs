@@ -327,7 +327,7 @@
 
         public bool CanFocus { get; set; }
 
-        public bool IsFocused { get { return false; } set { if (value) throw new Exception("ConsoleList cannot be set as the active, focused, console."); } }
+        public bool IsFocused { get; set; }
 
 
         public bool ExclusiveFocus { get; set; }

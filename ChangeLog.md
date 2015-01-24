@@ -9,6 +9,7 @@
 * Added load/save methods to console, cellsurface, and layeredconsole. More to come.
 * Engine.Serializer now has a Save/Load method that does file handling for you. The other Serialize/Deserialize methods only use a stream.
 * CellSurface Copy Fixes.
+* ConsoleList can now become "focused." Unsure why I had it throw an exception in the past.
 
 #### Entities
 * BREAKING CHANGES
