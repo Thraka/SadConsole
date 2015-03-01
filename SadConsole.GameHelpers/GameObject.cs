@@ -38,5 +38,15 @@ namespace SadConsole.GameHelpers
 
             return newObject;
         }
+
+        public virtual void Loaded(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
+        {
+
+        }
+
+        public virtual void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
+        {
+
+        }
     }
 }
