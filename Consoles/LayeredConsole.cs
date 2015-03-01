@@ -120,6 +120,10 @@ namespace SadConsole.Consoles
             ResetViewArea();
         }
 
+        /// <summary>
+        /// Moves all layers to be at the specified position.
+        /// </summary>
+        /// <param name="position">The position of all layers.</param>
         public void Move(Point position)
         {
             this.Position = position;
@@ -259,6 +263,16 @@ namespace SadConsole.Consoles
         public static LayeredConsole Load(string file)
         {
             return SadConsole.Serializer.Load<LayeredConsole>(file);
+        }
+
+        /// <summary>
+        /// Sets the viewarea of all layers.
+        /// </summary>
+        /// <param name="viewArea"></param>
+        public void SetViewArea(Rectangle viewArea)
+        {
+            for (int i = 0; i < Layers; i++)
+                _layers[i].ViewArea = viewArea;
         }
     }
 
