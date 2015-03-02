@@ -39,6 +39,21 @@ namespace SadConsole.GameHelpers
             return newObject;
         }
 
+        public void CopyTo(GameObject destination)
+        {
+            destination.Name = Name;
+            destination.Character = Character.Clone();
+            destination.Settings = new List<Setting>(Settings.Count);
+            destination.Position = Position;
+
+            foreach (var item in Settings)
+            {
+                destination.Settings.Add(new Setting() { Name = item.Name, Value = item.Value });
+            }
+
+        }
+
+
         public virtual void Loaded(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
         {
 

@@ -9,6 +9,22 @@ namespace SadConsole.GameHelpers
 {
     public class GameObjectCollection : Dictionary<Point, GameObject>
     {
+        public void ParseAllObjects()
+        {
+            List<Tuple<Point, GameObject>> transformedObjects = new List<Tuple<Point, GameObject>>();
+
+            foreach (var item in base.Keys)
+            {
+                var newObject = GameObjectParser.Parse(this[item]);
+
+                if (newObject != this[item])
+                    transformedObjects.Add(new Tuple<Point, GameObject>(item, newObject));
+            }
+
+            foreach (var item in transformedObjects)
+                this[item.Item1] = item.Item2;
+        }
+
         public static void Save(GameObjectCollection instance, string file)
         {
             if (System.IO.File.Exists(file))
