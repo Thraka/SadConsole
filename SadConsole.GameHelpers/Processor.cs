@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SadConsole.Consoles;
-using Microsoft.Xna.Framework.Input;
 
 namespace SadConsole.GameHelpers
 {
-    public class Trigger : GameObject, ITrigger
+    class Processor :GameObject, IProcessor
     {
         public string Id { get; private set; }
         public IEnumerable<string> TargetIds { get; private set; }
@@ -18,7 +16,7 @@ namespace SadConsole.GameHelpers
         public Func<Trigger, GameObjectCollection, Consoles.Console, IEnumerable<GameObjectCollection>, bool> Condition;
         public Action<Trigger, GameObjectCollection, Consoles.Console, IEnumerable<GameObjectCollection>> Result;
 
-        public Trigger(GameObject source)
+        public Processor(GameObject source)
         {
             string id = "";
             StringBuilder targets = new StringBuilder();
@@ -38,14 +36,15 @@ namespace SadConsole.GameHelpers
             source.CopyTo(this);
         }
 
+        public void Triggered(ITrigger trigger, GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
+        {
+
+        }
+
         public override void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
         {
-            // Check for condition pass
-            if (Condition(this, parent, console, otherCollections))
-            {
-                // If it passed, find all targets and activate them
-                
-            }
+            //if (Condition(this, parent, console, otherCollections))
+            //    Result()
         }
     }
 }

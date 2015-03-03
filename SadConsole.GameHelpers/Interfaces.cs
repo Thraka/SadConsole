@@ -20,6 +20,8 @@ namespace SadConsole.GameHelpers
 
     public interface ITrigger : ICanTarget, ITarget
     {
+        bool DeepProcess { get; }
+
         void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null);
     }
 
