@@ -54,6 +54,7 @@
     <Compile Include="GameObjectCollection.cs" />
     <Compile Include="GameObjectParser.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="Processor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Trigger.cs" />
