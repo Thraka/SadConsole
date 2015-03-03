@@ -40,8 +40,12 @@ namespace SadConsole.GameHelpers
 
         public override void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
         {
-            //if (Condition(this, parent, console, otherCollections))
-            //    Result()
+            // Check for condition pass
+            if (Condition(this, parent, console, otherCollections))
+            {
+                // If it passed, find all targets and activate them
+                
+            }
         }
     }
 }
