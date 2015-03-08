@@ -22,6 +22,9 @@ namespace SadConsole.GameHelpers
         [IgnoreDataMember]
         public WeakReference<GameObjectCollection> Parent;
 
+        [IgnoreDataMember]
+        public int Layer;
+
         public GameObject()
         {
             Settings = new List<Setting>();

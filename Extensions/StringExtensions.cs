@@ -132,5 +132,24 @@ namespace System
 
             return newString;
         }
+
+        /// <summary>
+        /// Converts a string to a boolean when it is "0", "1", "true", or "false".
+        /// </summary>
+        /// <param name="item">The string to convert</param>
+        /// <returns>The converted boolean value, otherwise false.</returns>
+        public static bool ToBool(this string item)
+        {
+            int intValue;
+            bool boolValue;
+
+            if (int.TryParse(item, out intValue))
+                return Convert.ToBoolean(intValue);
+
+            if (bool.TryParse(item, out boolValue))
+                return bool.Parse(item);
+
+            return false;
+        }
     }
 }

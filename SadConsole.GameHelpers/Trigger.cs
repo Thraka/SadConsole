@@ -18,6 +18,8 @@ namespace SadConsole.GameHelpers
 
         public bool DeepProcess { get; set; }
 
+        public string Type { get; set; }
+
         public Func<Trigger, GameConsole, bool> Condition;
 
         public Trigger(GameObject source)
@@ -33,7 +35,9 @@ namespace SadConsole.GameHelpers
                 else if (name == "target")
                     targets.Append(String.Format("{0};", setting.Value));
                 else if (name == "deep")
-                    DeepProcess = string.IsNullOrWhiteSpace(setting.Value) ? false : bool.Parse(setting.Value);
+                    DeepProcess = string.IsNullOrWhiteSpace(setting.Value) ? false : setting.Value.ToBool();
+                else if (name == "type")
+                    Type = setting.Value;
             }
 
             TargetIds = targets.ToString().Trim(';').Trim().Split(';');
@@ -41,7 +45,7 @@ namespace SadConsole.GameHelpers
             source.CopyTo(this);
         }
 
-        public void Triggered(GameObject source, GameConsole console)
+        public virtual void Triggered(GameObject source, GameConsole console)
         {
             // Check for condition pass
             if (Condition(this, console))

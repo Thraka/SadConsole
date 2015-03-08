@@ -31,24 +31,39 @@ namespace SadConsole.GameHelpers
             {
                 var newObject = GameObjectParser.Parse(this[item]);
 
-                if (newObject != this[item])
-                    transformedObjects.Add(new Tuple<Point, GameObject>(item, newObject));
+                transformedObjects.Add(new Tuple<Point, GameObject>(item, TransformObject(newObject)));
             }
 
             foreach (var item in transformedObjects)
+            {
                 this[item.Item1] = item.Item2;
+
+                if (item.Item2 is Trigger)
+                    Triggers.Add((Trigger)item.Item2);
+
+                else if (item.Item2 is Processor)
+                    Processors.Add((Processor)item.Item2);
+
+                else if (item.Item2 is Action)
+                    Actions.Add((Action)item.Item2);
+            }
         }
 
-        protected virtual void SortObject(GameObject gameObject)
+        protected virtual GameObject TransformObject(GameObject gameObject)
         {
-            if (gameObject is Trigger)
-                Triggers.Add((Trigger)gameObject);
+            return gameObject;
+        }
 
-            else if (gameObject is Processor)
-                Processors.Add((Processor)gameObject);
+        [OnDeserialized]
+        private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
+        {
+            SetParentOnObjects();
+        }
 
-            else if (gameObject is Action)
-                Actions.Add((Action)gameObject);
+        public void SetParentOnObjects()
+        {
+            foreach (var item in this)
+                item.Value.Parent = new WeakReference<GameObjectCollection>(this);
         }
 
         public static void Save(GameObjectCollection instance, string file)
@@ -72,9 +87,9 @@ namespace SadConsole.GameHelpers
                     var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(GameObjectCollection), new Type[] { typeof(GameObject) });
 
                     var collection = serializer.ReadObject(fileObject) as GameObjectCollection;
+                    collection.SetParentOnObjects();
 
-                    foreach (var item in collection)
-                        item.Value.Parent = new WeakReference<GameObjectCollection>(collection);
+                    return collection;
                 }
             }
 
@@ -103,9 +118,8 @@ namespace SadConsole.GameHelpers
 
                     var collections = serializer.ReadObject(fileObject) as IEnumerable<GameObjectCollection>;
 
-                    foreach (var collection in collections)
-                        foreach (var item in collection)
-                            item.Value.Parent = new WeakReference<GameObjectCollection>(collection);
+                    foreach (var item in collections)
+                        item.SetParentOnObjects();
 
                     return collections;
                 }

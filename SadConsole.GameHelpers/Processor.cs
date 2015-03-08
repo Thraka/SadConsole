@@ -28,7 +28,7 @@ namespace SadConsole.GameHelpers
                 else if (name == "target")
                     targets.Append(string.Format("{0};", setting.Value));
                 else if (name == "deep")
-                    DeepProcess = string.IsNullOrWhiteSpace(setting.Value) ? false : bool.Parse(setting.Value);
+                    DeepProcess = string.IsNullOrWhiteSpace(setting.Value) ? false : setting.Value.ToBool();
             }
 
             TargetIds = targets.ToString().Trim(';').Trim().Split(';');
