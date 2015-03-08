@@ -9,24 +9,20 @@ namespace SadConsole.GameHelpers
     public interface ITarget
     {
         string Id { get; }
+
+        void Triggered(GameObject source, GameConsole console);
     }
 
     public interface ICanTarget
     {
-        IEnumerable<string> TargetIds { get; }
+        string[] TargetIds { get; set; }
 
-        IEnumerable<GameObject> ResolvedTargets { get; }
+        GameObject[] ResolvedTargets { get; }
+        bool DeepProcess { get; set; }
     }
 
     public interface ITrigger : ICanTarget, ITarget
     {
-        bool DeepProcess { get; }
-
-        void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null);
-    }
-
-    public interface IProcessor : ICanTarget, ITarget
-    {
-        void Triggered(ITrigger trigger, GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null);
+        void Process(GameConsole console);
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,8 +10,21 @@ namespace SadConsole.GameHelpers
 {
     public class GameObjectCollection : Dictionary<Point, GameObject>
     {
-        public void ParseAllObjects()
+        [IgnoreDataMember]
+        public List<Trigger> Triggers;
+
+        [IgnoreDataMember]
+        public List<Processor> Processors;
+
+        [IgnoreDataMember]
+        public List<Action> Actions;
+
+        public virtual void ParseAllObjects()
         {
+            Triggers = new List<Trigger>();
+            Processors = new List<Processor>();
+            Actions = new List<Action>();
+
             List<Tuple<Point, GameObject>> transformedObjects = new List<Tuple<Point, GameObject>>();
 
             foreach (var item in base.Keys)
@@ -23,6 +37,18 @@ namespace SadConsole.GameHelpers
 
             foreach (var item in transformedObjects)
                 this[item.Item1] = item.Item2;
+        }
+
+        protected virtual void SortObject(GameObject gameObject)
+        {
+            if (gameObject is Trigger)
+                Triggers.Add((Trigger)gameObject);
+
+            else if (gameObject is Processor)
+                Processors.Add((Processor)gameObject);
+
+            else if (gameObject is Action)
+                Actions.Add((Action)gameObject);
         }
 
         public static void Save(GameObjectCollection instance, string file)
@@ -43,9 +69,12 @@ namespace SadConsole.GameHelpers
             {
                 using (var fileObject = System.IO.File.OpenRead(file))
                 {
-                    var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(GameHelpers.GameObjectCollection), new Type[] { typeof(GameHelpers.GameObject) });
+                    var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(GameObjectCollection), new Type[] { typeof(GameObject) });
 
-                    return serializer.ReadObject(fileObject) as GameHelpers.GameObjectCollection;
+                    var collection = serializer.ReadObject(fileObject) as GameObjectCollection;
+
+                    foreach (var item in collection)
+                        item.Value.Parent = new WeakReference<GameObjectCollection>(collection);
                 }
             }
 
@@ -72,7 +101,13 @@ namespace SadConsole.GameHelpers
                 {
                     var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(IEnumerable<GameObjectCollection>), new Type[] { typeof(GameObjectCollection), typeof(GameHelpers.GameObject) });
 
-                    return serializer.ReadObject(fileObject) as IEnumerable<GameObjectCollection>;
+                    var collections = serializer.ReadObject(fileObject) as IEnumerable<GameObjectCollection>;
+
+                    foreach (var collection in collections)
+                        foreach (var item in collection)
+                            item.Value.Parent = new WeakReference<GameObjectCollection>(collection);
+
+                    return collections;
                 }
             }
 

@@ -3,6 +3,7 @@ using SadConsole;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,10 +11,16 @@ namespace SadConsole.GameHelpers
 {
     public class GameObject
     {
-        public string Name { get; set; }
+        [IgnoreDataMember]
+        private string name;
+
+        public string Name { get { return name; } set { name = value != null ? value.ToLower() : null; } }
         public CellAppearance Character { get; set; }
         public List<Setting> Settings { get; set; }
         public Point Position { get; set; }
+
+        [IgnoreDataMember]
+        public WeakReference<GameObjectCollection> Parent;
 
         public GameObject()
         {
@@ -22,7 +29,7 @@ namespace SadConsole.GameHelpers
             Character.CharacterIndex = 1;
             Name = "New";
         }
-        
+
         public GameObject Clone()
         {
             var newObject = new GameObject();
@@ -53,15 +60,34 @@ namespace SadConsole.GameHelpers
 
         }
 
+        public bool HasSetting(string name)
+        {
+            return Settings.Where(s => s.Name == name).FirstOrDefault() != null;
+        }
 
-        public virtual void Loaded(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
+        public string GetSetting(string name)
+        {
+            return Settings.Where(s => s.Name == name).Select(s => s.Value).FirstOrDefault();
+        }
+
+        public IEnumerable<string> GetSettings(string name)
+        {
+            return Settings.Where(s => s.Name == name).Select(s => s.Value);
+        }
+
+        public virtual void Loaded(GameConsole console)
         {
 
         }
 
-        public virtual void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
+        public virtual void Process(GameConsole console)
         {
 
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

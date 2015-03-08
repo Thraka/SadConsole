@@ -13,29 +13,42 @@ using SadConsole.Input;
 namespace SadConsole.Consoles
 {
     [DataContract]
-    public class LayeredConsole: Console
+    [KnownType(typeof(LayeredConsole<LayeredConsoleMetadata>))]
+    [KnownType(typeof(LayeredConsole))]
+    [KnownType(typeof(LayeredConsoleMetadata))]
+    [KnownType(typeof(Console))]
+    public class LayeredConsole : LayeredConsole<LayeredConsoleMetadata>
     {
-        [DataContract]
-        public class Metadata
+        public LayeredConsole(int layers, int width, int height) : base(layers, width, height) { }
+    }
+
+    [DataContract]
+    public class LayeredConsoleMetadata
+    {
+        [DataMember]
+        public string Name = "New";
+        [DataMember]
+        public bool IsVisible = true;
+        [DataMember]
+        public bool IsRemoveable = true;
+        [DataMember]
+        public bool IsMoveable = true;
+        [DataMember]
+        public bool IsRenamable = true;
+
+        public int Index;
+
+        public override string ToString()
         {
-            [DataMember]
-            public string Name;
-            [DataMember]
-            public bool IsVisible = true;
-            [DataMember]
-            public bool IsRemoveable = true;
-            [DataMember]
-            public bool IsMoveable = true;
-            [DataMember]
-            public bool IsRenamable = true;
-
-            public int Index;
-
-            public override string ToString()
-            {
-                return Name;
-            }
+            return Name;
         }
+    }
+
+    [DataContract]
+    public abstract class LayeredConsole<TMetadata>: Console
+        where TMetadata : LayeredConsoleMetadata, new()
+    {
+        
 
         [DataMember]
         public int Width { get; protected set; }
@@ -48,7 +61,7 @@ namespace SadConsole.Consoles
         public CellSurface ActiveLayer { get; protected set; }
 
         [DataMember(Name = "LayerMetadata")]
-        private List<Metadata> _layerMetadata;
+        protected List<TMetadata> _layerMetadata;
 
         [DataMember(Name = "Layers")]
         protected List<CellsRenderer> _layers;
@@ -64,7 +77,7 @@ namespace SadConsole.Consoles
             Height = height;
 
             _layers = new List<CellsRenderer>();
-            _layerMetadata = new List<Metadata>();
+            _layerMetadata = new List<TMetadata>();
             
             for (int i = 0; i < layers; i++)
                 AddLayer(i.ToString());
@@ -144,12 +157,12 @@ namespace SadConsole.Consoles
                     _layers[i].Render();
         }
 
-        public void SetLayerMetadata(int layer, Metadata data)
+        public void SetLayerMetadata(int layer, TMetadata data)
         {
             _layerMetadata[layer] = data;
         }
 
-        public Metadata GetLayerMetadata(int layer)
+        public TMetadata GetLayerMetadata(int layer)
         {
             return _layerMetadata[layer];
         }
@@ -171,7 +184,11 @@ namespace SadConsole.Consoles
             var layer = new CellsRenderer(new CellSurface(Width, Height), Batch);
             layer.Font = this.Font;
             _layers.Add(layer);
-            _layerMetadata.Add(new Metadata() { Name = name, IsVisible = true });
+
+            var metadata = CreateMetadataObject();
+            metadata.Name = name;
+
+            _layerMetadata.Add(CreateMetadataObject());
 
             SyncLayerIndex();
             SyncLayers();
@@ -183,7 +200,8 @@ namespace SadConsole.Consoles
             var layer = new CellsRenderer(surface, Batch);
             layer.Font = this.Font;
             _layers.Add(layer);
-            _layerMetadata.Add(new Metadata() { Name = "New", IsVisible = true });
+
+            _layerMetadata.Add(CreateMetadataObject());
 
             SyncLayerIndex();
             SyncLayers();
@@ -194,7 +212,11 @@ namespace SadConsole.Consoles
             var layer = new CellsRenderer(new CellSurface(Width, Height), Batch);
             layer.Font = this.Font;
             _layers.Insert(index, layer);
-            _layerMetadata.Insert(index, new Metadata() { Name = index.ToString(), IsVisible = true });
+
+            var metadata = CreateMetadataObject();
+            metadata.Name = index.ToString();
+
+            _layerMetadata.Insert(index, metadata);
 
             SyncLayerIndex();
             SyncLayers();
@@ -213,6 +235,11 @@ namespace SadConsole.Consoles
             _layerMetadata.Insert(newIndex, layerName);
 
             SyncLayerIndex();
+        }
+
+        protected virtual TMetadata CreateMetadataObject()
+        {
+            return new TMetadata();
         }
 
         public IEnumerable<CellsRenderer> GetEnumeratorForLayers()
@@ -253,16 +280,6 @@ namespace SadConsole.Consoles
         {
             for (int i = 0; i < Layers; i++)
                 _layerMetadata[i].Index = i;
-        }
-
-        public void Save(string file)
-        {
-            SadConsole.Serializer.Save<LayeredConsole>(this, file, new Type[] { typeof(Console) });
-        }
-
-        public static LayeredConsole Load(string file)
-        {
-            return SadConsole.Serializer.Load<LayeredConsole>(file);
         }
 
         /// <summary>

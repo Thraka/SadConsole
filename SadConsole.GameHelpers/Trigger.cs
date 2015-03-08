@@ -10,41 +10,74 @@ namespace SadConsole.GameHelpers
 {
     public class Trigger : GameObject, ITrigger
     {
-        public string Id { get; private set; }
-        public IEnumerable<string> TargetIds { get; private set; }
+        public string Id { get; set; }
 
-        public IEnumerable<GameObject> ResolvedTargets { get; private set; }
+        public string[] TargetIds { get; set; }
 
-        public Func<Trigger, GameObjectCollection, Consoles.Console, IEnumerable<GameObjectCollection>, bool> Condition;
-        public Action<Trigger, GameObjectCollection, Consoles.Console, IEnumerable<GameObjectCollection>> Result;
+        public GameObject[] ResolvedTargets { get; private set; }
+
+        public bool DeepProcess { get; set; }
+
+        public Func<Trigger, GameConsole, bool> Condition;
 
         public Trigger(GameObject source)
         {
-            string id = "";
+            Id = "";
             StringBuilder targets = new StringBuilder();
 
             foreach (var setting in source.Settings)
             {
                 string name = setting.Name.ToLower().Trim();
                 if (name == "id")
-                    id = setting.Value;
+                    Id = setting.Value;
                 else if (name == "target")
                     targets.Append(String.Format("{0};", setting.Value));
+                else if (name == "deep")
+                    DeepProcess = string.IsNullOrWhiteSpace(setting.Value) ? false : bool.Parse(setting.Value);
             }
 
-            Id = id;
             TargetIds = targets.ToString().Trim(';').Trim().Split(';');
 
             source.CopyTo(this);
         }
 
-        public override void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
+        public void Triggered(GameObject source, GameConsole console)
         {
             // Check for condition pass
-            if (Condition(this, parent, console, otherCollections))
+            if (Condition(this, console))
             {
-                // If it passed, find all targets and activate them
-                
+                GameObjectCollection parent = null;
+                Parent.TryGetTarget(out parent);
+
+                ResolvedTargets = GameObjectParser.ResolveTargets(this, TargetIds, parent, console, DeepProcess);
+
+                //Result(this, parent, console);
+
+                for (int i = 0; i < ResolvedTargets.Length; i++)
+                {
+                    if (ResolvedTargets[i] is ITarget)
+                        ((ITarget)ResolvedTargets[i]).Triggered(this, console);
+                }
+            }
+        }
+
+        public override void Process(GameConsole console)
+        {
+            // Check for condition pass
+            if (Condition(this, console))
+            {
+                GameObjectCollection parent = null;
+                Parent.TryGetTarget(out parent);
+
+                ResolvedTargets = GameObjectParser.ResolveTargets(this, TargetIds, parent, console, DeepProcess);
+
+                //Result(this, parent, console);
+
+                for (int i = 0; i < ResolvedTargets.Length; i++)
+                {
+                    if (ResolvedTargets[i] is ITarget)
+                        ((ITarget)ResolvedTargets[i]).Triggered(this, console);
+                }
             }
         }
     }

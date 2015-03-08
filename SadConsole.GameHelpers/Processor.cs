@@ -6,45 +6,48 @@ using System.Threading.Tasks;
 
 namespace SadConsole.GameHelpers
 {
-    class Processor :GameObject, IProcessor
+    public class Processor :GameObject, ITarget, ICanTarget
     {
         public string Id { get; private set; }
-        public IEnumerable<string> TargetIds { get; private set; }
+        public string[] TargetIds { get; set; }
 
-        public IEnumerable<GameObject> ResolvedTargets { get; private set; }
+        public GameObject[] ResolvedTargets { get; private set; }
 
-        public Func<Trigger, GameObjectCollection, Consoles.Console, IEnumerable<GameObjectCollection>, bool> Condition;
-        public Action<Trigger, GameObjectCollection, Consoles.Console, IEnumerable<GameObjectCollection>> Result;
+        public bool DeepProcess { get; set; }
 
         public Processor(GameObject source)
         {
-            string id = "";
+            Id = "";
             StringBuilder targets = new StringBuilder();
 
             foreach (var setting in source.Settings)
             {
                 string name = setting.Name.ToLower().Trim();
                 if (name == "id")
-                    id = setting.Value;
+                    Id = setting.Value;
                 else if (name == "target")
-                    targets.Append(String.Format("{0};", setting.Value));
+                    targets.Append(string.Format("{0};", setting.Value));
+                else if (name == "deep")
+                    DeepProcess = string.IsNullOrWhiteSpace(setting.Value) ? false : bool.Parse(setting.Value);
             }
 
-            Id = id;
             TargetIds = targets.ToString().Trim(';').Trim().Split(';');
 
             source.CopyTo(this);
         }
-
-        public void Triggered(ITrigger trigger, GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
+        
+        public void Triggered(GameObject source, GameConsole console)
         {
+            GameObjectCollection parent = null;
+            Parent.TryGetTarget(out parent);
 
-        }
+            ResolvedTargets = GameObjectParser.ResolveTargets(this, TargetIds, parent, console, DeepProcess);
 
-        public override void Process(GameObjectCollection parent, Consoles.Console console, IEnumerable<GameObjectCollection> otherCollections = null)
-        {
-            //if (Condition(this, parent, console, otherCollections))
-            //    Result()
+            for (int i = 0; i < ResolvedTargets.Length; i++)
+            {
+                if (ResolvedTargets[i] is ITarget)
+                    ((ITarget)ResolvedTargets[i]).Triggered(this, console);
+            }
         }
     }
 }

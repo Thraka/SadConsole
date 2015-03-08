@@ -10,6 +10,7 @@
 * Engine.Serializer now has a Save/Load method that does file handling for you. The other Serialize/Deserialize methods only use a stream.
 * CellSurface Copy Fixes.
 * ConsoleList can now become "focused." Unsure why I had it throw an exception in the past.
+* Save/Load removed from various types. Use SadConsole.Serializer instead.
 
 #### Entities
 * BREAKING CHANGES
@@ -27,6 +28,7 @@
 * A GameObject type has been created (along with a collection type) which represents a point on the console. 
 ** Generally these aren't rendered, but they allow you to query the collection for a GameObject named X or one located at a specific point. You can also do queries that return all GameObjects with a specific color or character for example, using lync.
 ** GameObjects have a Settings collection which represent name-value-pairs. For example, create a Door GameObject which a setting named Destination and a value of the name of another file. Then code your game to look for when something touches the same location as the GameObject and then move it to the appropriate screen.
+* GameConsole is a LayeredConsole with special metadata that contains a GameObjectCollection for each layer.
 
 ## Version 1.3.114 (12/12/2014)
 

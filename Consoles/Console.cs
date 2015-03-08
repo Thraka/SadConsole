@@ -494,15 +494,5 @@
         {
             _virtualCursor.AttachConsole(this);
         }
-
-        public void Save(string file)
-        {
-            SadConsole.Serializer.Save<Console>(this, file);
-        }
-
-        public static Console Load(string file)
-        {
-            return SadConsole.Serializer.Load<Console>(file);
-        }
     }
 }
