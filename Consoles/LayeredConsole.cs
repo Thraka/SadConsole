@@ -290,6 +290,8 @@ namespace SadConsole.Consoles
         {
             for (int i = 0; i < Layers; i++)
                 _layers[i].ViewArea = viewArea;
+
+            ViewArea = viewArea;
         }
     }
 
