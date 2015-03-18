@@ -22,7 +22,8 @@ namespace SadConsole.Shapes
 
         public void Draw(CellSurface surface)
         {
-            BorderAppearance = new CellAppearance(Color.Blue, Color.Black, 4);
+            if (BorderAppearance == null)
+                BorderAppearance = new CellAppearance(Color.Blue, Color.Black, 4);
 
             Algorithms.Circle(Center.X, Center.Y, Radius, (x, y) => { if (surface.IsValidCell(x, y)) surface.SetCellAppearance(x, y, BorderAppearance); });
         }

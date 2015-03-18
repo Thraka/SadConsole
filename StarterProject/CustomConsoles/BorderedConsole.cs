@@ -27,7 +27,26 @@
             // Draw the box shape onto the CellSurface that this console is displaying.
             box.Draw(this.CellData);
 
-            this.CellData.Print(3, 1, "Box drawn using the Shapes.Box class");
+            this.CellData.Print(3, 1, "Shapes are easily created with only a few lines of code");
+
+            // Get a circle
+            SadConsole.Shapes.Circle circle = new SadConsole.Shapes.Circle();
+            circle.BorderAppearance = new CellAppearance(Color.YellowGreen, Color.White, 57);
+            circle.Center = new Point(60, 13);
+            circle.Radius = 10;
+
+            circle.Draw(this.CellData);
+
+            // Now time to make a line
+            SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
+            line.StartingLocation = new Point(10, 10);
+            line.EndingLocation = new Point(45, 18);
+            line.UseEndingCell = false;
+            line.UseStartingCell = false;
+            line.CellAppearance = new Cell { Foreground = Color.Purple, Background = Color.White, CharacterIndex = 88 };
+
+            line.Draw(this.CellData);
+
         }
 
     }
