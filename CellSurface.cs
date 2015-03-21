@@ -12,7 +12,7 @@ namespace SadConsole
     /// Represents all the basic information about console text and methods to manipulate that text.
     /// </summary>
     [DataContract]
-    public class CellSurface: IEnumerable<Cell>
+    public class CellSurface : IEnumerable<Cell>
     {
         [DataMember(Name = "Width")]
         protected int _width = 1;
@@ -37,6 +37,12 @@ namespace SadConsole
         /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="Width"/> and <see cref="Height"/> properties instead. The cell data can be changed.</remarks>
         [DataMember]
         protected Cell[] Cells { get; set; }
+
+        /// <summary>
+        /// When true, the console will be extend to fit extra rows instead of having the data shift.
+        /// </summary>
+        [DataMember]
+        public bool ResizeOnShift { get; set; }
 
         /// <summary>
         /// Gets a cell based on it's coordinates on the surface.
@@ -933,29 +939,38 @@ namespace SadConsole
         /// <param name="rowsToShift">How many rows to shift.</param>
         public void ShiftRowsUp(int rowsToShift)
         {
-            for (int y = rowsToShift; y < Height; y++)
+            if (ResizeOnShift)
             {
-                for (int x = 0; x < Width; x++)
+                CellSurface copy = new CellSurface(_width, _height);
+                Copy(copy);
+                Resize(_width, _height + rowsToShift);
+                copy.Copy(this, 0, 0);
+            }
+            else
+            {
+                for (int y = rowsToShift; y < Height; y++)
                 {
-                    Cell destination = Cells[(y - rowsToShift) * Width + x];
-                    Cell source = Cells[y * Width + x];
+                    for (int x = 0; x < Width; x++)
+                    {
+                        Cell destination = Cells[(y - rowsToShift) * Width + x];
+                        Cell source = Cells[y * Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.CharacterIndex = source.CharacterIndex;
-                    destination.Effect = source.Effect;
+                        destination.Background = source.Background;
+                        destination.Foreground = source.Foreground;
+                        destination.CharacterIndex = source.CharacterIndex;
+                        destination.Effect = source.Effect;
+                    }
+                }
+
+
+                for (int y = Height - rowsToShift; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        Clear(x, y);
+                    }
                 }
             }
-
-
-            for (int y = Height - rowsToShift; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    Clear(x, y);
-                }
-            }
-
             TimesShiftedUp += rowsToShift;
         }
 
@@ -972,29 +987,40 @@ namespace SadConsole
         /// <param name="rowsToShift">How many rows to shift.</param>
         public void ShiftRowsDown(int rowsToShift)
         {
-            for (int y = (Height - 1) - rowsToShift; y >= 0; y--)
+            if (ResizeOnShift)
             {
-                for (int x = 0; x < Width; x++)
+                CellSurface copy = new CellSurface(_width, _height);
+                Copy(copy);
+                Resize(_width, _height + rowsToShift);
+                copy.Copy(this, 0, rowsToShift);
+            }
+            else
+            {
+                for (int y = (Height - 1) - rowsToShift; y >= 0; y--)
                 {
-                    Cell destination = Cells[(y + rowsToShift) * Width + x];
-                    Cell source = Cells[y * Width + x];
+                    for (int x = 0; x < Width; x++)
+                    {
+                        Cell destination = Cells[(y + rowsToShift) * Width + x];
+                        Cell source = Cells[y * Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.CharacterIndex = source.CharacterIndex;
-                    destination.Effect = source.Effect;
+                        destination.Background = source.Background;
+                        destination.Foreground = source.Foreground;
+                        destination.CharacterIndex = source.CharacterIndex;
+                        destination.Effect = source.Effect;
+                    }
+                }
+
+
+                for (int y = 0; y < rowsToShift; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        Cell source = Cells[y * Width + x];
+                        source.Reset();
+                    }
                 }
             }
-
-
-            for (int y = 0; y < rowsToShift; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    Cell source = Cells[y * Width + x];
-                    source.Reset();
-                }
-            }
+            TimesShiftedUp += rowsToShift;
         }
         #endregion
 
