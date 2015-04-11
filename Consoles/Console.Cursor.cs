@@ -70,10 +70,28 @@ using SadConsole.Effects;
                 }
             }
 
-            /// <summary>
-            /// Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
-            /// </summary>
-            [DataMember]
+			/// <summary>
+			/// Gets or sets the row of the cursor postion.
+			/// </summary>
+			public int Row
+			{
+				get { return _position.X; }
+				set { _position.X = value; }
+			}
+
+			/// <summary>
+			/// Gets or sets the column of the cursor postion.
+			/// </summary>
+			public int Column
+			{
+				get { return _position.Y; }
+				set { _position.Y = value; }
+			}
+
+			/// <summary>
+			/// Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
+			/// </summary>
+			[DataMember]
             public bool AutomaticallyShiftRowsUp { get; set; }
 
             /// <summary>
