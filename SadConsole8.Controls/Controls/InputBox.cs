@@ -31,6 +31,11 @@
         [DataMember(Name = "TextAlignment")]
         protected HorizontalAlignment _alignment = HorizontalAlignment.Left;
 
+		/// <summary>
+		/// When editing the text box, this allows the text to scroll to the right so you can see what you are typing.
+		/// </summary>
+		protected int _leftDrawOffset;
+
         /// <summary>
         /// The location of the carrot.
         /// </summary>
@@ -141,17 +146,19 @@
                 if (value != _text)
                 {
                     TextChangedEventArgs args = new TextChangedEventArgs();
-                    args.NewValue = value;
+                    args.NewValue = MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value;
                     args.OldValue = _text;
 
                     if (TextChangedPreview != null)
                         TextChangedPreview(this, args);
 
                     _text = args.NewValue ?? "";
+					_text = MaxLength != 0 && _text.Length > MaxLength ? _text.Substring(0, MaxLength) : _text;
 
-                    Validate();
+					Validate();
                     _editingText = _text;
-
+					PositionCursor();
+					
                     if (TextChanged != null)
                         TextChanged(this, EventArgs.Empty);
                 }
@@ -210,8 +217,8 @@
 
                 if (base.IsFocused && !DisableKeyboard)
                 {
-                    this.Print(0, 0, _editingText);
-                    SetEffect(this[this._carrotPos, 0], Theme.CarrotEffect.Clone());
+                    this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
+                    SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect.Clone());
                 }
                 else
                 {
@@ -293,7 +300,7 @@
                 }
             }
 
-            PositionCursor();
+            //PositionCursor();
 
             this.IsDirty = true;
         }
@@ -315,9 +322,19 @@
             else
                 _carrotPos = _editingText.Length;
 
-            if (_carrotPos >= this.Width)
-                _carrotPos = this.Width - 1;
-        }
+			// Test to see if carrot is off edge of box
+			if (_carrotPos >= _width)
+			{
+				_leftDrawOffset = _editingText.Length - _width + 1;
+
+				if (_leftDrawOffset < 0)
+					_leftDrawOffset = 0;
+			}
+			else
+			{
+				_leftDrawOffset = 0;
+			}
+		}
 
         /// <summary>
         /// Called when the control should process keyboard information.
@@ -347,55 +364,126 @@
 
                     this.IsDirty = true;
 
-                    for (int i = 0; i < info.KeysPressed.Count; i++)
-                    {
-                        if (_isNumeric)
-                        {
-                            if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
-                                newText.Remove(newText.Length - 1, 1);
+					for (int i = 0; i < info.KeysPressed.Count; i++)
+					{
+						if (_isNumeric)
+						{
+							if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
+								newText.Remove(newText.Length - 1, 1);
 
-                            else if (info.KeysPressed[i].XnaKey == Keys.Enter)
-                            {
-                                DisableKeyboard = true;
+							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
+							{
+								DisableKeyboard = true;
 
-                                Text = _editingText;
+								Text = _editingText;
 
-                                return true;
-                            }
-                            else if (info.KeysPressed[i].XnaKey == Keys.Escape)
-                            {
-                                DisableKeyboard = true;
-                                return true;
-                            }
+								return true;
+							}
+							else if (info.KeysPressed[i].XnaKey == Keys.Escape)
+							{
+								DisableKeyboard = true;
+								return true;
+							}
 
-                            else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
-                            {
-                                newText.Append(info.KeysPressed[i].Character);
-                            }
-                        }
+							else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
+							{
+								newText.Append(info.KeysPressed[i].Character);
+							}
 
-                        else
-                        {
-                            if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
-                                newText.Remove(newText.Length - 1, 1);
-                            else if (info.KeysPressed[i].XnaKey == Keys.Space)
-                                newText.Append(' ');
-                            else if (info.KeysPressed[i].Character != 0)
-                                newText.Append(info.KeysPressed[i].Character);
-                            else if (info.KeysPressed[i].XnaKey == Keys.Enter)
-                            {
-                                Text = _editingText;
-                                DisableKeyboard = true;
-                                return true;
-                            }
-                            else if (info.KeysPressed[i].XnaKey == Keys.Escape)
-                            {
-                                DisableKeyboard = true;
-                                return true;
-                            }
-                        }
+							PositionCursor();
+						}
 
-                    }
+						else
+						{
+							if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0 && _carrotPos != 0)
+							{
+								if (_carrotPos == newText.Length)
+									newText.Remove(newText.Length - 1, 1);
+								else
+									newText.Remove(_carrotPos - 1, 1);
+
+								_carrotPos -= 1;
+
+								if (_carrotPos == -1)
+									_carrotPos = 0;
+							}
+							else if (info.KeysPressed[i].XnaKey == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+							{
+								newText.Insert(_carrotPos, ' ');
+								_carrotPos++;
+
+								if (_carrotPos > newText.Length)
+									_carrotPos = newText.Length;
+							}
+
+							else if (info.KeysPressed[i].XnaKey == Keys.Delete && _carrotPos != newText.Length)
+							{
+								newText.Remove(_carrotPos, 1);
+
+								if (_carrotPos > newText.Length)
+									_carrotPos = newText.Length;
+							}
+
+							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
+							{
+								Text = _editingText;
+								DisableKeyboard = true;
+								return true;
+							}
+							else if (info.KeysPressed[i].XnaKey == Keys.Escape)
+							{
+								DisableKeyboard = true;
+								return true;
+							}
+							else if (info.KeysPressed[i].XnaKey == Keys.Left)
+							{
+								_carrotPos -= 1;
+
+								if (_carrotPos == -1)
+									_carrotPos = 0;
+							}
+							else if (info.KeysPressed[i].XnaKey == Keys.Right)
+							{
+								_carrotPos += 1;
+
+								if (_carrotPos > newText.Length)
+									_carrotPos = newText.Length;
+							}
+
+							else if (info.KeysPressed[i].XnaKey == Keys.Home)
+							{
+								_carrotPos = 0;
+							}
+
+							else if (info.KeysPressed[i].XnaKey == Keys.End)
+							{
+									_carrotPos = newText.Length;
+							}
+
+							else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+							{
+								newText.Insert(_carrotPos, info.KeysPressed[i].Character);
+								_carrotPos++;
+
+								if (_carrotPos > newText.Length)
+									_carrotPos = newText.Length;
+							}
+
+							// Test to see if carrot is off edge of box
+							if (_carrotPos >= _width)
+							{
+								_leftDrawOffset = newText.Length - _width + 1;
+
+								if (_leftDrawOffset < 0)
+									_leftDrawOffset = 0;
+							}
+							else
+							{
+								_leftDrawOffset = 0;
+							}
+						}
+
+					}
 
                     string newString = newText.ToString();
                     if (newString != _editingText)
