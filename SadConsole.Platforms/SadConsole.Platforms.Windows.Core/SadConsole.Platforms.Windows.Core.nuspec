@@ -19,6 +19,7 @@
     <copyright>Copyright 2014 Steve De George</copyright>
     <tags>monogame roguelike cli xna game development</tags>
     <dependencies>
+      <dependency id="MonoGame.Framework.WindowsDX" version="(3.2.9999, 3.4.0)" />
     </dependencies>
   </metadata>
 </package>

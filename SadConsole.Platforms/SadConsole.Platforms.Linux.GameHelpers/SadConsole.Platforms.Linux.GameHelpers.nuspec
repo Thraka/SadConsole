@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>EdCanHack.SadConsole.Platforms.Linux.GameHelpers</id>
-    <version>$version$</version>
+    <version>2.0.0</version>
     <title>SadConsole Game Helpers - Linux</title>
     <authors>Steve De George</authors>
     <owners>Ed Ropple</owners>
@@ -22,4 +22,8 @@
         <dependency id="EdCanHack.SadConsole.Platforms.Linux.Core" version="(1.9.99999, 2.1.0)" />
     </dependencies>
   </metadata>
+  <files>
+      <file src="bin/Release/SadConsole.Platforms.Linux.GameHelpers.dll"
+            target="lib/net45/SadConsole.Platforms.Linux.GameHelpers.dll" />
+  </files>
 </package>
