@@ -78,6 +78,7 @@ build/
 *.log
 *.scc
 *.sln.ide
+*.nupkg
 
 # Visual C++ cache files
 ipch/
