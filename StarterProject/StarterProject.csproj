@@ -39,9 +39,9 @@
     <StartupObject>StarterProject.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Binaries\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\packages\MonoGame.Framework.WindowsDX.3.3.0.0\lib\net40\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -77,6 +77,7 @@
     <None Include="Fonts\IBM.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -91,18 +92,30 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole.GameHelpers\SadConsole.GameHelpers.csproj">
-      <Project>{582f4ddd-9c17-42e2-9691-a96a03ed6ad8}</Project>
-      <Name>SadConsole.GameHelpers</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Fonts\IBM8x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="sad.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.Ansi\SadConsole.Platforms.Windows.Ansi.csproj">
+      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
+      <Name>SadConsole.Platforms.Windows.Ansi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.Controls\SadConsole.Platforms.Windows.Controls.csproj">
+      <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
+      <Name>SadConsole.Platforms.Windows.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
+      <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
+      <Name>SadConsole.Platforms.Windows.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.GameHelpers\SadConsole.Platforms.Windows.GameHelpers.csproj">
+      <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
+      <Name>SadConsole.Platforms.Windows.GameHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

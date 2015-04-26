@@ -67,7 +67,7 @@
                 VirtualCursor.Print("  Looking around you discover that you are in a dark and empty room. There is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
 
             else if (value.ToLower() == "exit" || value.ToLower() == "quit")
-                Program.Game.Exit();
+                Environment.Exit(0);
 
             else
                 VirtualCursor.Print("  Unknown command").NewLine();

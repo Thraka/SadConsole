@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.22310.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject", "StarterProject\StarterProject.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.GameHelpers", "SadConsole.GameHelpers\SadConsole.GameHelpers.csproj", "{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Libraries", "01_Libraries", "{4EACED7C-3BF4-488D-813F-7D481122A21C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_Platforms", "02_Platforms", "{CFB2D176-40FA-4D97-80ED-2C43B3552E68}"
@@ -35,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Platforms.Window
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Controls", "SadConsole.Controls\SadConsole.Controls.shproj", "{25C2DBD3-8AC1-4163-A29A-A7F756FA4A5F}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.GameHelpers", "SadConsole.GameHelpers\SadConsole.GameHelpers.shproj", "{00CC441C-44BB-4B15-BABD-6831B65C31D8}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SadConsole.Controls\SadConsole.Controls.projitems*{46f11907-cef3-4069-b041-0a88880981e6}*SharedItemsImports = 4
@@ -42,7 +42,9 @@ Global
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{5fe599b4-4b47-46e7-931b-b01c2cae40d4}*SharedItemsImports = 13
 		SadConsole.Core\SadConsole.Core.projitems*{bddf43cd-1bde-472a-a3d9-a003a6bf14d9}*SharedItemsImports = 13
 		SadConsole.Controls\SadConsole.Controls.projitems*{25c2dbd3-8ac1-4163-a29a-a7f756fa4a5f}*SharedItemsImports = 13
+		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{00cc441c-44bb-4b15-babd-6831b65c31d8}*SharedItemsImports = 13
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{55695088-7d09-4704-9d0c-7c69e0de6d47}*SharedItemsImports = 4
+		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{d348c254-ab16-4b48-9f61-2ffee51dfd4a}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +55,6 @@ Global
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -86,5 +84,6 @@ Global
 		{D348C254-AB16-4B48-9F61-2FFEE51DFD4A} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{55695088-7D09-4704-9D0C-7C69E0DE6D47} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{25C2DBD3-8AC1-4163-A29A-A7F756FA4A5F} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
+		{00CC441C-44BB-4B15-BABD-6831B65C31D8} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 	EndGlobalSection
 EndGlobal
