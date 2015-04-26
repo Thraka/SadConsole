@@ -78,12 +78,6 @@
     <Compile Include="Themes\WindowTheme.cs" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\SadConsole.Core.csproj">
-      <Project>{95c182e9-410a-4f76-8777-d7fa95d63552}</Project>
-      <Name>SadConsole.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

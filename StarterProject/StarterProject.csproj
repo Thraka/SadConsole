@@ -91,10 +91,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole.Core.csproj">
-      <Project>{95c182e9-410a-4f76-8777-d7fa95d63552}</Project>
-      <Name>SadConsole.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SadConsole.GameHelpers\SadConsole.GameHelpers.csproj">
       <Project>{582f4ddd-9c17-42e2-9691-a96a03ed6ad8}</Project>
       <Name>SadConsole.GameHelpers</Name>
