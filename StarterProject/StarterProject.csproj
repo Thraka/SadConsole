@@ -95,10 +95,6 @@
       <Project>{582f4ddd-9c17-42e2-9691-a96a03ed6ad8}</Project>
       <Name>SadConsole.GameHelpers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SadConsole8.Controls\SadConsole.Controls.csproj">
-      <Project>{d14d10e3-7a9b-4acf-ab40-9ad5911f9c83}</Project>
-      <Name>SadConsole.Controls</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\IBM8x16.png">
