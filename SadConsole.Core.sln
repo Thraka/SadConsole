@@ -27,8 +27,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Core", "SadConso
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{E37CC7AB-090B-410B-8017-3DC57780FA8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Platforms.Windows.Core", "SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj", "{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SadConsole.Core\SadConsole.Core.projitems*{9e8424e8-efd3-4158-b49e-feccd7509a7f}*SharedItemsImports = 4
 		SadConsole.Core\SadConsole.Core.projitems*{bddf43cd-1bde-472a-a3d9-a003a6bf14d9}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +55,10 @@ Global
 		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{582F4DDD-9C17-42E2-9691-A96A03ED6AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,5 +66,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BDDF43CD-1BDE-472A-A3D9-A003A6BF14D9} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{E37CC7AB-090B-410B-8017-3DC57780FA8E} = {CFB2D176-40FA-4D97-80ED-2C43B3552E68}
+		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 	EndGlobalSection
 EndGlobal
