@@ -1,5 +1,4 @@
-SadConsole
-==========
+# SadConsole #
 
 SadConsole is an MonoGame 3.3-based game library that provides an engine to emulate old-school console and command prompt style graphics. One or more textures are used to represent the standard ascii character set. SadConsole allows you to create console instances which can be managed independently of each other. A console is made up of individual cells which can have a foreground, background, character, and a special effect applied to it. 
 
@@ -9,13 +8,14 @@ There is source code for a screen editor written in SadConsole. It's the most co
 
 See the wiki for more information.
 
-Dependencies
-------------
-* SadConsole 2.x uses NuGet dependencies and does not require external dependencies.
-* SadConsole 1.x:
-    * MonoGame 3.2 - http://www.monogame.net/
-    * XNA 4.0 Refresh - http://www.microsoft.com/en-us/download/details.aspx?id=27599
+## Dependencies ##
+SadConsole 2.x uses NuGet dependencies for its .NET dependencies, but requires some external dependencies on MacOS and Linux.
 
-Starter Project
----------------
-The source code here provides a starter project that demonstrates how to use parts of the engine. The code is located at https://github.com/Thraka/SadConsole/tree/master/StarterProject
+### MacOS ###
+As a MonoMac project, Xcode must be installed along with the full Xamarin development kit.
+
+### Linux ###
+SadConsole for Linux has been built against the Debian package of Mono, on Ubuntu 14.04 LTS. It requires SDL dependencies, specifically `libsdl-mixer` and `libsdl-gfx`.
+
+## Starter Project ##
+[StarterProject](./StarterProject) demonstrates how to use SadConsole in a multi-platform environment.
