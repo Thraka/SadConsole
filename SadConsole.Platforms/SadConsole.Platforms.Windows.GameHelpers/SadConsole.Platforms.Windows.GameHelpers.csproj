@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -30,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.3.0.0\lib\net40\MonoGame.Framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -42,6 +38,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.3.0.0\lib\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
-      <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
+      <Project>{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}</Project>
       <Name>SadConsole.Platforms.Windows.Core</Name>
     </ProjectReference>
   </ItemGroup>

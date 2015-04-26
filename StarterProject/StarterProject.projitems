@@ -31,8 +31,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="$(MSBuildThisFileDirectory)sad.png">
+    <Content Include="$(MSBuildThisFileDirectory)sad.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 </Project>

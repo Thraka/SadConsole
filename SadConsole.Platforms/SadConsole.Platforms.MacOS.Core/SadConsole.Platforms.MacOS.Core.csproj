@@ -1,67 +1,73 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5CAFF19F-1B1D-4D71-A413-3AD4C5824459}</ProjectGuid>
+    <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{9286A346-969E-4D47-9768-12986BABA9FA}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SadConsole.Platforms.MacOS.Core</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>SadConsole.Platforms.MacOS.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <SuppressXamMacUpsell>True</SuppressXamMacUpsell>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <UseRefCounting>false</UseRefCounting>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <CreatePackage>false</CreatePackage>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <UseRefCounting>false</UseRefCounting>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <CreatePackage>false</CreatePackage>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.3.0.2293, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="MonoMac" />
+    <Reference Include="MonoGame.Framework">
       <HintPath>..\..\packages\MonoGame.Framework.MacOS.3.3.0.0\lib\net45\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MonoGame.Framework.MacOS.3.3.0.0\lib\net45\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL">
+    <Reference Include="Tao.Sdl">
       <HintPath>..\..\packages\MonoGame.Framework.MacOS.3.3.0.0\lib\net45\Tao.Sdl.dll</HintPath>
     </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\packages\MonoGame.Framework.MacOS.3.3.0.0\lib\net45\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Folder Include="Resources\" />
   </ItemGroup>
+  <Import Project="..\..\SadConsole.Core\SadConsole.Core.projitems" Label="Shared" Condition="Exists('..\..\SadConsole.Core\SadConsole.Core.projitems')" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="..\..\SadConsole.Core\SadConsole.Core.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

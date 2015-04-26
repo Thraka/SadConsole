@@ -65,7 +65,7 @@ namespace SadConsole
         public void Generate()
         {
             using (System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath))
-            {
+           {
                 Image = Texture2D.FromStream(Engine.Device, fontStream);
             }
 
