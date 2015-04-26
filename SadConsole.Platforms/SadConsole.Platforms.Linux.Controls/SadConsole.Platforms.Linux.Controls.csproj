@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{46F11907-CEF3-4069-B041-0A88880981E6}</ProjectGuid>
+    <ProjectGuid>{D826C81F-F04F-4A33-9AE3-1FD5B96DC542}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SadConsole.Platforms.Windows.Controls</RootNamespace>
-    <AssemblyName>SadConsole.Platforms.Windows.Controls</AssemblyName>
+    <RootNamespace>SadConsole.Platforms.Linux.Controls</RootNamespace>
+    <AssemblyName>SadConsole.Platforms.Linux.Controls</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,10 @@
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.3.0.0\lib\net40\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\..\packages\MonoGame.Framework.Linux.3.3.0.0\lib\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MonoGame.Framework.Linux.3.3.0.0\lib\net40\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,18 +45,27 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MonoGame.Framework.Linux.3.3.0.0\lib\net40\Tao.Sdl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\SadConsole.Platforms.Linux.Core\SadConsole.Platforms.Linux.Core.csproj">
+      <Project>{76e3a634-c04f-486f-93a1-80d9fb2615fb}</Project>
+      <Name>SadConsole.Platforms.Linux.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
-      <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
-      <Name>SadConsole.Platforms.Windows.Core</Name>
-    </ProjectReference>
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Tao.Sdl.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="..\..\SadConsole.Controls\SadConsole.Controls.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

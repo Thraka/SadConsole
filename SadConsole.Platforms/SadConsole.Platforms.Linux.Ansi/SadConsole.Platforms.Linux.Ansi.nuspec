@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>EdCanHack.SadConsole.Platforms.Windows.Core</id>
+    <id>EdCanHack.SadConsole.Platforms.Linux.Ansi</id>
     <version>$version$</version>
-    <title>SadConsole Core - Windows</title>
+    <title>SadConsole Ansi - Linux</title>
     <authors>Steve De George</authors>
     <owners>Ed Ropple</owners>
     <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
@@ -11,7 +11,7 @@
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-      A MonoGame 3.3 library that provides an engine to emulate old-school console and command prompt style graphics. (Unofficial NuGet port.)
+      Builds upon SadConsole.Core to provide ANSI documents as data. (Unofficial NuGet port.)
     </description>
     <releaseNotes>
 2.0.0: First NuGet release, targeting MonoGame 3.3.
@@ -19,6 +19,7 @@
     <copyright>Copyright 2014 Steve De George</copyright>
     <tags>monogame roguelike cli xna game development</tags>
     <dependencies>
+        <dependency id="EdCanHack.SadConsole.Platforms.Linux.Core" version="(1.9.99999, 2.1.0)" />
     </dependencies>
   </metadata>
 </package>
