@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StarterProject</RootNamespace>
-    <AssemblyName>StarterProject</AssemblyName>
+    <AssemblyName>StarterProject.Windows</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -52,71 +52,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomConsoles\BorderedConsole.cs" />
-    <Compile Include="CustomConsoles\CursorConsole.cs" />
-    <Compile Include="CustomConsoles\DOSConsole.cs" />
-    <Compile Include="CustomConsoles\EntityAndConsole.cs" />
-    <Compile Include="CustomConsoles\SplashScreen.cs" />
-    <Compile Include="CustomConsoles\StaticConsole.cs" />
-    <Compile Include="CustomConsoles\StretchedConsole.cs" />
-    <Compile Include="CustomConsoles\WindowTestConsole.cs" />
-    <Compile Include="Game1.cs" />
-    <Compile Include="InputHandling\ClassicConsoleKeyboardHandler.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Windows\CharacterViewer.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="Fonts\IBM.font">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Fonts\IBM8x16.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="sad.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.Ansi\SadConsole.Platforms.Windows.Ansi.csproj">
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Ansi\SadConsole.Platforms.Windows.Ansi.csproj">
       <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
       <Name>SadConsole.Platforms.Windows.Ansi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.Controls\SadConsole.Platforms.Windows.Controls.csproj">
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Controls\SadConsole.Platforms.Windows.Controls.csproj">
       <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
       <Name>SadConsole.Platforms.Windows.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
       <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
       <Name>SadConsole.Platforms.Windows.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SadConsole.Platforms\SadConsole.Platforms.Windows.GameHelpers\SadConsole.Platforms.Windows.GameHelpers.csproj">
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.GameHelpers\SadConsole.Platforms.Windows.GameHelpers.csproj">
       <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
       <Name>SadConsole.Platforms.Windows.GameHelpers</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\..\StarterProject.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

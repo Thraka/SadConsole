@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22310.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Windows", "StarterProject\StarterProject.Windows.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Libraries", "01_Libraries", "{4EACED7C-3BF4-488D-813F-7D481122A21C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_Platforms", "02_Platforms", "{CFB2D176-40FA-4D97-80ED-2C43B3552E68}"
@@ -59,6 +57,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_Examples", "03_Examples"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StarterProject", "StarterProject", "{B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StarterProject", "StarterProject\StarterProject.shproj", "{B41A356C-4BA6-40CC-AC03-0E5D46B0B981}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Windows", "StarterProject\Platforms\Windows\StarterProject.Windows.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.MacOS", "StarterProject\Platforms\MacOS\StarterProject.MacOS.csproj", "{04183580-F4DF-427D-B6E7-CA7C673F9C90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Linux", "StarterProject\Platforms\Linux\StarterProject.Linux.csproj", "{A76E76EA-9C7F-4047-938A-3A7BA10EBC38}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SadConsole.Controls\SadConsole.Controls.projitems*{46f11907-cef3-4069-b041-0a88880981e6}*SharedItemsImports = 4
@@ -66,12 +72,16 @@ Global
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{5fe599b4-4b47-46e7-931b-b01c2cae40d4}*SharedItemsImports = 13
 		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{1dd230c6-ddb8-47be-90a4-2025a3b0036f}*SharedItemsImports = 4
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{2afd92f2-e334-4f97-b1bf-292c15a6eb42}*SharedItemsImports = 4
+		StarterProject\StarterProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
+		StarterProject\StarterProject.projitems*{a76e76ea-9c7f-4047-938a-3a7ba10ebc38}*SharedItemsImports = 4
 		SadConsole.Core\SadConsole.Core.projitems*{bddf43cd-1bde-472a-a3d9-a003a6bf14d9}*SharedItemsImports = 13
 		SadConsole.Controls\SadConsole.Controls.projitems*{25c2dbd3-8ac1-4163-a29a-a7f756fa4a5f}*SharedItemsImports = 13
 		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{a88eca1c-08f5-40d9-af89-af59ba98e287}*SharedItemsImports = 4
 		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{00cc441c-44bb-4b15-babd-6831b65c31d8}*SharedItemsImports = 13
 		SadConsole.Core\SadConsole.Core.projitems*{76e3a634-c04f-486f-93a1-80d9fb2615fb}*SharedItemsImports = 4
 		SadConsole.Controls\SadConsole.Controls.projitems*{d826c81f-f04f-4a33-9ae3-1fd5b96dc542}*SharedItemsImports = 4
+		StarterProject\StarterProject.projitems*{04183580-f4df-427d-b6e7-ca7c673f9c90}*SharedItemsImports = 4
+		StarterProject\StarterProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{55695088-7d09-4704-9d0c-7c69e0de6d47}*SharedItemsImports = 4
 		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{d348c254-ab16-4b48-9f61-2ffee51dfd4a}*SharedItemsImports = 4
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{783de48a-176d-48d8-bdff-1ce7a8576cb3}*SharedItemsImports = 4
@@ -83,10 +93,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -135,12 +141,23 @@ Global
 		{2AFD92F2-E334-4F97-B1BF-292C15A6EB42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AFD92F2-E334-4F97-B1BF-292C15A6EB42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AFD92F2-E334-4F97-B1BF-292C15A6EB42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04183580-F4DF-427D-B6E7-CA7C673F9C90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04183580-F4DF-427D-B6E7-CA7C673F9C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04183580-F4DF-427D-B6E7-CA7C673F9C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04183580-F4DF-427D-B6E7-CA7C673F9C90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A76E76EA-9C7F-4047-938A-3A7BA10EBC38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76E76EA-9C7F-4047-938A-3A7BA10EBC38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76E76EA-9C7F-4047-938A-3A7BA10EBC38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76E76EA-9C7F-4047-938A-3A7BA10EBC38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{74327CCC-4606-40B8-9587-60E55B1D6A80} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 		{BDDF43CD-1BDE-472A-A3D9-A003A6BF14D9} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{E37CC7AB-090B-410B-8017-3DC57780FA8E} = {CFB2D176-40FA-4D97-80ED-2C43B3552E68}
 		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
@@ -161,5 +178,9 @@ Global
 		{D826C81F-F04F-4A33-9AE3-1FD5B96DC542} = {E2DC2E8C-24F5-4FE0-A8E7-EEF787AE40F4}
 		{2AFD92F2-E334-4F97-B1BF-292C15A6EB42} = {E2DC2E8C-24F5-4FE0-A8E7-EEF787AE40F4}
 		{B033AC07-53C2-4F0B-B6B1-812EB7D36CCC} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
+		{B41A356C-4BA6-40CC-AC03-0E5D46B0B981} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
+		{74327CCC-4606-40B8-9587-60E55B1D6A80} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
+		{04183580-F4DF-427D-B6E7-CA7C673F9C90} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
+		{A76E76EA-9C7F-4047-938A-3A7BA10EBC38} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 	EndGlobalSection
 EndGlobal
