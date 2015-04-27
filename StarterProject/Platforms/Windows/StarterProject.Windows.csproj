@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{74327CCC-4606-40B8-9587-60E55B1D6A80}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StarterProject</RootNamespace>
+    <AssemblyName>StarterProject.Windows</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>StarterProject.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MonoGame.Framework.WindowsDX.3.3.0.0\lib\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Ansi\SadConsole.Platforms.Windows.Ansi.csproj">
+      <Project>{55695088-7D09-4704-9D0C-7C69E0DE6D47}</Project>
+      <Name>SadConsole.Platforms.Windows.Ansi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Controls\SadConsole.Platforms.Windows.Controls.csproj">
+      <Project>{46F11907-CEF3-4069-B041-0A88880981E6}</Project>
+      <Name>SadConsole.Platforms.Windows.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
+      <Project>{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}</Project>
+      <Name>SadConsole.Platforms.Windows.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.GameHelpers\SadConsole.Platforms.Windows.GameHelpers.csproj">
+      <Project>{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}</Project>
+      <Name>SadConsole.Platforms.Windows.GameHelpers</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\..\StarterProject.projitems" Label="Shared" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

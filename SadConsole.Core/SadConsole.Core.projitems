@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>bddf43cd-1bde-472a-a3d9-a003a6bf14d9</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SadConsole.Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Algorithms.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CellAppearance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CellSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\CellsRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.Cursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ConsoleList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\IConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\IParentConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\IRender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\LayeredConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DoubleAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Bounce.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Circle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\EasingBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Expo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Linear.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Quad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Sine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\Blink.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\BlinkCharacter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\CellEffectBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\ConcurrentEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\Delay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\EffectsChain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\Fade.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\ICellEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\Recolor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Animation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Entity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Frame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\IEntityRender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FontCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICellAppearance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\ILockableMouse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\CodeInstruction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\ConcurrentInstruction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\DoubleInstruction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\DrawString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\FadeCellRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IUpdate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shapes\Box.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shapes\Circle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shapes\Ellipse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shapes\IShape.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shapes\Line.cs" />
+  </ItemGroup>
+</Project>

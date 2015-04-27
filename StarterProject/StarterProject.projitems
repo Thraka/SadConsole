@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b41a356c-4ba6-40cc-ac03-0e5d46b0b981</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>StarterProject</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\EntityAndConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\WindowTestConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\CharacterViewer.cs" />
+    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)sad.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

@@ -1,4 +1,15 @@
-﻿## Version 1.3.115 ()
+﻿## Version 2.0.0 (4/24/2014)
+#### All Libraries
+* __Biggest change:__ refactored SadConsole to use shared projects for easier code maintenance and cross-platform usage. Currently only Windows projects exist; pull requests welcome for OS X and Linux (should be fairly easy).
+* Dropped XNA support (could be re-added with shared projects, pull requests welcome!).
+* Moved to MonoGame 3.3.
+* Transitioned to NuGet for our MonoGame dependency.
+* Added NuGet support
+
+#### StarterProject
+* Replaced call to Microsoft.Xna.Framework.Game.Exit with a call to Environment.Exit, as XNA's is obsoleted in MonoGame 3.3.
+
+## Version 1.3.115 ()
 
 #### Core
 * Added some CellSurface.Fill aand FillArea overloads.
