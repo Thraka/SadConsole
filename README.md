@@ -8,6 +8,8 @@ There is source code for a screen editor written in SadConsole. It's the most co
 
 See the wiki for more information.
 
+* NuGet Package: [![nugetpkg](https://img.shields.io/badge/nuget-SadConsole-orange.svg)](http://www.nuget.org/packages/EdCanHack.SadConsole.Platforms.Windows.Core/)
+
 ## Dependencies ##
 SadConsole 2.x uses NuGet dependencies for its .NET dependencies, but requires some external dependencies on MacOS and Linux.
 
