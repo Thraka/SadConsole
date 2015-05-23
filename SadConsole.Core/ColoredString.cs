@@ -1,34 +1,47 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole.Effects;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Collections;
 
 namespace SadConsole
 {
     /// <summary>
     /// Represents a string that has foreground and background colors for each character in the string.
     /// </summary>
-    public class ColoredString: System.Collections.Generic.List<ColoredCharacter>
+    [DataContract]
+    public class ColoredString : IEnumerable<ColoredCharacter>
     {
+        private List<ColoredCharacter> _characters;
+
+        public ColoredCharacter this[int index]
+        {
+            get { return _characters[index]; }
+            set { _characters[index] = value; }
+        }
+
         /// <summary>
         /// Gets or sets the string. When Set, the colors for each character default to the <see cref="SadConsole.ColoredString.Foreground"/> and <see cref="SadConsole.ColoredString.Background"/> property values.
         /// </summary>
+        [DataMember]
         public string String
         {
             get
             {
-                if (this.Count == 0)
+                if (_characters.Count == 0)
                     return "";
 
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(this.Count);
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(_characters.Count);
 
-                for (int i = 0; i < this.Count; i++)
-                    sb.Append(this[i].Character);
+                for (int i = 0; i < _characters.Count; i++)
+                    sb.Append(_characters[i].Character);
 
                 return sb.ToString();
             }
             set
             {
-                this.Clear();
-                this.Capacity = value.Length;
+                _characters.Clear();
+                _characters.Capacity = value.Length;
 
                 for (int i = 0; i < value.Length; i++)
                 {
@@ -37,44 +50,53 @@ namespace SadConsole
                     character.Foreground = this.Foreground;
                     character.Background = this.Background;
                     character.Effect = this.Effect;
-                    this.Add(character);
+                    _characters.Add(character);
                 }
             }
         }
 
+        public int Count { get { return _characters.Count; } }
+
         /// <summary>
         /// The default foreground color for a new string.
         /// </summary>
+        [DataMember]
         public Color Foreground = Color.White;
 
         /// <summary>
         /// The default background color for a new string.
         /// </summary>
+        [DataMember]
         public Color Background = Color.Black;
 
         /// <summary>
         /// The default cell effect for the new string.
         /// </summary>
+        [DataMember]
         public ICellEffect Effect;
 
         /// <summary>
         /// When true, instructs a caller to not render the <see cref="Character"/>.
         /// </summary>
+        [DataMember]
         public bool IgnoreCharacter;
 
         /// <summary>
         /// When true, instructs a caller to not render the <see cref="Foreground"/>.
         /// </summary>
+        [DataMember]
         public bool IgnoreForeground;
 
         /// <summary>
         /// When true, instructs a caller to not render the <see cref="Background"/>.
         /// </summary>
+        [DataMember]
         public bool IgnoreBackground;
 
         /// <summary>
         /// When true, instructs a caller to not render the <see cref="Effect"/>.
         /// </summary>
+        [DataMember]
         public bool IgnoreEffect;
 
         /// <summary>
@@ -87,11 +109,11 @@ namespace SadConsole
         /// </summary>
         /// <param name="capacity">The number of blank characters.</param>
         public ColoredString(int capacity)
-            : base(capacity)
         {
+            _characters = new List<ColoredCharacter>(capacity);
             for (int i = 0; i < capacity; i++)
             {
-                base.Add(new ColoredCharacter() { Character = ' ', Background = this.Background, Foreground = this.Foreground, Effect = this.Effect });
+                _characters.Add(new ColoredCharacter() { Character = ' ', Background = this.Background, Foreground = this.Foreground, Effect = this.Effect });
             }
         }
         
@@ -128,9 +150,9 @@ namespace SadConsole
         /// </summary>
         public void UpdateWithDefaults()
         {
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < _characters.Count; i++)
             {
-                var character = this[i];
+                var character = _characters[i];
                 character.Foreground = this.Foreground;
                 character.Background = this.Background;
                 character.Effect = this.Effect;
@@ -145,7 +167,7 @@ namespace SadConsole
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
         public ColoredString SubString(int index, int count)
         {
-            if (index + count > this.Count)
+            if (index + count > _characters.Count)
                 throw new System.IndexOutOfRangeException();
 
             ColoredString returnObject = new ColoredString(count);
@@ -160,7 +182,7 @@ namespace SadConsole
 
             for (int i = 0; i < count; i++)
             {
-                returnObject[i] = this[i + index];
+                returnObject._characters[i] = _characters[i + index].Clone();
             }
 
             return returnObject;
@@ -172,9 +194,9 @@ namespace SadConsole
         /// <param name="effect">The effect to apply.</param>
         public void SetEffect(ICellEffect effect)
         {
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < _characters.Count; i++)
             {
-                this[i].Effect = effect;
+                _characters[i].Effect = effect;
             }
         }
 
@@ -184,9 +206,9 @@ namespace SadConsole
         /// <param name="color">The color to apply.</param>
         public void SetForeground(Color color)
         {
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < _characters.Count; i++)
             {
-                this[i].Foreground = color;
+                _characters[i].Foreground = color;
             }
         }
 
@@ -196,9 +218,9 @@ namespace SadConsole
         /// <param name="color">The color to apply.</param>
         public void SetBackground(Color color)
         {
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < _characters.Count; i++)
             {
-                this[i].Background = color;
+                _characters[i].Background = color;
             }
         }
 
@@ -206,6 +228,17 @@ namespace SadConsole
         {
             return this.String;
         }
+
+        public IEnumerator<ColoredCharacter> GetEnumerator()
+        {
+            return ((IEnumerable<ColoredCharacter>)_characters).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<ColoredCharacter>)_characters).GetEnumerator();
+        }
+
 
         /// <summary>
         /// Combines two ColoredString objects into a single ColoredString object. Ignore* values are only copied when both strings Ignore* values match.
@@ -218,10 +251,10 @@ namespace SadConsole
             ColoredString returnString = new ColoredString(string1.Count + string2.Count);
 
             for (int i = 0; i < string1.Count; i++)
-                returnString[i] = string1[i].Clone();
+                returnString._characters[i] = string1._characters[i].Clone();
 
             for (int i = 0; i < string2.Count; i++)
-                returnString[i + string1.Count] = string2[i].Clone();
+                returnString._characters[i + string1.Count] = string2._characters[i].Clone();
 
             returnString.IgnoreCharacter = string1.IgnoreCharacter && string1.IgnoreCharacter;
             returnString.IgnoreForeground = string1.IgnoreForeground && string1.IgnoreForeground;
@@ -261,7 +294,7 @@ namespace SadConsole
         /// Creates a new copy of this cell appearance.
         /// </summary>
         /// <returns>The cloned cell appearance.</returns>
-        public ColoredCharacter Clone()
+        public new ColoredCharacter Clone()
         {
             return new ColoredCharacter() { Foreground = this.Foreground, Background = this.Background, Effect = this.Effect != null ? this.Effect.Clone() : null, Character = this.Character };
         }
