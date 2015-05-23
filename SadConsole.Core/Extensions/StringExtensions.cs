@@ -88,6 +88,39 @@ namespace System
         }
 
         /// <summary>
+        /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground and background.
+        /// </summary>
+        /// <param name="value">The current string.</param>
+        /// <param name="appearance">The foreground and background color.</param>
+        /// <returns>A <see cref="ColoredString"/> object instace.</returns>
+        public static ColoredString CreateColored(this string value, ICellAppearance appearance)
+        {
+            ColoredString newString = new ColoredString(value);
+            newString.Foreground = appearance.Foreground;
+            newString.Background = appearance.Background;
+            newString.Effect = null;
+            newString.UpdateWithDefaults();
+            return newString;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground, background, and cell effect.
+        /// </summary>
+        /// <param name="value">The current string.</param>
+        /// <param name="appearance">The foreground and background color.</param>
+        /// <param name="effect">The cell effect.</param>
+        /// <returns>A <see cref="ColoredString"/> object instace.</returns>
+        public static ColoredString CreateColored(this string value, ICellAppearance appearance, ICellEffect effect)
+        {
+            ColoredString newString = new ColoredString(value);
+            newString.Foreground = appearance.Foreground;
+            newString.Background = appearance.Background;
+            newString.Effect = effect;
+            newString.UpdateWithDefaults();
+            return newString;
+        }
+
+        /// <summary>
         /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground gradient and cell effect. 
         /// </summary>
         /// <param name="value">The current string.</param>
