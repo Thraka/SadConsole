@@ -31,6 +31,8 @@ namespace SadConsole.Ansi
 
         public MemoryStream Stream { get; private set; }
 
+        private Document() { }
+
         public Document(string file)
         {
             using (var stream = System.IO.File.OpenRead(file))
@@ -38,6 +40,22 @@ namespace SadConsole.Ansi
                     AnsiBytes = reader.ReadBytes((int)stream.Length);
 
             Stream = new MemoryStream(AnsiBytes);
+        }
+
+        public static Document FromAsciiString(string ansiContent)
+        {
+            Document doc = new Document();
+            doc.AnsiBytes = Encoding.ASCII.GetBytes(ansiContent);
+            doc.Stream = new MemoryStream(doc.AnsiBytes);
+            return doc;
+        }
+
+        public static Document FromBytes(byte[] bytes)
+        {
+            Document doc = new Document();
+            doc.AnsiBytes = bytes;
+            doc.Stream = new MemoryStream(doc.AnsiBytes);
+            return doc;
         }
 
         public void Dispose()
