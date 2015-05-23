@@ -40,8 +40,7 @@ namespace SadConsole
             }
             set
             {
-                _characters.Clear();
-                _characters.Capacity = value.Length;
+                _characters = new List<ColoredCharacter>(value.Length);
 
                 for (int i = 0; i < value.Length; i++)
                 {
