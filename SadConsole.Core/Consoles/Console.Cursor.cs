@@ -75,8 +75,8 @@ using SadConsole.Effects;
 			/// </summary>
 			public int Row
 			{
-				get { return _position.X; }
-				set { _position.X = value; }
+				get { return _position.Y; }
+				set { _position.Y = value; }
 			}
 
 			/// <summary>
@@ -84,8 +84,8 @@ using SadConsole.Effects;
 			/// </summary>
 			public int Column
 			{
-				get { return _position.Y; }
-				set { _position.Y = value; }
+				get { return _position.X; }
+				set { _position.X = value; }
 			}
 
 			/// <summary>
