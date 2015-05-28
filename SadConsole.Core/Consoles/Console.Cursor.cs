@@ -253,7 +253,12 @@ using SadConsole.Effects;
                                 _position.Y -= 1;
 
                                 if (AutomaticallyShiftRowsUp)
+                                {
                                     console.CellData.ShiftRowsUp();
+
+                                    if (console.CellData.ResizeOnShift)
+                                        _position.Y++;
+                                }
                             }
                         }
                     }
@@ -279,7 +284,11 @@ using SadConsole.Effects;
             public Cursor LineFeed()
             {
                 if (_position.Y == ((Console)_console.Target).CellData.Height - 1)
+                {
                     ((Console)_console.Target).CellData.ShiftRowsUp();
+                    if (((Console)_console.Target).CellData.ResizeOnShift)
+                        _position.Y++;
+                }
                 else
                     _position.Y++;
 
