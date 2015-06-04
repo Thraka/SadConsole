@@ -70,6 +70,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IUpdate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\RexReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Tile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\TileLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\TileMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Box.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Circle.cs" />
