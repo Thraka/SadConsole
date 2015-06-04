@@ -23,7 +23,7 @@ namespace SadConsole.Readers.REXPaint
         public CellSurface ToCellSurface()
         {
             var cells = new CellSurface(Tiles.GetUpperBound(0), Tiles.GetUpperBound(1));
-
+            var transparentColor = new Microsoft.Xna.Framework.Color(255, 0, 255);
             cells.Fill(Microsoft.Xna.Framework.Color.Black, Microsoft.Xna.Framework.Color.Transparent, 0, null);
 
             for (int y = 0; y < cells.Height; y++)
@@ -31,13 +31,13 @@ namespace SadConsole.Readers.REXPaint
                 for (int x = 0; x < cells.Width; x++)
                 {
                     var tile = Tiles[y, x];
-
-                    if (tile.CharacterCode != 0)
+                    var backgroundColor = new Microsoft.Xna.Framework.Color(tile.BackgroundRed, tile.BackgroundGreen, tile.BackgroundBlue);
+                    if (backgroundColor != transparentColor)
                     {
                         var cell = cells[x, y];
                         cell.CharacterIndex = tile.CharacterCode;
                         cell.Foreground = new Microsoft.Xna.Framework.Color(tile.ForegroundRed, tile.ForegroundGreen, tile.ForegroundBlue);
-                        cell.Background = new Microsoft.Xna.Framework.Color(tile.BackgroundRed, tile.BackgroundGreen, tile.BackgroundBlue);
+                        cell.Background = backgroundColor; 
                     }
                 }
             }
