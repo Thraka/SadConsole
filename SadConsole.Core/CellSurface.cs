@@ -940,6 +940,14 @@ namespace SadConsole
         /// <param name="amount">How many rows to shift.</param>
         public void ShiftUp(int amount, bool wrap = false)
         {
+            if (amount == 0)
+                return;
+            else if (amount < 0)
+            {
+                ShiftDown(Math.Abs(amount), wrap);
+                return;
+            }
+
             if (ResizeOnShift)
             {
                 CellSurface copy = new CellSurface(_width, _height);
@@ -1019,6 +1027,14 @@ namespace SadConsole
         /// <param name="amount">How many rows to shift.</param>
         public void ShiftDown(int amount, bool wrap = false)
         {
+            if (amount == 0)
+                return;
+            else if (amount < 0)
+            {
+                ShiftUp(Math.Abs(amount), wrap);
+                return;
+            }
+
             if (ResizeOnShift)
             {
                 CellSurface copy = new CellSurface(_width, _height);
@@ -1098,6 +1114,14 @@ namespace SadConsole
         /// <param name="amount">How much to scroll.</param>
         public void ShiftRight(int amount, bool wrap = false)
         {
+            if (amount == 0)
+                return;
+            else if (amount < 0)
+            {
+                ShiftLeft(Math.Abs(amount), wrap);
+                return;
+            }
+
             if (ResizeOnShift)
             {
                 CellSurface copy = new CellSurface(_width, _height);
@@ -1178,6 +1202,14 @@ namespace SadConsole
         /// <param name="amount">How much to scroll.</param>
         public void ShiftLeft(int amount, bool wrap = false)
         {
+            if (amount == 0)
+                return;
+            else if (amount < 0)
+            {
+                ShiftRight(Math.Abs(amount), wrap);
+                return;
+            }
+
             if (ResizeOnShift)
             {
                 CellSurface copy = new CellSurface(_width, _height);
