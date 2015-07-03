@@ -929,30 +929,50 @@ namespace SadConsole
         /// <summary>
         /// Scrolls all the console data up by one.
         /// </summary>
-        public void ShiftRowsUp()
+        public void ShiftUp()
         {
-            ShiftRowsUp(1);
+            ShiftUp(1);
         }
+
         /// <summary>
         /// Scrolls all the console data up by the specified amount of rows.
         /// </summary>
-        /// <param name="rowsToShift">How many rows to shift.</param>
-        public void ShiftRowsUp(int rowsToShift)
+        /// <param name="amount">How many rows to shift.</param>
+        public void ShiftUp(int amount, bool wrap = false)
         {
             if (ResizeOnShift)
             {
                 CellSurface copy = new CellSurface(_width, _height);
                 Copy(copy);
-                Resize(_width, _height + rowsToShift);
+                Resize(_width, _height + amount);
                 copy.Copy(this, 0, 0);
             }
             else
             {
-                for (int y = rowsToShift; y < Height; y++)
+                List<Tuple<Cell, int>> wrappedCells = null;
+
+                // Handle all the wrapped ones first
+                if (wrap)
+                {
+                    wrappedCells = new List<Tuple<Cell, int>>(_height * amount);
+
+                    for (int y = 0; y < amount; y++)
+                    {
+                        for (int x = 0; x < Width; x++)
+                        {
+                            var tempCell = new Cell();
+                            Cells[y * Width + x].Copy(tempCell);
+
+                            wrappedCells.Add(new Tuple<Cell, int>(tempCell, (_height - amount + y) * _width + x));
+                        }
+                    }
+                }
+
+                for (int y = amount; y < Height; y++)
                 {
                     for (int x = 0; x < Width; x++)
                     {
-                        Cell destination = Cells[(y - rowsToShift) * Width + x];
+                        Cell destination = Cells[(y - amount) * Width + x];
                         Cell source = Cells[y * Width + x];
 
                         destination.Background = source.Background;
@@ -963,44 +983,75 @@ namespace SadConsole
                 }
 
 
-                for (int y = Height - rowsToShift; y < Height; y++)
-                {
-                    for (int x = 0; x < Width; x++)
+                if (!wrap)
+                    for (int y = Height - amount; y < Height; y++)
                     {
-                        Clear(x, y);
+                        for (int x = 0; x < Width; x++)
+                        {
+                            Clear(x, y);
+                        }
                     }
-                }
+                else
+                    for (int i = 0; i < wrappedCells.Count; i++)
+                    {
+                        Cell destination = Cells[wrappedCells[i].Item2];
+
+                        destination.Background = wrappedCells[i].Item1.Background;
+                        destination.Foreground = wrappedCells[i].Item1.Foreground;
+                        destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                        destination.Effect = wrappedCells[i].Item1.Effect;
+                    }
             }
-            TimesShiftedUp += rowsToShift;
+            TimesShiftedUp += amount;
         }
 
         /// <summary>
         /// Scrolls all the console data down by one.
         /// </summary>
-        public void ShiftRowsDown()
+        public void ShiftDown()
         {
-            ShiftRowsDown(1);
+            ShiftDown(1);
         }
+
         /// <summary>
         /// Scrolls all the console data down by the specified amount of rows.
         /// </summary>
-        /// <param name="rowsToShift">How many rows to shift.</param>
-        public void ShiftRowsDown(int rowsToShift)
+        /// <param name="amount">How many rows to shift.</param>
+        public void ShiftDown(int amount, bool wrap = false)
         {
             if (ResizeOnShift)
             {
                 CellSurface copy = new CellSurface(_width, _height);
                 Copy(copy);
-                Resize(_width, _height + rowsToShift);
-                copy.Copy(this, 0, rowsToShift);
+                Resize(_width, _height + amount);
+                copy.Copy(this, 0, amount);
             }
             else
             {
-                for (int y = (Height - 1) - rowsToShift; y >= 0; y--)
+                List<Tuple<Cell, int>> wrappedCells = null;
+
+                // Handle all the wrapped ones first
+                if (wrap)
+                {
+                    wrappedCells = new List<Tuple<Cell, int>>(_height * amount);
+
+                    for (int y = Height - amount; y < Height; y++)
+                    {
+                        for (int x = 0; x < Width; x++)
+                        {
+                            var tempCell = new Cell();
+                            Cells[y * Width + x].Copy(tempCell);
+
+                            wrappedCells.Add(new Tuple<Cell, int>(tempCell, (amount - (_height - y)) * _width + x));
+                        }
+                    }
+                }
+
+                for (int y = (Height - 1) - amount; y >= 0; y--)
                 {
                     for (int x = 0; x < Width; x++)
                     {
-                        Cell destination = Cells[(y + rowsToShift) * Width + x];
+                        Cell destination = Cells[(y + amount) * Width + x];
                         Cell source = Cells[y * Width + x];
 
                         destination.Background = source.Background;
@@ -1010,18 +1061,187 @@ namespace SadConsole
                     }
                 }
 
-
-                for (int y = 0; y < rowsToShift; y++)
-                {
-                    for (int x = 0; x < Width; x++)
+                if (!wrap)
+                    for (int y = 0; y < amount; y++)
                     {
-                        Cell source = Cells[y * Width + x];
-                        source.Reset();
+                        for (int x = 0; x < Width; x++)
+                        {
+                            Cell source = Cells[y * Width + x];
+                            source.Reset();
+                        }
+                    }
+                else
+                    for (int i = 0; i < wrappedCells.Count; i++)
+                    {
+                        Cell destination = Cells[wrappedCells[i].Item2];
+
+                        destination.Background = wrappedCells[i].Item1.Background;
+                        destination.Foreground = wrappedCells[i].Item1.Foreground;
+                        destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                        destination.Effect = wrappedCells[i].Item1.Effect;
+                    }
+            }
+            TimesShiftedUp += amount;
+        }
+
+        /// <summary>
+        /// Scrolls all the console data right by one.
+        /// </summary>
+        public void ShiftRight()
+        {
+            ShiftRight(1);
+        }
+
+        /// <summary>
+        /// Scrolls all the console data right by the specified amount.
+        /// </summary>
+        /// <param name="amount">How much to scroll.</param>
+        public void ShiftRight(int amount, bool wrap = false)
+        {
+            if (ResizeOnShift)
+            {
+                CellSurface copy = new CellSurface(_width, _height);
+                Copy(copy);
+                Resize(_width + amount, _height);
+                copy.Copy(this, 0, 0);
+            }
+            else
+            {
+                List<Tuple<Cell, int>> wrappedCells = null;
+
+                // Handle all the wrapped ones first
+                if (wrap)
+                {
+                    wrappedCells = new List<Tuple<Cell, int>>(_height * amount);
+
+                    for (int x = _width - amount; x < _width; x++)
+                    {
+                        for (int y = 0; y < _height; y++)
+                        {
+                            var tempCell = new Cell();
+                            Cells[y * Width + x].Copy(tempCell);
+
+                            wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * _width + amount - (_width - x)));
+                        }
                     }
                 }
+
+
+                for (int x = _width - 1 - amount; x >= 0; x--)
+                {
+                    for (int y = 0; y < _height; y++)
+                    {
+                        Cell destination = Cells[y * Width + (x + amount)];
+                        Cell source = Cells[y * Width + x];
+
+                        destination.Background = source.Background;
+                        destination.Foreground = source.Foreground;
+                        destination.CharacterIndex = source.CharacterIndex;
+                        destination.Effect = source.Effect;
+                    }
+                }
+
+                if (!wrap)
+                    for (int x = 0; x < amount; x++)
+                    {
+                        for (int y = 0; y < _height; y++)
+                        {
+                            Clear(x, y);
+
+                        }
+                    }
+                else
+                    for (int i = 0; i < wrappedCells.Count; i++)
+                    {
+                        Cell destination = Cells[wrappedCells[i].Item2];
+
+                        destination.Background = wrappedCells[i].Item1.Background;
+                        destination.Foreground = wrappedCells[i].Item1.Foreground;
+                        destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                        destination.Effect = wrappedCells[i].Item1.Effect;
+                    }
             }
-            TimesShiftedUp += rowsToShift;
+            //TimesShiftedUp += rowsToShift;
         }
+
+        /// <summary>
+        /// Scrolls all the console data left by one.
+        /// </summary>
+        public void ShiftLeft()
+        {
+            ShiftLeft(1);
+        }
+
+        /// <summary>
+        /// Scrolls all the console data left by the specified amount.
+        /// </summary>
+        /// <param name="amount">How much to scroll.</param>
+        public void ShiftLeft(int amount, bool wrap = false)
+        {
+            if (ResizeOnShift)
+            {
+                CellSurface copy = new CellSurface(_width, _height);
+                Copy(copy);
+                Resize(_width + amount, _height);
+                copy.Copy(this, 0, 0);
+            }
+            else
+            {
+                List<Tuple<Cell, int>> wrappedCells = null;
+
+                // Handle all the wrapped ones first
+                if (wrap)
+                {
+                    wrappedCells = new List<Tuple<Cell, int>>(_height * amount);
+
+                    for (int x = 0; x < amount; x++)
+                    {
+                        for (int y = 0; y < _height; y++)
+                        {
+                            var tempCell = new Cell();
+                            Cells[y * _width + x].Copy(tempCell);
+
+                            wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * _width + (_width - amount + x) ));
+                        }
+                    }
+                }
+
+                for (int x = amount; x < _width; x++)
+                {
+                    for (int y = 0; y < _height; y++)
+                    {
+                        Cell destination = Cells[y * _width + (x - amount)];
+                        Cell source = Cells[y * _width + x];
+
+                        destination.Background = source.Background;
+                        destination.Foreground = source.Foreground;
+                        destination.CharacterIndex = source.CharacterIndex;
+                        destination.Effect = source.Effect;
+                    }
+                }
+
+                if (!wrap)
+                    for (int x = _width - amount; x < _width; x++)
+                    {
+                        for (int y = 0; y < _height; y++)
+                        {
+                            Clear(x, y);
+                        }
+                    }
+                else
+                    for (int i = 0; i < wrappedCells.Count; i++)
+                    {
+                        Cell destination = Cells[wrappedCells[i].Item2];
+
+                        destination.Background = wrappedCells[i].Item1.Background;
+                        destination.Foreground = wrappedCells[i].Item1.Foreground;
+                        destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                        destination.Effect = wrappedCells[i].Item1.Effect;
+                    }
+            }
+            //TimesShiftedUp += rowsToShift;
+        }
+        
         #endregion
 
         #region Fill
