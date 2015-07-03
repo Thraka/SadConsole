@@ -198,7 +198,7 @@ using SadConsole.Effects;
                                 _position.Y -= 1;
 
                                 if (AutomaticallyShiftRowsUp)
-                                    console.CellData.ShiftRowsUp();
+                                    console.CellData.ShiftUp();
                             }
                         }
                     }
@@ -254,7 +254,7 @@ using SadConsole.Effects;
 
                                 if (AutomaticallyShiftRowsUp)
                                 {
-                                    console.CellData.ShiftRowsUp();
+                                    console.CellData.ShiftUp();
 
                                     if (console.CellData.ResizeOnShift)
                                         _position.Y++;
@@ -285,7 +285,7 @@ using SadConsole.Effects;
             {
                 if (_position.Y == ((Console)_console.Target).CellData.Height - 1)
                 {
-                    ((Console)_console.Target).CellData.ShiftRowsUp();
+                    ((Console)_console.Target).CellData.ShiftUp();
                     if (((Console)_console.Target).CellData.ResizeOnShift)
                         _position.Y++;
                 }
