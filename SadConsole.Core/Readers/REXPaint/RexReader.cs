@@ -205,9 +205,9 @@ namespace SadConsole.Readers.REXPaint {
 
             //Read every tile in column-major order, and place it in the map in row-major order
             for (var layer = 0; layer < layers; layer++) {
-                for (var col = 0; col < height; col++) {
-                    for (var row = 0; row < width; row++) {
-                        map.Layers[layer].Tiles[row, col] = new Tile {
+                for (var x = 0; x < width; x++) {
+                    for (var y = 0; y < height; y++) {
+                        map.Layers[layer].Tiles[y, x] = new Tile {
                             CharacterCode = (byte)Reader.ReadInt32(),
                             ForegroundRed = Reader.ReadByte(),
                             ForegroundGreen = Reader.ReadByte(),

@@ -22,7 +22,7 @@ namespace SadConsole.Readers.REXPaint
         /// <returns>The convereted surface.</returns>
         public CellSurface ToCellSurface()
         {
-            var cells = new CellSurface(Tiles.GetUpperBound(0), Tiles.GetUpperBound(1));
+            var cells = new CellSurface(Tiles.GetUpperBound(1), Tiles.GetUpperBound(0));
             var transparentColor = new Microsoft.Xna.Framework.Color(255, 0, 255);
             cells.Fill(Microsoft.Xna.Framework.Color.Black, Microsoft.Xna.Framework.Color.Transparent, 0, null);
 
