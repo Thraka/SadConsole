@@ -21,7 +21,7 @@ namespace SadConsole
         private static void Swap<T>(ref T lhs, ref T rhs) { T temp; temp = lhs; lhs = rhs; rhs = temp; }
 
         /// <summary>
-        /// Plot the line from (x0, y0) to (x1, y10
+        /// Plot the line from (x0, y0) to (x1, y1) using steep.
         /// </summary>
         /// <param name="x0">The start x</param>
         /// <param name="y0">The start y</param>
@@ -40,6 +40,41 @@ namespace SadConsole
                 if (!(steep ? plot(y, x) : plot(x, y))) return;
                 err = err - dY;
                 if (err < 0) { y += ystep; err += dX; }
+            }
+
+        }
+
+
+        /// <summary>
+        /// Plot the line from (x0, y0) to (x1, y1) using an interpolation derived algorithm.
+        /// </summary>
+        /// <param name="x0">The start x</param>
+        /// <param name="y0">The start y</param>
+        /// <param name="x1">The end x</param>
+        /// <param name="y1">The end y</param>
+        /// <param name="plot">The plotting function (if this returns false, the algorithm stops early)</param>
+        public static void Line2(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
+        {
+            //bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
+            //if (steep) { Swap<int>(ref x0, ref y0); Swap<int>(ref x1, ref y1); }
+            //if (x0 > x1) { Swap<int>(ref x0, ref x1); Swap<int>(ref y0, ref y1); }
+            //int dX = (x1 - x0), dY = Math.Abs(y1 - y0), err = (dX / 2), ystep = (y0 < y1 ? 1 : -1), y = y0;
+
+            //for (int x = x0; x <= x1; ++x)
+            //{
+            //    if (!(steep ? plot(y, x) : plot(x, y))) return;
+            //    err = err - dY;
+            //    if (err < 0) { y += ystep; err += dX; }
+            //}
+
+
+            var len = Math.Max(Math.Abs(x1 - x0), Math.Abs(y1 - y0));
+            for (int i = 0; i < len; i++)
+            {
+                var t = (float)i / len;
+                var x = Math.Round(x0 * (1.0 - t) + x1 * t);
+                var y = Math.Round(y0 * (1.0 - t) + y1 * t);
+                plot((int)x, (int)y);
             }
         }
 
