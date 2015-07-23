@@ -9,12 +9,11 @@
     <Import_RootNamespace>StarterProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\EntityAndConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
