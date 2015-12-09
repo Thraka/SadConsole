@@ -58,8 +58,7 @@ namespace SadConsole.Readers.REXPaint {
             }
             Deflated.Position = _layerCountOffset;
         }
-
-
+        
         /// <summary>
         /// Construct a RexReader from an .xp file. Throws standard errors if the file doesn't exist.
         /// </summary>
@@ -234,6 +233,48 @@ namespace SadConsole.Readers.REXPaint {
             while ((byt = source.Read(buffer, 0, buffer.Length)) != 0) {
                 destination.Write(buffer, 0, byt);
             }
+        }
+
+        public Consoles.LayeredConsole ToLayeredConsole()
+        {
+            CheckDisposed();
+
+            Consoles.LayeredConsole console = null;
+            Reader.BaseStream.Position = 0;
+            var version = Reader.ReadInt32();
+            var layerCount = Reader.ReadInt32();
+            Microsoft.Xna.Framework.Color transparentColor = new Microsoft.Xna.Framework.Color(255, 0, 255);
+
+            for (int layer = 0; layer < layerCount; layer++)
+            {
+                int width = Reader.ReadInt32();
+                int height = Reader.ReadInt32();
+
+                if (layer == 0)
+                {
+                    console = new Consoles.LayeredConsole(layerCount, width, height);
+                }
+
+                var currentLayer = console[layer].CellData;
+
+                for (int i = 0; i < width * height; i++)
+                {
+                    var cell = currentLayer[i];
+
+                    int character = Reader.ReadInt32();
+                    Microsoft.Xna.Framework.Color foreground = new Microsoft.Xna.Framework.Color(Reader.ReadByte(), Reader.ReadByte(), Reader.ReadByte());
+                    Microsoft.Xna.Framework.Color background = new Microsoft.Xna.Framework.Color(Reader.ReadByte(), Reader.ReadByte(), Reader.ReadByte());
+
+                    if (background != transparentColor)
+                    {
+                        cell.CharacterIndex = character;
+                        cell.Foreground = foreground;
+                        cell.Background = background;
+                    }
+                }
+            }
+
+            return console;
         }
 
         public void Dispose()
