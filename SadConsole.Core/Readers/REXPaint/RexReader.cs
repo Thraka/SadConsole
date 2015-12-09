@@ -257,19 +257,22 @@ namespace SadConsole.Readers.REXPaint {
 
                 var currentLayer = console[layer].CellData;
 
-                for (int i = 0; i < width * height; i++)
+                for (int y = 0; y < height; y++)
                 {
-                    var cell = currentLayer[i];
-
-                    int character = Reader.ReadInt32();
-                    Microsoft.Xna.Framework.Color foreground = new Microsoft.Xna.Framework.Color(Reader.ReadByte(), Reader.ReadByte(), Reader.ReadByte());
-                    Microsoft.Xna.Framework.Color background = new Microsoft.Xna.Framework.Color(Reader.ReadByte(), Reader.ReadByte(), Reader.ReadByte());
-
-                    if (background != transparentColor)
+                    for (int x = 0; x < width; x++)
                     {
-                        cell.CharacterIndex = character;
-                        cell.Foreground = foreground;
-                        cell.Background = background;
+                        var cell = currentLayer[y, x];
+
+                        int character = Reader.ReadInt32();
+                        Microsoft.Xna.Framework.Color foreground = new Microsoft.Xna.Framework.Color(Reader.ReadByte(), Reader.ReadByte(), Reader.ReadByte());
+                        Microsoft.Xna.Framework.Color background = new Microsoft.Xna.Framework.Color(Reader.ReadByte(), Reader.ReadByte(), Reader.ReadByte());
+
+                        if (background != transparentColor)
+                        {
+                            cell.CharacterIndex = character;
+                            cell.Foreground = foreground;
+                            cell.Background = background;
+                        }
                     }
                 }
             }
