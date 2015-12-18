@@ -12,7 +12,8 @@ See the wiki for more information.
 
 Some sample games are provided in the [SampleGames](https://github.com/Thraka/SadConsole/tree/master/SampleGames) folder
 
-
+#### Demo video
+http://youtu.be/ZukjZIqDfJw
 
 ## Dependencies ##
 SadConsole 2.x uses NuGet dependencies for its .NET dependencies, but requires some external dependencies on MacOS and Linux.
