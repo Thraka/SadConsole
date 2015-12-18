@@ -10,6 +10,8 @@ There is source code for a screen editor written in SadConsole. It's the most co
 
 See the wiki for more information.
 
+Some sample games are provided in the [SampleGames](https://github.com/Thraka/SadConsole/tree/master/SampleGames) folder
+
 
 
 ## Dependencies ##
@@ -23,3 +25,5 @@ SadConsole for Linux has been built against the Debian package of Mono, on Ubunt
 
 ## Starter Project ##
 [StarterProject](./StarterProject) demonstrates how to use SadConsole in a multi-platform environment.
+
+
