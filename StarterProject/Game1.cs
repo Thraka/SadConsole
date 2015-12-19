@@ -49,12 +49,12 @@
             SadConsole.Engine.ConsoleRenderStack.Add(_defaultConsole);
             
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
-            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { new CustomConsoles.CursorConsole(), 
+            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { new CustomConsoles.WindowTestConsole(),new CustomConsoles.CursorConsole(), 
                                                                        new CustomConsoles.StaticConsole(), 
                                                                        new CustomConsoles.StretchedConsole(), 
                                                                        new CustomConsoles.BorderedConsole(80, 25), 
                                                                        new CustomConsoles.DOSConsole(),
-                                                                       new CustomConsoles.WindowTestConsole(),
+                                                                       
                                                                        new CustomConsoles.EntityAndConsole(),
                                                                        new CustomConsoles.RandomScrollingConsole(),
                                                                        new CustomConsoles.SplashScreen(),

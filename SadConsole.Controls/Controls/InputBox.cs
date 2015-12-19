@@ -171,7 +171,7 @@
         public bool IsNumeric
         {
             get { return _isNumeric; }
-            set { _isNumeric = value; Text = Text; }
+            set { _isNumeric = value; Validate(); }
         }
 
         /// <summary>
@@ -180,7 +180,7 @@
         public bool AllowDecimal
         {
             get { return _allowDecimalPoint; }
-            set { _allowDecimalPoint = value; Text = Text; }
+            set { _allowDecimalPoint = value; Validate(); }
         }
 
         #region Constructors
@@ -262,6 +262,9 @@
                         _text = value.ToString();
                     else
                         _text = "0.0";
+
+                    if (!_text.Contains("."))
+                        _text = _text + ".0";
                 }
                 else
                 {
@@ -280,27 +283,7 @@
 
         protected void ValidateEdit()
         {
-            if (_isNumeric)
-            {
-                if (_allowDecimalPoint)
-                {
-                    float value;
-                    if (_editingText != null & float.TryParse(_editingText, out value))
-                        _editingText = value.ToString();
-                    else
-                        _editingText = "0.0";
-                }
-                else
-                {
-                    int value;
-                    if (_editingText != null & int.TryParse(_editingText, out value))
-                        _editingText = value.ToString();
-                    else
-                        _editingText = "0";
-                }
-            }
-
-            //PositionCursor();
+            PositionCursor();
 
             this.IsDirty = true;
         }
@@ -528,9 +511,12 @@
                 base.OnLeftMouseClicked(info);
 
                 DisableKeyboard = false;
+                _editingText = Text;
 
                 if (!IsFocused)
                     Parent.FocusedControl = this;
+
+                IsDirty = true;    
             }
         }
 
