@@ -12,19 +12,34 @@ See the wiki for more information.
 
 Some sample games are provided in the [SampleGames](https://github.com/Thraka/SadConsole/tree/master/SampleGames) folder
 
+## Features
+
+Here are some of the features SadConsole supports.
+
+* Show any number of consoles
+* Uses PNG graphic fonts supporting more than 256 characters
+* Multiple fonts in your game
+* Draggable console windows whithin the game
+* Text GUI controls
+* Full keyboard support
+* Full mouse support
+* Read ansi files from the good old DOS days
+* Animation engine
+* Instruction engine
+
 #### Demo video
 http://youtu.be/ZukjZIqDfJw
 
-## Dependencies ##
+## Dependencies
 SadConsole 2.x uses NuGet dependencies for its .NET dependencies, but requires some external dependencies on MacOS and Linux.
 
-### MacOS ###
+### MacOS
 As a MonoMac project, Xcode must be installed along with the full Xamarin development kit.
 
-### Linux ###
+### Linux
 SadConsole for Linux has been built against the Debian package of Mono, on Ubuntu 14.04 LTS. It requires SDL dependencies, specifically `libsdl-mixer` and `libsdl-gfx`.
 
-## Starter Project ##
+## Starter Project
 [StarterProject](./StarterProject) demonstrates how to use SadConsole in a multi-platform environment.
 
 
