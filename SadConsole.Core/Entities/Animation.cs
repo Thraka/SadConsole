@@ -67,6 +67,9 @@
         [DataMember]
         public bool Repeat { get; set; }
 
+
+        public bool IsPlaying { get { return _isPlaying; } }
+
         /// <summary>
         /// The length of the animation.
         /// </summary>

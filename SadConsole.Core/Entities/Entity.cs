@@ -23,7 +23,7 @@
         [DataMember(Name="CenterOffset")]
         protected Point _centerOffset;
 
-        /// <summary>
+        /// <summary> 
         /// The animations.
         /// </summary>
         [DataMember(Name="Animations")]
