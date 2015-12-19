@@ -34,14 +34,6 @@
             };
             button.ButtonClicked += button_ButtonClicked;
 
-            var text = new SadConsole.Controls.InputBox(8)
-            {
-                IsNumeric = true,
-                AllowDecimal = true,
-                Position = new Point(10, 10)
-            };
-            Add(text);
-
             // After it has been configured, add it to this controls console so it is rendered and can be interacted with.
             this.Add(button);
 
