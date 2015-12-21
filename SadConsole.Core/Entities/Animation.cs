@@ -12,11 +12,6 @@
     {
         #region Variables
         /// <summary>
-        /// The list of frames for this animation
-        /// </summary>
-        protected List<Frame> _animatedFrames = new List<Frame>();
-
-        /// <summary>
         /// Time counter for the naimation
         /// </summary>
         protected double _addedTime;
@@ -87,7 +82,7 @@
             get { return _currentFrameIndex; }
             set
             {
-                if (value < 0 || value >= _animatedFrames.Count)
+                if (value < 0 || value >= Frames.Count)
                     _currentFrameIndex = 0;
             }
         }
@@ -105,7 +100,7 @@
         /// <summary>
         /// Indicates the animation is empty.
         /// </summary>
-        public bool IsEmpty { get { return _animatedFrames.Count == 0; } }
+        public bool IsEmpty { get { return Frames.Count == 0; } }
 
         /// <summary>
         /// Gets the name of this animation.
@@ -130,7 +125,7 @@
         /// </summary>
         public Frame CurrentFrame
         {
-            get { return _animatedFrames[_currentFrameIndex]; }
+            get { return Frames[_currentFrameIndex]; }
         }
 
         #endregion
@@ -173,23 +168,7 @@
             if (IsEmpty || _animatedTime == 0f)
                 _timePerFrame = 0f;
             else
-                _timePerFrame = _animatedTime / _animatedFrames.Count;
-        }
-
-        /// <summary>
-        /// After frames have been changed, use this method to commit those changes to the animation.
-        /// </summary>
-        /// <remarks>Calling this method also calls the Stop method and resets the current animation frame back to zero.</remarks>
-        public void Commit()
-        {
-            Stop();
-            _currentFrameIndex = 0;
-
-            if (Frames == null)
-                Frames = new List<Frame>();
-
-            _animatedFrames = new List<Frame>(Frames);
-            CalculateFrameDuration();
+                _timePerFrame = _animatedTime / Frames.Count;
         }
         
         /// <summary>
@@ -205,6 +184,7 @@
         /// </summary>
         public void Start()
         {
+            CalculateFrameDuration();
             _isPlaying = true;
         }
 
@@ -213,6 +193,7 @@
         /// </summary>
         public void Restart()
         {
+            CalculateFrameDuration();
             _isPlaying = true;
             _currentFrameIndex = 0;
         }
@@ -224,6 +205,8 @@
         {
             if (_isPlaying && _timePerFrame != 0f)
             {
+                // TODO: Evaluate if we should change this to calculate current frame based on total time passed,
+                // not calculate frame based on individual frame duration on screen.
                 _addedTime += Engine.GameTimeElapsedUpdate;
 
                 if (_addedTime > _timePerFrame)
@@ -231,7 +214,7 @@
                     _addedTime = 0f;
                     _currentFrameIndex++;
 
-                    if (_currentFrameIndex >= _animatedFrames.Count)
+                    if (_currentFrameIndex >= Frames.Count)
                     {
                         if (Repeat)
                             _currentFrameIndex = 0;
@@ -255,7 +238,7 @@
             Width = width;
             Height = height;
 
-            foreach (var frame in _animatedFrames)
+            foreach (var frame in Frames)
                 frame.Resize(width, height);
 
             foreach (var frame in Frames)
@@ -276,12 +259,12 @@
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            Commit();
+            
         }
 
         public void Save(string file)
         {
-            SadConsole.Serializer.Save<Animation>(this, file);
+            SadConsole.Serializer.Save(this, file);
         }
 
         public static Animation Load(string file)
