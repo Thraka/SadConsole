@@ -23,7 +23,7 @@
         [DataMember(Name="CenterOffset")]
         protected Point _centerOffset;
 
-        /// <summary>
+        /// <summary> 
         /// The animations.
         /// </summary>
         [DataMember(Name="Animations")]
@@ -100,7 +100,6 @@
             _currentAnimation = new Animation("default", 1, 1);
             _currentAnimation.Font = font;
             _currentAnimation.CreateFrame();
-            _currentAnimation.Commit();
 
             _animations.Add(CurrentAnimation);
             _animationBoundingBox = new Rectangle(0, 0, 1, 1);
@@ -249,6 +248,7 @@
                 base.Font = Engine.DefaultFont;
 
             UpdateAnimationBoundingBox();
+            CellData = _currentAnimation.CurrentFrame;
             ResetViewArea();
         }
 
@@ -267,6 +267,7 @@
                 base.Font = Engine.DefaultFont;
 
             UpdateAnimationBoundingBox();
+            CellData = _currentAnimation.CurrentFrame;
             ResetViewArea();
         }
 
