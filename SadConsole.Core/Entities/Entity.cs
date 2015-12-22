@@ -450,7 +450,7 @@
 
         public void Save(string file)
         {
-            SadConsole.Serializer.Save<Entity>(this, file);
+            SadConsole.Serializer.Save<Entity>(this, file, new System.Type[] { typeof(List<Frame>) });
         }
 
         public static Entity Load(string file)

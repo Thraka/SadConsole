@@ -264,7 +264,7 @@
 
         public void Save(string file)
         {
-            SadConsole.Serializer.Save(this, file);
+            SadConsole.Serializer.Save(this, file, new System.Type[] { typeof(List<Frame>) });
         }
 
         public static Animation Load(string file)
