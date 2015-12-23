@@ -455,7 +455,7 @@
 
         public static Entity Load(string file)
         {
-            return SadConsole.Serializer.Load<Entity>(file);
+            return SadConsole.Serializer.Load<Entity>(file, new System.Type[] { typeof(List<Frame>) });
         }
     }
 }

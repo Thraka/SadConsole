@@ -269,7 +269,7 @@
 
         public static Animation Load(string file)
         {
-            return SadConsole.Serializer.Load<Animation>(file);
+            return SadConsole.Serializer.Load<Animation>(file, new System.Type[] { typeof(List<Frame>) });
         }
     }
 }
