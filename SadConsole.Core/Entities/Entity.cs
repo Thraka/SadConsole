@@ -80,6 +80,8 @@
         /// </summary>
         public Point PositionOffset { get; set; }
 
+        public System.Action<Entity, Animation, AnimationState, AnimationState> OnEntityAnimationStateChanged;
+
         #endregion
 
         #region Constructors
@@ -96,8 +98,12 @@
         {
             Font = font;
             IsVisible = true;
-            
-            _currentAnimation = new Animation("default", 1, 1);
+
+            var defaultAnimation = new Animation("default", 1, 1);
+
+            AddAnimation(defaultAnimation);
+            SetCurrentAnimation(defaultAnimation);
+
             _currentAnimation.Font = font;
             _currentAnimation.CreateFrame();
 
@@ -240,8 +246,8 @@
             if (animation == null)
                 return;
 
-            _currentAnimation = animation;
-
+            SetCurrentAnimation(animation);
+            
             if (_currentAnimation.Font != null)
                 base.Font = _currentAnimation.Font;
             else
@@ -259,7 +265,7 @@
         /// <remarks>This animation does not have to be part of the named animations added to the entity.</remarks>
         public void SetActiveAnimation(Animation animation)
         {
-            _currentAnimation = animation;
+            SetCurrentAnimation(animation);
 
             if (_currentAnimation.Font != null)
                 base.Font = _currentAnimation.Font;
@@ -274,7 +280,7 @@
         public void RemoveAllAnimations()
         {
             _animations.Clear();
-            _currentAnimation = null;
+            SetCurrentAnimation(null);
         }
 
         /// <summary>
@@ -306,9 +312,7 @@
 
             if (oldAnimation != null)
                 _animations.Remove(oldAnimation);
-
-            _currentAnimation = animation;
-
+            
             animation.Font = _font;
 
             _animations.Add(animation);
@@ -363,6 +367,24 @@
             {
                 _animations[i].Font = _font;
             }
+        }
+
+        protected void SetCurrentAnimation(Animation animation)
+        {
+            var oldAnimation = _currentAnimation;
+
+            if (oldAnimation != null)
+                oldAnimation.AnimationStateChanged -= CurrentAnimation_AnimationStateChanged;
+
+            _currentAnimation = animation;
+
+            if (_currentAnimation != null)
+                _currentAnimation.AnimationStateChanged += CurrentAnimation_AnimationStateChanged;
+        }
+
+        private void CurrentAnimation_AnimationStateChanged(object sender, AnimationStateChangedEventArgs e)
+        {
+            OnEntityAnimationStateChanged?.Invoke(this, _currentAnimation, e.NewState, e.PreviousState);
         }
         #endregion
 

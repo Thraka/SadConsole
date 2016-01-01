@@ -10,6 +10,8 @@
     [DataContract]
     public class Animation
     {
+        public event System.EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
+
         #region Variables
         /// <summary>
         /// Time counter for the naimation
@@ -47,6 +49,13 @@
         /// </summary>
         [DataMember]
         public List<Frame> Frames = new List<Frame>();
+
+        /// <summary>
+        /// The state of the animation.
+        /// </summary>
+        protected AnimationState state;
+        
+
         #endregion
 
         #region Properties
@@ -128,6 +137,24 @@
             get { return Frames[_currentFrameIndex]; }
         }
 
+        /// <summary>
+        /// Gets the current animation state.
+        /// </summary>
+        public AnimationState State
+        {
+            get { return state; }
+            protected set
+            {
+                var oldState = state;
+
+                if (value != state)
+                {
+                    state = value;
+                    AnimationStateChanged?.Invoke(this, new AnimationStateChangedEventArgs(oldState, state));
+                }
+            }
+        }
+        
         #endregion
 
         #region Constructors
@@ -177,6 +204,7 @@
         public void Stop()
         {
             _isPlaying = false;
+            State = AnimationState.Stopped;
         }
 
         /// <summary>
@@ -186,6 +214,7 @@
         {
             CalculateFrameDuration();
             _isPlaying = true;
+            State = AnimationState.Playing;
         }
 
         /// <summary>
@@ -196,6 +225,8 @@
             CalculateFrameDuration();
             _isPlaying = true;
             _currentFrameIndex = 0;
+            State = AnimationState.Restarted;
+            State = AnimationState.Playing;
         }
 
         /// <summary>
@@ -217,10 +248,15 @@
                     if (_currentFrameIndex >= Frames.Count)
                     {
                         if (Repeat)
+                        {
                             _currentFrameIndex = 0;
+                            State = AnimationState.Restarted;
+                            State = AnimationState.Playing;
+                        }
                         else
                         {
-                            Stop();
+                            _isPlaying = false;
+                            State = AnimationState.Finished;
                             _currentFrameIndex--;
                         }
                     }
@@ -271,5 +307,58 @@
         {
             return SadConsole.Serializer.Load<Animation>(file, new System.Type[] { typeof(List<Frame>) });
         }
+    }
+
+    /// <summary>
+    /// Event args for when the animation state changes
+    /// </summary>
+    public class AnimationStateChangedEventArgs : System.EventArgs
+    {
+        /// <summary>
+        /// The previous state.
+        /// </summary>
+        public readonly AnimationState PreviousState;
+
+        /// <summary>
+        /// The new state.
+        /// </summary>
+        public readonly AnimationState NewState;
+
+        /// <summary>
+        /// Creates a new instance of the event args.
+        /// </summary>
+        /// <param name="previousState">The previous state.</param>
+        /// <param name="newState">The new state.</param>
+        public AnimationStateChangedEventArgs(AnimationState previousState, AnimationState newState)
+        {
+            PreviousState = previousState;
+            NewState = newState;
+        }
+    }
+
+    /// <summary>
+    /// Represents what state the animation is in.
+    /// </summary>
+    public enum AnimationState
+    {
+        /// <summary>
+        /// The animation has never been played or was forcibly stopped.
+        /// </summary>
+        Stopped,
+
+        /// <summary>
+        /// The animation is currently playing.
+        /// </summary>
+        Playing,
+
+        /// <summary>
+        /// The animation was either manually restarted or repeated.
+        /// </summary>
+        Restarted,
+
+        /// <summary>
+        /// The animation was played and completed.
+        /// </summary>
+        Finished
     }
 }
