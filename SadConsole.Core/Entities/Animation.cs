@@ -143,7 +143,7 @@
         public AnimationState State
         {
             get { return state; }
-            protected set
+            internal set
             {
                 var oldState = state;
 
@@ -256,8 +256,8 @@
                         else
                         {
                             _isPlaying = false;
-                            State = AnimationState.Finished;
                             _currentFrameIndex--;
+                            State = AnimationState.Finished;
                         }
                     }
                 }
@@ -359,6 +359,16 @@
         /// <summary>
         /// The animation was played and completed.
         /// </summary>
-        Finished
+        Finished,
+
+        /// <summary>
+        /// The animation is now the current animation for an entity.
+        /// </summary>
+        Activated,
+
+        /// <summary>
+        /// The animation is no longer the current animation for an entity.
+        /// </summary>
+        Deactivated
     }
 }

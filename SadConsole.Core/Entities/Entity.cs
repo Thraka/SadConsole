@@ -80,6 +80,9 @@
         /// </summary>
         public Point PositionOffset { get; set; }
 
+        /// <summary>
+        /// Called when the current animation state changes. Parameters are: current entity, current animation, new state, old state.
+        /// </summary>
         public System.Action<Entity, Animation, AnimationState, AnimationState> OnEntityAnimationStateChanged;
 
         #endregion
@@ -374,12 +377,21 @@
             var oldAnimation = _currentAnimation;
 
             if (oldAnimation != null)
+            {
+                oldAnimation.State = AnimationState.Deactivated;
                 oldAnimation.AnimationStateChanged -= CurrentAnimation_AnimationStateChanged;
+
+                oldAnimation.Restart();
+                oldAnimation.Stop();
+            }
 
             _currentAnimation = animation;
 
             if (_currentAnimation != null)
+            {
                 _currentAnimation.AnimationStateChanged += CurrentAnimation_AnimationStateChanged;
+                _currentAnimation.State = AnimationState.Activated;
+            }
         }
 
         private void CurrentAnimation_AnimationStateChanged(object sender, AnimationStateChangedEventArgs e)
