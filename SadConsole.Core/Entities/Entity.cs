@@ -483,12 +483,61 @@
 
         public void Save(string file)
         {
-            SadConsole.Serializer.Save<Entity>(this, file, new System.Type[] { typeof(List<Frame>) });
+            //SadConsole.Serializer.Save<Entity>(this, file, new System.Type[] { typeof(List<Frame>) });
+            Serialized data = new Serialized(this);
+            data.Save(file);
         }
 
         public static Entity Load(string file)
         {
-            return SadConsole.Serializer.Load<Entity>(file, new System.Type[] { typeof(List<Frame>) });
+            //return SadConsole.Serializer.Load<Entity>(file, new System.Type[] { typeof(List<Frame>) });
+            return Serialized.Load(file);
+        }
+
+        [DataContract]
+        internal class Serialized
+        {
+            [DataMember]
+            public Animation[] Animations;
+
+            [DataMember]
+            public string CurrentAnimation;
+
+            [DataMember]
+            public Point CenterOffset;
+
+            [DataMember]
+            public Rectangle CollisionBox { get; set; }
+
+            public Serialized() { }
+
+            public Serialized(Entity entity)
+            {
+                Animations = entity._animations.ToArray();
+                CurrentAnimation = entity.CurrentAnimation != null ? entity.CurrentAnimation.Name : "default";
+                CenterOffset = entity._centerOffset;
+                CollisionBox = entity.CollisionBox;
+            }
+
+            public void Save(string file)
+            {
+                SadConsole.Serializer.Save(this, file, new System.Type[] { typeof(List<Frame>), typeof(Animation) });
+            }
+
+            public static Entity Load(string file)
+            {
+                var data = SadConsole.Serializer.Load<Serialized>(file, new System.Type[] { typeof(List<Frame>), typeof(Animation) });
+                var entity = new Entity();
+
+                entity._animations = new List<Animation>(data.Animations);
+                entity._centerOffset = data.CenterOffset;
+                entity.CollisionBox = data.CollisionBox;
+                entity.SetActiveAnimation(data.CurrentAnimation);
+
+                return entity;
+            }
         }
     }
+
+    
 }
