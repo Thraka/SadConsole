@@ -110,7 +110,6 @@
             _currentAnimation.Font = font;
             _currentAnimation.CreateFrame();
 
-            _animations.Add(CurrentAnimation);
             _animationBoundingBox = new Rectangle(0, 0, 1, 1);
         }
         #endregion
