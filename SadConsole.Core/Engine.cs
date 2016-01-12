@@ -223,14 +223,14 @@ namespace SadConsole
 
         public static void Draw(GameTime gameTime)
         {
-            GameTimeElapsedRender = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
             GameTimeDraw = gameTime;
             ConsoleRenderStack.Render(); 
         }
 
         public static void Update(GameTime gameTime, bool windowIsActive)
         {
-            GameTimeElapsedUpdate = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
             GameTimeUpdate = gameTime;
 
             if (windowIsActive)
