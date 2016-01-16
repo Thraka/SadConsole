@@ -6,13 +6,37 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    internal class Program
+    class Program
     {
-        private static SnakeGame snakeGame;
-        public static void Main()
+        public static SnakeGame Game;
+        static void Main(string[] args)
         {
-            snakeGame = new SnakeGame();
-            snakeGame.Run();
+#if !MACOS
+            Game = new SnakeGame();
+            Game.Run();
+#else
+				NSApplication.Init ();
+				using (var p = new NSAutoreleasePool ()) {
+					NSApplication.SharedApplication.Delegate = new AppDelegate ();
+					NSApplication.Main (args);
+				}
+#endif
         }
     }
+
+#if MACOS
+	class AppDelegate : NSApplicationDelegate
+	{
+		public override void FinishedLaunching (MonoMac.Foundation.NSObject notification)
+		{
+			Program.Game = new SnakeGame();
+			Program.Game.Run();
+		}
+
+		public override bool ApplicationShouldTerminateAfterLastWindowClosed (NSApplication sender)
+		{
+			return true;
+		}
+	}
+#endif
 }
