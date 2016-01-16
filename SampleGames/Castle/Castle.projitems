@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>bd5d2b21-2cd6-448d-acd7-5b90da247250</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Castle</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CastleConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CastleGame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClassicConsoleKeyboardHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Direction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameMenuConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameScoreConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Items.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MapReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Monster.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus12.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Map\CASTLE.RAN">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus_12x12.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

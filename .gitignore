@@ -50,6 +50,7 @@ x64/
 build/
 [Bb]in/
 [Oo]bj/
+[Pp]ackages/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

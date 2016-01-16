@@ -6,13 +6,37 @@ using System.Threading.Tasks;
 
 namespace Castle
 {
-    internal class Program
+    class Program
     {
-        private static CastleGame castleGame;
-        public static void Main()
+        public static CastleGame Game;
+        static void Main(string[] args)
         {
-            castleGame = new CastleGame();
-            castleGame.Run();
+#if !MACOS
+            Game = new CastleGame();
+            Game.Run();
+#else
+				NSApplication.Init ();
+				using (var p = new NSAutoreleasePool ()) {
+					NSApplication.SharedApplication.Delegate = new AppDelegate ();
+					NSApplication.Main (args);
+				}
+#endif
         }
     }
+
+#if MACOS
+	class AppDelegate : NSApplicationDelegate
+	{
+		public override void FinishedLaunching (MonoMac.Foundation.NSObject notification)
+		{
+			Program.Game = new CastleGame();
+			Program.Game.Run();
+		}
+
+		public override bool ApplicationShouldTerminateAfterLastWindowClosed (NSApplication sender)
+		{
+			return true;
+		}
+	}
+#endif
 }
