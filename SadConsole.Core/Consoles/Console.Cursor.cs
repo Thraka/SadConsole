@@ -188,17 +188,22 @@ using SadConsole.Effects;
                         }
 
                         _position.X += 1;
-                        if (_position.X > console.CellData.Width - 1)
+                        if (_position.X >= console.CellData.Width)
                         {
                             _position.X = 0;
                             _position.Y += 1;
 
-                            if (_position.Y > console.CellData.Height - 1)
+                            if (_position.Y >= console.CellData.Height)
                             {
                                 _position.Y -= 1;
 
                                 if (AutomaticallyShiftRowsUp)
+                                {
                                     console.CellData.ShiftUp();
+
+                                    if (console.CellData.ResizeOnShift)
+                                        _position.Y++;
+                                }
                             }
                         }
                     }
@@ -243,12 +248,12 @@ using SadConsole.Effects;
                         cell.CharacterIndex = character;
 
                         _position.X += 1;
-                        if (_position.X > console.CellData.Width - 1)
+                        if (_position.X >= console.CellData.Width)
                         {
                             _position.X = 0;
                             _position.Y += 1;
 
-                            if (_position.Y > console.CellData.Height - 1)
+                            if (_position.Y >= console.CellData.Height)
                             {
                                 _position.Y -= 1;
 

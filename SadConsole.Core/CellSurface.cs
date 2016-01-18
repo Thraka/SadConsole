@@ -39,7 +39,7 @@ namespace SadConsole
         protected Cell[] Cells { get; set; }
 
         /// <summary>
-        /// When true, the console will be extend to fit extra rows instead of having the data shift.
+        /// When true, the console will be extended to fit extra rows instead of having the data shift.
         /// </summary>
         [DataMember]
         public bool ResizeOnShift { get; set; }
