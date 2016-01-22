@@ -107,11 +107,11 @@
             {
                 item.Update(timeElapsed);
 
-                if (finished != false && !item.IsFinished)
+                if (!item.IsFinished)
                     finished = false;
             }
 
-            IsFinished = true;
+            IsFinished = finished;
         }
     }
 }

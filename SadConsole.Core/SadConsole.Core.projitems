@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Blink.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\BlinkCharacter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\CellEffectBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\CodeEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\ConcurrentEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Delay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\EffectsChain.cs" />
