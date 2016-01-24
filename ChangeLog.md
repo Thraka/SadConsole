@@ -1,4 +1,10 @@
-﻿## Version 2.0.0 (4/24/2014)
+﻿>**NOTE**
+This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
+
+## Version 2.0.1.1 (10/13/2015
+* Updated the NuGet package and wiki. When you install from NuGet you get font files and a browser page will open that points the NuGet starter page on the wiki.
+
+## Version 2.0.0 (4/24/2014)
 #### All Libraries
 * __Biggest change:__ refactored SadConsole to use shared projects for easier code maintenance and cross-platform usage. Currently only Windows projects exist; pull requests welcome for OS X and Linux (should be fairly easy).
 * Dropped XNA support (could be re-added with shared projects, pull requests welcome!).
