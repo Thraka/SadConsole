@@ -9,13 +9,36 @@ using System.Linq;
 
 namespace SadConsole.Input
 {
+    /// <summary>
+    /// Represents the state of a single key.
+    /// </summary>
     public struct AsciiKey
     {
+        /// <summary>
+        /// The key from MonoGame or XNA.
+        /// </summary>
         public Keys XnaKey;
+
+        /// <summary>
+        /// The keyboard character of the key.
+        /// </summary>
         public char Character;
+        
+        /// <summary>
+        /// Total time the key has been held.
+        /// </summary>
         public float TimeHeld;
+
+        /// <summary>
+        /// Tracks if the key was previously held when calcualting the <see cref="KeyboardInfo.InitialRepeatDelay"/>.
+        /// </summary>
         public bool PreviouslyPressed;
 
+        /// <summary>
+        /// Fills out the fields based on the MonoGame/XNA key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="shiftPressed">Helps identify which <see cref="Character"/> to use while the key is pressed. For example, if <see cref="Keys.A"/> is used the <see cref="Character"/> field will be either 'A' if <paramref name="shiftPressed"/> is true or 'a' if false.</param>
         public void Fill(Keys key, bool shiftPressed)
         {
             this.XnaKey = key;
@@ -427,6 +450,11 @@ namespace SadConsole.Input
             }
         }
 
+        /// <summary>
+        /// Shortcut to get the <see cref="AsciiKey"/> for a specific MonoGame/XNA <see cref="Keys"/> type. Shift is considered not pressed.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
         public static AsciiKey Get(Keys key)
         {
             AsciiKey asciiKey = new AsciiKey();
@@ -434,12 +462,25 @@ namespace SadConsole.Input
             return asciiKey;
         }
 
+        /// <summary>
+        /// Shortcut to get the <see cref="AsciiKey"/> for a specific MonoGame/XNA <see cref="Keys"/> type.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="shiftPressed">If shift should be considered pressed or not.</param>
+        /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
         public static AsciiKey Get(Keys key, bool shiftPressed)
         {
             AsciiKey asciiKey = new AsciiKey();
             asciiKey.Fill(key, shiftPressed);
             return asciiKey;
         }
+
+        /// <summary>
+        /// Checks if the two <see cref="AsciiKey"/> types use the same <see cref="XnaKey"/> if the <see cref="Character"/> is 0. If the <see cref="Character"/> is not 0, the <see cref="Character"/> is compared.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator ==(AsciiKey left, AsciiKey right)
         {
             if (left.Character == (char)0 && left.Character == right.Character)
@@ -448,11 +489,22 @@ namespace SadConsole.Input
                 return left.Character == right.Character;
         }
 
+        /// <summary>
+        /// Compares if the <see cref="Character"/> field of two <see cref="AsciiKey"/> instances are the same.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator !=(AsciiKey left, AsciiKey right)
         {
             return left.Character != right.Character;
         }
 
+        /// <summary>
+        /// Compares references.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is AsciiKey)

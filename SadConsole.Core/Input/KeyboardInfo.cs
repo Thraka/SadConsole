@@ -11,13 +11,34 @@ using System.Linq;
 
 namespace SadConsole.Input
 {
+    /// <summary>
+    /// Represents the state of the keyboard.
+    /// </summary>
     public class KeyboardInfo
     {
+        /// <summary>
+        /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. Uses the <see cref="RepeatDelay"/> and <see cref="InitialRepeatDelay"/> settings.
+        /// </summary>
         public List<AsciiKey> KeysPressed { get; internal set; }
+
+        /// <summary>
+        /// A collection of keys currently held down.
+        /// </summary>
         public List<AsciiKey> KeysDown { get; internal set; }
+
+        /// <summary>
+        /// A collection of keys that were just released this frame.
+        /// </summary>
         public List<AsciiKey> KeysReleased { get; internal set; }
 
+        /// <summary>
+        /// How often a key is included in the <see cref="KeysPressed"/> collection after the <see cref="InitialRepeatDelay"/> time has passed.
+        /// </summary>
         public float RepeatDelay = 0.04f;
+
+        /// <summary>
+        /// The initial delay after a key is first pressed before it is included a second time (while held down) in the <see cref="KeysPressed"/> collection.
+        /// </summary>
         public float InitialRepeatDelay = 0.8f;
 
         public KeyboardInfo()
@@ -27,6 +48,9 @@ namespace SadConsole.Input
             KeysDown = new List<AsciiKey>();
         }
 
+        /// <summary>
+        /// Clears the <see cref="KeysPressed"/>, <see cref="KeysDown"/>, <see cref="KeysReleased"/> collections.
+        /// </summary>
         public void Clear()
         {
             KeysPressed.Clear();
@@ -34,6 +58,10 @@ namespace SadConsole.Input
             KeysReleased.Clear();
         }
 
+        /// <summary>
+        /// Reads the keyboard state using the <see cref="GameTime"/> from the update frame.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void ProcessKeys(GameTime gameTime)
         {
             this.KeysPressed.Clear();
@@ -129,16 +157,31 @@ namespace SadConsole.Input
             }
         }
 
+        /// <summary>
+        /// Returns true if the key is not in the <see cref="KeysDown"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key is not being pressed.</returns>
         public bool IsKeyUp(Keys key)
         {
             return !KeysDown.Contains(AsciiKey.Get(key));
         }
 
+        /// <summary>
+        /// Returns true if the key is in the <see cref="KeysDown"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key is being pressed.</returns>
         public bool IsKeyDown(Keys key)
         {
             return KeysDown.Contains(AsciiKey.Get(key));
         }
 
+        /// <summary>
+        /// Returns true when they is in the <see cref="KeysReleased"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key was released this update frame.</returns>
         public bool IsKeyReleased(Keys key)
         {
             return KeysReleased.Contains(AsciiKey.Get(key));
