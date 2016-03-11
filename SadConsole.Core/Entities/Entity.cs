@@ -80,6 +80,11 @@
         /// </summary>
         public Point PositionOffset { get; set; }
 
+        /// <summary>
+        /// Called when the current animation state changes. Parameters are: current entity, current animation, new state, old state.
+        /// </summary>
+        public System.Action<Entity, Animation, AnimationState, AnimationState> OnEntityAnimationStateChanged;
+
         #endregion
 
         #region Constructors
@@ -96,12 +101,15 @@
         {
             Font = font;
             IsVisible = true;
-            
-            _currentAnimation = new Animation("default", 1, 1);
+
+            var defaultAnimation = new Animation("default", 1, 1);
+
+            AddAnimation(defaultAnimation);
+            SetCurrentAnimation(defaultAnimation);
+
             _currentAnimation.Font = font;
             _currentAnimation.CreateFrame();
 
-            _animations.Add(CurrentAnimation);
             _animationBoundingBox = new Rectangle(0, 0, 1, 1);
         }
         #endregion
@@ -240,8 +248,8 @@
             if (animation == null)
                 return;
 
-            _currentAnimation = animation;
-
+            SetCurrentAnimation(animation);
+            
             if (_currentAnimation.Font != null)
                 base.Font = _currentAnimation.Font;
             else
@@ -259,7 +267,7 @@
         /// <remarks>This animation does not have to be part of the named animations added to the entity.</remarks>
         public void SetActiveAnimation(Animation animation)
         {
-            _currentAnimation = animation;
+            SetCurrentAnimation(animation);
 
             if (_currentAnimation.Font != null)
                 base.Font = _currentAnimation.Font;
@@ -274,7 +282,7 @@
         public void RemoveAllAnimations()
         {
             _animations.Clear();
-            _currentAnimation = null;
+            SetCurrentAnimation(null);
         }
 
         /// <summary>
@@ -306,9 +314,7 @@
 
             if (oldAnimation != null)
                 _animations.Remove(oldAnimation);
-
-            _currentAnimation = animation;
-
+            
             animation.Font = _font;
 
             _animations.Add(animation);
@@ -363,6 +369,33 @@
             {
                 _animations[i].Font = _font;
             }
+        }
+
+        protected void SetCurrentAnimation(Animation animation)
+        {
+            var oldAnimation = _currentAnimation;
+
+            if (oldAnimation != null)
+            {
+                oldAnimation.State = AnimationState.Deactivated;
+                oldAnimation.AnimationStateChanged -= CurrentAnimation_AnimationStateChanged;
+
+                oldAnimation.Restart();
+                oldAnimation.Stop();
+            }
+
+            _currentAnimation = animation;
+
+            if (_currentAnimation != null)
+            {
+                _currentAnimation.AnimationStateChanged += CurrentAnimation_AnimationStateChanged;
+                _currentAnimation.State = AnimationState.Activated;
+            }
+        }
+
+        private void CurrentAnimation_AnimationStateChanged(object sender, AnimationStateChangedEventArgs e)
+        {
+            OnEntityAnimationStateChanged?.Invoke(this, _currentAnimation, e.NewState, e.PreviousState);
         }
         #endregion
 
@@ -450,12 +483,61 @@
 
         public void Save(string file)
         {
-            SadConsole.Serializer.Save<Entity>(this, file);
+            //SadConsole.Serializer.Save<Entity>(this, file, new System.Type[] { typeof(List<Frame>) });
+            Serialized data = new Serialized(this);
+            data.Save(file);
         }
 
         public static Entity Load(string file)
         {
-            return SadConsole.Serializer.Load<Entity>(file);
+            //return SadConsole.Serializer.Load<Entity>(file, new System.Type[] { typeof(List<Frame>) });
+            return Serialized.Load(file);
+        }
+
+        [DataContract]
+        internal class Serialized
+        {
+            [DataMember]
+            public Animation[] Animations;
+
+            [DataMember]
+            public string CurrentAnimation;
+
+            [DataMember]
+            public Point CenterOffset;
+
+            [DataMember]
+            public Rectangle CollisionBox { get; set; }
+
+            public Serialized() { }
+
+            public Serialized(Entity entity)
+            {
+                Animations = entity._animations.ToArray();
+                CurrentAnimation = entity.CurrentAnimation != null ? entity.CurrentAnimation.Name : "default";
+                CenterOffset = entity._centerOffset;
+                CollisionBox = entity.CollisionBox;
+            }
+
+            public void Save(string file)
+            {
+                SadConsole.Serializer.Save(this, file, new System.Type[] { typeof(List<Frame>), typeof(Animation) });
+            }
+
+            public static Entity Load(string file)
+            {
+                var data = SadConsole.Serializer.Load<Serialized>(file, new System.Type[] { typeof(List<Frame>), typeof(Animation) });
+                var entity = new Entity();
+
+                entity._animations = new List<Animation>(data.Animations);
+                entity._centerOffset = data.CenterOffset;
+                entity.CollisionBox = data.CollisionBox;
+                entity.SetActiveAnimation(data.CurrentAnimation);
+
+                return entity;
+            }
         }
     }
+
+    
 }
