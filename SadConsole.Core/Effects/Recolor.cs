@@ -9,15 +9,9 @@
     [DataContract]
     public class Recolor: CellEffectBase
     {
-        /// <summary>
-        /// The foreground color applied to a cell.
-        /// </summary>
         [DataMember]
         public Color Foreground { get; set; }
 
-        /// <summary>
-        /// The background color applied to a cell.
-        /// </summary>
         [DataMember]
         public Color Background { get; set; }
 
@@ -29,24 +23,10 @@
         [DataMember]
         private double _startDelay;
 
-        /// <summary>
-        /// When true, the <see cref="Foreground"/> color will be applied to the cell.
-        /// </summary>
-        [DataMember]
-        public bool DoForeground { get; set; }
-
-        /// <summary>
-        /// /// When true, the <see cref="Background"/> color will be applied to the cell.
-        /// </summary>
-        [DataMember]
-        public bool DoBackground { get; set; }
-
         public Recolor()
         {
             Color Foreground = Color.White;
             Color Background = Color.Transparent;
-            DoBackground = true;
-            DoForeground = true;
             RemoveOnFinished = false;
             Permanent = false;
             StartDelay = 0d;
@@ -56,8 +36,8 @@
         
         public override void Apply(Cell cell)
         {
-            if (DoBackground) cell.ActualBackground = Background;
-            if (DoForeground) cell.ActualForeground = Foreground;
+            cell.ActualBackground = Background;
+            cell.ActualForeground = Foreground;
         }
 
         public override void Update(double gameTimeSeconds)
@@ -111,8 +91,6 @@
                 Permanent = this.Permanent,
                 RemoveOnFinished = this.RemoveOnFinished,
                 StartDelay = this.StartDelay,
-                DoForeground = this.DoForeground,
-                DoBackground = this.DoBackground,
                 CloneOnApply = this.CloneOnApply
             };
         }
@@ -129,9 +107,7 @@
                            Background == effect2.Background &&
                            Permanent == effect2.Permanent &&
                            RemoveOnFinished == effect2.RemoveOnFinished &&
-                           StartDelay == effect2.StartDelay &&
-                           DoForeground == effect2.DoForeground &&
-                           DoBackground == effect2.DoBackground;
+                           StartDelay == effect2.StartDelay;
                 }
             }
                 
@@ -140,7 +116,7 @@
 
         public override string ToString()
         {
-            return string.Format("RECOLOR-{0}-{1}-{2}-{3}-{4}", Foreground.PackedValue, Background.PackedValue, Permanent, StartDelay, RemoveOnFinished);
+            return string.Format("PULSE-{0}-{1}-{2}-{3}-{4}", Foreground.PackedValue, Background.PackedValue, Permanent, StartDelay, RemoveOnFinished);
         }
     }
 }
