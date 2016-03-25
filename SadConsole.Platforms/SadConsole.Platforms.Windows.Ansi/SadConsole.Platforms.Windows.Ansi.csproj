@@ -7,8 +7,8 @@
     <ProjectGuid>{55695088-7D09-4704-9D0C-7C69E0DE6D47}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SadConsole.Platforms.Windows.Ansi</RootNamespace>
-    <AssemblyName>SadConsole.Platforms.Windows.Ansi</AssemblyName>
+    <RootNamespace>SadConsole.Ansi</RootNamespace>
+    <AssemblyName>SadConsole.Ansi</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\SadConsole.Platforms.Windows.Ansi.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\SadConsole.Ansi.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,10 +29,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SadConsole.Ansi.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.4.0.459, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.4.0.459\lib\net40\MonoGame.Framework.dll</HintPath>
+    <Reference Include="MonoGame.Framework, Version=3.5.0.1678, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.5.0.1678\lib\net40\MonoGame.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -48,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
-      <Project>{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}</Project>
+      <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
       <Name>SadConsole.Platforms.Windows.Core</Name>
     </ProjectReference>
   </ItemGroup>
@@ -57,11 +58,12 @@
   </ItemGroup>
   <Import Project="..\..\SadConsole.Ansi\SadConsole.Ansi.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
+  </Target>-->
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
+    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Prop Configuration=Release">
+    </Exec>
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

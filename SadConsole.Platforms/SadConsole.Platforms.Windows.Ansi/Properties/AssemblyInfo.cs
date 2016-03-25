@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SadConsole.Platforms.Windows.Ansi")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SadConsole.Ansi")]
+[assembly: AssemblyDescription("Utility library for SadConsole that can read and print ANSI.SYS text files and commands")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SadConsole.Platforms.Windows.Ansi")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("SadLogic")]
+[assembly: AssemblyProduct("SadConsole.Ansi")]
+[assembly: AssemblyCopyright("Copyright © 2015 Steve De George JR")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.1.0.1")]
-[assembly: AssemblyFileVersion("2.1.0.1")]
+[assembly: AssemblyVersion("2.5.0.0")]
+[assembly: AssemblyFileVersion("2.5.0.0")]

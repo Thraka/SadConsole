@@ -39,8 +39,8 @@
     <StartupObject>StarterProject.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.4.0.459, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\MonoGame.Framework.WindowsDX.3.4.0.459\lib\net40\MonoGame.Framework.dll</HintPath>
+    <Reference Include="MonoGame.Framework, Version=3.5.0.1678, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MonoGame.Framework.WindowsDX.3.5.0.1678\lib\net40\MonoGame.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -56,19 +56,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Ansi\SadConsole.Platforms.Windows.Ansi.csproj">
-      <Project>{55695088-7D09-4704-9D0C-7C69E0DE6D47}</Project>
+      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
       <Name>SadConsole.Platforms.Windows.Ansi</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Controls\SadConsole.Platforms.Windows.Controls.csproj">
-      <Project>{46F11907-CEF3-4069-B041-0A88880981E6}</Project>
+      <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
       <Name>SadConsole.Platforms.Windows.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
-      <Project>{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}</Project>
+      <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
       <Name>SadConsole.Platforms.Windows.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.GameHelpers\SadConsole.Platforms.Windows.GameHelpers.csproj">
-      <Project>{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}</Project>
+      <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
       <Name>SadConsole.Platforms.Windows.GameHelpers</Name>
     </ProjectReference>
   </ItemGroup>
