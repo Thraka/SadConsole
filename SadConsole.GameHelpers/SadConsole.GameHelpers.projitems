@@ -9,6 +9,49 @@
     <Import_RootNamespace>SadConsole.GameHelpers</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Cache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\CellularCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\CellularGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Enums\BasisType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Enums\CombinerType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Enums\FractalType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Enums\InterpolationType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Enums\MappingMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitAutoCorrect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitBasisFunction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitBias.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitBlend.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitBrightContrast.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitCeiling.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitCellular.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitClamp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitCombiner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitConstant.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitCos.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitFloor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitFractal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitGain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitGradient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitInvert.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitLog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitModuleBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitPow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitRotateDomain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitScaleDomain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitScaleOffset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitSelect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitSin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitSphere.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitTan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitTiers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitTranslateDomain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Implicit\ImplicitXmlChain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Mapping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\MappingRanges.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Noise.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\NoiseLookupTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Action.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObject.cs" />
@@ -18,5 +61,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Processor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Trigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Generator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\MapData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\River.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\SurfaceGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Tile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\TileGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\WorldGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\WrappingWorldGenerator.cs" />
   </ItemGroup>
 </Project>
