@@ -11,7 +11,7 @@ namespace SadConsole.GameHelpers.WorldGeneration
         protected ImplicitCombiner HeatMap;
         protected ImplicitFractal MoistureMap;
 
-        protected override void Initialize()
+        public override void Initialize()
         {
             // HeightMap
             HeightMap = new ImplicitFractal(FractalType.Multi,
@@ -43,7 +43,7 @@ namespace SadConsole.GameHelpers.WorldGeneration
                                                Seed);
         }
 
-        protected override void GetData()
+        public override void GetData()
         {
             HeightData = new MapData(Width, Height);
             HeatData = new MapData(Width, Height);
@@ -93,19 +93,19 @@ namespace SadConsole.GameHelpers.WorldGeneration
             }
         }
 
-        protected override Tile GetTop(Tile t)
+        public override Tile GetTop(Tile t)
         {
             return Tiles[t.X, MathHelper.Mod(t.Y - 1, Height)];
         }
-        protected override Tile GetBottom(Tile t)
+        public override Tile GetBottom(Tile t)
         {
             return Tiles[t.X, MathHelper.Mod(t.Y + 1, Height)];
         }
-        protected override Tile GetLeft(Tile t)
+        public override Tile GetLeft(Tile t)
         {
             return Tiles[MathHelper.Mod(t.X - 1, Width), t.Y];
         }
-        protected override Tile GetRight(Tile t)
+        public override Tile GetRight(Tile t)
         {
             return Tiles[MathHelper.Mod(t.X + 1, Width), t.Y];
         }

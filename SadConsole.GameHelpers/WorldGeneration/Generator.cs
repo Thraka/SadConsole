@@ -8,63 +8,63 @@ namespace SadConsole.GameHelpers.WorldGeneration
         where TMapConverter : IMapConverter<TMapConverterOutput>, new()
     {
 
-        protected int Seed;
-        protected Random Random;
+        public int Seed;
+        public Random Random;
 
-        protected int Width = 512;
-        protected int Height = 512;
+        public int Width = 512;
+        public int Height = 512;
 
         // Height Map
-        protected int TerrainOctaves = 6;
-        protected double TerrainFrequency = 1.25;
-        protected float DeepWater = 0.2f;
-        protected float ShallowWater = 0.4f;
-        protected float Sand = 0.5f;
-        protected float Grass = 0.7f;
-        protected float Forest = 0.8f;
-        protected float Rock = 0.9f;
+        public int TerrainOctaves = 6;
+        public double TerrainFrequency = 1.25;
+        public float DeepWater = 0.2f;
+        public float ShallowWater = 0.4f;
+        public float Sand = 0.5f;
+        public float Grass = 0.7f;
+        public float Forest = 0.8f;
+        public float Rock = 0.9f;
 
         // Heat Map
-        protected int HeatOctaves = 4;
-        protected double HeatFrequency = 3.0;
-        protected float ColdestValue = 0.05f;
-        protected float ColderValue = 0.18f;
-        protected float ColdValue = 0.4f;
-        protected float WarmValue = 0.6f;
-        protected float WarmerValue = 0.8f;
+        public int HeatOctaves = 4;
+        public double HeatFrequency = 3.0;
+        public float ColdestValue = 0.05f;
+        public float ColderValue = 0.18f;
+        public float ColdValue = 0.4f;
+        public float WarmValue = 0.6f;
+        public float WarmerValue = 0.8f;
 
         // Moisture Map
-        protected int MoistureOctaves = 4;
-        protected double MoistureFrequency = 3.0;
-        protected float DryerValue = 0.27f;
-        protected float DryValue = 0.4f;
-        protected float WetValue = 0.6f;
-        protected float WetterValue = 0.8f;
-        protected float WettestValue = 0.9f;
+        public int MoistureOctaves = 4;
+        public double MoistureFrequency = 3.0;
+        public float DryerValue = 0.27f;
+        public float DryValue = 0.4f;
+        public float WetValue = 0.6f;
+        public float WetterValue = 0.8f;
+        public float WettestValue = 0.9f;
 
         // Rivers
-        protected int RiverCount = 40;
-        protected float MinRiverHeight = 0.6f;
-        protected int MaxRiverAttempts = 1000;
-        protected int MinRiverTurns = 18;
-        protected int MinRiverLength = 20;
-        protected int MaxRiverIntersections = 2;
+        public int RiverCount = 40;
+        public float MinRiverHeight = 0.6f;
+        public int MaxRiverAttempts = 1000;
+        public int MinRiverTurns = 18;
+        public int MinRiverLength = 20;
+        public int MaxRiverIntersections = 2;
 
-        protected MapData HeightData;
-        protected MapData HeatData;
-        protected MapData MoistureData;
-        //protected MapData Clouds1;
-        //protected MapData Clouds2;
+        public MapData HeightData;
+        public MapData HeatData;
+        public MapData MoistureData;
+        //public MapData Clouds1;
+        //public MapData Clouds2;
 
-        protected Tile[,] Tiles;
+        public Tile[,] Tiles;
 
-        protected List<TileGroup> Waters = new List<TileGroup>();
-        protected List<TileGroup> Lands = new List<TileGroup>();
+        public List<TileGroup> Waters = new List<TileGroup>();
+        public List<TileGroup> Lands = new List<TileGroup>();
 
-        protected List<River> Rivers = new List<River>();
-        protected List<RiverGroup> RiverGroups = new List<RiverGroup>();
+        public List<River> Rivers = new List<River>();
+        public List<RiverGroup> RiverGroups = new List<RiverGroup>();
 
-        protected BiomeType[,] BiomeTable = new BiomeType[6, 6] {   
+        public BiomeType[,] BiomeTable = new BiomeType[6, 6] {   
 		//COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
 		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
 		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
@@ -92,21 +92,21 @@ namespace SadConsole.GameHelpers.WorldGeneration
             Generate();
         }
 
-        protected abstract void Initialize();
-        protected abstract void GetData();
+        public abstract void Initialize();
+        public abstract void GetData();
 
-        protected abstract Tile GetTop(Tile tile);
-        protected abstract Tile GetBottom(Tile tile);
-        protected abstract Tile GetLeft(Tile tile);
-        protected abstract Tile GetRight(Tile tile);
+        public abstract Tile GetTop(Tile tile);
+        public abstract Tile GetBottom(Tile tile);
+        public abstract Tile GetLeft(Tile tile);
+        public abstract Tile GetRight(Tile tile);
 
         public TMapConverterOutput HeightMapRenderer;
         public TMapConverterOutput HeatMapRenderer;
         public TMapConverterOutput MoistureMapRenderer;
         public TMapConverterOutput BiomeMapRenderer;
-        protected TMapConverter MapConverter;
+        public TMapConverter MapConverter;
 
-        protected virtual void Reset()
+        public virtual void Reset()
         {
             Random = new Random(Seed);
 
@@ -115,7 +115,7 @@ namespace SadConsole.GameHelpers.WorldGeneration
             Initialize();
         }
 
-        protected virtual void Generate()
+        public virtual void Generate()
         {
             GetData();
             LoadTiles();

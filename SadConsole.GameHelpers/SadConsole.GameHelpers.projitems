@@ -64,7 +64,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Generator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\MapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\River.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\SurfaceGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\CellSurfaceMapConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Tile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\TileGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\WorldGenerator.cs" />
