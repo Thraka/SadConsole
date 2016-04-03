@@ -70,6 +70,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IUpdate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\RexReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Tile.cs" />

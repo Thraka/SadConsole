@@ -47,10 +47,13 @@
 
             // Add the default console to the list of consoles.
             SadConsole.Engine.ConsoleRenderStack.Add(_defaultConsole);
+
             
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
-            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { new CustomConsoles.CursorConsole(), 
-                                                                       new CustomConsoles.StaticConsole(), 
+            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
+                                                                       new CustomConsoles.CursorConsole(),
+                                                                       new CustomConsoles.WorldGenerationConsole(),
+                                                                       new CustomConsoles.StaticConsole(),
                                                                        new CustomConsoles.StretchedConsole(), 
                                                                        new CustomConsoles.BorderedConsole(80, 25), 
                                                                        new CustomConsoles.DOSConsole(),
@@ -59,6 +62,7 @@
                                                                        new CustomConsoles.RandomScrollingConsole(),
                                                                        new CustomConsoles.SplashScreen(),
                                                                      };
+
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
@@ -66,6 +70,8 @@
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
+
+            //Components.Add(new FPSCounterComponent(this));
 
             // Call the default initialize of the base class.
             base.Initialize();
@@ -111,6 +117,50 @@
             SadConsole.Engine.Draw(gameTime);
             
             base.Draw(gameTime);
+        }
+    }
+
+
+    public class FPSCounterComponent : DrawableGameComponent
+    {
+        CellsRenderer console;
+
+        int frameRate = 0;
+        int frameCounter = 0;
+        TimeSpan elapsedTime = TimeSpan.Zero;
+
+
+        public FPSCounterComponent(Game game)
+            : base(game)
+        {
+            console = new CellsRenderer(new CellSurface(30, 1), new SpriteBatch(game.GraphicsDevice));
+            console.CellData.DefaultBackground = Color.Black;
+            console.CellData.Clear();
+            console.Position = new Point(0, 10);
+        }
+
+
+        public override void Update(GameTime gameTime)
+        {
+            elapsedTime += gameTime.ElapsedGameTime;
+
+            if (elapsedTime > TimeSpan.FromSeconds(1))
+            {
+                elapsedTime -= TimeSpan.FromSeconds(1);
+                frameRate = frameCounter;
+                frameCounter = 0;
+            }
+        }
+
+
+        public override void Draw(GameTime gameTime)
+        {
+            frameCounter++;
+
+            string fps = string.Format("fps: {0} mem : {1}", frameRate, GC.GetTotalMemory(false));
+            console.CellData.Clear();
+            console.CellData.Print(0, 0, fps);
+            console.Render();
         }
     }
 }

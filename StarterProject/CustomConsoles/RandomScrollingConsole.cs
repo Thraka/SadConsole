@@ -88,7 +88,9 @@ namespace StarterProject.CustomConsoles
 
                 // Create a faux layering system.
                 base.Render();
-                messageData.Render();
+
+                if (IsVisible)
+                    messageData.Render();
             }
         }
     }

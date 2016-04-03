@@ -240,6 +240,19 @@ namespace SadConsole
         }
         #endregion
 
+        /// <summary>
+        /// Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
+        /// </summary>
+        /// <param name="pixels">The colors to place.</param>
+        public void SetPixels(Color[] pixels)
+        {
+            if (pixels.Length != Cells.Length)
+                throw new ArgumentOutOfRangeException("pixels", "The amount of colors do not match the size of this cell surface.");
+
+            for (int i = 0; i < pixels.Length; i++)
+                Cells[i].Background = pixels[i];
+        }
+
         #region Resize
         /// <summary>
         /// Resizes the cell surface and resets all data.
