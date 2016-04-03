@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\EntityAndConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\WorldGenerationConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
