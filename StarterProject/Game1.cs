@@ -27,6 +27,10 @@
             IsMouseVisible = true;
             IsFixedTimeStep = true;
 
+            // Uncomment these two lines to run as fast as possible
+            //_graphics.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
+
             // Initialize the SadConsole engine and the first effects library (provided by the SadConsole.Effects.dll binary)
             SadConsole.Engine.Initialize(GraphicsDevice);
 
