@@ -86,6 +86,11 @@ namespace SadConsole.Consoles
             SetActiveLayer(0);
         }
 
+        protected override void OnPositionChanged(Point oldLocation)
+        {
+            SyncLayers();
+        }
+
         public virtual void SyncLayers()
         {
             if (_layers != null)
@@ -132,18 +137,7 @@ namespace SadConsole.Consoles
 
             ResetViewArea();
         }
-
-        /// <summary>
-        /// Moves all layers to be at the specified position.
-        /// </summary>
-        /// <param name="position">The position of all layers.</param>
-        public void Move(Point position)
-        {
-            this.Position = position;
-
-            SyncLayers();
-        }
-
+        
         public override void Update()
         {
             for (int i = 0; i < _layers.Count; i++)
