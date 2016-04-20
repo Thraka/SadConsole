@@ -53,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\NoiseLookupTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Action.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObjectCollection.cs" />
