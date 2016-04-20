@@ -120,6 +120,11 @@ namespace SadConsole
                 return _cellEffects.AsReadOnly();
             }
         }
+
+        /// <summary>
+        /// Centralized sudo random number generator used by SadConsole. Replace it with your own seed to replicate specific randomness.
+        /// </summary>
+        public static Random Random = new Random();
         #endregion
 
         #region Constructors

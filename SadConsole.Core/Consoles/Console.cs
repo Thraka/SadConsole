@@ -393,7 +393,6 @@
         /// </summary>
         public void FillWithRandomGarbage(bool useEffect = false)
         {
-            Random rand = new Random();
             SadConsole.Effects.Blink pulse = new SadConsole.Effects.Blink();
             pulse.CloneOnApply = true;
 
@@ -404,13 +403,13 @@
                 for (int x = 0; x < CellData.Width; x++)
                 {
                     CellData.SetCharacter(x, y, charCounter);
-                    CellData.SetForeground(x, y, new Color(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256), 255));
+                    CellData.SetForeground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
                     CellData.SetBackground(x, y, CellData.DefaultBackground);
-                    CellData.SetBackground(x, y, new Color(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256), 255));
-                    CellData.SetSpriteEffect(x, y, (SpriteEffects)rand.Next(0, 4));
+                    CellData.SetBackground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
+                    CellData.SetSpriteEffect(x, y, (SpriteEffects)Engine.Random.Next(0, 4));
                     if (useEffect)
                     {
-                        pulse.BlinkSpeed = ((float)rand.NextDouble() * 3f);
+                        pulse.BlinkSpeed = ((float)Engine.Random.NextDouble() * 3f);
                         CellData.SetEffect(x, y, pulse);
                     }
                     charCounter++;
