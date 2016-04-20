@@ -318,6 +318,9 @@
             animation.Font = _font;
 
             _animations.Add(animation);
+
+            if (_animations.Count == 1)
+                SetActiveAnimation(animation);
         }
 
         /// <summary>
