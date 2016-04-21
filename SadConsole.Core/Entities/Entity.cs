@@ -103,12 +103,13 @@
             IsVisible = true;
 
             var defaultAnimation = new Animation("default", 1, 1);
+            defaultAnimation.CreateFrame();
 
             AddAnimation(defaultAnimation);
             SetCurrentAnimation(defaultAnimation);
 
             _currentAnimation.Font = font;
-            _currentAnimation.CreateFrame();
+            
 
             _animationBoundingBox = new Rectangle(0, 0, 1, 1);
         }
