@@ -38,26 +38,25 @@
             SadConsole.Engine.UseMouse = true;
 
             // Load the default font.
-            using (var stream = System.IO.File.OpenRead("Fonts/IBM.font"))
-                SadConsole.Engine.DefaultFont = SadConsole.Serializer.Deserialize<Font>(stream);
-
             FontMaster masterFont;
 
             using (var stream = System.IO.File.OpenRead("Fonts/IBM.font"))
                 masterFont = SadConsole.Serializer.Deserialize<FontMaster>(stream);
 
-            normalFont = masterFont.GetFont(1);
-            SadConsole.ConsolesNS.TextSurface surface1;
-            surface1 = new SadConsole.ConsolesNS.TextSurface(10, 10, normalFont);
+            Engine.Fonts.Add(masterFont.Name, masterFont);
+            Engine.DefaultFont = masterFont.GetFont(1);
+
+            SadConsole.Consoles.TextSurface surface1;
+            surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
             surface1.DefaultBackground = Color.Gray;
             surface1.DefaultForeground = ColorAnsi.Black;
             surface1.Clear();
 
             surface1.Print(2, 1, "Hello");
-            tempSurface = new SadConsole.ConsolesNS.TextSurfaceView(surface1, new Rectangle(0, 0, 4, 6));
+            tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(0, 0, 4, 6));
             tempSurface2 = surface1;
 
-            tempRenderer = new SadConsole.ConsolesNS.TextSurfaceRenderer();
+            tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
 
             // Using the default font, resize the window to a Width,Height of cells. This example uses the MS-DOS default of 80 columns by 25 rows.
             SadConsole.Engine.DefaultFont.ResizeGraphicsDeviceManager(_graphics, 80, 25, 0, 0);
@@ -100,10 +99,9 @@
         }
 
 
-        SadConsole.ConsolesNS.ITextSurfaceView tempSurface;
-        SadConsole.ConsolesNS.ITextSurfaceView tempSurface2;
-        SadConsole.ConsolesNS.TextSurfaceRenderer tempRenderer;
-        Font normalFont;
+        SadConsole.Consoles.ITextSurfaceView tempSurface;
+        SadConsole.Consoles.ITextSurfaceView tempSurface2;
+        SadConsole.Consoles.TextSurfaceRenderer tempRenderer;
 
         protected override void Update(GameTime gameTime)
         {
@@ -153,46 +151,46 @@
     }
 
 
-    public class FPSCounterComponent : DrawableGameComponent
-    {
-        CellsRenderer console;
+    //public class FPSCounterComponent : DrawableGameComponent
+    //{
+    //    CellsRenderer console;
 
-        int frameRate = 0;
-        int frameCounter = 0;
-        TimeSpan elapsedTime = TimeSpan.Zero;
-
-
-        public FPSCounterComponent(Game game)
-            : base(game)
-        {
-            console = new CellsRenderer(new CellSurface(30, 1), new SpriteBatch(game.GraphicsDevice));
-            console.CellData.DefaultBackground = Color.Black;
-            console.CellData.Clear();
-            console.Position = new Point(0, 10);
-        }
+    //    int frameRate = 0;
+    //    int frameCounter = 0;
+    //    TimeSpan elapsedTime = TimeSpan.Zero;
 
 
-        public override void Update(GameTime gameTime)
-        {
-            elapsedTime += gameTime.ElapsedGameTime;
-
-            if (elapsedTime > TimeSpan.FromSeconds(1))
-            {
-                elapsedTime -= TimeSpan.FromSeconds(1);
-                frameRate = frameCounter;
-                frameCounter = 0;
-            }
-        }
+    //    public FPSCounterComponent(Game game)
+    //        : base(game)
+    //    {
+    //        console = new CellsRenderer(new CellSurface(30, 1), new SpriteBatch(game.GraphicsDevice));
+    //        console.CellData.DefaultBackground = Color.Black;
+    //        console.CellData.Clear();
+    //        console.Position = new Point(0, 10);
+    //    }
 
 
-        public override void Draw(GameTime gameTime)
-        {
-            frameCounter++;
+    //    public override void Update(GameTime gameTime)
+    //    {
+    //        elapsedTime += gameTime.ElapsedGameTime;
 
-            string fps = string.Format("fps: {0} mem : {1}", frameRate, GC.GetTotalMemory(false));
-            console.CellData.Clear();
-            console.CellData.Print(0, 0, fps);
-            console.Render();
-        }
-    }
+    //        if (elapsedTime > TimeSpan.FromSeconds(1))
+    //        {
+    //            elapsedTime -= TimeSpan.FromSeconds(1);
+    //            frameRate = frameCounter;
+    //            frameCounter = 0;
+    //        }
+    //    }
+
+
+    //    public override void Draw(GameTime gameTime)
+    //    {
+    //        frameCounter++;
+
+    //        string fps = string.Format("fps: {0} mem : {1}", frameRate, GC.GetTotalMemory(false));
+    //        console.CellData.Clear();
+    //        console.CellData.Print(0, 0, fps);
+    //        console.Render();
+    //    }
+    //}
 }

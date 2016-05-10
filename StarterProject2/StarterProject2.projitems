@@ -13,10 +13,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM.font" />
+    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)Game.ico" />
     <Content Include="$(MSBuildThisFileDirectory)GameThumbnail.png" />
     <Content Include="$(MSBuildThisFileDirectory)sad.png" />
