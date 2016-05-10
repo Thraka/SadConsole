@@ -11,10 +11,10 @@ namespace SadConsole.Consoles
     /// </summary>
     public class TextSurfaceRenderer : ITextSurfaceRenderer
     {
-        private Matrix absolutePositionTransform;
-        private Matrix positionTransform;
-        private Point oldPosition;
-        private Point oldAbsolutePosition;
+        //private Matrix absolutePositionTransform;
+        //private Matrix positionTransform;
+        //private Point oldPosition;
+        //private Point oldAbsolutePosition;
 
         /// <summary>
         /// The sprite batch used for drawing to the screen.
@@ -89,23 +89,27 @@ namespace SadConsole.Consoles
 
             if (usePixelPositioning)
             {
-                if (oldAbsolutePosition != position)
-                {
-                    absolutePositionTransform = GetPositionTransform(position, surface.Font.Size, true);
-                    oldAbsolutePosition = position;
-                }
+                //if (oldAbsolutePosition != position)
+                //{
+                //    absolutePositionTransform = GetPositionTransform(position, surface.Font.Size, true);
+                //    oldAbsolutePosition = position;
+                //}
 
-                matrix = absolutePositionTransform;
+                //matrix = absolutePositionTransform;
+
+                matrix = GetPositionTransform(position, surface.Font.Size, true);
             }
             else
             {
-                if (position != oldPosition)
-                {
-                    positionTransform = GetPositionTransform(position, surface.Font.Size, false);
-                    oldPosition = position;
-                }
+                //if (position != oldPosition)
+                //{
+                //    positionTransform = GetPositionTransform(position, surface.Font.Size, false);
+                //    oldPosition = position;
+                //}
 
-                matrix = positionTransform;
+                //matrix = positionTransform;
+
+                matrix = GetPositionTransform(position, surface.Font.Size, false);
             }
 
             Render(surface, matrix);
