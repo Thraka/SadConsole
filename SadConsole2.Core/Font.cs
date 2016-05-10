@@ -46,6 +46,24 @@ namespace SadConsole
             SolidCharacterIndex = masterFont.SolidCharacterIndex;
         }
 
+        /// <summary>
+        /// Resizes the graphics device manager to this font cell size.
+        /// </summary>
+        /// <param name="manager">Graphics device manager to resize.</param>
+        /// <param name="width">The width in cell count.</param>
+        /// <param name="height">The height in cell count.</param>
+        /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
+        /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
+        {
+            manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
+            manager.PreferredBackBufferHeight = (Size.Y * height) + additionalHeight;
+            manager.ApplyChanges();
+
+            Engine.WindowWidth = manager.PreferredBackBufferWidth;
+            Engine.WindowHeight = manager.PreferredBackBufferHeight;
+        }
+
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {
@@ -137,25 +155,7 @@ namespace SadConsole
             texture.GetData<Color>(newPixels);
             Image.GetData<Color>(oldPixels);
         }
-
-        /// <summary>
-        /// Resizes the graphics device manager to this font cell size.
-        /// </summary>
-        /// <param name="manager">Graphics device manager to resize.</param>
-        /// <param name="width">The width in cell count.</param>
-        /// <param name="height">The height in cell count.</param>
-        /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
-        /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
-        public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
-        {
-            manager.PreferredBackBufferWidth = (CellWidth * width) + additionalWidth;
-            manager.PreferredBackBufferHeight = (CellHeight * height) + additionalHeight;
-            manager.ApplyChanges();
-
-            Engine.WindowWidth = manager.PreferredBackBufferWidth;
-            Engine.WindowHeight = manager.PreferredBackBufferHeight;
-        }
-
+        
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {
