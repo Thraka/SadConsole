@@ -24,10 +24,10 @@
         public int Count { get { return _consoles.Count; } }
 
         [DataMember]
-        public bool IsVisible { get; set; }
+        public bool IsVisible { get; set; } = true;
 
         [DataMember]
-        public bool DoUpdate { get; set; }
+        public bool DoUpdate { get; set; } = true;
 
         [DataMember]
         public bool CanUseKeyboard { get; set; }
@@ -65,8 +65,6 @@
         public ConsoleList()
         {
             _consoles = new List<IConsole>();
-
-            IsVisible = true;
         }
 
         public virtual void Render()
