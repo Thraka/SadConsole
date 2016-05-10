@@ -11,7 +11,7 @@
     /// Represents a set of animations that can be positioned and rendered to the screen.
     /// </summary>
     [DataContract]
-    public class Entity: Consoles.CellsRenderer, IConsole
+    public class Entity: TextSurfaceRenderer, IDraw
     {
         #region Variables
         [DataMember(Name = "CurrentAnimation")]
@@ -29,6 +29,9 @@
         [DataMember(Name="Animations")]
         protected List<Animation> _animations = new List<Animation>();
 
+        [DataMember(Name = "Font")]
+        protected Font _font;
+
         /// <summary>
         /// The currently animating animation.
         /// </summary>
@@ -40,14 +43,10 @@
         protected Rectangle _animationBoundingBox = Rectangle.Empty;
 
         /// <summary>
-        /// Backing field for CanUseKeyboard property;
+        /// Where the console should be located on the screen.
         /// </summary>
-        protected bool _canUseKeyboard;
+        protected Point _position;
 
-        /// <summary>
-        /// Backing field for CanUseMouse property;
-        /// </summary>
-        protected bool _canUseMouse;
         #endregion
 
         #region Properties
@@ -81,10 +80,36 @@
         public Point PositionOffset { get; set; }
 
         /// <summary>
+        /// Gets or sets the position to render the cells.
+        /// </summary>
+        [DataMember]
+        public Point Position
+        {
+            get { return _position; }
+            set { Point previousPosition = _position; _position = value; OnPositionChanged(previousPosition); }
+        }
+
+        public Font Font { get { return _font; } set { _font = Font; UpdateAnimationFont(); } }
+
+        /// <summary>
         /// Called when the current animation state changes. Parameters are: current entity, current animation, new state, old state.
         /// </summary>
         public System.Action<Entity, Animation, AnimationState, AnimationState> OnEntityAnimationStateChanged;
 
+        /// <summary>
+        /// Indicates this entity should be drawn.
+        /// </summary>
+        public bool IsVisible { get; set; }
+
+        /// <summary>
+        /// Indicates this entity should update the animations.
+        /// </summary>
+        public bool DoUpdate { get; set; }
+
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get; set; } = false;
         #endregion
 
         #region Constructors
@@ -97,7 +122,7 @@
         /// Creates a new entity with the specified font.
         /// </summary>
         /// <param name="font">The font to use when rendering this entity.</param>
-        public Entity(Font font): base(null, new SpriteBatch(Engine.Device))
+        public Entity(Font font)
         {
             Font = font;
             IsVisible = true;
@@ -150,6 +175,11 @@
             // copy the current frame of the animation to the console at the specified location
             Frame frame = _currentAnimation.CurrentFrame;
             frame.Copy(0, 0, frame.Width, frame.Height, surface, location.X, location.Y);
+        }
+
+        public void Render()
+        {
+            base.Render(_currentAnimation.CurrentFrame, _position, UsePixelPositioning);
         }
 
         ////TODO: This is not really working well now. Since positioning changed to be transform based, entity will always render 0,0 if you do not call begin and end.
@@ -209,16 +239,11 @@
         /// <summary>
         /// Called by the owning console during it's update method. Calls update the current animation.
         /// </summary>
-        public override void Update()
+        public virtual void Update()
         {
-            if (_currentAnimation != null)
-            {
-                _currentAnimation.Update();
-
-                CellData = _currentAnimation.CurrentFrame;
-
-                base.Update();
-            }
+            if (DoUpdate)
+                if (_currentAnimation != null)
+                    _currentAnimation.Update();
         }
 
 
@@ -250,15 +275,7 @@
                 return;
 
             SetCurrentAnimation(animation);
-            
-            if (_currentAnimation.Font != null)
-                base.Font = _currentAnimation.Font;
-            else
-                base.Font = Engine.DefaultFont;
-
             UpdateAnimationBoundingBox();
-            CellData = _currentAnimation.CurrentFrame;
-            ResetViewArea();
         }
 
         /// <summary>
@@ -269,15 +286,7 @@
         public void SetActiveAnimation(Animation animation)
         {
             SetCurrentAnimation(animation);
-
-            if (_currentAnimation.Font != null)
-                base.Font = _currentAnimation.Font;
-            else
-                base.Font = Engine.DefaultFont;
-
             UpdateAnimationBoundingBox();
-            CellData = _currentAnimation.CurrentFrame;
-            ResetViewArea();
         }
 
         public void RemoveAllAnimations()
@@ -370,9 +379,7 @@
         protected void UpdateAnimationFont()
         {
             for (int i = 0; i < _animations.Count; i++)
-            {
                 _animations[i].Font = _font;
-            }
         }
 
         protected void SetCurrentAnimation(Animation animation)
@@ -403,73 +410,24 @@
         }
         #endregion
 
-        public override Matrix GetPositionTransform()
+        public override Matrix GetPositionTransform(Point position, Point CellSize, bool absolutePositioning)
         {
             Point worldLocation;
 
-            if (UseAbsolutePositioning)
-                worldLocation = Position + PositionOffset;
+            if (absolutePositioning)
+                worldLocation = position + PositionOffset;
             else
-                worldLocation = Position.ConsoleLocationToWorld(CellSize.X, CellSize.Y) + PositionOffset.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
+                worldLocation = position.ConsoleLocationToWorld(CellSize.X, CellSize.Y) + PositionOffset.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
 
-            return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f) * Matrix.CreateTranslation(-_currentAnimation.Center.X * _font.CellWidth, -_currentAnimation.Center.Y * _font.CellHeight, 0f);
+            return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f) * Matrix.CreateTranslation(-_currentAnimation.Center.X * _currentAnimation.Font.Size.X, -_currentAnimation.Center.Y * _currentAnimation.Font.Size.Y, 0f);
         }
 
-        #region IConsole
-        private IConsoleList _parentConsole;
+        /// <summary>
+        /// Called when the <see cref="Position" /> property changes.
+        /// </summary>
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
 
-        public Console.Cursor VirtualCursor { get { return null; } set { } }
-
-        public IConsoleList Parent
-        {
-            get { return _parentConsole; }
-            set
-            {
-                if (_parentConsole != value)
-                {
-                    if (_parentConsole == null)
-                    {
-                        _parentConsole = value;
-                        _parentConsole.Add(this);
-                    }
-                    else
-                    {
-                        var oldParent = _parentConsole;
-                        _parentConsole = value;
-
-                        oldParent.Remove(this);
-
-                        if (_parentConsole != null)
-                            _parentConsole.Add(this);
-
-                    }
-                }
-
-            }
-        }
-
-        [DataMember]
-        public bool CanUseKeyboard { get { return _canUseKeyboard; } set { _canUseKeyboard = value; } }
-
-        [DataMember]
-        public bool CanUseMouse { get { return _canUseMouse; } set { _canUseMouse = value; } }
-
-        public bool CanFocus { get { return false; } set { } }
-
-        public bool IsFocused { get { return false; } set { } }
-
-        public bool ExclusiveFocus { get { return false; } set { } }
-
-        public virtual bool ProcessMouse(Input.MouseInfo info)
-        {
-            return false;
-        }
-
-        public virtual bool ProcessKeyboard(Input.KeyboardInfo info)
-        {
-            return false;
-        }
-        #endregion
 
         [OnSerializing]
         private void BeforeSerializing(StreamingContext context)

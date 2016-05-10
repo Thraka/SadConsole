@@ -1,5 +1,6 @@
 ﻿namespace SadConsole.Entities
 {
+    using Consoles;
     using Microsoft.Xna.Framework;
     using System.Runtime.Serialization;
 
@@ -8,8 +9,8 @@
     {
         //public Rectangle[] CellIndexRects { get; private set; }
 
-        public Frame(int width, int height)
-            : base(width, height)
+        public Frame(int width, int height, Font font)
+            : base(width, height, font)
         {
         }
 

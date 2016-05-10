@@ -292,6 +292,11 @@
         /// </summary>
         public bool UseDataViewport { get; set; } = false;
 
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get; set; } = false;
+
         #region Constructors
         //public Console() : this(1, 1, Engine.DefaultFont) { }
 
@@ -589,9 +594,9 @@
             if (_isVisible)
             {
                 if (UseDataViewport)
-                    Renderer.Render(_textSurfaceView, _position);
+                    Renderer.Render(_textSurfaceView, _position, UsePixelPositioning);
                 else
-                    Renderer.Render(_textSurface, _position);
+                    Renderer.Render(_textSurface, _position, UsePixelPositioning);
             }
         }
 

@@ -103,6 +103,9 @@
             set
             {
                 _font = value;
+
+                for (int i = 0; i < Frames.Count; i++)
+                    Frames[i].Font = _font;
             }
         }
 
@@ -182,7 +185,7 @@
             if (Frames == null)
                 Frames = new List<Frame>();
 
-            var frame = new Frame(Width, Height);
+            var frame = new Frame(Width, Height, _font);
             Frames.Add(frame);
             return frame;
         }
