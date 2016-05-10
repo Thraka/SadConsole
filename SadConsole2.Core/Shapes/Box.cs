@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SadConsole.Consoles;
 
 namespace SadConsole.Shapes
 {
