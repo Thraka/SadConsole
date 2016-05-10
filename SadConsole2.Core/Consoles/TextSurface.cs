@@ -228,12 +228,12 @@ namespace SadConsole.Consoles
             {
                 for (int x = 0; x < ViewArea.Width; x++)
                 {
-                    RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
+                    RenderRects[index] = new Rectangle(x * _font.Size.X, y * _font.Size.Y, _font.Size.X, _font.Size.Y);
                     index++;
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, ViewArea.Width * Font.Size.X, ViewArea.Height * Font.Size.Y);
+            AbsoluteArea = new Rectangle(0, 0, ViewArea.Width * _font.Size.X, ViewArea.Height * _font.Size.Y);
 
         }
 

@@ -305,7 +305,7 @@ namespace SadConsole
         /// <returns>The amount of cells along the X and Y axis.</returns>
         public static Point GetScreenSizeInCells(Font font)
         {
-            return new Point(WindowWidth / font.CellWidth, WindowHeight / font.CellHeight);
+            return new Point(WindowWidth / font.Size.X, WindowHeight / font.Size.Y);
         }
 
         /// <summary>
@@ -313,9 +313,9 @@ namespace SadConsole
         /// </summary>
         /// <param name="surface">The cell surface.</param>
         /// <returns>The amount of cells along the X and Y axis.</returns>
-        public static Point GetScreenSizeInCells(CellsRenderer surface)
+        public static Point GetScreenSizeInCells(TextSurface surface)
         {
-            return new Point(WindowWidth / surface.CellSize.X, WindowHeight / surface.CellSize.Y);
+            return new Point(WindowWidth / surface.Font.Size.X, WindowHeight / surface.Font.Size.Y);
         }
     }
 

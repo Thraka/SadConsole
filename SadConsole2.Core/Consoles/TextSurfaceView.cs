@@ -62,13 +62,13 @@ namespace SadConsole.Consoles
             {
                 for (int x = 0; x < area.Width; x++)
                 {
-                    RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
+                    RenderRects[index] = new Rectangle(x * data.Font.Size.X, y * data.Font.Size.Y, data.Font.Size.X, data.Font.Size.Y);
                     RenderCells[index] = data.RenderCells[(y + area.Top) * data.ViewArea.Width + (x + area.Left)];
                     index++;
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
+            AbsoluteArea = new Rectangle(0, 0, area.Width * data.Font.Size.X, area.Height * data.Font.Size.Y);
         }
     }
 }
