@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class Frame: CellSurface
+    public class Frame: TextSurface
     {
         //public Rectangle[] CellIndexRects { get; private set; }
 

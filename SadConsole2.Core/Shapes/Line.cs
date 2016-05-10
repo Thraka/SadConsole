@@ -81,7 +81,7 @@ namespace SadConsole.Shapes
         /// Draws the line shape.
         /// </summary>
         /// <param name="surface">The cell surface to draw on.</param>
-        public void Draw(CellSurface surface)
+        public void Draw(TextSurface surface)
         {
             List<Cell> cells = new List<Cell>();
 
@@ -158,7 +158,7 @@ namespace SadConsole.Shapes
         /// </summary>
         /// <param name="surface">The surface to get the cells from.</param>
         /// <returns>The cells the line would have drawn on.</returns>
-        public IEnumerable<Cell> GetCells(CellSurface surface)
+        public IEnumerable<Cell> GetCells(TextSurface surface)
         {
             List<Cell> cells = new List<Cell>();
 

@@ -52,7 +52,7 @@ namespace SadConsole.Readers.REXPaint
             var console = new Consoles.LayeredConsole(Layers.Length, Width, Height);
 
             for (int i = 0; i < Layers.Length; i++)
-                console[i].CellData = Layers[i].ToCellSurface();
+                console[i].CellData = Layers[i].ToTextSurface();
 
             return console;
         }

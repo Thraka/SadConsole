@@ -17,12 +17,12 @@ namespace SadConsole.Readers.REXPaint
         }
 
         /// <summary>
-        /// Converts a <see cref="TileLayer"/> to a <see cref="CellSurface"/>.
+        /// Converts a <see cref="TileLayer"/> to a <see cref="TextSurface"/>.
         /// </summary>
         /// <returns>The convereted surface.</returns>
-        public CellSurface ToCellSurface()
+        public TextSurface ToTextSurface()
         {
-            var cells = new CellSurface(Tiles.GetUpperBound(1), Tiles.GetUpperBound(0));
+            var cells = new TextSurface(Tiles.GetUpperBound(1), Tiles.GetUpperBound(0));
             var transparentColor = new Microsoft.Xna.Framework.Color(255, 0, 255);
             cells.Fill(Microsoft.Xna.Framework.Color.Black, Microsoft.Xna.Framework.Color.Transparent, 0, null);
 

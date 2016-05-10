@@ -1,11 +1,12 @@
 ﻿namespace Microsoft.Xna.Framework.Graphics
 {
     using SadConsole;
+    using SadConsole.Consoles;
     using System;
 
     public static class TextureExtensions
     {
-        public static void DrawImageToSurface(this Texture2D texture, CellSurface surface, Point position, bool useBackground, Func<Color, Color, Color> blendOperation = null)
+        public static void DrawImageToSurface(this Texture2D texture, TextSurface surface, Point position, bool useBackground, Func<Color, Color, Color> blendOperation = null)
         {
             Color[] pixels = new Color[texture.Width * texture.Height];
             texture.GetData<Color>(pixels);
@@ -47,7 +48,7 @@
             }
         }
 
-        public static void DrawImageToSurface(this Texture2D texture, CellSurface surface, Point position, Action<int, Cell, Color> cellProcessor)
+        public static void DrawImageToSurface(this Texture2D texture, TextSurface surface, Point position, Action<int, Cell, Color> cellProcessor)
         {
             Color[] pixels = new Color[texture.Width * texture.Height];
             texture.GetData<Color>(pixels);

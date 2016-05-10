@@ -152,7 +152,7 @@ namespace SadConsole.Consoles
         {
             bool processOldCells = Cells != null;
 
-            Rectangle oldCellSurfaceArea = new Rectangle(0, 0, oldWidth, oldHeight);
+            Rectangle oldTextSurfaceArea = new Rectangle(0, 0, oldWidth, oldHeight);
             Cell[] existingCells = Cells;
             Cells = new Cell[_width * _height];
 
@@ -162,7 +162,7 @@ namespace SadConsole.Consoles
                 {
                     Point cellPosition = GetPointFromIndex(i);
 
-                    if (oldCellSurfaceArea.Contains(cellPosition))
+                    if (oldTextSurfaceArea.Contains(cellPosition))
                     {
                         // Check if the cell position was valid in the old cell data, 
                         int oldCellIndex = TextSurface.GetIndexFromPoint(cellPosition, oldWidth);

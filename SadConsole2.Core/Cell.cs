@@ -86,17 +86,17 @@ namespace SadConsole
         public virtual int ActualCharacterIndex { get; set; }
 
         /// <summary>
-        /// The effect associated with this cell. Processed by the <see cref="T:SadConsole.CellSurface"/> class.
+        /// The effect associated with this cell. Processed by the <see cref="T:SadConsole.TextSurface"/> class.
         /// </summary>
         public Effects.ICellEffect Effect { get; set; }
 
         /// <summary>
-        /// The index of the cell in the parent <see cref="T:SadConsole.CellSurface"/>.
+        /// The index of the cell in the parent <see cref="T:SadConsole.TextSurface"/>.
         /// </summary>
         public int Index { get; set; }
 
         /// <summary>
-        /// The position of the cell in the parent <see cref="T:SadConsole.CellSurface"/>.
+        /// The position of the cell in the parent <see cref="T:SadConsole.TextSurface"/>.
         /// </summary>
         public Point Position { get; set; }
 
@@ -171,7 +171,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Updates and applies the <see cref="P:SadConsole.Cell.Effect"/> to this cell. WARNING: Do not use with CellSurface. This should only be called when the cell has a standalone effect that isn't managed by the CellSurface.
+        /// Updates and applies the <see cref="P:SadConsole.Cell.Effect"/> to this cell. WARNING: Do not use with TextSurface. This should only be called when the cell has a standalone effect that isn't managed by the TextSurface.
         /// </summary>
         public void UpdateAndApplyEffect(double elapsedTime)
         {

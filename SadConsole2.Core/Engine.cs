@@ -309,7 +309,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Returns the amount of cells (X,Y) given the specified <see cref="CellSurface"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
+        /// Returns the amount of cells (X,Y) given the specified <see cref="TextSurface"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
         /// </summary>
         /// <param name="surface">The cell surface.</param>
         /// <returns>The amount of cells along the X and Y axis.</returns>

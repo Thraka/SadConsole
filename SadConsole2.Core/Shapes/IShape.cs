@@ -8,7 +8,7 @@ namespace SadConsole.Shapes
 {
     public interface IShape
     {
-        void Draw(CellSurface surface);
+        void Draw(TextSurface surface);
     }
 
     // TODO: Ideas for more shapes: Circle, AdvancedLine (like line but allows inter connected links based on direction of previous and next link)
