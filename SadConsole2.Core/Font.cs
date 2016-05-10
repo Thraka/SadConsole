@@ -8,24 +8,56 @@ namespace SadConsole
 {
     public sealed class Font
     {
+        [IgnoreDataMember]
         public Texture2D FontImage { get; private set; }
 
+        [IgnoreDataMember]
         public Point Size { get; private set; }
 
+        [IgnoreDataMember]
         public int MaxCharacter { get; private set; }
 
+        [IgnoreDataMember]
         public int SolidCharacterIndex { get; set; }
 
+        [IgnoreDataMember]
         public Rectangle[] CharacterIndexRects { get; private set; }
 
+        public int SizeMultiple { get; private set; }
+
+        public string Name { get; private set; }
+
+        internal Font() { }
+
         internal Font(FontMaster masterFont, int fontMultiple)
+        {
+            Initialize(masterFont, fontMultiple);
+        }
+
+        private void Initialize(FontMaster masterFont, int fontMultiple)
         {
             FontImage = masterFont.Image;
             MaxCharacter = masterFont.Rows * Engine.FontColumns - 1;
             Size = new Point(masterFont.CellWidth * fontMultiple, masterFont.CellHeight * fontMultiple);
+            SizeMultiple = fontMultiple;
+            Name = masterFont.Name;
             CharacterIndexRects = new Rectangle[masterFont.CharacterIndexRects.Length];
             masterFont.CharacterIndexRects.CopyTo(CharacterIndexRects, 0);
             SolidCharacterIndex = masterFont.SolidCharacterIndex;
+        }
+
+        [OnDeserialized]
+        private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
+        {
+            if (Engine.Fonts.ContainsKey(Name))
+            {
+                var master = Engine.Fonts[Name];
+                Initialize(master, SizeMultiple);
+            }
+            else
+            {
+                throw new Exception($"A font is being used that has not been added to the engine. Name: {Name}");
+            }
         }
     }
 
@@ -127,24 +159,7 @@ namespace SadConsole
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {
-            var specificFont = Engine.Fonts[Name, CellWidth, CellHeight];
-
-            if (specificFont != null)
-            {
-                Image = specificFont.Image;
-                ConfigureRects();
-            }
-            else
-                foreach (var font in Engine.Fonts[Name])
-                {
-                    Image = font.Image;
-                    ConfigureRects();
-                    break;
-                }
-
-            // Existing font was not found, try to load the one specified by this font.
-            if (Image == null)
-                Generate();
+            Generate();
         }
         #endregion
     }

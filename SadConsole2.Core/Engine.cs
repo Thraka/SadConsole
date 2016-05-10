@@ -158,7 +158,7 @@ namespace SadConsole
         /// <summary>
         /// A collection of fonts.
         /// </summary>
-        public static FontCollection Fonts { get; internal set; }
+        public static Dictionary<string, FontMaster> Fonts { get; internal set; }
         #endregion
 
         #region Methods
@@ -187,7 +187,7 @@ namespace SadConsole
             }
             BackgroundCell.SetData<Color>(newPixels);
 
-            Fonts = new FontCollection();
+            Fonts = new Dictionary<string, FontMaster>();
             ConsoleRenderStack = new Consoles.ConsoleList();
             RegisterCellEffect<Effects.Blink>();
             RegisterCellEffect<Effects.BlinkCharacter>();
@@ -274,29 +274,6 @@ namespace SadConsole
         }
 
         #endregion
-
-        public static void Save()
-        {
-            System.Runtime.Serialization.DataContractSerializer serializer = 
-                new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
-            System.IO.MemoryStream mem = new System.IO.MemoryStream();
-            
-            var fonts = Fonts["C64"];
-            var font = fonts[0];
-
-            
-
-            serializer.WriteObject(mem, Fonts);
-
-            mem.Position = 0;
-            System.IO.StreamReader reader = new System.IO.StreamReader(mem);
-            string output = reader.ReadToEnd();
-
-            serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
-
-            mem.Position = 0;
-            object obj = serializer.ReadObject(mem);
-        }
 
         /// <summary>
         /// Returns the amount of cells (X,Y) given the specified <see cref="Font"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.

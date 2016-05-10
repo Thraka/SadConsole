@@ -53,7 +53,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FontCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ICellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
