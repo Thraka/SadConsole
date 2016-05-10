@@ -72,7 +72,7 @@
 
             if (TotalTimeToPrint == 0f)
             {
-                Target.CellData.Print(Position.X, Position.Y, Text);
+                Target.Data.Print(Position.X, Position.Y, Text);
                 IsFinished = true;
             }
             else
