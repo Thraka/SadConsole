@@ -42,13 +42,14 @@ namespace SadConsole.Consoles
         public Color DefaultBackground { get { return data.DefaultBackground; } }
         public Color DefaultForeground { get { return data.DefaultForeground; } }
 
-        public Color Tint { get { return data.Tint; } }
+        public Color Tint { get; set; }
 
 
         public TextSurfaceView(ITextSurfaceView surface, Rectangle area)
         {
             data = surface;
             ViewArea = area;
+            Tint = data.Tint;
         }
 
         private void ResetArea()

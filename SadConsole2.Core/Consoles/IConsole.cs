@@ -9,11 +9,13 @@
     public interface IConsole : IInput, IDraw
     {
         Point Position { get; set; }
+
         TextSurface Data { get; set; }
         
         Console.Cursor VirtualCursor { get; set; }
 
         IConsoleList Parent { get; set; }
 
+        bool UsePixelPositioning { get; set; }
     }
 }

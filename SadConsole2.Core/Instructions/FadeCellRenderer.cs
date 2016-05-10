@@ -9,7 +9,7 @@
     /// Animates the change to the tint of a <see cref="SadConsole.Consoles.CellsRenderer"/>.
     /// </summary>
     [DataContract]
-    public class FadeCellRenderer : InstructionBase<Consoles.CellsRenderer>
+    public class FadeCellRenderer : InstructionBase<Consoles.TextSurfaceView>
     {
         /// <summary>
         /// The color to fade the tint to.
@@ -20,7 +20,7 @@
         [DataMember]
         public DoubleAnimation FadeAnimationSettings { get; set; }
 
-        public FadeCellRenderer(Consoles.CellsRenderer renderer, ColorGradient colors, TimeSpan duration)
+        public FadeCellRenderer(Consoles.TextSurfaceView renderer, ColorGradient colors, TimeSpan duration)
             : base(renderer)
         {
             Colors = colors;
