@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace SadConsole.Consoles
 {
     /// <summary>
-    /// Represents a parent of a console.
+    /// Represents a group of consoles.
     /// </summary>
-    public interface IParentConsole : IEnumerable<IConsole>
+    public interface IConsoleList : IEnumerable<IConsole>, IDraw, Input.IInput
     {
         /// <summary>
         /// Gets the count of child consoles.

@@ -10,14 +10,14 @@ namespace SadConsole.Consoles
         private ITextSurfaceView data;
         private Rectangle area;
 
-        public Rectangle Area
+        public Rectangle ViewArea
         {
             get { return area; }
             set
             {
-                if (area.Width > data.Area.Width)
+                if (area.Width > data.ViewArea.Width)
                     throw new ArgumentOutOfRangeException("area", "The area is too wide for the surface.");
-                if (area.Height > data.Area.Height)
+                if (area.Height > data.ViewArea.Height)
                     throw new ArgumentOutOfRangeException("area", "The area is too tall for the surface.");
 
                 if (area.X < 0)
@@ -25,9 +25,9 @@ namespace SadConsole.Consoles
                 if (area.Y < 0)
                     throw new ArgumentOutOfRangeException("area", "The top of the area cannot be less than 0.");
 
-                if (area.X + area.Width > data.Area.Width)
+                if (area.X + area.Width > data.ViewArea.Width)
                     throw new ArgumentOutOfRangeException("area", "The area x + width is too wide for the surface.");
-                if (area.Y + area.Height > data.Area.Height)
+                if (area.Y + area.Height > data.ViewArea.Height)
                     throw new ArgumentOutOfRangeException("area", "The area y + height is too tal for the surface.");
 
                 area = value;
@@ -48,7 +48,7 @@ namespace SadConsole.Consoles
         public TextSurfaceView(ITextSurfaceView surface, Rectangle area)
         {
             data = surface;
-            Area = area;
+            ViewArea = area;
         }
 
         private void ResetArea()
@@ -63,7 +63,7 @@ namespace SadConsole.Consoles
                 for (int x = 0; x < area.Width; x++)
                 {
                     RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
-                    RenderCells[index] = data.RenderCells[(y + area.Top) * data.Area.Width + (x + area.Left)];
+                    RenderCells[index] = data.RenderCells[(y + area.Top) * data.ViewArea.Width + (x + area.Left)];
                     index++;
                 }
             }

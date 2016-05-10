@@ -8,7 +8,7 @@ namespace SadConsole.Consoles
     public interface ITextSurfaceView
     {
         Rectangle AbsoluteArea { get; }
-        Rectangle Area { get; }
+        Rectangle ViewArea { get; }
         Rectangle[] RenderRects { get; }
         Cell[] RenderCells { get; }
 

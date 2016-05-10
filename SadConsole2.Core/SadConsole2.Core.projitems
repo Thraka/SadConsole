@@ -12,14 +12,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Algorithms.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellAppearance.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CellSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ConsoleList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\IConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\IParentConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\IRender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurfaceView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurfaceRenderer.cs" />
@@ -71,7 +70,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IUpdate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IDraw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\RexReader.cs" />

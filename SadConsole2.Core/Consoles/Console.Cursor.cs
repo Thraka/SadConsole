@@ -62,9 +62,9 @@ using SadConsole.Effects;
                     {
                         Console console = (Console)_console.Target;
 
-                        if (!(value.X < 0 || value.X >= console.CellData.Width))
+                        if (!(value.X < 0 || value.X >= console._textSurface.Width))
                             _position.X = value.X;
-                        if (!(value.Y < 0 || value.Y >= console.CellData.Height))
+                        if (!(value.Y < 0 || value.Y >= console._textSurface.Height))
                             _position.Y = value.Y;
                     }
                 }
@@ -135,8 +135,8 @@ using SadConsole.Effects;
             {
                 Console console = ((Console)_console.Target);
 
-                if (console.CellData != null)
-                    PrintAppearance = new CellAppearance(console.CellData.DefaultForeground, console.CellData.DefaultBackground);
+                if (console._textSurface != null)
+                    PrintAppearance = new CellAppearance(console._textSurface.DefaultForeground, console._textSurface.DefaultBackground);
                 else
                     throw new Exception("CellData of the attached console is null. Cannot reset appearance.");
 
@@ -173,7 +173,7 @@ using SadConsole.Effects;
 
                     else
                     {
-                        var cell = console.CellData[_position.X, _position.Y];
+                        var cell = console._textSurface[_position.X, _position.Y];
 
                         if (!PrintOnlyCharacterData)
                         {
@@ -184,24 +184,24 @@ using SadConsole.Effects;
                             if (!text.IgnoreForeground)
                                 cell.Foreground = character.Foreground;
                             if (!text.IgnoreEffect)
-                                console._cellData.SetEffect(cell, character.Effect);
+                                console._textSurface.SetEffect(cell, character.Effect);
                         }
 
                         _position.X += 1;
-                        if (_position.X >= console.CellData.Width)
+                        if (_position.X >= console._textSurface.Width)
                         {
                             _position.X = 0;
                             _position.Y += 1;
 
-                            if (_position.Y >= console.CellData.Height)
+                            if (_position.Y >= console._textSurface.Height)
                             {
                                 _position.Y -= 1;
 
                                 if (AutomaticallyShiftRowsUp)
                                 {
-                                    console.CellData.ShiftUp();
+                                    console._textSurface.ShiftUp();
 
-                                    if (console.CellData.ResizeOnShift)
+                                    if (console._textSurface.ResizeOnShift)
                                         _position.Y++;
                                 }
                             }
@@ -237,31 +237,31 @@ using SadConsole.Effects;
                     }
                     else
                     {
-                        var cell = console.CellData[_position.X, _position.Y];
+                        var cell = console._textSurface[_position.X, _position.Y];
 
                         if (!PrintOnlyCharacterData)
                         {
                             template.CopyAppearanceTo(cell);
-                            console._cellData.SetEffect(cell, templateEffect);
+                            console._textSurface.SetEffect(cell, templateEffect);
                         }
 
                         cell.CharacterIndex = character;
 
                         _position.X += 1;
-                        if (_position.X >= console.CellData.Width)
+                        if (_position.X >= console._textSurface.Width)
                         {
                             _position.X = 0;
                             _position.Y += 1;
 
-                            if (_position.Y >= console.CellData.Height)
+                            if (_position.Y >= console._textSurface.Height)
                             {
                                 _position.Y -= 1;
 
                                 if (AutomaticallyShiftRowsUp)
                                 {
-                                    console.CellData.ShiftUp();
+                                    console._textSurface.ShiftUp();
 
-                                    if (console.CellData.ResizeOnShift)
+                                    if (console._textSurface.ResizeOnShift)
                                         _position.Y++;
                                 }
                             }
@@ -288,10 +288,10 @@ using SadConsole.Effects;
             /// <returns>The current cursor object.</returns>
             public Cursor LineFeed()
             {
-                if (_position.Y == ((Console)_console.Target).CellData.Height - 1)
+                if (_position.Y == ((Console)_console.Target)._textSurface.Height - 1)
                 {
-                    ((Console)_console.Target).CellData.ShiftUp();
-                    if (((Console)_console.Target).CellData.ResizeOnShift)
+                    ((Console)_console.Target)._textSurface.ShiftUp();
+                    if (((Console)_console.Target)._textSurface.ResizeOnShift)
                         _position.Y++;
                 }
                 else
@@ -334,8 +334,8 @@ using SadConsole.Effects;
             {
                 int newY = _position.Y + amount;
 
-                if (newY >= ((Console)_console.Target).CellData.Height)
-                    newY = ((Console)_console.Target).CellData.Height - 1;
+                if (newY >= ((Console)_console.Target)._textSurface.Height)
+                    newY = ((Console)_console.Target)._textSurface.Height - 1;
 
                 Position = new Point(_position.X, newY);
                 return this;
@@ -366,12 +366,12 @@ using SadConsole.Effects;
             {
                 var console = ((Console)_console.Target);
 
-                int index = console.CellData.GetIndexFromPoint(this._position) - amount;
+                int index = console._textSurface.GetIndexFromPoint(this._position) - amount;
 
                 if (index < 0)
                     index = 0;
 
-                this._position = console.CellData.GetPointFromIndex(index);
+                this._position = console._textSurface.GetPointFromIndex(index);
 
                 return this;
             }
@@ -385,8 +385,8 @@ using SadConsole.Effects;
             {
                 int newX = _position.X + amount;
 
-                if (newX >= ((Console)_console.Target).CellData.Width)
-                    newX = ((Console)_console.Target).CellData.Width - 1;
+                if (newX >= ((Console)_console.Target)._textSurface.Width)
+                    newX = ((Console)_console.Target)._textSurface.Width - 1;
 
                 Position = new Point(newX, _position.Y);
                 return this;
@@ -401,12 +401,12 @@ using SadConsole.Effects;
             {
                 var console = ((Console)_console.Target);
 
-                int index = console.CellData.GetIndexFromPoint(this._position) + amount;
+                int index = console._textSurface.GetIndexFromPoint(this._position) + amount;
 
-                if (index > console.CellData.CellCount)
-                    index = console.CellData.CellCount - 1;
+                if (index > console._textSurface.CellCount)
+                    index = console._textSurface.CellCount - 1;
 
-                this._position = console.CellData.GetPointFromIndex(index);
+                this._position = console._textSurface.GetPointFromIndex(index);
 
                 return this;
             }
@@ -414,7 +414,7 @@ using SadConsole.Effects;
             public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
             {
                 batch.Draw(Engine.BackgroundCell, renderArea, null, CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
-                batch.Draw(font.Image, renderArea, font.CharacterIndexRects[CursorRenderCell.ActualCharacterIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                batch.Draw(font.FontImage, renderArea, font.CharacterIndexRects[CursorRenderCell.ActualCharacterIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
             }
         }
     }

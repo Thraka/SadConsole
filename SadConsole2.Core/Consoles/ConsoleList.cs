@@ -11,7 +11,7 @@
     /// Represents a list of consoles. By calling the <see cref="Update"/> or <see cref="Render"/> methods, all contained consoles will be called in order.
     /// </summary>
     [DataContract]
-    public class ConsoleList : IConsole, IParentConsole
+    public class ConsoleList : IConsoleList
     {
         [DataMember]
         private List<IConsole> _consoles;
@@ -19,7 +19,7 @@
         /// <summary>
         /// The parent console.
         /// </summary>
-        public IParentConsole Parent { get; set; }
+        public IConsoleList Parent { get; set; } 
 
         public int Count { get { return _consoles.Count; } }
 
@@ -27,7 +27,25 @@
         public bool IsVisible { get; set; }
 
         [DataMember]
-        public bool UseAbsolutePositioning { get; set; }
+        public bool DoUpdate { get; set; }
+
+        [DataMember]
+        public bool CanUseKeyboard { get; set; }
+
+        [DataMember]
+        public bool CanUseMouse { get; set; }
+
+        [DataMember]
+        public bool CanFocus { get; set; }
+
+        [DataMember]
+        public bool IsFocused { get; set; }
+
+        [DataMember]
+        public bool ExclusiveFocus { get; set; }
+
+        [DataMember]
+        public Microsoft.Xna.Framework.Point Position { get; set; }
 
         public IConsole this[int index]
         {
@@ -66,11 +84,14 @@
 
         public virtual void Update()
         {
-            var copyList = new List<IConsole>(_consoles);
-
-            for (int i = copyList.Count - 1; i >= 0; i--)
+            if (DoUpdate)
             {
-                copyList[i].Update();
+                var copyList = new List<IConsole>(_consoles);
+
+                for (int i = copyList.Count - 1; i >= 0; i--)
+                {
+                    copyList[i].Update();
+                }
             }
         }
 
@@ -116,38 +137,6 @@
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Returns true if this console list, or any child console list, contains the specified console.
-        /// </summary>
-        /// <param name="console">The console to search for.</param>
-        /// <returns></returns>
-        public bool Contains(IConsole console, bool deep)
-        {
-            if (!deep)
-                return _consoles.Contains(console);
-            else
-            {
-                if (_consoles.Contains(console))
-                    return true;
-                else
-                {
-                    for (int i = 0; i < _consoles.Count; i++)
-                    {
-                        if (_consoles[i] is ConsoleList)
-                        {
-                            if (((ConsoleList)_consoles[i]).Contains(console, true))
-                                return true;
-                        }
-                        else if (_consoles[i] is IParentConsole)
-                            if (((IParentConsole)_consoles[i]).Contains(console))
-                                return true;
-                    }
-                }
-
-                return false;
-            }
         }
 
         /// <summary>
@@ -317,42 +306,6 @@
         {
             return _consoles.GetEnumerator();
         }
-
-        public Console.Cursor VirtualCursor { get; set; }
-
-        public bool CanUseKeyboard { get; set; }
-
-        public bool CanUseMouse { get; set; }
-
-
-        public bool CanFocus { get; set; }
-
-        public bool IsFocused { get; set; }
-
-
-        public bool ExclusiveFocus { get; set; }
-
-        public Microsoft.Xna.Framework.Matrix? Transform { get; set; }
-
-
-        public Microsoft.Xna.Framework.Graphics.SpriteBatch Batch
-        {
-            get { return null; }
-        }
-
-        public Microsoft.Xna.Framework.Point CellSize { get; set; }
-
-
-        public Microsoft.Xna.Framework.Point Position { get; set; }
-
-
-        public Microsoft.Xna.Framework.Rectangle ViewArea { get; set; }
-
-
-        public CellSurface CellData { get; set; }
-
-
-        public Font Font { get; set; }
 
     }
 }

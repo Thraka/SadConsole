@@ -34,7 +34,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// An array of all cells in this surface.
         /// </summary>
-        /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="Width"/> and <see cref="Height"/> properties instead. The cell data can be changed.</remarks>
+        /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="_width"/> and <see cref="_height"/> properties instead. The cell data can be changed.</remarks>
         [DataMember]
         protected Cell[] Cells { get; set; }
 
@@ -107,7 +107,7 @@ namespace SadConsole.Consoles
         #region ITextSurfaceView
         public Rectangle AbsoluteArea { get; private set; }
 
-        public Rectangle Area { get; private set; }
+        public Rectangle ViewArea { get; private set; }
 
         public Rectangle[] RenderRects { get; private set; }
 
@@ -165,7 +165,7 @@ namespace SadConsole.Consoles
                     if (oldCellSurfaceArea.Contains(cellPosition))
                     {
                         // Check if the cell position was valid in the old cell data, 
-                        int oldCellIndex = CellSurface.GetIndexFromPoint(cellPosition, oldWidth);
+                        int oldCellIndex = TextSurface.GetIndexFromPoint(cellPosition, oldWidth);
 
                         // new position existed in the old cells, we should copy.
                         Cells[i] = existingCells[oldCellIndex];
@@ -220,20 +220,20 @@ namespace SadConsole.Consoles
         private void SetRenderData()
         {
             RenderRects = new Rectangle[_width * _height];
-            Area = new Rectangle(0, 0, _width, _height);
+            ViewArea = new Rectangle(0, 0, _width, _height);
 
             int index = 0;
 
-            for (int y = 0; y < Area.Height; y++)
+            for (int y = 0; y < ViewArea.Height; y++)
             {
-                for (int x = 0; x < Area.Width; x++)
+                for (int x = 0; x < ViewArea.Width; x++)
                 {
                     RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
                     index++;
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, Area.Width * Font.Size.X, Area.Height * Font.Size.Y);
+            AbsoluteArea = new Rectangle(0, 0, ViewArea.Width * Font.Size.X, ViewArea.Height * Font.Size.Y);
 
         }
 
@@ -340,7 +340,7 @@ namespace SadConsole.Consoles
         /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
         public bool IsValidCell(int x, int y)
         {
-            return x >= 0 && x < this.Width && y >= 0 && y < this.Height;
+            return x >= 0 && x < this._width && y >= 0 && y < this._height;
         }
 
         /// <summary>
@@ -352,9 +352,9 @@ namespace SadConsole.Consoles
         /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
         public bool IsValidCell(int x, int y, out int index)
         {
-            if (x >= 0 && x < this.Width && y >= 0 && y < this.Height)
+            if (x >= 0 && x < this._width && y >= 0 && y < this._height)
             {
-                index = y * Width + x;
+                index = y * _width + x;
                 return true;
             }
             else
@@ -536,7 +536,7 @@ namespace SadConsole.Consoles
         /// <param name="character">The desired character of the cell.</param>
         public void SetCharacter(int x, int y, int character)
         {
-            Cells[y * Width + x].CharacterIndex = character;
+            Cells[y * _width + x].CharacterIndex = character;
         }
         /// <summary>
         /// Changes the character, foreground, and background of a cell.
@@ -547,7 +547,7 @@ namespace SadConsole.Consoles
         /// <param name="foreground">The desired foreground.</param>
         public void SetCharacter(int x, int y, int character, Color foreground)
         {
-            int index = y * Width + x;
+            int index = y * _width + x;
 
             Cells[index].Foreground = foreground;
             Cells[index].CharacterIndex = character;
@@ -562,7 +562,7 @@ namespace SadConsole.Consoles
         /// <param name="background">The desired background.</param>
         public void SetCharacter(int x, int y, int character, Color foreground, Color background)
         {
-            int index = y * Width + x;
+            int index = y * _width + x;
 
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
@@ -580,7 +580,7 @@ namespace SadConsole.Consoles
         /// <param name="effect"></param>
         public void SetCharacter(int x, int y, int character, Color foreground, Color background, ICellEffect effect)
         {
-            int index = y * Width + x;
+            int index = y * _width + x;
 
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
@@ -597,7 +597,7 @@ namespace SadConsole.Consoles
         /// <returns>The character.</returns>
         public int GetCharacter(int x, int y)
         {
-            return Cells[y * Width + x].CharacterIndex;
+            return Cells[y * _width + x].CharacterIndex;
         }
 
         /// <summary>
@@ -608,7 +608,7 @@ namespace SadConsole.Consoles
         /// <param name="color">The desired color of the cell.</param>
         public void SetForeground(int x, int y, Color color)
         {
-            Cells[y * Width + x].Foreground = color;
+            Cells[y * _width + x].Foreground = color;
         }
         /// <summary>
         /// Gets the foreground of a specified cell.
@@ -618,7 +618,7 @@ namespace SadConsole.Consoles
         /// <returns>The color.</returns>
         public Color GetForeground(int x, int y)
         {
-            return Cells[y * Width + x].Foreground;
+            return Cells[y * _width + x].Foreground;
         }
 
         /// <summary>
@@ -629,7 +629,7 @@ namespace SadConsole.Consoles
         /// <param name="color">The desired color of the cell.</param>
         public void SetBackground(int x, int y, Color color)
         {
-            Cells[y * Width + x].Background = color;
+            Cells[y * _width + x].Background = color;
         }
         /// <summary>
         /// Gets the background of a specified cell.
@@ -639,7 +639,7 @@ namespace SadConsole.Consoles
         /// <returns>The color.</returns>
         public Color GetBackground(int x, int y)
         {
-            return Cells[y * Width + x].Background;
+            return Cells[y * _width + x].Background;
         }
 
         /// <summary>
@@ -650,7 +650,7 @@ namespace SadConsole.Consoles
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(int x, int y, Effects.ICellEffect effect)
         {
-            SetEffect(Cells[y * Width + x], effect);
+            SetEffect(Cells[y * _width + x], effect);
         }
 
         /// <summary>
@@ -745,7 +745,7 @@ namespace SadConsole.Consoles
         /// <returns>The effect.</returns>
         public Effects.ICellEffect GetEffect(int x, int y)
         {
-            return Cells[y * Width + x].Effect;
+            return Cells[y * _width + x].Effect;
         }
 
         /// <summary>
@@ -759,7 +759,7 @@ namespace SadConsole.Consoles
             if (appearance == null)
                 throw new NullReferenceException("Appearance may not be null.");
 
-            appearance.CopyAppearanceTo(Cells[y * Width + x]);
+            appearance.CopyAppearanceTo(Cells[y * _width + x]);
         }
         /// <summary>
         /// Gets the appearance of a cell.
@@ -770,7 +770,7 @@ namespace SadConsole.Consoles
         public ICellAppearance GetCellAppearance(int x, int y)
         {
             CellAppearance appearance = new CellAppearance();
-            Cells[y * Width + x].CopyAppearanceTo(appearance);
+            Cells[y * _width + x].CopyAppearanceTo(appearance);
             return appearance;
         }
 
@@ -782,7 +782,7 @@ namespace SadConsole.Consoles
         /// <returns>The color.</returns>
         public SpriteEffects GetSpriteEffect(int x, int y)
         {
-            return Cells[y * Width + x].SpriteEffect;
+            return Cells[y * _width + x].SpriteEffect;
         }
 
         /// <summary>
@@ -793,7 +793,7 @@ namespace SadConsole.Consoles
         /// <returns>The color.</returns>
         public void SetSpriteEffect(int x, int y, SpriteEffects spriteEffect)
         {
-            Cells[y * Width + x].SpriteEffect = spriteEffect;
+            Cells[y * _width + x].SpriteEffect = spriteEffect;
         }
         #endregion
 
@@ -809,10 +809,10 @@ namespace SadConsole.Consoles
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
+            if (x >= _width || x < 0 || y >= _height || y < 0)
                 throw new Exception("X,Y is out of range for Print");
 
-            int index = y * Width + x;
+            int index = y * _width + x;
             int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
             int charIndex = 0;
             for (; index < total; index++)
@@ -835,10 +835,10 @@ namespace SadConsole.Consoles
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
+            if (x >= _width || x < 0 || y >= _height || y < 0)
                 throw new Exception("X,Y is out of range for Print");
 
-            int index = y * Width + x;
+            int index = y * _width + x;
             int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
             int charIndex = 0;
 
@@ -868,10 +868,10 @@ namespace SadConsole.Consoles
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
+            if (x >= _width || x < 0 || y >= _height || y < 0)
                 throw new Exception("X,Y is out of range for Print");
 
-            int index = y * Width + x;
+            int index = y * _width + x;
             int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
             int charIndex = 0;
             for (; index < total; index++)
@@ -895,10 +895,10 @@ namespace SadConsole.Consoles
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
+            if (x >= _width || x < 0 || y >= _height || y < 0)
                 throw new Exception("X,Y is out of range for Print");
 
-            int index = y * Width + x;
+            int index = y * _width + x;
             int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
             int charIndex = 0;
             for (; index < total; index++)
@@ -918,10 +918,10 @@ namespace SadConsole.Consoles
         /// <param name="text">The string to display.</param>
         public void Print(int x, int y, ColoredString text)
         {
-            if (x >= Width || x < 0 || y >= Height || y < 0)
+            if (x >= _width || x < 0 || y >= _height || y < 0)
                 throw new Exception("X,Y is out of range for Print");
 
-            int index = y * Width + x;
+            int index = y * _width + x;
             int total = index + text.Count > Cells.Length ? Cells.Length : index + text.Count;
             int charIndex = 0;
 
@@ -951,7 +951,7 @@ namespace SadConsole.Consoles
         /// <returns>A string built from the text surface data.</returns>
         public string GetString(int x, int y, int length)
         {
-            return GetString(y * Width + x, length);
+            return GetString(y * _width + x, length);
         }
 
         /// <summary>
@@ -989,7 +989,7 @@ namespace SadConsole.Consoles
         /// <returns>A string built from the text surface data.</returns>
         public ColoredString GetStringColored(int x, int y, int length)
         {
-            return GetStringColored(y * Width + x, length);
+            return GetStringColored(y * _width + x, length);
         }
 
         /// <summary>
@@ -1036,7 +1036,7 @@ namespace SadConsole.Consoles
         /// <param name="y">The y location of the cell.</param>
         public void Clear(int x, int y)
         {
-            var cell = Cells[y * Width + x];
+            var cell = Cells[y * _width + x];
             cell.Reset();
             cell.Foreground = DefaultForeground;
             cell.Background = DefaultBackground;
@@ -1085,22 +1085,22 @@ namespace SadConsole.Consoles
 
                     for (int y = 0; y < amount; y++)
                     {
-                        for (int x = 0; x < Width; x++)
+                        for (int x = 0; x < _width; x++)
                         {
                             var tempCell = new Cell();
-                            Cells[y * Width + x].Copy(tempCell);
+                            Cells[y * _width + x].Copy(tempCell);
 
                             wrappedCells.Add(new Tuple<Cell, int>(tempCell, (_height - amount + y) * _width + x));
                         }
                     }
                 }
 
-                for (int y = amount; y < Height; y++)
+                for (int y = amount; y < _height; y++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 0; x < _width; x++)
                     {
-                        Cell destination = Cells[(y - amount) * Width + x];
-                        Cell source = Cells[y * Width + x];
+                        Cell destination = Cells[(y - amount) * _width + x];
+                        Cell source = Cells[y * _width + x];
 
                         destination.Background = source.Background;
                         destination.Foreground = source.Foreground;
@@ -1111,9 +1111,9 @@ namespace SadConsole.Consoles
 
 
                 if (!wrap)
-                    for (int y = Height - amount; y < Height; y++)
+                    for (int y = _height - amount; y < _height; y++)
                     {
-                        for (int x = 0; x < Width; x++)
+                        for (int x = 0; x < _width; x++)
                         {
                             Clear(x, y);
                         }
@@ -1170,24 +1170,24 @@ namespace SadConsole.Consoles
                 {
                     wrappedCells = new List<Tuple<Cell, int>>(_height * amount);
 
-                    for (int y = Height - amount; y < Height; y++)
+                    for (int y = _height - amount; y < _height; y++)
                     {
-                        for (int x = 0; x < Width; x++)
+                        for (int x = 0; x < _width; x++)
                         {
                             var tempCell = new Cell();
-                            Cells[y * Width + x].Copy(tempCell);
+                            Cells[y * _width + x].Copy(tempCell);
 
                             wrappedCells.Add(new Tuple<Cell, int>(tempCell, (amount - (_height - y)) * _width + x));
                         }
                     }
                 }
 
-                for (int y = (Height - 1) - amount; y >= 0; y--)
+                for (int y = (_height - 1) - amount; y >= 0; y--)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 0; x < _width; x++)
                     {
-                        Cell destination = Cells[(y + amount) * Width + x];
-                        Cell source = Cells[y * Width + x];
+                        Cell destination = Cells[(y + amount) * _width + x];
+                        Cell source = Cells[y * _width + x];
 
                         destination.Background = source.Background;
                         destination.Foreground = source.Foreground;
@@ -1199,9 +1199,9 @@ namespace SadConsole.Consoles
                 if (!wrap)
                     for (int y = 0; y < amount; y++)
                     {
-                        for (int x = 0; x < Width; x++)
+                        for (int x = 0; x < _width; x++)
                         {
-                            Cell source = Cells[y * Width + x];
+                            Cell source = Cells[y * _width + x];
                             source.Reset();
                         }
                     }
@@ -1262,7 +1262,7 @@ namespace SadConsole.Consoles
                         for (int y = 0; y < _height; y++)
                         {
                             var tempCell = new Cell();
-                            Cells[y * Width + x].Copy(tempCell);
+                            Cells[y * _width + x].Copy(tempCell);
 
                             wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * _width + amount - (_width - x)));
                         }
@@ -1274,8 +1274,8 @@ namespace SadConsole.Consoles
                 {
                     for (int y = 0; y < _height; y++)
                     {
-                        Cell destination = Cells[y * Width + (x + amount)];
-                        Cell source = Cells[y * Width + x];
+                        Cell destination = Cells[y * _width + (x + amount)];
+                        Cell source = Cells[y * _width + x];
 
                         destination.Background = source.Background;
                         destination.Foreground = source.Foreground;
@@ -1449,14 +1449,14 @@ namespace SadConsole.Consoles
             List<Cell> cells = new List<Cell>(area.Width * area.Height);
 
             // Check for valid rect
-            Rectangle consoleArea = new Rectangle(0, 0, Width, Height);
+            Rectangle consoleArea = new Rectangle(0, 0, _width, _height);
             if (consoleArea.Contains(area))
             {
                 for (int x = area.X; x < area.Right; x++)
                 {
                     for (int y = area.Y; y < area.Bottom; y++)
                     {
-                        Cell cell = Cells[y * Width + x];
+                        Cell cell = Cells[y * _width + x];
                         cell.Foreground = foreground;
                         cell.Background = background;
                         cell.CharacterIndex = character;
@@ -1482,14 +1482,14 @@ namespace SadConsole.Consoles
             List<Cell> cells = new List<Cell>(area.Width * area.Height);
 
             // Check for valid rect
-            Rectangle consoleArea = new Rectangle(0, 0, Width, Height);
+            Rectangle consoleArea = new Rectangle(0, 0, _width, _height);
             if (consoleArea.Contains(area))
             {
                 for (int x = area.X; x < area.Right; x++)
                 {
                     for (int y = area.Y; y < area.Bottom; y++)
                     {
-                        Cell cell = Cells[y * Width + x];
+                        Cell cell = Cells[y * _width + x];
                         cell.Foreground = foreground;
                         cell.Background = background;
                         cell.CharacterIndex = character;

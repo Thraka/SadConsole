@@ -9,17 +9,27 @@ namespace SadConsole.Consoles
     /// <summary>
     /// Draws a text surface to the screen.
     /// </summary>
-    public class TextSurfaceRenderer : IRender
+    public class TextSurfaceRenderer : ITextSurfaceRenderer
     {
+        private Matrix absolutePositionTransform;
+        private Matrix positionTransform;
+        private Point oldPosition;
+        private Point oldAbsolutePosition;
+
         /// <summary>
         /// The sprite batch used for drawing to the screen.
         /// </summary>
         public SpriteBatch Batch { get; private set; }
 
-        private Matrix absolutePositionTransform;
-        private Matrix positionTransform;
-        private Point oldPosition;
-        private Point oldAbsolutePosition;
+        /// <summary>
+        /// A method called when the <see cref="SpriteBatch"/> has been created and transformed, but before any text characters are drawn.
+        /// </summary>
+        public Action<SpriteBatch> BeforeRenderCallback { get; set; }
+
+        /// <summary>
+        /// A method called when all text characters have been drawn and any tinting has been applied.
+        /// </summary>
+        public Action<SpriteBatch> AfterRenderCallback { get; set; }
 
         /// <summary>
         /// Creates a new renderer.
@@ -36,7 +46,7 @@ namespace SadConsole.Consoles
 
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
-            //OnBeforeRender();
+            BeforeRenderCallback?.Invoke(Batch);
 
             if (surface.Tint.A != 255)
             {
@@ -68,7 +78,7 @@ namespace SadConsole.Consoles
                 Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.CharacterIndexRects[surface.Font.SolidCharacterIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None , 0.3f);
             }
 
-            //OnAfterRender();
+            AfterRenderCallback?.Invoke(Batch);
 
             Batch.End();
         }

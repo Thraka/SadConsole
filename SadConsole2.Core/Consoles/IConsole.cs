@@ -1,18 +1,19 @@
 ﻿namespace SadConsole.Consoles
 {
+    using Microsoft.Xna.Framework;
     using SadConsole.Input;
 
     /// <summary>
     /// Supports basic console management and input functionallity.
     /// </summary>
-    public interface IConsole : IInput, IUpdate
+    public interface IConsole : IInput, IDraw
     {
+        Point Position { get; set; }
         TextSurface Data { get; set; }
+        
+        Console.Cursor VirtualCursor { get; set; }
 
-        ITextSurfaceView DataView { get; set; }
+        IConsoleList Parent { get; set; }
 
-        Consoles.Console.Cursor VirtualCursor { get; set; }
-
-        Consoles.IParentConsole Parent { get; set; }
     }
 }

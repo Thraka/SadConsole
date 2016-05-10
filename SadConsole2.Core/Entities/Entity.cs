@@ -416,11 +416,11 @@
         }
 
         #region IConsole
-        private IParentConsole _parentConsole;
+        private IConsoleList _parentConsole;
 
         public Console.Cursor VirtualCursor { get { return null; } set { } }
 
-        public IParentConsole Parent
+        public IConsoleList Parent
         {
             get { return _parentConsole; }
             set
