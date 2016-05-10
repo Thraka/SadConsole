@@ -5,6 +5,7 @@
     using SadConsole.Consoles;
     using Console = SadConsole.Consoles.Console;
     using Microsoft.Xna.Framework;
+    using System.Linq;
 
     class StretchedConsole: Console
     {
@@ -16,10 +17,10 @@
             // 40x12 cells instead of the 80x25 cells other consoles have, we're going to
             // stretch the size of the cells based on the font * 2. This will fill our 
             // area.
-            CellSize = new Point(_font.CellWidth * 2, _font.CellHeight * 2);
+            _textSurface.Font = Engine.Fonts.Values.First().GetFont(2);
 
             ColoredString colorString = "Text using a colored string gradient that wraps around".CreateGradient(Color.DarkGreen, Color.LightGreen, null);
-            _cellData.Print(2, 3, colorString);
+            _textSurface.Print(2, 3, colorString);
 
             IsVisible = false;
         }

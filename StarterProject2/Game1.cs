@@ -71,24 +71,24 @@
 
             
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
-            //SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
-            //                                                           new CustomConsoles.CursorConsole(),
-            //                                                           new CustomConsoles.StaticConsole(),
-            //                                                           new CustomConsoles.StretchedConsole(), 
-            //                                                           new CustomConsoles.BorderedConsole(80, 25), 
+            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
+                //new Console(surface1)
+                                                                       new CustomConsoles.CursorConsole(),
+                                                                       new CustomConsoles.StaticConsole(),
+                                                                       new CustomConsoles.StretchedConsole(), 
+                                                                       new CustomConsoles.BorderedConsole(80, 25), 
             //                                                           new CustomConsoles.WorldGenerationConsole(),
             //                                                           new CustomConsoles.DOSConsole(),
             //                                                           new CustomConsoles.WindowTestConsole(),
             //                                                           new CustomConsoles.EntityAndConsole(),
             //                                                           new CustomConsoles.RandomScrollingConsole(),
             //                                                           new CustomConsoles.SplashScreen(),
-            //                                                         };
+                                                                     };
 
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
-
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
 
@@ -140,10 +140,12 @@
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the consoles to the screen.
-            //SadConsole.Engine.Draw(gameTime);
+            SadConsole.Engine.Draw(gameTime);
 
-            tempRenderer.Render(tempSurface, new Point(5,5));
-            tempRenderer.Render(tempSurface2, new Point(20,5));
+            //tempRenderer.Render(SadConsole.Engine.ConsoleRenderStack[0].Data, SadConsole.Engine.ConsoleRenderStack[0].Position);
+
+            //if (SadConsole.Engine.Keyboard.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Space))
+            //    tempRenderer.Render(tempSurface2, new Point(20,5));
 
 
             base.Draw(gameTime);

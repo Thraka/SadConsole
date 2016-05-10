@@ -9,6 +9,10 @@
     <Import_RootNamespace>StarterProject2</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
   </ItemGroup>
@@ -26,7 +30,6 @@
     <Content Include="$(MSBuildThisFileDirectory)sad.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)CustomConsoles\" />
     <Folder Include="$(MSBuildThisFileDirectory)InputHandling\" />
     <Folder Include="$(MSBuildThisFileDirectory)Windows\" />
   </ItemGroup>
