@@ -54,7 +54,7 @@ namespace SadConsole.Consoles
 
 
                 if (surface.DefaultBackground.A != 0)
-                    Batch.Draw(Engine.BackgroundCell, surface.AbsoluteArea, null, surface.DefaultBackground);
+                    Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.CharacterIndexRects[surface.Font.SolidCharacterIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.0f);
 
                 for (int i = 0; i < surface.RenderCells.Length; i++)
                 {

@@ -15,6 +15,6 @@ namespace SadConsole.Consoles
         Font Font { get; }
         Color DefaultBackground { get; }
         Color DefaultForeground { get; }
-        Color Tint { get; }
+        Color Tint { get; set; }
     }
 }

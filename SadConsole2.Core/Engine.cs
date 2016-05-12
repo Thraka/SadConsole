@@ -151,11 +151,6 @@ namespace SadConsole
         public static GraphicsDevice Device { get; private set; }
 
         /// <summary>
-        /// A simple white texture used for coloring and rendering the background of each cell.
-        /// </summary>
-        public static Texture2D BackgroundCell { get; internal set; }
-
-        /// <summary>
         /// A collection of fonts.
         /// </summary>
         public static Dictionary<string, FontMaster> Fonts { get; internal set; }
@@ -172,20 +167,6 @@ namespace SadConsole
         {
             if (Device == null)
                 Device = device;
-
-            // setup background cell
-#if !SHARPDX
-            BackgroundCell = new Texture2D(Device, 1, 1, false, SurfaceFormat.Color);
-#else
-            BackgroundCell = Texture2D.New(Device, 1, 1, PixelFormat.R8G8B8A8.UInt);
-#endif
-            Color[] newPixels = new Color[1];
-            BackgroundCell.GetData<Color>(newPixels);
-            for (int pixel = 0; pixel < 1; pixel++)
-            {
-                newPixels[pixel] = Color.White;
-            }
-            BackgroundCell.SetData<Color>(newPixels);
 
             Fonts = new Dictionary<string, FontMaster>();
             ConsoleRenderStack = new Consoles.ConsoleList();

@@ -413,8 +413,8 @@ using SadConsole.Effects;
 
             public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
             {
-                batch.Draw(Engine.BackgroundCell, renderArea, null, CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
-                batch.Draw(font.FontImage, renderArea, font.CharacterIndexRects[CursorRenderCell.ActualCharacterIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                batch.Draw(font.FontImage, renderArea, font.CharacterIndexRects[font.SolidCharacterIndex], CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
+                batch.Draw(font.FontImage, renderArea, font.CharacterIndexRects[CursorRenderCell.ActualCharacterIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
             }
         }
     }
