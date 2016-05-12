@@ -15,22 +15,38 @@ namespace SadConsole.Consoles
             get { return area; }
             set
             {
-                if (area.Width > data.ViewArea.Width)
-                    throw new ArgumentOutOfRangeException("area", "The area is too wide for the surface.");
-                if (area.Height > data.ViewArea.Height)
-                    throw new ArgumentOutOfRangeException("area", "The area is too tall for the surface.");
+                //if (area.Width > data.ViewArea.Width)
+                //    throw new ArgumentOutOfRangeException("area", "The area is too wide for the surface.");
+                //if (area.Height > data.ViewArea.Height)
+                //    throw new ArgumentOutOfRangeException("area", "The area is too tall for the surface.");
 
-                if (area.X < 0)
-                    throw new ArgumentOutOfRangeException("area", "The left of the area cannot be less than 0.");
-                if (area.Y < 0)
-                    throw new ArgumentOutOfRangeException("area", "The top of the area cannot be less than 0.");
+                //if (area.X < 0)
+                //    throw new ArgumentOutOfRangeException("area", "The left of the area cannot be less than 0.");
+                //if (area.Y < 0)
+                //    throw new ArgumentOutOfRangeException("area", "The top of the area cannot be less than 0.");
 
-                if (area.X + area.Width > data.ViewArea.Width)
-                    throw new ArgumentOutOfRangeException("area", "The area x + width is too wide for the surface.");
-                if (area.Y + area.Height > data.ViewArea.Height)
-                    throw new ArgumentOutOfRangeException("area", "The area y + height is too tal for the surface.");
+                //if (area.X + area.Width > data.ViewArea.Width)
+                //    throw new ArgumentOutOfRangeException("area", "The area x + width is too wide for the surface.");
+                //if (area.Y + area.Height > data.ViewArea.Height)
+                //    throw new ArgumentOutOfRangeException("area", "The area y + height is too tal for the surface.");
 
                 area = value;
+
+                if (area.Width > data.ViewArea.Width)
+                    area.Width = data.ViewArea.Width;
+                if (area.Height > data.ViewArea.Height)
+                    area.Height = data.ViewArea.Height;
+
+                if (area.X < 0)
+                    area.X = 0;
+                if (area.Y < 0)
+                    area.Y = 0;
+
+                if (area.X + area.Width > data.ViewArea.Width)
+                    area.X = data.ViewArea.Width - area.Width;
+                if (area.Y + area.Height > data.ViewArea.Height)
+                    area.Y = data.ViewArea.Height - area.Height;
+
                 ResetArea();
             }
         }

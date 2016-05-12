@@ -129,7 +129,8 @@ namespace SadConsole.Consoles
         /// <remarks>You must set the Font property before rendering this cell surface.</remarks>
         //public ConsoleData() : this(1, 1, Engine.DefaultFont) { }
 
-        //public ConsoleData(int width, int height) : this(width, height, Engine.DefaultFont) { }
+        public TextSurface(int width, int height) : this(width, height, Engine.DefaultFont) { }
+
         public TextSurface(int width, int height, Font font)
         {
             DefaultBackground = Color.Transparent;

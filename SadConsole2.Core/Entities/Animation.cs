@@ -42,7 +42,7 @@
         /// <summary>
         /// The font to use with all frames.
         /// </summary>
-        protected Font _font;
+        protected Font _font = Engine.DefaultFont;
 
         /// <summary>
         /// All frames of the animation

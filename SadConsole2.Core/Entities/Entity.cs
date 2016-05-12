@@ -124,7 +124,7 @@
         /// <param name="font">The font to use when rendering this entity.</param>
         public Entity(Font font)
         {
-            Font = font;
+            _font = font;
             IsVisible = true;
 
             var defaultAnimation = new Animation("default", 1, 1);
