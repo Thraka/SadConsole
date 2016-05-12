@@ -78,11 +78,11 @@
                                                                        new CustomConsoles.StretchedConsole(), 
                                                                        new CustomConsoles.BorderedConsole(80, 25), 
             //                                                           new CustomConsoles.WorldGenerationConsole(),
-            //                                                           new CustomConsoles.DOSConsole(),
+                                                                       new CustomConsoles.DOSConsole(),
             //                                                           new CustomConsoles.WindowTestConsole(),
-            //                                                           new CustomConsoles.EntityAndConsole(),
-            //                                                           new CustomConsoles.RandomScrollingConsole(),
-            //                                                           new CustomConsoles.SplashScreen(),
+                                                                       new CustomConsoles.EntityAndConsole(),
+                                                                       new CustomConsoles.RandomScrollingConsole(),
+                                                                       new CustomConsoles.SplashScreen(),
                                                                      };
 
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;

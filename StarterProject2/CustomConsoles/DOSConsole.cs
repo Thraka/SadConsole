@@ -37,17 +37,17 @@
 
 
             // Startup description
-            CellData.Clear();
+            Data.Clear();
             VirtualCursor.Position = new Point(0, 24);
             VirtualCursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
             _keyboardHandlerObject.VirtualCursorLastY = 24;
-            _cellData.TimesShiftedUp = 0;
+            Data.TimesShiftedUp = 0;
             VirtualCursor.Print(Prompt);
         }
 
         public void Clear()
         {
-            CellData.Clear();
+            Data.Clear();
             VirtualCursor.Position = new Point(0, 24);
             _keyboardHandlerObject.VirtualCursorLastY = 24;
         }

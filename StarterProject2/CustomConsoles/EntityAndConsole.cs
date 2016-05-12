@@ -8,6 +8,7 @@ using SadConsole.Entities;
 using SadConsole.Consoles;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace StarterProject.CustomConsoles
 {
@@ -24,7 +25,7 @@ namespace StarterProject.CustomConsoles
         {
             // Create out player entity, and center it.
             _player = new Player();
-            _player.Position = new Microsoft.Xna.Framework.Point(_cellData.Width / 2, _cellData.Height / 2);
+            _player.Position = new Microsoft.Xna.Framework.Point(_textSurface.Width / 2, _textSurface.Height / 2);
             _playerPreviousPosition = _player.Position;
 
             // Setup this console to accept keyboard input.
@@ -40,10 +41,14 @@ namespace StarterProject.CustomConsoles
             base.Update();
         }
 
-        protected override void OnAfterRender()
+        public override void Render()
         {
-            // Render the entities.
-            _player.Render();
+            if (IsVisible)
+            {
+                base.Render();
+
+                _player.Render();
+            }
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
@@ -53,13 +58,40 @@ namespace StarterProject.CustomConsoles
             // By not setting the entity as the active object, twe let this
             // "game level" (the console we're hosting the entity on) determine if
             // the keyboard data should be sent to the entity.
-            if (_player.ProcessKeyboard(info))
+
+            // Process logic for moving the entity.
+            bool keyHit = false;
+
+            if (info.IsKeyReleased(Keys.Up))
+            {
+                _player.Position = new Point(_player.Position.X, _player.Position.Y - 1);
+                keyHit = true;
+            }
+            else if (info.IsKeyReleased(Keys.Down))
+            {
+                _player.Position = new Point(_player.Position.X, _player.Position.Y + 1);
+                keyHit = true;
+            }
+
+            if (info.IsKeyReleased(Keys.Left))
+            {
+                _player.Position = new Point(_player.Position.X - 1, _player.Position.Y);
+                keyHit = true;
+            }
+            else if (info.IsKeyReleased(Keys.Right))
+            {
+                _player.Position = new Point(_player.Position.X + 1, _player.Position.Y);
+                keyHit = true;
+            }
+
+
+            if (keyHit)
             {
                 // Entity moved. Let's draw a trail of where they moved from.
 
                 // We are not detecting when the player tries to move off the console area.
                 // We could detected that though and then move the player back to where they were.
-                _cellData.SetCharacter(_playerPreviousPosition.X, _playerPreviousPosition.Y, 250);
+                _textSurface.SetCharacter(_playerPreviousPosition.X, _playerPreviousPosition.Y, 250);
                 _playerPreviousPosition = _player.Position;
 
                 return true;
@@ -77,45 +109,10 @@ namespace StarterProject.CustomConsoles
         {
             public Player()
             {
-                // Enable keyboard. This isn't really used right now. Currently, the engine sends keyboard
-                // data the IConsole object set as the active console. We could add the entity as the active
-                // console, and if we did that, would need this boolean set.
-                _canUseKeyboard = true;
-
                 // Update the default animation frame (cellsurface that is 1x1 of nothing) to have a smiley character
                 _currentAnimation.CurrentFrame[0].CharacterIndex = 1;
             }
 
-            public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
-            {
-                // Process logic for moving the entity.
-                bool keyHit = false;
-
-                if (info.IsKeyReleased(Keys.Up))
-                {
-                    _position.Y -= 1;
-                    keyHit = true;
-                }
-                else if (info.IsKeyReleased(Keys.Down))
-                {
-                    _position.Y += 1;
-                    keyHit = true;
-                }
-
-                if (info.IsKeyReleased(Keys.Left))
-                {
-                    _position.X -= 1;
-                    keyHit = true;
-                }
-                else if (info.IsKeyReleased(Keys.Right))
-                {
-                    _position.X += 1;
-                    keyHit = true;
-                }
-
-                return keyHit;
-
-            }
         }
     }
 }

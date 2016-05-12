@@ -11,9 +11,14 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\EntityAndConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -27,10 +32,11 @@
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Game.ico" />
     <Content Include="$(MSBuildThisFileDirectory)GameThumbnail.png" />
-    <Content Include="$(MSBuildThisFileDirectory)sad.png" />
+    <Content Include="$(MSBuildThisFileDirectory)sad.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)InputHandling\" />
     <Folder Include="$(MSBuildThisFileDirectory)Windows\" />
   </ItemGroup>
 </Project>
