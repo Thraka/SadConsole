@@ -17,7 +17,6 @@
 
         private InstructionSet _animation;
         private TextSurface _consoleImage;
-        private TextSurfaceView _consoleImageView;
         private Point _consoleImagePosition;
 
         int _x = -50;
@@ -46,8 +45,7 @@
             _consoleImage = new TextSurface(image.Width, image.Height);
             _consoleImagePosition = new Point(Data.Width / 2 - image.Width / 2, -1);
             image.DrawImageToSurface(_consoleImage, new Point(0,0), true);
-            _consoleImageView = new TextSurfaceView(_consoleImage, _consoleImage.ViewArea);
-            _consoleImageView.Tint = Color.Black;
+            _consoleImage.Tint = Color.Black;
 
             // Configure the animations
             _animation = new InstructionSet();
@@ -80,7 +78,7 @@
             _animation.Instructions.AddLast(new DrawString(this) { Position = new Point(26, this.Data.Height - 1), Text = logoText, TotalTimeToPrint = 1f, UseConsolesCursorToPrint = false });
 
             // Animation for fading in the logo picture.
-            _animation.Instructions.AddLast(new FadeCellRenderer(_consoleImageView, new ColorGradient(Color.Black, Color.Transparent), new TimeSpan(0, 0, 0, 0, 2000)));
+            _animation.Instructions.AddLast(new FadeCellRenderer(_consoleImage, new ColorGradient(Color.Black, Color.Transparent), new TimeSpan(0, 0, 0, 0, 2000)));
 
             // Animation to blink SadConsole in the logo text
             _animation.Instructions.AddLast(new CodeInstruction()
@@ -108,7 +106,7 @@
             
             // Animation to delay, keeping the logo and all on there for 2 seconds, then destroy itself.
             _animation.Instructions.AddLast(new Wait() { Duration = 2.5f });
-            _animation.Instructions.AddLast(new FadeCellRenderer(new TextSurfaceView(this.Data, this.Data.ViewArea), new ColorGradient(Color.Transparent, Color.Black), new TimeSpan(0, 0, 0, 0, 2000)));
+            _animation.Instructions.AddLast(new FadeCellRenderer(_consoleImage, new ColorGradient(Color.Transparent, Color.Black), new TimeSpan(0, 0, 0, 0, 2000)));
             _animation.Instructions.AddLast(new CodeInstruction()
             {
                 CodeCallback = (i) =>
@@ -137,7 +135,7 @@
             // Draw the logo console...
             if (IsVisible)
             {
-                Renderer.Render(_consoleImageView, _consoleImagePosition);
+                Renderer.Render(_consoleImage, _consoleImagePosition);
 
                 base.Render();
             }
