@@ -73,6 +73,7 @@
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
             SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
                 //new Console(surface1)
+                new CustomConsoles._3dprojectionConsole(80,25),
                                                                        new CustomConsoles.CursorConsole(),
                                                                        new CustomConsoles.StaticConsole(),
                                                                        new CustomConsoles.StretchedConsole(), 
@@ -92,7 +93,7 @@
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
 
-            //Components.Add(new FPSCounterComponent(this));
+            Components.Add(new FPSCounterComponent(this));
 
             // Call the default initialize of the base class.
             base.Initialize();
@@ -153,46 +154,47 @@
     }
 
 
-    //public class FPSCounterComponent : DrawableGameComponent
-    //{
-    //    CellsRenderer console;
+    public class FPSCounterComponent : DrawableGameComponent
+    {
+        TextSurfaceRenderer consoleRender;
+        TextSurface console;
 
-    //    int frameRate = 0;
-    //    int frameCounter = 0;
-    //    TimeSpan elapsedTime = TimeSpan.Zero;
-
-
-    //    public FPSCounterComponent(Game game)
-    //        : base(game)
-    //    {
-    //        console = new CellsRenderer(new CellSurface(30, 1), new SpriteBatch(game.GraphicsDevice));
-    //        console.CellData.DefaultBackground = Color.Black;
-    //        console.CellData.Clear();
-    //        console.Position = new Point(0, 10);
-    //    }
+        int frameRate = 0;
+        int frameCounter = 0;
+        TimeSpan elapsedTime = TimeSpan.Zero;
 
 
-    //    public override void Update(GameTime gameTime)
-    //    {
-    //        elapsedTime += gameTime.ElapsedGameTime;
-
-    //        if (elapsedTime > TimeSpan.FromSeconds(1))
-    //        {
-    //            elapsedTime -= TimeSpan.FromSeconds(1);
-    //            frameRate = frameCounter;
-    //            frameCounter = 0;
-    //        }
-    //    }
+        public FPSCounterComponent(Game game)
+            : base(game)
+        {
+            console = new TextSurface(30, 1);
+            console.DefaultBackground = Color.Black;
+            console.Clear();
+            consoleRender = new TextSurfaceRenderer();
+        }
 
 
-    //    public override void Draw(GameTime gameTime)
-    //    {
-    //        frameCounter++;
+        public override void Update(GameTime gameTime)
+        {
+            elapsedTime += gameTime.ElapsedGameTime;
 
-    //        string fps = string.Format("fps: {0} mem : {1}", frameRate, GC.GetTotalMemory(false));
-    //        console.CellData.Clear();
-    //        console.CellData.Print(0, 0, fps);
-    //        console.Render();
-    //    }
-    //}
+            if (elapsedTime > TimeSpan.FromSeconds(1))
+            {
+                elapsedTime -= TimeSpan.FromSeconds(1);
+                frameRate = frameCounter;
+                frameCounter = 0;
+            }
+        }
+
+
+        public override void Draw(GameTime gameTime)
+        {
+            frameCounter++;
+
+            string fps = string.Format("fps: {0} mem : {1}", frameRate, GC.GetTotalMemory(false));
+            console.Clear();
+            console.Print(0, 0, fps);
+            consoleRender.Render(console, Point.Zero);
+        }
+    }
 }
