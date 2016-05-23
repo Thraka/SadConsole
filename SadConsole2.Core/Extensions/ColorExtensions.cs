@@ -30,26 +30,6 @@ namespace Microsoft.Xna.Framework
 
     public static class ColorEx
     {
-        public static XElement ToXElement(this Color color, string nodeName)
-        {
-            return new XElement(nodeName,
-                new XAttribute("r", color.R),
-                new XAttribute("g", color.G),
-                new XAttribute("b", color.B),
-                new XAttribute("a", color.A));
-        }
-
-        public static Color FromXElement(XElement element)
-        {
-            return new Color()
-            {
-                R = Convert.ToByte(element.Attribute("r").Value),
-                G = Convert.ToByte(element.Attribute("g").Value),
-                B = Convert.ToByte(element.Attribute("b").Value),
-                A = Convert.ToByte(element.Attribute("a").Value)
-            };
-        }
-
         public static Color[] LerpSteps(this Color color, Color endingColor, int steps)
         {
             Color[] colors = new Color[steps];
@@ -143,12 +123,16 @@ namespace Microsoft.Xna.Framework
             return new Color(0, 0, color.B);
         }
 
+        public static float GetLuma(this Color color)
+        {
+            return (color.R + color.R + color.B + color.G + color.G + color.G) / 6f;
+        }
+
         #region Color methods taken from mono source code
         public static float GetBrightness(this Color color)
         {
             byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
             byte maxval = Math.Max(color.R, Math.Max(color.G, color.B));
-
 
             return (float)(maxval + minval) / 510;
         }
