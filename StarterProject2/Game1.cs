@@ -93,7 +93,7 @@
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
 
-            Components.Add(new FPSCounterComponent(this));
+            //Components.Add(new FPSCounterComponent(this));
 
             // Call the default initialize of the base class.
             base.Initialize();
@@ -143,12 +143,6 @@
             // Draw the consoles to the screen.
             SadConsole.Engine.Draw(gameTime);
 
-            //tempRenderer.Render(SadConsole.Engine.ConsoleRenderStack[0].Data, SadConsole.Engine.ConsoleRenderStack[0].Position);
-
-            //if (SadConsole.Engine.Keyboard.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Space))
-            //    tempRenderer.Render(tempSurface2, new Point(20,5));
-
-
             base.Draw(gameTime);
         }
     }
@@ -191,7 +185,7 @@
         {
             frameCounter++;
 
-            string fps = string.Format("fps: {0} mem : {1}", frameRate, GC.GetTotalMemory(false));
+            string fps = string.Format("fps: {0}", frameRate);
             console.Clear();
             console.Print(0, 0, fps);
             consoleRender.Render(console, Point.Zero);
