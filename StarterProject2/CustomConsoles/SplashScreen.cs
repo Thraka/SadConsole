@@ -42,9 +42,8 @@
             imageStream.Dispose();
 
             // Configure the logo
-            _consoleImage = new TextSurface(image.Width, image.Height);
-            _consoleImagePosition = new Point(Data.Width / 2 - image.Width / 2, -1);
-            image.DrawImageToSurface(_consoleImage, new Point(0,0), true);
+            _consoleImage = image.ToSurface(Engine.DefaultFont, false);
+            _consoleImagePosition = new Point(Data.Width / 2 - _consoleImage.Width / 2, -1);
             _consoleImage.Tint = Color.Black;
 
             // Configure the animations
