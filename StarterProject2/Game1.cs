@@ -73,7 +73,6 @@
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
             SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
                 //new Console(surface1)
-                new CustomConsoles._3dprojectionConsole(80,25),
                                                                        new CustomConsoles.CursorConsole(),
                                                                        new CustomConsoles.StaticConsole(),
                                                                        new CustomConsoles.StretchedConsole(), 
@@ -83,6 +82,7 @@
             //                                                           new CustomConsoles.WindowTestConsole(),
                                                                        new CustomConsoles.EntityAndConsole(),
                                                                        new CustomConsoles.RandomScrollingConsole(),
+                                                                       new CustomConsoles.SceneProjectionConsole(80,25),
                                                                        new CustomConsoles.SplashScreen(),
                                                                      };
 
@@ -93,6 +93,7 @@
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
 
+            // Uncomment to see FPS. If the unlimited FPS is not uncommented at the top, you'll probably only see 60fps.
             //Components.Add(new FPSCounterComponent(this));
 
             // Call the default initialize of the base class.
