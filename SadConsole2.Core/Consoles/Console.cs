@@ -86,7 +86,7 @@
         /// <summary>
         /// Represents a _virtualCursor that can be used to input information into the console.
         /// </summary>
-        public Console.Cursor VirtualCursor
+        public Cursor VirtualCursor
         {
             get { return _virtualCursor; }
             set

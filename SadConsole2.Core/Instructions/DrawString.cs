@@ -83,12 +83,12 @@
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
                     _timeElapsed = 0d;
 
-                    SadConsole.Consoles.Console.Cursor cur;
+                    SadConsole.Consoles.Cursor cur;
 
                     if (UseConsolesCursorToPrint)
                         cur = Target.VirtualCursor;
                     else
-                        cur = new Consoles.Console.Cursor(Target);
+                        cur = new Consoles.Cursor(Target);
 
                     cur.Position = _tempLocation;
 
