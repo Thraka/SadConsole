@@ -9,7 +9,7 @@
     <Import_RootNamespace>StarterProject2</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\3dprojectionConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />

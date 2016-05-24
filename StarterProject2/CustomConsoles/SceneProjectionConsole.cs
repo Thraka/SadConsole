@@ -9,46 +9,31 @@ using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    public class _3dprojectionConsole : Console
+    public class SceneProjectionConsole : Console
     {
         private RenderTarget2D _renderTexture;
+        private Vector3 _boxPosition;
+        private Vector3 _trianglePosition;
         private VertexPositionColorNormal[] _vertices;
+        private VertexPositionColorNormal[] _triangle;
         private BasicEffect _effect;
         private RasterizerState rasterizerState = new RasterizerState();
         private float _angle = 0f;
         private bool toggle = true;
         private bool blockMode = false;
         Color[] pixels;
-
-        public struct VertexPositionColorNormal
-        {
-            public Vector3 Position;
-            public Color Color;
-            public Vector3 Normal;
-
-            public VertexPositionColorNormal(Vector3 position, Color color, Vector3 normal)
-            {
-                Position = position;
-                Color = color;
-                Normal = normal;
-            }
-
-            public readonly static VertexDeclaration VertexDeclaration = new VertexDeclaration
-            (
-                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-                new VertexElement(sizeof(float) * 3, VertexElementFormat.Color, VertexElementUsage.Color, 0),
-                new VertexElement(sizeof(float) * 3 + 4, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
-            );
-
-        }
-
-
-        public _3dprojectionConsole(int width, int height) : base(width, height)
+        
+        public SceneProjectionConsole(int width, int height) : base(width, height)
         {
             PresentationParameters pp = SadConsole.Engine.Device.PresentationParameters;
             _renderTexture = new RenderTarget2D(SadConsole.Engine.Device, pp.BackBufferWidth, pp.BackBufferHeight, false, SadConsole.Engine.Device.DisplayMode.Format, DepthFormat.Depth24);
 
             _vertices = CreateBox();
+            _triangle = CreateTriangle();
+
+            _boxPosition = new Vector3(1.5f, 0.0f, -0.0f);
+            _trianglePosition = new Vector3(-1.5f, 0.0f, -0.0f);
+
             _effect = new BasicEffect(SadConsole.Engine.Device);
             _effect.FogEnabled = false;
             _effect.TextureEnabled = false;
@@ -61,9 +46,7 @@ namespace StarterProject.CustomConsoles
 
             CanUseMouse = true;
         }
-
         
-
         public override void Update()
         {
 
@@ -106,15 +89,12 @@ namespace StarterProject.CustomConsoles
 
                 SadConsole.Engine.Device.RasterizerState = rasterizerState;
 
-                var worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateRotationX(-_angle) * Matrix.CreateTranslation(new Vector3(1.5f, 0.0f, -0.0f));
-                //worldMatrix = Matrix.CreateRotationX(-_angle) * Matrix.CreateTranslation(new Vector3(1.5f, 0.0f, -7.0f));
-                //var worldMatrix = Matrix.CreateTranslation(new Vector3(1.5f, 0.0f, -0.0f));
+                var worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateRotationX(-_angle) * Matrix.CreateTranslation(_boxPosition);
 
                 _effect.World = worldMatrix;
                 var camera = new Vector3(0, 0, 5);
                 _effect.View = Matrix.CreateLookAt(camera, Vector3.Zero, Vector3.Up);
                 _effect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)_renderTexture.Width / _renderTexture.Height, 0.1f, 100.0f);
-
 
                 // Calculate scene
                 foreach (var pass in _effect.CurrentTechnique.Passes)
@@ -125,6 +105,17 @@ namespace StarterProject.CustomConsoles
                     SadConsole.Engine.Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, 12, VertexPositionColorNormal.VertexDeclaration);
                 }
 
+                worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateTranslation(_trianglePosition);
+                _effect.World = worldMatrix;
+
+                foreach (var pass in _effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+
+                    // Render to texture
+                    SadConsole.Engine.Device.DrawUserPrimitives(PrimitiveType.TriangleList, _triangle, 0, 2, VertexPositionColorNormal.VertexDeclaration);
+                }
+
                 if (toggle)
                 {
                     SadConsole.Engine.Device.SetRenderTarget(null);
@@ -132,22 +123,30 @@ namespace StarterProject.CustomConsoles
                 }
 
                 base.Render();
-
             }
         }
 
         private VertexPositionColorNormal[] CreateTriangle()
         {
-            var vertices = new VertexPositionColorNormal[3];
-            vertices[0].Position = new Vector3(-0.5f, -0.5f, 0f);
-            vertices[0].Color = Color.Red;
+            var vertices = new VertexPositionColorNormal[6];
+            vertices[0].Position = new Vector3(-1f, -1f, 0f);
+            vertices[0].Color = Color.Blue;
             vertices[0].Normal = new Vector3(1, 0, 1);
-            vertices[1].Position = new Vector3(0, 0.5f, 0f);
+            vertices[1].Position = new Vector3(0, 1f, 0f);
             vertices[1].Color = Color.Green;
             vertices[1].Normal = new Vector3(1, 0, 1);
-            vertices[2].Position = new Vector3(0.5f, -0.5f, 0f);
-            vertices[2].Color = Color.Yellow;
+            vertices[2].Position = new Vector3(1f, -1f, 0f);
+            vertices[2].Color = Color.White;
             vertices[2].Normal = new Vector3(1, 0, 1);
+            vertices[3].Position = new Vector3(1f, -1f, 0f);
+            vertices[3].Color = Color.White;
+            vertices[3].Normal = new Vector3(1, 0, 1);
+            vertices[4].Position = new Vector3(0, 1f, 0f);
+            vertices[4].Color = Color.Green;
+            vertices[4].Normal = new Vector3(1, 0, 1);
+            vertices[5].Position = new Vector3(-1f, -1f, 0f);
+            vertices[5].Color = Color.Blue;
+            vertices[5].Normal = new Vector3(1, 0, 1);
             return vertices;
         }
 
@@ -209,6 +208,28 @@ namespace StarterProject.CustomConsoles
             };
 
             return vertices;
+        }
+
+        public struct VertexPositionColorNormal
+        {
+            public Vector3 Position;
+            public Color Color;
+            public Vector3 Normal;
+
+            public VertexPositionColorNormal(Vector3 position, Color color, Vector3 normal)
+            {
+                Position = position;
+                Color = color;
+                Normal = normal;
+            }
+
+            public readonly static VertexDeclaration VertexDeclaration = new VertexDeclaration
+            (
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                new VertexElement(sizeof(float) * 3, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+                new VertexElement(sizeof(float) * 3 + 4, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
+            );
+
         }
     }
 }
