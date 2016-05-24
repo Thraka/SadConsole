@@ -14,7 +14,7 @@
 
         Rectangle DataViewport { get; set; }
 
-        Console.Cursor VirtualCursor { get; set; }
+        Cursor VirtualCursor { get; set; }
 
         IConsoleList Parent { get; set; }
 
