@@ -96,7 +96,7 @@
         /// Creates a new instance of the cursor class that will work with the specified console.
         /// </summary>
         /// <param name="console">The console this cursor will print on.</param>
-        public Cursor(Console console)
+        public Cursor(IConsole console)
         {
             _console = new WeakReference(console);
             IsVisible = false;
@@ -119,7 +119,7 @@
 
         }
 
-        internal void AttachConsole(Console console)
+        internal void AttachConsole(IConsole console)
         {
             _console = new WeakReference(console);
         }

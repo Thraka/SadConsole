@@ -8,7 +8,7 @@
     /// Draws a string to a console as if someone was typing.
     /// </summary>
     [DataContract]
-    public class DrawString : InstructionBase<Consoles.Console>
+    public class DrawString : InstructionBase<Consoles.IConsole>
     {
         #region Settings
         /// <summary>
@@ -43,7 +43,7 @@
         private bool _started = false;
         private Point _tempLocation;
 
-        public DrawString(Consoles.Console target)
+        public DrawString(Consoles.IConsole target)
             : base(target)
         {
         }

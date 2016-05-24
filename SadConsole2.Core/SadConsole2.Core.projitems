@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.Cursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ConsoleList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\IConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\IParentConsole.cs" />
