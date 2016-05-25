@@ -8,7 +8,7 @@
     /// Draws a string to a console as if someone was typing.
     /// </summary>
     [DataContract]
-    public class DrawString : InstructionBase<Consoles.Console>
+    public class DrawString : InstructionBase<Consoles.IConsole>
     {
         #region Settings
         /// <summary>
@@ -43,7 +43,7 @@
         private bool _started = false;
         private Point _tempLocation;
 
-        public DrawString(Consoles.Console target)
+        public DrawString(Consoles.IConsole target)
             : base(target)
         {
         }
@@ -72,7 +72,7 @@
 
             if (TotalTimeToPrint == 0f)
             {
-                Target.CellData.Print(Position.X, Position.Y, Text);
+                Target.Data.Print(Position.X, Position.Y, Text);
                 IsFinished = true;
             }
             else
@@ -83,12 +83,12 @@
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
                     _timeElapsed = 0d;
 
-                    SadConsole.Consoles.Console.Cursor cur;
+                    SadConsole.Consoles.Cursor cur;
 
                     if (UseConsolesCursorToPrint)
                         cur = Target.VirtualCursor;
                     else
-                        cur = new Consoles.Console.Cursor(Target);
+                        cur = new Consoles.Cursor(Target);
 
                     cur.Position = _tempLocation;
 

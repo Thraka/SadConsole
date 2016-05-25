@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SadConsole.Shapes
             
         }
 
-        public void Draw(CellSurface surface)
+        public void Draw(TextSurface surface)
         {
             if (BorderAppearance == null)
                 BorderAppearance = new CellAppearance(Color.Blue, Color.Black, 4);

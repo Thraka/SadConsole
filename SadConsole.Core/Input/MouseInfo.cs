@@ -134,11 +134,11 @@ namespace SadConsole.Input
         /// <remarks>This method alters the data of the mouse information based on the provided console. It </remarks>
         public void Fill(IConsole data)
         {
-            if (data.UseAbsolutePositioning)
+            if (data.UsePixelPositioning)
             {
                 WorldLocation.X = ScreenLocation.X - data.Position.X;
                 WorldLocation.Y = ScreenLocation.Y - data.Position.Y;
-                ConsoleLocation = WorldLocation.WorldLocationToConsole(data.CellSize.X, data.CellSize.Y);
+                ConsoleLocation = WorldLocation.WorldLocationToConsole(data.Data.Font.Size.X, data.Data.Font.Size.Y);
 
                 if (WorldLocation.X < 0)
                     ConsoleLocation.X -= 1;
@@ -147,18 +147,18 @@ namespace SadConsole.Input
             }
             else
             {
-                WorldLocation = ScreenLocation.WorldLocationToConsole(data.CellSize.X, data.CellSize.Y);
+                WorldLocation = ScreenLocation.WorldLocationToConsole(data.Data.Font.Size.X, data.Data.Font.Size.Y);
                 ConsoleLocation = new Point(WorldLocation.X - data.Position.X, WorldLocation.Y - data.Position.Y);
             }
 
             //TODO: Need to translate mouse coords by the render transform used by the console!!
             
             // If the mouse is on a console, then we need to fill out the mouse information with the console information.
-            if (ConsoleLocation.X >= 0 && ConsoleLocation.X <= data.ViewArea.Width - 1 &&
-                ConsoleLocation.Y >= 0 && ConsoleLocation.Y <= data.ViewArea.Height - 1)
+            if (ConsoleLocation.X >= 0 && ConsoleLocation.X <= data.Data.ViewArea.Width - 1 &&
+                ConsoleLocation.Y >= 0 && ConsoleLocation.Y <= data.Data.ViewArea.Height - 1)
             {
-                ConsoleLocation = new Point(ConsoleLocation.X + data.ViewArea.Location.X, ConsoleLocation.Y + data.ViewArea.Location.Y);
-                Cell = data.CellData[ConsoleLocation.X, ConsoleLocation.Y];
+                ConsoleLocation = new Point(ConsoleLocation.X + data.Data.ViewArea.Location.X, ConsoleLocation.Y + data.Data.ViewArea.Location.Y);
+                Cell = data.Data[ConsoleLocation.X, ConsoleLocation.Y];
                 Console = data;
 
                 // Other console previously had mouse, we'll properly tell it that it has loss it.

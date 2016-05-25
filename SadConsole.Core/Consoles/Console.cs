@@ -12,7 +12,7 @@
     /// </summary>
     [DataContract]
     [KnownType(typeof(CellAppearance))]
-    public partial class Console : CellsRenderer, IConsole
+    public partial class Console : IConsole
     {
         #region Events
         /// <summary>
@@ -37,9 +37,29 @@
         #endregion
 
         /// <summary>
+        /// The renderer used to draw the <see cref="_textSurface"/>.
+        /// </summary>
+        protected ITextSurfaceRenderer _renderer;
+
+        /// <summary>
+        /// Where the console should be located on the screen.
+        /// </summary>
+        protected Point _position;
+
+        /// <summary>
+        /// The text surface data to render.
+        /// </summary>
+        protected TextSurface _textSurface;
+
+        /// <summary>
+        /// Indicates the console is visible.
+        /// </summary>
+        protected bool _isVisible = true;
+
+        /// <summary>
         /// The parent console.
         /// </summary>
-        protected IParentConsole _parentConsole;
+        protected IConsoleList _parentConsole;
 
         /// <summary>
         /// Indicates that the mouse is currently over this console.
@@ -53,7 +73,7 @@
         protected Cursor _virtualCursor;
 
         /// <summary>
-        /// Toggles the _virtualCursor as visible\hidden when the console if focused\unfocused.
+        /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
         /// </summary>
         [DataMember]
         public bool AutoCursorOnFocus { get; set; }
@@ -61,7 +81,7 @@
         /// <summary>
         /// Represents a _virtualCursor that can be used to input information into the console.
         /// </summary>
-        public Console.Cursor VirtualCursor
+        public Cursor VirtualCursor
         {
             get { return _virtualCursor; }
             set
@@ -81,7 +101,7 @@
         /// <summary>
         /// Gets or sets the Parent console.
         /// </summary>
-        public IParentConsole Parent
+        public IConsoleList Parent
         {
             get { return _parentConsole; }
             set
@@ -142,6 +162,49 @@
         public bool CanFocus { get; set; }
 
         /// <summary>
+        /// Indicates whether or not this console is visible.
+        /// </summary>
+        [DataMember]
+        public bool IsVisible { get { return _isVisible; } set { _isVisible = value; OnVisibleChanged(); } }
+
+        /// <summary>
+        /// When false, does not perform the code within the <see cref="Update"/> method. Defaults to true.
+        /// </summary>
+        [DataMember]
+        public bool DoUpdate { get; set; } = true;
+
+        /// <summary>
+        /// The renderer used to draw <see cref="Data"/>.
+        /// </summary>
+        [DataMember]
+        public ITextSurfaceRenderer Renderer
+        {
+            get { return _renderer; }
+            set
+            {
+                if (_renderer != null)
+                {
+                    _renderer.BeforeRenderCallback = null;
+                    _renderer.AfterRenderCallback = null;
+                }
+
+                _renderer = value;
+                _renderer.BeforeRenderCallback = this.OnBeforeRender;
+                _renderer.AfterRenderCallback = this.OnAfterRender;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the position to render the cells.
+        /// </summary>
+        [DataMember]
+        public Point Position
+        {
+            get { return _position; }
+            set { Point previousPosition = _position; _position = value; OnPositionChanged(previousPosition); }
+        }
+
+        /// <summary>
         /// Gets or sets this console as the <see cref="Engine.ActiveConsole"/> value.
         /// </summary>
         /// <remarks>If the <see cref="Engine.ActiveConsole"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
@@ -197,18 +260,44 @@
         /// </summary>
         public Func<IConsole, KeyboardInfo, bool> KeyboardHandler { get; set; }
 
-        #region Constructors
-        public Console() : this(1, 1) { }
-        public Console(int width, int height)
-            : base(new CellSurface(width, height), new SpriteBatch(Engine.Device))
+        /// <summary>
+        /// The console text data.
+        /// </summary>
+        public TextSurface Data
         {
-            _virtualCursor = new Cursor(this);
+            get { return _textSurface; }
+            set
+            {
+                _textSurface = value;
+            }
         }
 
-        public Console(CellSurface cellData)
-            : base(cellData, new SpriteBatch(Engine.Device))
+        /// <summary>
+        /// If explicitly set, 
+        /// </summary>
+        public Rectangle DataViewport
+        {
+            get { return _textSurface.ViewArea; }
+            set { _textSurface.ViewArea = value; }
+        }
+
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get; set; } = false;
+
+        #region Constructors
+        //public Console() : this(1, 1, Engine.DefaultFont) { }
+
+        public Console(int width, int height): this(width, height, Engine.DefaultFont) { }
+
+        public Console(int width, int height, Font font) : this(new TextSurface(width, height, font)) { }
+
+        public Console(TextSurface textData)
         {
             _virtualCursor = new Cursor(this);
+            Renderer = new TextSurfaceRenderer();
+            Data = textData;
         }
         #endregion
 
@@ -393,25 +482,17 @@
         /// </summary>
         public void FillWithRandomGarbage(bool useEffect = false)
         {
-            SadConsole.Effects.Blink pulse = new SadConsole.Effects.Blink();
-            pulse.CloneOnApply = true;
-
             //pulse.Reset();
             int charCounter = 0;
-            for (int y = 0; y < CellData.Height; y++)
+            for (int y = 0; y < Data.Height; y++)
             {
-                for (int x = 0; x < CellData.Width; x++)
+                for (int x = 0; x < Data.Width; x++)
                 {
-                    CellData.SetCharacter(x, y, charCounter);
-                    CellData.SetForeground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
-                    CellData.SetBackground(x, y, CellData.DefaultBackground);
-                    CellData.SetBackground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
-                    CellData.SetSpriteEffect(x, y, (SpriteEffects)Engine.Random.Next(0, 4));
-                    if (useEffect)
-                    {
-                        pulse.BlinkSpeed = ((float)Engine.Random.NextDouble() * 3f);
-                        CellData.SetEffect(x, y, pulse);
-                    }
+                    Data.SetCharacter(x, y, charCounter);
+                    Data.SetForeground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
+                    Data.SetBackground(x, y, Data.DefaultBackground);
+                    Data.SetBackground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
+                    Data.SetSpriteEffect(x, y, (SpriteEffects)Engine.Random.Next(0, 4));
                     charCounter++;
                     if (charCounter > 255)
                         charCounter = 0;
@@ -420,7 +501,12 @@
 
             
         }
-        
+
+        /// <summary>
+        /// Called when the visibility of the console changes.
+        /// </summary>
+        protected virtual void OnVisibleChanged() { }
+
         /// <summary>
         /// Called when this console's focus has been lost.
         /// </summary>
@@ -439,30 +525,57 @@
                 _virtualCursor.IsVisible = true;
         }
 
-        protected override void OnAfterRender()
+        /// <summary>
+        /// Called when the <see cref="Position" /> property changes.
+        /// </summary>
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
+
+        /// <summary>
+        /// Called when the renderer renders the text view.
+        /// </summary>
+        /// <param name="batch">The batch used in renderering.</param>
+        protected virtual void OnAfterRender(SpriteBatch batch)
         {
             if (VirtualCursor.IsVisible)
             {
-                int virtualCursorLocationIndex = CellSurface.GetIndexFromPoint(new Point(VirtualCursor.Position.X - ViewArea.Location.X, VirtualCursor.Position.Y - ViewArea.Location.Y), ViewArea.Width);
+                int virtualCursorLocationIndex = TextSurface.GetIndexFromPoint(
+                    new Point(VirtualCursor.Position.X - _textSurface.ViewArea.X, 
+                              VirtualCursor.Position.Y - _textSurface.ViewArea.Y), _textSurface.ViewArea.Width);
 
-                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < _renderAreaRects.Length)
+                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < _textSurface.RenderRects.Length)
                 {
-                    VirtualCursor.Render(Batch, Font, _renderAreaRects[virtualCursorLocationIndex]);
+                    VirtualCursor.Render(batch, _textSurface.Font, _textSurface.RenderRects[virtualCursorLocationIndex]);
                 }
             }
-
-            base.OnAfterRender();
         }
+
+        /// <summary>
+        /// Called when the renderer renders the text view.
+        /// </summary>
+        /// <param name="batch">The batch used in renderering.</param>
+        protected virtual void OnBeforeRender(SpriteBatch batch) { }
 
         /// <summary>
         /// Updates the cell effects and cursor.
         /// </summary>
-        public override void Update()
+        public virtual void Update()
         {
-            base.Update();
+            if (DoUpdate)
+            {
+                //_textSurface.UpdateEffects(Engine.GameTimeElapsedUpdate);
 
-            if (this.DoUpdate && VirtualCursor.IsVisible)
-                VirtualCursor.CursorRenderCell.UpdateAndApplyEffect(Engine.GameTimeElapsedUpdate);
+                if (VirtualCursor.IsVisible)
+                    VirtualCursor.CursorRenderCell.UpdateAndApplyEffect(Engine.GameTimeElapsedUpdate);
+            }
+        }
+
+        public virtual void Render()
+        {
+            if (_isVisible)
+            {
+                Renderer.Render(_textSurface, _position, UsePixelPositioning);
+            }
         }
 
         /// <summary>
@@ -470,7 +583,7 @@
         /// </summary>
         /// <param name="oldParent">The previous parent.</param>
         /// <param name="newParent">The new parent.</param>
-        protected virtual void OnParentConsoleChanged(IParentConsole oldParent, IParentConsole newParent) { }
+        protected virtual void OnParentConsoleChanged(IConsoleList oldParent, IConsoleList newParent) { }
 
         /// <summary>
         /// Used by the console engine to properly clear the mouse over flag and call OnMouseExit. Used when mouse exits window.
@@ -493,5 +606,7 @@
         {
             _virtualCursor.AttachConsole(this);
         }
+
+        
     }
 }

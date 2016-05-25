@@ -42,7 +42,7 @@
         /// <summary>
         /// The font to use with all frames.
         /// </summary>
-        protected Font _font;
+        protected Font _font = Engine.DefaultFont;
 
         /// <summary>
         /// All frames of the animation
@@ -103,6 +103,9 @@
             set
             {
                 _font = value;
+
+                for (int i = 0; i < Frames.Count; i++)
+                    Frames[i].Font = _font;
             }
         }
 
@@ -182,7 +185,7 @@
             if (Frames == null)
                 Frames = new List<Frame>();
 
-            var frame = new Frame(Width, Height);
+            var frame = new Frame(Width, Height, _font);
             Frames.Add(frame);
             return frame;
         }
@@ -262,23 +265,6 @@
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Resizes all frames in the animation to the specified width and height.
-        /// </summary>
-        /// <param name="width">The new width.</param>
-        /// <param name="height">The new height.</param>
-        public void Resize(int width, int height)
-        {
-            Width = width;
-            Height = height;
-
-            foreach (var frame in Frames)
-                frame.Resize(width, height);
-
-            foreach (var frame in Frames)
-                frame.Resize(width, height);
         }
 
         /// <summary>

@@ -151,14 +151,9 @@ namespace SadConsole
         public static GraphicsDevice Device { get; private set; }
 
         /// <summary>
-        /// A simple white texture used for coloring and rendering the background of each cell.
-        /// </summary>
-        public static Texture2D BackgroundCell { get; internal set; }
-
-        /// <summary>
         /// A collection of fonts.
         /// </summary>
-        public static FontCollection Fonts { get; internal set; }
+        public static Dictionary<string, FontMaster> Fonts { get; internal set; }
         #endregion
 
         #region Methods
@@ -173,21 +168,7 @@ namespace SadConsole
             if (Device == null)
                 Device = device;
 
-            // setup background cell
-#if !SHARPDX
-            BackgroundCell = new Texture2D(Device, 1, 1, false, SurfaceFormat.Color);
-#else
-            BackgroundCell = Texture2D.New(Device, 1, 1, PixelFormat.R8G8B8A8.UInt);
-#endif
-            Color[] newPixels = new Color[1];
-            BackgroundCell.GetData<Color>(newPixels);
-            for (int pixel = 0; pixel < 1; pixel++)
-            {
-                newPixels[pixel] = Color.White;
-            }
-            BackgroundCell.SetData<Color>(newPixels);
-
-            Fonts = new FontCollection();
+            Fonts = new Dictionary<string, FontMaster>();
             ConsoleRenderStack = new Consoles.ConsoleList();
             RegisterCellEffect<Effects.Blink>();
             RegisterCellEffect<Effects.BlinkCharacter>();
@@ -275,29 +256,6 @@ namespace SadConsole
 
         #endregion
 
-        public static void Save()
-        {
-            System.Runtime.Serialization.DataContractSerializer serializer = 
-                new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
-            System.IO.MemoryStream mem = new System.IO.MemoryStream();
-            
-            var fonts = Fonts["C64"];
-            var font = fonts[0];
-
-            
-
-            serializer.WriteObject(mem, Fonts);
-
-            mem.Position = 0;
-            System.IO.StreamReader reader = new System.IO.StreamReader(mem);
-            string output = reader.ReadToEnd();
-
-            serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
-
-            mem.Position = 0;
-            object obj = serializer.ReadObject(mem);
-        }
-
         /// <summary>
         /// Returns the amount of cells (X,Y) given the specified <see cref="Font"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
         /// </summary>
@@ -305,17 +263,17 @@ namespace SadConsole
         /// <returns>The amount of cells along the X and Y axis.</returns>
         public static Point GetScreenSizeInCells(Font font)
         {
-            return new Point(WindowWidth / font.CellWidth, WindowHeight / font.CellHeight);
+            return new Point(WindowWidth / font.Size.X, WindowHeight / font.Size.Y);
         }
 
         /// <summary>
-        /// Returns the amount of cells (X,Y) given the specified <see cref="CellSurface"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
+        /// Returns the amount of cells (X,Y) given the specified <see cref="TextSurface"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
         /// </summary>
         /// <param name="surface">The cell surface.</param>
         /// <returns>The amount of cells along the X and Y axis.</returns>
-        public static Point GetScreenSizeInCells(CellsRenderer surface)
+        public static Point GetScreenSizeInCells(TextSurface surface)
         {
-            return new Point(WindowWidth / surface.CellSize.X, WindowHeight / surface.CellSize.Y);
+            return new Point(WindowWidth / surface.Font.Size.X, WindowHeight / surface.Font.Size.Y);
         }
     }
 

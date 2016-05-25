@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SadConsole.Consoles;
 
 namespace SadConsole.Shapes
 {
@@ -23,7 +24,7 @@ namespace SadConsole.Shapes
         public bool Fill;
         public bool DrawTransparency;
 
-        public void Draw(CellSurface surface)
+        public void Draw(TextSurface surface)
         {
             for (int x = Location.X; x < Location.X + Width; x++)
             {
@@ -67,7 +68,7 @@ namespace SadConsole.Shapes
 
         }
 
-        private void PlotCell(CellSurface surface, int x, int y, int character, bool fillMe = false)
+        private void PlotCell(TextSurface surface, int x, int y, int character, bool fillMe = false)
         {
             if (surface.IsValidCell(x,y))
             {
