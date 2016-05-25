@@ -53,6 +53,11 @@
             surface1.Clear();
 
             surface1.Print(2, 1, "Hello");
+
+            surface1.Save("test.sadcv3");
+
+            surface1 = TextSurface.Load("test.sadcv3");
+            
             tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
             tempSurface2 = surface1;
             surface1.SetForeground(2, 1, Color.CadetBlue);
@@ -73,6 +78,7 @@
             // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
             SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
                 //new Console(surface1)
+                                                                       new CustomConsoles.SceneProjectionConsole(80,25),
                                                                        new CustomConsoles.CursorConsole(),
                                                                        new CustomConsoles.StaticConsole(),
                                                                        new CustomConsoles.StretchedConsole(), 
@@ -82,7 +88,6 @@
             //                                                           new CustomConsoles.WindowTestConsole(),
                                                                        new CustomConsoles.EntityAndConsole(),
                                                                        new CustomConsoles.RandomScrollingConsole(),
-                                                                       new CustomConsoles.SceneProjectionConsole(80,25),
                                                                        new CustomConsoles.SplashScreen(),
                                                                      };
 
@@ -142,9 +147,9 @@
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the consoles to the screen.
-            SadConsole.Engine.Draw(gameTime);
-            //tempRenderer.Render(tempSurface2, new Point(0, 0));
-            //tempRenderer.Render(tempSurface, new Point(15, 0));
+            //SadConsole.Engine.Draw(gameTime);
+            tempRenderer.Render(tempSurface2, new Point(0, 0));
+            tempRenderer.Render(tempSurface, new Point(15, 0));
 
             base.Draw(gameTime);
         }

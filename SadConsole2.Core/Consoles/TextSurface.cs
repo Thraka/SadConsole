@@ -267,7 +267,6 @@ namespace SadConsole.Consoles
     /// <summary>
     /// Represents all the basic information about console text and methods to manipulate that text.
     /// </summary>
-    [DataContract]
     public class TextSurface : TextSurfaceBase
     {
         protected Rectangle area;
@@ -331,6 +330,7 @@ namespace SadConsole.Consoles
             base.font = font;
             base.width = width;
             base.height = height;
+            area = new Rectangle(0, 0, width, height);
 
             InitializeCells();
         }
@@ -357,7 +357,7 @@ namespace SadConsole.Consoles
             }
 
             // Setup the new render area
-            OnFontChanged();
+            ResetArea();
         }
 
         /// <summary>
@@ -380,6 +380,7 @@ namespace SadConsole.Consoles
                 }
             }
 
+            // TODO: Optimization by calculating AbsArea and seeing if it's diff from current, if so, don't create new RenderRects
             AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
         }
 
@@ -1441,23 +1442,71 @@ namespace SadConsole.Consoles
         
         public void Save(string file)
         {
-            SadConsole.Serializer.Save<TextSurface>(this, file);
+            TextSurfaceSerialized.Save(this, file);
         }
 
         public static TextSurface Load(string file)
         {
-            return SadConsole.Serializer.Load<TextSurface>(file);
+            return TextSurfaceSerialized.Load(file);
         }
 
-        private class CellEffectData
+        [DataContract]
+        public class TextSurfaceSerialized
         {
-            public ICellEffect Effect;
-            public List<Cell> Cells;
+            [DataMember]
+            Cell[] Cells;
 
-            public CellEffectData(ICellEffect effect)
+            [DataMember]
+            Rectangle ViewArea;
+
+            [DataMember]
+            string FontName;
+
+            [DataMember]
+            int FontMultiple;
+
+            [DataMember]
+            int Width;
+
+            [DataMember]
+            int Height;
+
+            [DataMember]
+            Color Tint;
+
+            public static void Save(TextSurface surfaceBase, string file)
             {
-                Effect = effect;
-                Cells = new List<Cell>();
+                TextSurfaceSerialized data = new TextSurfaceSerialized();
+                data.Cells = surfaceBase.cells;
+                data.ViewArea = surfaceBase.ViewArea;
+                data.FontName = surfaceBase.font.Name;
+                data.FontMultiple = surfaceBase.font.SizeMultiple;
+                data.Width = surfaceBase.width;
+                data.Height = surfaceBase.height;
+                data.Tint = surfaceBase.Tint;
+
+                SadConsole.Serializer.Save(data, file);
+            }
+
+            public static TextSurface Load(string file)
+            {
+                TextSurfaceSerialized data = Serializer.Load<TextSurfaceSerialized>(file);
+                TextSurface newSurface = new TextSurface();
+
+                newSurface.width = data.Width;
+                newSurface.height = data.Height;
+                newSurface.cells = newSurface.renderCells = data.Cells;
+
+                // Try to find font
+                if (Engine.Fonts.ContainsKey(data.FontName))
+                    newSurface.font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
+                else
+                    newSurface.font = Engine.DefaultFont;
+
+                newSurface.ViewArea = data.ViewArea;
+                newSurface.Tint = data.Tint;
+
+                return newSurface;
             }
         }
     }

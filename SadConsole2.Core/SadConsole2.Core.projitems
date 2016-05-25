@@ -78,7 +78,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\TileLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\TileMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\TextureToSurfaceReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Serialization\TextSurfaceBaseSerialized.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Box.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Circle.cs" />
