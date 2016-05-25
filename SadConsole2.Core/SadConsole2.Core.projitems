@@ -19,7 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\IConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\IParentConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurfaceRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurfaceView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurfaceView.cs" />

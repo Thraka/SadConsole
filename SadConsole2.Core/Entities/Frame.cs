@@ -14,24 +14,6 @@
         {
         }
 
-        protected override void OnResize()
-        {
-            //base.OnResize();
-
-            //int index = 0;
-
-            //CellIndexRects = new Rectangle[_width * _height];
-            //for (int y = 0; y < _height; y++)
-            //{
-            //    for (int x = 0; x < _width; x++)
-            //    {
-            //        CellIndexRects[index] = new Rectangle(x * CellSize.X, y * CellSize.Y, CellSize.X, CellSize.Y);
-            //        index++;
-            //    }
-            //}
-            
-        }
-
         public new void Save(string file)
         {
             SadConsole.Serializer.Save<Frame>(this, file);

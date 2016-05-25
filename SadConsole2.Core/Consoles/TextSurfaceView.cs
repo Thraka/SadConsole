@@ -5,73 +5,35 @@ using System.Text;
 
 namespace SadConsole.Consoles
 {
-    public class TextSurfaceView : ITextSurfaceView
+    public class TextSurfaceView : TextSurface
     {
-        private ITextSurfaceView data;
-        private Rectangle area;
-
-        public Rectangle ViewArea
-        {
-            get { return area; }
-            set
-            {
-                //if (area.Width > data.ViewArea.Width)
-                //    throw new ArgumentOutOfRangeException("area", "The area is too wide for the surface.");
-                //if (area.Height > data.ViewArea.Height)
-                //    throw new ArgumentOutOfRangeException("area", "The area is too tall for the surface.");
-
-                //if (area.X < 0)
-                //    throw new ArgumentOutOfRangeException("area", "The left of the area cannot be less than 0.");
-                //if (area.Y < 0)
-                //    throw new ArgumentOutOfRangeException("area", "The top of the area cannot be less than 0.");
-
-                //if (area.X + area.Width > data.ViewArea.Width)
-                //    throw new ArgumentOutOfRangeException("area", "The area x + width is too wide for the surface.");
-                //if (area.Y + area.Height > data.ViewArea.Height)
-                //    throw new ArgumentOutOfRangeException("area", "The area y + height is too tal for the surface.");
-
-                area = value;
-
-                if (area.Width > data.ViewArea.Width)
-                    area.Width = data.ViewArea.Width;
-                if (area.Height > data.ViewArea.Height)
-                    area.Height = data.ViewArea.Height;
-
-                if (area.X < 0)
-                    area.X = 0;
-                if (area.Y < 0)
-                    area.Y = 0;
-
-                if (area.X + area.Width > data.ViewArea.Width)
-                    area.X = data.ViewArea.Width - area.Width;
-                if (area.Y + area.Height > data.ViewArea.Height)
-                    area.Y = data.ViewArea.Height - area.Height;
-
-                ResetArea();
-            }
-        }
-        public Rectangle[] RenderRects { get; private set; }
-        public Cell[] RenderCells { get; private set; }
-        public Rectangle AbsoluteArea { get; private set; }
-
-        public Font Font { get { return data.Font; } }
-        public Color DefaultBackground { get { return data.DefaultBackground; } }
-        public Color DefaultForeground { get { return data.DefaultForeground; } }
-
-        public Color Tint { get; set; }
-
-
-        public TextSurfaceView(ITextSurfaceView surface, Rectangle area)
+        private ITextSurface data;
+        
+        public TextSurfaceView(ITextSurface surface, Rectangle area)
         {
             data = surface;
-            ViewArea = area;
-            Tint = data.Tint;
-        }
+            DefaultBackground = surface.DefaultBackground;
+            DefaultForeground = surface.DefaultForeground;
+            base.font = surface.Font;
+            base.width = surface.Width;
+            base.height = surface.Height;
 
-        private void ResetArea()
+            
+            this.area = area;
+            this.cells = data.Cells;
+            ResetArea();
+            this.area = new Rectangle(0, 0, area.Width, area.Height);
+            this.cells = this.renderCells;
+            base.width = area.Width;
+            base.height = area.Height;
+            ResetArea();
+            
+        }
+        
+        protected override void ResetArea()
         {
             RenderRects = new Rectangle[area.Width * area.Height];
-            RenderCells = new Cell[area.Width * area.Height];
+            renderCells = new Cell[area.Width * area.Height];
 
             int index = 0;
 
@@ -79,13 +41,13 @@ namespace SadConsole.Consoles
             {
                 for (int x = 0; x < area.Width; x++)
                 {
-                    RenderRects[index] = new Rectangle(x * data.Font.Size.X, y * data.Font.Size.Y, data.Font.Size.X, data.Font.Size.Y);
-                    RenderCells[index] = data.RenderCells[(y + area.Top) * data.ViewArea.Width + (x + area.Left)];
+                    RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
+                    renderCells[index] = base.cells[(y + area.Top) * width + (x + area.Left)];
                     index++;
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, area.Width * data.Font.Size.X, area.Height * data.Font.Size.Y);
+            AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
         }
     }
 }

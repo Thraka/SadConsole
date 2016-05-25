@@ -53,9 +53,9 @@
             surface1.Clear();
 
             surface1.Print(2, 1, "Hello");
-            tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(0, 0, 4, 6));
+            tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
             tempSurface2 = surface1;
-
+            surface1.SetForeground(2, 1, Color.CadetBlue);
             tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
 
             // Using the default font, resize the window to a Width,Height of cells. This example uses the MS-DOS default of 80 columns by 25 rows.
@@ -101,8 +101,8 @@
         }
 
 
-        SadConsole.Consoles.ITextSurfaceView tempSurface;
-        SadConsole.Consoles.ITextSurfaceView tempSurface2;
+        SadConsole.Consoles.ITextSurface tempSurface;
+        SadConsole.Consoles.ITextSurface tempSurface2;
         SadConsole.Consoles.TextSurfaceRenderer tempRenderer;
 
         protected override void Update(GameTime gameTime)
@@ -143,6 +143,8 @@
 
             // Draw the consoles to the screen.
             SadConsole.Engine.Draw(gameTime);
+            //tempRenderer.Render(tempSurface2, new Point(0, 0));
+            //tempRenderer.Render(tempSurface, new Point(15, 0));
 
             base.Draw(gameTime);
         }

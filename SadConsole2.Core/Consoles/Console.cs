@@ -52,11 +52,6 @@
         protected TextSurface _textSurface;
 
         /// <summary>
-        /// An optional viewport of the <see cref="_textSurface"/>.
-        /// </summary>
-        protected TextSurfaceView _textSurfaceView;
-
-        /// <summary>
         /// Indicates the console is visible.
         /// </summary>
         protected bool _isVisible = true;
@@ -274,7 +269,6 @@
             set
             {
                 _textSurface = value;
-                _textSurfaceView = new TextSurfaceView(_textSurface, _textSurface.ViewArea);
             }
         }
 
@@ -283,14 +277,9 @@
         /// </summary>
         public Rectangle DataViewport
         {
-            get { return _textSurfaceView.ViewArea; }
-            set { _textSurfaceView.ViewArea = value; }
+            get { return _textSurface.ViewArea; }
+            set { _textSurface.ViewArea = value; }
         }
-
-        /// <summary>
-        /// Uses the <see cref="DataViewport"/> for rendering.
-        /// </summary>
-        public bool UseDataViewport { get; set; } = false;
 
         /// <summary>
         /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
@@ -493,9 +482,6 @@
         /// </summary>
         public void FillWithRandomGarbage(bool useEffect = false)
         {
-            SadConsole.Effects.Blink pulse = new SadConsole.Effects.Blink();
-            pulse.CloneOnApply = true;
-
             //pulse.Reset();
             int charCounter = 0;
             for (int y = 0; y < Data.Height; y++)
@@ -507,11 +493,6 @@
                     Data.SetBackground(x, y, Data.DefaultBackground);
                     Data.SetBackground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
                     Data.SetSpriteEffect(x, y, (SpriteEffects)Engine.Random.Next(0, 4));
-                    if (useEffect)
-                    {
-                        pulse.BlinkSpeed = ((float)Engine.Random.NextDouble() * 3f);
-                        Data.SetEffect(x, y, pulse);
-                    }
                     charCounter++;
                     if (charCounter > 255)
                         charCounter = 0;
@@ -559,12 +540,12 @@
             if (VirtualCursor.IsVisible)
             {
                 int virtualCursorLocationIndex = TextSurface.GetIndexFromPoint(
-                    new Point(VirtualCursor.Position.X - _textSurfaceView.ViewArea.X, 
-                              VirtualCursor.Position.Y - _textSurfaceView.ViewArea.Y), _textSurfaceView.ViewArea.Width);
+                    new Point(VirtualCursor.Position.X - _textSurface.ViewArea.X, 
+                              VirtualCursor.Position.Y - _textSurface.ViewArea.Y), _textSurface.ViewArea.Width);
 
-                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < _textSurfaceView.RenderRects.Length)
+                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < _textSurface.RenderRects.Length)
                 {
-                    VirtualCursor.Render(batch, _textSurfaceView.Font, _textSurfaceView.RenderRects[virtualCursorLocationIndex]);
+                    VirtualCursor.Render(batch, _textSurface.Font, _textSurface.RenderRects[virtualCursorLocationIndex]);
                 }
             }
         }
@@ -582,7 +563,7 @@
         {
             if (DoUpdate)
             {
-                _textSurface.UpdateEffects(Engine.GameTimeElapsedUpdate);
+                //_textSurface.UpdateEffects(Engine.GameTimeElapsedUpdate);
 
                 if (VirtualCursor.IsVisible)
                     VirtualCursor.CursorRenderCell.UpdateAndApplyEffect(Engine.GameTimeElapsedUpdate);
@@ -593,10 +574,7 @@
         {
             if (_isVisible)
             {
-                if (UseDataViewport)
-                    Renderer.Render(_textSurfaceView, _position, UsePixelPositioning);
-                else
-                    Renderer.Render(_textSurface, _position, UsePixelPositioning);
+                Renderer.Render(_textSurface, _position, UsePixelPositioning);
             }
         }
 

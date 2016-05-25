@@ -27,11 +27,11 @@
         /// <summary>
         /// Renders the cell data to the screen.
         /// </summary>
-        void Render(ITextSurfaceView cells, Point position, bool usePixelPositioning = false);
+        void Render(ITextSurface cells, Point position, bool usePixelPositioning = false);
 
         /// <summary>
         /// Renders the cell data to the screen.
         /// </summary>
-        void Render(ITextSurfaceView cells, Matrix renderingMatrix);
+        void Render(ITextSurface cells, Matrix renderingMatrix);
     }
 }

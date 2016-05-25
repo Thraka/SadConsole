@@ -93,35 +93,35 @@ namespace SadConsole.Shapes
                 if (UseStartingCell)
                 {
                     StartingCellAppearance.Copy(cells[0]);
-                    surface.SetEffect(cells[0], StartingCellAppearance.Effect);
+                    cells[0].Effect = StartingCellAppearance.Effect;
                 }
                 else
                 {
                     CellAppearance.Copy(cells[0]);
-                    surface.SetEffect(cells[0], CellAppearance.Effect);
+                    cells[0].Effect = StartingCellAppearance.Effect;
                 }
 
                 if (UseEndingCell)
                 {
                     EndingCellAppearance.Copy(cells[cells.Count - 1]);
-                    surface.SetEffect(cells[cells.Count - 1], EndingCellAppearance.Effect);
+                    cells[cells.Count - 1].Effect = EndingCellAppearance.Effect;
                 }
                 else
                 {
                     CellAppearance.Copy(cells[cells.Count - 1]);
-                    surface.SetEffect(cells[cells.Count - 1], CellAppearance.Effect);
+                    cells[cells.Count - 1].Effect = CellAppearance.Effect;
                 }
 
                 for (int i = 1; i < cells.Count - 1; i++)
                 {
                     CellAppearance.Copy(cells[i]);
-                    surface.SetEffect(cells[i], CellAppearance.Effect);
+                    cells[i].Effect = CellAppearance.Effect;
                 }
             }
             else if (cells.Count == 1)
             {
                 CellAppearance.Copy(cells[0]);
-                surface.SetEffect(cells[0], CellAppearance.Effect);
+                cells[0].Effect = CellAppearance.Effect;
             }
         }
 

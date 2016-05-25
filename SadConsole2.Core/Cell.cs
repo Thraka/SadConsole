@@ -91,16 +91,6 @@ namespace SadConsole
         public Effects.ICellEffect Effect { get; set; }
 
         /// <summary>
-        /// The index of the cell in the parent <see cref="T:SadConsole.TextSurface"/>.
-        /// </summary>
-        public int Index { get; set; }
-
-        /// <summary>
-        /// The position of the cell in the parent <see cref="T:SadConsole.TextSurface"/>.
-        /// </summary>
-        public Point Position { get; set; }
-
-        /// <summary>
         /// true when this cell will be drawn; otehrwise false.
         /// </summary>
         [DataMember]

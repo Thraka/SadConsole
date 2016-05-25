@@ -45,6 +45,7 @@ namespace StarterProject.CustomConsoles
             rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 
             CanUseMouse = true;
+            IsVisible = false;
         }
         
         public override void Update()

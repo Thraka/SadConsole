@@ -41,7 +41,7 @@
             VirtualCursor.Position = new Point(0, 24);
             VirtualCursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
             _keyboardHandlerObject.VirtualCursorLastY = 24;
-            Data.TimesShiftedUp = 0;
+            //Data.TimesShiftedUp = 0;
             VirtualCursor.Print(Prompt);
         }
 

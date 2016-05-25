@@ -41,7 +41,7 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="surface"></param>
         /// <param name="renderingMatrix"></param>
-        public void Render(ITextSurfaceView surface, Matrix renderingMatrix)
+        public void Render(ITextSurface surface, Matrix renderingMatrix)
         {
 
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
@@ -83,7 +83,7 @@ namespace SadConsole.Consoles
             Batch.End();
         }
 
-        public void Render(ITextSurfaceView surface, Point position, bool usePixelPositioning = false)
+        public void Render(ITextSurface surface, Point position, bool usePixelPositioning = false)
         {
             Matrix matrix;
 

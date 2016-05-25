@@ -268,23 +268,6 @@
         }
 
         /// <summary>
-        /// Resizes all frames in the animation to the specified width and height.
-        /// </summary>
-        /// <param name="width">The new width.</param>
-        /// <param name="height">The new height.</param>
-        public void Resize(int width, int height)
-        {
-            Width = width;
-            Height = height;
-
-            foreach (var frame in Frames)
-                frame.Resize(width, height);
-
-            foreach (var frame in Frames)
-                frame.Resize(width, height);
-        }
-
-        /// <summary>
         /// Returns the name of the animation.
         /// </summary>
         /// <returns>The name.</returns>

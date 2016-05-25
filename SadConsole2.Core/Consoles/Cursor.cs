@@ -182,7 +182,7 @@
                         if (!text.IgnoreForeground)
                             cell.Foreground = character.Foreground;
                         if (!text.IgnoreEffect)
-                            console.Data.SetEffect(cell, character.Effect);
+                            cell.Effect = character.Effect;
                     }
 
                     _position.X += 1;
@@ -199,8 +199,8 @@
                             {
                                 console.Data.ShiftUp();
 
-                                if (console.Data.ResizeOnShift)
-                                    _position.Y++;
+                                //if (console.Data.ResizeOnShift)
+                                //    _position.Y++;
                             }
                         }
                     }
@@ -240,7 +240,7 @@
                     if (!PrintOnlyCharacterData)
                     {
                         template.CopyAppearanceTo(cell);
-                        console.Data.SetEffect(cell, templateEffect);
+                        cell.Effect = templateEffect;
                     }
 
                     cell.CharacterIndex = character;
@@ -259,8 +259,8 @@
                             {
                                 console.Data.ShiftUp();
 
-                                if (console.Data.ResizeOnShift)
-                                    _position.Y++;
+                                //if (console.Data.ResizeOnShift)
+                                //    _position.Y++;
                             }
                         }
                     }
@@ -289,8 +289,8 @@
             if (_position.Y == ((IConsole)_console.Target).Data.Height - 1)
             {
                 ((IConsole)_console.Target).Data.ShiftUp();
-                if (((IConsole)_console.Target).Data.ResizeOnShift)
-                    _position.Y++;
+                //if (((IConsole)_console.Target).Data.ResizeOnShift)
+                //    _position.Y++;
             }
             else
                 _position.Y++;

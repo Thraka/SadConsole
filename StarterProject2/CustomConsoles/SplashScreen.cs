@@ -18,14 +18,14 @@
         private InstructionSet _animation;
         private TextSurface _consoleImage;
         private Point _consoleImagePosition;
-
+        private EffectsManager effectsManager;
         int _x = -50;
 
         public SplashScreen()
             : base(80, 25)
         {
             IsVisible = false;
-
+            effectsManager = new EffectsManager(this.Data);
             // Setup the console text background
             string textTemplate = "sole SadCon";
             System.Text.StringBuilder text = new System.Text.StringBuilder(2200);
@@ -98,7 +98,7 @@
                             cells.Add(Data[point]);
                         }
 
-                        Data.SetEffect(cells, fadeEffect);
+                        effectsManager.SetEffect(cells, fadeEffect);
                         i.IsFinished = true;
                     }
             });

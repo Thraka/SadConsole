@@ -70,7 +70,7 @@ namespace StarterProject.CustomConsoles
 
                     // Generate the content
                     _textSurface = new TextSurface(2000, 2000, Engine.DefaultFont); //500mb ?? why?
-                    _textSurfaceView = new TextSurfaceView(_textSurface, new Rectangle(0, 0, 80, 25));
+                    _textSurface.ViewArea = new Rectangle(0, 0, 80, 25);
                     //Data = new TextSurface(2000, 2000);
                     //DataViewport = new Rectangle(0, 0, 80, 25);
 
@@ -78,7 +78,6 @@ namespace StarterProject.CustomConsoles
                     messageData.Fill(Color.White, Color.Transparent, 0, null);
 
                     // We need to set celldata to the big console data so we can use the FillWithRandom method.
-                    UseDataViewport = true;
                     FillWithRandomGarbage();
                     initializedStep3 = true;
                 }
