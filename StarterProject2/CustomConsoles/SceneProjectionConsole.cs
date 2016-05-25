@@ -22,7 +22,8 @@ namespace StarterProject.CustomConsoles
         private bool toggle = true;
         private bool blockMode = false;
         Color[] pixels;
-        
+        SadConsole.Readers.TextureToSurfaceReader reader1;
+
         public SceneProjectionConsole(int width, int height) : base(width, height)
         {
             PresentationParameters pp = SadConsole.Engine.Device.PresentationParameters;
@@ -43,6 +44,8 @@ namespace StarterProject.CustomConsoles
             pixels = new Color[_renderTexture.Width * _renderTexture.Height];
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+
+            reader1 = new SadConsole.Readers.TextureToSurfaceReader(_renderTexture.Width, _renderTexture.Height, SadConsole.Engine.DefaultFont);
 
             CanUseMouse = true;
             IsVisible = false;
@@ -120,7 +123,7 @@ namespace StarterProject.CustomConsoles
                 if (toggle)
                 {
                     SadConsole.Engine.Device.SetRenderTarget(null);
-                    _renderTexture.ToSurface(_textSurface, pixels, blockMode);
+                    Data = reader1.GetSurface(_renderTexture);
                 }
 
                 base.Render();
