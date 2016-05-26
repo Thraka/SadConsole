@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>Thraka</owners>
+    <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>
+3.0.0: Major new release. Breaking changes.
+    
+2.5.0: New NuGet package; Using semantic versioning - Fresh new version; Updated animation system; Target MonoGame 3.5
+
+2.0.1.1: Updated the NuGet package with fonts and pointer to wiki for what to do in a new project
+
+2.0.1: Updated to latest SadConsole release 2.0.1.
+
+2.0.0: First NuGet release, targeting MonoGame 3.3.
+    </releaseNotes>
+    <copyright>Copyright 2016 Steve De George JR</copyright>
+    <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+  </metadata>
+  <files>
+    <file src="nuget\*.font" target="content\Fonts" /> 
+    <file src="nuget\*.png" target="content\Fonts" /> 
+    <file src="nuget\install.ps1" target="tools" /> 
+  </files>
+</package>
