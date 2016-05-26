@@ -78,10 +78,9 @@ namespace SadConsole.Readers
             System.Threading.Tasks.Parallel.For(0, surface.Width * surface.Height, (i) =>
             //for (int i = 0; i < surface.Width * surface.Height; i++)
             {
-                float allR = 0;
-                float allG = 0;
-                float allB = 0;
-                float sbri = 0;
+                int allR = 0;
+                int allG = 0;
+                int allB = 0;
 
                 int min = i * fontPixels;
                 int max = min + fontPixels;
@@ -101,11 +100,8 @@ namespace SadConsole.Readers
                 byte sb = (byte)(allB / fontPixels);
 
                 var newColor = new Color(sr, sg, sb);
-                sbri = newColor.GetBrightness() * 255;
+                float sbri = newColor.GetBrightness() * 255;
 
-                allR = 0;
-                allG = 0;
-                allB = 0;
 
                 Point surfacePoint = surface.GetPointFromIndex(i);
                 if (UseBlockMode)
