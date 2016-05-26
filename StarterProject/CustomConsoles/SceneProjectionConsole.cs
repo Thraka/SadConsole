@@ -24,7 +24,7 @@ namespace StarterProject.CustomConsoles
         Color[] pixels;
         SadConsole.Readers.TextureToSurfaceReader reader1;
 
-        public SceneProjectionConsole(int width, int height) : base(width, height)
+        public SceneProjectionConsole() : base(80, 25)
         {
             PresentationParameters pp = SadConsole.Engine.Device.PresentationParameters;
             _renderTexture = new RenderTarget2D(SadConsole.Engine.Device, pp.BackBufferWidth, pp.BackBufferHeight, false, SadConsole.Engine.Device.DisplayMode.Format, DepthFormat.Depth24);
