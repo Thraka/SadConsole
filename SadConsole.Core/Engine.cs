@@ -134,7 +134,7 @@ namespace SadConsole
             Mouse = new MouseInfo();
 
             UseKeyboard = true;
-            UseMouse = false;
+            UseMouse = true;
             ProcessMouseWhenOffScreen = false;
 
             _cellEffects = new List<Type>();
@@ -162,11 +162,15 @@ namespace SadConsole
         /// <summary>
         /// Prepares the engine for use. This must be the first method you call on the engine.
         /// </summary>
-        /// <param name="device"></param>
-        public static void Initialize(GraphicsDevice device)
+        /// <param name="deviceManager">The graphics device manager from MonoGame.</param>
+        /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
+        /// <param name="consoleWidth">The width of the default root console (and game window).</param>
+        /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <returns>The default active console.</returns>
+        public static Consoles.Console Initialize(GraphicsDeviceManager deviceManager, string font, int consoleWidth, int consoleHeight)
         {
             if (Device == null)
-                Device = device;
+                Device = deviceManager.GraphicsDevice;
 
             Fonts = new Dictionary<string, FontMaster>();
             ConsoleRenderStack = new Consoles.ConsoleList();
@@ -177,6 +181,20 @@ namespace SadConsole
             RegisterCellEffect<Effects.EffectsChain>();
             RegisterCellEffect<Effects.Fade>();
             RegisterCellEffect<Effects.Recolor>();
+
+            // Load the default font and screen size
+            DefaultFont = LoadFont(font).GetFont(1);
+            DefaultFont.ResizeGraphicsDeviceManager(deviceManager, consoleWidth, consoleHeight, 0, 0);
+
+            // Create the default console.
+            ActiveConsole = new Consoles.Console(consoleWidth, consoleHeight);
+            ActiveConsole.Data.DefaultBackground = Color.Black;
+            ActiveConsole.Data.DefaultForeground = ColorAnsi.White;
+            ActiveConsole.Data.Clear();
+
+            ConsoleRenderStack.Add(ActiveConsole);
+
+            return (Consoles.Console)ActiveConsole;
         }
         #endregion
 
@@ -192,6 +210,28 @@ namespace SadConsole
         }
 
         #endregion
+
+        /// <summary>
+        /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
+        /// </summary>
+        /// <param name="font">The font file to load.</param>
+        /// <returns>A master font that you can generate a usable font from.</returns>
+        public static FontMaster LoadFont(string font)
+        {
+            if (!System.IO.File.Exists(font))
+                throw new Exception($"Font does not exist: {font}");
+
+            using (var stream = System.IO.File.OpenRead(font))
+            {
+                var masterFont = SadConsole.Serializer.Deserialize<FontMaster>(stream);
+
+                if (Fonts.ContainsKey(masterFont.Name))
+                    Fonts.Remove(masterFont.Name);
+
+                Fonts.Add(masterFont.Name, masterFont);
+                return masterFont;
+            }
+        }
 
         private static void changeActiveConsole(IConsole oldConsole, IConsole newConsole)
         {
@@ -282,19 +322,28 @@ namespace SadConsole
     /// </summary>
     public class EngineGameComponent: DrawableGameComponent
     {
-        private Action _initializationCallback;
+        private Action initializationCallback;
+        private string font;
+        private int screenWidth;
+        private int screenHeight;
+        private GraphicsDeviceManager manager;
 
-        public EngineGameComponent(Game game, Action initializeCallback): base(game)
+        public EngineGameComponent(Game game, GraphicsDeviceManager manager, Action initializeCallback, string font, int screenWidth, int screenHeight): base(game)
         {
-            _initializationCallback = initializeCallback;
+            this.initializationCallback = initializeCallback;
+            this.font = font;
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
         }
 
         public override void Initialize()
         {
-            SadConsole.Engine.Initialize(this.Game.GraphicsDevice);
+            SadConsole.Engine.Initialize(manager, font, screenWidth, screenHeight);
 
-            if (_initializationCallback != null)
-                _initializationCallback();
+            manager = null; // no need to hang on to this.
+
+            if (initializationCallback != null)
+                initializationCallback();
         }
 
         public override void Update(GameTime gameTime)

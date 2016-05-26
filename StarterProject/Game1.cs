@@ -31,51 +31,32 @@
             //_graphics.SynchronizeWithVerticalRetrace = false;
             //IsFixedTimeStep = false;
 
-            // Initialize the SadConsole engine and the first effects library (provided by the SadConsole.Effects.dll binary)
-            SadConsole.Engine.Initialize(GraphicsDevice);
-
-            // Tell SadConsole to track the mouse.
-            SadConsole.Engine.UseMouse = true;
-
-            // Load the default font.
-            FontMaster masterFont;
-
-            using (var stream = System.IO.File.OpenRead("Fonts/IBM.font"))
-                masterFont = SadConsole.Serializer.Deserialize<FontMaster>(stream);
-
-            Engine.Fonts.Add(masterFont.Name, masterFont);
-            Engine.DefaultFont = masterFont.GetFont(1);
-
-            SadConsole.Consoles.TextSurface surface1;
-            surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
-            surface1.DefaultBackground = Color.Gray;
-            surface1.DefaultForeground = ColorAnsi.Black;
-            surface1.Clear();
-
-            surface1.Print(2, 1, "Hello");
-
-            surface1.Save("test.sadcv3");
-
-            surface1 = TextSurface.Load("test.sadcv3");
+            // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
+            var rootConsole = SadConsole.Engine.Initialize(_graphics, "Fonts/IBM.font", 80, 25);
             
-            tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
-            tempSurface2 = surface1;
-            surface1.SetForeground(2, 1, Color.CadetBlue);
-            tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
+            //SadConsole.Consoles.TextSurface surface1;
+            //surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
+            //surface1.DefaultBackground = Color.Gray;
+            //surface1.DefaultForeground = ColorAnsi.Black;
+            //surface1.Clear();
 
-            // Using the default font, resize the window to a Width,Height of cells. This example uses the MS-DOS default of 80 columns by 25 rows.
-            SadConsole.Engine.DefaultFont.ResizeGraphicsDeviceManager(_graphics, 80, 25, 0, 0);
+            //surface1.Print(2, 1, "Hello");
 
-            // Create the default console, show the cursor, and let the console accept keyboard input.
-            _defaultConsole = new Console(80, 25);
-            _defaultConsole.VirtualCursor.IsVisible = true;
-            _defaultConsole.CanUseKeyboard = true;
+            //surface1.Save("test.sadcv3");
 
-            // Add the default console to the list of consoles.
-            SadConsole.Engine.ConsoleRenderStack.Add(_defaultConsole);
-
+            //surface1 = TextSurface.Load("test.sadcv3");
             
-            // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
+            //tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
+            //tempSurface2 = surface1;
+            //surface1.SetForeground(2, 1, Color.CadetBlue);
+            //tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
+
+            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
+            // We don't want to use that for the sample project.
+            SadConsole.Engine.ConsoleRenderStack.Clear();
+            SadConsole.Engine.ActiveConsole = null;
+
+            // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
                 //new Console(surface1)
                                                                        new CustomConsoles.SceneProjectionConsole(80,25),
@@ -91,10 +72,12 @@
                                                                        new CustomConsoles.SplashScreen(),
                                                                      };
 
+            // Show the first console (by default all of our demo consoles are hidden)
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
+
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
 
@@ -147,9 +130,9 @@
             GraphicsDevice.Clear(Color.Black);
 
             // Draw the consoles to the screen.
-            //SadConsole.Engine.Draw(gameTime);
-            tempRenderer.Render(tempSurface2, new Point(0, 0));
-            tempRenderer.Render(tempSurface, new Point(15, 0));
+            SadConsole.Engine.Draw(gameTime);
+            //tempRenderer.Render(tempSurface2, new Point(0, 0));
+            //tempRenderer.Render(tempSurface, new Point(15, 0));
 
             base.Draw(gameTime);
         }
