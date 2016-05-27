@@ -88,6 +88,7 @@
         public bool DisableKeyboard;
 
         private string _editingText = "";
+        private Effects.EffectsManager effects;
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -189,21 +190,11 @@
         /// </summary>
         /// <param name="width">The width of the input box.</param>
         public InputBox(int width)
-            : base()
+            : base(width, 1)
         {
-            base.Resize(width, 1);
-
             DetermineAppearance();
         }
         #endregion
-
-        /// <summary>
-        /// Repositions the cursor after a resize.
-        /// </summary>
-        protected override void OnResize()
-        {
-            PositionCursor();
-        }
 
         /// <summary>
         /// Draws the control.
@@ -218,7 +209,8 @@
                 if (base.IsFocused && !DisableKeyboard)
                 {
                     this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
-                    SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect.Clone());
+                    effects.RemoveAll();
+                    effects.SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect.Clone());
                 }
                 else
                 {
@@ -306,9 +298,9 @@
                 _carrotPos = _editingText.Length;
 
 			// Test to see if carrot is off edge of box
-			if (_carrotPos >= _width)
+			if (_carrotPos >= width)
 			{
-				_leftDrawOffset = _editingText.Length - _width + 1;
+				_leftDrawOffset = _editingText.Length - width + 1;
 
 				if (_leftDrawOffset < 0)
 					_leftDrawOffset = 0;
@@ -453,9 +445,9 @@
 							}
 
 							// Test to see if carrot is off edge of box
-							if (_carrotPos >= _width)
+							if (_carrotPos >= width)
 							{
-								_leftDrawOffset = newText.Length - _width + 1;
+								_leftDrawOffset = newText.Length - width + 1;
 
 								if (_leftDrawOffset < 0)
 									_leftDrawOffset = 0;

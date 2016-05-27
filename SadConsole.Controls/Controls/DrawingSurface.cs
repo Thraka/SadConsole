@@ -18,10 +18,9 @@
         /// </summary>
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
-        public DrawingSurface(int width, int height)
+        public DrawingSurface(int width, int height) : base(width, height)
         {
             base.TabStop = false;
-            Resize(width, height);
         }
 
         /// <summary>

@@ -128,10 +128,8 @@
         /// </summary>
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
-        public RadioButton(int width, int height)
+        public RadioButton(int width, int height): base(width, height)
         {
-            base.Resize(width, height);
-
             DetermineAppearance();
         }
 
@@ -241,7 +239,7 @@
             if (this.IsDirty)
             {
                 // If we are doing text, then print it otherwise we're just displaying the button part
-                if (_width != 1)
+                if (width != 1)
                 {
                     for (int x = 0; x < 4; x++)
 			        {

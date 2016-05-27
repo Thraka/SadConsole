@@ -461,10 +461,8 @@
         /// Renders the controls on top of the already rendered console.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch that rendered the console cells.</param>
-        protected override void OnAfterRender()
+        protected override void OnAfterRender(SpriteBatch Batch)
         {
-            base.OnAfterRender();
-
             int cellCount;
             Rectangle rect;
             Point point;
@@ -480,6 +478,8 @@
                     control = _controls[i];
                     cellCount = control.CellCount;
 
+                    var font = control.AlternateFont == null ? _textSurface.Font : control.AlternateFont;
+
                     // Draw background of each cell for the control
                     for (int cellIndex = 0; cellIndex < cellCount; cellIndex++)
                     {
@@ -490,39 +490,15 @@
                             point = control.GetPointFromIndex(cellIndex);
                             point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
 
-                            if (base._renderArea.Contains(point))
+                            if (_textSurface.ViewArea.Contains(point))
                             {
-                                point = new Point(point.X - _renderArea.X, point.Y - _renderArea.Y);
-                                rect = _renderAreaRects[base.CellData.GetIndexFromPoint(point)];
+                                point = new Point(point.X - _textSurface.ViewArea.X, point.Y - _textSurface.ViewArea.Y);
+                                rect = _textSurface.RenderRects[_textSurface.GetIndexFromPoint(point)];
 
                                 if (cell.ActualBackground != Color.Transparent)
-                                    Batch.Draw(Engine.BackgroundCell, rect, null, cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.4f);
-                            }
-                        }
-                    }
-
-                    // Draw foreground of each cell for the control
-                    for (int cellIndex = 0; cellIndex < cellCount; cellIndex++)
-                    {
-                        cell = control[cellIndex];
-
-                        if (cell.IsVisible)
-                        {
-                            point = control.GetPointFromIndex(cellIndex);
-                            point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
-
-                            if (base._renderArea.Contains(point))
-                            {
-                                point = new Point(point.X - _renderArea.X, point.Y - _renderArea.Y);
-                                rect = _renderAreaRects[base.CellData.GetIndexFromPoint(point)];
-
+                                    Batch.Draw(font.FontImage, rect, font.CharacterIndexRects[font.SolidCharacterIndex], cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.23f);
                                 if (cell.ActualForeground != Color.Transparent)
-                                {
-                                    if (control.AlternateFont == null)
-                                        Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.1f);
-                                    else
-                                        Batch.Draw(control.AlternateFont.Image, rect, control.AlternateFont.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.1f);
-                                }
+                                    Batch.Draw(font.FontImage, rect, font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.26f);
                             }
                         }
                     }

@@ -17,10 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_Platforms", "02_Platform
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{E37CC7AB-090B-410B-8017-3DC57780FA8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Platforms.Windows.Core", "SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj", "{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Platforms.Windows.Controls", "SadConsole.Platforms\SadConsole.Platforms.Windows.Controls\SadConsole.Platforms.Windows.Controls.csproj", "{46F11907-CEF3-4069-B041-0A88880981E6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Platforms.Windows.GameHelpers", "SadConsole.Platforms\SadConsole.Platforms.Windows.GameHelpers\SadConsole.Platforms.Windows.GameHelpers.csproj", "{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Platforms.Windows.Ansi", "SadConsole.Platforms\SadConsole.Platforms.Windows.Ansi\SadConsole.Platforms.Windows.Ansi.csproj", "{55695088-7D09-4704-9D0C-7C69E0DE6D47}"
@@ -43,10 +39,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Windows", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Core.Windows", "SadConsole.Core.Windows\SadConsole.Core.Windows.csproj", "{9A7432D8-0C8B-4C46-B405-B6D1080E6811}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Controls.Windows", "SadConsole.Controls.Windows\SadConsole.Controls.Windows.csproj", "{46F11907-CEF3-4069-B041-0A88880981E6}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SadConsole.Controls\SadConsole.Controls.projitems*{46f11907-cef3-4069-b041-0a88880981e6}*SharedItemsImports = 4
-		SadConsole.Core\SadConsole.Core.projitems*{9e8424e8-efd3-4158-b49e-feccd7509a7f}*SharedItemsImports = 4
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{5fe599b4-4b47-46e7-931b-b01c2cae40d4}*SharedItemsImports = 13
 		StarterProject\StarterProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
 		SadConsole.Core\SadConsole.Core.projitems*{bddf43cd-1bde-472a-a3d9-a003a6bf14d9}*SharedItemsImports = 13
@@ -68,30 +65,6 @@ Global
 		Release|Windows = Release|Windows
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Linux.ActiveCfg = Debug|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|MacOS.ActiveCfg = Debug|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Windows.ActiveCfg = Debug|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Debug|Windows.Build.0 = Debug|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Linux.ActiveCfg = Release|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|MacOS.ActiveCfg = Release|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Windows.ActiveCfg = Release|Any CPU
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F}.Release|Windows.Build.0 = Release|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Linux.ActiveCfg = Debug|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|MacOS.ActiveCfg = Debug|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Windows.ActiveCfg = Debug|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Windows.Build.0 = Debug|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Linux.ActiveCfg = Release|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|MacOS.ActiveCfg = Release|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Windows.ActiveCfg = Release|Any CPU
-		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Windows.Build.0 = Release|Any CPU
 		{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}.Debug|Linux.ActiveCfg = Debug|Any CPU
@@ -144,6 +117,22 @@ Global
 		{9A7432D8-0C8B-4C46-B405-B6D1080E6811}.Release|MacOS.Build.0 = Release|Any CPU
 		{9A7432D8-0C8B-4C46-B405-B6D1080E6811}.Release|Windows.ActiveCfg = Release|Any CPU
 		{9A7432D8-0C8B-4C46-B405-B6D1080E6811}.Release|Windows.Build.0 = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Linux.ActiveCfg = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Linux.Build.0 = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|MacOS.ActiveCfg = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|MacOS.Build.0 = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Windows.ActiveCfg = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Debug|Windows.Build.0 = Debug|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Linux.ActiveCfg = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Linux.Build.0 = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|MacOS.ActiveCfg = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|MacOS.Build.0 = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Windows.ActiveCfg = Release|Any CPU
+		{46F11907-CEF3-4069-B041-0A88880981E6}.Release|Windows.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,13 +143,12 @@ Global
 		{25C2DBD3-8AC1-4163-A29A-A7F756FA4A5F} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{00CC441C-44BB-4B15-BABD-6831B65C31D8} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{E37CC7AB-090B-410B-8017-3DC57780FA8E} = {CFB2D176-40FA-4D97-80ED-2C43B3552E68}
-		{9E8424E8-EFD3-4158-B49E-FECCD7509A7F} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
-		{46F11907-CEF3-4069-B041-0A88880981E6} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{D348C254-AB16-4B48-9F61-2FFEE51DFD4A} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{55695088-7D09-4704-9D0C-7C69E0DE6D47} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{B033AC07-53C2-4F0B-B6B1-812EB7D36CCC} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{B41A356C-4BA6-40CC-AC03-0E5D46B0B981} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 		{74327CCC-4606-40B8-9587-60E55B1D6A80} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 		{9A7432D8-0C8B-4C46-B405-B6D1080E6811} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
+		{46F11907-CEF3-4069-B041-0A88880981E6} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 	EndGlobalSection
 EndGlobal

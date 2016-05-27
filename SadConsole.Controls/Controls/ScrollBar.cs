@@ -175,13 +175,22 @@
             set { _sliderBarCharacter = value; this.IsDirty = true; }
         }
 
-        public ScrollBar(System.Windows.Controls.Orientation orientation, int size)
+        public static ScrollBar Create(System.Windows.Controls.Orientation orientation, int size)
+        {
+            if (size <= 2)
+                throw new Exception("The scroll bar must be 4 or more in size.");
+
+            if (orientation == System.Windows.Controls.Orientation.Vertical)
+                return new ScrollBar(orientation, 1, size);
+            else
+                return new ScrollBar(orientation, size, 1);
+        }
+
+
+        private ScrollBar(System.Windows.Controls.Orientation orientation, int width, int height): base(width, height)
         {
             _initialized = true;
             _barOrientation = orientation;
-
-            if (size <= 2)
-                size = 4;
 
             _sliderCharacter = 219;
 
@@ -190,15 +199,21 @@
                 _sliderBarCharacter = 176;
                 _topOrLeftCharacter = 17;
                 _bottomOrRightCharacter = 16;
-                Resize(size, 1);
             }
             else
             {
                 _sliderBarCharacter = 176;
                 _topOrLeftCharacter = 30;
                 _bottomOrRightCharacter = 31;
-                Resize(1, size);
             }
+
+            if (width > height)
+                _sliderBarSize = width - 2;
+            else
+                _sliderBarSize = height - 2;
+
+            _sliderPositionValues = new int[_sliderBarSize];
+            DetermineSliderPositions();
         }
 
         public override void DetermineAppearance()
@@ -232,25 +247,7 @@
 
                 this.IsDirty = true;
         }
-
-        protected override void OnResize()
-        {
-            base.OnResize();
-
-            if (_initialized)
-            {
-                int size;
-
-                if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
-                    size = this.Width;
-                else
-                    size = this.Height;
-
-                _sliderBarSize = size - 2;
-                _sliderPositionValues = new int[_sliderBarSize];
-                DetermineSliderPositions();
-            }
-        }
+        
 
         public override void Compose()
         {
@@ -490,7 +487,6 @@
         private void AfterDeserialized(StreamingContext context)
         {
             _initialized = true;
-            OnResize();
 
             var temp = _value;
             _value = -22;

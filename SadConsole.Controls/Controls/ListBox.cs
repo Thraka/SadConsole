@@ -1,6 +1,7 @@
 ﻿namespace SadConsole.Controls
 {
     using Microsoft.Xna.Framework;
+    using SadConsole.Consoles;
     using SadConsole.Themes;
     using System;
     using System.Collections.Generic;
@@ -153,36 +154,32 @@
         public Point ScrollBarOffset
         {
             get { return _scrollBarOffset; }
-            set { _scrollBarOffset = value; OnResize(); }
+            set { _scrollBarOffset = value; SetupSlider();  }
         }
 
         public int ScrollBarSizeAdjust
         {
             get { return _scrollBarSizeAdjust; }
-            set { _scrollBarSizeAdjust = value; OnResize(); }
+            set { _scrollBarSizeAdjust = value; SetupSlider(); }
         }
 
         #region Constructors
         /// <summary>
         /// Creates a new instance of the listbox control.
         /// </summary>
-        public ListBox(int width, int height)
-            : base()
+        public ListBox(int width, int height): base(width, height)
         {
             _initialized = true;
             _containers = new List<TItemContainer>();
+            
+            SetupSlider();
 
-            _slider = new ScrollBar(System.Windows.Controls.Orientation.Vertical, 3);
-            _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
-            _slider.IsVisible = false;
-            _slider.Theme = this.Theme.ScrollBarTheme;
             _border = Shapes.Box.GetDefaultBox();
             _border.Fill = true;
 
             Items = new ObservableCollection<object>();
 
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
-            Resize(width, height);
 
             DetermineAppearance();
         }
@@ -220,17 +217,19 @@
             _slider.Position = new Point(this.Position.X + _sliderRenderLocation.X, this.Position.Y + _sliderRenderLocation.Y);
         }
 
-        protected override void OnResize()
+        protected void SetupSlider()
         {
-            base.OnResize();
-
             if (_initialized)
             {
-                _slider.Resize(_slider.Width, this.Height < 3 ? 3 : this.Height - _scrollBarSizeAdjust);
-                _sliderRenderLocation = new Point(this.Width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
-                _slider.Position = new Point(this.Position.X + _sliderRenderLocation.X, this.Position.Y + _sliderRenderLocation.Y);
-                _border.Width = this.Width;
-                _border.Height = this.Height;
+                //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
+                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 3);
+                _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
+                _slider.IsVisible = false;
+                _slider.Theme = this.Theme.ScrollBarTheme;
+                _sliderRenderLocation = new Point(width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
+                _slider.Position = new Point(_position.X + _sliderRenderLocation.X, _position.Y + _sliderRenderLocation.Y);
+                _border.Width = width;
+                _border.Height = height;
 
                 Compose();
             }
@@ -373,7 +372,7 @@
                 heightOffset = 2;
 
             // process the slider
-            int sliderItems = _containers.Count - (_height - heightOffset);
+            int sliderItems = _containers.Count - (height - heightOffset);
 
             if (sliderItems > 0)
             {
@@ -563,10 +562,10 @@
 
                 if (!HideBorder)
                 {
-                    endingRow = _height - 2;
+                    endingRow = height - 2;
                     startingRow = 1;
                     columnOffset = 1;
-                    columnEnd = _width - 2;
+                    columnEnd = width - 2;
                     _border.Foreground = this.Theme.Border.Foreground;
                     _border.BorderBackground = this.Theme.Border.Background;
                     _border.FillColor = this.Theme.Border.Background;
@@ -574,10 +573,10 @@
                 }
                 else
                 {
-                    endingRow = _height;
+                    endingRow = height;
                     startingRow = 0;
                     columnOffset = 0;
-                    columnEnd = _width;
+                    columnEnd = width;
                     this.Fill(this.Theme.Border.Foreground, this.Theme.Border.Background, 0, null);
                 }
 
@@ -638,7 +637,7 @@
             if (_selectedIndex != -1)
                 SelectedItem = Items[_selectedIndex];
 
-            OnResize();
+            SetupSlider();
 
             DetermineAppearance();
             Compose(true);
@@ -726,7 +725,7 @@
             set { _isDirty = value; OnPropertyChanged("IsDirty"); }
         }
 
-        public virtual void Draw(CellSurface surface, Rectangle area)
+        public virtual void Draw(TextSurface surface, Rectangle area)
         {
             string value = Item.ToString();
             if (value.Length < area.Width)
@@ -755,7 +754,7 @@
     [DataContract]
     public class ListBoxItemColor : ListBoxItem
     {
-        public override void Draw(CellSurface surface, Rectangle area)
+        public override void Draw(TextSurface surface, Rectangle area)
         {
             if (Item is Color || Item is Tuple<Color, Color, string>)
             {

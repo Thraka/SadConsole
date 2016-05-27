@@ -66,9 +66,8 @@
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
         public Button(int width, int height)
-            : base()
+            : base(width, height)
         {
-            base.Resize(width, height);
 
             DetermineAppearance();
         }

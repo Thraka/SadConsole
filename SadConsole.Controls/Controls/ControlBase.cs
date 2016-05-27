@@ -1,6 +1,8 @@
 ﻿namespace SadConsole.Controls
 {
+    using Consoles;
     using Microsoft.Xna.Framework;
+    using SadConsole.Consoles;
     using SadConsole.Input;
     using System;
     using System.Runtime.Serialization;
@@ -9,7 +11,7 @@
     /// Base class for all controls.
     /// </summary>
     [DataContract]
-    public abstract class ControlBase: CellSurface, IInput
+    public abstract class ControlBase: TextSurface, IInput
     {
         /// <summary>
         /// Protected variable representing the Position of the control.
@@ -158,8 +160,8 @@
         /// <summary>
         /// Default constructor of the control.
         /// </summary>
-        public ControlBase()
-            : base()
+        public ControlBase(int width, int height)
+            : base(width, height)
         {
             IsDirty = true;
             TabStop = true;
@@ -344,8 +346,9 @@
         public virtual void Update()
         {
             Compose();
-
-            UpdateEffects(Engine.GameTimeElapsedUpdate);
+            
+            //TODO: Effects
+            //UpdateEffects(Engine.GameTimeElapsedUpdate);
         }
 
         [OnDeserializedAttribute]
