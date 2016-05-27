@@ -6,6 +6,7 @@ using SadConsole;
 using Microsoft.Xna.Framework;
 using SadConsole.Controls;
 using SadConsole.Consoles;
+using SadConsole.Effects;
 
 namespace StarterProject.Windows
 {

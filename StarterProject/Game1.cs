@@ -92,29 +92,31 @@
             SadConsole.Engine.ActiveConsole = null;
 
             // We'll instead use our demo consoles that show various features of SadConsole.
-            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
+            SadConsole.Engine.ConsoleRenderStack 
+                = new ConsoleList() {
                 //new Console(surface1)
-                                                                       new CustomConsoles.SceneProjectionConsole(),
-                                                                       new CustomConsoles.CursorConsole(),
-                                                                       new CustomConsoles.StaticConsole(),
-                                                                       new CustomConsoles.StretchedConsole(), 
-                                                                       new CustomConsoles.BorderedConsole(80, 25), 
-            //                                                           new CustomConsoles.WorldGenerationConsole(),
-                                                                       new CustomConsoles.DOSConsole(),
-            //                                                           new CustomConsoles.WindowTestConsole(),
-                                                                       new CustomConsoles.EntityAndConsole(),
-                                                                       new CustomConsoles.RandomScrollingConsole(),
-                                                                       new CustomConsoles.SplashScreen(),
-                                                                     };
+                                        new CustomConsoles.ControlsTest(),                                
+                                        new CustomConsoles.SceneProjectionConsole(),
+                                        new CustomConsoles.CursorConsole(),
+                                        new CustomConsoles.StaticConsole(),
+                                        new CustomConsoles.StretchedConsole(), 
+                                        new CustomConsoles.BorderedConsole(80, 25), 
+    //                                                           new CustomConsoles.WorldGenerationConsole(),
+                                        new CustomConsoles.DOSConsole(),
+    //                                                           new CustomConsoles.WindowTestConsole(),
+                                        new CustomConsoles.EntityAndConsole(),
+                                        new CustomConsoles.RandomScrollingConsole(),
+                                        new CustomConsoles.SplashScreen(),
+                                    };
 
             // Show the first console (by default all of our demo consoles are hidden)
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
-            SadConsole.Engine.ConsoleRenderStack.Clear();
-            SadConsole.Engine.ConsoleRenderStack.Add(tempConsole);
-            SadConsole.Engine.ConsoleRenderStack.Add(tempConsole2);
+            //SadConsole.Engine.ConsoleRenderStack.Clear();
+            //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole);
+            //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole2);
             //SadConsole.Engine.ActiveConsole = tempConsole;
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();

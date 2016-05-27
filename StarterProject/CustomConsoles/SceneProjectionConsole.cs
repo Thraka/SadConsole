@@ -71,17 +71,7 @@ namespace StarterProject.CustomConsoles
                 blockMode = !blockMode;
             }
         }
-        public override bool ProcessMouse(MouseInfo info)
-        {
-            base.ProcessMouse(info);
-
-            if (info.LeftClicked)
-            {
-                var test = info.ConsoleLocation;
-            }
-
-            return true;
-        }
+        
 
         public override void Render()
         {

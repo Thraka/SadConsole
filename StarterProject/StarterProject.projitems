@@ -6,9 +6,10 @@
     <SharedGUID>f394dd93-db0a-42b0-85d6-835683f0c14d</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>StarterProject2</Import_RootNamespace>
+    <Import_RootNamespace>StarterProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ControlsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
@@ -18,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ViewsAndSubViews.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />

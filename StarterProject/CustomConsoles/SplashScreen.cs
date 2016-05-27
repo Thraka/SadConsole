@@ -9,7 +9,7 @@
     using System.Linq;
     using Microsoft.Xna.Framework.Graphics;
     using SadConsole.Instructions;
-
+    using SadConsole.Effects;
     class SplashScreen: Console
     {
 
