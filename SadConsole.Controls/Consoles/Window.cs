@@ -132,6 +132,8 @@
             CanFocus = true;
             MouseCanFocus = true;
 
+            Renderer = new WindowRenderer();
+
             IsDirty = true;
             Redraw();
         }
@@ -146,6 +148,14 @@
                 Show(ModalIsDefault);
             else
                 Hide();
+        }
+
+        public override void Render()
+        {
+            ((WindowRenderer)_renderer).IsModal = _isModal;
+            ((WindowRenderer)_renderer).ModalTint = Theme.ModalTint;
+
+            base.Render();
         }
 
         /// <summary>
@@ -219,17 +229,6 @@
             }
             else
                 return base.ProcessKeyboard(info);
-        }
-
-        protected override void OnBeforeRender(SpriteBatch batch)
-        {
-            if (_isModal)
-            {
-                SpriteBatch batch2 = new SpriteBatch(Engine.Device);
-                batch2.Begin();
-                batch2.Draw(_textSurface.Font.FontImage, new Rectangle(0, 0, Engine.Device.PresentationParameters.BackBufferWidth, Engine.Device.PresentationParameters.BackBufferHeight), _textSurface.Font.CharacterIndexRects[_textSurface.Font.SolidCharacterIndex], Theme.ModalTint);
-                batch2.End();
-            }
         }
         #endregion
 
