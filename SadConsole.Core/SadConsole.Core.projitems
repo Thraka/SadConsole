@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Effects\ConcurrentEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Delay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\EffectsChain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\EffectsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Fade.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\ICellEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Recolor.cs" />

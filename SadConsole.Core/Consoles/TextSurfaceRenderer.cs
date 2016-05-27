@@ -36,12 +36,13 @@ namespace SadConsole.Consoles
         /// </summary>
         public TextSurfaceRenderer() { Batch = new SpriteBatch(Engine.Device); }
 
+
         /// <summary>
         /// Renders a 
         /// </summary>
         /// <param name="surface"></param>
         /// <param name="renderingMatrix"></param>
-        public void Render(ITextSurface surface, Matrix renderingMatrix)
+        public virtual void Render(ITextSurface surface, Matrix renderingMatrix)
         {
 
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);

@@ -23,6 +23,8 @@ namespace SadConsole
         [IgnoreDataMember]
         public Rectangle[] CharacterIndexRects { get; private set; }
 
+        public int Rows { get; private set; }
+
         public int SizeMultiple { get; private set; }
 
         public string Name { get; private set; }
@@ -44,6 +46,7 @@ namespace SadConsole
             CharacterIndexRects = new Rectangle[masterFont.CharacterIndexRects.Length];
             masterFont.CharacterIndexRects.CopyTo(CharacterIndexRects, 0);
             SolidCharacterIndex = masterFont.SolidCharacterIndex;
+            Rows = masterFont.Rows;
         }
 
         /// <summary>
