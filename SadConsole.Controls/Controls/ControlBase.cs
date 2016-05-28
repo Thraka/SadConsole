@@ -167,6 +167,7 @@
             TabStop = true;
             IsVisible = true;
             FocusOnClick = true;
+            CanFocus = false;
             _position = new Point();
             CanUseMouse = true;
             CanUseKeyboard = true;

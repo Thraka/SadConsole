@@ -171,11 +171,11 @@
         {
             _initialized = true;
             _containers = new List<TItemContainer>();
-            
-            SetupSlider();
 
             _border = Shapes.Box.GetDefaultBox();
             _border.Fill = true;
+
+            SetupSlider();
 
             Items = new ObservableCollection<object>();
 
@@ -222,7 +222,7 @@
             if (_initialized)
             {
                 //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 3);
+                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, height);
                 _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
                 _slider.IsVisible = false;
                 _slider.Theme = this.Theme.ScrollBarTheme;

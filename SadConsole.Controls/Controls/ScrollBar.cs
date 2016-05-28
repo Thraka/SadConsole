@@ -358,6 +358,8 @@
 
                             Parent.FocusedControl = this;
                         }
+
+                        return true;
                     }
                 }
                 else if (Parent.CapturedControl == this)
@@ -409,14 +411,17 @@
                                     }
                                 }
                             }
+
+                            return true;
                         }
                         else
                             Parent.ReleaseControl();
+
+                        return false;
+
                     }
                 }
-
-                return true;
-
+                
                 //else if(Parent.CapturedControl == this && !info.LeftButtonDown)
                 //{
                 //    Parent.ReleaseControl();

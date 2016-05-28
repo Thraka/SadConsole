@@ -192,6 +192,7 @@
         public InputBox(int width)
             : base(width, 1)
         {
+            effects = new Effects.EffectsManager(this);
             DetermineAppearance();
         }
         #endregion
@@ -205,12 +206,12 @@
             {
                 this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
 
+                effects.RemoveAll();
 
                 if (base.IsFocused && !DisableKeyboard)
                 {
                     this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
-                    effects.RemoveAll();
-                    effects.SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect.Clone());
+                    effects.SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect);
                 }
                 else
                 {
@@ -510,6 +511,13 @@
 
                 IsDirty = true;    
             }
+        }
+
+        public override void Update()
+        {
+            effects.UpdateEffects(Engine.GameTimeElapsedUpdate);
+
+            base.Update();
         }
 
         [OnDeserializedAttribute]

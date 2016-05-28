@@ -665,6 +665,41 @@ namespace SadConsole.Consoles
             }
         }
 
+        /// <summary>
+        /// Draws the string on the console at the specified location with the specified settings. 
+        /// </summary>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="text">The string to display.</param>
+        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
+        /// <param name="background">Sets the background of all characters in the text.</param>
+        /// <param name="spriteEffect">The sprite effect to set on the cell.</param>
+        public void Print(int x, int y, string text, Color? foreground = null, Color? background = null, SpriteEffects? spriteEffect = null)
+        {
+            if (String.IsNullOrEmpty(text))
+                return;
+
+            if (x >= width || x < 0 || y >= height || y < 0)
+                throw new Exception("X,Y is out of range for Print");
+
+            int index = y * width + x;
+            int total = index + text.Length > cells.Length ? cells.Length - index : index + text.Length;
+            int charIndex = 0;
+            for (; index < total; index++)
+            {
+                cells[index].CharacterIndex = text[charIndex];
+
+                if (background.HasValue)
+                    cells[index].Background = background.Value;
+                if (foreground.HasValue)
+                    cells[index].Foreground = foreground.Value;
+                if (spriteEffect.HasValue)
+                    cells[index].SpriteEffect = spriteEffect.Value;
+
+                charIndex++;
+            }
+        }
+
         #endregion
 
         #region Get String

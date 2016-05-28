@@ -52,12 +52,15 @@
             get { return _focusedControl; }
             set
             {
-                if (FocusedControlChanging(value, _focusedControl))
+                if (!DisableControlFocusing)
                 {
-                    var oldControl = _focusedControl;
-                    _focusedControl = value;
+                    if (FocusedControlChanging(value, _focusedControl))
+                    {
+                        var oldControl = _focusedControl;
+                        _focusedControl = value;
 
-                    FocusedControlChanged(_focusedControl, oldControl);
+                        FocusedControlChanged(_focusedControl, oldControl);
+                    }
                 }
             }
         }
@@ -77,6 +80,11 @@
         /// Sets reference to the console to tab to when the <see cref="CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
         /// </summary>
         public IConsole PreviousTabConsole { get; set; }
+
+        /// <summary>
+        /// When set to true, child controls are not alerted to (non-)focused states.
+        /// </summary>
+        public bool DisableControlFocusing { get; set; }
         #endregion
 
         #region Constructors
@@ -91,12 +99,13 @@
         {
             _controls = new List<ControlBase>();
 
-            base.VirtualCursor.IsVisible = false;
-            base.AutoCursorOnFocus = false;
-            base.CanUseKeyboard = true;
-            base.CanUseMouse = true;
-            base.MouseCanFocus = true;
-            base.AutoCursorOnFocus = false;
+            VirtualCursor.IsVisible = false;
+            AutoCursorOnFocus = false;
+            CanUseKeyboard = true;
+            CanUseMouse = true;
+            MouseCanFocus = true;
+            AutoCursorOnFocus = false;
+            DisableControlFocusing = false;
         }
         #endregion
 
