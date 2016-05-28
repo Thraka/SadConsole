@@ -1,6 +1,7 @@
 ﻿using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
+using SadConsole;
 using System.Text;
 using SadConsole.Input;
 
@@ -15,6 +16,7 @@ namespace StarterProject.CustomConsoles
             var button1 = new SadConsole.Controls.Button(10, 1);
             button1.Text = "Click";
             button1.Position = new Microsoft.Xna.Framework.Point(1, 3);
+            button1.ButtonClicked += (s, e) => Window.Message("Clicked!", "OK");
             Add(button1);
         }
 

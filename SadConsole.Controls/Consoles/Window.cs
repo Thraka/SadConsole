@@ -152,6 +152,7 @@
 
         public override void Render()
         {
+            //TODO: Perf - cache reference?
             ((WindowRenderer)_renderer).IsModal = _isModal;
             ((WindowRenderer)_renderer).ModalTint = Theme.ModalTint;
 
