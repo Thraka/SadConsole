@@ -11,6 +11,7 @@ namespace StarterProject.CustomConsoles
     {
         public ControlsTest():base(80, 25)
         {
+            IsVisible = false;
             Data.Print(1, 1, "CONTROL LIBRARY TEST");
             Data.Print(1, 2, "____________________", spriteEffect: Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically);
             

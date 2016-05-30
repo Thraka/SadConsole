@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\CachedTextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ConsoleList.cs" />

@@ -7,14 +7,11 @@ using Microsoft.Xna.Framework.Graphics;
 namespace SadConsole.Consoles
 {
     /// <summary>
-    /// Draws a text surface to the screen.
+    /// Caches a text surface by rendering to a texture. That texture is then rendered at draw time. Reduces draw calls for a non-changing console.
     /// </summary>
-    public class TextSurfaceRenderer : ITextSurfaceRenderer
+    public class CachedTextSurfaceRenderer : ITextSurfaceRenderer
     {
-        //private Matrix absolutePositionTransform;
-        //private Matrix positionTransform;
-        //private Point oldPosition;
-        //private Point oldAbsolutePosition;
+        private RenderTarget2D renderedConsole;
 
         /// <summary>
         /// The sprite batch used for drawing to the screen.
@@ -34,50 +31,48 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Creates a new renderer.
         /// </summary>
-        public TextSurfaceRenderer() { Batch = new SpriteBatch(Engine.Device); }
-
+        public CachedTextSurfaceRenderer(ITextSurface source)
+        {
+            Batch = new SpriteBatch(Engine.Device);
+            Update(source);
+        }
 
         /// <summary>
-        /// Renders a surface to the screen.
+        /// Updates the cache based on the <paramref name="source"/> surface.
         /// </summary>
-        /// <param name="surface">The surface to render.</param>
+        /// <param name="source">The surface to render and cache.</param>
+        public void Update(ITextSurface source)
+        {
+            if (renderedConsole != null)
+                renderedConsole.Dispose();
+
+            renderedConsole = new RenderTarget2D(Engine.Device, source.AbsoluteArea.Width, source.AbsoluteArea.Height, false, Engine.Device.DisplayMode.Format, DepthFormat.Depth24);
+            TextSurfaceRenderer renderer = new TextSurfaceRenderer();
+            Engine.Device.SetRenderTarget(renderedConsole);
+            renderer.Render(source, new Point(0, 0));
+            Engine.Device.SetRenderTarget(null);
+        }
+
+        /// <summary>
+        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ITextSurface)"/> method.
+        /// </summary>
+        /// <param name="surface">Used only for tinting.</param>
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
         public virtual void Render(ITextSurface surface, Matrix renderingMatrix)
         {
-
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
 
             if (surface.Tint.A != 255)
             {
-                Cell cell;
-
-
-                if (surface.DefaultBackground.A != 0)
-                    Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.CharacterIndexRects[surface.Font.SolidCharacterIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
-
-                for (int i = 0; i < surface.RenderCells.Length; i++)
-                {
-                    cell = surface.RenderCells[i];
-
-                    if (cell.IsVisible)
-                    {
-                        if (cell.ActualBackground != Color.Transparent && cell.ActualBackground != surface.DefaultBackground)
-                            Batch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.CharacterIndexRects[surface.Font.SolidCharacterIndex], cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-
-                        if (cell.ActualForeground != Color.Transparent)
-                            Batch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.4f);
-                    }
-                }
+                Batch.Draw(renderedConsole, Vector2.Zero, Color.White);
 
                 if (surface.Tint.A != 0)
                     Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.CharacterIndexRects[surface.Font.SolidCharacterIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
             }
             else
-            {
                 Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.CharacterIndexRects[surface.Font.SolidCharacterIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
-            }
 
             AfterRenderCallback?.Invoke(Batch);
 
@@ -85,9 +80,9 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Renders a surface to the screen.
+        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ITextSurface)"/> method.
         /// </summary>
-        /// <param name="surface">The surface to render.</param>
+        /// <param name="surface">Only used for tinting and calculation the position from the font.</param>
         /// <param name="position">Calculates the rendering position on the screen based on the size of the <paramref name="surface"/> parameter.</param>
         /// <param name="usePixelPositioning">Ignores the <paramref name="surface"/> font for positioning and instead treats the <paramref name="position"/> parameter in pixels.</param>
         public void Render(ITextSurface surface, Point position, bool usePixelPositioning = false)
