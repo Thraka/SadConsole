@@ -24,15 +24,16 @@
         protected override void Initialize()
         {
             // Let the XNA framework show the mouse.
-            //IsMouseVisible = true;
-            //IsFixedTimeStep = true;
+            IsMouseVisible = true;
 
             // Uncomment these two lines to run as fast as possible
-            _graphics.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
+            //_graphics.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             var rootConsole = SadConsole.Engine.Initialize(_graphics, "Fonts/IBM.font", 80, 25);
+
+            Theme.SetupThemes();
 
             SadConsole.Consoles.TextSurface surface1;
             surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);

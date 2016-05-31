@@ -77,6 +77,19 @@ namespace StarterProject.CustomConsoles
 
             FocusedControl = null;
             //DisableControlFocusing = true;
+
+            _textSurface.Print(3, 23, "RED ".CreateColored(StarterProject.Theme.Red, null) +
+                                      "BLUE ".CreateColored(StarterProject.Theme.Blue, null) +
+                                      "GREEN ".CreateColored(StarterProject.Theme.Green, null) +
+                                      "YELLOW ".CreateColored(StarterProject.Theme.Yellow, null) +
+                                      "ORANGE ".CreateColored(StarterProject.Theme.Orange, null) + 
+                                      "DRK GRAY ".CreateColored(StarterProject.Theme.GrayDark, null) +
+                                      "PURPLE ".CreateColored(StarterProject.Theme.Purple, null) +
+                                      "CYAN ".CreateColored(StarterProject.Theme.Cyan, null) +
+                                      "DRK CYAN ".CreateColored(StarterProject.Theme.CyanDark, null) +
+                                      "WHITE ".CreateColored(StarterProject.Theme.White, null) +
+                                      "BLACK ".CreateColored(StarterProject.Theme.Black, null)
+                                      );
         }
 
         public override bool ProcessMouse(MouseInfo info)
