@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ButtonTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\ControlsConsoleTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\InputBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Library.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ListBoxTheme.cs" />

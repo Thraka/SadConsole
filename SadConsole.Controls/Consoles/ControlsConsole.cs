@@ -21,7 +21,25 @@
         private ControlBase _capturedControl;
         private bool _exlusiveBeforeCapture;
 
+        private SadConsole.Themes.ControlsConsoleTheme _theme;
+
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the theme of the window.
+        /// </summary>
+        public SadConsole.Themes.ControlsConsoleTheme Theme
+        {
+            get
+            {
+                if (_theme == null)
+                    return SadConsole.Themes.Library.Default.ControlsConsoleTheme;
+                else
+                    return _theme;
+            }
+            set { _theme = value; }
+        }
+
         /// <summary>
         /// When true, mouse events over this console will be processed even if this console is not active.
         /// </summary>
@@ -106,6 +124,9 @@
             MouseCanFocus = true;
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
+            _textSurface.DefaultForeground = Theme.FillStyle.Foreground;
+            _textSurface.DefaultBackground = Theme.FillStyle.Background;
+            _textSurface.Fill(_textSurface.DefaultForeground, _textSurface.DefaultBackground, Theme.FillStyle.CharacterIndex, null);
         }
         #endregion
 

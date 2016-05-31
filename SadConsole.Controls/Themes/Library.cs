@@ -63,6 +63,12 @@ namespace SadConsole.Themes
         [DataMember]
         public InputBoxTheme InputBoxTheme;
 
+        /// <summary>
+        /// Theme for <see cref="Consoles.ControlsConsole"/>.
+        /// </summary>
+        [DataMember]
+        public ControlsConsoleTheme ControlsConsoleTheme;
+
         static Library()
         {
             if (Default == null)
@@ -104,6 +110,9 @@ namespace SadConsole.Themes
             WindowTheme.TitleStyle = new CellAppearance(ColorAnsi.Black, ColorAnsi.WhiteBright);
             WindowTheme.BorderStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
             WindowTheme.FillStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
+
+            ControlsConsoleTheme = new ControlsConsoleTheme();
+            ControlsConsoleTheme.FillStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
 
             CheckBoxTheme = new CheckBoxTheme();
             CheckBoxTheme.CheckedIcon = 251;
