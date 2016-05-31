@@ -88,6 +88,33 @@ namespace System
         }
 
         /// <summary>
+        /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
+        /// </summary>
+        /// <param name="value">The current string.</param>
+        /// <param name="foreground">The foreground color. If null, <see cref="ColoredString.IgnoreForeground"/> will be set.</param>
+        /// <param name="background">The background color. If null, <see cref="ColoredString.IgnoreBackground"/> will be set.</param>
+        /// <returns>A <see cref="ColoredString"/> object instace.</returns>
+        public static ColoredString CreateColored(this string value, Color? foreground, Color? background)
+        {
+            ColoredString newString = new ColoredString(value);
+            if (foreground.HasValue)
+                newString.Foreground = foreground.Value;
+            else
+                newString.IgnoreForeground = true;
+
+            if (background.HasValue)
+                newString.Background = background.Value;
+            else
+                newString.IgnoreBackground = true;
+
+            newString.Effect = null;
+            newString.IgnoreEffect = true;
+            newString.UpdateWithDefaults();
+
+            return newString;
+        }
+
+        /// <summary>
         /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground and background.
         /// </summary>
         /// <param name="value">The current string.</param>
