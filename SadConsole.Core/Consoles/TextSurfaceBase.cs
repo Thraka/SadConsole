@@ -8,9 +8,13 @@ using System.Text;
 
 namespace SadConsole.Consoles
 {
+    /// <summary>
+    /// The base class for a text surface. Provides code for the view port and basic cell access.
+    /// </summary>
     [DataContract]
     public abstract class TextSurfaceBase : IEnumerable<Cell>, ITextSurface
     {
+        
         protected Cell[] renderCells;
         protected Font font;
 

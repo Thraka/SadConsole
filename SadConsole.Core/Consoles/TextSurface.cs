@@ -15,6 +15,11 @@ namespace SadConsole.Consoles
     {
         protected Rectangle area;
 
+        public int TimesShiftedDown;
+        public int TimesShiftedRight;
+        public int TimesShiftedLeft;
+        public int TimesShiftedUp;
+
         #region Properties
         public Rectangle ViewArea
         {
@@ -806,6 +811,15 @@ namespace SadConsole.Consoles
         #endregion
 
         #region Shifting Rows
+
+        public void ClearShiftValues()
+        {
+            TimesShiftedDown = 0;
+            TimesShiftedUp = 0;
+            TimesShiftedLeft = 0;
+            TimesShiftedRight = 0;
+        }
+
         /// <summary>
         /// Scrolls all the console data up by one.
         /// </summary>
@@ -827,6 +841,8 @@ namespace SadConsole.Consoles
                 ShiftDown(Math.Abs(amount), wrap);
                 return;
             }
+
+            TimesShiftedUp += amount;
 
             List<Tuple<Cell, int>> wrappedCells = null;
 
@@ -904,6 +920,7 @@ namespace SadConsole.Consoles
                 return;
             }
 
+            TimesShiftedDown += amount;
 
             List<Tuple<Cell, int>> wrappedCells = null;
 
@@ -981,6 +998,7 @@ namespace SadConsole.Consoles
                 return;
             }
 
+            TimesShiftedRight += amount;
 
             List<Tuple<Cell, int>> wrappedCells = null;
 
@@ -1059,6 +1077,7 @@ namespace SadConsole.Consoles
                 return;
             }
 
+            TimesShiftedLeft += amount;
 
             List<Tuple<Cell, int>> wrappedCells = null;
 
