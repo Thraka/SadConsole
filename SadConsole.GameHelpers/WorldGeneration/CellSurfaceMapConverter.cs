@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SadConsole.Consoles;
 
 namespace SadConsole.GameHelpers.WorldGeneration
 {
@@ -11,7 +12,7 @@ namespace SadConsole.GameHelpers.WorldGeneration
     }
     
 
-    public class CellSurfaceMap: IMapConverter<CellSurface>
+    public class TextSurfaceMap: IMapConverter<TextSurface>
     {
         #region Colors
         // Height Map Colors
@@ -102,9 +103,9 @@ namespace SadConsole.GameHelpers.WorldGeneration
         //    return texture;
         //}
 
-        public CellSurface GetHeightMapTexture(int width, int height, Tile[,] tiles)
+        public TextSurface GetHeightMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new CellSurface(width, height);
+            var surface = new TextSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -158,9 +159,9 @@ namespace SadConsole.GameHelpers.WorldGeneration
             return surface;
         }
 
-        public CellSurface GetHeatMapTexture(int width, int height, Tile[,] tiles)
+        public TextSurface GetHeatMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new CellSurface(width, height);
+            var surface = new TextSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -199,9 +200,9 @@ namespace SadConsole.GameHelpers.WorldGeneration
             return surface;
         }
 
-        public CellSurface GetMoistureMapTexture(int width, int height, Tile[,] tiles)
+        public TextSurface GetMoistureMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new CellSurface(width, height);
+            var surface = new TextSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -229,9 +230,9 @@ namespace SadConsole.GameHelpers.WorldGeneration
             return surface;
         }
 
-        public CellSurface GetBiomeMapTexture(int width, int height, Tile[,] tiles, float coldest, float colder, float cold)
+        public TextSurface GetBiomeMapTexture(int width, int height, Tile[,] tiles, float coldest, float colder, float cold)
         {
-            var surface = new CellSurface(width, height);
+            var surface = new TextSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
