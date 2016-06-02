@@ -37,7 +37,7 @@
                 else
                     return _theme;
             }
-            set { _theme = value; }
+            set { _theme = value; Invalidate(); }
         }
 
         /// <summary>
@@ -124,9 +124,7 @@
             MouseCanFocus = true;
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
-            _textSurface.DefaultForeground = Theme.FillStyle.Foreground;
-            _textSurface.DefaultBackground = Theme.FillStyle.Background;
-            _textSurface.Fill(_textSurface.DefaultForeground, _textSurface.DefaultBackground, Theme.FillStyle.CharacterIndex, null);
+            Invalidate();
         }
         #endregion
 
@@ -362,6 +360,13 @@
                 else
                     return 1;
             });
+        }
+
+        public virtual void Invalidate()
+        {
+            _textSurface.DefaultForeground = Theme.FillStyle.Foreground;
+            _textSurface.DefaultBackground = Theme.FillStyle.Background;
+            _textSurface.Fill(_textSurface.DefaultForeground, _textSurface.DefaultBackground, Theme.FillStyle.CharacterIndex, null);
         }
 
         /// <summary>

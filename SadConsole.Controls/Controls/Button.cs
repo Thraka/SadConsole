@@ -165,7 +165,7 @@
             {
                 // Redraw the control
                 this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
-                this.Print(0, 0, Text.Align(TextAlignment, this.Width));
+                this.Print(0, 0, ("< " + Text + " >").Align(TextAlignment, this.Width));
 
                 this.IsDirty = false;
             }
