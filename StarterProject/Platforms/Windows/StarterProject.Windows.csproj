@@ -60,6 +60,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\SadConsole.Ansi.Windows\SadConsole.Ansi.Windows.csproj">
+      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
+      <Name>SadConsole.Ansi.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\SadConsole.Controls.Windows\SadConsole.Controls.Windows.csproj">
       <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
       <Name>SadConsole.Controls.Windows</Name>

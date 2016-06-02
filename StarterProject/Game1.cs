@@ -96,8 +96,8 @@
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
                 //new Console(surface1
-                                        new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.ControlsTest(),                                
+                                        new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.StaticConsole(),
