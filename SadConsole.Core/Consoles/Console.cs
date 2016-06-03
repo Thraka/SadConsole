@@ -84,13 +84,13 @@
         public Cursor VirtualCursor
         {
             get { return _virtualCursor; }
-            set
-            {
-                if (value != null)
-                    _virtualCursor = value;
-                else
-                    throw new Exception("VirtualCursor cannot be null");
-            }
+            //set
+            //{
+            //    if (value != null)
+            //        _virtualCursor = value;
+            //    else
+            //        throw new Exception("VirtualCursor cannot be null");
+            //}
         }
 
         /// <summary>
@@ -266,10 +266,10 @@
         public TextSurface Data
         {
             get { return _textSurface; }
-            set
-            {
-                _textSurface = value;
-            }
+            //set
+            //{
+            //    _textSurface = value;
+            //}
         }
 
         /// <summary>
@@ -297,7 +297,7 @@
         {
             _virtualCursor = new Cursor(this);
             Renderer = new TextSurfaceRenderer();
-            Data = textData;
+            _textSurface = textData;
         }
         #endregion
 

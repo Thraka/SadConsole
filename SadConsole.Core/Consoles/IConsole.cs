@@ -10,11 +10,11 @@
     {
         Point Position { get; set; }
 
-        TextSurface Data { get; set; }
+        TextSurface Data { get; }
 
         Rectangle DataViewport { get; set; }
 
-        Cursor VirtualCursor { get; set; }
+        Cursor VirtualCursor { get; }
 
         IConsoleList Parent { get; set; }
 
