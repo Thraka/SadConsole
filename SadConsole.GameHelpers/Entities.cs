@@ -19,7 +19,7 @@ namespace SadConsole.GameHelpers
         /// <returns></returns>
         public static SadConsole.Entities.Entity CreateStaticEntity(int width, int height, int frames, double blankChance)
         {
-            SadConsole.Entities.Entity entity = new SadConsole.Entities.Entity();
+            SadConsole.Entities.Entity entity = new SadConsole.Entities.Entity(width, height);
             SadConsole.Entities.Animation animation = new SadConsole.Entities.Animation("default", width, height);
             
 
