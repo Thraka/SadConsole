@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SadConsole.Consoles
 {
-    class LayeredTextSurface: TextSurface
+    public class LayeredTextSurface: TextSurface
     {
         protected Cell[][] renderCellsLayers;
         protected Cell[][] cellsLayers;

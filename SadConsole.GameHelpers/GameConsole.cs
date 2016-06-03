@@ -9,29 +9,38 @@ namespace SadConsole.GameHelpers
 {
     [DataContract]
 
-    public class GameConsoleMetadata : Consoles.LayeredConsoleMetadata
+    public class GameConsole : Consoles.Console
     {
-        [DataMember]
-        public GameObjectCollection GameObjects = new GameObjectCollection();
-    }
+        protected LayeredTextSurface _layeredTextSurface;
+        protected GameObjectCollection[] _gameObjects;
 
-    [DataContract]
+        public LayeredTextSurface LayeredTextSurface { get { return _layeredTextSurface; } }
 
-    public class GameConsole : Consoles.LayeredConsole<GameConsoleMetadata>
-    {
-        public GameConsole(int layers, int width, int height) :base(layers, width, height) { }
-
+        public GameConsole(int width, int height, int layers) :base(width, height)
+        {
+            _textSurface = _layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
+            _gameObjects = new GameObjectCollection[_layeredTextSurface.Layers];
+            AssociateLayersWithObjects();
+        }
 
         public void AssociateLayersWithObjects()
         {
-            for (int i = 0; i < _layers.Count; i++)
+            for (int i = 0; i < _layeredTextSurface.Layers; i++)
             {
-                foreach (var gameObject in _layerMetadata[i].GameObjects.Values)
+                foreach (var gameObject in _gameObjects[i].Values)
                 {
                     gameObject.Layer = i;
                 }
                 
             }
+        }
+
+        public GameObjectCollection GetObjectCollection(int layer)
+        {
+            if (layer < 0 || layer >= _layeredTextSurface.Layers)
+                throw new System.ArgumentOutOfRangeException("layer");
+
+            return _gameObjects[layer];
         }
 
     }
