@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Console = SadConsole.Consoles.Console;
+using CustomConsole = SadConsole.Consoles.CustomConsole;
 using SadConsole.Entities;
 using SadConsole.Consoles;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StarterProject.CustomConsoles
 {
-    class EntityAndConsole: Console
+    class EntityAndConsole: CustomConsole
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
@@ -107,7 +107,7 @@ namespace StarterProject.CustomConsoles
         /// </summary>
         class Player : Entity
         {
-            public Player()
+            public Player(): base(1, 1)
             {
                 // Update the default animation frame (cellsurface that is 1x1 of nothing) to have a smiley character
                 _currentAnimation.CurrentFrame[0].CharacterIndex = 1;

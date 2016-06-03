@@ -3,10 +3,10 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
     using Microsoft.Xna.Framework;
 
-    class BorderedConsole: Console
+    class BorderedConsole: CustomConsole
     {
         public BorderedConsole(int width, int height)
             : base(width, height)

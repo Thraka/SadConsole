@@ -11,7 +11,7 @@
     /// A basic console that can contain controls.
     /// </summary>
     [DataContract]
-    public class ControlsConsole: Console, IEnumerable<ControlBase>
+    public class ControlsConsole: CustomConsole, IEnumerable<ControlBase>
     {
         [DataMember]
         private List<ControlBase> _controls;

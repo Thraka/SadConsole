@@ -19,5 +19,10 @@
         IConsoleList Parent { get; set; }
 
         bool UsePixelPositioning { get; set; }
+
+        /// <summary>
+        /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+        /// </summary>
+        bool AutoCursorOnFocus { get; set; }
     }
 }

@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\CachedTextSurfaceRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\CustomConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ConsoleList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\IConsole.cs" />
@@ -22,7 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\LayeredTextSurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\SimpleConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurfaceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurfaceRenderer.cs" />

@@ -3,11 +3,11 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
     using Microsoft.Xna.Framework;
     using System.Linq;
 
-    class StretchedConsole: Console
+    class StretchedConsole: CustomConsole
     {
         public StretchedConsole()
             : base(40, 12)

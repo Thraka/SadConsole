@@ -3,14 +3,14 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
     using Microsoft.Xna.Framework;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework.Graphics;
     using SadConsole.Instructions;
     using SadConsole.Effects;
-    class SplashScreen: Console
+    class SplashScreen: CustomConsole
     {
 
         public Action SplashCompleted { get; set; }

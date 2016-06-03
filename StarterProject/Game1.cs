@@ -3,14 +3,14 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
     public class Game1: Game
     {
         GraphicsDeviceManager _graphics;
-        Console _defaultConsole;
+        CustomConsole _defaultConsole;
         Windows.CharacterViewer _characterWindow;
 
         int currentConsoleIndex = 0;
@@ -32,7 +32,7 @@
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             var rootConsole = SadConsole.Engine.Initialize(_graphics, "Fonts/IBM.font", 80, 25);
-
+            
             Theme.SetupThemes();
 
             SadConsole.Consoles.TextSurface surface1;
@@ -51,7 +51,7 @@
             //tempSurface2 = surface1;
             surface1.SetForeground(2, 1, Color.CadetBlue);
             tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
-            tempConsole = new Console(surface1);
+            tempConsole = new CustomConsole(surface1);
             tempConsole.Position = new Point(5, 7);
             tempConsole.UsePixelPositioning = true;
             tempConsole.CanUseMouse = true;
@@ -69,7 +69,7 @@
                 return false;
             };
 
-            tempConsole2 = new Console((TextSurfaceView)tempSurface);
+            tempConsole2 = new CustomConsole((TextSurfaceView)tempSurface);
             tempConsole2.Position = new Point(20, 15);
             tempConsole2.CanUseMouse = false;
             tempConsole2.MouseHandler = (con, info) =>
@@ -92,10 +92,16 @@
             SadConsole.Engine.ConsoleRenderStack.Clear();
             SadConsole.Engine.ActiveConsole = null;
 
+            rootConsole.IsVisible = false;
+            rootConsole.Fill(Color.Blue, Color.DarkGreen, 0, null);
+            rootConsole.Print(2, 2, "Hello");
+            rootConsole.Position = new Point(2, 0);
+            
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
                 //new Console(surface1
+                                        rootConsole,
                                         new CustomConsoles.ControlsTest(),                                
                                         new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.SceneProjectionConsole(),
@@ -134,8 +140,8 @@
         SadConsole.Consoles.ITextSurface tempSurface;
         SadConsole.Consoles.ITextSurface tempSurface2;
         SadConsole.Consoles.TextSurfaceRenderer tempRenderer;
-        SadConsole.Consoles.Console tempConsole;
-        SadConsole.Consoles.Console tempConsole2;
+        SadConsole.Consoles.CustomConsole tempConsole;
+        SadConsole.Consoles.CustomConsole tempConsole2;
 
         protected override void Update(GameTime gameTime)
         {

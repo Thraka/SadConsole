@@ -4,12 +4,12 @@ using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Console = SadConsole.Consoles.Console;
+using CustomConsole = SadConsole.Consoles.CustomConsole;
 using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    public class SceneProjectionConsole : Console
+    public class SceneProjectionConsole : CustomConsole
     {
         private RenderTarget2D _renderTexture;
         private Vector3 _boxPosition;

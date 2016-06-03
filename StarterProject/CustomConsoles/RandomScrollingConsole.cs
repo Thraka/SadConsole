@@ -1,12 +1,12 @@
 ﻿using System;
 using SadConsole;
 using SadConsole.Consoles;
-using Console = SadConsole.Consoles.Console;
+using CustomConsole = SadConsole.Consoles.CustomConsole;
 using Microsoft.Xna.Framework;
 
 namespace StarterProject.CustomConsoles
 {
-    class RandomScrollingConsole : Console
+    class RandomScrollingConsole : CustomConsole
     {
         private TextSurface mainData;
         private TextSurface messageData;
@@ -24,16 +24,16 @@ namespace StarterProject.CustomConsoles
             {
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
-                    cons.DataViewport = new Rectangle(cons.DataViewport.X - 1, cons.DataViewport.Y, 80, 25);
+                    cons.ViewArea = new Rectangle(cons.ViewArea.X - 1, cons.ViewArea.Y, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
-                    cons.DataViewport = new Rectangle(cons.DataViewport.X + 1, cons.DataViewport.Y, 80, 25);
+                    cons.ViewArea = new Rectangle(cons.ViewArea.X + 1, cons.ViewArea.Y, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up))
-                    cons.DataViewport = new Rectangle(cons.DataViewport.X, cons.DataViewport.Y - 1, 80, 25);
+                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y - 1, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-                    cons.DataViewport = new Rectangle(cons.DataViewport.X, cons.DataViewport.Y + 1, 80, 25);
+                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y + 1, 80, 25);
 
                 return true;
             };
@@ -85,7 +85,7 @@ namespace StarterProject.CustomConsoles
                 else
                 {
                     // Set message data information about where the viewport is located
-                    messageData.Print(0, 0, $"{DataViewport.X} , {DataViewport.Y}            ", Color.White, Color.Black);
+                    messageData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Y}            ", Color.White, Color.Black);
 
                     // Create a faux layering system.
                     base.Render();

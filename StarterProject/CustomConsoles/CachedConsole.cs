@@ -3,11 +3,11 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
     using Microsoft.Xna.Framework;
     using SadConsole.Input;
 
-    class CachedConsoleConsole : Console
+    class CachedConsoleConsole : CustomConsole
     {
         CachedTextSurfaceRenderer cachedRenderer;
         ITextSurfaceRenderer oldRenderer;

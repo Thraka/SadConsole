@@ -9,7 +9,7 @@ namespace SadConsole.GameHelpers
 {
     [DataContract]
 
-    public class GameConsole : Consoles.Console
+    public class GameConsole : Consoles.CustomConsole
     {
         protected LayeredTextSurface _layeredTextSurface;
         protected GameObjectCollection[] _gameObjects;

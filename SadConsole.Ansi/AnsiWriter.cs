@@ -7,7 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
 
     public class AnsiWriter
     {
@@ -23,7 +23,7 @@
         private int _charsPerSecond;
         private int _readerIndex;
         private byte[] _bytes;
-        private Console _console;
+        private CustomConsole _console;
         private State _ansiState;
         private Point _storedCursorLocation;
 
@@ -43,7 +43,7 @@
             }
         }
 
-        public AnsiWriter(Document ansiDocument, Console console)
+        public AnsiWriter(Document ansiDocument, CustomConsole console)
         {
             _ansiDoc = ansiDocument;
             _console = console;

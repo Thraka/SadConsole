@@ -3,10 +3,10 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
     using Microsoft.Xna.Framework;
 
-    class DOSConsole: Console
+    class DOSConsole: CustomConsole
     {
         public string Prompt { get; set; }
 

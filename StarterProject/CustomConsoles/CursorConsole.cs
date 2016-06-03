@@ -3,10 +3,10 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using Console = SadConsole.Consoles.Console;
+    using CustomConsole = SadConsole.Consoles.CustomConsole;
     using Microsoft.Xna.Framework;
 
-    class CursorConsole: Console
+    class CursorConsole: CustomConsole
     {
         public CursorConsole()
             : base(80, 25)
