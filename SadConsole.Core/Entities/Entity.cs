@@ -110,33 +110,49 @@
         /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
         /// </summary>
         public bool UsePixelPositioning { get; set; } = false;
+
+        /// <summary>
+        /// The width of the entity.
+        /// </summary>
+        public int Width { get; protected set; }
+
+        /// <summary>
+        /// The height of the entity.
+        /// </summary>
+        public int Height { get; protected set; }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Creates a new entity with the Engine's default font.
         /// </summary>
-        public Entity() : this(Engine.DefaultFont) { }
+        /// <param name="width">The width of the entity. All animations should try and match this width.</param>
+        /// <param name="height">The height of the entity. All animations should try and match this height.</param>
+        public Entity(int width, int height) : this(width, height, Engine.DefaultFont) { }
 
         /// <summary>
         /// Creates a new entity with the specified font.
         /// </summary>
+        /// <param name="width">The width of the entity. All animations should try and match this width.</param>
+        /// <param name="height">The height of the entity. All animations should try and match this height.</param>
         /// <param name="font">The font to use when rendering this entity.</param>
-        public Entity(Font font)
+        public Entity(int width, int height, Font font)
         {
             _font = font;
             IsVisible = true;
+            Width = width;
+            Height = height;
 
-            var defaultAnimation = new Animation("default", 1, 1);
+            var defaultAnimation = new Animation("default", width, height);
             defaultAnimation.CreateFrame();
 
             AddAnimation(defaultAnimation);
             SetCurrentAnimation(defaultAnimation);
 
             _currentAnimation.Font = font;
-            
 
-            _animationBoundingBox = new Rectangle(0, 0, 1, 1);
+            CollisionBox = new Rectangle(0, 0, width, height);
+            _animationBoundingBox = new Rectangle(0, 0, width, height);
         }
         #endregion
 
@@ -469,7 +485,19 @@
             public Point CenterOffset;
 
             [DataMember]
-            public Rectangle CollisionBox { get; set; }
+            public Rectangle CollisionBox;
+
+            [DataMember]
+            public int Width;
+
+            [DataMember]
+            public int Height;
+
+            [DataMember]
+            string FontName;
+
+            [DataMember]
+            int FontMultiple;
 
             public Serialized() { }
 
@@ -479,6 +507,10 @@
                 CurrentAnimation = entity.CurrentAnimation != null ? entity.CurrentAnimation.Name : "default";
                 CenterOffset = entity._centerOffset;
                 CollisionBox = entity.CollisionBox;
+                Width = entity.Width;
+                Height = entity.Height;
+                FontName = entity.Font.Name;
+                FontMultiple = entity.Font.SizeMultiple;
             }
 
             public void Save(string file)
@@ -489,7 +521,7 @@
             public static Entity Load(string file)
             {
                 var data = SadConsole.Serializer.Load<Serialized>(file, new System.Type[] { typeof(List<Frame>), typeof(Animation) });
-                var entity = new Entity();
+                var entity = new Entity(data.Width, data.Height);
 
                 entity._animations = new List<Animation>(data.Animations);
                 entity._centerOffset = data.CenterOffset;

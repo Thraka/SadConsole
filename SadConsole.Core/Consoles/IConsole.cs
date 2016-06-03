@@ -12,7 +12,7 @@
 
         TextSurface Data { get; }
 
-        Rectangle DataViewport { get; set; }
+        Rectangle ViewArea { get; set; }
 
         Cursor VirtualCursor { get; }
 

@@ -81,13 +81,13 @@
 
                         if (currentLocation != _mouseLastLocation)
                         {
-                            Rectangle viewport = console.DataViewport;
+                            Rectangle viewport = console.ViewArea;
 
                             viewport.X += _mouseLastLocation.X - currentLocation.X;
                             viewport.Y += _mouseLastLocation.Y - currentLocation.Y;
                             _mouseLastLocation = currentLocation;
 
-                            console.DataViewport = viewport;
+                            console.ViewArea = viewport;
                         }
                     }
 
@@ -110,7 +110,7 @@
             bool handled = false;
             if (console.CanUseKeyboard && CanMoveWithKeyboard)
             {
-                var view = console.DataViewport;
+                var view = console.ViewArea;
 
                 if (info.IsKeyDown(MoveLeftKey))
                 {
@@ -133,7 +133,7 @@
                     handled = true;
                 }
 
-                console.DataViewport = view;
+                console.ViewArea = view;
             }
             return handled;
         }

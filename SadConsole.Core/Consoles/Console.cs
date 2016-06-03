@@ -275,7 +275,7 @@
         /// <summary>
         /// If explicitly set, 
         /// </summary>
-        public Rectangle DataViewport
+        public Rectangle ViewArea
         {
             get { return _textSurface.ViewArea; }
             set { _textSurface.ViewArea = value; }
