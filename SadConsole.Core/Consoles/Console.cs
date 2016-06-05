@@ -59,88 +59,43 @@ namespace SadConsole.Consoles
         #region IConsole
         public bool CanFocus
         {
-            get
-            {
-                return console.CanFocus;
-            }
-
-            set
-            {
-                console.CanFocus = value;
-            }
+            get { return console.CanFocus; }
+            set { console.CanFocus = value; }
         }
 
         public bool CanUseKeyboard
         {
-            get
-            {
-                return console.CanUseKeyboard;
-            }
-
-            set
-            {
-                console.CanUseKeyboard = value;
-            }
+            get { return console.CanUseKeyboard; }
+            set { console.CanUseKeyboard = value; }
         }
 
         public bool CanUseMouse
         {
-            get
-            {
-                return console.CanUseMouse;
-            }
-
-            set
-            {
-                console.CanUseMouse = value;
-            }
+            get { return console.CanUseMouse; }
+            set { console.CanUseMouse = value; }
         }
 
         TextSurface IConsole.Data
         {
-            get
-            {
-                return this;
-            }
+            get { return this; }
         }
 
         Rectangle IConsole.ViewArea
         {
-            get
-            {
-                return this.ViewArea;
-            }
-
-            set
-            {
-                this.ViewArea = value;
-            }
+            get { return this.ViewArea; }
+            set { this.ViewArea = value; }
         }
 
         public bool DoUpdate
         {
-            get
-            {
-                return console.DoUpdate;
-            }
-
-            set
-            {
-                console.DoUpdate = value;
-            }
+            get { return console.DoUpdate; }
+            set { console.DoUpdate = value; }
         }
 
         public bool ExclusiveFocus
         {
-            get
-            {
-                return console.ExclusiveFocus;
-            }
-
-            set
-            {
-                console.ExclusiveFocus = value;
-            }
+            get { return console.ExclusiveFocus; }
+            set { console.ExclusiveFocus = value; }
         }
 
         /// <summary>

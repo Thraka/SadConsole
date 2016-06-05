@@ -119,6 +119,8 @@ namespace SadConsole
             Background = Color.Transparent;
             CharacterIndex = 0;
             IsVisible = true;
+            SpriteEffect = SpriteEffects.None;
+            Effect = null;
         }
 
         /// <summary>
