@@ -14,8 +14,6 @@ namespace SadConsole.Consoles
 
         public int ActiveLayerIndex { get; private set; }
 
-        protected LayeredTextSurface(int layers):base() { Layers = layers; }
-
         public LayeredTextSurface(int width, int height, int layers) : this(width, height, layers, Engine.DefaultFont) { }
 
         public LayeredTextSurface(int width, int height, int layers, Font font): base(width, height, font)
@@ -34,7 +32,7 @@ namespace SadConsole.Consoles
                 throw new ArgumentOutOfRangeException("index");
 
             base.cells = cellsLayers[index];
-            base.renderCells = renderCellsLayers[index];
+            base.RenderCells = renderCellsLayers[index];
         }
 
         protected override void InitializeCells()
@@ -58,32 +56,32 @@ namespace SadConsole.Consoles
             }
             
             // Setup the new render area
-            ResetArea();
+            //ResetArea();
         }
 
-        protected override void ResetArea()
-        {
-            RenderRects = new Rectangle[area.Width * area.Height];
-            renderCellsLayers = new Cell[Layers][];
+        //protected override void ResetArea()
+        //{
+        //    RenderRects = new Rectangle[area.Width * area.Height];
+        //    renderCellsLayers = new Cell[Layers][];
 
-            int index = 0;
+        //    int index = 0;
 
-            for (int y = 0; y < area.Height; y++)
-            {
-                for (int x = 0; x < area.Width; x++)
-                {
-                    for (int i = 0; i < Layers; i++)
-                    {
-                        renderCellsLayers[i][index] = cellsLayers[i][(y + area.Top) * width + (x + area.Left)];
-                    }
+        //    for (int y = 0; y < area.Height; y++)
+        //    {
+        //        for (int x = 0; x < area.Width; x++)
+        //        {
+        //            for (int i = 0; i < Layers; i++)
+        //            {
+        //                renderCellsLayers[i][index] = cellsLayers[i][(y + area.Top) * width + (x + area.Left)];
+        //            }
 
-                    RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
-                    index++;
-                }
-            }
+        //            RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
+        //            index++;
+        //        }
+        //    }
 
-            // TODO: Optimization by calculating AbsArea and seeing if it's diff from current, if so, don't create new RenderRects
-            AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
-        }
+        //    // TODO: Optimization by calculating AbsArea and seeing if it's diff from current, if so, don't create new RenderRects
+        //    AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
+        //}
     }
 }

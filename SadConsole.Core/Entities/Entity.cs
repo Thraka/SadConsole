@@ -189,8 +189,7 @@
         public void RenderToSurface(TextSurface surface, Point location)
         {
             // copy the current frame of the animation to the console at the specified location
-            Frame frame = _currentAnimation.CurrentFrame;
-            frame.Copy(0, 0, frame.Width, frame.Height, surface, location.X, location.Y);
+            TextSurface.Copy(_currentAnimation.CurrentFrame, surface, location.X, location.Y);
         }
 
         public void Render()

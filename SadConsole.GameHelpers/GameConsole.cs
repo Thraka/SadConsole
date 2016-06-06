@@ -9,7 +9,7 @@ namespace SadConsole.GameHelpers
 {
     [DataContract]
 
-    public class GameConsole : Consoles.CustomConsole
+    public class GameConsole : Consoles.Console
     {
         protected LayeredTextSurface _layeredTextSurface;
         protected GameObjectCollection[] _gameObjects;
@@ -18,7 +18,7 @@ namespace SadConsole.GameHelpers
 
         public GameConsole(int width, int height, int layers) :base(width, height)
         {
-            _textSurface = _layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
+            textSurface = _layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
             _gameObjects = new GameObjectCollection[_layeredTextSurface.Layers];
             AssociateLayersWithObjects();
         }

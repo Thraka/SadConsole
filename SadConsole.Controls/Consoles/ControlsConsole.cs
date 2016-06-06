@@ -11,7 +11,7 @@
     /// A basic console that can contain controls.
     /// </summary>
     [DataContract]
-    public class ControlsConsole: CustomConsole, IEnumerable<ControlBase>
+    public class ControlsConsole: Console, IEnumerable<ControlBase>
     {
         [DataMember]
         private List<ControlBase> _controls;
@@ -364,9 +364,9 @@
 
         public virtual void Invalidate()
         {
-            _textSurface.DefaultForeground = Theme.FillStyle.Foreground;
-            _textSurface.DefaultBackground = Theme.FillStyle.Background;
-            _textSurface.Fill(_textSurface.DefaultForeground, _textSurface.DefaultBackground, Theme.FillStyle.CharacterIndex, null);
+            textSurface.DefaultForeground = Theme.FillStyle.Foreground;
+            textSurface.DefaultBackground = Theme.FillStyle.Background;
+            Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, Theme.FillStyle.CharacterIndex, null);
         }
 
         /// <summary>
@@ -511,9 +511,9 @@
                 if (_controls[i].IsVisible)
                 {
                     control = _controls[i];
-                    cellCount = control.CellCount;
+                    cellCount = control.TextSurface.Cells.Length;
 
-                    var font = control.AlternateFont == null ? _textSurface.Font : control.AlternateFont;
+                    var font = control.AlternateFont == null ? textSurface.Font : control.AlternateFont;
 
                     // Draw background of each cell for the control
                     for (int cellIndex = 0; cellIndex < cellCount; cellIndex++)
@@ -522,13 +522,13 @@
 
                         if (cell.IsVisible)
                         {
-                            point = control.GetPointFromIndex(cellIndex);
+                            point = Consoles.TextSurface.GetPointFromIndex(cellIndex, control.TextSurface.Width);
                             point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
 
-                            if (_textSurface.ViewArea.Contains(point))
+                            if (ViewArea.Contains(point))
                             {
-                                point = new Point(point.X - _textSurface.ViewArea.X, point.Y - _textSurface.ViewArea.Y);
-                                rect = _textSurface.RenderRects[_textSurface.GetIndexFromPoint(point)];
+                                point = new Point(point.X - ViewArea.X, point.Y - ViewArea.Y);
+                                rect = textSurface.RenderRects[Consoles.TextSurface.GetIndexFromPoint(point, textSurface.Width)];
 
                                 if (cell.ActualBackground != Color.Transparent)
                                     Batch.Draw(font.FontImage, rect, font.CharacterIndexRects[font.SolidCharacterIndex], cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.23f);

@@ -11,7 +11,7 @@
     /// Base class for all controls.
     /// </summary>
     [DataContract]
-    public abstract class ControlBase: TextSurface, IInput
+    public abstract class ControlBase: SurfaceEditor, IInput
     {
         /// <summary>
         /// Protected variable representing the Position of the control.
@@ -123,6 +123,16 @@
             }
         }
 
+        /// <summary>
+        /// The width of the control.
+        /// </summary>
+        public int Width { get { return textSurface.Width; } }
+
+        /// <summary>
+        /// The height of the control.
+        /// </summary>
+        public int Height { get { return textSurface.Height; } }
+
         protected bool _isMouseOver = false;
         protected bool _isEnabled = true;
         protected Consoles.ControlsConsole _parent;
@@ -161,7 +171,7 @@
         /// Default constructor of the control.
         /// </summary>
         public ControlBase(int width, int height)
-            : base(width, height)
+            : base(new TextSurface(width, height, Engine.DefaultFont))
         {
             IsDirty = true;
             TabStop = true;

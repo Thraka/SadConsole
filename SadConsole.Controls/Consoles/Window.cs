@@ -304,9 +304,9 @@
             int screenHeight = SadConsole.Engine.Device.PresentationParameters.BackBufferHeight;
 
             if (UsePixelPositioning)
-                this.Position = new Point((screenWidth / 2) - ((_textSurface.Width * _textSurface.Font.Size.X) / 2), (screenHeight / 2) - ((_textSurface.Height * _textSurface.Font.Size.Y) / 2));
+                this.Position = new Point((screenWidth / 2) - ((textSurface.Width * textSurface.Font.Size.X) / 2), (screenHeight / 2) - ((textSurface.Height * textSurface.Font.Size.Y) / 2));
             else
-                this.Position = new Point(((screenWidth / _textSurface.Font.Size.X) / 2) - (_textSurface.Width / 2), ((screenHeight / _textSurface.Font.Size.Y) / 2) - (_textSurface.Height / 2));
+                this.Position = new Point(((screenWidth / textSurface.Font.Size.X) / 2) - (textSurface.Width / 2), ((screenHeight / textSurface.Font.Size.Y) / 2) - (textSurface.Height / 2));
             
         }
 
@@ -315,19 +315,19 @@
         /// </summary>
         public virtual void Redraw()
         {
-            _textSurface.DefaultForeground = Theme.FillStyle.Foreground;
-            _textSurface.DefaultBackground = Theme.FillStyle.Background;
+            textSurface.DefaultForeground = Theme.FillStyle.Foreground;
+            textSurface.DefaultBackground = Theme.FillStyle.Background;
 
-            _textSurface.Clear();
+            Clear();
 
             ResetBox();
-            Border.Draw(_textSurface);
+            Border.Draw(this);
 
             // Draw title
             string adjustedText = "";
             _titleWidth = 0;
             _titleLocationX = 0;
-            int adjustedWidth = _textSurface.Width - 2;
+            int adjustedWidth = textSurface.Width - 2;
 
             if (!string.IsNullOrEmpty(_title))
             {
@@ -342,18 +342,18 @@
                 _titleWidth = adjustedText.Length;
                 if (_titleAlignment == HorizontalAlignment.Left)
                 {
-                    _textSurface.Print(1, 0, adjustedText, Theme.TitleStyle);
+                    Print(1, 0, adjustedText, Theme.TitleStyle);
                     _titleLocationX = 1;
                 }
                 else if (_titleAlignment == HorizontalAlignment.Center)
                 {
                     _titleLocationX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
-                    _textSurface.Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
+                    Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
                 }
                 else
                 {
-                    _titleLocationX = _textSurface.Width - 1 - adjustedText.Length;
-                    _textSurface.Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
+                    _titleLocationX = textSurface.Width - 1 - adjustedText.Length;
+                    Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
                 }
             }
         }

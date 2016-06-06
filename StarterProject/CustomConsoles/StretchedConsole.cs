@@ -3,11 +3,11 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using CustomConsole = SadConsole.Consoles.CustomConsole;
+    using Console = SadConsole.Consoles.Console;
     using Microsoft.Xna.Framework;
     using System.Linq;
 
-    class StretchedConsole: CustomConsole
+    class StretchedConsole: Console
     {
         public StretchedConsole()
             : base(40, 12)
@@ -17,10 +17,10 @@
             // 40x12 cells instead of the 80x25 cells other consoles have, we're going to
             // stretch the size of the cells based on the font * 2. This will fill our 
             // area.
-            _textSurface.Font = Engine.Fonts.Values.First().GetFont(2);
+            textSurface.Font = Engine.Fonts.Values.First().GetFont(2);
 
             ColoredString colorString = "Text using a colored string gradient that wraps around".CreateGradient(Color.DarkGreen, Color.LightGreen, null);
-            _textSurface.Print(2, 3, colorString);
+            Print(2, 3, colorString);
 
             IsVisible = false;
         }

@@ -18,6 +18,7 @@ namespace SadConsole.Readers
         Color[] pixels;
         int[] indexes;
         int fontPixels;
+        SurfaceEditor editor;
 
         /// <summary>
         /// Renders the cells as blocks instead of characters.
@@ -38,6 +39,7 @@ namespace SadConsole.Readers
             indexes = new int[pixelWidth * pixelHeight];
             surface = new TextSurface(pixelWidth / font.Size.X, pixelHeight / font.Size.Y, font);
             fontPixels = font.Size.X * font.Size.Y;
+            editor = new SurfaceEditor(surface);
 
             // build the indexes
             int currentIndex = 0;
@@ -72,7 +74,7 @@ namespace SadConsole.Readers
         /// <returns>The surface.</returns>
         public TextSurface GetSurface(Texture2D image)
         {
-            //surface.Clear();
+            editor.Clear();
             image.GetData<Color>(pixels);
 
             System.Threading.Tasks.Parallel.For(0, surface.Width * surface.Height, (i) =>
@@ -107,40 +109,40 @@ namespace SadConsole.Readers
                 if (UseBlockMode)
                 {
                     if (sbri > 204)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
                     else if (sbri > 152)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
                     else if (sbri > 100)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
                     else if (sbri > 48)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
                     else
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
                 }
                 else
                 {
                     if (sbri > 230)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'#', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'#', newColor);
                     else if (sbri > 207)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'&', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'&', newColor);
                     else if (sbri > 184)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'$', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'$', newColor);
                     else if (sbri > 161)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'X', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'X', newColor);
                     else if (sbri > 138)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'x', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'x', newColor);
                     else if (sbri > 115)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'=', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'=', newColor);
                     else if (sbri > 92)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'+', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'+', newColor);
                     else if (sbri > 69)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)';', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)';', newColor);
                     else if (sbri > 46)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)':', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)':', newColor);
                     else if (sbri > 23)
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'.', newColor);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'.', newColor);
                     else
-                        surface.SetCharacter(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
                 }
             }
             );

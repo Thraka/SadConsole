@@ -11,7 +11,7 @@ namespace SadConsole.Consoles
         private ITextSurface data;
         protected Rectangle originalArea;
         
-        public TextSurfaceView(ITextSurface surface, Rectangle area)
+        public TextSurfaceView(ITextSurface surface, Rectangle area): base(area.Width, area.Height, surface.Font)
         {
             data = surface;
             DefaultBackground = surface.DefaultBackground;
@@ -20,22 +20,14 @@ namespace SadConsole.Consoles
             base.width = surface.Width;
             base.height = surface.Height;
 
-            this.area = area;
             this.originalArea = area;
             this.cells = data.Cells;
-            ResetArea();
-            this.area = new Rectangle(0, 0, area.Width, area.Height);
-            this.cells = this.renderCells;
+
             base.width = area.Width;
             base.height = area.Height;
-            ResetArea();
-            
-        }
-        
-        protected override void ResetArea()
-        {
+
             RenderRects = new Rectangle[area.Width * area.Height];
-            renderCells = new Cell[area.Width * area.Height];
+            RenderCells = new Cell[area.Width * area.Height];
 
             int index = 0;
 
@@ -44,14 +36,17 @@ namespace SadConsole.Consoles
                 for (int x = 0; x < area.Width; x++)
                 {
                     RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
-                    renderCells[index] = base.cells[(y + area.Top) * width + (x + area.Left)];
+                    RenderCells[index] = base.cells[(y + area.Top) * width + (x + area.Left)];
                     index++;
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
-        }
+            cells = RenderCells;
 
+            AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
+
+        }
+        
         public new void Save(string file)
         {
             TextSurfaceViewSerialized.Save(this, file);
@@ -69,9 +64,6 @@ namespace SadConsole.Consoles
             Rectangle Area;
 
             [DataMember]
-            Rectangle ViewArea;
-
-            [DataMember]
             string FontName;
 
             [DataMember]
@@ -84,7 +76,6 @@ namespace SadConsole.Consoles
             {
                 TextSurfaceViewSerialized data = new TextSurfaceViewSerialized();
                 data.Area = surfaceBase.originalArea;
-                data.ViewArea = surfaceBase.ViewArea;
                 data.FontName = surfaceBase.font.Name;
                 data.FontMultiple = surfaceBase.font.SizeMultiple;
                 data.Tint = surfaceBase.Tint;
@@ -103,7 +94,6 @@ namespace SadConsole.Consoles
                 else
                     newSurface.font = Engine.DefaultFont;
 
-                newSurface.ViewArea = data.ViewArea;
                 newSurface.Tint = data.Tint;
 
                 return newSurface;

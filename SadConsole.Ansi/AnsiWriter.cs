@@ -7,7 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using CustomConsole = SadConsole.Consoles.CustomConsole;
+    using Console = SadConsole.Consoles.Console;
 
     public class AnsiWriter
     {
@@ -23,7 +23,7 @@
         private int _charsPerSecond;
         private int _readerIndex;
         private byte[] _bytes;
-        private CustomConsole _console;
+        private Console _console;
         private State _ansiState;
         private Point _storedCursorLocation;
 
@@ -43,7 +43,7 @@
             }
         }
 
-        public AnsiWriter(Document ansiDocument, CustomConsole console)
+        public AnsiWriter(Document ansiDocument, Console console)
         {
             _ansiDoc = ansiDocument;
             _console = console;
@@ -191,15 +191,15 @@
                     case 'j':
                         if (data == "" || data == "0")
                             for (int i = _cursor.Position.X; i < _console.Data.Width; i++)
-                                _console.Data.Clear(i, _cursor.Position.Y);
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
                             for (int i = _cursor.Position.X; i >= 0; i--)
-                                _console.Data.Clear(i, _cursor.Position.Y);
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "2")
                         {
-                            _console.Data.Clear();
+                            _console.Clear();
                             _cursor.Position = Point.Zero;
                         }
                         break;
@@ -207,16 +207,16 @@
                     case 'k':
                         if (data == "" || data == "0")
                             for (int i = _cursor.Position.X; i < _console.Data.Width; i++)
-                                _console.Data.Clear(i, _cursor.Position.Y);
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
                             for (int i = _cursor.Position.X; i >= 0; i--)
-                                _console.Data.Clear(i, _cursor.Position.Y);
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "2")
                         {
                             for (int i = 0; i < _console.Data.Width; i++)
-                                _console.Data.Clear(i, _cursor.Position.Y);
+                                _console.Clear(i, _cursor.Position.Y);
                         }
                         break;
 

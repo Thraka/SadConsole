@@ -10,7 +10,7 @@
     {
         Point Position { get; set; }
 
-        TextSurface Data { get; }
+        ITextSurface Data { get; set; }
 
         Rectangle ViewArea { get; set; }
 

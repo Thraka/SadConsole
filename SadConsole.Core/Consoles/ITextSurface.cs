@@ -7,10 +7,10 @@ namespace SadConsole.Consoles
 {
     public interface ITextSurface
     {
-        Rectangle AbsoluteArea { get; }
-        Rectangle[] RenderRects { get; }
+        Rectangle AbsoluteArea { get; set; }
+        Rectangle[] RenderRects { get; set; }
         Cell[] Cells { get; }
-        Cell[] RenderCells { get; }
+        Cell[] RenderCells { get; set; }
         int Width { get; }
         int Height { get; }
 
@@ -18,5 +18,9 @@ namespace SadConsole.Consoles
         Color DefaultBackground { get; set; }
         Color DefaultForeground { get; set; }
         Color Tint { get; set; }
+
+        bool IsValidCell(int x, int y);
+        bool IsValidCell(int x, int y, out int index);
+        Cell GetCell(int x, int y);
     }
 }

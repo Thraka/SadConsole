@@ -246,7 +246,7 @@
 			            this.SetCellAppearance(x, 0, _currentAppearanceButton);
 			        }
                     this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.CharacterIndex, null);
-                    this.Print(4, 0, Text.Align(TextAlignment, this.Width - 4));
+                    this.Print(4, 0, Text.Align(TextAlignment, textSurface.Width - 4));
                     this.SetCharacter(0, 0, 40);
                     this.SetCharacter(2, 0, 41);
 

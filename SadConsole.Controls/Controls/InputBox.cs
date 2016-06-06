@@ -192,7 +192,7 @@
         public InputBox(int width)
             : base(width, 1)
         {
-            effects = new Effects.EffectsManager(this);
+            effects = new Effects.EffectsManager(textSurface);
             DetermineAppearance();
         }
         #endregion
@@ -336,7 +336,7 @@
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, this.Width - 1);
+                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, textSurface.Width - 1);
 
                     this.IsDirty = true;
 

@@ -1,64 +1,67 @@
-﻿using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using Color = Microsoft.Xna.Framework.Color;
-using SpriteEffects = Microsoft.Xna.Framework.Graphics.SpriteEffects;
-
-
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using SadConsole.Effects;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
-using SadConsole.Effects;
 
 namespace SadConsole.Consoles
 {
-    public class SurfaceEditor
+    /// <summary>
+    /// Represents all the basic information about console text and methods to manipulate that text.
+    /// </summary>
+    public class TextSurface : TextSurfaceBase
     {
-        protected ITextSurface textSurface;
-        protected Cell[] cells;
-        protected int width;
-        protected int height;
+        protected Rectangle area;
 
         public int TimesShiftedDown;
         public int TimesShiftedRight;
         public int TimesShiftedLeft;
         public int TimesShiftedUp;
-        
-        public ITextSurface TextSurface
+
+        #region Properties
+        public Rectangle ViewArea
         {
-            get { return textSurface; }
+            get { return area; }
             set
             {
-                if (value == null)
-                    throw new NullReferenceException();
+                //if (area.Width > data.ViewArea.Width)
+                //    throw new ArgumentOutOfRangeException("area", "The area is too wide for the surface.");
+                //if (area.Height > data.ViewArea.Height)
+                //    throw new ArgumentOutOfRangeException("area", "The area is too tall for the surface.");
 
-                var old = textSurface;
-                textSurface = value;
-                
-                OnSurfaceChanged(old, value);
+                //if (area.X < 0)
+                //    throw new ArgumentOutOfRangeException("area", "The left of the area cannot be less than 0.");
+                //if (area.Y < 0)
+                //    throw new ArgumentOutOfRangeException("area", "The top of the area cannot be less than 0.");
+
+                //if (area.X + area.Width > data.ViewArea.Width)
+                //    throw new ArgumentOutOfRangeException("area", "The area x + width is too wide for the surface.");
+                //if (area.Y + area.Height > data.ViewArea.Height)
+                //    throw new ArgumentOutOfRangeException("area", "The area y + height is too tal for the surface.");
+
+                area = value;
+
+                if (area.Width > base.Width)
+                    area.Width = base.Width;
+                if (area.Height > base.Height)
+                    area.Height = base.Height;
+
+                if (area.X < 0)
+                    area.X = 0;
+                if (area.Y < 0)
+                    area.Y = 0;
+
+                if (area.X + area.Width > base.Width)
+                    area.X = base.Width - area.Width;
+                if (area.Y + area.Height > base.Height)
+                    area.Y = base.Height - area.Height;
+
+                ResetArea();
             }
         }
-
-        /// <summary>
-        /// Gets a cell based on it's coordinates on the surface.
-        /// </summary>
-        /// <param name="x">The X coordinate.</param>
-        /// <param name="y">The Y coordinate.</param>
-        /// <returns>The indicated cell.</returns>
-        public Cell this[int x, int y]
-        {
-            get { return cells[y * width + x]; }
-            protected set { cells[y * width + x] = value; }
-        }
-
-        /// <summary>
-        /// Gets a cell by index.
-        /// </summary>
-        /// <param name="index">The index of the cell.</param>
-        /// <returns>The indicated cell.</returns>
-        public Cell this[int index]
-        {
-            get { return cells[index]; }
-            protected set { cells[index] = value; }
-        }
+        #endregion
 
         #region Constructors
         /// <summary>
@@ -67,21 +70,70 @@ namespace SadConsole.Consoles
         /// <remarks>You must set the Font property before rendering this cell surface.</remarks>
         //public ConsoleData() : this(1, 1, Engine.DefaultFont) { }
 
-        public SurfaceEditor(ITextSurface surface)
+        public TextSurface(int width, int height) : this(width, height, Engine.DefaultFont) { }
+
+        public TextSurface(int width, int height, Font font)
         {
-            cells = surface.Cells;
-            width = surface.Width;
-            height = surface.Height;
-            textSurface = surface;
+            DefaultBackground = Color.Transparent;
+            DefaultForeground = Color.White;
+            base.font = font;
+            base.width = width;
+            base.height = height;
+            area = new Rectangle(0, 0, width, height);
+
+            InitializeCells();
         }
+
+        protected TextSurface() { }
         #endregion
 
-        protected virtual void OnSurfaceChanged(ITextSurface oldSurface, ITextSurface newSurface)
+        #region Private Methods
+        /// <summary>
+        /// Initializes the cells. This method caches all of the rendering points and rectangles and initializes each cell.
+        /// </summary>
+        /// <param name="oldWidth">The old size of the surface in width. Used when resizing to preserve existing cells.</param>
+        protected virtual void InitializeCells()
         {
-            cells = textSurface.Cells;
-            width = textSurface.Width;
-            height = textSurface.Height;
+            base.cells = new Cell[base.width * base.height];
+            base.renderCells = cells;
+
+            for (int i = 0; i < base.cells.Length; i++)
+            {
+                base.cells[i] = new Cell();
+                base.cells[i].Foreground = this.DefaultForeground;
+                base.cells[i].Background = this.DefaultBackground;
+                base.cells[i].OnCreated();
+            }
+
+            // Setup the new render area
+            ResetArea();
         }
+
+        /// <summary>
+        /// Keeps the text view data in sync with this surface.
+        /// </summary>
+        protected virtual void ResetArea()
+        {
+            RenderRects = new Rectangle[area.Width * area.Height];
+            renderCells = new Cell[area.Width * area.Height];
+
+            int index = 0;
+
+            for (int y = 0; y < area.Height; y++)
+            {
+                for (int x = 0; x < area.Width; x++)
+                {
+                    RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
+                    renderCells[index] = base.cells[(y + area.Top) * width + (x + area.Left)];
+                    index++;
+                }
+            }
+
+            // TODO: Optimization by calculating AbsArea and seeing if it's diff from current, if so, don't create new RenderRects
+            AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
+        }
+
+        #endregion
 
         #region Public Methods
 
@@ -143,43 +195,153 @@ namespace SadConsole.Consoles
         #endregion
 
         #region Copy
-        
+        /// <summary>
+        /// Copies the contents of this cell surface to the destination.
+        /// </summary>
+        /// <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
+        /// <param name="destination">The destination surface.</param>
+        public void Copy(TextSurface destination)
+        {
+            int maxX = this.width >= destination.width ? destination.width : this.width;
+            int maxY = this.height >= destination.height ? destination.height : this.height;
 
+            for (int x = 0; x < maxX; x++)
+            {
+                for (int y = 0; y < maxY; y++)
+                {
+                    if (IsValidCell(x, y) && destination.IsValidCell(x, y))
+                    {
+                        var sourceCell = this[x, y];
+                        var desCell = destination[x, y];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        desCell.Effect = sourceCell.Effect;
+                    }
+                }
+            }
+        }
 
+        /// <summary>
+        /// Copies the contents of this cell surface to the destination at the specified x,y.
+        /// </summary>
+        /// <param name="x">The x coordinate of the destination.</param>
+        /// <param name="y">The y coordinate of the destination.</param>
+        /// <param name="destination">The destination surface.</param>
+        public void Copy(TextSurface destination, int x, int y)
+        {
+            for (int curx = 0; curx < width; curx++)
+            {
+                for (int cury = 0; cury < height; cury++)
+                {
+                    var sourceCell = this[curx, cury];
 
+                    if (destination.IsValidCell(x + curx, y + cury))
+                    {
+                        var desCell = destination[x + curx, y + cury];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        desCell.Effect = sourceCell.Effect;
+                    }
+                }
+            }
+        }
 
+        /// <summary>
+        /// Copies the contents of this cell surface at the specified x,y coordinates to the destination.
+        /// </summary>
+        /// <param name="x">The x coordinate to start from.</param>
+        /// <param name="y">The y coordinate to start from.</param>
+        /// <param name="destination">The destination surface.</param>
+        public void Copy(int x, int y, TextSurface destination)
+        {
+            int maxX = this.width - x >= destination.width ? destination.width : this.width;
+            int maxY = this.height - y >= destination.height ? destination.height : this.height;
 
+            int destX = 0;
+            int destY = 0;
 
+            for (int curx = x; curx < maxX; curx++)
+            {
+                for (int cury = y; cury < maxY; cury++)
+                {
+                    if (IsValidCell(curx, cury) && destination.IsValidCell(destX, destY))
+                    {
+                        var sourceCell = this[curx, cury];
+                        var desCell = destination[destX, destY];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        desCell.Effect = sourceCell.Effect;
+                        destY++;
+                    }
+                }
+                destY = 0;
+                destX++;
+            }
+        }
 
+        /// <summary>
+        /// Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height.
+        /// </summary>
+        /// <param name="x">The x coordinate to start from.</param>
+        /// <param name="y">The y coordinate to start from.</param>
+        /// <param name="width">The width to copy from.</param>
+        /// <param name="height">The height to copy from.</param>
+        /// <param name="destination">The destination surface.</param>
+        public void Copy(int x, int y, int width, int height, TextSurface destination)
+        {
+            int maxX = width > destination.width ? destination.width : x + width;
+            int maxY = height > destination.height ? destination.height : y + height;
 
+            int destX = 0;
+            int destY = 0;
 
+            for (int curx = 0; curx < maxX; curx++)
+            {
+                for (int cury = 0; cury < maxY; cury++)
+                {
+                    if (IsValidCell(curx + x, cury + y) && destination.IsValidCell(destX, destY))
+                    {
+                        var sourceCell = this[curx + x, cury + y];
+                        var desCell = destination[destX, destY];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        desCell.Effect = sourceCell.Effect;
+                        destY++;
+                    }
+                }
+                destY = 0;
+                destX++;
+            }
+        }
 
+        /// <summary>
+        /// Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
+        /// </summary>
+        /// <param name="x">The x coordinate to start from.</param>
+        /// <param name="y">The y coordinate to start from.</param>
+        /// <param name="width">The width to copy from.</param>
+        /// <param name="height">The height to copy from.</param>
+        /// <param name="destination">The destination surface.</param>
+        /// <param name="destinationX">The x coordinate to copy to.</param>
+        /// <param name="destinationY">The y coordinate to copy to.</param>
+        public void Copy(int x, int y, int width, int height, TextSurface destination, int destinationX, int destinationY)
+        {
+            int destX = destinationX;
+            int destY = destinationY;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            for (int curx = 0; curx < width; curx++)
+            {
+                for (int cury = 0; cury < height; cury++)
+                {
+                    if (IsValidCell(curx + x, cury + y) && destination.IsValidCell(destX, destY))
+                    {
+                        var sourceCell = this[curx + x, cury + y];
+                        var desCell = destination[destX, destY];
+                        sourceCell.CopyAppearanceTo(desCell);
+                        desCell.Effect = sourceCell.Effect;
+                    }
+                    destY++;
+                }
+                destY = destinationY;
+                destX++;
+            }
+        }
         #endregion
 
         #region Cell Manipulation
@@ -363,33 +525,10 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <param name="spriteEffect">The sprite effect of the cell.</param>
+        /// <returns>The color.</returns>
         public void SetSpriteEffect(int x, int y, SpriteEffects spriteEffect)
         {
             cells[y * width + x].SpriteEffect = spriteEffect;
-        }
-
-        /// <summary>
-        /// Fills a console with random colors and characters.
-        /// </summary>
-        public void FillWithRandomGarbage(bool useEffect = false)
-        {
-            //pulse.Reset();
-            int charCounter = 0;
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    SetCharacter(x, y, charCounter);
-                    SetForeground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
-                    SetBackground(x, y, textSurface.DefaultBackground);
-                    SetBackground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
-                    SetSpriteEffect(x, y, (SpriteEffects)Engine.Random.Next(0, 4));
-                    charCounter++;
-                    if (charCounter > 255)
-                        charCounter = 0;
-                }
-            }
         }
         #endregion
 
@@ -653,7 +792,7 @@ namespace SadConsole.Consoles
         /// </summary>
         public void Clear()
         {
-            Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, 0, null);
+            Fill(DefaultForeground, DefaultBackground, 0, null);
         }
 
         /// <summary>
@@ -665,8 +804,9 @@ namespace SadConsole.Consoles
         {
             var cell = cells[y * width + x];
             cell.Reset();
-            cell.Foreground = textSurface.DefaultForeground;
-            cell.Background = textSurface.DefaultBackground;
+            cell.Foreground = DefaultForeground;
+            cell.Background = DefaultBackground;
+            cell.Effect = null;
         }
         #endregion
 
@@ -991,7 +1131,7 @@ namespace SadConsole.Consoles
                     destination.Effect = wrappedCells[i].Item1.Effect;
                 }
         }
-
+        
         #endregion
 
         #region Fill
@@ -1087,7 +1227,7 @@ namespace SadConsole.Consoles
                         cell.Background = background;
                         cell.CharacterIndex = character;
                         cell.SpriteEffect = spriteEffect;
-                        cell.Effect = effect;
+                        cell.Effect= effect;
                     }
                 }
             }
@@ -1097,26 +1237,84 @@ namespace SadConsole.Consoles
         #endregion
         #endregion
 
+        
+        /// <summary>
+        /// Saves this TextSurface.
+        /// </summary>
+        /// <param name="file">The file to save the TextSurface too.</param>
+        public void Save(string file)
+        {
+            TextSurfaceSerialized.Save(this, file);
+        }
 
-        ///// <summary>
-        ///// Saves this TextSurface.
-        ///// </summary>
-        ///// <param name="file">The file to save the TextSurface too.</param>
-        //public void Save(string file)
-        //{
-        //    TextSurfaceSerialized.Save(this, file);
-        //}
+        /// <summary>
+        /// Loads a TextSurface.
+        /// </summary>
+        /// <param name="file">The file to load.</param>
+        /// <returns></returns>
+        public static TextSurface Load(string file)
+        {
+            return TextSurfaceSerialized.Load(file);
+        }
 
-        ///// <summary>
-        ///// Loads a TextSurface.
-        ///// </summary>
-        ///// <param name="file">The file to load.</param>
-        ///// <returns></returns>
-        //public static TextSurface Load(string file)
-        //{
-        //    return TextSurfaceSerialized.Load(file);
-        //}
+        [DataContract]
+        internal class TextSurfaceSerialized
+        {
+            [DataMember]
+            Cell[] Cells;
+
+            [DataMember]
+            Rectangle ViewArea;
+
+            [DataMember]
+            string FontName;
+
+            [DataMember]
+            int FontMultiple;
+
+            [DataMember]
+            int Width;
+
+            [DataMember]
+            int Height;
+
+            [DataMember]
+            Color Tint;
+
+            public static void Save(TextSurface surfaceBase, string file)
+            {
+                TextSurfaceSerialized data = new TextSurfaceSerialized();
+                data.Cells = surfaceBase.cells;
+                data.ViewArea = surfaceBase.ViewArea;
+                data.FontName = surfaceBase.font.Name;
+                data.FontMultiple = surfaceBase.font.SizeMultiple;
+                data.Width = surfaceBase.width;
+                data.Height = surfaceBase.height;
+                data.Tint = surfaceBase.Tint;
+
+                SadConsole.Serializer.Save(data, file);
+            }
+
+            public static TextSurface Load(string file)
+            {
+                TextSurfaceSerialized data = Serializer.Load<TextSurfaceSerialized>(file);
+                TextSurface newSurface = new TextSurface();
+
+                newSurface.width = data.Width;
+                newSurface.height = data.Height;
+                newSurface.cells = newSurface.renderCells = data.Cells;
+
+                // Try to find font
+                if (Engine.Fonts.ContainsKey(data.FontName))
+                    newSurface.font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
+                else
+                    newSurface.font = Engine.DefaultFont;
+
+                newSurface.ViewArea = data.ViewArea;
+                newSurface.Tint = data.Tint;
+
+                return newSurface;
+            }
+        }
     }
-
-
 }

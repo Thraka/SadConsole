@@ -105,7 +105,7 @@ namespace SadConsole.GameHelpers.WorldGeneration
 
         public TextSurface GetHeightMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new TextSurface(width, height);
+            var surface = new SurfaceEditor(new TextSurface(width, height, Engine.DefaultFont));
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -156,12 +156,12 @@ namespace SadConsole.GameHelpers.WorldGeneration
             }
 
             surface.SetPixels(pixels);
-            return surface;
+            return (TextSurface)surface.TextSurface;
         }
 
         public TextSurface GetHeatMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new TextSurface(width, height);
+            var surface = new SurfaceEditor(new TextSurface(width, height, Engine.DefaultFont));
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -195,14 +195,15 @@ namespace SadConsole.GameHelpers.WorldGeneration
                         pixels[x + y * width] = Color.Lerp(pixels[x + y * width], Color.Black, 0.4f);
                 }
             }
-
+            
+            
             surface.SetPixels(pixels);
-            return surface;
+            return (TextSurface)surface.TextSurface;
         }
 
         public TextSurface GetMoistureMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new TextSurface(width, height);
+            var surface = new SurfaceEditor(new TextSurface(width, height, Engine.DefaultFont));
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -227,12 +228,12 @@ namespace SadConsole.GameHelpers.WorldGeneration
             }
 
             surface.SetPixels(pixels);
-            return surface;
+            return (TextSurface)surface.TextSurface;
         }
 
         public TextSurface GetBiomeMapTexture(int width, int height, Tile[,] tiles, float coldest, float colder, float cold)
         {
-            var surface = new TextSurface(width, height);
+            var surface = new SurfaceEditor(new TextSurface(width, height, Engine.DefaultFont));
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -311,7 +312,7 @@ namespace SadConsole.GameHelpers.WorldGeneration
             }
 
             surface.SetPixels(pixels);
-            return surface;
+            return (TextSurface)surface.TextSurface;
         }
     }
 }

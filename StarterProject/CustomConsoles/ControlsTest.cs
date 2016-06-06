@@ -151,7 +151,7 @@ namespace StarterProject.CustomConsoles
             //{
             //    foreach (var color2 in colors)
             //    {
-            //        _textSurface.Print(x, y, new ColoredString(color2.Item2.PadRight(colorLength).Substring(0, colorLength), color2.Item1, color1.Item1, null));
+            //        _Print(x, y, new ColoredString(color2.Item2.PadRight(colorLength).Substring(0, colorLength), color2.Item1, color1.Item1, null));
             //        y++;
             //    }
 
@@ -192,12 +192,12 @@ namespace StarterProject.CustomConsoles
         {
             base.Invalidate();
 
-            _textSurface.Print(50, 2, "CLICK BTN - USE UP/DOWN KEYS", StarterProject.Theme.YellowDark);
+            Print(50, 2, "CLICK BTN - USE UP/DOWN KEYS", StarterProject.Theme.YellowDark);
 
-            _textSurface.Print(1, 1, "CONTROL LIBRARY TEST", StarterProject.Theme.YellowDark);
-            _textSurface.Print(1, 2, "____________________", spriteEffect: Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically);
+            Print(1, 1, "CONTROL LIBRARY TEST", StarterProject.Theme.YellowDark);
+            Print(1, 2, "____________________", spriteEffect: Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically);
 
-            _textSurface.Print(2, 15, "RED ".CreateColored(StarterProject.Theme.Red, null) +
+            Print(2, 15, "RED ".CreateColored(StarterProject.Theme.Red, null) +
                                       "PURPLE ".CreateColored(StarterProject.Theme.Purple, null) +
                                       "BLUE ".CreateColored(StarterProject.Theme.Blue, null) +
                                       "CYAN ".CreateColored(StarterProject.Theme.Cyan, null) +
@@ -209,7 +209,7 @@ namespace StarterProject.CustomConsoles
                                       "WHITE ".CreateColored(StarterProject.Theme.White, null)
                                       );
 
-            _textSurface.Print(2, 16, "RED ".CreateColored(StarterProject.Theme.RedDark, null) +
+            Print(2, 16, "RED ".CreateColored(StarterProject.Theme.RedDark, null) +
                                       "PURPLE ".CreateColored(StarterProject.Theme.PurpleDark, null) +
                                       "BLUE ".CreateColored(StarterProject.Theme.BlueDark, null) +
                                       "CYAN ".CreateColored(StarterProject.Theme.CyanDark, null) +
@@ -221,18 +221,18 @@ namespace StarterProject.CustomConsoles
                                       "BLACK ".CreateColored(StarterProject.Theme.Black, null)
                                       );
 
-            _textSurface.Print(2, 18, CreateGradientExample("RED", StarterProject.Theme.Red, StarterProject.Theme.RedDark));
-            _textSurface.Print(2, 19, CreateGradientExample("PURPLE", StarterProject.Theme.Purple, StarterProject.Theme.PurpleDark));
-            _textSurface.Print(2, 20, CreateGradientExample("BLUE", StarterProject.Theme.Blue, StarterProject.Theme.BlueDark));
-            _textSurface.Print(2, 21, CreateGradientExample("CYAN", StarterProject.Theme.Cyan, StarterProject.Theme.CyanDark));
-            _textSurface.Print(2, 22, CreateGradientExample("GREEN", StarterProject.Theme.Green, StarterProject.Theme.GreenDark));
-            _textSurface.Print(34, 18, CreateGradientExample("YELLOW", StarterProject.Theme.Yellow, StarterProject.Theme.YellowDark));
-            _textSurface.Print(34, 19, CreateGradientExample("ORANGE", StarterProject.Theme.Orange, StarterProject.Theme.OrangeDark));
-            _textSurface.Print(34, 20, CreateGradientExample("BROWN", StarterProject.Theme.Brown, StarterProject.Theme.BrownDark));
-            _textSurface.Print(34, 21, CreateGradientExample("GRAY", StarterProject.Theme.Gray, StarterProject.Theme.GrayDark));
-            _textSurface.Print(34, 22, CreateGradientExample("WHITE", StarterProject.Theme.White, StarterProject.Theme.Black));
+            Print(2, 18, CreateGradientExample("RED", StarterProject.Theme.Red, StarterProject.Theme.RedDark));
+            Print(2, 19, CreateGradientExample("PURPLE", StarterProject.Theme.Purple, StarterProject.Theme.PurpleDark));
+            Print(2, 20, CreateGradientExample("BLUE", StarterProject.Theme.Blue, StarterProject.Theme.BlueDark));
+            Print(2, 21, CreateGradientExample("CYAN", StarterProject.Theme.Cyan, StarterProject.Theme.CyanDark));
+            Print(2, 22, CreateGradientExample("GREEN", StarterProject.Theme.Green, StarterProject.Theme.GreenDark));
+            Print(34, 18, CreateGradientExample("YELLOW", StarterProject.Theme.Yellow, StarterProject.Theme.YellowDark));
+            Print(34, 19, CreateGradientExample("ORANGE", StarterProject.Theme.Orange, StarterProject.Theme.OrangeDark));
+            Print(34, 20, CreateGradientExample("BROWN", StarterProject.Theme.Brown, StarterProject.Theme.BrownDark));
+            Print(34, 21, CreateGradientExample("GRAY", StarterProject.Theme.Gray, StarterProject.Theme.GrayDark));
+            Print(34, 22, CreateGradientExample("WHITE", StarterProject.Theme.White, StarterProject.Theme.Black));
 
-            _textSurface.Print(2, 23, CreateGradientExample("GOLD", StarterProject.Theme.Gold, StarterProject.Theme.GoldDark));
+            Print(2, 23, CreateGradientExample("GOLD", StarterProject.Theme.Gold, StarterProject.Theme.GoldDark));
         }
 
         private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7)

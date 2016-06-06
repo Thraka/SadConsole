@@ -36,9 +36,9 @@ namespace SadConsole.GameHelpers
                         if (Engine.Random.NextDouble() <= blankChance)
                             character = 32;
 
-
-                        frame.SetCharacter(x, y, character);
-                        frame.SetForeground(x, y, Microsoft.Xna.Framework.Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
+                        var editor = new Consoles.SurfaceEditor(frame);
+                        editor.SetCharacter(x, y, character);
+                        editor.SetForeground(x, y, Microsoft.Xna.Framework.Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
                     }
                 }
 
