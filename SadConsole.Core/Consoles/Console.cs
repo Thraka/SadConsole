@@ -14,7 +14,6 @@
     [KnownType(typeof(CellAppearance))]
     public partial class Console : SurfaceEditor, IConsole
     {
-        protected Rectangle area;
 
         #region Events
         /// <summary>
@@ -265,36 +264,7 @@
             get { return textSurface; }
             set { base.TextSurface = value; }
         }
-
-        /// <summary>
-        /// If explicitly set, 
-        /// </summary>
-        public Rectangle ViewArea
-        {
-            get { return area; }
-            set
-            {
-                area = value;
-
-                if (area.Width > textSurface.Width)
-                    area.Width = textSurface.Width;
-                if (area.Height > textSurface.Height)
-                    area.Height = textSurface.Height;
-
-                if (area.X < 0)
-                    area.X = 0;
-                if (area.Y < 0)
-                    area.Y = 0;
-
-                if (area.X + area.Width > textSurface.Width)
-                    area.X = textSurface.Width - area.Width;
-                if (area.Y + area.Height > textSurface.Height)
-                    area.Y = textSurface.Height - area.Height;
-
-                ResetArea();
-            }
-        }
-
+        
         /// <summary>
         /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
         /// </summary>
@@ -312,7 +282,6 @@
             _virtualCursor = new Cursor(this);
             Renderer = new TextSurfaceRenderer();
             textSurface = textData;
-            ViewArea = new Rectangle(0, 0, textSurface.Width, textSurface.Height);
         }
         #endregion
 
@@ -320,7 +289,6 @@
         {
             base.OnSurfaceChanged(oldSurface, newSurface);
             textSurface = newSurface;
-            ViewArea = area;
         }
 
         protected virtual void OnMouseEnter(MouseInfo info)
@@ -356,34 +324,7 @@
                 MouseButtonClicked(this, new MouseEventArgs(info));
         }
 
-
-        /// <summary>
-        /// Keeps the text view data in sync with this surface.
-        /// </summary>
-        protected virtual void ResetArea()
-        {
-            var renderRects = new Rectangle[area.Width * area.Height];
-            var renderCells = new Cell[area.Width * area.Height];
-
-            int index = 0;
-
-            for (int y = 0; y < area.Height; y++)
-            {
-                for (int x = 0; x < area.Width; x++)
-                {
-                    renderRects[index] = new Rectangle(x * textSurface.Font.Size.X, y * textSurface.Font.Size.Y, textSurface.Font.Size.X, textSurface.Font.Size.Y);
-                    renderCells[index] = textSurface.Cells[(y + area.Top) * textSurface.Width + (x + area.Left)];
-                    index++;
-                }
-            }
-
-            // TODO: Optimization by calculating AbsArea and seeing if it's diff from current, if so, don't create new RenderRects
-            textSurface.AbsoluteArea = new Rectangle(0, 0, area.Width * textSurface.Font.Size.X, area.Height * textSurface.Font.Size.Y);
-            textSurface.RenderCells = renderCells;
-            textSurface.RenderRects = renderRects;
-        }
-
-
+        
         /// <summary>
         /// Processes the mouse.
         /// </summary>
@@ -567,8 +508,8 @@
             if (VirtualCursor.IsVisible)
             {
                 int virtualCursorLocationIndex = Consoles.TextSurface.GetIndexFromPoint(
-                    new Point(VirtualCursor.Position.X - ViewArea.X,
-                              VirtualCursor.Position.Y - ViewArea.Y), ViewArea.Width);
+                    new Point(VirtualCursor.Position.X - Data.ViewArea.X,
+                              VirtualCursor.Position.Y - Data.ViewArea.Y), Data.ViewArea.Width);
 
                 if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
                 {

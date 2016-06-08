@@ -15,6 +15,7 @@ namespace SadConsole.Consoles
     public class TextSurface : IEnumerable<Cell>, ITextSurface
     {
         protected Font font;
+        protected Rectangle area;
 
         /// <summary>
         /// An array of all cells in this surface.
@@ -109,8 +110,39 @@ namespace SadConsole.Consoles
         /// </summary>
         public Color Tint { get; set; } = Color.Transparent;
 
+        /// <summary>
+        /// Sets the area of the text surface that should be rendered.
+        /// </summary>
+        public Rectangle ViewArea
+        {
+            get { return area; }
+            set
+            {
+                area = value;
+
+                if (area == null)
+                    area = new Rectangle(0, 0, width, height);
+
+                if (area.Width > width)
+                    area.Width = width;
+                if (area.Height > height)
+                    area.Height = height;
+
+                if (area.X < 0)
+                    area.X = 0;
+                if (area.Y < 0)
+                    area.Y = 0;
+
+                if (area.X + area.Width > width)
+                    area.X = width - area.Width;
+                if (area.Y + area.Height > height)
+                    area.Y = height - area.Height;
+
+                ResetArea();
+            }
+        }
         #endregion
-        
+
         /// <summary>
         /// Creates a new text surface with the specified width and height.
         /// </summary>
@@ -123,6 +155,7 @@ namespace SadConsole.Consoles
             this.height = height;
             InitializeCells();
             Font = font;
+            ViewArea = new Rectangle(0, 0, width, height);
         }
 
         /// <summary>
@@ -141,6 +174,30 @@ namespace SadConsole.Consoles
                 cells[i].Background = this.DefaultBackground;
                 cells[i].OnCreated();
             }
+        }
+
+        /// <summary>
+        /// Keeps the text view data in sync with this surface.
+        /// </summary>
+        protected virtual void ResetArea()
+        {
+            RenderRects = new Rectangle[area.Width * area.Height];
+            RenderCells = new Cell[area.Width * area.Height];
+
+            int index = 0;
+
+            for (int y = 0; y < area.Height; y++)
+            {
+                for (int x = 0; x < area.Width; x++)
+                {
+                    RenderRects[index] = new Rectangle(x * font.Size.X, y * font.Size.Y, font.Size.X, font.Size.Y);
+                    RenderCells[index] = cells[(y + area.Top) * width + (x + area.Left)];
+                    index++;
+                }
+            }
+
+            // TODO: Optimization by calculating AbsArea and seeing if it's diff from current, if so, don't create new RenderRects
+            AbsoluteArea = new Rectangle(0, 0, area.Width * font.Size.X, area.Height * font.Size.Y);
         }
 
         protected virtual void OnFontChanged()

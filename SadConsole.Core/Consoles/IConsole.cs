@@ -12,7 +12,7 @@
 
         ITextSurface Data { get; set; }
 
-        Rectangle ViewArea { get; set; }
+        //Rectangle ViewArea { get; set; }
 
         Cursor VirtualCursor { get; }
 
