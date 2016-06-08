@@ -7,10 +7,15 @@ namespace SadConsole.Consoles
 {
     public class LayeredTextSurface: TextSurface
     {
-        protected Cell[][] renderCellsLayers;
-        protected Cell[][] cellsLayers;
+        public class Layer
+        {
+            public Cell[] Cells;
+            public Cell[] RenderCells;
+            public bool IsVisible;
+        }
+        protected Layer[] Layers;
 
-        public int Layers { get; private set; }
+        public int LayerCount { get; private set; }
 
         public int ActiveLayerIndex { get; private set; }
 
@@ -18,41 +23,37 @@ namespace SadConsole.Consoles
 
         public LayeredTextSurface(int width, int height, int layers, Font font): base(width, height, font)
         {
-            Layers = layers;
+            Layers = new Layer[layers];
+            LayerCount = layers;
 
             for (int i = 0; i < layers; i++)
-            {
-
-            }
+                Layers[i] = new Layer();
         }
 
         public void SetActiveLayer(int index)
         {
-            if (ActiveLayerIndex <= 0 || ActiveLayerIndex >= Layers)
+            if (ActiveLayerIndex <= 0 || ActiveLayerIndex >= LayerCount)
                 throw new ArgumentOutOfRangeException("index");
 
-            base.cells = cellsLayers[index];
-            base.RenderCells = renderCellsLayers[index];
+            base.cells = Layers[index].Cells;
+            base.RenderCells = Layers[index].RenderCells;
         }
 
         protected override void InitializeCells()
         {
-            cellsLayers = new Cell[Layers][];
-            renderCellsLayers = new Cell[Layers][];
-
-            for (int i = 0; i < Layers; i++)
+            for (int i = 0; i < LayerCount; i++)
             {
-                cellsLayers[i] = new Cell[width * height];
+                Layers[i].Cells = new Cell[width * height];
 
                 for (int c = 0; c < base.cells.Length; c++)
                 {
-                    cellsLayers[i][c] = new Cell();
-                    cellsLayers[i][c].Foreground = this.DefaultForeground;
-                    cellsLayers[i][c].Background = this.DefaultBackground;
-                    cellsLayers[i][c].OnCreated();
+                    Layers[i].Cells[c] = new Cell();
+                    Layers[i].Cells[c].Foreground = this.DefaultForeground;
+                    Layers[i].Cells[c].Background = this.DefaultBackground;
+                    Layers[i].Cells[c].OnCreated();
                 }
 
-                renderCellsLayers[i] = cellsLayers[i];
+                Layers[i].RenderCells = Layers[i].Cells;
             }
             
             // Setup the new render area

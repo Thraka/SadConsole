@@ -444,20 +444,6 @@
         protected virtual void OnPositionChanged(Point oldLocation) { }
 
 
-        [OnSerializing]
-        private void BeforeSerializing(StreamingContext context)
-        {
-            if (_currentAnimation != null)
-                _currentAnimationName = _currentAnimation.Name;
-        }
-
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            if (_currentAnimationName != null)
-                SetActiveAnimation(_currentAnimationName);
-        }
-
         public void Save(string file)
         {
             //SadConsole.Serializer.Save<Entity>(this, file, new System.Type[] { typeof(List<Frame>) });

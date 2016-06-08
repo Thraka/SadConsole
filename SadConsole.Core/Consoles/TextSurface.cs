@@ -19,7 +19,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// An array of all cells in this surface.
         /// </summary>
-        /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="_width"/> and <see cref="_height"/> properties instead. The cell data can be changed.</remarks>
+        /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="width"/> and <see cref="height"/> properties instead. The cell data can be changed.</remarks>
         protected Cell[] cells;
         protected int width = 1;
         protected int height = 1;
@@ -78,21 +78,45 @@ namespace SadConsole.Consoles
             get { return height; }
         }
 
+        /// <summary>
+        /// Font used with rendering.
+        /// </summary>
         public Font Font { get { return font; } set { font = value; OnFontChanged(); } }
 
         #region ITextSurfaceView
+        /// <summary>
+        /// Pixel area of the render cells.
+        /// </summary>
         public Rectangle AbsoluteArea { get; set; }
 
+        /// <summary>
+        /// Destination rectangles for rendering.
+        /// </summary>
         public Rectangle[] RenderRects { get; set; }
 
+        /// <summary>
+        /// All cells of the surface.
+        /// </summary>
         public Cell[] Cells { get { return cells; } }
 
+        /// <summary>
+        /// Cells that will be rendered.
+        /// </summary>
         public Cell[] RenderCells { get; set; }
 
+        /// <summary>
+        /// A tint used in rendering.
+        /// </summary>
         public Color Tint { get; set; } = Color.Transparent;
 
         #endregion
         
+        /// <summary>
+        /// Creates a new text surface with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">THe height of the surface.</param>
+        /// <param name="font">The font used with rendering.</param>
         public TextSurface(int width, int height, Font font)
         {
             this.width = width;

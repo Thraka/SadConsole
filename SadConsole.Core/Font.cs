@@ -11,6 +11,7 @@ namespace SadConsole
         public enum FontSizes
         {
             Half,
+            One,
             Two,
             Three,
             Four
