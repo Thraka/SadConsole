@@ -10,8 +10,6 @@
     /// <summary>
     /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
     /// </summary>
-    [DataContract]
-    [KnownType(typeof(CellAppearance))]
     public partial class Console : SurfaceEditor, IConsole
     {
 
@@ -65,13 +63,11 @@
         /// <summary>
         /// The private virtual curser reference.
         /// </summary>
-        [DataMember(Name = "VirtualCursor")]
         protected Cursor _virtualCursor;
 
         /// <summary>
         /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
         /// </summary>
-        [DataMember]
         public bool AutoCursorOnFocus { get; set; }
 
         /// <summary>
@@ -130,49 +126,41 @@
         /// <summary>
         /// When true, this console will move to the front of its parent console when focused.
         /// </summary>
-        [DataMember]
         public bool MoveToFrontOnMouseFocus { get; set; }
 
         /// <summary>
         /// Allows the mouse (with a click) to focus this console.
         /// </summary>
-        [DataMember]
         public bool MouseCanFocus { get; set; }
 
         /// <summary>
         /// Allows this console to accept keyboard input.
         /// </summary>
-        [DataMember]
         public bool CanUseKeyboard { get; set; }
 
         /// <summary>
         /// Allows this console to accept mouse input.
         /// </summary>
-        [DataMember]
         public bool CanUseMouse { get; set; }
 
         /// <summary>
         /// Allows this console to be focusable.
         /// </summary>
-        [DataMember]
         public bool CanFocus { get; set; }
 
         /// <summary>
         /// Indicates whether or not this console is visible.
         /// </summary>
-        [DataMember]
         public bool IsVisible { get { return _isVisible; } set { _isVisible = value; OnVisibleChanged(); } }
 
         /// <summary>
         /// When false, does not perform the code within the <see cref="Update"/> method. Defaults to true.
         /// </summary>
-        [DataMember]
         public bool DoUpdate { get; set; } = true;
 
         /// <summary>
         /// The renderer used to draw <see cref="Data"/>.
         /// </summary>
-        [DataMember]
         public ITextSurfaceRenderer Renderer
         {
             get { return _renderer; }
@@ -193,7 +181,6 @@
         /// <summary>
         /// Gets or sets the position to render the cells.
         /// </summary>
-        [DataMember]
         public Point Position
         {
             get { return _position; }
@@ -508,8 +495,8 @@
             if (VirtualCursor.IsVisible)
             {
                 int virtualCursorLocationIndex = Consoles.TextSurface.GetIndexFromPoint(
-                    new Point(VirtualCursor.Position.X - Data.ViewArea.X,
-                              VirtualCursor.Position.Y - Data.ViewArea.Y), Data.ViewArea.Width);
+                    new Point(VirtualCursor.Position.X - Data.RenderArea.X,
+                              VirtualCursor.Position.Y - Data.RenderArea.Y), Data.RenderArea.Width);
 
                 if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
                 {
@@ -575,6 +562,131 @@
             _virtualCursor.AttachConsole(this);
         }
 
-        
+
+
+
+        #region Serialization
+        /// <summary>
+        /// Saves the <see cref="Console"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public void Save(string file, bool saveTextSurface)
+        {
+            new Serialized(this).Save(file);
+        }
+
+        /// <summary>
+        /// Loads a <see cref="TextSurface"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static Console Load(string file)
+        {
+            return Serialized.Load(file);
+        }
+
+        /// <summary>
+        /// Serialized instance of a <see cref="Console"/>.
+        /// </summary>
+        [DataContract]
+        public class Serialized
+        {
+            [DataMember]
+            public bool AutoCursorOnFocus;
+            [DataMember]
+            public bool CanFocus;
+            [DataMember]
+            public bool CanUseKeyboard;
+            [DataMember]
+            public bool CanUseMouse;
+            [DataMember]
+            public ITextSurface Data;
+            [DataMember]
+            public bool DoUpdate;
+            [DataMember]
+            public bool ExclusiveFocus;
+            [DataMember]
+            public bool IsFocused;
+            [DataMember]
+            public bool IsVisible;
+            [DataMember]
+            public bool MouseCanFocus;
+            [DataMember]
+            public bool MoveToFrontOnMouseFocus;
+            [DataMember]
+            public Point Position;
+            [DataMember]
+            public ITextSurfaceRenderer Renderer;
+            [DataMember]
+            public bool UsePixelPositioning;
+            [DataMember]
+            public Cursor VirtualCursor;
+
+            /// <summary>
+            /// Creates a serialized object from an existing <see cref="Console"/>.
+            /// </summary>
+            /// <param name="surface">The surface to serialize.</param>
+            public Serialized(Console console)
+            {
+                AutoCursorOnFocus = console.AutoCursorOnFocus;
+                CanFocus = console.CanFocus;
+                CanUseKeyboard = console.CanUseKeyboard;
+                CanUseMouse = console.CanUseMouse;
+                Data = console.Data;
+                DoUpdate = console.DoUpdate;
+                ExclusiveFocus = console.ExclusiveFocus;
+                IsFocused = console.IsFocused;
+                IsVisible = console.IsVisible;
+                MouseCanFocus = console.MouseCanFocus;
+                MoveToFrontOnMouseFocus = console.MoveToFrontOnMouseFocus;
+                Position = console.Position;
+                Renderer = console.Renderer;
+                UsePixelPositioning = console.UsePixelPositioning;
+                VirtualCursor = console.VirtualCursor;
+            }
+
+            protected Serialized() { }
+
+            /// <summary>
+            /// Saves the serialized <see cref="Console"/> to a file.
+            /// </summary>
+            /// <param name="file">The destination file.</param>
+            public void Save(string file)
+            {
+                SadConsole.Serializer.Save(this, file);
+            }
+
+            /// <summary>
+            /// Loads a <see cref="TextSurface"/> from a file.
+            /// </summary>
+            /// <param name="file">The source file.</param>
+            /// <returns>A surface.</returns>
+            public static Console Load(string file)
+            {
+                Serialized data = Serializer.Load<Serialized>(file);
+                Console console = new Console(data.Data);
+
+                console.AutoCursorOnFocus = data.AutoCursorOnFocus;
+                console.CanFocus = data.CanFocus;
+                console.CanUseMouse = data.CanUseMouse;
+                console.Data = data.Data;
+                console.DoUpdate = data.DoUpdate;
+                console.ExclusiveFocus = data.ExclusiveFocus;
+                console.IsFocused = data.IsFocused;
+                console.IsVisible = data.IsVisible;
+                console.MouseCanFocus = data.MouseCanFocus;
+                console.MoveToFrontOnMouseFocus = data.MoveToFrontOnMouseFocus;
+                console.Position = data.Position;
+                console.Renderer = data.Renderer;
+                console.UsePixelPositioning = data.UsePixelPositioning;
+                console._virtualCursor = data.VirtualCursor;
+
+                console._virtualCursor.AttachConsole(console);
+
+                return console;
+            }
+        }
+        #endregion
+
     }
 }

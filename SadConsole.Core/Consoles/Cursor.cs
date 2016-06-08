@@ -119,7 +119,7 @@
 
         }
 
-        internal void AttachConsole(Console console)
+        internal void AttachConsole(SurfaceEditor console)
         {
             _console = new WeakReference(console);
         }

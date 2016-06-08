@@ -50,6 +50,9 @@ namespace SadConsole
                 case FontSizes.Half:
                     Size = new Point((int)(masterFont.CellWidth * 0.5), (int)(masterFont.CellHeight * 0.5));
                     break;
+                case FontSizes.One:
+                    Size = new Point(masterFont.CellWidth, masterFont.CellHeight);
+                    break;
                 case FontSizes.Two:
                     Size = new Point(masterFont.CellWidth * 2, masterFont.CellHeight * 2);
                     break;

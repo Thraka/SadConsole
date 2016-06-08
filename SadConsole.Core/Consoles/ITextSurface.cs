@@ -18,7 +18,7 @@ namespace SadConsole.Consoles
         Color DefaultBackground { get; set; }
         Color DefaultForeground { get; set; }
         Color Tint { get; set; }
-        Rectangle ViewArea { get; set; }
+        Rectangle RenderArea { get; set; }
 
         bool IsValidCell(int x, int y);
         bool IsValidCell(int x, int y, out int index);

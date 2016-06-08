@@ -113,7 +113,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Sets the area of the text surface that should be rendered.
         /// </summary>
-        public Rectangle ViewArea
+        public Rectangle RenderArea
         {
             get { return area; }
             set
@@ -155,7 +155,7 @@ namespace SadConsole.Consoles
             this.height = height;
             InitializeCells();
             Font = font;
-            ViewArea = new Rectangle(0, 0, width, height);
+            RenderArea = new Rectangle(0, 0, width, height);
         }
 
         /// <summary>
@@ -456,6 +456,9 @@ namespace SadConsole.Consoles
             [DataMember]
             public Font.FontSizes FontMultiple;
 
+            [DataMember]
+            public Rectangle RenderArea;
+
             /// <summary>
             /// Creates a serialized object from an existing <see cref="TextSurface"/>.
             /// </summary>
@@ -470,6 +473,7 @@ namespace SadConsole.Consoles
                 DefaultBackground = surface.DefaultBackground;
                 DefaultForeground = surface.DefaultForeground;
                 Tint = surface.Tint;
+                RenderArea = surface.RenderArea;
             }
 
             protected Serialized() { }
@@ -503,6 +507,7 @@ namespace SadConsole.Consoles
                 newSurface.DefaultForeground = data.DefaultForeground;
                 newSurface.Tint = data.Tint;
                 newSurface.cells = data.Cells;
+                newSurface.RenderArea = data.RenderArea;
 
                 return newSurface;
             }

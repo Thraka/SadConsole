@@ -239,7 +239,7 @@
             if (this.IsDirty)
             {
                 // If we are doing text, then print it otherwise we're just displaying the button part
-                if (width != 1)
+                if (Width != 1)
                 {
                     for (int x = 0; x < 4; x++)
 			        {

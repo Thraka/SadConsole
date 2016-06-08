@@ -12,8 +12,6 @@
 
         ITextSurface Data { get; set; }
 
-        //Rectangle ViewArea { get; set; }
-
         Cursor VirtualCursor { get; }
 
         IConsoleList Parent { get; set; }

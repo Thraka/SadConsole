@@ -222,14 +222,14 @@
             if (_initialized)
             {
                 //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, height);
+                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, Height);
                 _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
                 _slider.IsVisible = false;
                 _slider.Theme = this.Theme.ScrollBarTheme;
-                _sliderRenderLocation = new Point(width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
+                _sliderRenderLocation = new Point(Width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
                 _slider.Position = new Point(_position.X + _sliderRenderLocation.X, _position.Y + _sliderRenderLocation.Y);
-                _border.Width = width;
-                _border.Height = height;
+                _border.Width = Width;
+                _border.Height = Height;
 
                 Compose();
             }
@@ -372,7 +372,7 @@
                 heightOffset = 2;
 
             // process the slider
-            int sliderItems = _containers.Count - (height - heightOffset);
+            int sliderItems = _containers.Count - (Height - heightOffset);
 
             if (sliderItems > 0)
             {
@@ -562,10 +562,10 @@
 
                 if (!HideBorder)
                 {
-                    endingRow = height - 2;
+                    endingRow = Height - 2;
                     startingRow = 1;
                     columnOffset = 1;
-                    columnEnd = width - 2;
+                    columnEnd = Width - 2;
                     _border.Foreground = this.Theme.Border.Foreground;
                     _border.BorderBackground = this.Theme.Border.Background;
                     _border.FillColor = this.Theme.Border.Background;
@@ -573,10 +573,10 @@
                 }
                 else
                 {
-                    endingRow = height;
+                    endingRow = Height;
                     startingRow = 0;
                     columnOffset = 0;
-                    columnEnd = width;
+                    columnEnd = Width;
                     this.Fill(this.Theme.Border.Foreground, this.Theme.Border.Background, 0, null);
                 }
 
