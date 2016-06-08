@@ -6,11 +6,19 @@ using System.Text;
 
 namespace SadConsole.Consoles
 {
+    /// <summary>
+    /// A text surface created from an existing text surface.
+    /// </summary>
     public class TextSurfaceView : TextSurface
     {
         private ITextSurface data;
         protected Rectangle originalArea;
         
+        /// <summary>
+        /// Creates a new surface view from an existing surface.
+        /// </summary>
+        /// <param name="surface">The source cell data.</param>
+        /// <param name="area">The area of the text surface.</param>
         public TextSurfaceView(ITextSurface surface, Rectangle area): base(area.Width, area.Height, surface.Font)
         {
             data = surface;
