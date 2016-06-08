@@ -159,7 +159,7 @@
         public bool DoUpdate { get; set; } = true;
 
         /// <summary>
-        /// The renderer used to draw <see cref="Data"/>.
+        /// The renderer used to draw <see cref="TextSurface"/>.
         /// </summary>
         public ITextSurfaceRenderer Renderer
         {
@@ -244,15 +244,6 @@
         public Func<IConsole, KeyboardInfo, bool> KeyboardHandler { get; set; }
 
         /// <summary>
-        /// The console text data.
-        /// </summary>
-        public ITextSurface Data
-        {
-            get { return textSurface; }
-            set { base.TextSurface = value; }
-        }
-        
-        /// <summary>
         /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
         /// </summary>
         public bool UsePixelPositioning { get; set; } = false;
@@ -271,13 +262,7 @@
             textSurface = textData;
         }
         #endregion
-
-        protected override void OnSurfaceChanged(ITextSurface oldSurface, ITextSurface newSurface)
-        {
-            base.OnSurfaceChanged(oldSurface, newSurface);
-            textSurface = newSurface;
-        }
-
+        
         protected virtual void OnMouseEnter(MouseInfo info)
         {
             if (MouseEnter != null)
@@ -495,8 +480,8 @@
             if (VirtualCursor.IsVisible)
             {
                 int virtualCursorLocationIndex = Consoles.TextSurface.GetIndexFromPoint(
-                    new Point(VirtualCursor.Position.X - Data.RenderArea.X,
-                              VirtualCursor.Position.Y - Data.RenderArea.Y), Data.RenderArea.Width);
+                    new Point(VirtualCursor.Position.X - TextSurface.RenderArea.X,
+                              VirtualCursor.Position.Y - TextSurface.RenderArea.Y), TextSurface.RenderArea.Width);
 
                 if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
                 {
@@ -576,7 +561,7 @@
         }
 
         /// <summary>
-        /// Loads a <see cref="TextSurface"/> from a file.
+        /// Loads a <see cref="Consoles.TextSurface"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
@@ -632,7 +617,7 @@
                 CanFocus = console.CanFocus;
                 CanUseKeyboard = console.CanUseKeyboard;
                 CanUseMouse = console.CanUseMouse;
-                Data = console.Data;
+                Data = console.TextSurface;
                 DoUpdate = console.DoUpdate;
                 ExclusiveFocus = console.ExclusiveFocus;
                 IsFocused = console.IsFocused;
@@ -657,7 +642,7 @@
             }
 
             /// <summary>
-            /// Loads a <see cref="TextSurface"/> from a file.
+            /// Loads a <see cref="Consoles.TextSurface"/> from a file.
             /// </summary>
             /// <param name="file">The source file.</param>
             /// <returns>A surface.</returns>
@@ -669,7 +654,7 @@
                 console.AutoCursorOnFocus = data.AutoCursorOnFocus;
                 console.CanFocus = data.CanFocus;
                 console.CanUseMouse = data.CanUseMouse;
-                console.Data = data.Data;
+                console.TextSurface = data.Data;
                 console.DoUpdate = data.DoUpdate;
                 console.ExclusiveFocus = data.ExclusiveFocus;
                 console.IsFocused = data.IsFocused;

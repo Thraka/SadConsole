@@ -188,8 +188,8 @@ namespace SadConsole
 
             // Create the default console.
             ActiveConsole = new Consoles.Console(consoleWidth, consoleHeight);
-            ActiveConsole.Data.DefaultBackground = Color.Black;
-            ActiveConsole.Data.DefaultForeground = ColorAnsi.White;
+            ActiveConsole.TextSurface.DefaultBackground = Color.Black;
+            ActiveConsole.TextSurface.DefaultForeground = ColorAnsi.White;
             ((Consoles.Console)ActiveConsole).Clear();
 
             ConsoleRenderStack.Add(ActiveConsole);

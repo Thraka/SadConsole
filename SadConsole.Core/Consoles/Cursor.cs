@@ -60,9 +60,9 @@
                 {
                     Console console = (Console)_console.Target;
 
-                    if (!(value.X < 0 || value.X >= console.Data.Width))
+                    if (!(value.X < 0 || value.X >= console.TextSurface.Width))
                         _position.X = value.X;
-                    if (!(value.Y < 0 || value.Y >= console.Data.Height))
+                    if (!(value.Y < 0 || value.Y >= console.TextSurface.Height))
                         _position.Y = value.Y;
                 }
             }
@@ -171,7 +171,7 @@
 
                 else
                 {
-                    var cell = console.Data.Cells[_position.Y * console.Data.Width + _position.X];
+                    var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
 
                     if (!PrintOnlyCharacterData)
                     {
@@ -186,12 +186,12 @@
                     }
 
                     _position.X += 1;
-                    if (_position.X >= console.Data.Width)
+                    if (_position.X >= console.TextSurface.Width)
                     {
                         _position.X = 0;
                         _position.Y += 1;
 
-                        if (_position.Y >= console.Data.Height)
+                        if (_position.Y >= console.TextSurface.Height)
                         {
                             _position.Y -= 1;
 
@@ -235,7 +235,7 @@
                 }
                 else
                 {
-                    var cell = console.Data.Cells[_position.Y * console.Data.Width + _position.X];
+                    var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
 
                     if (!PrintOnlyCharacterData)
                     {
@@ -246,12 +246,12 @@
                     cell.CharacterIndex = character;
 
                     _position.X += 1;
-                    if (_position.X >= console.Data.Width)
+                    if (_position.X >= console.TextSurface.Width)
                     {
                         _position.X = 0;
                         _position.Y += 1;
 
-                        if (_position.Y >= console.Data.Height)
+                        if (_position.Y >= console.TextSurface.Height)
                         {
                             _position.Y -= 1;
 

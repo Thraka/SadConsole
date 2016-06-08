@@ -190,7 +190,7 @@
                     case 'J':
                     case 'j':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _console.Data.Width; i++)
+                            for (int i = _cursor.Position.X; i < _console.TextSurface.Width; i++)
                                 _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
@@ -206,7 +206,7 @@
                     case 'K':
                     case 'k':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _console.Data.Width; i++)
+                            for (int i = _cursor.Position.X; i < _console.TextSurface.Width; i++)
                                 _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
@@ -215,7 +215,7 @@
 
                         else if (data == "2")
                         {
-                            for (int i = 0; i < _console.Data.Width; i++)
+                            for (int i = 0; i < _console.TextSurface.Width; i++)
                                 _console.Clear(i, _cursor.Position.Y);
                         }
                         break;
@@ -308,7 +308,7 @@
                 return true;
             }
 
-            bool onLastLine = _cursor.Position.Y == _console.Data.Height - 1;
+            bool onLastLine = _cursor.Position.Y == _console.TextSurface.Height - 1;
 
             foreach (var item in line)
             {
@@ -374,7 +374,7 @@
             foreach (var line in lines)
             {
                 counter++;
-                bool onLastLine = _cursor.Position.Y == _console.Data.Height - 1;
+                bool onLastLine = _cursor.Position.Y == _console.TextSurface.Height - 1;
 
                 if (AnsiReadLine(line, counter != lines.Length) == false)
                     return;

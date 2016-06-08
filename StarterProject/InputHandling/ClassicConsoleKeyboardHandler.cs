@@ -53,8 +53,8 @@
 
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
-                    int startingIndex = TextSurface.GetIndexFromPoint(new Point(prompt.Length, VirtualCursorLastY), console.Data.Width);
-                    string data = ((SadConsole.Consoles.Console)console).GetString(startingIndex, TextSurface.GetIndexFromPoint(console.VirtualCursor.Position, console.Data.Width) - startingIndex);
+                    int startingIndex = TextSurface.GetIndexFromPoint(new Point(prompt.Length, VirtualCursorLastY), console.TextSurface.Width);
+                    string data = ((SadConsole.Consoles.Console)console).GetString(startingIndex, TextSurface.GetIndexFromPoint(console.VirtualCursor.Position, console.TextSurface.Width) - startingIndex);
 
                     // Move the cursor to the next line before we send the string data to the processor
                     console.VirtualCursor.CarriageReturn().LineFeed();

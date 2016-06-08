@@ -525,9 +525,9 @@
                             point = Consoles.TextSurface.GetPointFromIndex(cellIndex, control.TextSurface.Width);
                             point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
 
-                            if (Data.RenderArea.Contains(point))
+                            if (TextSurface.RenderArea.Contains(point))
                             {
-                                point = new Point(point.X - Data.RenderArea.X, point.Y - Data.RenderArea.Y);
+                                point = new Point(point.X - TextSurface.RenderArea.X, point.Y - TextSurface.RenderArea.Y);
                                 rect = textSurface.RenderRects[Consoles.TextSurface.GetIndexFromPoint(point, textSurface.Width)];
 
                                 if (cell.ActualBackground != Color.Transparent)

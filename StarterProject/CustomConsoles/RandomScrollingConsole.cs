@@ -24,16 +24,16 @@ namespace StarterProject.CustomConsoles
             {
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X - 1, cons.ViewArea.Y, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X - 1, cons.TextSurface.RenderArea.Y, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X + 1, cons.ViewArea.Y, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X + 1, cons.TextSurface.RenderArea.Y, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y - 1, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y - 1, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y + 1, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y + 1, 80, 25);
 
                 return true;
             };
@@ -72,7 +72,7 @@ namespace StarterProject.CustomConsoles
                     TextSurface = new TextSurface(2000, 2000, Engine.DefaultFont); //500mb ?? why?
                     //Data = new TextSurface(2000, 2000);
                     //DataViewport = new Rectangle(0, 0, 80, 25);
-                    ViewArea = new Rectangle(0, 0, 80, 25);
+                    TextSurface.RenderArea = new Rectangle(0, 0, 80, 25);
 
                     // Clear message data and make it transparent so that it acts as a layer
                     messageData.Fill(Color.White, Color.Transparent, 0, null);

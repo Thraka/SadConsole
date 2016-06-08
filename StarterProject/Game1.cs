@@ -27,8 +27,8 @@
             IsMouseVisible = true;
 
             // Uncomment these two lines to run as fast as possible
-            //_graphics.SynchronizeWithVerticalRetrace = false;
-            //IsFixedTimeStep = false;
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             var rootConsole = SadConsole.Engine.Initialize(_graphics, "Fonts/IBM.font", 80, 25);
@@ -73,10 +73,6 @@
             };
             
 
-            //TODO: Fix textsurface view. Not right size.
-
-
-
             tempConsole2 = new Console((TextSurfaceView)tempSurface);
             tempConsole2.Position = new Point(20, 15);
             tempConsole2.CanUseMouse = false;
@@ -109,12 +105,11 @@
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                //new Console(surface1
-                                        new CustomConsoles.RandomScrollingConsole(),
-                                        rootConsole,
-                                        new CustomConsoles.DOSConsole(),
-                                        new CustomConsoles.ControlsTest(),
                                         new CustomConsoles.CachedConsoleConsole(),
+                                        new CustomConsoles.SplashScreen(),
+                                        new CustomConsoles.DOSConsole(),
+                                        new CustomConsoles.RandomScrollingConsole(),
+                                        new CustomConsoles.ControlsTest(),
                                         new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.StaticConsole(),
@@ -123,7 +118,6 @@
     //                                                           new CustomConsoles.WorldGenerationConsole(),
     //                                                           new CustomConsoles.WindowTestConsole(),
                                         new CustomConsoles.EntityAndConsole(),
-                                        new CustomConsoles.SplashScreen(),
                                     };
 
             // Show the first console (by default all of our demo consoles are hidden)
@@ -131,15 +125,15 @@
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
-            SadConsole.Engine.ConsoleRenderStack.Clear();
-            SadConsole.Engine.ConsoleRenderStack.Add(tempConsole);
-            SadConsole.Engine.ConsoleRenderStack.Add(tempConsole2);
+            //SadConsole.Engine.ConsoleRenderStack.Clear();
+            //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole);
+            //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole2);
             //SadConsole.Engine.ActiveConsole = tempConsole;
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
             // Uncomment to see FPS. If the unlimited FPS is not uncommented at the top, you'll probably only see 60fps.
-            //Components.Add(new FPSCounterComponent(this));
+            Components.Add(new FPSCounterComponent(this));
 
             // Call the default initialize of the base class.
             base.Initialize();
