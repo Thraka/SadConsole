@@ -14,18 +14,14 @@ namespace SadConsole.Consoles
     [DataContract]
     public class TextSurface : IEnumerable<Cell>, ITextSurface
     {
-
         protected Font font;
 
         /// <summary>
         /// An array of all cells in this surface.
         /// </summary>
         /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="_width"/> and <see cref="_height"/> properties instead. The cell data can be changed.</remarks>
-        [DataMember(Name = "Cells")]
         protected Cell[] cells;
-        [DataMember(Name = "Width")]
         protected int width = 1;
-        [DataMember(Name = "Height")]
         protected int height = 1;
 
         /// <summary>
@@ -331,7 +327,92 @@ namespace SadConsole.Consoles
             return cells.GetEnumerator();
         }
 
+        #region Serialization
+        /// <summary>
+        /// Saves the <see cref="TextSurface"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public void Save(string file)
+        {
+            new Serialized(this).Save(file);
+        }
 
+        /// <summary>
+        /// Loads a <see cref="TextSurface"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static TextSurface Load(string file)
+        {
+            return Serialized.Load(file);
+        }
 
+        /// <summary>
+        /// Serialized instance of a <see cref="TextSurface"/>.
+        /// </summary>
+        [DataContract]
+        public class Serialized
+        {
+            [DataMember]
+            public Cell[] Cells;
+
+            [DataMember]
+            public int Width;
+
+            [DataMember]
+            public int Height;
+
+            [DataMember]
+            public string FontName;
+
+            [DataMember]
+            public Font.FontSizes FontMultiple;
+
+            /// <summary>
+            /// Creates a serialized object from an existing <see cref="TextSurface"/>.
+            /// </summary>
+            /// <param name="surface">The surface to serialize.</param>
+            public Serialized(TextSurface surface)
+            {
+                Cells = surface.cells;
+                Width = surface.width;
+                Height = surface.height;
+                FontName = surface.font.Name;
+                FontMultiple = surface.font.SizeMultiple;
+            }
+
+            protected Serialized() { }
+
+            /// <summary>
+            /// Saves the serialized <see cref="TextSurface"/> to a file.
+            /// </summary>
+            /// <param name="file">The destination file.</param>
+            public void Save(string file)
+            {
+                SadConsole.Serializer.Save(this, file);
+            }
+
+            /// <summary>
+            /// Loads a <see cref="TextSurface"/> from a file.
+            /// </summary>
+            /// <param name="file">The source file.</param>
+            /// <returns>A surface.</returns>
+            public static TextSurface Load(string file)
+            {
+                Serialized data = Serializer.Load<Serialized>(file);
+                Font font;
+                // Try to find font
+                if (Engine.Fonts.ContainsKey(data.FontName))
+                    font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
+                else
+                    font = Engine.DefaultFont;
+
+                TextSurface newSurface = new TextSurface(data.Width, data.Height, font);
+                newSurface.cells = data.Cells;
+
+                return newSurface;
+            }
+        }
+        #endregion
     }
 }

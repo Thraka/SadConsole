@@ -8,39 +8,61 @@ namespace SadConsole
 {
     public sealed class Font
     {
-        [IgnoreDataMember]
+        public enum FontSizes
+        {
+            Half,
+            Two,
+            Three,
+            Four
+        }
+
         public Texture2D FontImage { get; private set; }
 
-        [IgnoreDataMember]
         public Point Size { get; private set; }
 
-        [IgnoreDataMember]
         public int MaxCharacter { get; private set; }
 
-        [IgnoreDataMember]
         public int SolidCharacterIndex { get; set; }
 
-        [IgnoreDataMember]
         public Rectangle[] CharacterIndexRects { get; private set; }
 
         public int Rows { get; private set; }
 
-        public int SizeMultiple { get; private set; }
+        public FontSizes SizeMultiple { get; private set; }
 
         public string Name { get; private set; }
 
         internal Font() { }
 
-        internal Font(FontMaster masterFont, int fontMultiple)
+        internal Font(FontMaster masterFont, FontSizes fontMultiple)
         {
             Initialize(masterFont, fontMultiple);
         }
 
-        private void Initialize(FontMaster masterFont, int fontMultiple)
+        private void Initialize(FontMaster masterFont, FontSizes fontMultiple)
         {
             FontImage = masterFont.Image;
             MaxCharacter = masterFont.Rows * Engine.FontColumns - 1;
-            Size = new Point(masterFont.CellWidth * fontMultiple, masterFont.CellHeight * fontMultiple);
+
+            switch (fontMultiple)
+            {
+                case FontSizes.Half:
+                    Size = new Point((int)(masterFont.CellWidth * 0.5), (int)(masterFont.CellHeight * 0.5));
+                    break;
+                case FontSizes.Two:
+                    Size = new Point(masterFont.CellWidth * 2, masterFont.CellHeight * 2);
+                    break;
+                case FontSizes.Three:
+                    Size = new Point(masterFont.CellWidth * 3, masterFont.CellHeight * 3);
+                    break;
+                case FontSizes.Four:
+                    Size = new Point(masterFont.CellWidth * 4, masterFont.CellHeight * 4);
+                    break;
+                default:
+                    break;
+            }
+
+            
             SizeMultiple = fontMultiple;
             Name = masterFont.Name;
             CharacterIndexRects = new Rectangle[masterFont.CharacterIndexRects.Length];
@@ -143,7 +165,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="multiple">How much to multiple the font size by.</param>
         /// <returns>A font.</returns>
-        public Font GetFont(int multiple = 1)
+        public Font GetFont(Font.FontSizes multiple)
         {
             return new Font(this, multiple);
         }
