@@ -471,8 +471,11 @@
             return Serialized.Load(file);
         }
 
+        /// <summary>
+        /// Serialized instance of an <see cref="Entity"/>.
+        /// </summary>
         [DataContract]
-        internal class Serialized
+        public class Serialized
         {
             [DataMember]
             public Animation[] Animations;
@@ -493,13 +496,17 @@
             public int Height;
 
             [DataMember]
-            string FontName;
+            public string FontName;
 
             [DataMember]
-            int FontMultiple;
+            public Font.FontSizes FontMultiple;
 
-            public Serialized() { }
+            protected Serialized() { }
 
+            /// <summary>
+            /// Creates a serialized object from an existing <see cref="Entity"/>.
+            /// </summary>
+            /// <param name="entity">The entity to serialize.</param>
             public Serialized(Entity entity)
             {
                 Animations = entity._animations.ToArray();
@@ -512,14 +519,23 @@
                 FontMultiple = entity.Font.SizeMultiple;
             }
 
+            /// <summary>
+            /// Saves the serialized <see cref="Entity"/> to a file.
+            /// </summary>
+            /// <param name="file">The destination file.</param>
             public void Save(string file)
             {
-                SadConsole.Serializer.Save(this, file, new System.Type[] { typeof(List<Frame>), typeof(Animation) });
+                SadConsole.Serializer.Save(this, file);
             }
 
+            /// <summary>
+            /// Loads a <see cref="Entity"/> from a file.
+            /// </summary>
+            /// <param name="file">The source file.</param>
+            /// <returns>An entity.</returns>
             public static Entity Load(string file)
             {
-                var data = SadConsole.Serializer.Load<Serialized>(file, new System.Type[] { typeof(List<Frame>), typeof(Animation) });
+                var data = SadConsole.Serializer.Load<Serialized>(file);
                 var entity = new Entity(data.Width, data.Height);
 
                 entity._animations = new List<Animation>(data.Animations);

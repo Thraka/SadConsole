@@ -55,13 +55,11 @@ namespace SadConsole.Consoles
         /// <summary>
         /// The default foreground for characters on this surface.
         /// </summary>
-        [DataMember]
         public Color DefaultForeground { get; set; } = Color.White;
 
         /// <summary>
         /// The default background for characters on this surface.
         /// </summary>
-        [DataMember]
         public Color DefaultBackground { get; set; } = Color.Transparent;
 
         /// <summary>
@@ -363,6 +361,15 @@ namespace SadConsole.Consoles
             public int Height;
 
             [DataMember]
+            public Color DefaultBackground;
+
+            [DataMember]
+            public Color DefaultForeground;
+
+            [DataMember]
+            public Color Tint;
+
+            [DataMember]
             public string FontName;
 
             [DataMember]
@@ -379,6 +386,9 @@ namespace SadConsole.Consoles
                 Height = surface.height;
                 FontName = surface.font.Name;
                 FontMultiple = surface.font.SizeMultiple;
+                DefaultBackground = surface.DefaultBackground;
+                DefaultForeground = surface.DefaultForeground;
+                Tint = surface.Tint;
             }
 
             protected Serialized() { }
@@ -408,6 +418,9 @@ namespace SadConsole.Consoles
                     font = Engine.DefaultFont;
 
                 TextSurface newSurface = new TextSurface(data.Width, data.Height, font);
+                newSurface.DefaultBackground = data.DefaultBackground;
+                newSurface.DefaultForeground = data.DefaultForeground;
+                newSurface.Tint = data.Tint;
                 newSurface.cells = data.Cells;
 
                 return newSurface;

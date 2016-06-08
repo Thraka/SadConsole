@@ -90,6 +90,15 @@ namespace SadConsole.Consoles
             [DataMember]
             public Font.FontSizes FontMultiple;
 
+            [DataMember]
+            public Color DefaultBackground;
+
+            [DataMember]
+            public Color DefaultForeground;
+
+            [DataMember]
+            public Color Tint;
+
             /// <summary>
             /// Creates a serialized object from an existing <see cref="TextSurfaceView"/>.
             /// </summary>
@@ -99,6 +108,9 @@ namespace SadConsole.Consoles
                 Area = surfaceView.originalArea;
                 FontName = surfaceView.font.Name;
                 FontMultiple = surfaceView.font.SizeMultiple;
+                DefaultBackground = surfaceView.DefaultBackground;
+                DefaultForeground = surfaceView.DefaultForeground;
+                Tint = surfaceView.Tint;
             }
 
             protected Serialized() { }
@@ -130,6 +142,9 @@ namespace SadConsole.Consoles
 
                 TextSurfaceView newSurface = new TextSurfaceView(surfaceHydrate, data.Area);
                 newSurface.Font = font;
+                newSurface.DefaultBackground = data.DefaultBackground;
+                newSurface.DefaultForeground = data.DefaultForeground;
+                newSurface.Tint = data.Tint;
 
                 return newSurface;
             }
