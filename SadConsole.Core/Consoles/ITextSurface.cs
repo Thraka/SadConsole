@@ -8,9 +8,9 @@ namespace SadConsole.Consoles
     public interface ITextSurface
     {
         Rectangle AbsoluteArea { get; set; }
-        Rectangle[] RenderRects { get; set; }
+        Rectangle[] RenderRects { get; }//set; }
         Cell[] Cells { get; }
-        Cell[] RenderCells { get; set; }
+        Cell[] RenderCells { get; }//set; }
         int Width { get; }
         int Height { get; }
 
