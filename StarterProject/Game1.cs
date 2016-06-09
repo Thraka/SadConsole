@@ -50,19 +50,17 @@
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        new CustomConsoles.CachedConsoleConsole(),
-                                        new CustomConsoles.SplashScreen(),
-                                        new CustomConsoles.DOSConsole(),
-                                        new CustomConsoles.RandomScrollingConsole(),
-                                        new CustomConsoles.ControlsTest(),
-                                        new CustomConsoles.SceneProjectionConsole(),
+                                        //new CustomConsoles.WorldGenerationConsole(),
                                         new CustomConsoles.CursorConsole(),
+                                        new CustomConsoles.DOSConsole(),
+                                        new CustomConsoles.SceneProjectionConsole(),
+                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.StretchedConsole(), 
-                                        new CustomConsoles.BorderedConsole(80, 25), 
-    //                                                           new CustomConsoles.WorldGenerationConsole(),
-    //                                                           new CustomConsoles.WindowTestConsole(),
+                                        new CustomConsoles.BorderedConsole(), 
                                         new CustomConsoles.EntityAndConsole(),
+                                        new CustomConsoles.SplashScreen(),
                                     };
 
             // Show the first console (by default all of our demo consoles are hidden)
@@ -72,7 +70,17 @@
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
 
 
-            SadConsole.Engine.ConsoleRenderStack.Clear();
+            //SadConsole.Engine.ConsoleRenderStack.Clear();
+
+            // *****************
+            // Game Console testing
+            //SadConsole.GameHelpers.GameConsole con1 = new SadConsole.GameHelpers.GameConsole(10, 10, 2);
+            //con1.LayeredTextSurface.SetActiveLayer(0);
+            //con1.SetCharacter(1, 1, 2);
+            //con1.LayeredTextSurface.SetActiveLayer(1);
+            //con1.SetCharacter(2, 2, 2);
+            //Engine.ConsoleRenderStack.Add(con1);
+
 
             // *****************
             // Layer testing

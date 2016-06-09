@@ -8,8 +8,8 @@
 
     class BorderedConsole: Console
     {
-        public BorderedConsole(int width, int height)
-            : base(width, height)
+        public BorderedConsole()
+            : base(80, 25)
         {
             this.IsVisible = false;
 
@@ -21,8 +21,8 @@
             box.BorderBackground = Color.White;
             box.FillColor = Color.White;
             box.Fill = true;
-            box.Width = width;
-            box.Height = height;
+            box.Width = textSurface.Width;
+            box.Height = textSurface.Height;
             
             // Draw the box shape onto the CellSurface that this console is displaying.
             box.Draw(this);

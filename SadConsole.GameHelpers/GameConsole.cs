@@ -11,23 +11,28 @@ namespace SadConsole.GameHelpers
 
     public class GameConsole : Consoles.Console
     {
-        protected LayeredTextSurface _layeredTextSurface;
-        protected GameObjectCollection[] _gameObjects;
+        protected LayeredTextSurface layeredTextSurface;
+        protected GameObjectCollection[] gameObjects;
 
-        public LayeredTextSurface LayeredTextSurface { get { return _layeredTextSurface; } }
+        public LayeredTextSurface LayeredTextSurface { get { return layeredTextSurface; } }
 
         public GameConsole(int width, int height, int layers) :base(width, height)
         {
-            textSurface = _layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
-            _gameObjects = new GameObjectCollection[_layeredTextSurface.LayerCount];
+            textSurface = layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
+            _renderer = new LayeredTextRenderer();
+            gameObjects = new GameObjectCollection[layers];
+            for (int i = 0; i < layers; i++)
+            {
+                gameObjects[i] = new GameObjectCollection();
+            }
             AssociateLayersWithObjects();
         }
 
         public void AssociateLayersWithObjects()
         {
-            for (int i = 0; i < _layeredTextSurface.LayerCount; i++)
+            for (int i = 0; i < layeredTextSurface.LayerCount; i++)
             {
-                foreach (var gameObject in _gameObjects[i].Values)
+                foreach (var gameObject in gameObjects[i].Values)
                 {
                     gameObject.Layer = i;
                 }
@@ -37,10 +42,10 @@ namespace SadConsole.GameHelpers
 
         public GameObjectCollection GetObjectCollection(int layer)
         {
-            if (layer < 0 || layer >= _layeredTextSurface.LayerCount)
+            if (layer < 0 || layer >= layeredTextSurface.LayerCount)
                 throw new System.ArgumentOutOfRangeException("layer");
 
-            return _gameObjects[layer];
+            return gameObjects[layer];
         }
 
     }
