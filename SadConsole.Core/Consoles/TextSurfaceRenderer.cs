@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Consoles
 {
     /// <summary>
     /// Draws a text surface to the screen.
     /// </summary>
+    [DataContract]
     public class TextSurfaceRenderer : ITextSurfaceRenderer
     {
         //private Matrix absolutePositionTransform;
@@ -136,6 +138,12 @@ namespace SadConsole.Consoles
                 worldLocation = position.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
 
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
+        }
+
+        [OnDeserialized]
+        private void AfterDeserialized(StreamingContext context)
+        {
+            Batch = new SpriteBatch(Engine.Device);
         }
     }
 }

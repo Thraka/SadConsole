@@ -6,6 +6,7 @@
     using SadConsole.Input;
     using System;
     using System.Runtime.Serialization;
+    using System.Linq;
 
     /// <summary>
     /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
@@ -541,23 +542,16 @@
             }
         }
 
-        [OnDeserializedAttribute]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            _virtualCursor.AttachConsole(this);
-        }
-
-
-
 
         #region Serialization
         /// <summary>
         /// Saves the <see cref="Console"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
-        public void Save(string file, bool saveTextSurface)
+        public void Save(string file, bool saveTextSurface, params Type[] knownTypes)
         {
-            new Serialized(this).Save(file);
+            new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            //Serializer.Save(this, file, new Type[] { typeof(CellAppearance) });
         }
 
         /// <summary>
@@ -565,9 +559,10 @@
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static Console Load(string file)
+        public static Console Load(string file, params Type[] knownTypes)
         {
-            return Serialized.Load(file);
+            //return Serializer.Load<Console>(file, new Type[] { typeof(CellAppearance) });
+            return Serialized.Load(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
         }
 
         /// <summary>
@@ -606,18 +601,26 @@
             public bool UsePixelPositioning;
             [DataMember]
             public Cursor VirtualCursor;
+            [DataMember]
+            public int Width;
+            [DataMember]
+            public int Height;
 
             /// <summary>
             /// Creates a serialized object from an existing <see cref="Console"/>.
             /// </summary>
             /// <param name="surface">The surface to serialize.</param>
-            public Serialized(Console console)
+            public Serialized(Console console, bool serializeTextSurface)
             {
                 AutoCursorOnFocus = console.AutoCursorOnFocus;
                 CanFocus = console.CanFocus;
                 CanUseKeyboard = console.CanUseKeyboard;
                 CanUseMouse = console.CanUseMouse;
-                Data = console.TextSurface;
+                if (serializeTextSurface)
+                    Data = console.TextSurface;
+
+                Width = console.Width;
+                Height = console.Height;
                 DoUpdate = console.DoUpdate;
                 ExclusiveFocus = console.ExclusiveFocus;
                 IsFocused = console.IsFocused;
@@ -636,9 +639,9 @@
             /// Saves the serialized <see cref="Console"/> to a file.
             /// </summary>
             /// <param name="file">The destination file.</param>
-            public void Save(string file)
+            public void Save(string file, params Type[] knownTypes)
             {
-                SadConsole.Serializer.Save(this, file);
+                SadConsole.Serializer.Save(this, file, knownTypes);
             }
 
             /// <summary>
@@ -646,15 +649,20 @@
             /// </summary>
             /// <param name="file">The source file.</param>
             /// <returns>A surface.</returns>
-            public static Console Load(string file)
+            public static Console Load(string file, params Type[] knownTypes)
             {
-                Serialized data = Serializer.Load<Serialized>(file);
+                var data = Serializer.Load<Serialized>(file, knownTypes);
                 Console console = new Console(data.Data);
 
                 console.AutoCursorOnFocus = data.AutoCursorOnFocus;
                 console.CanFocus = data.CanFocus;
                 console.CanUseMouse = data.CanUseMouse;
-                console.TextSurface = data.Data;
+
+                if (data.Data != null)
+                    console.TextSurface = data.Data;
+                else
+                    console.TextSurface = new TextSurface(data.Width, data.Height, Engine.DefaultFont);
+
                 console.DoUpdate = data.DoUpdate;
                 console.ExclusiveFocus = data.ExclusiveFocus;
                 console.IsFocused = data.IsFocused;

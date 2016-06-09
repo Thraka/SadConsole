@@ -27,8 +27,8 @@
             IsMouseVisible = true;
 
             // Uncomment these two lines to run as fast as possible
-            _graphics.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
+            //_graphics.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             var rootConsole = SadConsole.Engine.Initialize(_graphics, "Fonts/IBM.font", 80, 25);
@@ -36,61 +36,6 @@
             Theme.SetupThemes();
 
             
-
-            SadConsole.Consoles.TextSurface surface1;
-            surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
-            surface1.DefaultBackground = Color.Gray;
-            surface1.DefaultForeground = ColorAnsi.Black;
-            SurfaceEditor editor = new SurfaceEditor(surface1);
-            editor.Clear();
-
-            editor.Print(2, 1, "Hello");
-
-            //surface1.Save("test.sadcv3");
-
-            //surface1 = TextSurface.Load("test.sadcv3");
-
-            tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
-            //tempSurface2 = surface1;
-            editor.SetForeground(2, 1, Color.CadetBlue);
-            tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
-            tempConsole = new Console(surface1);
-            tempConsole.Position = new Point(5, 7);
-            tempConsole.UsePixelPositioning = true;
-            tempConsole.CanUseMouse = true;
-            tempConsole.MouseHandler = (con, info) =>
-            {
-                info.Fill(con);
-
-                if (info.Console == con)
-                {
-                    if (info.Cell != null)
-                        info.Cell.Background = Color.Blue;
-
-                    return true;
-                }
-                return false;
-            };
-            
-
-            tempConsole2 = new Console((TextSurfaceView)tempSurface);
-            tempConsole2.Position = new Point(20, 15);
-            tempConsole2.CanUseMouse = false;
-            tempConsole2.MouseHandler = (con, info) =>
-            {
-                info.Fill(con);
-
-                if (info.Console == con)
-                {
-                    if (info.Cell != null)
-                        info.Cell.Background = Color.Yellow;
-
-                    return true;
-                }
-                return false;
-            };
-
-
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project.
@@ -125,15 +70,93 @@
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
+
+
+            SadConsole.Engine.ConsoleRenderStack.Clear();
+
+            var con1 = new SadConsole.Consoles.Console(10, 10);
+            var tempData = con1.TextSurface;
+            con1.SetCharacter(1, 1, 1);
+            con1.SetCharacter(2, 2, 2);
+            con1.SetForeground(1, 1, Color.Khaki);
+            //con1.TextSurface.RenderArea = new Rectangle(1, 1, 2, 2);
+            con1.VirtualCursor.IsVisible = true;
+            con1.CanUseKeyboard = true;
+            
+            con1.Save("testme.con", false);
+            //((TextSurface)con1.TextSurface).Save("test.con");
+            //con1.TextSurface = new TextSurface(10, 10, Engine.DefaultFont);
+            //con1.TextSurface = TextSurface.Load("test.con");
+            con1 = Console.Load("testme.con");
+            con1.TextSurface = tempData;
+
+            //con1.TextSurface.RenderArea = new Rectangle(0,0,con1.Width, con1.Height);
+
+            SadConsole.Engine.ConsoleRenderStack.Add(con1);
+            Engine.ActiveConsole = con1;
+
+            // ***************
+            // Test multiple surfaces
+            //SadConsole.Consoles.TextSurface surface1;
+            //surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
+            //surface1.DefaultBackground = Color.Gray;
+            //surface1.DefaultForeground = ColorAnsi.Black;
+            //SurfaceEditor editor = new SurfaceEditor(surface1);
+            //editor.Clear();
+
+            //editor.Print(2, 1, "Hello");
+
+            //tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
+            ////tempSurface2 = surface1;
+            //editor.SetForeground(2, 1, Color.CadetBlue);
+            //tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
+            //tempConsole = new Console(surface1);
+            //tempConsole.Position = new Point(5, 7);
+            //tempConsole.UsePixelPositioning = true;
+            //tempConsole.CanUseMouse = true;
+            //tempConsole.MouseHandler = (con, info) =>
+            //{
+            //    info.Fill(con);
+
+            //    if (info.Console == con)
+            //    {
+            //        if (info.Cell != null)
+            //            info.Cell.Background = Color.Blue;
+
+            //        return true;
+            //    }
+            //    return false;
+            //};
+
+
+            //tempConsole2 = new Console((TextSurfaceView)tempSurface);
+            //tempConsole2.Position = new Point(20, 15);
+            //tempConsole2.CanUseMouse = false;
+            //tempConsole2.MouseHandler = (con, info) =>
+            //{
+            //    info.Fill(con);
+
+            //    if (info.Console == con)
+            //    {
+            //        if (info.Cell != null)
+            //            info.Cell.Background = Color.Yellow;
+
+            //        return true;
+            //    }
+            //    return false;
+            //};
+
             //SadConsole.Engine.ConsoleRenderStack.Clear();
             //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole);
             //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole2);
             //SadConsole.Engine.ActiveConsole = tempConsole;
+
+
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
             // Uncomment to see FPS. If the unlimited FPS is not uncommented at the top, you'll probably only see 60fps.
-            Components.Add(new FPSCounterComponent(this));
+            //Components.Add(new FPSCounterComponent(this));
 
             // Call the default initialize of the base class.
             base.Initialize();

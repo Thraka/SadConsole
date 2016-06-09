@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SadConsole.Effects;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Consoles
 {
+    [DataContract]
     public class SurfaceEditor
     {
         protected ITextSurface textSurface;
@@ -23,6 +25,7 @@ namespace SadConsole.Consoles
         public int Width { get { return textSurface.Width; } }
         public int Height { get { return textSurface.Height; } }
 
+        [IgnoreDataMember]
         public ITextSurface TextSurface
         {
             get { return textSurface; }

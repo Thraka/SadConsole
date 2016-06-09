@@ -14,15 +14,28 @@ namespace SadConsole.Consoles
     [DataContract]
     public class TextSurface : IEnumerable<Cell>, ITextSurface
     {
+        [DataMember(Name = "FontName")]
+        private string fontName;
+
+        [DataMember(Name = "FontSize")]
+        private Font.FontSizes fontSize;
+
         protected Font font;
+
+        [DataMember(Name = "Area")]
         protected Rectangle area;
 
         /// <summary>
         /// An array of all cells in this surface.
         /// </summary>
         /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="width"/> and <see cref="height"/> properties instead. The cell data can be changed.</remarks>
+        [DataMember(Name = "Cells")]
         protected Cell[] cells;
+
+        [DataMember(Name = "Width")]
         protected int width = 1;
+
+        [DataMember(Name = "Height")]
         protected int height = 1;
 
         /// <summary>
@@ -56,11 +69,13 @@ namespace SadConsole.Consoles
         /// <summary>
         /// The default foreground for characters on this surface.
         /// </summary>
+        [DataMember]
         public Color DefaultForeground { get; set; } = Color.White;
 
         /// <summary>
         /// The default background for characters on this surface.
         /// </summary>
+        [DataMember]
         public Color DefaultBackground { get; set; } = Color.Transparent;
 
         /// <summary>
@@ -108,6 +123,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// A tint used in rendering.
         /// </summary>
+        [DataMember]
         public Color Tint { get; set; } = Color.Transparent;
 
         /// <summary>
@@ -202,20 +218,7 @@ namespace SadConsole.Consoles
 
         protected virtual void OnFontChanged()
         {
-            RenderRects = new Rectangle[width * height];
-
-            int index = 0;
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    RenderRects[index] = new Rectangle(x * font.Size.X, y * font.Size.Y, font.Size.X, font.Size.Y);
-                    index++;
-                }
-            }
-
-            AbsoluteArea = new Rectangle(0, 0, width * font.Size.X, height * font.Size.Y);
+            ResetArea();
         }
 
 
@@ -413,7 +416,7 @@ namespace SadConsole.Consoles
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            new Serialized(this).Save(file);
+            Serializer.Save(this, file);
         }
 
         /// <summary>
@@ -423,95 +426,116 @@ namespace SadConsole.Consoles
         /// <returns></returns>
         public static TextSurface Load(string file)
         {
-            return Serialized.Load(file);
+            return Serializer.Load<TextSurface>(file);
         }
 
-        /// <summary>
-        /// Serialized instance of a <see cref="TextSurface"/>.
-        /// </summary>
-        [DataContract]
-        public class Serialized
+        [OnSerializing]
+        private void BeforeSerializing(StreamingContext context)
         {
-            [DataMember]
-            public Cell[] Cells;
-
-            [DataMember]
-            public int Width;
-
-            [DataMember]
-            public int Height;
-
-            [DataMember]
-            public Color DefaultBackground;
-
-            [DataMember]
-            public Color DefaultForeground;
-
-            [DataMember]
-            public Color Tint;
-
-            [DataMember]
-            public string FontName;
-
-            [DataMember]
-            public Font.FontSizes FontMultiple;
-
-            [DataMember]
-            public Rectangle RenderArea;
-
-            /// <summary>
-            /// Creates a serialized object from an existing <see cref="TextSurface"/>.
-            /// </summary>
-            /// <param name="surface">The surface to serialize.</param>
-            public Serialized(TextSurface surface)
-            {
-                Cells = surface.cells;
-                Width = surface.width;
-                Height = surface.height;
-                FontName = surface.font.Name;
-                FontMultiple = surface.font.SizeMultiple;
-                DefaultBackground = surface.DefaultBackground;
-                DefaultForeground = surface.DefaultForeground;
-                Tint = surface.Tint;
-                RenderArea = surface.RenderArea;
-            }
-
-            protected Serialized() { }
-
-            /// <summary>
-            /// Saves the serialized <see cref="TextSurface"/> to a file.
-            /// </summary>
-            /// <param name="file">The destination file.</param>
-            public void Save(string file)
-            {
-                SadConsole.Serializer.Save(this, file);
-            }
-
-            /// <summary>
-            /// Loads a <see cref="TextSurface"/> from a file.
-            /// </summary>
-            /// <param name="file">The source file.</param>
-            /// <returns>A surface.</returns>
-            public static TextSurface Load(string file)
-            {
-                Serialized data = Serializer.Load<Serialized>(file);
-                Font font;
-                // Try to find font
-                if (Engine.Fonts.ContainsKey(data.FontName))
-                    font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
-                else
-                    font = Engine.DefaultFont;
-
-                TextSurface newSurface = new TextSurface(data.Width, data.Height, font);
-                newSurface.DefaultBackground = data.DefaultBackground;
-                newSurface.DefaultForeground = data.DefaultForeground;
-                newSurface.Tint = data.Tint;
-                newSurface.cells = data.Cells;
-                newSurface.RenderArea = data.RenderArea;
-
-                return newSurface;
-            }
+            fontName = Font.Name;
+            fontSize = Font.SizeMultiple;
         }
+
+        [OnDeserialized]
+        private void AfterDeserialized(StreamingContext context)
+        {
+            Font font;
+
+            // Try to find font
+            if (Engine.Fonts.ContainsKey(fontName))
+                font = Engine.Fonts[fontName].GetFont(fontSize);
+            else
+                font = Engine.DefaultFont;
+
+            Font = font;
+        }
+
+        ///// <summary>
+        ///// Serialized instance of a <see cref="TextSurface"/>.
+        ///// </summary>
+        //[DataContract]
+        //public class Serialized
+        //{
+        //    [DataMember]
+        //    public Cell[] Cells;
+
+        //    [DataMember]
+        //    public int Width;
+
+        //    [DataMember]
+        //    public int Height;
+
+        //    [DataMember]
+        //    public Color DefaultBackground;
+
+        //    [DataMember]
+        //    public Color DefaultForeground;
+
+        //    [DataMember]
+        //    public Color Tint;
+
+        //    [DataMember]
+        //    public string FontName;
+
+        //    [DataMember]
+        //    public Font.FontSizes FontMultiple;
+
+        //    [DataMember]
+        //    public Rectangle RenderArea;
+
+        //    /// <summary>
+        //    /// Creates a serialized object from an existing <see cref="TextSurface"/>.
+        //    /// </summary>
+        //    /// <param name="surface">The surface to serialize.</param>
+        //    public Serialized(TextSurface surface)
+        //    {
+        //        Cells = surface.cells;
+        //        Width = surface.width;
+        //        Height = surface.height;
+        //        FontName = surface.font.Name;
+        //        FontMultiple = surface.font.SizeMultiple;
+        //        DefaultBackground = surface.DefaultBackground;
+        //        DefaultForeground = surface.DefaultForeground;
+        //        Tint = surface.Tint;
+        //        RenderArea = surface.RenderArea;
+        //    }
+
+        //    protected Serialized() { }
+
+        //    /// <summary>
+        //    /// Saves the serialized <see cref="TextSurface"/> to a file.
+        //    /// </summary>
+        //    /// <param name="file">The destination file.</param>
+        //    public void Save(string file)
+        //    {
+        //        SadConsole.Serializer.Save(this, file);
+        //    }
+
+        //    /// <summary>
+        //    /// Loads a <see cref="TextSurface"/> from a file.
+        //    /// </summary>
+        //    /// <param name="file">The source file.</param>
+        //    /// <returns>A surface.</returns>
+        //    public static TextSurface Load(string file)
+        //    {
+        //        Serialized data = Serializer.Load<Serialized>(file);
+        //        Font font;
+        //        // Try to find font
+        //        if (Engine.Fonts.ContainsKey(data.FontName))
+        //            font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
+        //        else
+        //            font = Engine.DefaultFont;
+
+        //        TextSurface newSurface = new TextSurface(data.Width, data.Height, font);
+        //        newSurface.DefaultBackground = data.DefaultBackground;
+        //        newSurface.DefaultForeground = data.DefaultForeground;
+        //        newSurface.Tint = data.Tint;
+        //        newSurface.cells = data.Cells;
+        //        newSurface.RenderArea = data.RenderArea;
+
+        //        return newSurface;
+        //    }
+        //}
         #endregion
     }
 }

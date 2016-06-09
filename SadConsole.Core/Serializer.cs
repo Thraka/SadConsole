@@ -14,12 +14,11 @@
         /// <summary>
         /// The types commonly used when sesrializing a basic console.
         /// </summary>
-        public static IEnumerable<Type> ConsoleTypes
+        public static IEnumerable<Type> ConsoleTypes { get; set; }
+
+        static Serializer()
         {
-            get
-            {
-                return (new Type[] { typeof(Consoles.Console), typeof(Consoles.TextSurface), typeof(Consoles.ConsoleList), typeof(Consoles.TextSurfaceRenderer), typeof(Cell), typeof(Font) }).Union(SadConsole.Engine.RegisteredEffects);
-            }
+            ConsoleTypes = new Type[] { typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceView), typeof(Consoles.ConsoleList), typeof(Consoles.TextSurfaceRenderer), typeof(Cell), typeof(CellAppearance), typeof(Consoles.Cursor), typeof(Consoles.CachedTextSurfaceRenderer) };
         }
 
         /// <summary>
