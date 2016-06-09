@@ -74,26 +74,22 @@
 
             SadConsole.Engine.ConsoleRenderStack.Clear();
 
-            var con1 = new SadConsole.Consoles.Console(10, 10);
-            var tempData = con1.TextSurface;
-            con1.SetCharacter(1, 1, 1);
-            con1.SetCharacter(2, 2, 2);
-            con1.SetForeground(1, 1, Color.Khaki);
-            //con1.TextSurface.RenderArea = new Rectangle(1, 1, 2, 2);
-            con1.VirtualCursor.IsVisible = true;
-            con1.CanUseKeyboard = true;
-            
-            con1.Save("testme.con", false);
-            //((TextSurface)con1.TextSurface).Save("test.con");
-            //con1.TextSurface = new TextSurface(10, 10, Engine.DefaultFont);
-            //con1.TextSurface = TextSurface.Load("test.con");
-            con1 = Console.Load("testme.con");
-            con1.TextSurface = tempData;
+            // *****************
+            // Layer testing
+            //var con1 = new SadConsole.Consoles.Console(10, 10);
+            //var layers = new LayeredTextSurface(10, 10, 2);
+            //con1.TextSurface = layers;
 
-            //con1.TextSurface.RenderArea = new Rectangle(0,0,con1.Width, con1.Height);
+            //layers.SetActiveLayer(0);
+            //con1.SetCharacter(1, 1, 2);
+            //layers.SetActiveLayer(1);
+            //con1.SetCharacter(2, 2, 2);
 
-            SadConsole.Engine.ConsoleRenderStack.Add(con1);
-            Engine.ActiveConsole = con1;
+            //con1.TextSurface.RenderArea = new Rectangle(1, 1, 5, 5);
+
+            //con1.Renderer = new LayeredTextRenderer();
+
+            //Engine.ConsoleRenderStack.Add(con1);
 
             // ***************
             // Test multiple surfaces

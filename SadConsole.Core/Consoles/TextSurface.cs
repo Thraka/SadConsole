@@ -175,6 +175,11 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
+        /// Do your own setup.
+        /// </summary>
+        protected TextSurface() { } 
+
+        /// <summary>
         /// Initializes the cells. This method caches all of the rendering points and rectangles and initializes each cell.
         /// </summary>
         /// <param name="oldWidth">The old size of the surface in width. Used when resizing to preserve existing cells.</param>
