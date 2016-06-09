@@ -3,14 +3,14 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using CustomConsole = SadConsole.Consoles.CustomConsole;
+    using Console = SadConsole.Consoles.Console;
     using Microsoft.Xna.Framework;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Xna.Framework.Graphics;
     using SadConsole.Instructions;
     using SadConsole.Effects;
-    class SplashScreen: CustomConsole
+    class SplashScreen: Console
     {
 
         public Action SplashCompleted { get; set; }
@@ -21,20 +21,22 @@
         private EffectsManager effectsManager;
         int _x = -50;
 
+        List<int> cellindexes = new List<int>();
+
         public SplashScreen()
             : base(80, 25)
         {
             IsVisible = false;
-            effectsManager = new EffectsManager(this.Data);
+            effectsManager = new EffectsManager(this.TextSurface);
             // Setup the console text background
             string textTemplate = "sole SadCon";
             System.Text.StringBuilder text = new System.Text.StringBuilder(2200);
 
-            for (int i = 0; i < Data.Width * Data.Height; i++)
+            for (int i = 0; i < TextSurface.Width * TextSurface.Height; i++)
             {
                 text.Append(textTemplate);
             }
-            this.Data.Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
+            Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
 
             // Load the logo
             System.IO.Stream imageStream = System.IO.File.OpenRead("sad.png");
@@ -43,7 +45,7 @@
 
             // Configure the logo
             _consoleImage = image.ToSurface(Engine.DefaultFont, false);
-            _consoleImagePosition = new Point(Data.Width / 2 - _consoleImage.Width / 2, -1);
+            _consoleImagePosition = new Point(TextSurface.Width / 2 - _consoleImage.Width / 2, -1);
             _consoleImage.Tint = Color.Black;
 
             // Configure the animations
@@ -56,7 +58,7 @@
                 {
                     _x += 1;
 
-                    if (_x > Data.Width + 50)
+                    if (_x > TextSurface.Width + 50)
                     {
                         inst.IsFinished = true;
                     }
@@ -64,17 +66,17 @@
                     Color[] colors = new Color[] { Color.Black, Color.DarkBlue, Color.White, Color.DarkBlue, Color.Black };
                     float[] colorStops = new float[] { 0f, 0.2f, 0.5f, 0.8f, 1f };
 
-                    Algorithms.GradientFill(Data.Font.Size, new Point(_x, 12), 10, 45, new Rectangle(0, 0, Data.Width, Data.Height), new ColorGradient(colors, colorStops), Data.SetForeground);
+                    Algorithms.GradientFill(TextSurface.Font.Size, new Point(_x, 12), 10, 45, new Rectangle(0, 0, TextSurface.Width, TextSurface.Height), new ColorGradient(colors, colorStops), SetForeground);
                 };
             _animation.Instructions.AddLast(moveGradientInstruction);
 
             // Animation to clear the SadConsole text.
-            _animation.Instructions.AddLast(new CodeInstruction() { CodeCallback = (i) => { Data.Fill(Color.Black, Color.Transparent, 0, null); i.IsFinished = true; } });
+            _animation.Instructions.AddLast(new CodeInstruction() { CodeCallback = (i) => { Fill(Color.Black, Color.Transparent, 0, null); i.IsFinished = true; } });
 
             // Animation for the logo text.
             var logoText = new ColorGradient(new Color[] { Color.Purple, Color.Yellow }, new float[] { 0.0f, 1f }).ToColoredString("[| Powered by SadConsole |]");
             logoText.SetEffect(new SadConsole.Effects.Fade() { DestinationForeground = Color.Blue, FadeForeground = true, FadeDuration = 1f, Repeat = false, RemoveOnFinished = true, Permanent = true, CloneOnApply = true });
-            _animation.Instructions.AddLast(new DrawString(this) { Position = new Point(26, this.Data.Height - 1), Text = logoText, TotalTimeToPrint = 1f, UseConsolesCursorToPrint = false });
+            _animation.Instructions.AddLast(new DrawString(this) { Position = new Point(26, this.TextSurface.Height - 1), Text = logoText, TotalTimeToPrint = 1f });
 
             // Animation for fading in the logo picture.
             _animation.Instructions.AddLast(new FadeCellRenderer(_consoleImage, new ColorGradient(Color.Black, Color.Transparent), new TimeSpan(0, 0, 0, 0, 2000)));
@@ -88,14 +90,17 @@
                         fadeEffect.AutoReverse = true;
                         fadeEffect.DestinationForeground = new ColorGradient(Color.Blue, Color.Yellow);
                         fadeEffect.FadeForeground = true;
+                        fadeEffect.UseCellForeground = false;
                         fadeEffect.Repeat = true;
                         fadeEffect.FadeDuration = 0.7f;
+                        fadeEffect.RemoveOnFinished = true;
 
                         List<Cell> cells = new List<Cell>();
                         for (int index = 0; index < 10; index++)
                         {
-                            var point = new Point(26, this.Data.Height - 1).ToIndex(this.Data.Width) + 14 + index;
-                            cells.Add(Data[point]);
+                            var point = new Point(26, this.TextSurface.Height - 1).ToIndex(this.TextSurface.Width) + 14 + index;
+                            cells.Add(textSurface.Cells[point]);
+                            cellindexes.Add(point);
                         }
 
                         effectsManager.SetEffect(cells, fadeEffect);
@@ -115,6 +120,8 @@
 
                     if (SplashCompleted != null)
                         SplashCompleted();
+
+                    i.IsFinished = true;
                 }
             });
         }
@@ -125,6 +132,7 @@
                 return;
 
             base.Update();
+            effectsManager.UpdateEffects(Engine.GameTimeElapsedUpdate);
             
             _animation.Run();
         }

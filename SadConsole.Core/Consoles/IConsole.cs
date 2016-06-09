@@ -10,9 +10,7 @@
     {
         Point Position { get; set; }
 
-        TextSurface Data { get; }
-
-        Rectangle ViewArea { get; set; }
+        ITextSurface TextSurface { get; set; }
 
         Cursor VirtualCursor { get; }
 

@@ -6,12 +6,20 @@ using System.Text;
 
 namespace SadConsole.Consoles
 {
+    /// <summary>
+    /// A text surface created from an existing text surface.
+    /// </summary>
     public class TextSurfaceView : TextSurface
     {
         private ITextSurface data;
         protected Rectangle originalArea;
         
-        public TextSurfaceView(ITextSurface surface, Rectangle area)
+        /// <summary>
+        /// Creates a new surface view from an existing surface.
+        /// </summary>
+        /// <param name="surface">The source cell data.</param>
+        /// <param name="area">The area of the text surface.</param>
+        public TextSurfaceView(ITextSurface surface, Rectangle area): base(area.Width, area.Height, surface.Font)
         {
             data = surface;
             DefaultBackground = surface.DefaultBackground;
@@ -20,22 +28,14 @@ namespace SadConsole.Consoles
             base.width = surface.Width;
             base.height = surface.Height;
 
-            this.area = area;
             this.originalArea = area;
             this.cells = data.Cells;
-            ResetArea();
-            this.area = new Rectangle(0, 0, area.Width, area.Height);
-            this.cells = this.renderCells;
+
             base.width = area.Width;
             base.height = area.Height;
-            ResetArea();
-            
-        }
-        
-        protected override void ResetArea()
-        {
+
             RenderRects = new Rectangle[area.Width * area.Height];
-            renderCells = new Cell[area.Width * area.Height];
+            RenderCells = new Cell[area.Width * area.Height];
 
             int index = 0;
 
@@ -44,70 +44,111 @@ namespace SadConsole.Consoles
                 for (int x = 0; x < area.Width; x++)
                 {
                     RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
-                    renderCells[index] = base.cells[(y + area.Top) * width + (x + area.Left)];
+                    RenderCells[index] = base.cells[(y + area.Top) * surface.Width + (x + area.Left)];
                     index++;
                 }
             }
 
+            cells = RenderCells;
+
             AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
         }
 
+        #region Serialization
+        /// <summary>
+        /// Saves the <see cref="TextSurfaceView"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
         public new void Save(string file)
         {
-            TextSurfaceViewSerialized.Save(this, file);
+            new Serialized(this).Save(file);
         }
 
+        /// <summary>
+        /// Loads a <see cref="TextSurfaceView"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <param name="surfaceBase">The surface this view was created from.</param>
+        /// <returns></returns>
         public static TextSurfaceView Load(string file, ITextSurface surfaceBase)
         {
-            return TextSurfaceViewSerialized.Load(file, surfaceBase);
+            return Serialized.Load(file, surfaceBase);
         }
 
+        /// <summary>
+        /// Serialized instance of a <see cref="TextSurface"/>.
+        /// </summary>
         [DataContract]
-        public class TextSurfaceViewSerialized
+        public new class Serialized
         {
             [DataMember]
-            Rectangle Area;
+            public Rectangle Area;
 
             [DataMember]
-            Rectangle ViewArea;
+            public string FontName;
 
             [DataMember]
-            string FontName;
+            public Font.FontSizes FontMultiple;
 
             [DataMember]
-            int FontMultiple;
+            public Color DefaultBackground;
 
             [DataMember]
-            Color Tint;
+            public Color DefaultForeground;
 
-            public static void Save(TextSurfaceView surfaceBase, string file)
+            [DataMember]
+            public Color Tint;
+
+            /// <summary>
+            /// Creates a serialized object from an existing <see cref="TextSurfaceView"/>.
+            /// </summary>
+            /// <param name="surface">The surface to serialize.</param>
+            public Serialized(TextSurfaceView surfaceView)
             {
-                TextSurfaceViewSerialized data = new TextSurfaceViewSerialized();
-                data.Area = surfaceBase.originalArea;
-                data.ViewArea = surfaceBase.ViewArea;
-                data.FontName = surfaceBase.font.Name;
-                data.FontMultiple = surfaceBase.font.SizeMultiple;
-                data.Tint = surfaceBase.Tint;
-
-                SadConsole.Serializer.Save(data, file);
+                Area = surfaceView.originalArea;
+                FontName = surfaceView.font.Name;
+                FontMultiple = surfaceView.font.SizeMultiple;
+                DefaultBackground = surfaceView.DefaultBackground;
+                DefaultForeground = surfaceView.DefaultForeground;
+                Tint = surfaceView.Tint;
             }
 
-            public static TextSurfaceView Load(string file, ITextSurface parent)
+            protected Serialized() { }
+
+            /// <summary>
+            /// Saves the serialized <see cref="TextSurfaceView"/> to a file.
+            /// </summary>
+            /// <param name="file">The destination file.</param>
+            public void Save(string file)
             {
-                TextSurfaceViewSerialized data = Serializer.Load<TextSurfaceViewSerialized>(file);
-                TextSurfaceView newSurface = new TextSurfaceView(parent, data.Area);
-                
+                SadConsole.Serializer.Save(this, file);
+            }
+
+            /// <summary>
+            /// Loads a <see cref="TextSurfaceView"/> from a file and existing <see cref="ITextSurface"/>.
+            /// </summary>
+            /// <param name="file">The source file.</param>
+            /// <param name="surfaceHydrate">The surface this view was originally from.</param>
+            /// <returns>A surface view.</returns>
+            public static TextSurfaceView Load(string file, ITextSurface surfaceHydrate)
+            {
+                Serialized data = Serializer.Load<Serialized>(file);
+                Font font;
                 // Try to find font
                 if (Engine.Fonts.ContainsKey(data.FontName))
-                    newSurface.font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
+                    font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
                 else
-                    newSurface.font = Engine.DefaultFont;
+                    font = Engine.DefaultFont;
 
-                newSurface.ViewArea = data.ViewArea;
+                TextSurfaceView newSurface = new TextSurfaceView(surfaceHydrate, data.Area);
+                newSurface.Font = font;
+                newSurface.DefaultBackground = data.DefaultBackground;
+                newSurface.DefaultForeground = data.DefaultForeground;
                 newSurface.Tint = data.Tint;
 
                 return newSurface;
             }
         }
+        #endregion
     }
 }

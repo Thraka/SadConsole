@@ -1,22 +1,22 @@
 ﻿using System;
 using SadConsole;
 using SadConsole.Consoles;
-using CustomConsole = SadConsole.Consoles.CustomConsole;
+using Console = SadConsole.Consoles.Console;
 using Microsoft.Xna.Framework;
 
 namespace StarterProject.CustomConsoles
 {
-    class RandomScrollingConsole : CustomConsole
+    class RandomScrollingConsole : Console
     {
         private TextSurface mainData;
-        private TextSurface messageData;
+        private SurfaceEditor messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
 
         public RandomScrollingConsole() : base(80, 25)
         {
-            messageData = new TextSurface(10, 1, Engine.DefaultFont);
+            messageData = new SurfaceEditor(new TextSurface(10, 1, Engine.DefaultFont));
             IsVisible = false;
 
             
@@ -24,16 +24,16 @@ namespace StarterProject.CustomConsoles
             {
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X - 1, cons.ViewArea.Y, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X - 1, cons.TextSurface.RenderArea.Y, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X + 1, cons.ViewArea.Y, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X + 1, cons.TextSurface.RenderArea.Y, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y - 1, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y - 1, 80, 25);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y + 1, 80, 25);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y + 1, 80, 25);
 
                 return true;
             };
@@ -45,7 +45,7 @@ namespace StarterProject.CustomConsoles
             if (IsVisible && !initialized)
             {
                 // Write to the message layer
-                _textSurface.Print(0, 0, "Generating random console data, please wait...");
+                Print(0, 0, "Generating random console data, please wait...");
                 initialized = true;
             }
         }
@@ -69,10 +69,10 @@ namespace StarterProject.CustomConsoles
                     base.Render();
 
                     // Generate the content
-                    _textSurface = new TextSurface(2000, 2000, Engine.DefaultFont); //500mb ?? why?
-                    _textSurface.ViewArea = new Rectangle(0, 0, 80, 25);
+                    TextSurface = new TextSurface(2000, 2000, Engine.DefaultFont); //500mb ?? why?
                     //Data = new TextSurface(2000, 2000);
                     //DataViewport = new Rectangle(0, 0, 80, 25);
+                    TextSurface.RenderArea = new Rectangle(0, 0, 80, 25);
 
                     // Clear message data and make it transparent so that it acts as a layer
                     messageData.Fill(Color.White, Color.Transparent, 0, null);
@@ -85,12 +85,12 @@ namespace StarterProject.CustomConsoles
                 else
                 {
                     // Set message data information about where the viewport is located
-                    messageData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Y}            ", Color.White, Color.Black);
+                    //messageData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Y}            ", Color.White, Color.Black);
 
                     // Create a faux layering system.
                     base.Render();
 
-                    Renderer.Render(messageData, new Point(0, 0));
+                    //Renderer.Render(messageData.TextSurface, new Point(0, 0));
                 }
             }
         }

@@ -58,11 +58,11 @@
             {
                 if (_console != null)
                 {
-                    IConsole console = (IConsole)_console.Target;
+                    Console console = (Console)_console.Target;
 
-                    if (!(value.X < 0 || value.X >= console.Data.Width))
+                    if (!(value.X < 0 || value.X >= console.TextSurface.Width))
                         _position.X = value.X;
-                    if (!(value.Y < 0 || value.Y >= console.Data.Height))
+                    if (!(value.Y < 0 || value.Y >= console.TextSurface.Height))
                         _position.Y = value.Y;
                 }
             }
@@ -96,7 +96,7 @@
         /// Creates a new instance of the cursor class that will work with the specified console.
         /// </summary>
         /// <param name="console">The console this cursor will print on.</param>
-        public Cursor(IConsole console)
+        public Cursor(SurfaceEditor console)
         {
             _console = new WeakReference(console);
             IsVisible = false;
@@ -119,7 +119,7 @@
 
         }
 
-        internal void AttachConsole(IConsole console)
+        internal void AttachConsole(SurfaceEditor console)
         {
             _console = new WeakReference(console);
         }
@@ -131,10 +131,10 @@
         /// <exception cref="Exception">Thrown when the backing console's CellData is null.</exception>
         public Cursor ResetAppearanceToConsole()
         {
-            IConsole console = ((IConsole)_console.Target);
+            var console = ((SurfaceEditor)_console.Target);
 
-            if (console.Data != null)
-                PrintAppearance = new CellAppearance(console.Data.DefaultForeground, console.Data.DefaultBackground);
+            if (console.TextSurface != null)
+                PrintAppearance = new CellAppearance(console.TextSurface.DefaultForeground, console.TextSurface.DefaultBackground);
             else
                 throw new Exception("CellData of the attached console is null. Cannot reset appearance.");
 
@@ -159,7 +159,7 @@
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(ColoredString text)
         {
-            var console = (IConsole)_console.Target;
+            var console = (Console)_console.Target;
 
             foreach (var character in text)
             {
@@ -171,7 +171,7 @@
 
                 else
                 {
-                    var cell = console.Data[_position.X, _position.Y];
+                    var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
 
                     if (!PrintOnlyCharacterData)
                     {
@@ -186,18 +186,18 @@
                     }
 
                     _position.X += 1;
-                    if (_position.X >= console.Data.Width)
+                    if (_position.X >= console.TextSurface.Width)
                     {
                         _position.X = 0;
                         _position.Y += 1;
 
-                        if (_position.Y >= console.Data.Height)
+                        if (_position.Y >= console.TextSurface.Height)
                         {
                             _position.Y -= 1;
 
                             if (AutomaticallyShiftRowsUp)
                             {
-                                console.Data.ShiftUp();
+                                console.ShiftUp();
 
                                 //if (console.Data.ResizeOnShift)
                                 //    _position.Y++;
@@ -219,9 +219,9 @@
         public Cursor Print(string text, ICellAppearance template, ICellEffect templateEffect)
         {
             // TODO: Look for the flag 7 on settings. This means allow word wrap. So without it we need to test if the text will reach the end of the screen and cut it off.
-            //((Console)_console.Target).DrawString(_location.X, _location.Y, text, PrintAppearance.Foreground, PrintAppearance.Background, PrintAppearance.Effect);
+            //((SurfaceEditor)_console.Target).DrawString(_location.X, _location.Y, text, PrintAppearance.Foreground, PrintAppearance.Background, PrintAppearance.Effect);
 
-            var console = (IConsole)_console.Target;
+            var console = (Console)_console.Target;
 
             foreach (var character in text)
             {
@@ -235,7 +235,7 @@
                 }
                 else
                 {
-                    var cell = console.Data[_position.X, _position.Y];
+                    var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
 
                     if (!PrintOnlyCharacterData)
                     {
@@ -246,18 +246,18 @@
                     cell.CharacterIndex = character;
 
                     _position.X += 1;
-                    if (_position.X >= console.Data.Width)
+                    if (_position.X >= console.TextSurface.Width)
                     {
                         _position.X = 0;
                         _position.Y += 1;
 
-                        if (_position.Y >= console.Data.Height)
+                        if (_position.Y >= console.TextSurface.Height)
                         {
                             _position.Y -= 1;
 
                             if (AutomaticallyShiftRowsUp)
                             {
-                                console.Data.ShiftUp();
+                                console.ShiftUp();
 
                                 //if (console.Data.ResizeOnShift)
                                 //    _position.Y++;
@@ -286,10 +286,10 @@
         /// <returns>The current cursor object.</returns>
         public Cursor LineFeed()
         {
-            if (_position.Y == ((IConsole)_console.Target).Data.Height - 1)
+            if (_position.Y == ((SurfaceEditor)_console.Target).TextSurface.Height - 1)
             {
-                ((IConsole)_console.Target).Data.ShiftUp();
-                //if (((IConsole)_console.Target).Data.ResizeOnShift)
+                ((SurfaceEditor)_console.Target).ShiftUp();
+                //if (((CustomConsole)_console.Target).Data.ResizeOnShift)
                 //    _position.Y++;
             }
             else
@@ -332,8 +332,8 @@
         {
             int newY = _position.Y + amount;
 
-            if (newY >= ((IConsole)_console.Target).Data.Height)
-                newY = ((IConsole)_console.Target).Data.Height - 1;
+            if (newY >= ((SurfaceEditor)_console.Target).TextSurface.Height)
+                newY = ((SurfaceEditor)_console.Target).TextSurface.Height - 1;
 
             Position = new Point(_position.X, newY);
             return this;
@@ -362,14 +362,14 @@
         /// <returns>This cursor object.</returns>
         public Cursor LeftWrap(int amount)
         {
-            var console = ((IConsole)_console.Target);
+            var console = ((SurfaceEditor)_console.Target);
 
-            int index = console.Data.GetIndexFromPoint(this._position) - amount;
+            int index = TextSurface.GetIndexFromPoint(this._position, console.TextSurface.Width) - amount;
 
             if (index < 0)
                 index = 0;
 
-            this._position = console.Data.GetPointFromIndex(index);
+            this._position = TextSurface.GetPointFromIndex(index, console.TextSurface.Width);
 
             return this;
         }
@@ -383,8 +383,8 @@
         {
             int newX = _position.X + amount;
 
-            if (newX >= ((IConsole)_console.Target).Data.Width)
-                newX = ((IConsole)_console.Target).Data.Width - 1;
+            if (newX >= ((SurfaceEditor)_console.Target).TextSurface.Width)
+                newX = ((SurfaceEditor)_console.Target).TextSurface.Width - 1;
 
             Position = new Point(newX, _position.Y);
             return this;
@@ -397,14 +397,15 @@
         /// <returns>This cursor object.</returns>
         public Cursor RightWrap(int amount)
         {
-            var console = ((IConsole)_console.Target);
+            var console = ((SurfaceEditor)_console.Target);
 
-            int index = console.Data.GetIndexFromPoint(this._position) + amount;
+            
+            int index = TextSurface.GetIndexFromPoint(this._position, console.TextSurface.Width) + amount;
 
-            if (index > console.Data.CellCount)
-                index = console.Data.CellCount - 1;
+            if (index > console.TextSurface.Cells.Length)
+                index = console.TextSurface.Cells.Length - 1;
 
-            this._position = console.Data.GetPointFromIndex(index);
+            this._position = TextSurface.GetPointFromIndex(index, console.TextSurface.Width);
 
             return this;
         }

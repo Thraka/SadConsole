@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StarterProject.CustomConsoles
 {
-    class ViewsAndSubViews: SadConsole.Consoles.CustomConsole
+    class ViewsAndSubViews: SadConsole.Consoles.Console
     {
         public ViewsAndSubViews() : base(40, 25)
         {

@@ -3,10 +3,10 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using CustomConsole = SadConsole.Consoles.CustomConsole;
+    using Console = SadConsole.Consoles.Console;
     using Microsoft.Xna.Framework;
 
-    class DOSConsole: CustomConsole
+    class DOSConsole: Console
     {
         public string Prompt { get; set; }
 
@@ -37,7 +37,7 @@
 
 
             // Startup description
-            Data.Clear();
+            ClearText();
             VirtualCursor.Position = new Point(0, 24);
             VirtualCursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
             _keyboardHandlerObject.VirtualCursorLastY = 24;
@@ -45,9 +45,9 @@
             VirtualCursor.Print(Prompt);
         }
 
-        public void Clear()
+        public void ClearText()
         {
-            Data.Clear();
+            Clear();
             VirtualCursor.Position = new Point(0, 24);
             _keyboardHandlerObject.VirtualCursorLastY = 24;
         }
@@ -61,7 +61,7 @@
                 VirtualCursor.Print("  SadConsole for MonoGame and XNA 4.0").NewLine();
 
             else if (value.ToLower() == "cls")
-                Clear();
+                ClearText();
 
             else if (value.ToLower() == "look")
                 VirtualCursor.Print("  Looking around you discover that you are in a dark and empty room. There is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();

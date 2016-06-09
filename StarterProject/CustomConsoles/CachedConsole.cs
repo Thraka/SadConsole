@@ -3,11 +3,11 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using CustomConsole = SadConsole.Consoles.CustomConsole;
+    using Console = SadConsole.Consoles.Console;
     using Microsoft.Xna.Framework;
     using SadConsole.Input;
 
-    class CachedConsoleConsole : CustomConsole
+    class CachedConsoleConsole : Console
     {
         CachedTextSurfaceRenderer cachedRenderer;
         ITextSurfaceRenderer oldRenderer;
@@ -18,7 +18,7 @@
             IsVisible = false;
             FillWithRandomGarbage();
 
-            cachedRenderer = new CachedTextSurfaceRenderer(Data);
+            cachedRenderer = new CachedTextSurfaceRenderer(TextSurface);
             oldRenderer = _renderer;
         }
 
@@ -27,7 +27,7 @@
             if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space))
             {
                 Renderer = _renderer == oldRenderer ? cachedRenderer : oldRenderer;
-                Data.Tint = _renderer == oldRenderer ? Color.Transparent : Color.Black * 0.25f;
+                TextSurface.Tint = _renderer == oldRenderer ? Color.Transparent : Color.Black * 0.25f;
             }
 
             return false;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CustomConsole = SadConsole.Consoles.CustomConsole;
+using Console = SadConsole.Consoles.Console;
 using SadConsole.Entities;
 using SadConsole.Consoles;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StarterProject.CustomConsoles
 {
-    class EntityAndConsole: CustomConsole
+    class EntityAndConsole: Console
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
@@ -25,7 +25,7 @@ namespace StarterProject.CustomConsoles
         {
             // Create out player entity, and center it.
             _player = new Player();
-            _player.Position = new Microsoft.Xna.Framework.Point(_textSurface.Width / 2, _textSurface.Height / 2);
+            _player.Position = new Microsoft.Xna.Framework.Point(textSurface.Width / 2, textSurface.Height / 2);
             _playerPreviousPosition = _player.Position;
 
             // Setup this console to accept keyboard input.
@@ -91,7 +91,7 @@ namespace StarterProject.CustomConsoles
 
                 // We are not detecting when the player tries to move off the console area.
                 // We could detected that though and then move the player back to where they were.
-                _textSurface.SetCharacter(_playerPreviousPosition.X, _playerPreviousPosition.Y, 250);
+                SetCharacter(_playerPreviousPosition.X, _playerPreviousPosition.Y, 250);
                 _playerPreviousPosition = _player.Position;
 
                 return true;

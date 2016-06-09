@@ -1,146 +1,191 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-
-namespace SadConsole.Consoles
+﻿namespace SadConsole.Consoles
 {
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+    using SadConsole.Input;
+    using System;
+    using System.Runtime.Serialization;
+    using System.Linq;
+
     /// <summary>
-    /// A basic console ready to render and use. Implements it's own <see cref="Parent"/> and <see cref="IsFocused"/> logic. By default uses the <see cref="CustomConsole"/> and <see cref="TextSurfaceRenderer"/> types for console management and rendering.
+    /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
     /// </summary>
-    public class Console: TextSurface, IConsole, ITextSurfaceRenderer
+    public partial class Console : SurfaceEditor, IConsole
     {
-        protected IConsole console;
-        protected ITextSurfaceRenderer renderer;
-        protected IConsoleList _parentConsole;
 
-        #region Constructors
+        #region Events
+        /// <summary>
+        /// Raised when the a mosue button is clicked on this console.
+        /// </summary>
+        public event EventHandler<MouseEventArgs> MouseButtonClicked;
 
         /// <summary>
-        /// Creates a console with the specified width and height. Uses <see cref="Engine.DefaultFont"/> as the font and the <see cref="CustomConsole"/> and <see cref="TextSurfaceRenderer"/> types for console management and rendering.
+        /// Raised when the mouse moves around the this console.
         /// </summary>
-        /// <param name="width">Width of the console.</param>
-        /// <param name="height">Height of the console.</param>
-        public Console(int width, int height) : this(width, height, Engine.DefaultFont) { }
+        public event EventHandler<MouseEventArgs> MouseMove;
 
         /// <summary>
-        /// Creates a console with the specified width, height, and font. Uses the <see cref="CustomConsole"/> and <see cref="TextSurfaceRenderer"/> types for console management and rendering.
+        /// Raised when the mouse exits this console.
         /// </summary>
-        /// <param name="width">Width of the console.</param>
-        /// <param name="height">Height of the console.</param>
-        /// <param name="font">The font used in rendering.</param>
-        public Console(int width, int height, Font font) : base(width, height, font)
-        {
-            console = new CustomConsole(this);
-            renderer = new TextSurfaceRenderer();
-            ((CustomConsole)console).Renderer = renderer;
-        }
+        public event EventHandler<MouseEventArgs> MouseExit;
 
         /// <summary>
-        /// Creates the console with the specified width, height, backing console and renderer. If the console uses a customer renderer, the <paramref name="supportingRenderer"/> parameter should match.
+        /// Raised when the mouse enters this console.
         /// </summary>
-        /// <param name="width">Width of the console.</param>
-        /// <param name="height">Height of the console.</param>
-        /// <param name="font">The font used in rendering.</param>
-        /// <param name="supportingConsole">Custom console.</param>
-        /// <param name="supportingRenderer">Custom renderer</param>
-        public Console(int width, int height, Font font, IConsole supportingConsole, ITextSurfaceRenderer supportingRenderer) : base(width, height, font)
-        {
-            console = supportingConsole;
-            this.renderer = supportingRenderer;
-        }
-
+        public event EventHandler<MouseEventArgs> MouseEnter;
         #endregion
 
-        #region IConsole
-        public bool CanFocus
-        {
-            get
-            {
-                return console.CanFocus;
-            }
+        /// <summary>
+        /// The renderer used to draw the <see cref="textSurface"/>.
+        /// </summary>
+        protected ITextSurfaceRenderer _renderer;
 
+        /// <summary>
+        /// Where the console should be located on the screen.
+        /// </summary>
+        protected Point _position;
+
+        /// <summary>
+        /// Indicates the console is visible.
+        /// </summary>
+        protected bool _isVisible = true;
+
+        /// <summary>
+        /// The parent console.
+        /// </summary>
+        protected IConsoleList _parentConsole;
+
+        /// <summary>
+        /// Indicates that the mouse is currently over this console.
+        /// </summary>
+        protected bool _isMouseOver = false;
+
+        /// <summary>
+        /// The private virtual curser reference.
+        /// </summary>
+        protected Cursor _virtualCursor;
+
+        /// <summary>
+        /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+        /// </summary>
+        public bool AutoCursorOnFocus { get; set; }
+
+        /// <summary>
+        /// Represents a _virtualCursor that can be used to input information into the console.
+        /// </summary>
+        public Cursor VirtualCursor
+        {
+            get { return _virtualCursor; }
+            //set
+            //{
+            //    if (value != null)
+            //        _virtualCursor = value;
+            //    else
+            //        throw new Exception("VirtualCursor cannot be null");
+            //}
+        }
+
+        /// <summary>
+        /// Indicates that the mouse is currently over this console.
+        /// </summary>
+        public bool IsMouseOver { get { return _isMouseOver; } }
+
+        /// <summary>
+        /// Gets or sets the Parent console.
+        /// </summary>
+        public IConsoleList Parent
+        {
+            get { return _parentConsole; }
             set
             {
-                console.CanFocus = value;
+                if (_parentConsole != value)
+                {
+                    if (_parentConsole == null)
+                    {
+                        _parentConsole = value;
+                        _parentConsole.Add(this);
+                        OnParentConsoleChanged(null, _parentConsole);
+                    }
+                    else
+                    {
+                        var oldParent = _parentConsole;
+                        _parentConsole = value;
+
+                        oldParent.Remove(this);
+
+                        if (_parentConsole != null)
+                            _parentConsole.Add(this);
+
+                        OnParentConsoleChanged(oldParent, _parentConsole);
+                    }
+                }
+
             }
         }
 
-        public bool CanUseKeyboard
-        {
-            get
-            {
-                return console.CanUseKeyboard;
-            }
+        /// <summary>
+        /// When true, this console will move to the front of its parent console when focused.
+        /// </summary>
+        public bool MoveToFrontOnMouseFocus { get; set; }
 
+        /// <summary>
+        /// Allows the mouse (with a click) to focus this console.
+        /// </summary>
+        public bool MouseCanFocus { get; set; }
+
+        /// <summary>
+        /// Allows this console to accept keyboard input.
+        /// </summary>
+        public bool CanUseKeyboard { get; set; }
+
+        /// <summary>
+        /// Allows this console to accept mouse input.
+        /// </summary>
+        public bool CanUseMouse { get; set; }
+
+        /// <summary>
+        /// Allows this console to be focusable.
+        /// </summary>
+        public bool CanFocus { get; set; }
+
+        /// <summary>
+        /// Indicates whether or not this console is visible.
+        /// </summary>
+        public bool IsVisible { get { return _isVisible; } set { _isVisible = value; OnVisibleChanged(); } }
+
+        /// <summary>
+        /// When false, does not perform the code within the <see cref="Update"/> method. Defaults to true.
+        /// </summary>
+        public bool DoUpdate { get; set; } = true;
+
+        /// <summary>
+        /// The renderer used to draw <see cref="TextSurface"/>.
+        /// </summary>
+        public ITextSurfaceRenderer Renderer
+        {
+            get { return _renderer; }
             set
             {
-                console.CanUseKeyboard = value;
+                if (_renderer != null)
+                {
+                    _renderer.BeforeRenderCallback = null;
+                    _renderer.AfterRenderCallback = null;
+                }
+
+                _renderer = value;
+                _renderer.BeforeRenderCallback = this.OnBeforeRender;
+                _renderer.AfterRenderCallback = this.OnAfterRender;
             }
         }
 
-        public bool CanUseMouse
+        /// <summary>
+        /// Gets or sets the position to render the cells.
+        /// </summary>
+        public Point Position
         {
-            get
-            {
-                return console.CanUseMouse;
-            }
-
-            set
-            {
-                console.CanUseMouse = value;
-            }
-        }
-
-        TextSurface IConsole.Data
-        {
-            get
-            {
-                return this;
-            }
-        }
-
-        Rectangle IConsole.ViewArea
-        {
-            get
-            {
-                return this.ViewArea;
-            }
-
-            set
-            {
-                this.ViewArea = value;
-            }
-        }
-
-        public bool DoUpdate
-        {
-            get
-            {
-                return console.DoUpdate;
-            }
-
-            set
-            {
-                console.DoUpdate = value;
-            }
-        }
-
-        public bool ExclusiveFocus
-        {
-            get
-            {
-                return console.ExclusiveFocus;
-            }
-
-            set
-            {
-                console.ExclusiveFocus = value;
-            }
+            get { return _position; }
+            set { Point previousPosition = _position; _position = value; OnPositionChanged(previousPosition); }
         }
 
         /// <summary>
@@ -183,165 +228,225 @@ namespace SadConsole.Consoles
                 }
             }
         }
-        public bool IsVisible
-        {
-            get
-            {
-                return console.IsVisible;
-            }
 
-            set
-            {
-                console.IsVisible = value;
-            }
+        /// <summary>
+        /// Gets or sets whether or not this console has exclusive access to the mouse events.
+        /// </summary>
+        public bool ExclusiveFocus { get; set; }
+
+        /// <summary>
+        /// An alternative method handler for handling the mouse logic.
+        /// </summary>
+        public Func<IConsole, MouseInfo, bool> MouseHandler { get; set; }
+
+        /// <summary>
+        /// An alternative method handler for handling the keyboard logic.
+        /// </summary>
+        public Func<IConsole, KeyboardInfo, bool> KeyboardHandler { get; set; }
+
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get; set; } = false;
+
+        #region Constructors
+        //public Console() : this(1, 1, Engine.DefaultFont) { }
+
+        public Console(int width, int height): this(width, height, Engine.DefaultFont) { }
+
+        public Console(int width, int height, Font font) : this(new TextSurface(width, height, font)) { }
+
+        public Console(ITextSurface textData): base(textData)
+        {
+            _virtualCursor = new Cursor(this);
+            Renderer = new TextSurfaceRenderer();
+            textSurface = textData;
+        }
+        #endregion
+        
+        protected virtual void OnMouseEnter(MouseInfo info)
+        {
+            if (MouseEnter != null)
+                MouseEnter(this, new MouseEventArgs(info));
         }
 
-        public IConsoleList Parent
+        protected virtual void OnMouseExit(MouseInfo info)
         {
-            get { return _parentConsole; }
-            set
+            // Force mouse off just incase
+            _isMouseOver = false;
+
+            if (MouseExit != null)
+                MouseExit(this, new MouseEventArgs(info));
+        }
+
+        protected virtual void OnMouseIn(MouseInfo info)
+        {
+            if (MouseMove != null)
+                MouseMove(this, new MouseEventArgs(info));
+        }
+
+        protected virtual void OnMouseLeftClicked(MouseInfo info)
+        {
+            if (MouseButtonClicked != null)
+                MouseButtonClicked(this, new MouseEventArgs(info));
+        }
+
+        protected virtual void OnRightMouseClicked(MouseInfo info)
+        {
+            if (MouseButtonClicked != null)
+                MouseButtonClicked(this, new MouseEventArgs(info));
+        }
+
+        
+        /// <summary>
+        /// Processes the mouse.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns>True when the mouse is over this console.</returns>
+        public virtual bool ProcessMouse(MouseInfo info)
+        {
+            var handlerResult = MouseHandler == null ? false : MouseHandler(this, info);
+
+            if (!handlerResult)
             {
-                if (_parentConsole != value)
+                if (this.IsVisible && this.CanUseMouse)
                 {
-                    if (_parentConsole == null)
+                    info.Fill(this);
+
+                    if (info.Console == this)
                     {
-                        _parentConsole = value;
-                        _parentConsole.Add(this);
-                        OnParentConsoleChanged(null, _parentConsole);
+                        if (this.CanFocus && this.MouseCanFocus && info.LeftClicked)
+                        {
+                            IsFocused = true;
+
+                            if (IsFocused && this.MoveToFrontOnMouseFocus && this.Parent != null && this.Parent.IndexOf(this) != this.Parent.Count - 1)
+                                this.Parent.MoveToTop(this);
+                        }
+
+                        if (_isMouseOver != true)
+                        {
+                            _isMouseOver = true;
+                            OnMouseEnter(info);
+                        }
+
+                        OnMouseIn(info);
+
+                        if (info.LeftClicked)
+                            OnMouseLeftClicked(info);
+
+                        if (info.RightClicked)
+                            OnRightMouseClicked(info);
+
+                        return true;
                     }
                     else
                     {
-                        var oldParent = _parentConsole;
-                        _parentConsole = value;
+                        if (_isMouseOver)
+                        {
+                            _isMouseOver = false;
+                            OnMouseExit(info);
+                        }
+                    }
+                }
+            }
 
-                        oldParent.Remove(this);
+            return handlerResult;
+        }
 
-                        if (_parentConsole != null)
-                            _parentConsole.Add(this);
+        /// <summary>
+        /// Called by the engine to process the keyboard. If the <see cref="KeyboardHandler"/> has been set, that will be called instead of this method.
+        /// </summary>
+        /// <param name="info">Keyboard information.</param>
+        /// <returns>True when the keyboard had data and this console did something with it.</returns>
+        public virtual bool ProcessKeyboard(KeyboardInfo info)
+        {
+            var handlerResult = KeyboardHandler == null ? false : KeyboardHandler(this, info);
 
-                        OnParentConsoleChanged(oldParent, _parentConsole);
+            if (!handlerResult && this.CanUseKeyboard)
+            {
+                bool didSomething = false;
+                foreach (var key in info.KeysPressed)
+                {
+                    if (key.Character == '\0')
+                    {
+                        switch (key.XnaKey)
+                        {
+                            case Keys.Space:
+                                this._virtualCursor.Print(key.Character.ToString());
+                                didSomething = true;
+                                break;
+                            case Keys.Enter:
+                                this._virtualCursor.CarriageReturn().LineFeed();
+                                didSomething = true;
+                                break;
+#if !SILVERLIGHT
+                            case Keys.LeftShift:
+                            case Keys.RightShift:
+                            case Keys.LeftAlt:
+                            case Keys.RightAlt:
+                            case Keys.LeftControl:
+                            case Keys.RightControl:
+                            case Keys.LeftWindows:
+                            case Keys.RightWindows:
+                            case Keys.F1:case Keys.F2:case Keys.F3:case Keys.F4:case Keys.F5:case Keys.F6:case Keys.F7:case Keys.F8:case Keys.F9:case Keys.F10:
+                            case Keys.F11:case Keys.F12:case Keys.F13:case Keys.F14:case Keys.F15:case Keys.F16:case Keys.F17:case Keys.F18:case Keys.F19:case Keys.F20:
+                            case Keys.F21:case Keys.F22:case Keys.F23:case Keys.F24:
+                            case Keys.Pause:
+                            case Keys.Escape:
+#else
+							case Keys.Shift:
+							case Keys.Alt:
+							case Keys.Ctrl:
+#endif
+                                //this._virtualCursor.Print(key.Character.ToString());
+                                break;
+                            case Keys.Up:
+                                this._virtualCursor.Up(1);
+                                didSomething = true;
+                                break;
+                            case Keys.Left:
+                                this._virtualCursor.Left(1);
+                                didSomething = true;
+                                break;
+                            case Keys.Right:
+                                this._virtualCursor.Right(1);
+                                didSomething = true;
+                                break;
+                            case Keys.Down:
+                                this._virtualCursor.Down(1);
+                                didSomething = true;
+                                break;
+                            case Keys.None:
+                                break;
+                            case Keys.Back:
+                                this._virtualCursor.Left(1).Print(" ").Left(1);
+                                didSomething = true;
+                                break;
+                            default:
+                                this._virtualCursor.Print(key.Character.ToString());
+                                didSomething = true;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        this._virtualCursor.Print(key.Character.ToString());
+                        didSomething = true;
                     }
                 }
 
-            }
-        }
-        public Point Position
-        {
-            get
-            {
-                return console.Position;
+                return didSomething;
             }
 
-            set
-            {
-                console.Position = value;
-            }
+            return handlerResult;
         }
 
-        public bool UsePixelPositioning
-        {
-            get
-            {
-                return console.UsePixelPositioning;
-            }
-
-            set
-            {
-                console.UsePixelPositioning = value;
-            }
-        }
-
-        public Cursor VirtualCursor
-        {
-            get
-            {
-                return console.VirtualCursor;
-            }
-        }
+        
 
         /// <summary>
-        /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+        /// Called when the visibility of the console changes.
         /// </summary>
-        public bool AutoCursorOnFocus { get { return console.AutoCursorOnFocus; } set { console.AutoCursorOnFocus = value; } }
-
-        public virtual bool ProcessKeyboard(KeyboardInfo info)
-        {
-            return console.ProcessKeyboard(info);
-        }
-
-        public virtual bool ProcessMouse(MouseInfo info)
-        {
-            return console.ProcessMouse(info);
-        }
-
-        public virtual void Render()
-        {
-            console.Render();
-        }
-
-        public virtual void Update()
-        {
-            console.Update();
-        }
-
-        #endregion
-
-        #region ITextSurfaceRenderer
-        Action<SpriteBatch> ITextSurfaceRenderer.AfterRenderCallback
-        {
-            get
-            {
-                return renderer.AfterRenderCallback;
-            }
-
-            set
-            {
-                renderer.AfterRenderCallback = value;
-            }
-        }
-
-        SpriteBatch ITextSurfaceRenderer.Batch
-        {
-            get
-            {
-                return renderer.Batch;
-            }
-        }
-
-        Action<SpriteBatch> ITextSurfaceRenderer.BeforeRenderCallback
-        {
-            get
-            {
-                return renderer.BeforeRenderCallback;
-            }
-
-            set
-            {
-                renderer.BeforeRenderCallback = value;
-            }
-        }
-
-        void ITextSurfaceRenderer.Render(ITextSurface cells, Matrix renderingMatrix)
-        {
-            renderer.Render(cells, renderingMatrix);
-        }
-
-        void ITextSurfaceRenderer.Render(ITextSurface cells, Point position, bool usePixelPositioning)
-        {
-            renderer.Render(cells, position, usePixelPositioning);
-        }
-
-        #endregion  
-
-
-        /// <summary>
-        /// Called when the parent console changes for this console.
-        /// </summary>
-        /// <param name="oldParent">The previous parent.</param>
-        /// <param name="newParent">The new parent.</param>
-        protected virtual void OnParentConsoleChanged(IConsoleList oldParent, IConsoleList newParent) { }
-
-
+        protected virtual void OnVisibleChanged() { }
 
         /// <summary>
         /// Called when this console's focus has been lost.
@@ -349,7 +454,7 @@ namespace SadConsole.Consoles
         protected virtual void OnFocusLost()
         {
             if (AutoCursorOnFocus == true)
-                VirtualCursor.IsVisible = false;
+                _virtualCursor.IsVisible = false;
         }
 
         /// <summary>
@@ -358,7 +463,223 @@ namespace SadConsole.Consoles
         protected virtual void OnFocused()
         {
             if (AutoCursorOnFocus == true)
-                VirtualCursor.IsVisible = true;
+                _virtualCursor.IsVisible = true;
         }
+
+        /// <summary>
+        /// Called when the <see cref="Position" /> property changes.
+        /// </summary>
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
+
+        /// <summary>
+        /// Called when the renderer renders the text view.
+        /// </summary>
+        /// <param name="batch">The batch used in renderering.</param>
+        protected virtual void OnAfterRender(SpriteBatch batch)
+        {
+            if (VirtualCursor.IsVisible)
+            {
+                int virtualCursorLocationIndex = Consoles.TextSurface.GetIndexFromPoint(
+                    new Point(VirtualCursor.Position.X - TextSurface.RenderArea.X,
+                              VirtualCursor.Position.Y - TextSurface.RenderArea.Y), TextSurface.RenderArea.Width);
+
+                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
+                {
+                    VirtualCursor.Render(batch, textSurface.Font, textSurface.RenderRects[virtualCursorLocationIndex]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when the renderer renders the text view.
+        /// </summary>
+        /// <param name="batch">The batch used in renderering.</param>
+        protected virtual void OnBeforeRender(SpriteBatch batch) { }
+
+        /// <summary>
+        /// Updates the cell effects and cursor.
+        /// </summary>
+        public virtual void Update()
+        {
+            if (DoUpdate)
+            {
+                //_textSurface.UpdateEffects(Engine.GameTimeElapsedUpdate);
+
+                if (VirtualCursor.IsVisible)
+                    VirtualCursor.CursorRenderCell.UpdateAndApplyEffect(Engine.GameTimeElapsedUpdate);
+            }
+        }
+
+        public virtual void Render()
+        {
+            if (_isVisible)
+            {
+                Renderer.Render(textSurface, _position, UsePixelPositioning);
+            }
+        }
+
+        /// <summary>
+        /// Called when the parent console changes for this console.
+        /// </summary>
+        /// <param name="oldParent">The previous parent.</param>
+        /// <param name="newParent">The new parent.</param>
+        protected virtual void OnParentConsoleChanged(IConsoleList oldParent, IConsoleList newParent) { }
+
+        /// <summary>
+        /// Used by the console engine to properly clear the mouse over flag and call OnMouseExit. Used when mouse exits window.
+        /// </summary>
+        private void ExitMouse()
+        {
+            if (_isMouseOver)
+            {
+                _isMouseOver = false;
+
+                MouseInfo info = Engine.Mouse.Clone();
+                info.ConsoleLocation = new Point(-1, -1);
+
+                OnMouseExit(info);
+            }
+        }
+
+
+        #region Serialization
+        /// <summary>
+        /// Saves the <see cref="Console"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public void Save(string file, bool saveTextSurface, params Type[] knownTypes)
+        {
+            new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            //Serializer.Save(this, file, new Type[] { typeof(CellAppearance) });
+        }
+
+        /// <summary>
+        /// Loads a <see cref="Consoles.TextSurface"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static Console Load(string file, params Type[] knownTypes)
+        {
+            //return Serializer.Load<Console>(file, new Type[] { typeof(CellAppearance) });
+            return Serialized.Load(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+        }
+
+        /// <summary>
+        /// Serialized instance of a <see cref="Console"/>.
+        /// </summary>
+        [DataContract]
+        public class Serialized
+        {
+            [DataMember]
+            public bool AutoCursorOnFocus;
+            [DataMember]
+            public bool CanFocus;
+            [DataMember]
+            public bool CanUseKeyboard;
+            [DataMember]
+            public bool CanUseMouse;
+            [DataMember]
+            public ITextSurface Data;
+            [DataMember]
+            public bool DoUpdate;
+            [DataMember]
+            public bool ExclusiveFocus;
+            [DataMember]
+            public bool IsFocused;
+            [DataMember]
+            public bool IsVisible;
+            [DataMember]
+            public bool MouseCanFocus;
+            [DataMember]
+            public bool MoveToFrontOnMouseFocus;
+            [DataMember]
+            public Point Position;
+            [DataMember]
+            public ITextSurfaceRenderer Renderer;
+            [DataMember]
+            public bool UsePixelPositioning;
+            [DataMember]
+            public Cursor VirtualCursor;
+            [DataMember]
+            public int Width;
+            [DataMember]
+            public int Height;
+
+            /// <summary>
+            /// Creates a serialized object from an existing <see cref="Console"/>.
+            /// </summary>
+            /// <param name="surface">The surface to serialize.</param>
+            public Serialized(Console console, bool serializeTextSurface)
+            {
+                AutoCursorOnFocus = console.AutoCursorOnFocus;
+                CanFocus = console.CanFocus;
+                CanUseKeyboard = console.CanUseKeyboard;
+                CanUseMouse = console.CanUseMouse;
+                if (serializeTextSurface)
+                    Data = console.TextSurface;
+
+                Width = console.Width;
+                Height = console.Height;
+                DoUpdate = console.DoUpdate;
+                ExclusiveFocus = console.ExclusiveFocus;
+                IsFocused = console.IsFocused;
+                IsVisible = console.IsVisible;
+                MouseCanFocus = console.MouseCanFocus;
+                MoveToFrontOnMouseFocus = console.MoveToFrontOnMouseFocus;
+                Position = console.Position;
+                Renderer = console.Renderer;
+                UsePixelPositioning = console.UsePixelPositioning;
+                VirtualCursor = console.VirtualCursor;
+            }
+
+            protected Serialized() { }
+
+            /// <summary>
+            /// Saves the serialized <see cref="Console"/> to a file.
+            /// </summary>
+            /// <param name="file">The destination file.</param>
+            public void Save(string file, params Type[] knownTypes)
+            {
+                SadConsole.Serializer.Save(this, file, knownTypes);
+            }
+
+            /// <summary>
+            /// Loads a <see cref="Consoles.TextSurface"/> from a file.
+            /// </summary>
+            /// <param name="file">The source file.</param>
+            /// <returns>A surface.</returns>
+            public static Console Load(string file, params Type[] knownTypes)
+            {
+                var data = Serializer.Load<Serialized>(file, knownTypes);
+                Console console = new Console(data.Data);
+
+                console.AutoCursorOnFocus = data.AutoCursorOnFocus;
+                console.CanFocus = data.CanFocus;
+                console.CanUseMouse = data.CanUseMouse;
+
+                if (data.Data != null)
+                    console.TextSurface = data.Data;
+                else
+                    console.TextSurface = new TextSurface(data.Width, data.Height, Engine.DefaultFont);
+
+                console.DoUpdate = data.DoUpdate;
+                console.ExclusiveFocus = data.ExclusiveFocus;
+                console.IsFocused = data.IsFocused;
+                console.IsVisible = data.IsVisible;
+                console.MouseCanFocus = data.MouseCanFocus;
+                console.MoveToFrontOnMouseFocus = data.MoveToFrontOnMouseFocus;
+                console.Position = data.Position;
+                console.Renderer = data.Renderer;
+                console.UsePixelPositioning = data.UsePixelPositioning;
+                console._virtualCursor = data.VirtualCursor;
+
+                console._virtualCursor.AttachConsole(console);
+
+                return console;
+            }
+        }
+        #endregion
+
     }
 }

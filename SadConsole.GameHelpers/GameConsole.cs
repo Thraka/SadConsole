@@ -9,7 +9,7 @@ namespace SadConsole.GameHelpers
 {
     [DataContract]
 
-    public class GameConsole : Consoles.CustomConsole
+    public class GameConsole : Consoles.Console
     {
         protected LayeredTextSurface _layeredTextSurface;
         protected GameObjectCollection[] _gameObjects;
@@ -18,14 +18,14 @@ namespace SadConsole.GameHelpers
 
         public GameConsole(int width, int height, int layers) :base(width, height)
         {
-            _textSurface = _layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
-            _gameObjects = new GameObjectCollection[_layeredTextSurface.Layers];
+            textSurface = _layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
+            _gameObjects = new GameObjectCollection[_layeredTextSurface.LayerCount];
             AssociateLayersWithObjects();
         }
 
         public void AssociateLayersWithObjects()
         {
-            for (int i = 0; i < _layeredTextSurface.Layers; i++)
+            for (int i = 0; i < _layeredTextSurface.LayerCount; i++)
             {
                 foreach (var gameObject in _gameObjects[i].Values)
                 {
@@ -37,7 +37,7 @@ namespace SadConsole.GameHelpers
 
         public GameObjectCollection GetObjectCollection(int layer)
         {
-            if (layer < 0 || layer >= _layeredTextSurface.Layers)
+            if (layer < 0 || layer >= _layeredTextSurface.LayerCount)
                 throw new System.ArgumentOutOfRangeException("layer");
 
             return _gameObjects[layer];

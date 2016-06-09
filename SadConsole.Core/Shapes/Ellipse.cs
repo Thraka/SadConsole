@@ -16,7 +16,7 @@ namespace SadConsole.Shapes
         //public ICellAppearance FillAppearance;
         //public bool Fill;
 
-        public void Draw(TextSurface surface)
+        public void Draw(SurfaceEditor surface)
         {
             Algorithms.Ellipse(StartingPoint.X, StartingPoint.Y, EndingPoint.X, EndingPoint.Y, (x, y) => { if (surface.IsValidCell(x, y)) surface.SetCellAppearance(x, y, BorderAppearance); });
         }

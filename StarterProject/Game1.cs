@@ -3,14 +3,14 @@
     using System;
     using SadConsole;
     using SadConsole.Consoles;
-    using CustomConsole = SadConsole.Consoles.CustomConsole;
+    using Console = SadConsole.Consoles.Console;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
     public class Game1: Game
     {
         GraphicsDeviceManager _graphics;
-        CustomConsole _defaultConsole;
+        Console _defaultConsole;
         Windows.CharacterViewer _characterWindow;
 
         int currentConsoleIndex = 0;
@@ -35,57 +35,7 @@
             
             Theme.SetupThemes();
 
-            SadConsole.Consoles.TextSurface surface1;
-            surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
-            surface1.DefaultBackground = Color.Gray;
-            surface1.DefaultForeground = ColorAnsi.Black;
-            surface1.Clear();
-
-            surface1.Print(2, 1, "Hello");
-
-            surface1.Save("test.sadcv3");
-
-            surface1 = TextSurface.Load("test.sadcv3");
-
-            tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
-            //tempSurface2 = surface1;
-            surface1.SetForeground(2, 1, Color.CadetBlue);
-            tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
-            tempConsole = new CustomConsole(surface1);
-            tempConsole.Position = new Point(5, 7);
-            tempConsole.UsePixelPositioning = true;
-            tempConsole.CanUseMouse = true;
-            tempConsole.MouseHandler = (con, info) =>
-            {
-                info.Fill(con);
-
-                if (info.Console == con)
-                {
-                    if (info.Cell != null)
-                        info.Cell.Background = Color.Blue;
-
-                    return true;
-                }
-                return false;
-            };
-
-            tempConsole2 = new CustomConsole((TextSurfaceView)tempSurface);
-            tempConsole2.Position = new Point(20, 15);
-            tempConsole2.CanUseMouse = false;
-            tempConsole2.MouseHandler = (con, info) =>
-            {
-                info.Fill(con);
-
-                if (info.Console == con)
-                {
-                    if (info.Cell != null)
-                        info.Cell.Background = Color.Yellow;
-
-                    return true;
-                }
-                return false;
-            };
-
+            
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project.
@@ -100,21 +50,19 @@
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                //new Console(surface1
-                                        rootConsole,
-                                        new CustomConsoles.ControlsTest(),                                
                                         new CustomConsoles.CachedConsoleConsole(),
+                                        new CustomConsoles.SplashScreen(),
+                                        new CustomConsoles.DOSConsole(),
+                                        new CustomConsoles.RandomScrollingConsole(),
+                                        new CustomConsoles.ControlsTest(),
                                         new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.StretchedConsole(), 
                                         new CustomConsoles.BorderedConsole(80, 25), 
     //                                                           new CustomConsoles.WorldGenerationConsole(),
-                                        new CustomConsoles.DOSConsole(),
     //                                                           new CustomConsoles.WindowTestConsole(),
                                         new CustomConsoles.EntityAndConsole(),
-                                        new CustomConsoles.RandomScrollingConsole(),
-                                        new CustomConsoles.SplashScreen(),
                                     };
 
             // Show the first console (by default all of our demo consoles are hidden)
@@ -122,10 +70,88 @@
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
+
+
+            SadConsole.Engine.ConsoleRenderStack.Clear();
+
+            var con1 = new SadConsole.Consoles.Console(10, 10);
+            var tempData = con1.TextSurface;
+            con1.SetCharacter(1, 1, 1);
+            con1.SetCharacter(2, 2, 2);
+            con1.SetForeground(1, 1, Color.Khaki);
+            //con1.TextSurface.RenderArea = new Rectangle(1, 1, 2, 2);
+            con1.VirtualCursor.IsVisible = true;
+            con1.CanUseKeyboard = true;
+            
+            con1.Save("testme.con", false);
+            //((TextSurface)con1.TextSurface).Save("test.con");
+            //con1.TextSurface = new TextSurface(10, 10, Engine.DefaultFont);
+            //con1.TextSurface = TextSurface.Load("test.con");
+            con1 = Console.Load("testme.con");
+            con1.TextSurface = tempData;
+
+            //con1.TextSurface.RenderArea = new Rectangle(0,0,con1.Width, con1.Height);
+
+            SadConsole.Engine.ConsoleRenderStack.Add(con1);
+            Engine.ActiveConsole = con1;
+
+            // ***************
+            // Test multiple surfaces
+            //SadConsole.Consoles.TextSurface surface1;
+            //surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
+            //surface1.DefaultBackground = Color.Gray;
+            //surface1.DefaultForeground = ColorAnsi.Black;
+            //SurfaceEditor editor = new SurfaceEditor(surface1);
+            //editor.Clear();
+
+            //editor.Print(2, 1, "Hello");
+
+            //tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
+            ////tempSurface2 = surface1;
+            //editor.SetForeground(2, 1, Color.CadetBlue);
+            //tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
+            //tempConsole = new Console(surface1);
+            //tempConsole.Position = new Point(5, 7);
+            //tempConsole.UsePixelPositioning = true;
+            //tempConsole.CanUseMouse = true;
+            //tempConsole.MouseHandler = (con, info) =>
+            //{
+            //    info.Fill(con);
+
+            //    if (info.Console == con)
+            //    {
+            //        if (info.Cell != null)
+            //            info.Cell.Background = Color.Blue;
+
+            //        return true;
+            //    }
+            //    return false;
+            //};
+
+
+            //tempConsole2 = new Console((TextSurfaceView)tempSurface);
+            //tempConsole2.Position = new Point(20, 15);
+            //tempConsole2.CanUseMouse = false;
+            //tempConsole2.MouseHandler = (con, info) =>
+            //{
+            //    info.Fill(con);
+
+            //    if (info.Console == con)
+            //    {
+            //        if (info.Cell != null)
+            //            info.Cell.Background = Color.Yellow;
+
+            //        return true;
+            //    }
+            //    return false;
+            //};
+
             //SadConsole.Engine.ConsoleRenderStack.Clear();
             //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole);
             //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole2);
             //SadConsole.Engine.ActiveConsole = tempConsole;
+
+
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
@@ -140,8 +166,8 @@
         SadConsole.Consoles.ITextSurface tempSurface;
         SadConsole.Consoles.ITextSurface tempSurface2;
         SadConsole.Consoles.TextSurfaceRenderer tempRenderer;
-        SadConsole.Consoles.CustomConsole tempConsole;
-        SadConsole.Consoles.CustomConsole tempConsole2;
+        SadConsole.Consoles.Console tempConsole;
+        SadConsole.Consoles.Console tempConsole2;
 
         protected override void Update(GameTime gameTime)
         {
@@ -181,7 +207,7 @@
 
             // Draw the consoles to the screen.
             SadConsole.Engine.Draw(gameTime);
-            
+
             base.Draw(gameTime);
         }
     }
@@ -191,6 +217,7 @@
     {
         TextSurfaceRenderer consoleRender;
         TextSurface console;
+        SurfaceEditor editor;
 
         int frameRate = 0;
         int frameCounter = 0;
@@ -200,9 +227,10 @@
         public FPSCounterComponent(Game game)
             : base(game)
         {
-            console = new TextSurface(30, 1);
+            console = new TextSurface(30, 1, Engine.DefaultFont);
+            editor = new SurfaceEditor(console);
             console.DefaultBackground = Color.Black;
-            console.Clear();
+            editor.Clear();
             consoleRender = new TextSurfaceRenderer();
         }
 
@@ -225,8 +253,8 @@
             frameCounter++;
 
             string fps = string.Format("fps: {0}", frameRate);
-            console.Clear();
-            console.Print(0, 0, fps);
+            editor.Clear();
+            editor.Print(0, 0, fps);
             consoleRender.Render(console, Point.Zero);
         }
     }

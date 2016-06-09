@@ -21,7 +21,7 @@ namespace SadConsole.Shapes
             
         }
 
-        public void Draw(TextSurface surface)
+        public void Draw(SurfaceEditor surface)
         {
             if (BorderAppearance == null)
                 BorderAppearance = new CellAppearance(Color.Blue, Color.Black, 4);

@@ -192,7 +192,7 @@
         public InputBox(int width)
             : base(width, 1)
         {
-            effects = new Effects.EffectsManager(this);
+            effects = new Effects.EffectsManager(textSurface);
             DetermineAppearance();
         }
         #endregion
@@ -299,9 +299,9 @@
                 _carrotPos = _editingText.Length;
 
 			// Test to see if carrot is off edge of box
-			if (_carrotPos >= width)
+			if (_carrotPos >= Width)
 			{
-				_leftDrawOffset = _editingText.Length - width + 1;
+				_leftDrawOffset = _editingText.Length - Width + 1;
 
 				if (_leftDrawOffset < 0)
 					_leftDrawOffset = 0;
@@ -336,7 +336,7 @@
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, this.Width - 1);
+                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, textSurface.Width - 1);
 
                     this.IsDirty = true;
 
@@ -446,9 +446,9 @@
 							}
 
 							// Test to see if carrot is off edge of box
-							if (_carrotPos >= width)
+							if (_carrotPos >= Width)
 							{
-								_leftDrawOffset = newText.Length - width + 1;
+								_leftDrawOffset = newText.Length - Width + 1;
 
 								if (_leftDrawOffset < 0)
 									_leftDrawOffset = 0;

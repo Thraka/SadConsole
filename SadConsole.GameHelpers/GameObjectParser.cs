@@ -47,7 +47,7 @@ namespace SadConsole.GameHelpers
             // Process all known collections
             if (DeepProcess)
             {
-                for (int i = 0; i < console.LayeredTextSurface.Layers; i++)
+                for (int i = 0; i < console.LayeredTextSurface.LayerCount; i++)
                 {
                     var objects = console.GetObjectCollection(i);
                     if (objects != parent)

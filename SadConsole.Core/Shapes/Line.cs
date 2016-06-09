@@ -82,7 +82,7 @@ namespace SadConsole.Shapes
         /// Draws the line shape.
         /// </summary>
         /// <param name="surface">The cell surface to draw on.</param>
-        public void Draw(TextSurface surface)
+        public void Draw(SurfaceEditor surface)
         {
             List<Cell> cells = new List<Cell>();
 

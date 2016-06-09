@@ -4,12 +4,12 @@ using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CustomConsole = SadConsole.Consoles.CustomConsole;
+using Console = SadConsole.Consoles.Console;
 using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    public class SceneProjectionConsole : CustomConsole
+    public class SceneProjectionConsole : Console
     {
         private RenderTarget2D _renderTexture;
         private Vector3 _boxPosition;
@@ -63,7 +63,7 @@ namespace StarterProject.CustomConsoles
             if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.T))
             {
                 toggle = !toggle;
-                _textSurface.Clear();
+                Clear();
             }
 
             if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.B))
@@ -113,7 +113,7 @@ namespace StarterProject.CustomConsoles
                 if (toggle)
                 {
                     SadConsole.Engine.Device.SetRenderTarget(null);
-                    _textSurface = reader1.GetSurface(_renderTexture);
+                    textSurface = reader1.GetSurface(_renderTexture);
                 }
 
                 base.Render();

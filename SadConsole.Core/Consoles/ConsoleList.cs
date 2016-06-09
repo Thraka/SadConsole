@@ -10,10 +10,8 @@
     /// <summary>
     /// Represents a list of consoles. By calling the <see cref="Update"/> or <see cref="Render"/> methods, all contained consoles will be called in order.
     /// </summary>
-    [DataContract]
     public class ConsoleList : IConsoleList
     {
-        [DataMember]
         private List<IConsole> _consoles;
         
         /// <summary>
@@ -23,28 +21,20 @@
 
         public int Count { get { return _consoles.Count; } }
 
-        [DataMember]
         public bool IsVisible { get; set; } = true;
 
-        [DataMember]
         public bool DoUpdate { get; set; } = true;
 
-        [DataMember]
         public bool CanUseKeyboard { get; set; }
 
-        [DataMember]
         public bool CanUseMouse { get; set; }
 
-        [DataMember]
         public bool CanFocus { get; set; }
 
-        [DataMember]
         public bool IsFocused { get; set; }
 
-        [DataMember]
         public bool ExclusiveFocus { get; set; }
 
-        [DataMember]
         public Microsoft.Xna.Framework.Point Position { get; set; }
 
         public IConsole this[int index]

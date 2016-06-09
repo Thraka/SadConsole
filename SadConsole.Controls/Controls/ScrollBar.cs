@@ -256,8 +256,8 @@
                 this.SetCellAppearance(0, 0, Theme.Ends.Normal);
                 this.SetCharacter(0, 0, _topOrLeftCharacter);
 
-                this.SetCellAppearance(Width - 1, 0, Theme.Ends.Normal);
-                this.SetCharacter(Width - 1, 0, _bottomOrRightCharacter);
+                this.SetCellAppearance(textSurface.Width - 1, 0, Theme.Ends.Normal);
+                this.SetCharacter(textSurface.Width - 1, 0, _bottomOrRightCharacter);
 
                 for (int i = 1; i <= _sliderBarSize; i++)
                 {
@@ -276,8 +276,8 @@
                 this.SetCellAppearance(0, 0, Theme.Ends.Normal);
                 this.SetCharacter(0, 0, _topOrLeftCharacter);
 
-                this.SetCellAppearance(0, Height - 1, Theme.Ends.Normal);
-                this.SetCharacter(0, Height - 1, _bottomOrRightCharacter);
+                this.SetCellAppearance(0, textSurface.Height - 1, Theme.Ends.Normal);
+                this.SetCharacter(0, textSurface.Height - 1, _bottomOrRightCharacter);
 
                 for (int i = 0; i < _sliderBarSize; i++)
                 {
@@ -311,8 +311,8 @@
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.CapturedControl == null)
                 {
-                    if (info.ConsoleLocation.X >= this.Position.X && info.ConsoleLocation.X < this.Position.X + this.Width &&
-                        info.ConsoleLocation.Y >= this.Position.Y && info.ConsoleLocation.Y < this.Position.Y + this.Height)
+                    if (info.ConsoleLocation.X >= this.Position.X && info.ConsoleLocation.X < this.Position.X + textSurface.Width &&
+                        info.ConsoleLocation.Y >= this.Position.Y && info.ConsoleLocation.Y < this.Position.Y + textSurface.Height)
                     {
 
                         if (info.LeftClicked)
@@ -321,14 +321,14 @@
                             {
                                 if (mouseControlPosition.X == 0)
                                     Value -= Step;
-                                if (mouseControlPosition.X == this.Width - 1)
+                                if (mouseControlPosition.X == textSurface.Width - 1)
                                     Value += Step;
                             }
                             else
                             {
                                 if (mouseControlPosition.Y == 0)
                                     Value -= Step;
-                                if (mouseControlPosition.Y == this.Height - 1)
+                                if (mouseControlPosition.Y == textSurface.Height - 1)
                                     Value += Step;
                             }
 
@@ -364,8 +364,8 @@
                 }
                 else if (Parent.CapturedControl == this)
                 {
-                    if (info.ConsoleLocation.X >= this.Position.X - 2 && info.ConsoleLocation.X < this.Position.X + this.Width + 2 &&
-                        info.ConsoleLocation.Y >= this.Position.Y - 3 && info.ConsoleLocation.Y < this.Position.Y + this.Height + 3)
+                    if (info.ConsoleLocation.X >= this.Position.X - 2 && info.ConsoleLocation.X < this.Position.X + textSurface.Width + 2 &&
+                        info.ConsoleLocation.Y >= this.Position.Y - 3 && info.ConsoleLocation.Y < this.Position.Y + textSurface.Height + 3)
                     {
                         if (info.LeftButtonDown)
                         {

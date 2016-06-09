@@ -183,14 +183,14 @@ namespace SadConsole
             RegisterCellEffect<Effects.Recolor>();
 
             // Load the default font and screen size
-            DefaultFont = LoadFont(font).GetFont(1);
+            DefaultFont = LoadFont(font).GetFont(Font.FontSizes.One);
             DefaultFont.ResizeGraphicsDeviceManager(deviceManager, consoleWidth, consoleHeight, 0, 0);
 
             // Create the default console.
             ActiveConsole = new Consoles.Console(consoleWidth, consoleHeight);
-            ActiveConsole.Data.DefaultBackground = Color.Black;
-            ActiveConsole.Data.DefaultForeground = ColorAnsi.White;
-            ActiveConsole.Data.Clear();
+            ActiveConsole.TextSurface.DefaultBackground = Color.Black;
+            ActiveConsole.TextSurface.DefaultForeground = ColorAnsi.White;
+            ((Consoles.Console)ActiveConsole).Clear();
 
             ConsoleRenderStack.Add(ActiveConsole);
 

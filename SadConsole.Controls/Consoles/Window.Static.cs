@@ -34,13 +34,13 @@ namespace SadConsole.Consoles
 
             message.IgnoreBackground = true;
 
-            window._textSurface.Print(2, 2, message);
+            window.Print(2, 2, message);
 
             Button yesButton = new Button(yesPrompt.Length + 2, 1);
             Button noButton = new Button(noPrompt.Length + 2, 1);
 
-            yesButton.Position = new Microsoft.Xna.Framework.Point(2, window._textSurface.Height - 2);
-            noButton.Position = new Microsoft.Xna.Framework.Point(window._textSurface.Width - noButton.Width - 2, window._textSurface.Height - 2);
+            yesButton.Position = new Microsoft.Xna.Framework.Point(2, window.textSurface.Height - 2);
+            noButton.Position = new Microsoft.Xna.Framework.Point(window.textSurface.Width - noButton.Width - 2, window.textSurface.Height - 2);
 
             yesButton.Text = yesPrompt;
             noButton.Text = noPrompt;
@@ -83,11 +83,11 @@ namespace SadConsole.Consoles
 
             message.IgnoreBackground = true;
 
-            window._textSurface.Print(2, 2, message);
+            window.Print(2, 2, message);
 
             Button closeButton = new Button(closeButtonText.Length + 2, 1);
 
-            closeButton.Position = new Microsoft.Xna.Framework.Point(2, window._textSurface.Height - 2);
+            closeButton.Position = new Microsoft.Xna.Framework.Point(2, window.textSurface.Height - 2);
 
             closeButton.Text = closeButtonText;
 

@@ -222,14 +222,14 @@
             if (_initialized)
             {
                 //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, height);
+                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, Height);
                 _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
                 _slider.IsVisible = false;
                 _slider.Theme = this.Theme.ScrollBarTheme;
-                _sliderRenderLocation = new Point(width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
+                _sliderRenderLocation = new Point(Width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
                 _slider.Position = new Point(_position.X + _sliderRenderLocation.X, _position.Y + _sliderRenderLocation.Y);
-                _border.Width = width;
-                _border.Height = height;
+                _border.Width = Width;
+                _border.Height = Height;
 
                 Compose();
             }
@@ -372,7 +372,7 @@
                 heightOffset = 2;
 
             // process the slider
-            int sliderItems = _containers.Count - (height - heightOffset);
+            int sliderItems = _containers.Count - (Height - heightOffset);
 
             if (sliderItems > 0)
             {
@@ -421,7 +421,7 @@
                     {
                         SelectedItem = Items[index + 1];
 
-                        if (index + 1 >= _slider.Value + (Height - 2))
+                        if (index + 1 >= _slider.Value + (textSurface.Height - 2))
                             _slider.Value += 1;
 
                     }
@@ -473,8 +473,8 @@
 
             Point mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
 
-            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
-                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
             {
                 if (_showSlider)
                 {
@@ -501,8 +501,8 @@
 
             Point mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
 
-            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
-                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
             {
                 object oldItem = _selectedItem;
                 bool noItem = false;
@@ -538,7 +538,7 @@
                 {
                     var mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
 
-                    if (mouseControlPosition.X == this.Width - 1 && _showSlider)
+                    if (mouseControlPosition.X == this.textSurface.Width - 1 && _showSlider)
                     {
                         _slider.ProcessMouse(info);
                     }
@@ -562,10 +562,10 @@
 
                 if (!HideBorder)
                 {
-                    endingRow = height - 2;
+                    endingRow = Height - 2;
                     startingRow = 1;
                     columnOffset = 1;
-                    columnEnd = width - 2;
+                    columnEnd = Width - 2;
                     _border.Foreground = this.Theme.Border.Foreground;
                     _border.BorderBackground = this.Theme.Border.Background;
                     _border.FillColor = this.Theme.Border.Background;
@@ -573,10 +573,10 @@
                 }
                 else
                 {
-                    endingRow = height;
+                    endingRow = Height;
                     startingRow = 0;
                     columnOffset = 0;
-                    columnEnd = width;
+                    columnEnd = Width;
                     this.Fill(this.Theme.Border.Foreground, this.Theme.Border.Background, 0, null);
                 }
 
@@ -584,7 +584,7 @@
                 for (int i = 0; i < endingRow; i++)
                 {
                     if (i + offset < _containers.Count)
-                        _containers[i + offset].Draw(this, new Rectangle(columnOffset, i + startingRow, columnEnd, 1));
+                        _containers[i + offset].Draw(textSurface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1));
                 }
 
                 if (_showSlider)
@@ -592,7 +592,7 @@
                     _slider.Compose(true);
                     int y = _sliderRenderLocation.Y;
 
-                    for (int ycell = 0; ycell < _slider.Height; ycell++)
+                    for (int ycell = 0; ycell < _slider.TextSurface.Height; ycell++)
                     {
                         this.SetCharacter(_sliderRenderLocation.X, y, _slider[0, ycell].CharacterIndex);
                         this.SetCellAppearance(_sliderRenderLocation.X, y, _slider[0, ycell]);
@@ -725,15 +725,15 @@
             set { _isDirty = value; OnPropertyChanged("IsDirty"); }
         }
 
-        public virtual void Draw(TextSurface surface, Rectangle area)
+        public virtual void Draw(ITextSurface surface, Rectangle area)
         {
             string value = Item.ToString();
             if (value.Length < area.Width)
                 value += new string(' ', area.Width - value.Length);
             else if (value.Length > area.Width)
                 value = value.Substring(0, area.Width);
-
-            surface.Print(area.X, area.Y, value, _currentAppearance);
+            var editor = new SurfaceEditor(surface);
+            editor.Print(area.X, area.Y, value, _currentAppearance);
             _isDirty = false;
         }
 
@@ -754,10 +754,11 @@
     [DataContract]
     public class ListBoxItemColor : ListBoxItem
     {
-        public override void Draw(TextSurface surface, Rectangle area)
+        public override void Draw(ITextSurface surface, Rectangle area)
         {
             if (Item is Color || Item is Tuple<Color, Color, string>)
             {
+                var editor = new SurfaceEditor(surface);
                 string value = new string(' ', area.Width - 2);
 
                 CellAppearance cellLook = _currentAppearance.Clone();
@@ -765,23 +766,23 @@
                 if (Item is Color)
                 {
                     cellLook.Background = (Color)Item;
-                    surface.Print(area.X + 1, area.Y, value, cellLook);
+                    editor.Print(area.X + 1, area.Y, value, cellLook);
                 }
                 else
                 {
                     cellLook.Foreground = ((Tuple<Color, Color, string>)Item).Item2;
                     cellLook.Background = ((Tuple<Color, Color, string>)Item).Item1;
                     value = ((Tuple<Color, Color, string>)Item).Item3.Align(HorizontalAlignment.Left, area.Width - 2);
-                    surface.Print(area.X + 1, area.Y, value, cellLook);
+                    editor.Print(area.X + 1, area.Y, value, cellLook);
                 }
 
-                surface.Print(area.X, area.Y, " ", _currentAppearance);
-                surface.Print(area.X + area.Width - 1, area.Y, " ", _currentAppearance);
+                editor.Print(area.X, area.Y, " ", _currentAppearance);
+                editor.Print(area.X + area.Width - 1, area.Y, " ", _currentAppearance);
 
                 if (IsSelected)
                 {
-                    surface.SetCharacter(area.X, area.Y, 16);
-                    surface.SetCharacter(area.X + area.Width - 1, area.Y, 17);
+                    editor.SetCharacter(area.X, area.Y, 16);
+                    editor.SetCharacter(area.X + area.Width - 1, area.Y, 17);
                 }
 
                 IsDirty = false;

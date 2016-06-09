@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Consoles
 {
     /// <summary>
     /// Caches a text surface by rendering to a texture. That texture is then rendered at draw time. Reduces draw calls for a non-changing console.
     /// </summary>
+    [DataContract]
     public class CachedTextSurfaceRenderer : ITextSurfaceRenderer
     {
         private RenderTarget2D renderedConsole;
