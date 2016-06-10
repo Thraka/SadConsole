@@ -49,7 +49,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Engine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Entity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities\Frame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\IEntityRender.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
@@ -58,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ICellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />

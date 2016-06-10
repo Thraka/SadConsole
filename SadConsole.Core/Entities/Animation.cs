@@ -1,5 +1,6 @@
 ﻿namespace SadConsole.Entities
 {
+    using Consoles;
     using Microsoft.Xna.Framework;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
@@ -48,7 +49,7 @@
         /// All frames of the animation
         /// </summary>
         [DataMember]
-        public List<Frame> Frames = new List<Frame>();
+        public List<TextSurface> Frames = new List<TextSurface>();
 
         /// <summary>
         /// The state of the animation.
@@ -135,7 +136,7 @@
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public Frame CurrentFrame
+        public TextSurface CurrentFrame
         {
             get { return Frames[_currentFrameIndex]; }
         }
@@ -180,12 +181,12 @@
         /// Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
         /// </summary>
         /// <returns>The created frame.</returns>
-        public Frame CreateFrame()
+        public TextSurface CreateFrame()
         {
             if (Frames == null)
-                Frames = new List<Frame>();
+                Frames = new List<TextSurface>();
 
-            var frame = new Frame(Width, Height, _font);
+            var frame = new TextSurface(Width, Height, _font);
             Frames.Add(frame);
             return frame;
         }
@@ -281,17 +282,17 @@
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            
+            AnimationDuration = _animatedTime;
         }
 
         public void Save(string file)
         {
-            SadConsole.Serializer.Save(this, file, new System.Type[] { typeof(List<Frame>) });
+            Serializer.Save(this, file, new System.Type[] { typeof(List<TextSurface>) });
         }
 
         public static Animation Load(string file)
         {
-            return SadConsole.Serializer.Load<Animation>(file, new System.Type[] { typeof(List<Frame>) });
+            return Serializer.Load<Animation>(file, new System.Type[] { typeof(List<TextSurface>) });
         }
     }
 

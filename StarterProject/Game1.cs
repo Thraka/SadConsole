@@ -7,7 +7,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class Game1: Game
+    public class Game1: Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager _graphics;
         Console _defaultConsole;
@@ -32,10 +32,9 @@
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             var rootConsole = SadConsole.Engine.Initialize(_graphics, "Fonts/IBM.font", 80, 25);
-            
+
             Theme.SetupThemes();
 
-            
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project.
@@ -228,7 +227,7 @@
         TimeSpan elapsedTime = TimeSpan.Zero;
 
 
-        public FPSCounterComponent(Game game)
+        public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
             : base(game)
         {
             console = new TextSurface(30, 1, Engine.DefaultFont);

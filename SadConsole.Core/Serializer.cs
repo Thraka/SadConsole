@@ -1,5 +1,6 @@
 ﻿namespace SadConsole
 {
+    using Entities;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -16,9 +17,15 @@
         /// </summary>
         public static IEnumerable<Type> ConsoleTypes { get; set; }
 
+        /// <summary>
+        /// The types commonly used when sesrializing an <see cref="Entity"/>.
+        /// </summary>
+        public static IEnumerable<Type> EntityTypes { get; set; }
+
         static Serializer()
         {
             ConsoleTypes = new Type[] { typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceView), typeof(Consoles.ConsoleList), typeof(Consoles.TextSurfaceRenderer), typeof(Cell), typeof(CellAppearance), typeof(Consoles.Cursor), typeof(Consoles.CachedTextSurfaceRenderer) };
+            EntityTypes = (new Type[] { typeof(Entities.Animation), typeof(Entity) }).Union(ConsoleTypes);
         }
 
         /// <summary>
@@ -112,28 +119,6 @@
     }
 }
 
-namespace SadConsole.Entities
-{
-    using System.Linq;
-    using System.Collections.Generic;
-
-    /// <summary>
-    /// Common serialization tasks for SadConsole.
-    /// </summary>
-    public static class Serializer
-    {
-        /// <summary>
-        /// The types commonly used when sesrializing an <see cref="Entity"/>.
-        /// </summary>
-        public static IEnumerable<System.Type> AnimationTypes
-        {
-            get
-            {
-                return (new System.Type[] { typeof(Animation), typeof(Entity), typeof(Frame) }).Union(SadConsole.Serializer.ConsoleTypes);
-            }
-        }
-    }
-}
 
 namespace SadConsole.Instructions
 {

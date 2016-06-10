@@ -95,6 +95,8 @@
         /// Called when the current animation state changes. Parameters are: current entity, current animation, new state, old state.
         /// </summary>
         public System.Action<Entity, Animation, AnimationState, AnimationState> OnEntityAnimationStateChanged;
+        private string fontName;
+        private Font.FontSizes fontSize;
 
         /// <summary>
         /// Indicates this entity should be drawn.
@@ -446,91 +448,38 @@
 
         public void Save(string file)
         {
-            //SadConsole.Serializer.Save<Entity>(this, file, new System.Type[] { typeof(List<Frame>) });
-            Serialized data = new Serialized(this);
-            data.Save(file);
+            Serializer.Save(this, file, Serializer.EntityTypes);
         }
 
         public static Entity Load(string file)
         {
-            //return SadConsole.Serializer.Load<Entity>(file, new System.Type[] { typeof(List<Frame>) });
-            return Serialized.Load(file);
+            return Serializer.Load<Entity>(file, Serializer.EntityTypes);
         }
 
-        /// <summary>
-        /// Serialized instance of an <see cref="Entity"/>.
-        /// </summary>
-        [DataContract]
-        public class Serialized
+        [OnSerializing]
+        private void BeforeSerializing(StreamingContext context)
         {
-            [DataMember]
-            public Animation[] Animations;
+            fontName = Font.Name;
+            fontSize = Font.SizeMultiple;
+            _currentAnimationName = CurrentAnimation.Name;
+        }
 
-            [DataMember]
-            public string CurrentAnimation;
+        [OnDeserialized]
+        private void AfterDeserialized(StreamingContext context)
+        {
+            Font font;
 
-            [DataMember]
-            public Point CenterOffset;
+            // Try to find font
+            if (Engine.Fonts.ContainsKey(fontName))
+                font = Engine.Fonts[fontName].GetFont(fontSize);
+            else
+                font = Engine.DefaultFont;
 
-            [DataMember]
-            public Rectangle CollisionBox;
+            Font = font;
+            SetActiveAnimation(_currentAnimationName);
 
-            [DataMember]
-            public int Width;
-
-            [DataMember]
-            public int Height;
-
-            [DataMember]
-            public string FontName;
-
-            [DataMember]
-            public Font.FontSizes FontMultiple;
-
-            protected Serialized() { }
-
-            /// <summary>
-            /// Creates a serialized object from an existing <see cref="Entity"/>.
-            /// </summary>
-            /// <param name="entity">The entity to serialize.</param>
-            public Serialized(Entity entity)
-            {
-                Animations = entity._animations.ToArray();
-                CurrentAnimation = entity.CurrentAnimation != null ? entity.CurrentAnimation.Name : "default";
-                CenterOffset = entity._centerOffset;
-                CollisionBox = entity.CollisionBox;
-                Width = entity.Width;
-                Height = entity.Height;
-                FontName = entity.Font.Name;
-                FontMultiple = entity.Font.SizeMultiple;
-            }
-
-            /// <summary>
-            /// Saves the serialized <see cref="Entity"/> to a file.
-            /// </summary>
-            /// <param name="file">The destination file.</param>
-            public void Save(string file)
-            {
-                SadConsole.Serializer.Save(this, file);
-            }
-
-            /// <summary>
-            /// Loads a <see cref="Entity"/> from a file.
-            /// </summary>
-            /// <param name="file">The source file.</param>
-            /// <returns>An entity.</returns>
-            public static Entity Load(string file)
-            {
-                var data = SadConsole.Serializer.Load<Serialized>(file);
-                var entity = new Entity(data.Width, data.Height);
-
-                entity._animations = new List<Animation>(data.Animations);
-                entity._centerOffset = data.CenterOffset;
-                entity.CollisionBox = data.CollisionBox;
-                entity.SetActiveAnimation(data.CurrentAnimation);
-
-                return entity;
-            }
+            _currentAnimationName = null;
+            fontName = null;
         }
     }
 
