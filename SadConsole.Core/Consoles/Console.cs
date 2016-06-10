@@ -656,6 +656,7 @@
 
                 console.AutoCursorOnFocus = data.AutoCursorOnFocus;
                 console.CanFocus = data.CanFocus;
+                console.CanUseKeyboard = data.CanUseKeyboard;
                 console.CanUseMouse = data.CanUseMouse;
 
                 if (data.Data != null)
@@ -673,8 +674,8 @@
                 console.Renderer = data.Renderer;
                 console.UsePixelPositioning = data.UsePixelPositioning;
                 console._virtualCursor = data.VirtualCursor;
-
                 console._virtualCursor.AttachConsole(console);
+                console._virtualCursor.ResetCursorEffect();
 
                 return console;
             }

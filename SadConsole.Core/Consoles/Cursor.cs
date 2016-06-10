@@ -101,17 +101,15 @@
             _console = new WeakReference(console);
             IsVisible = false;
 
-            SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
-            blinkEffect.BlinkSpeed = 0.35f;
-
             PrintAppearance = new CellAppearance(Color.White, Color.Black);
             AutomaticallyShiftRowsUp = true;
 
             CursorRenderCell = new Cell();
             CursorRenderCell.CharacterIndex = _cursorCharacter;
-            CursorRenderCell.Effect = blinkEffect;
             CursorRenderCell.Foreground = Color.White;
             CursorRenderCell.Background = Color.Transparent;
+
+            ResetCursorEffect();
         }
 
         internal Cursor()
@@ -119,9 +117,23 @@
 
         }
 
-        internal void AttachConsole(SurfaceEditor console)
+        /// <summary>
+        /// Sets the console this cursor is targetting.
+        /// </summary>
+        /// <param name="console">The console the cursor works with.</param>
+        public void AttachConsole(SurfaceEditor console)
         {
             _console = new WeakReference(console);
+        }
+
+        /// <summary>
+        /// Resets the <see cref="CursorRenderCell"/> back to the default.
+        /// </summary>
+        public void ResetCursorEffect()
+        {
+            SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
+            blinkEffect.BlinkSpeed = 0.35f;
+            CursorRenderCell.Effect = blinkEffect;
         }
 
         /// <summary>
@@ -215,6 +227,7 @@
         /// </summary>
         /// <param name="text">The text to print.</param>
         /// <param name="template">The way the text will look when it is printed.</param>
+        /// <param name="templateEffect">Effect to apply to the text as its printed.</param>
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(string text, ICellAppearance template, ICellEffect templateEffect)
         {

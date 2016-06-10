@@ -69,7 +69,7 @@
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
 
 
-            //SadConsole.Engine.ConsoleRenderStack.Clear();
+            SadConsole.Engine.ConsoleRenderStack.Clear();
 
             // *****************
             // Game Console testing
@@ -80,6 +80,17 @@
             //con1.SetCharacter(2, 2, 2);
             //Engine.ConsoleRenderStack.Add(con1);
 
+            // ******************
+            // Testing cursor serialization
+            //var con1 = new Console(10, 10);
+            //con1.VirtualCursor.IsVisible = true;
+            //con1.VirtualCursor.PrintAppearance = new CellAppearance(Color.Blue, Color.Black);
+            //con1.CanUseKeyboard = true;
+
+            //con1.Save("andy.con", false);
+            //con1 = Console.Load("andy.con");
+            //Engine.ActiveConsole = con1;
+            //Engine.ConsoleRenderStack.Add(con1);
 
             // *****************
             // Layer testing
