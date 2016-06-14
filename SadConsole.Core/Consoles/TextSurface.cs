@@ -15,10 +15,10 @@ namespace SadConsole.Consoles
     public class TextSurface : IEnumerable<Cell>, ITextSurface
     {
         [DataMember(Name = "FontName")]
-        private string fontName;
+        protected string fontName;
 
         [DataMember(Name = "FontSize")]
-        private Font.FontSizes fontSize;
+        protected Font.FontSizes fontSize;
 
         protected Font font;
 

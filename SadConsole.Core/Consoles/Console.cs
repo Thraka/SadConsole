@@ -548,6 +548,8 @@
         /// Saves the <see cref="Console"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
+        /// <param name="saveTextSurface">When false the <see cref="IConsole.TextSurface"/> property will not be serialized.</param>
+        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
         public void Save(string file, bool saveTextSurface, params Type[] knownTypes)
         {
             new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
@@ -555,10 +557,11 @@
         }
 
         /// <summary>
-        /// Loads a <see cref="Consoles.TextSurface"/> from a file.
+        /// Loads a <see cref="Console"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
-        /// <returns></returns>
+        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
+        /// <returns>The <see cref="Console"/>.</returns>
         public static Console Load(string file, params Type[] knownTypes)
         {
             //return Serializer.Load<Console>(file, new Type[] { typeof(CellAppearance) });
@@ -580,7 +583,7 @@
             [DataMember]
             public bool CanUseMouse;
             [DataMember]
-            public ITextSurface Data;
+            public ITextSurface TextSurface;
             [DataMember]
             public bool DoUpdate;
             [DataMember]
@@ -617,7 +620,7 @@
                 CanUseKeyboard = console.CanUseKeyboard;
                 CanUseMouse = console.CanUseMouse;
                 if (serializeTextSurface)
-                    Data = console.TextSurface;
+                    TextSurface = console.TextSurface;
 
                 Width = console.Width;
                 Height = console.Height;
@@ -652,15 +655,15 @@
             public static Console Load(string file, params Type[] knownTypes)
             {
                 var data = Serializer.Load<Serialized>(file, knownTypes);
-                Console console = new Console(data.Data);
+                Console console = new Console(data.TextSurface);
 
                 console.AutoCursorOnFocus = data.AutoCursorOnFocus;
                 console.CanFocus = data.CanFocus;
                 console.CanUseKeyboard = data.CanUseKeyboard;
                 console.CanUseMouse = data.CanUseMouse;
 
-                if (data.Data != null)
-                    console.TextSurface = data.Data;
+                if (data.TextSurface != null)
+                    console.TextSurface = data.TextSurface;
                 else
                     console.TextSurface = new TextSurface(data.Width, data.Height, Engine.DefaultFont);
 

@@ -24,7 +24,7 @@
 
         static Serializer()
         {
-            ConsoleTypes = new Type[] { typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceView), typeof(Consoles.ConsoleList), typeof(Consoles.TextSurfaceRenderer), typeof(Cell), typeof(CellAppearance), typeof(Consoles.Cursor), typeof(Consoles.CachedTextSurfaceRenderer) };
+            ConsoleTypes = new Type[] { typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceView), typeof(Consoles.ConsoleList), typeof(Consoles.TextSurfaceRenderer), typeof(Cell), typeof(CellAppearance), typeof(Consoles.Cursor), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.LayeredTextRenderer), typeof(Consoles.LayeredTextSurface) };
             EntityTypes = (new Type[] { typeof(Entities.Animation), typeof(Entity) }).Union(ConsoleTypes);
         }
 

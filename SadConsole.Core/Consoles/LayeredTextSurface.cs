@@ -1,40 +1,49 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Runtime.Serialization;
+using System.Linq;
 
 namespace SadConsole.Consoles
 {
     /// <summary>
     /// Text surface with multiple layers.
     /// </summary>
+    [DataContract]
     public class LayeredTextSurface: TextSurface
     {
         /// <summary>
         /// A layer.
         /// </summary>
+        [DataContract]
         public class Layer
         {
             /// <summary>
             /// All cells of the layer.
             /// </summary>
+            [DataMember]
             public Cell[] Cells;
 
             /// <summary>
             /// The cells that will be rendered.
             /// </summary>
+            [DataMember]
             public Cell[] RenderCells;
 
             /// <summary>
             /// When true, the layer will be drawn.
             /// </summary>
+            [DataMember]
             public bool IsVisible = true;
+
+            [DataMember]
+            public object Metadata;
         }
 
         /// <summary>
         /// Layers for the surface.
         /// </summary>
-        protected Layer[] Layers;
+        protected List<Layer> layers;
 
         /// <summary>
         /// Count of layers.
@@ -49,7 +58,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Gets the active layer.
         /// </summary>
-        public Layer ActiveLayer { get { return Layers[ActiveLayerIndex]; } }
+        public Layer ActiveLayer { get { return layers[ActiveLayerIndex]; } }
 
         /// <summary>
         /// Creates a new layer text surface with the default <see cref="Font"/>.
@@ -68,11 +77,11 @@ namespace SadConsole.Consoles
         /// <param name="font">The font.</param>
         public LayeredTextSurface(int width, int height, int layers, Font font)
         {
-            Layers = new Layer[layers];
+            this.layers = new List<Layer>(layers);
             LayerCount = layers;
 
             for (int i = 0; i < layers; i++)
-                Layers[i] = new Layer();
+                this.layers.Add(new Layer());
 
             this.width = width;
             this.height = height;
@@ -92,46 +101,56 @@ namespace SadConsole.Consoles
                 throw new ArgumentOutOfRangeException("index");
 
             ActiveLayerIndex = index;
-            base.cells = Layers[index].Cells;
-            base.RenderCells = Layers[index].RenderCells;
+            base.cells = layers[index].Cells;
+            base.RenderCells = layers[index].RenderCells;
+        }
+
+        /// <summary>
+        /// Changes the active layer, which sets the current cell data for <see cref="ITextSurface"/>.
+        /// </summary>
+        /// <param name="layer">The layer to set active.</param>
+        public void SetActiveLayer(Layer layer)
+        {
+            if (layers.Contains(layer))
+                SetActiveLayer(layers.IndexOf(layer));
         }
 
         protected override void InitializeCells()
         {
             for (int i = 0; i < LayerCount; i++)
             {
-                Layers[i].Cells = new Cell[width * height];
-
-                for (int c = 0; c < Layers[i].Cells.Length; c++)
-                {
-                    Layers[i].Cells[c] = new Cell();
-                    Layers[i].Cells[c].Foreground = this.DefaultForeground;
-                    Layers[i].Cells[c].Background = this.DefaultBackground;
-                    Layers[i].Cells[c].OnCreated();
-                }
-
-                Layers[i].RenderCells = Layers[i].Cells;
+                InitializeLayer(layers[i]);
             }
+        }
+
+        protected void InitializeLayer(Layer layer)
+        {
+            layer.Cells = new Cell[width * height];
+
+            for (int c = 0; c < layer.Cells.Length; c++)
+            {
+                layer.Cells[c] = new Cell();
+                layer.Cells[c].Foreground = this.DefaultForeground;
+                layer.Cells[c].Background = this.DefaultBackground;
+                layer.Cells[c].OnCreated();
+            }
+
+            layer.RenderCells = layer.Cells;
         }
 
         protected override void ResetArea()
         {
             RenderRects = new Rectangle[area.Width * area.Height];
+            
+            for (int l = 0; l < LayerCount; l++)
+                ResetAreaLayer(layers[l]);
 
             int index = 0;
-
-            for (int l = 0; l < LayerCount; l++)
-                Layers[l].RenderCells = new Cell[area.Width * area.Height];
 
             for (int y = 0; y < area.Height; y++)
             {
                 for (int x = 0; x < area.Width; x++)
                 {
-                    for (int i = 0; i < LayerCount; i++)
-                    {
-                        Layers[i].RenderCells[index] = Layers[i].Cells[(y + area.Top) * width + (x + area.Left)];
-                    }
-
                     RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
                     index++;
                 }
@@ -141,13 +160,127 @@ namespace SadConsole.Consoles
             AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
         }
 
+        protected void ResetAreaLayer(Layer layer)
+        {
+            layer.RenderCells = new Cell[area.Width * area.Height];
+
+            int index = 0;
+
+            for (int y = 0; y < area.Height; y++)
+            {
+                for (int x = 0; x < area.Width; x++)
+                {
+                    layer.RenderCells[index] = layer.Cells[(y + area.Top) * width + (x + area.Left)];
+                    index++;
+                }
+            }
+        }
+
         /// <summary>
         /// Gets all of the layers.
         /// </summary>
         /// <returns>The layers.</returns>
         public Layer[] GetLayers()
         {
-            return Layers;
+            return layers.ToArray();
+        }
+
+        /// <summary>
+        /// Adds a new layer.
+        /// </summary>
+        /// <returns>The created layer.</returns>
+        public Layer Add()
+        {
+            var layer = new Layer();
+            InitializeLayer(layer);
+            ResetAreaLayer(layer);
+            layers.Add(layer);
+            return layer;
+        }
+
+        /// <summary>
+        /// Removes a layer.
+        /// </summary>
+        /// <param name="layer">The layer to remove.</param>
+        public void Remove(Layer layer)
+        {
+            if (layers.Contains(layer))
+            {
+                int index = layers.IndexOf(layer);
+
+                layers.Remove(layer);
+
+                if (ActiveLayerIndex == index || ActiveLayerIndex >= layers.Count)
+                    SetActiveLayer(0);
+                else
+                    SetActiveLayer(ActiveLayerIndex);
+
+            }
+        }
+
+        /// <summary>
+        /// Removes a layer.
+        /// </summary>
+        /// <param name="index">The layer index to remove.</param>
+        public void Remove(int index)
+        {
+            if (index < 0 || index >= layers.Count)
+                throw new IndexOutOfRangeException();
+
+            Remove(layers[index]);
+        }
+
+        /// <summary>
+        /// Moves a layer to the specified index.
+        /// </summary>
+        /// <param name="layer">The layer to check.</param>
+        /// <param name="index">The new index of the layer.</param>
+        public void Move(Layer layer, int index)
+        {
+            if (layers.Contains(layer))
+            {
+                layers.Remove(layer);
+                layers.Insert(index, layer);
+            }
+        }
+
+        /// <summary>
+        /// Moves a layer to the top.
+        /// </summary>
+        /// <param name="layer">The layer to check.</param>
+        public void MoveToTop(Layer layer)
+        {
+            if (layers.Contains(layer))
+            {
+                layers.Remove(layer);
+                layers.Add(layer);
+            }
+        }
+
+        /// <summary>
+        /// Moves a layer to the bottom.
+        /// </summary>
+        /// <param name="layer">The layer to check.</param>
+        public void MoveToBottom(Layer layer)
+        {
+            if (layers.Contains(layer))
+            {
+                layers.Remove(layer);
+                layers.Insert(0, layer);
+            }
+        }
+
+        /// <summary>
+        /// Gets the index of a layer.
+        /// </summary>
+        /// <param name="layer">The layer to check.</param>
+        /// <returns>The index of the layer.</returns>
+        public int IndexOf(Layer layer)
+        {
+            if (layers.Contains(layer))
+                return layers.IndexOf(layer);
+            else
+                return -1;
         }
 
         /// <summary>
@@ -157,7 +290,72 @@ namespace SadConsole.Consoles
         /// <returns></returns>
         public Layer GetLayer(int index)
         {
-            return Layers[index];
+            return layers[index];
         }
+
+        #region Serialization
+        /// <summary>
+        /// Saves the <see cref="LayeredTextSurface"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
+        public void Save(string file, params Type[] knownTypes)
+        {
+            Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+        }
+
+        /// <summary>
+        /// Loads a <see cref="LayeredTextSurface"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
+        /// <returns>The <see cref="LayeredTextSurface"/>.</returns>
+        public static LayeredTextSurface Load(string file, params Type[] knownTypes)
+        {
+            return Serializer.Load<LayeredTextSurface>(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+        }
+
+        /// <summary>
+        /// Saves the <see cref="LayeredTextSurface"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public new void Save(string file)
+        {
+            Serializer.Save(this, file, Serializer.ConsoleTypes);
+        }
+
+        /// <summary>
+        /// Loads a <see cref="LayeredTextSurface"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public new static LayeredTextSurface Load(string file)
+        {
+            return Serializer.Load<LayeredTextSurface>(file, Serializer.ConsoleTypes);
+        }
+
+
+        [OnSerializing]
+        private void BeforeSerializing(StreamingContext context)
+        {
+            fontName = Font.Name;
+            fontSize = Font.SizeMultiple;
+        }
+
+        [OnDeserialized]
+        private void AfterDeserialized(StreamingContext context)
+        {
+            Font font;
+
+            // Try to find font
+            if (Engine.Fonts.ContainsKey(fontName))
+                font = Engine.Fonts[fontName].GetFont(fontSize);
+            else
+                font = Engine.DefaultFont;
+
+            Font = font;
+            SetActiveLayer(ActiveLayerIndex);
+        }
+        #endregion
     }
 }
