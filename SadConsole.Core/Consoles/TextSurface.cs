@@ -175,6 +175,23 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
+        /// Creates a new text surface with the specified width, height, and initial set of cell data.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">THe height of the surface.</param>
+        /// <param name="font">The font used with rendering.</param>
+        /// <param name="initialCells"></param>
+        public TextSurface(int width, int height, Font font, Cell[] initialCells)
+        {
+            if (initialCells.Length != width * height)
+                throw new ArgumentOutOfRangeException("initialCells", "initialCells length must equal width * height");
+
+            this.width = width;
+            this.height = height;
+            cells = RenderCells = initialCells;
+        }
+
+        /// <summary>
         /// Do your own setup.
         /// </summary>
         protected TextSurface() { } 

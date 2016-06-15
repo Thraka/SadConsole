@@ -10,7 +10,7 @@ namespace SadConsole.Consoles
     /// <summary>
     /// Represents a group of consoles.
     /// </summary>
-    public interface IConsoleList : IEnumerable<IConsole>, IDraw, Input.IInput
+    public interface IConsoleList : IEnumerable<IConsole>, IConsole
     {
         /// <summary>
         /// Gets the count of child consoles.

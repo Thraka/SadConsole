@@ -328,7 +328,7 @@ namespace SadConsole
         private int screenHeight;
         private GraphicsDeviceManager manager;
 
-        public EngineGameComponent(Game game, GraphicsDeviceManager manager, Action initializeCallback, string font, int screenWidth, int screenHeight): base(game)
+        public EngineGameComponent(Game game, GraphicsDeviceManager manager, string font, int screenWidth, int screenHeight, Action initializeCallback): base(game)
         {
             this.initializationCallback = initializeCallback;
             this.font = font;
@@ -338,24 +338,23 @@ namespace SadConsole
 
         public override void Initialize()
         {
-            SadConsole.Engine.Initialize(manager, font, screenWidth, screenHeight);
+            Engine.Initialize(manager, font, screenWidth, screenHeight);
 
             manager = null; // no need to hang on to this.
 
-            if (initializationCallback != null)
-                initializationCallback();
+            initializationCallback?.Invoke();
         }
 
         public override void Update(GameTime gameTime)
         {
-            SadConsole.Engine.Update(gameTime, this.Game.IsActive);
+            Engine.Update(gameTime, this.Game.IsActive);
 
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            SadConsole.Engine.Draw(gameTime);
+            Engine.Draw(gameTime);
 
             base.Draw(gameTime);
         }

@@ -37,6 +37,53 @@
 
         public Microsoft.Xna.Framework.Point Position { get; set; }
 
+        public ITextSurface TextSurface
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public Cursor VirtualCursor
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool UsePixelPositioning
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool AutoCursorOnFocus
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public IConsole this[int index]
         {
             get { return _consoles[index]; }
