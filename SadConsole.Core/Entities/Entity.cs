@@ -196,7 +196,8 @@
 
         public void Render()
         {
-            base.Render(_currentAnimation.CurrentFrame, _position, UsePixelPositioning);
+            if (IsVisible)
+                base.Render(_currentAnimation.CurrentFrame, _position, UsePixelPositioning);
         }
 
         ////TODO: This is not really working well now. Since positioning changed to be transform based, entity will always render 0,0 if you do not call begin and end.

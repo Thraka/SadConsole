@@ -56,7 +56,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Count of layers.
         /// </summary>
-        public int LayerCount { get; private set; }
+        public int LayerCount { get { return layers.Count; } }
 
         /// <summary>
         /// The current zero-based active layer index.
@@ -86,7 +86,6 @@ namespace SadConsole.Consoles
         public LayeredTextSurface(int width, int height, int layers, Font font)
         {
             this.layers = new List<Layer>(layers);
-            LayerCount = layers;
 
             for (int i = 0; i < layers; i++)
                 this.layers.Add(new Layer());
