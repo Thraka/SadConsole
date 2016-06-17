@@ -51,6 +51,7 @@ namespace SadConsole.Consoles
             renderedConsole = new RenderTarget2D(Engine.Device, source.AbsoluteArea.Width, source.AbsoluteArea.Height, false, Engine.Device.DisplayMode.Format, DepthFormat.Depth24);
             TextSurfaceRenderer renderer = new TextSurfaceRenderer();
             Engine.Device.SetRenderTarget(renderedConsole);
+            Engine.Device.Clear(Color.Transparent);
             renderer.Render(source, new Point(0, 0));
             Engine.Device.SetRenderTarget(null);
         }
