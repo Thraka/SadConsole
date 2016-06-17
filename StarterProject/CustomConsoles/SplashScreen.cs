@@ -115,11 +115,7 @@
             {
                 CodeCallback = (i) =>
                 {
-                    if (this.Parent != null)
-                        this.Parent.Remove(this);
-
-                    if (SplashCompleted != null)
-                        SplashCompleted();
+                    SplashCompleted?.Invoke();
 
                     i.IsFinished = true;
                 }

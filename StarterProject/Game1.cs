@@ -45,21 +45,21 @@
             rootConsole.Fill(Color.Blue, Color.DarkGreen, 0, null);
             rootConsole.Print(2, 2, "Hello");
             rootConsole.Position = new Point(2, 0);
-            
+
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        //new CustomConsoles.WorldGenerationConsole(),
+                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.DOSConsole(),
                                         new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.ControlsTest(),
-                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.StretchedConsole(), 
                                         new CustomConsoles.BorderedConsole(), 
                                         new CustomConsoles.EntityAndConsole(),
-                                        new CustomConsoles.SplashScreen(),
+                                        new CustomConsoles.RandomScrollingConsole(),
+                                        new CustomConsoles.WorldGenerationConsole(),
                                     };
 
             // Show the first console (by default all of our demo consoles are hidden)
@@ -69,7 +69,7 @@
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
 
 
-            SadConsole.Engine.ConsoleRenderStack.Clear();
+            //SadConsole.Engine.ConsoleRenderStack.Clear();
 
             // *****************
             // Game Console testing
@@ -183,6 +183,19 @@
         SadConsole.Consoles.Console tempConsole;
         SadConsole.Consoles.Console tempConsole2;
 
+        private void MoveNextConsole()
+        {
+            currentConsoleIndex++;
+
+            if (currentConsoleIndex >= SadConsole.Engine.ConsoleRenderStack.Count)
+                currentConsoleIndex = 0;
+
+            for (int i = 0; i < SadConsole.Engine.ConsoleRenderStack.Count; i++)
+                SadConsole.Engine.ConsoleRenderStack[i].IsVisible = currentConsoleIndex == i;
+
+            Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[currentConsoleIndex];
+        }
+
         protected override void Update(GameTime gameTime)
         {
             // Update the SadConsole engine, handles the mouse, keyboard, and any special effects. You must call this.
@@ -195,15 +208,7 @@
                 // in the Initialize method above.
                 if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F1))
                 {
-                    currentConsoleIndex++;
-
-                    if (currentConsoleIndex >= SadConsole.Engine.ConsoleRenderStack.Count)
-                        currentConsoleIndex = 0;
-
-                    for (int i = 0; i < SadConsole.Engine.ConsoleRenderStack.Count; i++)
-                        SadConsole.Engine.ConsoleRenderStack[i].IsVisible = currentConsoleIndex == i;
-
-                    Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[currentConsoleIndex];
+                    MoveNextConsole();
                 }
                 else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F2))
                 {
