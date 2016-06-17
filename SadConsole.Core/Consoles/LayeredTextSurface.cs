@@ -36,8 +36,16 @@ namespace SadConsole.Consoles
             [DataMember]
             public bool IsVisible = true;
 
+            /// <summary>
+            /// Custom object.
+            /// </summary>
             [DataMember]
             public object Metadata;
+
+            /// <summary>
+            /// The index of the layer.
+            /// </summary>
+            public int Index;
         }
 
         /// <summary>
@@ -195,6 +203,7 @@ namespace SadConsole.Consoles
             InitializeLayer(layer);
             ResetAreaLayer(layer);
             layers.Add(layer);
+            SyncLayerIndex();
             return layer;
         }
 
@@ -215,6 +224,7 @@ namespace SadConsole.Consoles
                 else
                     SetActiveLayer(ActiveLayerIndex);
 
+                SyncLayerIndex();
             }
         }
 
@@ -228,6 +238,7 @@ namespace SadConsole.Consoles
                 throw new IndexOutOfRangeException();
 
             Remove(layers[index]);
+            SyncLayerIndex();
         }
 
         /// <summary>
@@ -241,6 +252,7 @@ namespace SadConsole.Consoles
             {
                 layers.Remove(layer);
                 layers.Insert(index, layer);
+                SyncLayerIndex();
             }
         }
 
@@ -254,6 +266,7 @@ namespace SadConsole.Consoles
             {
                 layers.Remove(layer);
                 layers.Add(layer);
+                SyncLayerIndex();
             }
         }
 
@@ -267,6 +280,7 @@ namespace SadConsole.Consoles
             {
                 layers.Remove(layer);
                 layers.Insert(0, layer);
+                SyncLayerIndex();
             }
         }
 
@@ -334,6 +348,16 @@ namespace SadConsole.Consoles
             return Serializer.Load<LayeredTextSurface>(file, Serializer.ConsoleTypes);
         }
 
+        protected void SyncLayerIndex()
+        {
+            int i = 0;
+            foreach (var layer in layers)
+            {
+                layer.Index = i;
+                i++;
+            }
+        }
+
 
         [OnSerializing]
         private void BeforeSerializing(StreamingContext context)
@@ -354,6 +378,7 @@ namespace SadConsole.Consoles
                 font = Engine.DefaultFont;
 
             Font = font;
+            SyncLayerIndex();
             SetActiveLayer(ActiveLayerIndex);
         }
         #endregion

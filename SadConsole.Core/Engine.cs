@@ -334,6 +334,7 @@ namespace SadConsole
             this.font = font;
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
+            this.manager = manager;
         }
 
         public override void Initialize()
