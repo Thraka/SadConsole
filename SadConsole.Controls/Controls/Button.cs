@@ -22,6 +22,23 @@
         protected System.Windows.HorizontalAlignment _textAlignment = System.Windows.HorizontalAlignment.Center;
         protected CellAppearance _currentAppearance;
 
+        /// <summary>
+        /// When true, renders the <see cref="EndCharacterLeft"/> and <see cref="EndCharacterRight"/> on the button.
+        /// </summary>
+        [DataMember]
+        public bool ShowEnds { get; set; } = true;
+
+        /// <summary>
+        /// The character on the left side of the button. Defaults to '<'.
+        /// </summary>
+        [DataMember]
+        public int EndCharacterLeft { get; set; } = (int)'<';
+
+        /// <summary>
+        /// The character on the right side of the button. Defaults to '>'.
+        /// </summary>
+        [DataMember]
+        public int EndCharacterRight { get; set; } = (int)'>';
         //public int Margin = 0;
 
         /// <summary>
@@ -165,7 +182,13 @@
             {
                 // Redraw the control
                 this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
-                this.Print(0, 0, ("< " + Text + " >").Align(TextAlignment, this.TextSurface.Width));
+                this.Print(1, 0, (Text).Align(TextAlignment, this.TextSurface.Width - 2));
+
+                if (ShowEnds)
+                {
+                    SetCharacter(0, 0, EndCharacterLeft);
+                    SetCharacter(this.TextSurface.Width - 1, 0, EndCharacterRight);
+                }
 
                 this.IsDirty = false;
             }
