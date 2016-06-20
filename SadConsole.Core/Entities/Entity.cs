@@ -122,6 +122,11 @@
         /// The height of the entity.
         /// </summary>
         public int Height { get; protected set; }
+
+        /// <summary>
+        /// A tint applied to the entity.
+        /// </summary>
+        public Color Tint { get; set; }
         #endregion
 
         #region Constructors
@@ -155,6 +160,7 @@
 
             CollisionBox = new Rectangle(0, 0, width, height);
             _animationBoundingBox = new Rectangle(0, 0, width, height);
+            Tint = Color.Transparent;
         }
         #endregion
 
@@ -414,9 +420,12 @@
             }
 
             _currentAnimation = animation;
-
+            
             if (_currentAnimation != null)
             {
+                foreach (var frame in _currentAnimation.Frames)
+                    frame.Tint = Tint;
+
                 _currentAnimation.AnimationStateChanged += CurrentAnimation_AnimationStateChanged;
                 _currentAnimation.State = AnimationState.Activated;
             }
