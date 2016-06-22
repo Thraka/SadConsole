@@ -46,6 +46,18 @@ namespace SadConsole.Consoles
             /// The index of the layer.
             /// </summary>
             public int Index;
+
+            /// <summary>
+            /// Converts the layer data into a <see cref="TextSurface"/>.
+            /// </summary>
+            /// <param name="width">Target width of the <see cref="TextSurface"/>.</param>
+            /// <param name="height">Target height of the <see cref="TextSurface"/>.</param>
+            /// <param name="font">Target font of the <see cref="TextSurface"/>.</param>
+            /// <returns>A new <see cref="TextSurface"/> seeded by this layer data.</returns>
+            public TextSurface ToTextSurface(int width, int height, Font font)
+            {
+                return new TextSurface(width, height, font, Cells);
+            }
         }
 
         /// <summary>
@@ -206,6 +218,19 @@ namespace SadConsole.Consoles
             return layer;
         }
 
+        public Layer Import(ITextSurface surface)
+        {
+            if (surface.Cells.Length != width * height)
+                throw new Exception("The length of cells passed in must match the width * height of this surface");
+
+            var layer = new Layer();
+
+            layer.Cells = surface.Cells;
+            ResetAreaLayer(layer);
+
+            return layer;
+        }
+
         /// <summary>
         /// Removes a layer.
         /// </summary>
@@ -305,7 +330,7 @@ namespace SadConsole.Consoles
         {
             return layers[index];
         }
-
+        
         #region Serialization
         /// <summary>
         /// Saves the <see cref="LayeredTextSurface"/> to a file.

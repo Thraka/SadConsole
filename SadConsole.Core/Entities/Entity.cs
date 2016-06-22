@@ -184,7 +184,7 @@
         /// Renders the current entity's animation frame to a surface using the <see cref="Position"/> property for the location.
         /// </summary>
         /// <param name="surface">The surface to print the frame on.</param>
-        public void RenderToSurface(TextSurface surface)
+        public void RenderToSurface(ITextSurface surface)
         {
             this.RenderToSurface(surface, this.Position);
         }
@@ -194,7 +194,7 @@
         /// </summary>
         /// <param name="surface">The surface to print the frame on.</param>
         /// <param name="location">Specifies the cell at which the frame will be printed at.</param>
-        public void RenderToSurface(TextSurface surface, Point location)
+        public void RenderToSurface(ITextSurface surface, Point location)
         {
             // copy the current frame of the animation to the console at the specified location
             TextSurface.Copy(_currentAnimation.CurrentFrame, surface, location.X, location.Y);
