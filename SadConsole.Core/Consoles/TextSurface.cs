@@ -245,6 +245,8 @@ namespace SadConsole.Consoles
 
 
         #region Static Methods
+
+
         public static int GetIndexFromPoint(Point location, int width)
         {
             return location.Y * width + location.X;

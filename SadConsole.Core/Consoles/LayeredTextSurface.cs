@@ -63,6 +63,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Layers for the surface.
         /// </summary>
+        [DataMember(Name = "Layers")]
         protected List<Layer> layers;
 
         /// <summary>
