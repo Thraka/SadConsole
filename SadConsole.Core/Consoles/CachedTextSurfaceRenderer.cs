@@ -21,12 +21,12 @@ namespace SadConsole.Consoles
         public SpriteBatch Batch { get; private set; }
 
         /// <summary>
-        /// A method called when the <see cref="SpriteBatch"/> has been created and transformed, but before any text characters are drawn.
+        /// A method called when the <see cref="SpriteBatch"/> has been created and transformed, but before any text is drawn.
         /// </summary>
         public Action<SpriteBatch> BeforeRenderCallback { get; set; }
 
         /// <summary>
-        /// A method called when all text characters have been drawn and any tinting has been applied.
+        /// A method called when all text has been drawn and any tinting has been applied.
         /// </summary>
         public Action<SpriteBatch> AfterRenderCallback { get; set; }
 

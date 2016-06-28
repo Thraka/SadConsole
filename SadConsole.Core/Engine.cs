@@ -175,7 +175,7 @@ namespace SadConsole
             Fonts = new Dictionary<string, FontMaster>();
             ConsoleRenderStack = new Consoles.ConsoleList();
             RegisterCellEffect<Effects.Blink>();
-            RegisterCellEffect<Effects.BlinkCharacter>();
+            RegisterCellEffect<Effects.BlinkGlyph>();
             RegisterCellEffect<Effects.ConcurrentEffect>();
             RegisterCellEffect<Effects.Delay>();
             RegisterCellEffect<Effects.EffectsChain>();

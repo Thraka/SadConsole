@@ -366,7 +366,7 @@
         {
             textSurface.DefaultForeground = Theme.FillStyle.Foreground;
             textSurface.DefaultBackground = Theme.FillStyle.Background;
-            Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, Theme.FillStyle.CharacterIndex, null);
+            Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, Theme.FillStyle.GlyphIndex, null);
         }
 
         /// <summary>
@@ -533,7 +533,7 @@
                                 if (cell.ActualBackground != Color.Transparent)
                                     Batch.Draw(font.FontImage, rect, font.CharacterIndexRects[font.SolidCharacterIndex], cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.23f);
                                 if (cell.ActualForeground != Color.Transparent)
-                                    Batch.Draw(font.FontImage, rect, font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.26f);
+                                    Batch.Draw(font.FontImage, rect, font.CharacterIndexRects[cell.ActualGlyphIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.26f);
                             }
                         }
                     }

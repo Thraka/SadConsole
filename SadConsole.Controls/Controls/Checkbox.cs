@@ -212,15 +212,15 @@
                     {
                         this.SetCellAppearance(x, 0, _currentAppearanceButton);
                     }
-                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.CharacterIndex, null);
+                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.GlyphIndex, null);
                     this.Print(4, 0, Text.Align(TextAlignment, this.Width - 4));
-                    this.SetCharacter(0, 0, 91);
-                    this.SetCharacter(2, 0, 93);
+                    this.SetGlyph(0, 0, 91);
+                    this.SetGlyph(2, 0, 93);
 
                     if (_isSelected)
-                        this.SetCharacter(1, 0, Theme.CheckedIcon);
+                        this.SetGlyph(1, 0, Theme.CheckedIcon);
                     else
-                        this.SetCharacter(1, 0, Theme.UncheckedIcon);
+                        this.SetGlyph(1, 0, Theme.UncheckedIcon);
                 }
                 else
                 {

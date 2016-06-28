@@ -43,7 +43,7 @@
             line.EndingLocation = new Point(45, 18);
             line.UseEndingCell = false;
             line.UseStartingCell = false;
-            line.CellAppearance = new Cell { Foreground = Color.Purple, Background = Color.White, CharacterIndex = 88 };
+            line.CellAppearance = new Cell { Foreground = Color.Purple, Background = Color.White, GlyphIndex = 88 };
 
             line.Draw(this);
 

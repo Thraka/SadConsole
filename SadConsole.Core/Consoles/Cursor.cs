@@ -105,7 +105,7 @@
             AutomaticallyShiftRowsUp = true;
 
             CursorRenderCell = new Cell();
-            CursorRenderCell.CharacterIndex = _cursorCharacter;
+            CursorRenderCell.GlyphIndex = _cursorCharacter;
             CursorRenderCell.Foreground = Color.White;
             CursorRenderCell.Background = Color.Transparent;
 
@@ -173,12 +173,12 @@
         {
             var console = (Console)_console.Target;
 
-            foreach (var character in text)
+            foreach (var glyph in text)
             {
-                if (character.Character == '\r')
+                if (glyph.Glyph == '\r')
                     CarriageReturn();
 
-                else if (character.Character == '\n')
+                else if (glyph.Glyph == '\n')
                     LineFeed();
 
                 else
@@ -188,13 +188,13 @@
                     if (!PrintOnlyCharacterData)
                     {
                         if (!text.IgnoreCharacter)
-                            cell.CharacterIndex = character.Character;
+                            cell.GlyphIndex = glyph.Glyph;
                         if (!text.IgnoreBackground)
-                            cell.Background = character.Background;
+                            cell.Background = glyph.Background;
                         if (!text.IgnoreForeground)
-                            cell.Foreground = character.Foreground;
+                            cell.Foreground = glyph.Foreground;
                         if (!text.IgnoreEffect)
-                            cell.Effect = character.Effect;
+                            cell.Effect = glyph.Effect;
                     }
 
                     _position.X += 1;
@@ -256,7 +256,7 @@
                         cell.Effect = templateEffect;
                     }
 
-                    cell.CharacterIndex = character;
+                    cell.GlyphIndex = character;
 
                     _position.X += 1;
                     if (_position.X >= console.TextSurface.Width)
@@ -426,7 +426,7 @@
         public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
         {
             batch.Draw(font.FontImage, renderArea, font.CharacterIndexRects[font.SolidCharacterIndex], CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
-            batch.Draw(font.FontImage, renderArea, font.CharacterIndexRects[CursorRenderCell.ActualCharacterIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
+            batch.Draw(font.FontImage, renderArea, font.CharacterIndexRects[CursorRenderCell.ActualGlyphIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
         }
     }
 }

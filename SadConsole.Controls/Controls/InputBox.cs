@@ -204,7 +204,7 @@
         {
             if (this.IsDirty)
             {
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
+                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
 
                 effects.RemoveAll();
 

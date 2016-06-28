@@ -20,7 +20,7 @@
         /// <summary>
         /// The character index from a font sheet.
         /// </summary>
-        int CharacterIndex { get; set; }
+        int GlyphIndex { get; set; }
 
         /// <summary>
         /// The SpriteBatch sprite mirror effect used when rendering the cell.

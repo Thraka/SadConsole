@@ -109,40 +109,40 @@ namespace SadConsole.Readers
                 if (UseBlockMode)
                 {
                     if (sbri > 204)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
                     else if (sbri > 152)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
                     else if (sbri > 100)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
                     else if (sbri > 48)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
                     else
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
                 }
                 else
                 {
                     if (sbri > 230)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'#', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'#', newColor);
                     else if (sbri > 207)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'&', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'&', newColor);
                     else if (sbri > 184)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'$', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'$', newColor);
                     else if (sbri > 161)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'X', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'X', newColor);
                     else if (sbri > 138)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'x', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'x', newColor);
                     else if (sbri > 115)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'=', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'=', newColor);
                     else if (sbri > 92)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'+', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'+', newColor);
                     else if (sbri > 69)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)';', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)';', newColor);
                     else if (sbri > 46)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)':', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)':', newColor);
                     else if (sbri > 23)
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, (int)'.', newColor);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'.', newColor);
                     else
-                        editor.SetCharacter(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
                 }
             }
             );

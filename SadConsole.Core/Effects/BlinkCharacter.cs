@@ -3,10 +3,10 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Switches between the character of a cell and a specified character for an amount of time, and then repeats.
+    /// Switches between the glyph of a cell and a specified glyph for an amount of time, and then repeats.
     /// </summary>
     [DataContract]
-    public class BlinkCharacter: CellEffectBase
+    public class BlinkGlyph: CellEffectBase
     {
         [DataMember]
         private bool _isOn;
@@ -20,15 +20,15 @@
         public double BlinkSpeed { get; set; }
 
         /// <summary>
-        /// The character index to blink into.
+        /// The glyph index to blink into.
         /// </summary>
         [DataMember]
-        public int CharacterIndex { get; set; }
+        public int GlyphIndex { get; set; }
 
-        public BlinkCharacter()
+        public BlinkGlyph()
         {
             BlinkSpeed = 1d;
-            CharacterIndex = 0;
+            GlyphIndex = 0;
             _isOn = true;
             _timeElapsed = 0d;
             StartDelay = 0d;
@@ -39,9 +39,9 @@
         public override void Apply(Cell cell)
         {
             if (!_isOn)
-                cell.ActualCharacterIndex = CharacterIndex;
+                cell.ActualGlyphIndex = GlyphIndex;
             else
-                cell.ActualCharacterIndex = cell.CharacterIndex;
+                cell.ActualGlyphIndex = cell.GlyphIndex;
         }
 
         public override void Update(double gameTimeSeconds)
@@ -79,17 +79,17 @@
 
         public override void Clear(Cell cell)
         {
-            cell.CharacterIndex = cell.CharacterIndex;
+            cell.GlyphIndex = cell.GlyphIndex;
         }
 
         public override ICellEffect Clone()
         {
-            return new BlinkCharacter()
+            return new BlinkGlyph()
             {
                 _isOn = this._isOn,
                 _timeElapsed = this._timeElapsed,
                 BlinkSpeed = this.BlinkSpeed,
-                CharacterIndex = this.CharacterIndex,
+                GlyphIndex = this.GlyphIndex,
                 IsFinished = this.IsFinished,
                 StartDelay = this.StartDelay,
                 RemoveOnFinished = this.RemoveOnFinished,
@@ -99,13 +99,13 @@
 
         public override bool Equals(ICellEffect effect)
         {
-            if (effect is BlinkCharacter)
+            if (effect is BlinkGlyph)
             {
                 if (base.Equals(effect))
                 {
-                    var effect2 = (BlinkCharacter)effect;
+                    var effect2 = (BlinkGlyph)effect;
 
-                    return CharacterIndex == effect2.CharacterIndex &&
+                    return GlyphIndex == effect2.GlyphIndex &&
                            BlinkSpeed == effect2.BlinkSpeed &&
                            RemoveOnFinished == effect2.RemoveOnFinished &&
                            StartDelay == effect2.StartDelay;
@@ -117,7 +117,7 @@
 
         public override string ToString()
         {
-            return string.Format("BLINKCHAR-{0}-{1}-{2}-{3}", CharacterIndex, BlinkSpeed, StartDelay, RemoveOnFinished);
+            return string.Format("BLINKCHAR-{0}-{1}-{2}-{3}", GlyphIndex, BlinkSpeed, StartDelay, RemoveOnFinished);
         }
         #endregion
     }

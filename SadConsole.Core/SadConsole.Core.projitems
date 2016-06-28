@@ -77,10 +77,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IDraw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\RexReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Tile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\TileLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\TileMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\TextureToSurfaceReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Box.cs" />
@@ -88,8 +84,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Ellipse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\IShape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Line.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Readers\REXPaint\license" />
   </ItemGroup>
 </Project>

@@ -75,7 +75,7 @@ namespace StarterProject.Windows
             {
                 for (int x = 1; x < 17; x++)
                 {
-                    SetCharacter(x, y, charIndex);
+                    SetGlyph(x, y, charIndex);
                     charIndex++;
                 }
             }
@@ -85,11 +85,11 @@ namespace StarterProject.Windows
         {
             base.Redraw();
             // Draw the border between char sheet area and the text area
-            SetCharacter(0, textSurface.Height - 3, 204);
-            SetCharacter(textSurface.Width - 1, textSurface.Height - 3, 185);
+            SetGlyph(0, textSurface.Height - 3, 204);
+            SetGlyph(textSurface.Width - 1, textSurface.Height - 3, 185);
             for (int i = 1; i < textSurface.Width - 1; i++)
             {
-                SetCharacter(i, textSurface.Height - 3, 205);
+                SetGlyph(i, textSurface.Height - 3, 205);
             }
             //SetCharacter(this.Width - 1, 0, 256);
 
@@ -98,7 +98,7 @@ namespace StarterProject.Windows
             {
                 for (int x = 1; x < 17; x++)
                 {
-                    SetCharacter(x, y, charIndex);
+                    SetGlyph(x, y, charIndex);
                     charIndex++;
                 }
             }
@@ -108,7 +108,7 @@ namespace StarterProject.Windows
         {
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
-                SelectedCharacterIndex = data.Cell.CharacterIndex;
+                SelectedCharacterIndex = data.Cell.GlyphIndex;
             }
             else if (data.ConsoleLocation.X == textSurface.Width - 1 && data.ConsoleLocation.Y == 0)
                 Hide();
@@ -121,7 +121,7 @@ namespace StarterProject.Windows
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
                 // Draw the character index and value in the status area
-                string[] items = new string[] { "Index: ", data.Cell.CharacterIndex.ToString() + " ", ((char)data.Cell.CharacterIndex).ToString() };
+                string[] items = new string[] { "Index: ", data.Cell.GlyphIndex.ToString() + " ", ((char)data.Cell.GlyphIndex).ToString() };
 
                 items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
 

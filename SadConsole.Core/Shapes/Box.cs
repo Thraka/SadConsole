@@ -68,7 +68,7 @@ namespace SadConsole.Shapes
 
         }
 
-        private void PlotCell(SurfaceEditor surface, int x, int y, int character, bool fillMe = false)
+        private void PlotCell(SurfaceEditor surface, int x, int y, int glyph, bool fillMe = false)
         {
             if (surface.IsValidCell(x,y))
             {
@@ -78,7 +78,7 @@ namespace SadConsole.Shapes
                 {
                     cell.Background = FillColor;
                     cell.Foreground = Foreground;
-                    cell.CharacterIndex = character;
+                    cell.GlyphIndex = glyph;
                     return;
                 }
 
@@ -88,7 +88,7 @@ namespace SadConsole.Shapes
                 if (BorderBackground != Color.Transparent || DrawTransparency)
                     cell.Background = BorderBackground;
 
-                cell.CharacterIndex = character;
+                cell.GlyphIndex = glyph;
             }
         }
 

@@ -181,13 +181,13 @@
             if (this.IsDirty)
             {
                 // Redraw the control
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
+                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
                 this.Print(1, 0, (Text).Align(TextAlignment, this.TextSurface.Width - 2));
 
                 if (ShowEnds)
                 {
-                    SetCharacter(0, 0, EndCharacterLeft);
-                    SetCharacter(this.TextSurface.Width - 1, 0, EndCharacterRight);
+                    SetGlyph(0, 0, EndCharacterLeft);
+                    SetGlyph(this.TextSurface.Width - 1, 0, EndCharacterRight);
                 }
 
                 this.IsDirty = false;

@@ -594,7 +594,7 @@
 
                     for (int ycell = 0; ycell < _slider.TextSurface.Height; ycell++)
                     {
-                        this.SetCharacter(_sliderRenderLocation.X, y, _slider[0, ycell].CharacterIndex);
+                        this.SetGlyph(_sliderRenderLocation.X, y, _slider[0, ycell].GlyphIndex);
                         this.SetCellAppearance(_sliderRenderLocation.X, y, _slider[0, ycell]);
                         y++;
                     }
@@ -781,8 +781,8 @@
 
                 if (IsSelected)
                 {
-                    editor.SetCharacter(area.X, area.Y, 16);
-                    editor.SetCharacter(area.X + area.Width - 1, area.Y, 17);
+                    editor.SetGlyph(area.X, area.Y, 16);
+                    editor.SetGlyph(area.X + area.Width - 1, area.Y, 17);
                 }
 
                 IsDirty = false;

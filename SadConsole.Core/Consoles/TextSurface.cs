@@ -67,13 +67,13 @@ namespace SadConsole.Consoles
         public int CellCount { get { return cells.Length; } }
 
         /// <summary>
-        /// The default foreground for characters on this surface.
+        /// The default foreground for glyphs on this surface.
         /// </summary>
         [DataMember]
         public Color DefaultForeground { get; set; } = Color.White;
 
         /// <summary>
-        /// The default background for characters on this surface.
+        /// The default background for glyphs on this surface.
         /// </summary>
         [DataMember]
         public Color DefaultBackground { get; set; } = Color.Transparent;

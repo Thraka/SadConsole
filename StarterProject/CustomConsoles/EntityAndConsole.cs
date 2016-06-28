@@ -91,7 +91,7 @@ namespace StarterProject.CustomConsoles
 
                 // We are not detecting when the player tries to move off the console area.
                 // We could detected that though and then move the player back to where they were.
-                SetCharacter(_playerPreviousPosition.X, _playerPreviousPosition.Y, 250);
+                SetGlyph(_playerPreviousPosition.X, _playerPreviousPosition.Y, 250);
                 _playerPreviousPosition = _player.Position;
 
                 return true;
@@ -110,7 +110,7 @@ namespace StarterProject.CustomConsoles
             public Player(): base(1, 1)
             {
                 // Update the default animation frame (cellsurface that is 1x1 of nothing) to have a smiley character
-                _currentAnimation.CurrentFrame[0].CharacterIndex = 1;
+                _currentAnimation.CurrentFrame[0].GlyphIndex = 1;
             }
 
         }

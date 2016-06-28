@@ -24,6 +24,9 @@ namespace SadConsole.Consoles
         public int Width { get { return textSurface.Width; } }
         public int Height { get { return textSurface.Height; } }
 
+        /// <summary>
+        /// The text surface being changed.
+        /// </summary>
         [IgnoreDataMember]
         public ITextSurface TextSurface
         {
@@ -139,118 +142,79 @@ namespace SadConsole.Consoles
         }
         #endregion
 
-        #region Copy
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        #endregion
 
         #region Cell Manipulation
 
         #region Cell Specifics
         /// <summary>
-        /// Changes the character of a specified cell to a new value.
+        /// Changes the glyph of a specified cell to a new value.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <param name="character">The desired character of the cell.</param>
-        public void SetCharacter(int x, int y, int character)
+        /// <param name="glyph">The desired glyph of the cell.</param>
+        public void SetGlyph(int x, int y, int glyph)
         {
-            textSurface.Cells[y * textSurface.Width + x].CharacterIndex = character;
+            textSurface.Cells[y * textSurface.Width + x].GlyphIndex = glyph;
         }
         /// <summary>
-        /// Changes the character, foreground, and background of a cell.
+        /// Changes the glyph, foreground, and background of a cell.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <param name="character">The desired character.</param>
+        /// <param name="glyph">The desired glyph.</param>
         /// <param name="foreground">The desired foreground.</param>
-        public void SetCharacter(int x, int y, int character, Color foreground)
+        public void SetGlyph(int x, int y, int glyph, Color foreground)
         {
             int index = y * textSurface.Width + x;
 
             textSurface.Cells[index].Foreground = foreground;
-            textSurface.Cells[index].CharacterIndex = character;
+            textSurface.Cells[index].GlyphIndex = glyph;
         }
         /// <summary>
-        /// Changes the character, foreground, and background of a cell.
+        /// Changes the glyph, foreground, and background of a cell.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <param name="character">The desired character.</param>
+        /// <param name="glyph">The desired glyph.</param>
         /// <param name="foreground">The desired foreground.</param>
         /// <param name="background">The desired background.</param>
-        public void SetCharacter(int x, int y, int character, Color foreground, Color background)
+        public void SetGlyph(int x, int y, int glyph, Color foreground, Color background)
         {
             int index = y * textSurface.Width + x;
 
             textSurface.Cells[index].Background = background;
             textSurface.Cells[index].Foreground = foreground;
-            textSurface.Cells[index].CharacterIndex = character;
+            textSurface.Cells[index].GlyphIndex = glyph;
         }
 
         /// <summary>
-        /// Changes the character, foreground, background, and effect of a cell.
+        /// Changes the glyph, foreground, background, and effect of a cell.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="character"></param>
-        /// <param name="foreground"></param>
-        /// <param name="background"></param>
-        /// <param name="effect"></param>
-        public void SetCharacter(int x, int y, int character, Color foreground, Color background, ICellEffect effect)
+        /// <param name="x">The x location of the cell.</param>
+        /// <param name="y">The y location of the cell.</param>
+        /// <param name="glyph">The desired glyph.</param>
+        /// <param name="foreground">The desired foreground.</param>
+        /// <param name="background">The desired background.</param>
+        /// <param name="effect">Sets the effect of the cell</param>
+        public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, ICellEffect effect)
         {
             int index = y * textSurface.Width + x;
 
             textSurface.Cells[index].Background = background;
             textSurface.Cells[index].Foreground = foreground;
-            textSurface.Cells[index].CharacterIndex = character;
+            textSurface.Cells[index].GlyphIndex = glyph;
             textSurface.Cells[index].Effect = effect;
         }
 
         /// <summary>
-        /// Gets the character of a specified cell.
+        /// Gets the glyph of a specified cell.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <returns>The character.</returns>
-        public int GetCharacter(int x, int y)
+        /// <returns>The glyph index.</returns>
+        public int GetGlyph(int x, int y)
         {
-            return textSurface.Cells[y * textSurface.Width + x].CharacterIndex;
+            return textSurface.Cells[y * textSurface.Width + x].GlyphIndex;
         }
 
         /// <summary>
@@ -367,7 +331,7 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Fills a console with random colors and characters.
+        /// Fills a console with random colors and glyphs.
         /// </summary>
         public void FillWithRandomGarbage(bool useEffect = false)
         {
@@ -377,7 +341,7 @@ namespace SadConsole.Consoles
             {
                 for (int x = 0; x < textSurface.Width; x++)
                 {
-                    SetCharacter(x, y, charCounter);
+                    SetGlyph(x, y, charCounter);
                     SetForeground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
                     SetBackground(x, y, textSurface.DefaultBackground);
                     SetBackground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
@@ -410,7 +374,7 @@ namespace SadConsole.Consoles
             int charIndex = 0;
             for (; index < total; index++)
             {
-                textSurface.Cells[index].CharacterIndex = text[charIndex];
+                textSurface.Cells[index].GlyphIndex = text[charIndex];
                 charIndex++;
             }
         }
@@ -439,7 +403,7 @@ namespace SadConsole.Consoles
             {
                 Cell cell = textSurface.Cells[index];
                 appearance.CopyAppearanceTo(cell);
-                cell.CharacterIndex = text[charIndex];
+                cell.GlyphIndex = text[charIndex];
                 cell.Effect = effect;
                 charIndex++;
             }
@@ -465,7 +429,7 @@ namespace SadConsole.Consoles
             int charIndex = 0;
             for (; index < total; index++)
             {
-                textSurface.Cells[index].CharacterIndex = text[charIndex];
+                textSurface.Cells[index].GlyphIndex = text[charIndex];
                 textSurface.Cells[index].Foreground = foreground;
                 charIndex++;
             }
@@ -492,7 +456,7 @@ namespace SadConsole.Consoles
             int charIndex = 0;
             for (; index < total; index++)
             {
-                textSurface.Cells[index].CharacterIndex = text[charIndex];
+                textSurface.Cells[index].GlyphIndex = text[charIndex];
                 textSurface.Cells[index].Background = background;
                 textSurface.Cells[index].Foreground = foreground;
                 charIndex++;
@@ -517,7 +481,7 @@ namespace SadConsole.Consoles
             for (; index < total; index++)
             {
                 if (!text.IgnoreCharacter)
-                    textSurface.Cells[index].CharacterIndex = text[charIndex].Character;
+                    textSurface.Cells[index].GlyphIndex = text[charIndex].Glyph;
                 if (!text.IgnoreBackground)
                     textSurface.Cells[index].Background = text[charIndex].Background;
                 if (!text.IgnoreForeground)
@@ -550,7 +514,7 @@ namespace SadConsole.Consoles
             int charIndex = 0;
             for (; index < total; index++)
             {
-                textSurface.Cells[index].CharacterIndex = text[charIndex];
+                textSurface.Cells[index].GlyphIndex = text[charIndex];
 
                 if (background.HasValue)
                     textSurface.Cells[index].Background = background.Value;
@@ -595,7 +559,7 @@ namespace SadConsole.Consoles
                     tempIndex = i + index;
 
                     if (tempIndex < textSurface.Cells.Length)
-                        sb.Append((char)textSurface.Cells[tempIndex].CharacterIndex);
+                        sb.Append((char)textSurface.Cells[tempIndex].GlyphIndex);
                 }
 
                 return sb.ToString();
@@ -729,7 +693,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
-                    destination.CharacterIndex = source.CharacterIndex;
+                    destination.GlyphIndex = source.GlyphIndex;
                     destination.Effect = source.Effect;
                 }
             }
@@ -750,7 +714,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
-                    destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                    destination.GlyphIndex = wrappedCells[i].Item1.GlyphIndex;
                     destination.Effect = wrappedCells[i].Item1.Effect;
                 }
         }
@@ -807,7 +771,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
-                    destination.CharacterIndex = source.CharacterIndex;
+                    destination.GlyphIndex = source.GlyphIndex;
                     destination.Effect = source.Effect;
                 }
             }
@@ -828,7 +792,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
-                    destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                    destination.GlyphIndex = wrappedCells[i].Item1.GlyphIndex;
                     destination.Effect = wrappedCells[i].Item1.Effect;
                 }
         }
@@ -886,7 +850,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
-                    destination.CharacterIndex = source.CharacterIndex;
+                    destination.GlyphIndex = source.GlyphIndex;
                     destination.Effect = source.Effect;
                 }
             }
@@ -907,7 +871,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
-                    destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                    destination.GlyphIndex = wrappedCells[i].Item1.GlyphIndex;
                     destination.Effect = wrappedCells[i].Item1.Effect;
                 }
         }
@@ -964,7 +928,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
-                    destination.CharacterIndex = source.CharacterIndex;
+                    destination.GlyphIndex = source.GlyphIndex;
                     destination.Effect = source.Effect;
                 }
             }
@@ -984,7 +948,7 @@ namespace SadConsole.Consoles
 
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
-                    destination.CharacterIndex = wrappedCells[i].Item1.CharacterIndex;
+                    destination.GlyphIndex = wrappedCells[i].Item1.GlyphIndex;
                     destination.Effect = wrappedCells[i].Item1.Effect;
                 }
         }
@@ -997,15 +961,15 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="foreground">Foregorund of every cell.</param>
         /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="character">Character of every cell.</param>
+        /// <param name="glyph">Glyph of every cell.</param>
         /// <param name="effect">Effect of every cell.</param>
-        public void Fill(Color foreground, Color background, int character, Effects.ICellEffect effect)
+        public void Fill(Color foreground, Color background, int glyph, Effects.ICellEffect effect)
         {
             for (int i = 0; i < textSurface.Cells.Length; i++)
             {
                 textSurface.Cells[i].Foreground = foreground;
                 textSurface.Cells[i].Background = background;
-                textSurface.Cells[i].CharacterIndex = character;
+                textSurface.Cells[i].GlyphIndex = glyph;
                 textSurface.Cells[i].Effect = effect;
             }
         }
@@ -1015,16 +979,16 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="foreground">Foregorund of every cell.</param>
         /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="character">Character of every cell.</param>
+        /// <param name="glyph">Glyph of every cell.</param>
         /// <param name="effect">Effect of every cell.</param>
         /// <param name="spriteEffect">Sprite effect of every cell.</param>
-        public void Fill(Color foreground, Color background, int character, Effects.ICellEffect effect, SpriteEffects spriteEffect)
+        public void Fill(Color foreground, Color background, int glyph, Effects.ICellEffect effect, SpriteEffects spriteEffect)
         {
             for (int i = 0; i < textSurface.Cells.Length; i++)
             {
                 textSurface.Cells[i].Foreground = foreground;
                 textSurface.Cells[i].Background = background;
-                textSurface.Cells[i].CharacterIndex = character;
+                textSurface.Cells[i].GlyphIndex = glyph;
                 textSurface.Cells[i].SpriteEffect = spriteEffect;
                 textSurface.Cells[i].Effect = effect;
             }
@@ -1036,9 +1000,9 @@ namespace SadConsole.Consoles
         /// <param name="area">The area to fill.</param>
         /// <param name="foreground">Foregorund of every cell.</param>
         /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="character">Character of every cell.</param>
+        /// <param name="glyph">Glyph of every cell.</param>
         /// <param name="effect">Effect of every cell.</param>
-        public void FillArea(Rectangle area, Color foreground, Color background, int character, Effects.ICellEffect effect)
+        public void FillArea(Rectangle area, Color foreground, Color background, int glyph, Effects.ICellEffect effect)
         {
             // Check for valid rect
             Rectangle consoleArea = new Rectangle(0, 0, textSurface.Width, textSurface.Height);
@@ -1051,7 +1015,7 @@ namespace SadConsole.Consoles
                         Cell cell = textSurface.Cells[y * textSurface.Width + x];
                         cell.Foreground = foreground;
                         cell.Background = background;
-                        cell.CharacterIndex = character;
+                        cell.GlyphIndex = glyph;
                         cell.Effect = effect;
                     }
                 }
@@ -1064,10 +1028,10 @@ namespace SadConsole.Consoles
         /// <param name="area">The area to fill.</param>
         /// <param name="foreground">Foregorund of every cell.</param>
         /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="character">Character of every cell.</param>
+        /// <param name="glyph">Glyph of every cell.</param>
         /// <param name="effect">Effect of every cell.</param>
         /// <param name="spriteEffect">Sprite effect of every cell.</param>
-        public void FillArea(Rectangle area, Color foreground, Color background, int character, Effects.ICellEffect effect, SpriteEffects spriteEffect)
+        public void FillArea(Rectangle area, Color foreground, Color background, int glyph, Effects.ICellEffect effect, SpriteEffects spriteEffect)
         {
             // Check for valid rect
             Rectangle consoleArea = new Rectangle(0, 0, textSurface.Width, textSurface.Height);
@@ -1080,7 +1044,7 @@ namespace SadConsole.Consoles
                         Cell cell = textSurface.Cells[y * textSurface.Width + x];
                         cell.Foreground = foreground;
                         cell.Background = background;
-                        cell.CharacterIndex = character;
+                        cell.GlyphIndex = glyph;
                         cell.SpriteEffect = spriteEffect;
                         cell.Effect = effect;
                     }

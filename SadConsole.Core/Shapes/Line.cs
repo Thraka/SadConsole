@@ -59,19 +59,19 @@ namespace SadConsole.Shapes
             {
                 Background = colors.Background,
                 Foreground = colors.Foreground,
-                CharacterIndex = 195
+                GlyphIndex = 195
             };
             EndingCellAppearance = new Cell()
             {
                 Background = colors.Background,
                 Foreground = colors.Foreground,
-                CharacterIndex = 180
+                GlyphIndex = 180
             };
             CellAppearance = new Cell()
             {
                 Background = colors.Background,
                 Foreground = colors.Foreground,
-                CharacterIndex = 196
+                GlyphIndex = 196
             };
 
             UseStartingCell = true;

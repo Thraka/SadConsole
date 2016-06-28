@@ -254,41 +254,41 @@
             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
             {
                 this.SetCellAppearance(0, 0, Theme.Ends.Normal);
-                this.SetCharacter(0, 0, _topOrLeftCharacter);
+                this.SetGlyph(0, 0, _topOrLeftCharacter);
 
                 this.SetCellAppearance(textSurface.Width - 1, 0, Theme.Ends.Normal);
-                this.SetCharacter(textSurface.Width - 1, 0, _bottomOrRightCharacter);
+                this.SetGlyph(textSurface.Width - 1, 0, _bottomOrRightCharacter);
 
                 for (int i = 1; i <= _sliderBarSize; i++)
                 {
                     this.SetCellAppearance(i, 0, Theme.Bar.Normal);
-                    this.SetCharacter(i, 0, _sliderBarCharacter);
+                    this.SetGlyph(i, 0, _sliderBarCharacter);
                 }
 
                 if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
                 {
                     this.SetCellAppearance(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
-                    this.SetCharacter(1 + _currentSliderPosition, 0, _sliderCharacter);
+                    this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
                 }
             }
             else
             {
                 this.SetCellAppearance(0, 0, Theme.Ends.Normal);
-                this.SetCharacter(0, 0, _topOrLeftCharacter);
+                this.SetGlyph(0, 0, _topOrLeftCharacter);
 
                 this.SetCellAppearance(0, textSurface.Height - 1, Theme.Ends.Normal);
-                this.SetCharacter(0, textSurface.Height - 1, _bottomOrRightCharacter);
+                this.SetGlyph(0, textSurface.Height - 1, _bottomOrRightCharacter);
 
                 for (int i = 0; i < _sliderBarSize; i++)
                 {
                     this.SetCellAppearance(0, i + 1, Theme.Bar.Normal);
-                    this.SetCharacter(0, i + 1, _sliderBarCharacter);
+                    this.SetGlyph(0, i + 1, _sliderBarCharacter);
                 }
 
                 if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
                 {
                     this.SetCellAppearance(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
-                    this.SetCharacter(0, 1 + _currentSliderPosition, _sliderCharacter);
+                    this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
                 }
 
             }

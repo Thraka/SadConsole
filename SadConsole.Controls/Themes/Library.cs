@@ -168,9 +168,9 @@ namespace SadConsole.Themes
             InputBoxTheme.Focused = new CellAppearance(Color.DarkBlue, Color.DarkGray);
             InputBoxTheme.MouseOver = new CellAppearance(Color.DarkBlue, Color.DarkGray);
             InputBoxTheme.Disabled = new CellAppearance(Color.Black, ColorAnsi.White);
-            InputBoxTheme.CarrotEffect = new Effects.BlinkCharacter()
+            InputBoxTheme.CarrotEffect = new Effects.BlinkGlyph()
             {
-                CharacterIndex = 95,
+                GlyphIndex = 95,
                 BlinkSpeed = 0.4f
             };
         }

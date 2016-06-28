@@ -29,7 +29,7 @@ namespace SadConsole.GameHelpers
         {
             Settings = new List<Setting>();
             Character = new CellAppearance();
-            Character.CharacterIndex = 1;
+            Character.GlyphIndex = 1;
             Name = "New";
         }
 

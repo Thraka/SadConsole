@@ -52,36 +52,36 @@
                     if (blockMode)
                     {
                         if (sbri > 204)
-                            editor.SetCharacter(w, h, 219, newColor); //█
+                            editor.SetGlyph(w, h, 219, newColor); //█
                         else if (sbri > 152)
-                            editor.SetCharacter(w, h, 178, newColor); //▓
+                            editor.SetGlyph(w, h, 178, newColor); //▓
                         else if (sbri > 100)
-                            editor.SetCharacter(w, h, 177, newColor); //▒
+                            editor.SetGlyph(w, h, 177, newColor); //▒
                         else if (sbri > 48)
-                            editor.SetCharacter(w, h, 176, newColor); //░
+                            editor.SetGlyph(w, h, 176, newColor); //░
                     }
                     else
                     {
                         if (sbri > 230)
-                            editor.SetCharacter(w, h, (int)'#', newColor);
+                            editor.SetGlyph(w, h, (int)'#', newColor);
                         else if (sbri > 207)
-                            editor.SetCharacter(w, h, (int)'&', newColor);
+                            editor.SetGlyph(w, h, (int)'&', newColor);
                         else if (sbri > 184)
-                            editor.SetCharacter(w, h, (int)'$', newColor);
+                            editor.SetGlyph(w, h, (int)'$', newColor);
                         else if (sbri > 161)
-                            editor.SetCharacter(w, h, (int)'X', newColor);
+                            editor.SetGlyph(w, h, (int)'X', newColor);
                         else if (sbri > 138)
-                            editor.SetCharacter(w, h, (int)'x', newColor);
+                            editor.SetGlyph(w, h, (int)'x', newColor);
                         else if (sbri > 115)
-                            editor.SetCharacter(w, h, (int)'=', newColor);
+                            editor.SetGlyph(w, h, (int)'=', newColor);
                         else if (sbri > 92)
-                            editor.SetCharacter(w, h, (int)'+', newColor);
+                            editor.SetGlyph(w, h, (int)'+', newColor);
                         else if (sbri > 69)
-                            editor.SetCharacter(w, h, (int)';', newColor);
+                            editor.SetGlyph(w, h, (int)';', newColor);
                         else if (sbri > 46)
-                            editor.SetCharacter(w, h, (int)':', newColor);
+                            editor.SetGlyph(w, h, (int)':', newColor);
                         else if (sbri > 23)
-                            editor.SetCharacter(w, h, (int)'.', newColor);
+                            editor.SetGlyph(w, h, (int)'.', newColor);
                     }
                 }
             }
@@ -134,36 +134,36 @@
                     if (blockMode)
                     {
                         if (sbri > 204)
-                            editor.SetCharacter(w, h, 219, newColor); //█
+                            editor.SetGlyph(w, h, 219, newColor); //█
                         else if (sbri > 152)
-                            editor.SetCharacter(w, h, 178, newColor); //▓
+                            editor.SetGlyph(w, h, 178, newColor); //▓
                         else if (sbri > 100)
-                            editor.SetCharacter(w, h, 177, newColor); //▒
+                            editor.SetGlyph(w, h, 177, newColor); //▒
                         else if (sbri > 48)
-                            editor.SetCharacter(w, h, 176, newColor); //░
+                            editor.SetGlyph(w, h, 176, newColor); //░
                     }
                     else
                     {
                         if (sbri > 230)
-                            editor.SetCharacter(w, h, (int)'#', newColor);
+                            editor.SetGlyph(w, h, (int)'#', newColor);
                         else if (sbri > 207)
-                            editor.SetCharacter(w, h, (int)'&', newColor);
+                            editor.SetGlyph(w, h, (int)'&', newColor);
                         else if (sbri > 184)
-                            editor.SetCharacter(w, h, (int)'$', newColor);
+                            editor.SetGlyph(w, h, (int)'$', newColor);
                         else if (sbri > 161)
-                            editor.SetCharacter(w, h, (int)'X', newColor);
+                            editor.SetGlyph(w, h, (int)'X', newColor);
                         else if (sbri > 138)
-                            editor.SetCharacter(w, h, (int)'x', newColor);
+                            editor.SetGlyph(w, h, (int)'x', newColor);
                         else if (sbri > 115)
-                            editor.SetCharacter(w, h, (int)'=', newColor);
+                            editor.SetGlyph(w, h, (int)'=', newColor);
                         else if (sbri > 92)
-                            editor.SetCharacter(w, h, (int)'+', newColor);
+                            editor.SetGlyph(w, h, (int)'+', newColor);
                         else if (sbri > 69)
-                            editor.SetCharacter(w, h, (int)';', newColor);
+                            editor.SetGlyph(w, h, (int)';', newColor);
                         else if (sbri > 46)
-                            editor.SetCharacter(w, h, (int)':', newColor);
+                            editor.SetGlyph(w, h, (int)':', newColor);
                         else if (sbri > 23)
-                            editor.SetCharacter(w, h, (int)'.', newColor);
+                            editor.SetGlyph(w, h, (int)'.', newColor);
                     }
                 }
             }

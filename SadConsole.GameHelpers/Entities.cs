@@ -37,7 +37,7 @@ namespace SadConsole.GameHelpers
                             character = 32;
 
                         var editor = new Consoles.SurfaceEditor(frame);
-                        editor.SetCharacter(x, y, character);
+                        editor.SetGlyph(x, y, character);
                         editor.SetForeground(x, y, Microsoft.Xna.Framework.Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
                     }
                 }

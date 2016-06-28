@@ -5,12 +5,12 @@ using System.Runtime.Serialization;
 namespace SadConsole
 {
     /// <summary>
-    /// Represents an individual character on the screen with a foreground, background, and effect.
+    /// Represents an individual glyph on the screen with a foreground, background, and effect.
     /// </summary>
     [DataContract]
     public class Cell : ICellAppearance
     {
-        private int _characterIndex;
+        private int _glyphIndex;
         private Color _foreground;
         private Color _background;
         private SpriteEffects _spriteEffect;
@@ -43,16 +43,16 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// The character index of the graphic font to print when this cell is drawn. When set, copies the value to ActualCharacterIndex.
+        /// The glyph index of the graphic font to print when this cell is drawn. When set, copies the value to <see cref="ActualGlyphIndex"/>.
         /// </summary>
         [DataMember]
-        public int CharacterIndex
+        public int GlyphIndex
         {
-            get { return _characterIndex; }
+            get { return _glyphIndex; }
             set
             {
-                _characterIndex = value;
-                ActualCharacterIndex = value;
+                _glyphIndex = value;
+                ActualGlyphIndex = value;
             }
         }
 
@@ -80,10 +80,10 @@ namespace SadConsole
 
 
         /// <summary>
-        /// The actual character index of this cell when drawing.
+        /// The actual glyph index of this cell when drawing.
         /// <remarks>The actual index may or may not match the desired index. When effects are processed, they may change this value. If the effect is removed, the actual index is taken from desired index.</remarks>
         /// </summary>
-        public virtual int ActualCharacterIndex { get; set; }
+        public virtual int ActualGlyphIndex { get; set; }
 
         /// <summary>
         /// The effect associated with this cell. Processed by the <see cref="T:SadConsole.TextSurface"/> class.
@@ -117,7 +117,7 @@ namespace SadConsole
         {
             Foreground = Color.White;
             Background = Color.Transparent;
-            CharacterIndex = 0;
+            GlyphIndex = 0;
             IsVisible = true;
             SpriteEffect = SpriteEffects.None;
             Effect = null;
@@ -129,7 +129,7 @@ namespace SadConsole
         /// <returns>A string representing this cell.</returns>
         public override string ToString()
         {
-            return string.Format("{0} {1} {2}", ActualCharacterIndex, ActualForeground.ToString(), ActualBackground.ToString());
+            return string.Format("{0} {1} {2}", ActualGlyphIndex, ActualForeground.ToString(), ActualBackground.ToString());
         }
 
         /// <summary>
@@ -138,13 +138,13 @@ namespace SadConsole
         public virtual void OnCreated() { }
 
         /// <summary>
-        /// Copies this cells information to a new cell. Preserves appearance, Actual* properties, and character information.
+        /// Copies this cells information to a new cell. Preserves appearance, Actual* properties, and glyph information.
         /// </summary>
         /// <param name="destination">The cell to copy to.</param>
         public virtual void Copy(Cell destination)
         {
             CopyAppearanceTo(destination);
-            destination.ActualCharacterIndex = this.ActualCharacterIndex;
+            destination.ActualGlyphIndex = this.ActualGlyphIndex;
             destination.ActualBackground = this.ActualBackground;
             destination.ActualForeground = this.ActualForeground;
             destination.ActualSpriteEffect = this.ActualSpriteEffect;
@@ -158,7 +158,7 @@ namespace SadConsole
         {
             destination.Foreground = this.Foreground;
             destination.Background = this.Background;
-            destination.CharacterIndex = this.CharacterIndex;
+            destination.GlyphIndex = this.GlyphIndex;
             destination.SpriteEffect = this.SpriteEffect;
         }
 

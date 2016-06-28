@@ -24,10 +24,10 @@ namespace SadConsole
         public Color Background { get; set; }
 
         /// <summary>
-        /// The character index of the cell, used by a font sheet.
+        /// The glyph index of the cell, used by a font sheet.
         /// </summary>
         [DataMember]
-        public int CharacterIndex { get; set; }
+        public int GlyphIndex { get; set; }
 
         /// <summary>
         /// The SpriteBatch sprite mirror effect used when rendering the cell.
@@ -52,21 +52,21 @@ namespace SadConsole
         /// </summary>
         /// <param name="foreground">The foreground color of the cell appearance.</param>
         /// <param name="background">The background color of the cell appearance.</param>
-        /// <param name="characterIndex">The character of the cell appearance.</param>
-        public CellAppearance(Color foreground, Color background, int characterIndex): this(foreground, background, characterIndex, SpriteEffects.None) { }
+        /// <param name="glyphIndex">The glyph of the cell appearance.</param>
+        public CellAppearance(Color foreground, Color background, int glyphIndex): this(foreground, background, glyphIndex, SpriteEffects.None) { }
 
         /// <summary>
         /// Creates a new instance of the cell appearance with the specified colors and effect.
         /// </summary>
         /// <param name="foreground">The foreground color of the cell appearance.</param>
         /// <param name="background">The background color of the cell appearance.</param>
-        /// <param name="characterIndex">The character of the cell appearance.</param>
+        /// <param name="glyphIndex">The glyph of the cell appearance.</param>
         /// <param name="spriteEffect">The sprite mirror effect of the cell appearance.</param>
-        public CellAppearance(Color foreground, Color background, int characterIndex, SpriteEffects spriteEffect)
+        public CellAppearance(Color foreground, Color background, int glyphIndex, SpriteEffects spriteEffect)
         {
             this.Foreground = foreground;
             this.Background = background;
-            this.CharacterIndex = characterIndex;
+            this.GlyphIndex = glyphIndex;
             this.SpriteEffect = spriteEffect;
         }
 
@@ -80,8 +80,8 @@ namespace SadConsole
             destination.Background = this.Background;
             destination.SpriteEffect = this.SpriteEffect;
 
-            if (this.CharacterIndex != -1)
-                destination.CharacterIndex = this.CharacterIndex;
+            if (this.GlyphIndex != -1)
+                destination.GlyphIndex = this.GlyphIndex;
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace SadConsole
         /// <returns>The cloned cell appearance.</returns>
         public CellAppearance Clone()
         {
-            return new CellAppearance(this.Foreground, this.Background, this.CharacterIndex);
+            return new CellAppearance(this.Foreground, this.Background, this.GlyphIndex);
         }
     }
 }
