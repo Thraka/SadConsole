@@ -11,6 +11,9 @@ using System.Runtime.Serialization;
 
 namespace SadConsole.Consoles
 {
+    /// <summary>
+    /// Provides methods to manipulate a <see cref="ITextSurface"/>.
+    /// </summary>
     [DataContract]
     public class SurfaceEditor
     {
@@ -44,6 +47,15 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
+        /// The effects manager associated with the <see cref="TextSurface"/>.
+        /// </summary>
+        /// <remarks>
+        /// When the <see cref="TextSurface"/> property is set, a new <see cref="EffectsManager"/> instance is created.
+        /// </remarks>
+        [IgnoreDataMember]
+        public EffectsManager Effects { get; set; }
+
+        /// <summary>
         /// Gets a cell based on it's coordinates on the surface.
         /// </summary>
         /// <param name="x">The X coordinate.</param>
@@ -71,16 +83,20 @@ namespace SadConsole.Consoles
         /// Creates a new cell surface that can be resized and also have its textSurface.Cells resized.
         /// </summary>
         /// <remarks>You must set the Font property before rendering this cell surface.</remarks>
-        //public ConsoleData() : this(1, 1, Engine.DefaultFont) { }
-
         public SurfaceEditor(ITextSurface surface)
         {
-            textSurface = surface;
+            TextSurface = surface;
         }
         #endregion
 
+        /// <summary>
+        /// Called when the <see cref="TextSurface"/> property is changed. Sets <see cref="Effects"/> to a new instance of <see cref="EffectsManager"/>.
+        /// </summary>
+        /// <param name="oldSurface">The previous text surface.</param>
+        /// <param name="newSurface">The new text surface.</param>
         protected virtual void OnSurfaceChanged(ITextSurface oldSurface, ITextSurface newSurface)
         {
+            Effects = new EffectsManager(newSurface);
         }
 
         #region Public Methods
@@ -203,7 +219,8 @@ namespace SadConsole.Consoles
             textSurface.Cells[index].Background = background;
             textSurface.Cells[index].Foreground = foreground;
             textSurface.Cells[index].GlyphIndex = glyph;
-            textSurface.Cells[index].Effect = effect;
+
+            Effects.SetEffect(textSurface.Cells[index], effect);
         }
 
         /// <summary>
@@ -267,8 +284,7 @@ namespace SadConsole.Consoles
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(int x, int y, Effects.ICellEffect effect)
         {
-
-            textSurface.Cells[y * textSurface.Width + x].Effect = effect;
+            Effects.SetEffect(textSurface.Cells[y * textSurface.Width + x], effect);
         }
 
         /// <summary>
@@ -404,7 +420,7 @@ namespace SadConsole.Consoles
                 Cell cell = textSurface.Cells[index];
                 appearance.CopyAppearanceTo(cell);
                 cell.GlyphIndex = text[charIndex];
-                cell.Effect = effect;
+                Effects.SetEffect(cell, effect);
                 charIndex++;
             }
         }
@@ -480,7 +496,7 @@ namespace SadConsole.Consoles
 
             for (; index < total; index++)
             {
-                if (!text.IgnoreCharacter)
+                if (!text.IgnoreGlyph)
                     textSurface.Cells[index].GlyphIndex = text[charIndex].Glyph;
                 if (!text.IgnoreBackground)
                     textSurface.Cells[index].Background = text[charIndex].Background;

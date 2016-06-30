@@ -187,7 +187,7 @@
 
                     if (!PrintOnlyCharacterData)
                     {
-                        if (!text.IgnoreCharacter)
+                        if (!text.IgnoreGlyph)
                             cell.GlyphIndex = glyph.Glyph;
                         if (!text.IgnoreBackground)
                             cell.Background = glyph.Background;

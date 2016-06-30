@@ -12,6 +12,7 @@ namespace SadConsole
     [DataContract]
     public class ColoredString : IEnumerable<ColoredGlyph>
     {
+        [DataMember(Name = "Characters")]
         private List<ColoredGlyph> _characters;
 
         public ColoredGlyph this[int index]
@@ -23,7 +24,6 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the string. When Set, the colors for each character default to the <see cref="SadConsole.ColoredString.Foreground"/> and <see cref="SadConsole.ColoredString.Background"/> property values.
         /// </summary>
-        [DataMember]
         public string String
         {
             get
@@ -75,10 +75,10 @@ namespace SadConsole
         public ICellEffect Effect;
 
         /// <summary>
-        /// When true, instructs a caller to not render the <see cref="Character"/>.
+        /// When true, instructs a caller to not render the glyphs of the string.
         /// </summary>
         [DataMember]
-        public bool IgnoreCharacter;
+        public bool IgnoreGlyph;
 
         /// <summary>
         /// When true, instructs a caller to not render the <see cref="Foreground"/>.
@@ -173,7 +173,7 @@ namespace SadConsole
 
             returnObject.IgnoreBackground = this.IgnoreBackground;
             returnObject.IgnoreForeground = this.IgnoreForeground;
-            returnObject.IgnoreCharacter = this.IgnoreCharacter;
+            returnObject.IgnoreGlyph = this.IgnoreGlyph;
             returnObject.IgnoreEffect = this.IgnoreEffect;
             returnObject.Foreground = this.Foreground;
             returnObject.Background = this.Background;
@@ -255,7 +255,7 @@ namespace SadConsole
             for (int i = 0; i < string2.Count; i++)
                 returnString._characters[i + string1.Count] = string2._characters[i].Clone();
 
-            returnString.IgnoreCharacter = string1.IgnoreCharacter && string1.IgnoreCharacter;
+            returnString.IgnoreGlyph = string1.IgnoreGlyph && string1.IgnoreGlyph;
             returnString.IgnoreForeground = string1.IgnoreForeground && string1.IgnoreForeground;
             returnString.IgnoreBackground = string1.IgnoreBackground && string1.IgnoreBackground;
             returnString.IgnoreEffect = string1.IgnoreEffect && string1.IgnoreEffect;

@@ -37,7 +37,7 @@
         #endregion
 
         /// <summary>
-        /// The renderer used to draw the <see cref="textSurface"/>.
+        /// The renderer used to draw the <see cref="TextSurface"/>.
         /// </summary>
         protected ITextSurfaceRenderer _renderer;
 
@@ -504,7 +504,7 @@
         {
             if (DoUpdate)
             {
-                //_textSurface.UpdateEffects(Engine.GameTimeElapsedUpdate);
+                Effects.UpdateEffects(Engine.GameTimeElapsedUpdate);
 
                 if (VirtualCursor.IsVisible)
                     VirtualCursor.CursorRenderCell.UpdateAndApplyEffect(Engine.GameTimeElapsedUpdate);

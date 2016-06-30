@@ -54,8 +54,14 @@ namespace SadConsole.Effects
                     if (GetKnownEffect(effect, out workingEffect) == false)
                         _effects.Add(workingEffect.Effect, workingEffect);
                     else
+                    {
                         if (workingEffect.Cells.Contains(cell))
-                        return;
+                        {
+                            // Make sure the effect is attached to the cell.
+                            cell.Effect = workingEffect.Effect;
+                            return;
+                        }
+                    }
                 }
 
                 // Remove the targeted cell from the known cells list if it is already there (associated with another effect)
@@ -114,6 +120,8 @@ namespace SadConsole.Effects
                         cell.Effect = workingEffect.Effect;
                         workingEffect.Cells.Add(cell);
                     }
+                    else    // Make sure the effect is attached to the cell.
+                        cell.Effect = workingEffect.Effect;
                 }
             }
             else
