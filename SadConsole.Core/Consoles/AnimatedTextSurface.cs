@@ -338,19 +338,55 @@
             return Serializer.Load<AnimatedTextSurface>(file, new System.Type[] { typeof(List<TextSurface>) });
         }
 
-        public bool IsValidCell(int x, int y)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Tests if a cell is valid based on its x,y position.
+        /// </summary>
+        /// <param name="x">The x coordinate of the cell to test.</param>
+        /// <param name="y">The y coordinate of the cell to test.</param>
+        /// <param name="index">If the cell is valid, the index of the cell when found.</param>
+        /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
         public bool IsValidCell(int x, int y, out int index)
         {
-            throw new NotImplementedException();
+            if (x >= 0 && x < Frames[_currentFrameIndex].Width && y >= 0 && y < Frames[_currentFrameIndex].Height)
+            {
+                index = y * Frames[_currentFrameIndex].Width + x;
+                return true;
+            }
+            else
+            {
+                index = -1;
+                return false;
+            }
         }
 
+        /// <summary>
+        /// Tests if a cell is valid based on its x,y position.
+        /// </summary>
+        /// <param name="x">The x coordinate of the cell to test.</param>
+        /// <param name="y">The y coordinate of the cell to test.</param>
+        /// <param name="index">If the cell is valid, the index of the cell when found.</param>
+        /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
+        public bool IsValidCell(int x, int y)
+        {
+            if (x >= 0 && x < Frames[_currentFrameIndex].Width && y >= 0 && y < Frames[_currentFrameIndex].Height)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a cell based on it's coordinates on the surface.
+        /// </summary>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate.</param>
+        /// <returns>The indicated cell.</returns>
         public Cell GetCell(int x, int y)
         {
-            throw new NotImplementedException();
+            return Frames[_currentFrameIndex].GetCell(x, y);
         }
     }
 
