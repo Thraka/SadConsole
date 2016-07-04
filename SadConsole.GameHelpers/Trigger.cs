@@ -10,17 +10,13 @@ namespace SadConsole.GameHelpers
 {
     public class Trigger : GameObject, ITrigger
     {
-        public string Id { get; set; }
-
-        public string[] TargetIds { get; set; }
+        public string[] TargetNames { get; set; }
 
         public GameObject[] ResolvedTargets { get; private set; }
 
-        public bool DeepProcess { get; set; }
-
         public string Type { get; set; }
 
-        public Func<Trigger, GameConsole, bool> Condition;
+        public Func<Trigger, GameObjectTextSurface, bool> Condition;
 
         public Trigger(GameObject source)
         {
@@ -30,22 +26,18 @@ namespace SadConsole.GameHelpers
             foreach (var setting in source.Settings)
             {
                 string name = setting.Name.ToLower().Trim();
-                if (name == "id")
-                    Id = setting.Value;
-                else if (name == "target")
+                if (name == "target")
                     targets.Append(String.Format("{0};", setting.Value));
-                else if (name == "deep")
-                    DeepProcess = string.IsNullOrWhiteSpace(setting.Value) ? false : setting.Value.ToBool();
                 else if (name == "type")
                     Type = setting.Value;
             }
 
-            TargetIds = targets.ToString().Trim(';').Trim().Split(';');
+            TargetNames = targets.ToString().Trim(';').Trim().Split(';');
 
             source.CopyTo(this);
         }
 
-        public virtual void Triggered(GameObject source, GameConsole console)
+        public virtual void Triggered(GameObject source, GameObjectTextSurface )
         {
             // Check for condition pass
             if (Condition(this, console))

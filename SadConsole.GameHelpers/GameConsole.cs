@@ -7,46 +7,42 @@ using System.Threading.Tasks;
 
 namespace SadConsole.GameHelpers
 {
-    [DataContract]
-
-    public class GameConsole : Consoles.Console
+    /// <summary>
+    /// A text surface with metadata to help with common game functions.
+    /// </summary>
+    public class GameObjectTextSurface : TextSurface
     {
-        protected LayeredTextSurface layeredTextSurface;
-        protected GameObjectCollection[] gameObjects;
+        public List<Trigger> Triggers;
 
-        public LayeredTextSurface LayeredTextSurface { get { return layeredTextSurface; } }
+        public List<Processor> Processors;
 
-        public GameConsole(int width, int height, int layers) :base(width, height)
+        public List<Action> Actions;
+
+        public List<GameObject> Objects;
+
+        public void AssociateObjects()
         {
-            textSurface = layeredTextSurface = new Consoles.LayeredTextSurface(width, height, layers);
-            _renderer = new LayeredTextRenderer();
-            gameObjects = new GameObjectCollection[layers];
-            for (int i = 0; i < layers; i++)
+            foreach (var item in base.Keys)
             {
-                gameObjects[i] = new GameObjectCollection();
-            }
-            AssociateLayersWithObjects();
-        }
+                var newObject = GameObjectParser.Parse(this[item]);
 
-        public void AssociateLayersWithObjects()
-        {
-            for (int i = 0; i < layeredTextSurface.LayerCount; i++)
+                transformedObjects.Add(new Tuple<Point, GameObject>(item, TransformObject(newObject)));
+            }
+
+            foreach (var item in transformedObjects)
             {
-                foreach (var gameObject in gameObjects[i].Values)
-                {
-                    gameObject.Layer = i;
-                }
-                
+                this[item.Item1] = item.Item2;
+
+                if (item.Item2 is Trigger)
+                    Triggers.Add((Trigger)item.Item2);
+
+                else if (item.Item2 is Processor)
+                    Processors.Add((Processor)item.Item2);
+
+                else if (item.Item2 is Action)
+                    Actions.Add((Action)item.Item2);
             }
         }
-
-        public GameObjectCollection GetObjectCollection(int layer)
-        {
-            if (layer < 0 || layer >= layeredTextSurface.LayerCount)
-                throw new System.ArgumentOutOfRangeException("layer");
-
-            return gameObjects[layer];
-        }
-
     }
+
 }
