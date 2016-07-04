@@ -10,6 +10,7 @@ namespace SadConsole
     {
         public enum FontSizes
         {
+            Quarter,
             Half,
             One,
             Two,
@@ -47,6 +48,9 @@ namespace SadConsole
 
             switch (fontMultiple)
             {
+                case FontSizes.Quarter:
+                    Size = new Point((int)(masterFont.CellWidth * 0.25), (int)(masterFont.CellHeight * 0.25));
+                    break;
                 case FontSizes.Half:
                     Size = new Point((int)(masterFont.CellWidth * 0.5), (int)(masterFont.CellHeight * 0.5));
                     break;

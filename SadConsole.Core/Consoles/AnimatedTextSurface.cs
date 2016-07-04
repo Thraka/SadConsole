@@ -1,15 +1,16 @@
-﻿namespace SadConsole.Entities
+﻿namespace SadConsole.Consoles
 {
     using Consoles;
     using Microsoft.Xna.Framework;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using System;
 
     /// <summary>
     /// Animates a list of frames.
     /// </summary>
     [DataContract]
-    public class Animation
+    public class AnimatedTextSurface: ITextSurface
     {
         public event System.EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
 
@@ -158,7 +159,49 @@
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Pixel area of text surface. Taken from the current animation frame. Set not implemented.
+        /// </summary>
+        public Rectangle AbsoluteArea { get { return Frames[_currentFrameIndex].AbsoluteArea; } set { } }
+
+        /// <summary>
+        /// Destination rectangles for rendering. Taken from the current animation frame. Set not implemented.
+        /// </summary>
+        public Rectangle[] RenderRects { get { return Frames[_currentFrameIndex].RenderRects; } set { } }
+
+
+        /// <summary>
+        /// All cells of the surface. Taken from the current animation frame.
+        /// </summary>
+        public Cell[] Cells { get { return Frames[_currentFrameIndex].Cells; } }
+
+        /// <summary>
+        /// Cells that will be rendered. Taken from the current animation frame. Set not implemented.
+        /// </summary>
+        public Cell[] RenderCells { get { return Frames[_currentFrameIndex].RenderCells; } set { } }
+
+        /// <summary>
+        /// The default foreground for glyphs on this surface. Taken from the current animation frame. Set not implemented.
+        /// </summary>
+        public Color DefaultForeground { get { return Frames[_currentFrameIndex].DefaultForeground; } set { } }
+
+        /// <summary>
+        /// The default background for glyphs on this surface. Taken from the current animation frame. Set not implemented.
+        /// </summary>
+        public Color DefaultBackground { get { return Frames[_currentFrameIndex].DefaultBackground; } set { } }
+
+        /// <summary>
+        /// A tint used in rendering.
+        /// </summary>
+        [DataMember]
+        public Color Tint { get; set; } = Color.Transparent;
+
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        public Rectangle RenderArea { get { return Frames[_currentFrameIndex].RenderArea; } set { } }
+
         #endregion
 
         #region Constructors
@@ -168,7 +211,7 @@
         /// <param name="name">The name of the animation.</param>
         /// <param name="width">The width of each frame this animation wil have.</param>
         /// <param name="height">The height of each frame this animation wil have.</param>
-        public Animation(string name, int width, int height)
+        public AnimatedTextSurface(string name, int width, int height)
         {
             Width = width;
             Height = height;
@@ -290,9 +333,24 @@
             Serializer.Save(this, file, new System.Type[] { typeof(List<TextSurface>) });
         }
 
-        public static Animation Load(string file)
+        public static AnimatedTextSurface Load(string file)
         {
-            return Serializer.Load<Animation>(file, new System.Type[] { typeof(List<TextSurface>) });
+            return Serializer.Load<AnimatedTextSurface>(file, new System.Type[] { typeof(List<TextSurface>) });
+        }
+
+        public bool IsValidCell(int x, int y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsValidCell(int x, int y, out int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Cell GetCell(int x, int y)
+        {
+            throw new NotImplementedException();
         }
     }
 

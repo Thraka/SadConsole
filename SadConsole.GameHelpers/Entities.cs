@@ -17,11 +17,11 @@ namespace SadConsole.GameHelpers
         /// <param name="frames"></param>
         /// <param name="blankChance"></param>
         /// <returns></returns>
-        public static SadConsole.Entities.Entity CreateStaticEntity(int width, int height, int frames, double blankChance)
+        public static Consoles.AnimatedTextSurface CreateStaticEntity(int width, int height, int frames, double blankChance)
         {
-            SadConsole.Entities.Entity entity = new SadConsole.Entities.Entity(width, height);
-            SadConsole.Entities.Animation animation = new SadConsole.Entities.Animation("default", width, height);
-            
+            //SadConsole.Entities.Entity entity = new SadConsole.Entities.Entity(width, height);
+            //SadConsole.Entities.Animation animation = new SadConsole.Entities.Animation("default", width, height);
+            var animation = new Consoles.AnimatedTextSurface("default", width, height);
 
             for (int f = 0; f < frames; f++)
             {
@@ -47,11 +47,12 @@ namespace SadConsole.GameHelpers
             animation.AnimationDuration = 1;
             animation.Repeat = true;
 
-            entity.AddAnimation(animation);
-            entity.SetActiveAnimation(animation);
-            entity.Start();
+            //entity.AddAnimation(animation);
+            //entity.SetActiveAnimation(animation);
+            //entity.Start();
+            animation.Start();
 
-            return entity;
+            return animation;
         }
     }
 }

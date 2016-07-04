@@ -49,14 +49,14 @@
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
-                                        new CustomConsoles.CursorConsole(),
-                                        new CustomConsoles.DOSConsole(),
-                                        new CustomConsoles.SceneProjectionConsole(),
-                                        new CustomConsoles.ControlsTest(),
-                                        new CustomConsoles.StaticConsole(),
-                                        new CustomConsoles.StretchedConsole(), 
-                                        new CustomConsoles.BorderedConsole(), 
+                                       // new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
+                                        //new CustomConsoles.CursorConsole(),
+                                        //new CustomConsoles.DOSConsole(),
+                                        //new CustomConsoles.SceneProjectionConsole(),
+                                        //new CustomConsoles.ControlsTest(),
+                                        //new CustomConsoles.StaticConsole(),
+                                        //new CustomConsoles.StretchedConsole(), 
+                                        //new CustomConsoles.BorderedConsole(), 
                                         new CustomConsoles.EntityAndConsole(),
                                         new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.WorldGenerationConsole(),

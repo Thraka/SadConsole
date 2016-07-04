@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\AnimatedTextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\CachedTextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Cursor.cs" />
@@ -47,9 +48,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Effects\ICellEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Recolor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities\Animation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities\Entity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities\IEntityRender.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
