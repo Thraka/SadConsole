@@ -44,7 +44,7 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="surface">The surface to render.</param>
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
-        public virtual void Render(ITextSurface surface, Matrix renderingMatrix)
+        public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
 
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
@@ -92,7 +92,7 @@ namespace SadConsole.Consoles
         /// <param name="surface">The surface to render.</param>
         /// <param name="position">Calculates the rendering position on the screen based on the size of the <paramref name="surface"/> parameter.</param>
         /// <param name="usePixelPositioning">Ignores the <paramref name="surface"/> font for positioning and instead treats the <paramref name="position"/> parameter in pixels.</param>
-        public void Render(ITextSurface surface, Point position, bool usePixelPositioning = false)
+        public void Render(ITextSurfaceRendered surface, Point position, bool usePixelPositioning = false)
         {
             Matrix matrix;
 

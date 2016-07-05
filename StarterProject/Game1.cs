@@ -177,8 +177,8 @@
         }
 
 
-        SadConsole.Consoles.ITextSurface tempSurface;
-        SadConsole.Consoles.ITextSurface tempSurface2;
+        SadConsole.Consoles.ITextSurfaceRendered tempSurface;
+        SadConsole.Consoles.ITextSurfaceRendered tempSurface2;
         SadConsole.Consoles.TextSurfaceRenderer tempRenderer;
         SadConsole.Consoles.Console tempConsole;
         SadConsole.Consoles.Console tempConsole2;

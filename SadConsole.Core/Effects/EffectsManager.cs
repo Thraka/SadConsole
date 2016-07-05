@@ -247,7 +247,7 @@ namespace SadConsole.Effects
         /// <param name="file">The file to load from.</param>
         /// <param name="backingSurface">The surface the effects were originally (or will be) associated with.</param>
         /// <returns></returns>
-        public static EffectsManager Load(string file, ITextSurface backingSurface)
+        public static EffectsManager Load(string file, ITextSurfaceRendered backingSurface)
         {
             return EffectsManagerSerialized.Load(file, backingSurface);
         }

@@ -37,7 +37,7 @@
 
         public Microsoft.Xna.Framework.Point Position { get; set; }
 
-        public ITextSurface TextSurface
+        public ITextSurfaceRendered TextSurface
         {
             get
             {

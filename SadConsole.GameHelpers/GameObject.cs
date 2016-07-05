@@ -9,130 +9,98 @@ using System.Threading.Tasks;
 
 namespace SadConsole.GameHelpers
 {
+    /// <summary>
+    /// A positionable and animated game object.
+    /// </summary>
     public class GameObject
     {
-        [IgnoreDataMember]
-        private string name;
+        protected Consoles.TextSurfaceRenderer renderer;
+        protected bool repositionRects;
 
         /// <summary>
-        /// The name of the game object.
+        /// Where the console should be located on the screen.
         /// </summary>
-        public string Name { get { return name; } set { name = value != null ? value.ToLower() : null; } }
+        protected Point position;
 
         /// <summary>
-        /// How the game object looks in debug mode.
+        /// Gets or sets the position to render the cells.
         /// </summary>
-        public CellAppearance Appearance { get; set; }
-
-        /// <summary>
-        /// Key-value pairs.
-        /// </summary>
-        public List<Setting> Settings { get; set; }
-
-        /// <summary>
-        /// The area of the game object. Can be a single point with a width and height of 1.
-        /// </summary>
-        public Rectangle Area { get; set; }
-
-        /// <summary>
-        /// When true, it means the <see cref="Area"/> has a width and height of 1 and the game object can be treated as a single positioned item.
-        /// </summary>
-        public bool IsPoint { get { return Area.Width == 1 && Area.Height == 1; } }
-
-        /// <summary>
-        /// Creates a new game object.
-        /// </summary>
-        public GameObject()
+        public Point Position
         {
-            Settings = new List<Setting>();
-            Appearance = new CellAppearance();
-            Appearance.GlyphIndex = 1;
-            Name = "New";
+            get { return position; }
+            set { Point previousPosition = position; position = value; if (repositionRects) OffsetRects(value); OnPositionChanged(previousPosition); }
         }
 
         /// <summary>
-        /// Returns a brand new copy of this object.
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
         /// </summary>
-        /// <returns>A new game object.</returns>
-        public GameObject Clone()
-        {
-            var newObject = new GameObject();
-            CopyTo(newObject);
-            return newObject;
-        }
+        public bool UsePixelPositioning { get; set; } = false;
 
         /// <summary>
-        /// Copies the values of this game object into the <paramref name="destination"/>.
+        /// The current animation.
         /// </summary>
-        /// <param name="destination">The target game object to copy this one in to.</param>
-        public void CopyTo(GameObject destination)
-        {
-            destination.Name = Name;
-            destination.Appearance = Appearance.Clone();
-            destination.Settings = new List<Setting>(Settings.Count);
-            destination.Area = Area;
+        public Consoles.AnimatedTextSurface Animation { get; set; }
 
-            foreach (var item in Settings)
+        /// <summary>
+        /// When false, this <see cref="GameObject"/> won't be rendered.
+        /// </summary>
+        public bool IsVisible { get; set; }
+
+        /// <summary>
+        /// When true, the position of the game object will offset all of the surface rects instead of using a positioning matrix for rendering.
+        /// </summary>
+        public bool RepositionRects
+        {
+            get { return repositionRects; }
+            set
             {
-                destination.Settings.Add(new Setting() { Name = item.Name, Value = item.Value });
+                repositionRects = value;
+                if (value)
+                    OffsetRects(position);
+                else
+                    OffsetRects(position, true);
             }
         }
 
         /// <summary>
-        /// Returns true when this object has a setting with the <paramref name="name"/>.
+        /// Called when the <see cref="Position" /> property changes.
         /// </summary>
-        /// <param name="name">The name of the setting.</param>
-        /// <returns>True when the setting exists; otherwise false.</returns>
-        public bool HasSetting(string name)
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
+
+        protected void OffsetRects(Point position, bool force = false)
         {
-            return Settings.Where(s => s.Name == name).FirstOrDefault() != null;
+            if (repositionRects || force)
+            {
+
+            }
         }
 
         /// <summary>
-        /// Gets a setting value by name.
+        /// Creates a new GameObject.
         /// </summary>
-        /// <param name="name">The name of the setting.</param>
-        /// <returns>The value of the setting.</returns>
-        public string GetSetting(string name)
+        public GameObject()
         {
-            return Settings.Where(s => s.Name == name).Select(s => s.Value).FirstOrDefault();
+            renderer = new Consoles.TextSurfaceRenderer();
         }
 
         /// <summary>
-        /// Returns all setting values.
+        /// Draws the game object.
         /// </summary>
-        /// <param name="name">The name of the setting.</param>
-        /// <returns>The setting values.</returns>
-        public IEnumerable<string> GetSettings(string name)
+        public void Render()
         {
-            return Settings.Where(s => s.Name == name).Select(s => s.Value);
+            if (IsVisible)
+            {
+                renderer.Render(Animation, position, UsePixelPositioning);   
+            }
         }
 
         /// <summary>
-        /// Called when game object is loaded.
+        /// Updates the animation.
         /// </summary>
-        /// <param name="surface">The surface that owns this object.</param>
-        public virtual void Loaded(GameObjectTextSurface surface)
+        public void Update()
         {
-
-        }
-
-        /// <summary>
-        /// Called when game object is .
-        /// </summary>
-        /// <param name="surface">The surface that owns this object.</param>
-        public virtual void Process(GameObjectTextSurface surface)
-        {
-
-        }
-
-        /// <summary>
-        /// The name of the game object.
-        /// </summary>
-        /// <returns>The name.</returns>
-        public override string ToString()
-        {
-            return Name;
+            Animation.Update();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace SadConsole.Consoles
     /// </summary>
     public class TextSurfaceView : TextSurface
     {
-        private ITextSurface data;
+        private ITextSurfaceRendered data;
         protected Rectangle originalArea;
         
         /// <summary>
@@ -19,7 +19,7 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="surface">The source cell data.</param>
         /// <param name="area">The area of the text surface.</param>
-        public TextSurfaceView(ITextSurface surface, Rectangle area): base(area.Width, area.Height, surface.Font)
+        public TextSurfaceView(ITextSurfaceRendered surface, Rectangle area): base(area.Width, area.Height, surface.Font)
         {
             data = surface;
             DefaultBackground = surface.DefaultBackground;
@@ -70,7 +70,7 @@ namespace SadConsole.Consoles
         /// <param name="file">The source file.</param>
         /// <param name="surfaceBase">The surface this view was created from.</param>
         /// <returns></returns>
-        public static TextSurfaceView Load(string file, ITextSurface surfaceBase)
+        public static TextSurfaceView Load(string file, ITextSurfaceRendered surfaceBase)
         {
             return Serialized.Load(file, surfaceBase);
         }
@@ -125,12 +125,12 @@ namespace SadConsole.Consoles
             }
 
             /// <summary>
-            /// Loads a <see cref="TextSurfaceView"/> from a file and existing <see cref="ITextSurface"/>.
+            /// Loads a <see cref="TextSurfaceView"/> from a file and existing <see cref="ITextSurfaceRendered"/>.
             /// </summary>
             /// <param name="file">The source file.</param>
             /// <param name="surfaceHydrate">The surface this view was originally from.</param>
             /// <returns>A surface view.</returns>
-            public static TextSurfaceView Load(string file, ITextSurface surfaceHydrate)
+            public static TextSurfaceView Load(string file, ITextSurfaceRendered surfaceHydrate)
             {
                 Serialized data = Serializer.Load<Serialized>(file);
                 Font font;

@@ -178,6 +178,16 @@
                 _renderer.AfterRenderCallback = this.OnAfterRender;
             }
         }
+        protected ITextSurfaceRendered textSurface;
+
+        /// <summary>
+        /// The text surface to be rendered or changed.
+        /// </summary>
+        public new ITextSurfaceRendered TextSurface
+        {
+            get { return textSurface; }
+            set { textSurface = value; base.TextSurface = value; }
+        }
 
         /// <summary>
         /// Gets or sets the position to render the cells.
@@ -256,7 +266,7 @@
 
         public Console(int width, int height, Font font) : this(new TextSurface(width, height, font)) { }
 
-        public Console(ITextSurface textData): base(textData)
+        public Console(ITextSurfaceRendered textData): base(textData)
         {
             _virtualCursor = new Cursor(this);
             Renderer = new TextSurfaceRenderer();
@@ -583,7 +593,7 @@
             [DataMember]
             public bool CanUseMouse;
             [DataMember]
-            public ITextSurface TextSurface;
+            public ITextSurfaceRendered TextSurface;
             [DataMember]
             public bool DoUpdate;
             [DataMember]

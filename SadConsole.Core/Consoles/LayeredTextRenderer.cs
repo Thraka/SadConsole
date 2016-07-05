@@ -16,7 +16,7 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="surface">The <see cref="LayeredTextSurface"/> to render.</param>
         /// <param name="renderingMatrix">Rendering matrix used with the sprite batch.</param>
-        public override void Render(ITextSurface surface, Matrix renderingMatrix)
+        public override void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
             var layers = ((LayeredTextSurface)surface).GetLayers();
 

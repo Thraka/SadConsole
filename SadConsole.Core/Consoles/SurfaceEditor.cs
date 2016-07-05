@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 namespace SadConsole.Consoles
 {
     /// <summary>
-    /// Provides methods to manipulate a <see cref="ITextSurface"/>.
+    /// Provides methods to manipulate a <see cref="ITextSurfaceRendered"/>.
     /// </summary>
     [DataContract]
     public class SurfaceEditor
@@ -1066,44 +1066,6 @@ namespace SadConsole.Consoles
                     }
                 }
             }
-        }
-        #endregion
-        
-        #region CopyTo
-        /// <summary>
-        /// Copies the contents of the cell surface to the destination.
-        /// </summary>
-        /// <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
-        /// <param name="destination">The destination surface.</param>
-        public void Copy(ITextSurface destination)
-        {
-            Consoles.TextSurface.Copy(textSurface, destination);
-        }
-
-        /// <summary>
-        /// Copies the contents of the cell surface to the destination at the specified x,y.
-        /// </summary>
-        /// <param name="x">The x coordinate of the destination.</param>
-        /// <param name="y">The y coordinate of the destination.</param>
-        /// <param name="destination">The destination surface.</param>
-        public void Copy(ITextSurface destination, int x, int y)
-        {
-            Consoles.TextSurface.Copy(textSurface, destination, x, y);
-        }
-
-        /// <summary>
-        /// Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
-        /// </summary>
-        /// <param name="x">The x coordinate to start from.</param>
-        /// <param name="y">The y coordinate to start from.</param>
-        /// <param name="width">The width to copy from.</param>
-        /// <param name="height">The height to copy from.</param>
-        /// <param name="destination">The destination surface.</param>
-        /// <param name="destinationX">The x coordinate to copy to.</param>
-        /// <param name="destinationY">The y coordinate to copy to.</param>
-        public void Copy(int x, int y, int width, int height, ITextSurface destination, int destinationX, int destinationY)
-        {
-            Consoles.TextSurface.Copy(textSurface, x, y, width, height, destination, destinationX, destinationY);
         }
         #endregion
 

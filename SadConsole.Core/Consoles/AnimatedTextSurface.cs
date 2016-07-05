@@ -10,7 +10,7 @@
     /// Animates a list of frames.
     /// </summary>
     [DataContract]
-    public class AnimatedTextSurface: ITextSurface
+    public class AnimatedTextSurface: ITextSurfaceRendered
     {
         public event System.EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
 

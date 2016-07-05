@@ -8,14 +8,29 @@
     /// </summary>
     public interface IConsole : IInput, IDraw
     {
+        /// <summary>
+        /// The top-left coordinate of the screen where the console is located.
+        /// </summary>
         Point Position { get; set; }
 
-        ITextSurface TextSurface { get; set; }
+        /// <summary>
+        /// The surface of the console.
+        /// </summary>
+        ITextSurfaceRendered TextSurface { get; set; }
 
+        /// <summary>
+        /// A controllable cursor for the console.
+        /// </summary>
         Cursor VirtualCursor { get; }
 
+        /// <summary>
+        /// A parent list containing the console. Optional.
+        /// </summary>
         IConsoleList Parent { get; set; }
 
+        /// <summary>
+        /// When true, changes the <see cref="Position"/> to be in pixels rather than cell coordinates.
+        /// </summary>
         bool UsePixelPositioning { get; set; }
 
         /// <summary>

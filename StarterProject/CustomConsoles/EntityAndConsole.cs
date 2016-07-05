@@ -16,6 +16,7 @@ namespace StarterProject.CustomConsoles
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
 
+        private SadConsole.PositionedCell _player;
         //private Player _player;
         private Point _playerPreviousPosition;
         private AnimatedTextSurface animation = SadConsole.GameHelpers.Animation.CreateStatic(5, 5, 20, 0.3d);
@@ -23,6 +24,11 @@ namespace StarterProject.CustomConsoles
         public EntityAndConsole()
             : base(80, 25)
         {
+            _player = new SadConsole.PositionedCell();
+            _player.GlyphIndex = 1;
+            _player.X = textSurface.Width / 2;
+            _player.Y = textSurface.Height / 2;
+
             // Create out player entity, and center it.
             //_player = new Player();
             //_player.Position = new Microsoft.Xna.Framework.Point(textSurface.Width / 2, textSurface.Height / 2);
@@ -38,9 +44,6 @@ namespace StarterProject.CustomConsoles
 
         public override void Update()
         {
-            // Update the entities.
-            //_player.Update();
-            animation.Update();
             base.Update();
         }
 
@@ -49,9 +52,12 @@ namespace StarterProject.CustomConsoles
             if (IsVisible)
             {
                 base.Render();
-                
-                //_player.Render();
             }
+        }
+
+        protected override void OnAfterRender(SpriteBatch batch)
+        {
+            
         }
 
         //public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)

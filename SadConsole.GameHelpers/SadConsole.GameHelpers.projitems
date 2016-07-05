@@ -53,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\NoiseLookupTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Animation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Generator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\MapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\River.cs" />

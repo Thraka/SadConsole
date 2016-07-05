@@ -112,7 +112,7 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Changes the active layer, which sets the current cell data for <see cref="ITextSurface"/>.
+        /// Changes the active layer, which sets the current cell data for <see cref="ITextSurfaceRendered"/>.
         /// </summary>
         /// <param name="index">The zero-based index of the layer.</param>
         public void SetActiveLayer(int index)
@@ -126,7 +126,7 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Changes the active layer, which sets the current cell data for <see cref="ITextSurface"/>.
+        /// Changes the active layer, which sets the current cell data for <see cref="ITextSurfaceRendered"/>.
         /// </summary>
         /// <param name="layer">The layer to set active.</param>
         public void SetActiveLayer(Layer layer)
@@ -219,7 +219,7 @@ namespace SadConsole.Consoles
             return layer;
         }
 
-        public Layer Import(ITextSurface surface)
+        public Layer Import(ITextSurfaceRendered surface)
         {
             if (surface.Cells.Length != width * height)
                 throw new Exception("The length of cells passed in must match the width * height of this surface");

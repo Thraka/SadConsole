@@ -33,7 +33,7 @@ namespace SadConsole.Consoles
         /// <param name="surface"></param>
         /// <param name="renderingMatrix"></param>
 
-        public override void Render(ITextSurface surface, Matrix renderingMatrix)
+        public override void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
             if (IsModal)
             {

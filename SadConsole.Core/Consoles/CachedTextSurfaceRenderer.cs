@@ -33,7 +33,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Creates a new renderer.
         /// </summary>
-        public CachedTextSurfaceRenderer(ITextSurface source)
+        public CachedTextSurfaceRenderer(ITextSurfaceRendered source)
         {
             Batch = new SpriteBatch(Engine.Device);
             Update(source);
@@ -43,7 +43,7 @@ namespace SadConsole.Consoles
         /// Updates the cache based on the <paramref name="source"/> surface.
         /// </summary>
         /// <param name="source">The surface to render and cache.</param>
-        public void Update(ITextSurface source)
+        public void Update(ITextSurfaceRendered source)
         {
             if (renderedConsole != null)
                 renderedConsole.Dispose();
@@ -57,11 +57,11 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ITextSurface)"/> method.
+        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ITextSurfaceRendered)"/> method.
         /// </summary>
         /// <param name="surface">Used only for tinting.</param>
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
-        public virtual void Render(ITextSurface surface, Matrix renderingMatrix)
+        public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
@@ -83,12 +83,12 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ITextSurface)"/> method.
+        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ITextSurfaceRendered)"/> method.
         /// </summary>
         /// <param name="surface">Only used for tinting and calculation the position from the font.</param>
         /// <param name="position">Calculates the rendering position on the screen based on the size of the <paramref name="surface"/> parameter.</param>
         /// <param name="usePixelPositioning">Ignores the <paramref name="surface"/> font for positioning and instead treats the <paramref name="position"/> parameter in pixels.</param>
-        public void Render(ITextSurface surface, Point position, bool usePixelPositioning = false)
+        public void Render(ITextSurfaceRendered surface, Point position, bool usePixelPositioning = false)
         {
             Matrix matrix;
 
