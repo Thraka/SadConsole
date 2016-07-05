@@ -31,7 +31,7 @@
             //IsFixedTimeStep = false;
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
-            var rootConsole = SadConsole.Engine.Initialize(_graphics, "Fonts/IBM.font", 80, 25);
+            var rootConsole = SadConsole.Engine.Initialize(_graphics, "IBM.font", 80, 25);
 
             Theme.SetupThemes();
 
