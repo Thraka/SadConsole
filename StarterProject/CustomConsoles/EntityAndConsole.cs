@@ -18,7 +18,7 @@ namespace StarterProject.CustomConsoles
 
         //private Player _player;
         private Point _playerPreviousPosition;
-        private AnimatedTextSurface animation = SadConsole.GameHelpers.Entities.CreateStaticEntity(5, 5, 20, 0.1d);
+        private AnimatedTextSurface animation = SadConsole.GameHelpers.Animation.CreateStatic(5, 5, 20, 0.3d);
 
         public EntityAndConsole()
             : base(80, 25)
@@ -31,7 +31,9 @@ namespace StarterProject.CustomConsoles
             // Setup this console to accept keyboard input.
             CanUseKeyboard = true;
             IsVisible = false;
+            
             TextSurface = animation;
+            
         }
 
         public override void Update()

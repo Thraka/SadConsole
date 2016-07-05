@@ -5,9 +5,9 @@ using System.Text;
 namespace SadConsole.GameHelpers
 {
     /// <summary>
-    /// Helpers regarding <see cref="SadConsole.Entities.Entity"/> types and animations.
+    /// Helpers related to <see cref="Consoles.AnimatedTextSurface"/> animations.
     /// </summary>
-    public static class Entities
+    public static class Animation
     {
         /// <summary>
         /// 
@@ -17,15 +17,14 @@ namespace SadConsole.GameHelpers
         /// <param name="frames"></param>
         /// <param name="blankChance"></param>
         /// <returns></returns>
-        public static Consoles.AnimatedTextSurface CreateStaticEntity(int width, int height, int frames, double blankChance)
+        public static Consoles.AnimatedTextSurface CreateStatic(int width, int height, int frames, double blankChance)
         {
-            //SadConsole.Entities.Entity entity = new SadConsole.Entities.Entity(width, height);
-            //SadConsole.Entities.Animation animation = new SadConsole.Entities.Animation("default", width, height);
             var animation = new Consoles.AnimatedTextSurface("default", width, height);
 
             for (int f = 0; f < frames; f++)
             {
                 var frame = animation.CreateFrame();
+                var editor = new Consoles.SurfaceEditor(frame);
 
                 for (int x = 0; x < width; x++)
                 {
@@ -36,7 +35,6 @@ namespace SadConsole.GameHelpers
                         if (Engine.Random.NextDouble() <= blankChance)
                             character = 32;
 
-                        var editor = new Consoles.SurfaceEditor(frame);
                         editor.SetGlyph(x, y, character);
                         editor.SetForeground(x, y, Microsoft.Xna.Framework.Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
                     }
@@ -46,10 +44,7 @@ namespace SadConsole.GameHelpers
 
             animation.AnimationDuration = 1;
             animation.Repeat = true;
-
-            //entity.AddAnimation(animation);
-            //entity.SetActiveAnimation(animation);
-            //entity.Start();
+            
             animation.Start();
 
             return animation;

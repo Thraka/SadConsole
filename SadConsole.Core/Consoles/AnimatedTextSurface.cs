@@ -49,7 +49,7 @@
         /// <summary>
         /// All frames of the animation
         /// </summary>
-        [DataMember]
+        [DataMember(Order = 0)]
         public List<TextSurface> Frames = new List<TextSurface>();
 
         /// <summary>
@@ -98,7 +98,7 @@
             }
         }
 
-        [DataMember]
+        [DataMember(Order = 1)]
         public Font Font
         {
             get { return _font; }
@@ -330,12 +330,12 @@
 
         public void Save(string file)
         {
-            Serializer.Save(this, file, new System.Type[] { typeof(List<TextSurface>) });
+            Serializer.Save(this, file, new System.Type[] { typeof(List<TextSurface>), typeof(Font) });
         }
 
         public static AnimatedTextSurface Load(string file)
         {
-            return Serializer.Load<AnimatedTextSurface>(file, new System.Type[] { typeof(List<TextSurface>) });
+            return Serializer.Load<AnimatedTextSurface>(file, new System.Type[] { typeof(List<TextSurface>), typeof(Font) });
         }
 
         /// <summary>

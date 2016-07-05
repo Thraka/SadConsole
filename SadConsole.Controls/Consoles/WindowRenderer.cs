@@ -38,7 +38,7 @@ namespace SadConsole.Consoles
             if (IsModal)
             {
                 Batch.Begin(samplerState: SamplerState.PointClamp);
-                Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Engine.Device.PresentationParameters.BackBufferWidth, Engine.Device.PresentationParameters.BackBufferHeight), surface.Font.CharacterIndexRects[surface.Font.SolidCharacterIndex], ModalTint);
+                Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Engine.Device.PresentationParameters.BackBufferWidth, Engine.Device.PresentationParameters.BackBufferHeight), surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], ModalTint);
                 Batch.End();
             }
 
