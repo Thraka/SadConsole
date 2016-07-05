@@ -137,12 +137,12 @@
         /// <summary>
         /// Allows this console to accept keyboard input.
         /// </summary>
-        public bool CanUseKeyboard { get; set; }
+        public bool CanUseKeyboard { get; set; } = true;
 
         /// <summary>
         /// Allows this console to accept mouse input.
         /// </summary>
-        public bool CanUseMouse { get; set; }
+        public bool CanUseMouse { get; set; } = true;
 
         /// <summary>
         /// Allows this console to be focusable.
