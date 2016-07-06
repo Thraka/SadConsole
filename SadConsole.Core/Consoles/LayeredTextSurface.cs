@@ -56,7 +56,7 @@ namespace SadConsole.Consoles
             /// <returns>A new <see cref="TextSurface"/> seeded by this layer data.</returns>
             public TextSurface ToTextSurface(int width, int height, Font font)
             {
-                return new TextSurface(width, height, font, Cells);
+                return new TextSurface(width, height, Cells, font);
             }
         }
 
@@ -87,7 +87,7 @@ namespace SadConsole.Consoles
         /// <param name="width">Width of the layers.</param>
         /// <param name="height">Height of the layers.</param>
         /// <param name="layers">The count of layers.</param>
-        public LayeredTextSurface(int width, int height, int layers) : this(width, height, layers, Engine.DefaultFont) { }
+        public LayeredTextSurface(int width, int height, int layers) : this(width, height, Engine.DefaultFont, layers) { }
 
         /// <summary>
         /// Creates a new layer text surface with the specified font.
@@ -96,19 +96,14 @@ namespace SadConsole.Consoles
         /// <param name="height">Height of the layers.</param>
         /// <param name="layers">The count of layers.</param>
         /// <param name="font">The font.</param>
-        public LayeredTextSurface(int width, int height, int layers, Font font)
+        public LayeredTextSurface(int width, int height, Font font, int layers): base(width, height, font)
         {
             this.layers = new List<Layer>(layers);
 
             for (int i = 0; i < layers; i++)
                 this.layers.Add(new Layer());
 
-            this.width = width;
-            this.height = height;
-            InitializeCells();
-            Font = font;
             SetActiveLayer(0);
-            RenderArea = new Rectangle(0, 0, width, height);
         }
 
         /// <summary>

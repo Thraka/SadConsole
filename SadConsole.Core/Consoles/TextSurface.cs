@@ -12,7 +12,7 @@ namespace SadConsole.Consoles
     /// The base class for a text surface. Provides code for the view port and basic cell access.
     /// </summary>
     [DataContract]
-    public class TextSurface : IEnumerable<Cell>, ITextSurfaceRendered
+    public class TextSurface : TextSurfaceBasic, IEnumerable<Cell>, ITextSurfaceRendered
     {
         [DataMember(Name = "FontName")]
         protected string fontName;
@@ -24,20 +24,7 @@ namespace SadConsole.Consoles
 
         [DataMember(Name = "Area")]
         protected Rectangle area;
-
-        /// <summary>
-        /// An array of all cells in this surface.
-        /// </summary>
-        /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="width"/> and <see cref="height"/> properties instead. The cell data can be changed.</remarks>
-        [DataMember(Name = "Cells")]
-        protected Cell[] cells;
-
-        [DataMember(Name = "Width")]
-        protected int width = 1;
-
-        [DataMember(Name = "Height")]
-        protected int height = 1;
-
+        
         /// <summary>
         /// Gets a cell based on it's coordinates on the surface.
         /// </summary>
@@ -65,35 +52,7 @@ namespace SadConsole.Consoles
         /// The total cells for this surface.
         /// </summary>
         public int CellCount { get { return cells.Length; } }
-
-        /// <summary>
-        /// The default foreground for glyphs on this surface.
-        /// </summary>
-        [DataMember]
-        public Color DefaultForeground { get; set; } = Color.White;
-
-        /// <summary>
-        /// The default background for glyphs on this surface.
-        /// </summary>
-        [DataMember]
-        public Color DefaultBackground { get; set; } = Color.Transparent;
-
-        /// <summary>
-        /// How many cells wide the surface is.
-        /// </summary>
-        public int Width
-        {
-            get { return width; }
-        }
-
-        /// <summary>
-        /// How many cells high the surface is.
-        /// </summary>
-        public int Height
-        {
-            get { return height; }
-        }
-
+        
         /// <summary>
         /// Font used with rendering.
         /// </summary>
@@ -109,12 +68,7 @@ namespace SadConsole.Consoles
         /// Destination rectangles for rendering.
         /// </summary>
         public Rectangle[] RenderRects { get; set; }
-
-        /// <summary>
-        /// All cells of the surface.
-        /// </summary>
-        public Cell[] Cells { get { return cells; } }
-
+        
         /// <summary>
         /// Cells that will be rendered.
         /// </summary>
@@ -165,13 +119,10 @@ namespace SadConsole.Consoles
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">THe height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        public TextSurface(int width, int height, Font font)
+        public TextSurface(int width, int height, Font font): base(width, height)
         {
-            this.width = width;
-            this.height = height;
-            InitializeCells();
+            area = new Rectangle(0, 0, width, height);
             Font = font;
-            RenderArea = new Rectangle(0, 0, width, height);
         }
 
         /// <summary>
@@ -181,37 +132,20 @@ namespace SadConsole.Consoles
         /// <param name="height">THe height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells"></param>
-        public TextSurface(int width, int height, Font font, Cell[] initialCells)
+        public TextSurface(int width, int height, Cell[] initialCells, Font font) : base(width, height, initialCells)
         {
-            if (initialCells.Length != width * height)
-                throw new ArgumentOutOfRangeException("initialCells", "initialCells length must equal width * height");
-
-            this.width = width;
-            this.height = height;
-            cells = RenderCells = initialCells;
+            area = new Rectangle(0, 0, width, height);
+            Font = font;
         }
 
         /// <summary>
-        /// Do your own setup.
+        /// Sets <see cref="RenderCells"/> to <see cref="TextSurfaceBasic.cells"/>.
         /// </summary>
-        protected TextSurface() { } 
-
-        /// <summary>
-        /// Initializes the cells. This method caches all of the rendering points and rectangles and initializes each cell.
-        /// </summary>
-        /// <param name="oldWidth">The old size of the surface in width. Used when resizing to preserve existing cells.</param>
-        protected virtual void InitializeCells()
+        protected override void InitializeCells()
         {
-            cells = new Cell[width * height];
-            RenderCells = cells;
+            base.InitializeCells();
 
-            for (int i = 0; i < cells.Length; i++)
-            {
-                cells[i] = new Cell();
-                cells[i].Foreground = this.DefaultForeground;
-                cells[i].Background = this.DefaultBackground;
-                cells[i].OnCreated();
-            }
+            RenderCells = cells;
         }
 
         /// <summary>

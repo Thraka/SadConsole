@@ -10,7 +10,7 @@
     /// Animates a list of frames.
     /// </summary>
     [DataContract]
-    public class AnimatedTextSurface: ITextSurfaceRendered
+    public class AnimatedTextSurface: TextSurface
     {
         public event System.EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
 
@@ -50,7 +50,7 @@
         /// All frames of the animation
         /// </summary>
         [DataMember(Order = 0)]
-        public List<TextSurface> Frames = new List<TextSurface>();
+        public List<TextSurfaceBasic> Frames = new List<TextSurfaceBasic>();
 
         /// <summary>
         /// The state of the animation.
@@ -73,7 +73,9 @@
         [DataMember]
         public bool Repeat { get; set; }
 
-
+        /// <summary>
+        /// When true, the <see cref="Update"/> method will advance the frames.
+        /// </summary>
         public bool IsPlaying { get { return _isPlaying; } }
 
         /// <summary>
@@ -95,22 +97,13 @@
             {
                 if (value < 0 || value >= Frames.Count)
                     _currentFrameIndex = 0;
+                else
+                    _currentFrameIndex = value;
+
+                UpdateFrameReferences();
             }
         }
-
-        [DataMember(Order = 1)]
-        public Font Font
-        {
-            get { return _font; }
-            set
-            {
-                _font = value;
-
-                for (int i = 0; i < Frames.Count; i++)
-                    Frames[i].Font = _font;
-            }
-        }
-
+        
         /// <summary>
         /// Indicates the animation is empty.
         /// </summary>
@@ -121,23 +114,11 @@
         /// </summary>
         [DataMember]
         public string Name { get; set; }
-
-        /// <summary>
-        /// Gets the width of the animation frames.
-        /// </summary>
-        [DataMember]
-        public int Width { get; private set; }
-
-        /// <summary>
-        /// Gets the height of the animation frames.
-        /// </summary>
-        [DataMember]
-        public int Height { get; private set; }
-
+        
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public TextSurface CurrentFrame
+        public TextSurfaceBasic CurrentFrame
         {
             get { return Frames[_currentFrameIndex]; }
         }
@@ -159,49 +140,7 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Pixel area of text surface. Taken from the current animation frame. Set not implemented.
-        /// </summary>
-        public Rectangle AbsoluteArea { get { return Frames[_currentFrameIndex].AbsoluteArea; } set { } }
-
-        /// <summary>
-        /// Destination rectangles for rendering. Taken from the current animation frame. Set not implemented.
-        /// </summary>
-        public Rectangle[] RenderRects { get { return Frames[_currentFrameIndex].RenderRects; } set { } }
-
-
-        /// <summary>
-        /// All cells of the surface. Taken from the current animation frame.
-        /// </summary>
-        public Cell[] Cells { get { return Frames[_currentFrameIndex].Cells; } }
-
-        /// <summary>
-        /// Cells that will be rendered. Taken from the current animation frame. Set not implemented.
-        /// </summary>
-        public Cell[] RenderCells { get { return Frames[_currentFrameIndex].RenderCells; } set { } }
-
-        /// <summary>
-        /// The default foreground for glyphs on this surface. Taken from the current animation frame. Set not implemented.
-        /// </summary>
-        public Color DefaultForeground { get { return Frames[_currentFrameIndex].DefaultForeground; } set { } }
-
-        /// <summary>
-        /// The default background for glyphs on this surface. Taken from the current animation frame. Set not implemented.
-        /// </summary>
-        public Color DefaultBackground { get { return Frames[_currentFrameIndex].DefaultBackground; } set { } }
-
-        /// <summary>
-        /// A tint used in rendering.
-        /// </summary>
-        [DataMember]
-        public Color Tint { get; set; } = Color.Transparent;
-
-        /// <summary>
-        /// Not implemented.
-        /// </summary>
-        public Rectangle RenderArea { get { return Frames[_currentFrameIndex].RenderArea; } set { } }
-
+        
         #endregion
 
         #region Constructors
@@ -209,28 +148,50 @@
         /// Creates a new animation with the specified name, width, and height.
         /// </summary>
         /// <param name="name">The name of the animation.</param>
-        /// <param name="width">The width of each frame this animation wil have.</param>
-        /// <param name="height">The height of each frame this animation wil have.</param>
-        public AnimatedTextSurface(string name, int width, int height)
+        /// <param name="width">The width of each frame this animation will have.</param>
+        /// <param name="height">The height of each frame this animation will have.</param>
+        /// <param name="font">The font used with this animation.</param>
+        public AnimatedTextSurface(string name, int width, int height, Font font): base(width, height, font)
         {
-            Width = width;
-            Height = height;
             Name = name;
         }
         #endregion
 
         #region Methods
         /// <summary>
+        /// Forces the area of this text surface to always be the full width and height.
+        /// </summary>
+        protected override void ResetArea()
+        {
+            // Sub views are not allowed on animated text surfaces. Enforce full view.
+            area = new Rectangle(0, 0, width, height);
+
+            base.ResetArea();
+        }
+
+        /// <summary>
+        /// Updates the base <see cref="TextSurface"/> render references to the current frame.
+        /// </summary>
+        protected void UpdateFrameReferences()
+        {
+            var frame = Frames[_currentFrameIndex];
+            RenderCells = frame.Cells;
+            DefaultBackground = frame.DefaultBackground;
+            DefaultForeground = frame.DefaultForeground;
+        }
+
+        /// <summary>
         /// Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
         /// </summary>
         /// <returns>The created frame.</returns>
-        public TextSurface CreateFrame()
+        public TextSurfaceBasic CreateFrame()
         {
             if (Frames == null)
-                Frames = new List<TextSurface>();
+                Frames = new List<TextSurfaceBasic>();
 
-            var frame = new TextSurface(Width, Height, _font);
+            var frame = new TextSurfaceBasic(Width, Height);
             Frames.Add(frame);
+            UpdateFrameReferences();
             return frame;
         }
 
@@ -271,7 +232,7 @@
         {
             CalculateFrameDuration();
             _isPlaying = true;
-            _currentFrameIndex = 0;
+            CurrentFrameIndex = 0;
             State = AnimationState.Restarted;
             State = AnimationState.Playing;
         }
@@ -307,6 +268,8 @@
                             State = AnimationState.Finished;
                         }
                     }
+
+                    UpdateFrameReferences();
                 }
             }
         }
@@ -322,72 +285,78 @@
 
         #endregion
 
-        [OnDeserializedAttribute]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            AnimationDuration = _animatedTime;
-        }
-
         public void Save(string file)
         {
-            Serializer.Save(this, file, new System.Type[] { typeof(List<TextSurface>), typeof(Font) });
+            Serialized.Save(this, file);
         }
 
         public static AnimatedTextSurface Load(string file)
         {
-            return Serializer.Load<AnimatedTextSurface>(file, new System.Type[] { typeof(List<TextSurface>), typeof(Font) });
+            return Serialized.Load(file);
         }
 
         /// <summary>
-        /// Tests if a cell is valid based on its x,y position.
+        /// Serialized instance of a <see cref="AnimatedTextSurface"/>.
         /// </summary>
-        /// <param name="x">The x coordinate of the cell to test.</param>
-        /// <param name="y">The y coordinate of the cell to test.</param>
-        /// <param name="index">If the cell is valid, the index of the cell when found.</param>
-        /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
-        public bool IsValidCell(int x, int y, out int index)
+        [DataContract]
+        public class Serialized
         {
-            if (x >= 0 && x < Frames[_currentFrameIndex].Width && y >= 0 && y < Frames[_currentFrameIndex].Height)
+            [DataMember]
+            public TextSurfaceBasic[] Frames;
+            [DataMember]
+            public int Width;
+            [DataMember]
+            public int Height;
+            [DataMember]
+            public float AnimationDuration;
+            [DataMember]
+            public string FontName;
+            [DataMember]
+            public Font.FontSizes FontSize;
+            [DataMember]
+            public string Name;
+            [DataMember]
+            public bool Repeat;
+
+            protected Serialized(AnimatedTextSurface surface)
             {
-                index = y * Frames[_currentFrameIndex].Width + x;
-                return true;
+                Frames = surface.Frames.ToArray();
+                Width = surface.width;
+                Height = surface.height;
+                AnimationDuration = surface.AnimationDuration;
+                Name = surface.Name;
+                FontName = surface.font.Name;
+                FontSize = surface.font.SizeMultiple;
+                Repeat = surface.Repeat;
             }
-            else
+
+            public static void Save(AnimatedTextSurface surface, string file)
             {
-                index = -1;
-                return false;
+                var animation = new Serialized(surface);
+                Serializer.Save(animation, file, new Type[] { typeof(List<TextSurfaceBasic>), typeof(Font) });
+            }
+
+            public static AnimatedTextSurface Load(string file)
+            {
+                var animation = Serializer.Load<Serialized>(file, new Type[] { typeof(List<TextSurfaceBasic>), typeof(Font) });
+
+                Font font;
+
+                // Try to find font
+                if (Engine.Fonts.ContainsKey(animation.FontName))
+                    font = Engine.Fonts[animation.FontName].GetFont(animation.FontSize);
+                else
+                    font = Engine.DefaultFont;
+
+                var animationSurface = new AnimatedTextSurface(animation.Name, animation.Width, animation.Height, font);
+                animationSurface.Frames = new List<TextSurfaceBasic>(animation.Frames);
+                animationSurface.UpdateFrameReferences();
+                animationSurface.AnimationDuration = animation.AnimationDuration;
+                animationSurface.Repeat = animation.Repeat;
+                return animationSurface;
             }
         }
 
-        /// <summary>
-        /// Tests if a cell is valid based on its x,y position.
-        /// </summary>
-        /// <param name="x">The x coordinate of the cell to test.</param>
-        /// <param name="y">The y coordinate of the cell to test.</param>
-        /// <param name="index">If the cell is valid, the index of the cell when found.</param>
-        /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
-        public bool IsValidCell(int x, int y)
-        {
-            if (x >= 0 && x < Frames[_currentFrameIndex].Width && y >= 0 && y < Frames[_currentFrameIndex].Height)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets a cell based on it's coordinates on the surface.
-        /// </summary>
-        /// <param name="x">The X coordinate.</param>
-        /// <param name="y">The Y coordinate.</param>
-        /// <returns>The indicated cell.</returns>
-        public Cell GetCell(int x, int y)
-        {
-            return Frames[_currentFrameIndex].GetCell(x, y);
-        }
     }
 
     /// <summary>
@@ -452,4 +421,10 @@
         /// </summary>
         Deactivated
     }
+
+
+
+
+
+
 }

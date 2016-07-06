@@ -37,7 +37,9 @@ namespace StarterProject.CustomConsoles
             // Setup this console to accept keyboard input.
             CanUseKeyboard = true;
             IsVisible = false;
-            
+            animation.Save("temp.anim");
+            animation = AnimatedTextSurface.Load("temp.anim");
+            animation.Start();
             TextSurface = animation;
             
         }
@@ -45,6 +47,7 @@ namespace StarterProject.CustomConsoles
         public override void Update()
         {
             base.Update();
+            animation.Update();
         }
 
         public override void Render()

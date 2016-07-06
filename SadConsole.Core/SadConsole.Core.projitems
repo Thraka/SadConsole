@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ITextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\LayeredTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\LayeredTextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurfaceBasic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\SurfaceEditor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\TextSurfaceRenderer.cs" />

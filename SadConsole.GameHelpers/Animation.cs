@@ -19,12 +19,13 @@ namespace SadConsole.GameHelpers
         /// <returns></returns>
         public static Consoles.AnimatedTextSurface CreateStatic(int width, int height, int frames, double blankChance)
         {
-            var animation = new Consoles.AnimatedTextSurface("default", width, height);
+            var animation = new Consoles.AnimatedTextSurface("default", width, height, Engine.DefaultFont);
+            var editor = new Consoles.SurfaceEditor(new Consoles.TextSurface(1, 1, Engine.DefaultFont));
 
             for (int f = 0; f < frames; f++)
             {
                 var frame = animation.CreateFrame();
-                var editor = new Consoles.SurfaceEditor(frame);
+                editor.TextSurface = frame;
 
                 for (int x = 0; x < width; x++)
                 {
