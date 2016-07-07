@@ -60,10 +60,21 @@ If you're migrating an existing 2.0 project to 3.0 here are some things to remem
 		- You can render animations as the surface of any console because of this
 	3. The GameHelpers library has a **SadConsole.Game.GameObject** type that acts like the old entity type.
 		- This type though is not part of the console system like entity was.
-3. Initialization is simpler. Use this line now. Now need to load a font or resize manually, it's all handled for you
+3. Initialization is simpler. Use this line now. No need to load a font or resize manually, it's all handled for you
 	
 	```csharp
 	var rootConsole = SadConsole.Engine.Initialize(_graphics, "IBM.font", 80, 25);
+	```
+
+	If you're using the game component, it has changed too:
+
+	```csharp
+	var sadConsoleComponent = new SadConsole.EngineGameComponent(this, graphics, "IBM.font", 80, 60, () =>
+    {
+		// ... do init stuff, no need to resize or load the font.
+	});
+
+	Components.Add(sadConsoleComponent);
 	```
 
 	Also not that Engine.Initialize will return a console to the specified screen size (in this case 80x25) and automatically adds it to the `SadConsole.Engine.ConsoleRenderStack`.
