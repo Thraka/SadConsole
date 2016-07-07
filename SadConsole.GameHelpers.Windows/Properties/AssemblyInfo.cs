@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SadConsole.Platforms.Windows.Game")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SadConsole.GameHelpers")]
+[assembly: AssemblyDescription("A helper library for SadConsole that provides things like world generation and game object management.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SadConsole.Platforms.Windows.Game")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("SadLogic")]
+[assembly: AssemblyProduct("SadConsole.GameHelpers")]
+[assembly: AssemblyCopyright("Copyright © 2016 Steve De George JR (Thraka)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
