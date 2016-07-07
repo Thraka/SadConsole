@@ -38,7 +38,7 @@ namespace Castle
             PrintTreasures(castleConsole);
             PrintMonsters(castleConsole);
             PrintScore();
-            this.CellData.Print(11, 24, "- Press any key -", Color.White);
+            Print(11, 24, "- Press any key -", Color.White);
         }
 
         private void PrintResult(GameResult result)
@@ -46,20 +46,20 @@ namespace Castle
             switch(result)
             {
                 case GameResult.Quit:
-                    this.CellData.Print(8, 1, "You've ended the game!", Color.White);
+                    Print(8, 1, "You've ended the game!", Color.White);
                     break;
                 case GameResult.Failed:
-                    this.CellData.Print(5, 1, "Your're have failed to Escape!", Color.White);
+                    Print(5, 1, "Your're have failed to Escape!", Color.White);
                     break;
                 case GameResult.Win:
-                    this.CellData.Print(5, 1, "You've Escaped the Castle!", Color.White);
+                    Print(5, 1, "You've Escaped the Castle!", Color.White);
                     break;
             }
         }
 
         private void PrintTreasures(CastleConsole castleConsole)
         {
-            this.CellData.Print(1, 5, "You have collected these Treasues...", Color.White);
+            Print(1, 5, "You have collected these Treasues...", Color.White);
 
             scoringItems = new Collection<CastleItem>();
             foreach(var item in castleConsole.ItemManager.CastleItems)
@@ -75,7 +75,7 @@ namespace Castle
 
             if(scoringItems.Count == 0)
             {
-                this.CellData.Print(17, 7, "NONE", Color.White);
+                Print(17, 7, "NONE", Color.White);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Castle
                 xPoint = xPoint -= scoringItems.Count;
                 foreach (var item in this.scoringItems)
                 {
-                    this.CellData.SetCharacter(xPoint, 7, item.Character, Color.White);
+                    SetGlyph(xPoint, 7, item.Character, Color.White);
                     xPoint += 2;
                 }
             }
@@ -92,7 +92,7 @@ namespace Castle
 
         private void PrintMonsters(CastleConsole castleConsole)
         {
-            this.CellData.Print(1, 11, "You have killed these Monsters......", Color.White);
+            Print(1, 11, "You have killed these Monsters......", Color.White);
             scoringMonsters = new Collection<Monster>();
 
             foreach(Monster monster in castleConsole.ItemManager.CastleMonsters)
@@ -108,7 +108,7 @@ namespace Castle
             
             if (scoringMonsters.Count == 0)
             {
-                this.CellData.Print(17, 13, "NONE", Color.White);
+                Print(17, 13, "NONE", Color.White);
             }
             else
             {
@@ -116,7 +116,7 @@ namespace Castle
                 xPoint = xPoint -= scoringMonsters.Count;
                 foreach (var item in this.scoringMonsters)
                 {
-                    this.CellData.SetCharacter(xPoint, 13, item.Character, Color.White);
+                    SetGlyph(xPoint, 13, item.Character, Color.White);
                     xPoint += 2;
                 }
             }
@@ -137,8 +137,8 @@ namespace Castle
             {
                 score += 100;
             }
-            this.CellData.Print(12, 20, String.Format("Your Score: {0}", score), Color.White);
-            this.CellData.Print(11, 21, "(1550 is perfect)", Color.White);
+            Print(12, 20, String.Format("Your Score: {0}", score), Color.White);
+            Print(11, 21, "(1550 is perfect)", Color.White);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
@@ -152,7 +152,7 @@ namespace Castle
                 }
                 if (playAgain == false)
                 {
-                    this.CellData.Print(8, 24, "PLAY AGAIN (Y/N)?     ", Color.White);
+                    Print(8, 24, "PLAY AGAIN (Y/N)?     ", Color.White);
                     playAgain = true;
                     return true;
                 }

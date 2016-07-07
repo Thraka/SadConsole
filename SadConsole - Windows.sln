@@ -47,6 +47,12 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Snake", "SampleGames\Snake\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake.Windows", "SampleGames\Snake\Platforms\Windows\Snake.Windows.csproj", "{F1046DE6-C3F6-4838-B9E1-2FF67292730E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castle", "Castle", "{695BDDEB-51D5-486E-84F4-9031786775B7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Castle", "SampleGames\Castle\Castle.shproj", "{BD5D2B21-2CD6-448D-ACD7-5B90DA247250}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle.Windows", "SampleGames\Castle\Platforms\Windows\Castle.Windows.csproj", "{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{00cc441c-44bb-4b15-babd-6831b65c31d8}*SharedItemsImports = 13
@@ -56,8 +62,10 @@ Global
 		SadConsole.Ansi\SadConsole.Ansi.projitems*{5fe599b4-4b47-46e7-931b-b01c2cae40d4}*SharedItemsImports = 13
 		StarterProject\StarterProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{7a8507b4-db2c-453e-a72b-2384175bdff1}*SharedItemsImports = 13
+		SampleGames\Castle\Castle.projitems*{99eb89b5-bab6-47cb-899d-55653fc2b8dc}*SharedItemsImports = 4
 		SadConsole.Core\SadConsole.Core.projitems*{9a7432d8-0c8b-4c46-b405-b6d1080e6811}*SharedItemsImports = 4
 		StarterProject\StarterProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
+		SampleGames\Castle\Castle.projitems*{bd5d2b21-2cd6-448d-acd7-5b90da247250}*SharedItemsImports = 13
 		SadConsole.Core\SadConsole.Core.projitems*{bddf43cd-1bde-472a-a3d9-a003a6bf14d9}*SharedItemsImports = 13
 		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{d348c254-ab16-4b48-9f61-2ffee51dfd4a}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{f1046de6-c3f6-4838-b9e1-2ff67292730e}*SharedItemsImports = 4
@@ -165,6 +173,22 @@ Global
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|MacOS.Build.0 = Release|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Windows.ActiveCfg = Release|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Windows.Build.0 = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Linux.ActiveCfg = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Linux.Build.0 = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|MacOS.ActiveCfg = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|MacOS.Build.0 = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Windows.ActiveCfg = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Windows.Build.0 = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Linux.ActiveCfg = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Linux.Build.0 = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|MacOS.ActiveCfg = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|MacOS.Build.0 = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Windows.ActiveCfg = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Windows.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -185,5 +209,8 @@ Global
 		{4A49FF3D-25BC-49EF-AC19-970B4C95C5D2} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{7A8507B4-DB2C-453E-A72B-2384175BDFF1} = {4A49FF3D-25BC-49EF-AC19-970B4C95C5D2}
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E} = {4A49FF3D-25BC-49EF-AC19-970B4C95C5D2}
+		{695BDDEB-51D5-486E-84F4-9031786775B7} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
+		{BD5D2B21-2CD6-448D-ACD7-5B90DA247250} = {695BDDEB-51D5-486E-84F4-9031786775B7}
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC} = {695BDDEB-51D5-486E-84F4-9031786775B7}
 	EndGlobalSection
 EndGlobal

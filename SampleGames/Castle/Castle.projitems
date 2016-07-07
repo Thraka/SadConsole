@@ -23,7 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus12.font">
+    <None Include="$(MSBuildThisFileDirectory)Cheepicus12.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="$(MSBuildThisFileDirectory)Map\CASTLE.RAN">
@@ -31,7 +31,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus_12x12.png">
+    <Content Include="$(MSBuildThisFileDirectory)Cheepicus_12x12.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

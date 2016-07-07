@@ -37,25 +37,15 @@ namespace Castle
             IsFixedTimeStep = true;
 
             // Initialize the SadConsole engine and the first effects library (provided by the SadConsole.Effects.dll binary)
-            SadConsole.Engine.Initialize(GraphicsDevice);
+            SadConsole.Engine.Initialize(graphics, "Cheepicus12.font", 40, 25);
 
             // Tell SadConsole to track the mouse.
             SadConsole.Engine.UseMouse = true;
 
-            // Load the default font.
-            using (var stream = System.IO.File.OpenRead("Fonts/Cheepicus12.font"))
-            {
-                SadConsole.Engine.DefaultFont = SadConsole.Serializer.Deserialize<Font>(stream);
-            }
-
-            // Using the default font, resize the window to a Width,Height of cells. This example uses the MS-DOS default of 80 columns by 25 rows.
-            SadConsole.Engine.DefaultFont.ResizeGraphicsDeviceManager(graphics, 40, 25, 0, 0);
-            
             // Create the default console, show the cursor, and let the console accept keyboard input.
             gameMenuConsole = new GameMenuConsole();
             gameMenuConsole.PlayGame += StartGame;
             
-
             // Add the default console to the list of consoles.
             SadConsole.Engine.ConsoleRenderStack = new ConsoleList() { 
                                                                         gameMenuConsole

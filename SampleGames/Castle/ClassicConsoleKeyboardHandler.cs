@@ -19,14 +19,15 @@ namespace Castle
 
         public bool HandleKeyboard(IConsole console, KeyboardInfo info)
         {
+            var realConsole = (SadConsole.Consoles.Console)console;
             // Check each key pressed.
             foreach (var key in info.KeysPressed)
             {
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
                 {
-                    int startingIndex = console.CellData.GetIndexFromPoint(new Point(Room.MapWidth + 2, Room.MapHeight + 4));
-                    String data = console.CellData.GetString(startingIndex, console.CellData.GetIndexFromPoint(console.VirtualCursor.Position) - startingIndex);
+                    int startingIndex = TextSurface.GetIndexFromPoint(new Point(Room.MapWidth + 2, Room.MapHeight + 4), console.TextSurface.Width);
+                    String data = realConsole.GetString(startingIndex, TextSurface.GetIndexFromPoint(console.VirtualCursor.Position, console.TextSurface.Width) - startingIndex);
                     if (data.Length < 14)
                     {
                         console.VirtualCursor.Print(key.Character.ToString().ToUpper());
@@ -38,9 +39,9 @@ namespace Castle
                 {
 
                     // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
-                    if (console.CellData.TimesShiftedUp != 0)
+                    if (realConsole.TimesShiftedUp != 0)
                     {
-                        console.CellData.TimesShiftedUp = 0;
+                        realConsole.TimesShiftedUp = 0;
                     }
 
                     // Do not let them backspace into the prompt
@@ -54,15 +55,15 @@ namespace Castle
                 else if (key.XnaKey == Keys.Enter)
                 {
                     // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
-                    if (console.CellData.TimesShiftedUp != 0)
+                    if (realConsole.TimesShiftedUp != 0)
                     {
-                        VirtualCursorLastY -= console.CellData.TimesShiftedUp;
-                        console.CellData.TimesShiftedUp = 0;
+                        VirtualCursorLastY -= realConsole.TimesShiftedUp;
+                        realConsole.TimesShiftedUp = 0;
                     }
 
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
-                    int startingIndex = console.CellData.GetIndexFromPoint(new Point(Room.MapWidth + 2, Room.MapHeight + 4));
-                    String data = console.CellData.GetString(startingIndex, console.CellData.GetIndexFromPoint(console.VirtualCursor.Position) - startingIndex);
+                    int startingIndex = TextSurface.GetIndexFromPoint(new Point(Room.MapWidth + 2, Room.MapHeight + 4), console.TextSurface.Width);
+                    String data = realConsole.GetString(startingIndex, TextSurface.GetIndexFromPoint(console.VirtualCursor.Position, console.TextSurface.Width) - startingIndex);
 
                     // Move the cursor to the next line before we send the string data to the processor
 
@@ -73,7 +74,7 @@ namespace Castle
                     VirtualCursorLastY = console.VirtualCursor.Position.Y;
 
                     // Preparing the next lines could have scrolled the console, reset the counter
-                    console.CellData.TimesShiftedUp = 0;
+                    realConsole.TimesShiftedUp = 0;
                 }
             }
 
