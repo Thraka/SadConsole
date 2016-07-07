@@ -277,7 +277,7 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Changes the effect of a cell to the specified effect. The effect provided will be cloned and then set to the cell.
+        /// Changes the effect of a cell to the specified effect.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
@@ -285,6 +285,16 @@ namespace SadConsole.Consoles
         public void SetEffect(int x, int y, Effects.ICellEffect effect)
         {
             Effects.SetEffect(textSurface.Cells[y * textSurface.Width + x], effect);
+        }
+
+        /// <summary>
+        /// Changes the effect of a list of cells to the specified effect.
+        /// </summary>
+        /// <param name="cells">The cells for the effect.</param>
+        /// <param name="effect">The desired effect.</param>
+        public void SetEffect(IEnumerable<Cell> cells, Effects.ICellEffect effect)
+        {
+            Effects.SetEffect(cells, effect);
         }
 
         /// <summary>
