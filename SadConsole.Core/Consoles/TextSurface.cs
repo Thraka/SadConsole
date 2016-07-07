@@ -26,29 +26,6 @@ namespace SadConsole.Consoles
         protected Rectangle area;
         
         /// <summary>
-        /// Gets a cell based on it's coordinates on the surface.
-        /// </summary>
-        /// <param name="x">The X coordinate.</param>
-        /// <param name="y">The Y coordinate.</param>
-        /// <returns>The indicated cell.</returns>
-        public Cell this[int x, int y]
-        {
-            get { return cells[y * width + x]; }
-            protected set { cells[y * width + x] = value; }
-        }
-
-        /// <summary>
-        /// Gets a cell by index.
-        /// </summary>
-        /// <param name="index">The index of the cell.</param>
-        /// <returns>The indicated cell.</returns>
-        public Cell this[int index]
-        {
-            get { return cells[index]; }
-            protected set { cells[index] = value; }
-        }
-
-        /// <summary>
         /// The total cells for this surface.
         /// </summary>
         public int CellCount { get { return cells.Length; } }

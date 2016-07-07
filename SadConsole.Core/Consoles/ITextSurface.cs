@@ -34,6 +34,21 @@ namespace SadConsole.Consoles
         /// Each cell of the surface.
         /// </summary>
         Cell[] Cells { get; }
+
+        /// <summary>
+        /// Gets a cell by index.
+        /// </summary>
+        /// <param name="index">Index from the <see cref="Cells"/> array.</param>
+        /// <returns>The cell.</returns>
+        Cell this[int index] { get; }
+
+        /// <summary>
+        /// Gets a cell by coordinates
+        /// </summary>
+        /// <param name="x">The x coordinate in the surface.</param>
+        /// <param name="y">The y coordinate in the surface.</param>
+        /// <returns>The cell.</returns>
+        Cell this[int x, int y] { get; }
     }
 
     /// <summary>
