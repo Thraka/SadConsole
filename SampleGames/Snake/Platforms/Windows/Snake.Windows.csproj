@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Snake.Windows</RootNamespace>
     <AssemblyName>Snake</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,17 +41,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
-      <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
-      <Name>SadConsole.Platforms.Windows.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.5.0.1678, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\MonoGame.Framework.WindowsDX.3.5.0.1678\lib\net40\MonoGame.Framework.dll</HintPath>
+    <Reference Include="MonoGame.Framework, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\MonoGame.Framework.WindowsDX.3.5.1.1679\lib\net40\MonoGame.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\SadConsole.Core.Windows\SadConsole.Core.Windows.csproj">
+      <Project>{9a7432d8-0c8b-4c46-b405-b6d1080e6811}</Project>
+      <Name>SadConsole.Core.Windows</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\Snake.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
