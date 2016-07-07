@@ -21,7 +21,25 @@
         private ControlBase _capturedControl;
         private bool _exlusiveBeforeCapture;
 
+        private SadConsole.Themes.ControlsConsoleTheme _theme;
+
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the theme of the window.
+        /// </summary>
+        public SadConsole.Themes.ControlsConsoleTheme Theme
+        {
+            get
+            {
+                if (_theme == null)
+                    return SadConsole.Themes.Library.Default.ControlsConsoleTheme;
+                else
+                    return _theme;
+            }
+            set { _theme = value; Invalidate(); }
+        }
+
         /// <summary>
         /// When true, mouse events over this console will be processed even if this console is not active.
         /// </summary>
@@ -52,12 +70,15 @@
             get { return _focusedControl; }
             set
             {
-                if (FocusedControlChanging(value, _focusedControl))
+                if (!DisableControlFocusing)
                 {
-                    var oldControl = _focusedControl;
-                    _focusedControl = value;
+                    if (FocusedControlChanging(value, _focusedControl))
+                    {
+                        var oldControl = _focusedControl;
+                        _focusedControl = value;
 
-                    FocusedControlChanged(_focusedControl, oldControl);
+                        FocusedControlChanged(_focusedControl, oldControl);
+                    }
                 }
             }
         }
@@ -77,6 +98,11 @@
         /// Sets reference to the console to tab to when the <see cref="CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
         /// </summary>
         public IConsole PreviousTabConsole { get; set; }
+
+        /// <summary>
+        /// When set to true, child controls are not alerted to (non-)focused states.
+        /// </summary>
+        public bool DisableControlFocusing { get; set; }
         #endregion
 
         #region Constructors
@@ -91,12 +117,14 @@
         {
             _controls = new List<ControlBase>();
 
-            base.VirtualCursor.IsVisible = false;
-            base.AutoCursorOnFocus = false;
-            base.CanUseKeyboard = true;
-            base.CanUseMouse = true;
-            base.MouseCanFocus = true;
-            base.AutoCursorOnFocus = false;
+            VirtualCursor.IsVisible = false;
+            AutoCursorOnFocus = false;
+            CanUseKeyboard = true;
+            CanUseMouse = true;
+            MouseCanFocus = true;
+            AutoCursorOnFocus = false;
+            DisableControlFocusing = false;
+            Invalidate();
         }
         #endregion
 
@@ -334,6 +362,13 @@
             });
         }
 
+        public virtual void Invalidate()
+        {
+            textSurface.DefaultForeground = Theme.FillStyle.Foreground;
+            textSurface.DefaultBackground = Theme.FillStyle.Background;
+            Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, Theme.FillStyle.GlyphIndex, null);
+        }
+
         /// <summary>
         /// Processes the keyboard for the console.
         /// </summary>
@@ -461,10 +496,8 @@
         /// Renders the controls on top of the already rendered console.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch that rendered the console cells.</param>
-        protected override void OnAfterRender()
+        protected override void OnAfterRender(SpriteBatch Batch)
         {
-            base.OnAfterRender();
-
             int cellCount;
             Rectangle rect;
             Point point;
@@ -478,7 +511,9 @@
                 if (_controls[i].IsVisible)
                 {
                     control = _controls[i];
-                    cellCount = control.CellCount;
+                    cellCount = control.TextSurface.Cells.Length;
+
+                    var font = control.AlternateFont == null ? textSurface.Font : control.AlternateFont;
 
                     // Draw background of each cell for the control
                     for (int cellIndex = 0; cellIndex < cellCount; cellIndex++)
@@ -487,42 +522,18 @@
 
                         if (cell.IsVisible)
                         {
-                            point = control.GetPointFromIndex(cellIndex);
+                            point = Consoles.TextSurface.GetPointFromIndex(cellIndex, control.TextSurface.Width);
                             point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
 
-                            if (base._renderArea.Contains(point))
+                            if (TextSurface.RenderArea.Contains(point))
                             {
-                                point = new Point(point.X - _renderArea.X, point.Y - _renderArea.Y);
-                                rect = _renderAreaRects[base.CellData.GetIndexFromPoint(point)];
+                                point = new Point(point.X - TextSurface.RenderArea.X, point.Y - TextSurface.RenderArea.Y);
+                                rect = textSurface.RenderRects[Consoles.TextSurface.GetIndexFromPoint(point, textSurface.Width)];
 
                                 if (cell.ActualBackground != Color.Transparent)
-                                    Batch.Draw(Engine.BackgroundCell, rect, null, cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.4f);
-                            }
-                        }
-                    }
-
-                    // Draw foreground of each cell for the control
-                    for (int cellIndex = 0; cellIndex < cellCount; cellIndex++)
-                    {
-                        cell = control[cellIndex];
-
-                        if (cell.IsVisible)
-                        {
-                            point = control.GetPointFromIndex(cellIndex);
-                            point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
-
-                            if (base._renderArea.Contains(point))
-                            {
-                                point = new Point(point.X - _renderArea.X, point.Y - _renderArea.Y);
-                                rect = _renderAreaRects[base.CellData.GetIndexFromPoint(point)];
-
+                                    Batch.Draw(font.FontImage, rect, font.GlyphIndexRects[font.SolidGlyphIndex], cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.23f);
                                 if (cell.ActualForeground != Color.Transparent)
-                                {
-                                    if (control.AlternateFont == null)
-                                        Batch.Draw(Font.Image, rect, Font.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.1f);
-                                    else
-                                        Batch.Draw(control.AlternateFont.Image, rect, control.AlternateFont.CharacterIndexRects[cell.ActualCharacterIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.1f);
-                                }
+                                    Batch.Draw(font.FontImage, rect, font.GlyphIndexRects[cell.ActualGlyphIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.26f);
                             }
                         }
                     }

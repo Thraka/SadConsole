@@ -22,6 +22,23 @@
         protected System.Windows.HorizontalAlignment _textAlignment = System.Windows.HorizontalAlignment.Center;
         protected CellAppearance _currentAppearance;
 
+        /// <summary>
+        /// When true, renders the <see cref="EndCharacterLeft"/> and <see cref="EndCharacterRight"/> on the button.
+        /// </summary>
+        [DataMember]
+        public bool ShowEnds { get; set; } = true;
+
+        /// <summary>
+        /// The character on the left side of the button. Defaults to '<'.
+        /// </summary>
+        [DataMember]
+        public int EndCharacterLeft { get; set; } = (int)'<';
+
+        /// <summary>
+        /// The character on the right side of the button. Defaults to '>'.
+        /// </summary>
+        [DataMember]
+        public int EndCharacterRight { get; set; } = (int)'>';
         //public int Margin = 0;
 
         /// <summary>
@@ -66,9 +83,8 @@
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
         public Button(int width, int height)
-            : base()
+            : base(width, height)
         {
-            base.Resize(width, height);
 
             DetermineAppearance();
         }
@@ -165,8 +181,14 @@
             if (this.IsDirty)
             {
                 // Redraw the control
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
-                this.Print(0, 0, Text.Align(TextAlignment, this.Width));
+                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
+                this.Print(1, 0, (Text).Align(TextAlignment, this.TextSurface.Width - 2));
+
+                if (ShowEnds)
+                {
+                    SetGlyph(0, 0, EndCharacterLeft);
+                    SetGlyph(this.TextSurface.Width - 1, 0, EndCharacterRight);
+                }
 
                 this.IsDirty = false;
             }

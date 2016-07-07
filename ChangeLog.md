@@ -1,7 +1,27 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
-## Version 2.0.1.1 (10/13/2015
+## Version 3.0.0
+* Rewrote how the Console interacts with backing data and rendering.
+* CellSurface is gone and is replaced by TextSurface.
+	* TextSurfaces have viewports and the interface to read/write to the cell data.
+	* TextSurfaceView is an additional type that surfaces part of a TextSurface as a new type. Cells are shared between the two but the view uses a separate set of x,y coordinates.
+	* Cannot be resized anymore. Create a newly sized surface and copy the data to it.
+* CellsRenderer is gone and is replaced by TextSurfaceRenderer
+	* This now is a very trimmed down class that *only* handles drawing to the screen.
+	* ViewPort systems were moved to the TextSurface.
+* Engine initialization was simplified with a lot of helper code. Starting game construction should be quicker and easier.
+	* Startup code reduced from around 13 lines to 1 line.
+* Decoupled Console.Cursor from Console. It's now its own class and uses IConsole.
+* Controls library updated.
+	* Now that resize on a surface isn't supported, many controls are built differently. Some constructors changed.
+	* Fixed a bug that stopped processing mouse on any control added after a scroll bar.
+	* Windows now use a WindowRenderer instead of the standard renderer.
+* Added a new Print overload for a text surface that allows you to opt into which things you want to update (foreground, background, spriteeffect).
+* Entity system removed. Replaced with Consoles.AnimatedTextSurface and in the GameHelpers library, SadConsole.Game.GameObject
+* Tons more... https://github.com/Thraka/SadConsole/pull/26
+
+## Version 2.0.1.1 (10/13/2015)
 * Updated the NuGet package and wiki. When you install from NuGet you get font files and a browser page will open that points the NuGet starter page on the wiki.
 
 ## Version 2.0.0 (4/24/2014)

@@ -134,7 +134,7 @@ namespace SadConsole
             Mouse = new MouseInfo();
 
             UseKeyboard = true;
-            UseMouse = false;
+            UseMouse = true;
             ProcessMouseWhenOffScreen = false;
 
             _cellEffects = new List<Type>();
@@ -151,14 +151,9 @@ namespace SadConsole
         public static GraphicsDevice Device { get; private set; }
 
         /// <summary>
-        /// A simple white texture used for coloring and rendering the background of each cell.
-        /// </summary>
-        public static Texture2D BackgroundCell { get; internal set; }
-
-        /// <summary>
         /// A collection of fonts.
         /// </summary>
-        public static FontCollection Fonts { get; internal set; }
+        public static Dictionary<string, FontMaster> Fonts { get; internal set; }
         #endregion
 
         #region Methods
@@ -167,35 +162,39 @@ namespace SadConsole
         /// <summary>
         /// Prepares the engine for use. This must be the first method you call on the engine.
         /// </summary>
-        /// <param name="device"></param>
-        public static void Initialize(GraphicsDevice device)
+        /// <param name="deviceManager">The graphics device manager from MonoGame.</param>
+        /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
+        /// <param name="consoleWidth">The width of the default root console (and game window).</param>
+        /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <returns>The default active console.</returns>
+        public static Consoles.Console Initialize(GraphicsDeviceManager deviceManager, string font, int consoleWidth, int consoleHeight)
         {
             if (Device == null)
-                Device = device;
+                Device = deviceManager.GraphicsDevice;
 
-            // setup background cell
-#if !SHARPDX
-            BackgroundCell = new Texture2D(Device, 1, 1, false, SurfaceFormat.Color);
-#else
-            BackgroundCell = Texture2D.New(Device, 1, 1, PixelFormat.R8G8B8A8.UInt);
-#endif
-            Color[] newPixels = new Color[1];
-            BackgroundCell.GetData<Color>(newPixels);
-            for (int pixel = 0; pixel < 1; pixel++)
-            {
-                newPixels[pixel] = Color.White;
-            }
-            BackgroundCell.SetData<Color>(newPixels);
-
-            Fonts = new FontCollection();
+            Fonts = new Dictionary<string, FontMaster>();
             ConsoleRenderStack = new Consoles.ConsoleList();
             RegisterCellEffect<Effects.Blink>();
-            RegisterCellEffect<Effects.BlinkCharacter>();
+            RegisterCellEffect<Effects.BlinkGlyph>();
             RegisterCellEffect<Effects.ConcurrentEffect>();
             RegisterCellEffect<Effects.Delay>();
             RegisterCellEffect<Effects.EffectsChain>();
             RegisterCellEffect<Effects.Fade>();
             RegisterCellEffect<Effects.Recolor>();
+
+            // Load the default font and screen size
+            DefaultFont = LoadFont(font).GetFont(Font.FontSizes.One);
+            DefaultFont.ResizeGraphicsDeviceManager(deviceManager, consoleWidth, consoleHeight, 0, 0);
+
+            // Create the default console.
+            ActiveConsole = new Consoles.Console(consoleWidth, consoleHeight);
+            ActiveConsole.TextSurface.DefaultBackground = Color.Black;
+            ActiveConsole.TextSurface.DefaultForeground = ColorAnsi.White;
+            ((Consoles.Console)ActiveConsole).Clear();
+
+            ConsoleRenderStack.Add(ActiveConsole);
+
+            return (Consoles.Console)ActiveConsole;
         }
         #endregion
 
@@ -211,6 +210,28 @@ namespace SadConsole
         }
 
         #endregion
+
+        /// <summary>
+        /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
+        /// </summary>
+        /// <param name="font">The font file to load.</param>
+        /// <returns>A master font that you can generate a usable font from.</returns>
+        public static FontMaster LoadFont(string font)
+        {
+            if (!System.IO.File.Exists(font))
+                throw new Exception($"Font does not exist: {font}");
+
+            using (var stream = System.IO.File.OpenRead(font))
+            {
+                var masterFont = SadConsole.Serializer.Deserialize<FontMaster>(stream);
+
+                if (Fonts.ContainsKey(masterFont.Name))
+                    Fonts.Remove(masterFont.Name);
+
+                Fonts.Add(masterFont.Name, masterFont);
+                return masterFont;
+            }
+        }
 
         private static void changeActiveConsole(IConsole oldConsole, IConsole newConsole)
         {
@@ -275,29 +296,6 @@ namespace SadConsole
 
         #endregion
 
-        public static void Save()
-        {
-            System.Runtime.Serialization.DataContractSerializer serializer = 
-                new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
-            System.IO.MemoryStream mem = new System.IO.MemoryStream();
-            
-            var fonts = Fonts["C64"];
-            var font = fonts[0];
-
-            
-
-            serializer.WriteObject(mem, Fonts);
-
-            mem.Position = 0;
-            System.IO.StreamReader reader = new System.IO.StreamReader(mem);
-            string output = reader.ReadToEnd();
-
-            serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(FontCollection), new Type[] { typeof(Font) });
-
-            mem.Position = 0;
-            object obj = serializer.ReadObject(mem);
-        }
-
         /// <summary>
         /// Returns the amount of cells (X,Y) given the specified <see cref="Font"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
         /// </summary>
@@ -305,17 +303,17 @@ namespace SadConsole
         /// <returns>The amount of cells along the X and Y axis.</returns>
         public static Point GetScreenSizeInCells(Font font)
         {
-            return new Point(WindowWidth / font.CellWidth, WindowHeight / font.CellHeight);
+            return new Point(WindowWidth / font.Size.X, WindowHeight / font.Size.Y);
         }
 
         /// <summary>
-        /// Returns the amount of cells (X,Y) given the specified <see cref="CellSurface"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
+        /// Returns the amount of cells (X,Y) given the specified <see cref="TextSurface"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
         /// </summary>
         /// <param name="surface">The cell surface.</param>
         /// <returns>The amount of cells along the X and Y axis.</returns>
-        public static Point GetScreenSizeInCells(CellsRenderer surface)
+        public static Point GetScreenSizeInCells(TextSurface surface)
         {
-            return new Point(WindowWidth / surface.CellSize.X, WindowHeight / surface.CellSize.Y);
+            return new Point(WindowWidth / surface.Font.Size.X, WindowHeight / surface.Font.Size.Y);
         }
     }
 
@@ -324,31 +322,40 @@ namespace SadConsole
     /// </summary>
     public class EngineGameComponent: DrawableGameComponent
     {
-        private Action _initializationCallback;
+        private Action initializationCallback;
+        private string font;
+        private int screenWidth;
+        private int screenHeight;
+        private GraphicsDeviceManager manager;
 
-        public EngineGameComponent(Game game, Action initializeCallback): base(game)
+        public EngineGameComponent(Game game, GraphicsDeviceManager manager, string font, int screenWidth, int screenHeight, Action initializeCallback): base(game)
         {
-            _initializationCallback = initializeCallback;
+            this.initializationCallback = initializeCallback;
+            this.font = font;
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
+            this.manager = manager;
         }
 
         public override void Initialize()
         {
-            SadConsole.Engine.Initialize(this.Game.GraphicsDevice);
+            Engine.Initialize(manager, font, screenWidth, screenHeight);
 
-            if (_initializationCallback != null)
-                _initializationCallback();
+            manager = null; // no need to hang on to this.
+
+            initializationCallback?.Invoke();
         }
 
         public override void Update(GameTime gameTime)
         {
-            SadConsole.Engine.Update(gameTime, this.Game.IsActive);
+            Engine.Update(gameTime, this.Game.IsActive);
 
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            SadConsole.Engine.Draw(gameTime);
+            Engine.Draw(gameTime);
 
             base.Draw(gameTime);
         }

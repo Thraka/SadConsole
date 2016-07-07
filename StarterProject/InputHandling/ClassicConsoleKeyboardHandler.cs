@@ -29,12 +29,12 @@
                     // Get the prompt that the console has.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
 
-                    // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
-                    if (console.CellData.TimesShiftedUp != 0)
-                    {
-                        VirtualCursorLastY -= console.CellData.TimesShiftedUp;
-                        console.CellData.TimesShiftedUp = 0;
-                    }
+                    //// If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
+                    //if (console.Data.TimesShiftedUp != 0)
+                    //{
+                    //    VirtualCursorLastY -= console.Data.TimesShiftedUp;
+                    //    console.Data.TimesShiftedUp = 0;
+                    //}
 
                     // Do not let them backspace into the prompt
                     if (console.VirtualCursor.Position.Y != VirtualCursorLastY || console.VirtualCursor.Position.X > prompt.Length)
@@ -44,17 +44,17 @@
                 // Special character - ENTER
                 else if (key.XnaKey == Keys.Enter)
                 {
-                    // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
-                    if (console.CellData.TimesShiftedUp != 0)
-                    {
-                        VirtualCursorLastY -= console.CellData.TimesShiftedUp;
-                        console.CellData.TimesShiftedUp = 0;
-                    }
+                    //// If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
+                    //if (console.Data.TimesShiftedUp != 0)
+                    //{
+                    //    VirtualCursorLastY -= console.Data.TimesShiftedUp;
+                    //    console.Data.TimesShiftedUp = 0;
+                    //}
 
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
-                    int startingIndex = console.CellData.GetIndexFromPoint(new Point(prompt.Length, VirtualCursorLastY));
-                    string data = console.CellData.GetString(startingIndex, console.CellData.GetIndexFromPoint(console.VirtualCursor.Position) - startingIndex);
+                    int startingIndex = TextSurface.GetIndexFromPoint(new Point(prompt.Length, VirtualCursorLastY), console.TextSurface.Width);
+                    string data = ((SadConsole.Consoles.Console)console).GetString(startingIndex, TextSurface.GetIndexFromPoint(console.VirtualCursor.Position, console.TextSurface.Width) - startingIndex);
 
                     // Move the cursor to the next line before we send the string data to the processor
                     console.VirtualCursor.CarriageReturn().LineFeed();
@@ -68,7 +68,7 @@
                     VirtualCursorLastY = console.VirtualCursor.Position.Y;
 
                     // Preparing the next lines could have scrolled the console, reset the counter
-                    console.CellData.TimesShiftedUp = 0;
+                    //console.Data.TimesShiftedUp = 0;
                 }
             }
 

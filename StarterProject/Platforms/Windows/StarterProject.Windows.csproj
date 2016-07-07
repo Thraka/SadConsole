@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,12 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StarterProject</RootNamespace>
     <AssemblyName>StarterProject.Windows</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,25 +56,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Ansi\SadConsole.Platforms.Windows.Ansi.csproj">
-      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
-      <Name>SadConsole.Platforms.Windows.Ansi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Controls\SadConsole.Platforms.Windows.Controls.csproj">
-      <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
-      <Name>SadConsole.Platforms.Windows.Controls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.Core\SadConsole.Platforms.Windows.Core.csproj">
-      <Project>{9e8424e8-efd3-4158-b49e-feccd7509a7f}</Project>
-      <Name>SadConsole.Platforms.Windows.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\SadConsole.Platforms\SadConsole.Platforms.Windows.GameHelpers\SadConsole.Platforms.Windows.GameHelpers.csproj">
-      <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
-      <Name>SadConsole.Platforms.Windows.GameHelpers</Name>
-    </ProjectReference>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\..\..\SadConsole.Ansi.Windows\SadConsole.Ansi.Windows.csproj">
+      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
+      <Name>SadConsole.Ansi.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SadConsole.Controls.Windows\SadConsole.Controls.Windows.csproj">
+      <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
+      <Name>SadConsole.Controls.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SadConsole.Core.Windows\SadConsole.Core.Windows.csproj">
+      <Project>{9a7432d8-0c8b-4c46-b405-b6d1080e6811}</Project>
+      <Name>SadConsole.Core.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SadConsole.GameHelpers.Windows\SadConsole.GameHelpers.Windows.csproj">
+      <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
+      <Name>SadConsole.GameHelpers.Windows</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\StarterProject.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

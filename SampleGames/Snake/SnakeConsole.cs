@@ -53,33 +53,32 @@ namespace Snake
             this.IsVisible = false;
             gameState = GameState.MenuScreen;
 
-
             // Draw outline of phone
-            _cellData.SetCharacter(11, 55, 200, Color.White);
-            _cellData.SetCharacter(39, 55, 188, Color.White);
+            SetGlyph(11, 55, 200, Color.White);
+            SetGlyph(39, 55, 188, Color.White);
             for(int i = 12; i < 39; i++)
             {
-                _cellData.SetCharacter(i, 55, 205, Color.White);
+                SetGlyph(i, 55, 205, Color.White);
             }
             for (int i = 30; i < 55; i++)
             {
-                _cellData.SetCharacter(11, i, 186, Color.White);
-                _cellData.SetCharacter(39, i, 186, Color.White);
+                SetGlyph(11, i, 186, Color.White);
+                SetGlyph(39, i, 186, Color.White);
             }
-            _cellData.SetCharacter(11, 29, 187, Color.White);
-            _cellData.SetCharacter(39, 29, 201, Color.White);
-            _cellData.SetCharacter(10, 29, 200, Color.White);
-            _cellData.SetCharacter(40, 29, 188, Color.White);
+            SetGlyph(11, 29, 187, Color.White);
+            SetGlyph(39, 29, 201, Color.White);
+            SetGlyph(10, 29, 200, Color.White);
+            SetGlyph(40, 29, 188, Color.White);
             for (int i = 5; i < 29; i++)
             {
-                _cellData.SetCharacter(10, i, 186, Color.White);
-                _cellData.SetCharacter(40, i, 186, Color.White);
+                SetGlyph(10, i, 186, Color.White);
+                SetGlyph(40, i, 186, Color.White);
             }
-            _cellData.SetCharacter(10, 4, 201, Color.White);
-            _cellData.SetCharacter(40, 4, 187, Color.White);
+            SetGlyph(10, 4, 201, Color.White);
+            SetGlyph(40, 4, 187, Color.White);
             for (int i = 11; i < 40; i++)
             {
-                _cellData.SetCharacter(i, 4, 205, Color.White);
+                SetGlyph(i, 4, 205, Color.White);
             }
 
             // Draw Phone Buttons
@@ -128,7 +127,7 @@ namespace Snake
             // Draw Microphone
             for (int i = 24; i < 27; i++)
             {
-                _cellData.SetCharacter(i, 53, 240, Color.DarkGray);
+                SetGlyph(i, 53, 240, Color.DarkGray);
             }
 
             // Draw Plate
@@ -136,14 +135,14 @@ namespace Snake
             {
                 for (int y = 6; y < 28; y++)
                 {
-                    _cellData.SetCharacter(x, y, 178, Color.Silver);
+                    SetGlyph(x, y, 178, Color.Silver);
                 }
             }
             for (int x = 13; x < 38; x++)
             {
                 for (int y = 28; y < 30; y++)
                 {
-                    _cellData.SetCharacter(x, y, 178, Color.Silver);
+                    SetGlyph(x, y, 178, Color.Silver);
                 }
             }
 
@@ -152,29 +151,29 @@ namespace Snake
             {
                 for (int y = 26; y < 29; y++)
                 {
-                    _cellData.SetCharacter(x, y, 219, Color.Gray);
+                    SetGlyph(x, y, 219, Color.Gray);
                 }
             }
-            this.CellData.Print(phoneButtonColumn1 + 2, 27, "End", Color.Red, Color.Gray);
+            Print(phoneButtonColumn1 + 2, 27, "End", Color.Red, Color.Gray);
 
             for (int x = phoneButtonColumn3 - 2; x < phoneButtonColumn3 - 2 + 7; x++)
             {
                 for (int y = 26; y < 29; y++)
                 {
-                    _cellData.SetCharacter(x, y, 219, Color.Gray);
+                    SetGlyph(x, y, 219, Color.Gray);
                 }
             }
-            this.CellData.Print(phoneButtonColumn3 - 1, 27, "Call", Color.Green, Color.Gray);
+            Print(phoneButtonColumn3 - 1, 27, "Call", Color.Green, Color.Gray);
 
 
             // Draw Speaker
             for (int i = 22; i < 29; i++)
             {
-                _cellData.SetCharacter(i, 7, 240, Color.Black, Color.Silver);
+                SetGlyph(i, 7, 240, Color.Black, Color.Silver);
             }
 
             // Draw Brand
-            this.CellData.Print(23, 10, "NOKIA", Color.White, Color.Silver);
+            Print(23, 10, "NOKIA", Color.White, Color.Silver);
 
             // Draw Screen
             ClearScreen();
@@ -205,10 +204,10 @@ namespace Snake
             {
                 for (int y = phoneButtonRow4; y < phoneButtonRow4 + 3; y++)
                 {
-                    cells.Add(_cellData[x, y]);
+                    cells.Add(textSurface[x, y]);
                 }
             }
-            _cellData.SetEffect(cells, fadeEffect);
+            SetEffect(cells, fadeEffect);
         }
         private void UpKeyAnimationCb(CodeInstruction codeInstruction)
         {
@@ -218,10 +217,10 @@ namespace Snake
             {
                 for (int y = phoneButtonRow1; y < phoneButtonRow1 + 3; y++)
                 {
-                    cells.Add(_cellData[x, y]);
+                    cells.Add(textSurface[x, y]);
                 }
             }
-            _cellData.SetEffect(cells, fadeEffect);
+            SetEffect(cells, fadeEffect);
         }
         private void DownKeyAnimationCb(CodeInstruction codeInstruction)
         {
@@ -231,10 +230,10 @@ namespace Snake
             {
                 for (int y = phoneButtonRow3; y < phoneButtonRow3 + 3; y++)
                 {
-                    cells.Add(_cellData[x, y]);
+                    cells.Add(textSurface[x, y]);
                 }
             }
-            _cellData.SetEffect(cells, fadeEffect);
+            SetEffect(cells, fadeEffect);
         }
         private void LeftKeyAnimationCb(CodeInstruction codeInstruction)
         {
@@ -244,10 +243,10 @@ namespace Snake
             {
                 for (int y = phoneButtonRow2; y < phoneButtonRow2 + 3; y++)
                 {
-                    cells.Add(_cellData[x, y]);
+                    cells.Add(textSurface[x, y]);
                 }
             }
-            _cellData.SetEffect(cells, fadeEffect);
+            SetEffect(cells, fadeEffect);
         }
         private void RightKeyAnimationCb(CodeInstruction codeInstruction)
         {
@@ -257,10 +256,10 @@ namespace Snake
             {
                 for (int y = phoneButtonRow2; y < phoneButtonRow2 + 3; y++)
                 {
-                    cells.Add(_cellData[x, y]);
+                    cells.Add(textSurface[x, y]);
                 }
             }
-            _cellData.SetEffect(cells, fadeEffect);
+            SetEffect(cells, fadeEffect);
         }
 
         
@@ -271,10 +270,10 @@ namespace Snake
             {
                 for (int b = y; b < y + 3; b++)
                 {
-                    _cellData.SetCharacter(a, b, 219, Color.Gray);
+                    SetGlyph(a, b, 219, Color.Gray);
                 }
             }
-            this.CellData.Print(x + 2, y + 1, text, Color.Black, Color.Gray);
+            Print(x + 2, y + 1, text, Color.Black, Color.Gray);
         }
 
         private void ClearScreen()
@@ -283,17 +282,17 @@ namespace Snake
             {
                 for (int y = 12; y < 24; y++)
                 {
-                    _cellData.SetCharacter(x, y, 219, Color.DarkSeaGreen);
+                    SetGlyph(x, y, 219, Color.DarkSeaGreen);
                 }
             }
         }
 
         private void CreateStartMessage()
         {
-            this.CellData.Print(23, 14, "ASCII", Color.Black, Color.DarkSeaGreen);
-            this.CellData.Print(23, 16, "SNAKE", Color.Black, Color.DarkSeaGreen);
-            this.CellData.Print(21, 20, "Press * to", Color.Black, Color.DarkSeaGreen);
-            this.CellData.Print(23, 21, "Start", Color.Black, Color.DarkSeaGreen);
+            Print(23, 14, "ASCII", Color.Black, Color.DarkSeaGreen);
+            Print(23, 16, "SNAKE", Color.Black, Color.DarkSeaGreen);
+            Print(21, 20, "Press * to", Color.Black, Color.DarkSeaGreen);
+            Print(23, 21, "Start", Color.Black, Color.DarkSeaGreen);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
@@ -371,10 +370,10 @@ namespace Snake
             player = new Player();
             player.Position = new Microsoft.Xna.Framework.Point(18, 18);
             player.SetStartingPosition(player.Position);
-            _cellData.SetCharacter(player.Position.X, player.Position.Y, 1, Color.Black, Color.DarkSeaGreen);
+            SetGlyph(player.Position.X, player.Position.Y, 1, Color.Black, Color.DarkSeaGreen);
 
             CreateRandomWaferLocation();
-            _cellData.SetCharacter(wafer.X, wafer.Y, 249, Color.Black, Color.DarkSeaGreen);
+            SetGlyph(wafer.X, wafer.Y, 249, Color.Black, Color.DarkSeaGreen);
 
             gameState = GameState.Running;
         }
@@ -382,11 +381,11 @@ namespace Snake
         private void EndGame()
         {
             //ClearScreen();
-            this.CellData.Print(23, 15, "GAME", Color.Black, Color.DarkSeaGreen);
-            this.CellData.Print(23, 17, "OVER", Color.Black, Color.DarkSeaGreen);
+            Print(23, 15, "GAME", Color.Black, Color.DarkSeaGreen);
+            Print(23, 17, "OVER", Color.Black, Color.DarkSeaGreen);
 
-            this.CellData.Print(21, 20, "Press * to", Color.Black, Color.DarkSeaGreen);
-            this.CellData.Print(23, 21, "Exit", Color.Black, Color.DarkSeaGreen);
+            Print(21, 20, "Press * to", Color.Black, Color.DarkSeaGreen);
+            Print(23, 21, "Exit", Color.Black, Color.DarkSeaGreen);
 
             gameState = GameState.GameOver;
         }
@@ -399,19 +398,19 @@ namespace Snake
 
         private void DrawGameBorder()
         {
-            _cellData.SetCharacter(14, 13, 218, Color.Black, Color.DarkSeaGreen);
-            _cellData.SetCharacter(36, 13, 191, Color.Black, Color.DarkSeaGreen);
-            _cellData.SetCharacter(14, 23, 192, Color.Black, Color.DarkSeaGreen);
-            _cellData.SetCharacter(36, 23, 217, Color.Black, Color.DarkSeaGreen);
+            SetGlyph(14, 13, 218, Color.Black, Color.DarkSeaGreen);
+            SetGlyph(36, 13, 191, Color.Black, Color.DarkSeaGreen);
+            SetGlyph(14, 23, 192, Color.Black, Color.DarkSeaGreen);
+            SetGlyph(36, 23, 217, Color.Black, Color.DarkSeaGreen);
             for (int x = 15; x < 36; x++)
             {
-                _cellData.SetCharacter(x, 13, 196, Color.Black, Color.DarkSeaGreen);
-                _cellData.SetCharacter(x, 23, 196, Color.Black, Color.DarkSeaGreen);
+                SetGlyph(x, 13, 196, Color.Black, Color.DarkSeaGreen);
+                SetGlyph(x, 23, 196, Color.Black, Color.DarkSeaGreen);
             }
             for (int y = 14; y < 23; y++)
             {
-                _cellData.SetCharacter(14, y, 179, Color.Black, Color.DarkSeaGreen);
-                _cellData.SetCharacter(36, y, 179, Color.Black, Color.DarkSeaGreen);
+                SetGlyph(14, y, 179, Color.Black, Color.DarkSeaGreen);
+                SetGlyph(36, y, 179, Color.Black, Color.DarkSeaGreen);
             }
         }
         private void DrawScore(int score)
@@ -422,7 +421,7 @@ namespace Snake
                 scoreString = String.Format("0{0}", scoreString);
             }
 
-            this.CellData.Print(14, 12, scoreString, Color.Black, Color.DarkSeaGreen);
+            Print(14, 12, scoreString, Color.Black, Color.DarkSeaGreen);
         }
 
         private void CreateRandomWaferLocation()
@@ -524,11 +523,11 @@ namespace Snake
             // Erase any points that are old
             foreach (Point removePoint in player.RemoveNodes)
             {
-                _cellData.SetCharacter(removePoint.X, removePoint.Y, 0);
+                SetGlyph(removePoint.X, removePoint.Y, 0);
             }
 
             // Draw the new spot
-            _cellData.SetCharacter(player.Position.X, player.Position.Y, 1, Color.Black, Color.DarkSeaGreen);
+            SetGlyph(player.Position.X, player.Position.Y, 1, Color.Black, Color.DarkSeaGreen);
 
             // Detect if we hit something
             if (CollisionDetection(player.Position))
@@ -545,7 +544,7 @@ namespace Snake
 
                 CreateRandomWaferLocation();
 
-                _cellData.SetCharacter(wafer.X, wafer.Y, 249, Color.Black, Color.DarkSeaGreen);
+                SetGlyph(wafer.X, wafer.Y, 249, Color.Black, Color.DarkSeaGreen);
 
             }
         }

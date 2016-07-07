@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SadConsole.Consoles;
 
 namespace SadConsole.Shapes
 {
@@ -23,7 +24,7 @@ namespace SadConsole.Shapes
         public bool Fill;
         public bool DrawTransparency;
 
-        public void Draw(CellSurface surface)
+        public void Draw(SurfaceEditor surface)
         {
             for (int x = Location.X; x < Location.X + Width; x++)
             {
@@ -67,7 +68,7 @@ namespace SadConsole.Shapes
 
         }
 
-        private void PlotCell(CellSurface surface, int x, int y, int character, bool fillMe = false)
+        private void PlotCell(SurfaceEditor surface, int x, int y, int glyph, bool fillMe = false)
         {
             if (surface.IsValidCell(x,y))
             {
@@ -77,7 +78,7 @@ namespace SadConsole.Shapes
                 {
                     cell.Background = FillColor;
                     cell.Foreground = Foreground;
-                    cell.CharacterIndex = character;
+                    cell.GlyphIndex = glyph;
                     return;
                 }
 
@@ -87,7 +88,7 @@ namespace SadConsole.Shapes
                 if (BorderBackground != Color.Transparent || DrawTransparency)
                     cell.Background = BorderBackground;
 
-                cell.CharacterIndex = character;
+                cell.GlyphIndex = glyph;
             }
         }
 

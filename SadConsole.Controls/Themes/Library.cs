@@ -63,6 +63,12 @@ namespace SadConsole.Themes
         [DataMember]
         public InputBoxTheme InputBoxTheme;
 
+        /// <summary>
+        /// Theme for <see cref="Consoles.ControlsConsole"/>.
+        /// </summary>
+        [DataMember]
+        public ControlsConsoleTheme ControlsConsoleTheme;
+
         static Library()
         {
             if (Default == null)
@@ -104,6 +110,9 @@ namespace SadConsole.Themes
             WindowTheme.TitleStyle = new CellAppearance(ColorAnsi.Black, ColorAnsi.WhiteBright);
             WindowTheme.BorderStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
             WindowTheme.FillStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
+
+            ControlsConsoleTheme = new ControlsConsoleTheme();
+            ControlsConsoleTheme.FillStyle = new CellAppearance(ColorAnsi.WhiteBright, ColorAnsi.Black);
 
             CheckBoxTheme = new CheckBoxTheme();
             CheckBoxTheme.CheckedIcon = 251;
@@ -159,9 +168,9 @@ namespace SadConsole.Themes
             InputBoxTheme.Focused = new CellAppearance(Color.DarkBlue, Color.DarkGray);
             InputBoxTheme.MouseOver = new CellAppearance(Color.DarkBlue, Color.DarkGray);
             InputBoxTheme.Disabled = new CellAppearance(Color.Black, ColorAnsi.White);
-            InputBoxTheme.CarrotEffect = new Effects.BlinkCharacter()
+            InputBoxTheme.CarrotEffect = new Effects.BlinkGlyph()
             {
-                CharacterIndex = 95,
+                GlyphIndex = 95,
                 BlinkSpeed = 0.4f
             };
         }

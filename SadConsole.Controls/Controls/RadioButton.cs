@@ -128,10 +128,8 @@
         /// </summary>
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
-        public RadioButton(int width, int height)
+        public RadioButton(int width, int height): base(width, height)
         {
-            base.Resize(width, height);
-
             DetermineAppearance();
         }
 
@@ -241,21 +239,21 @@
             if (this.IsDirty)
             {
                 // If we are doing text, then print it otherwise we're just displaying the button part
-                if (_width != 1)
+                if (Width != 1)
                 {
                     for (int x = 0; x < 4; x++)
 			        {
 			            this.SetCellAppearance(x, 0, _currentAppearanceButton);
 			        }
-                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.CharacterIndex, null);
-                    this.Print(4, 0, Text.Align(TextAlignment, this.Width - 4));
-                    this.SetCharacter(0, 0, 40);
-                    this.SetCharacter(2, 0, 41);
+                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.GlyphIndex, null);
+                    this.Print(4, 0, Text.Align(TextAlignment, textSurface.Width - 4));
+                    this.SetGlyph(0, 0, 40);
+                    this.SetGlyph(2, 0, 41);
 
                     if (_isSelected)
-                        this.SetCharacter(1, 0, Theme.CheckedIcon);
+                        this.SetGlyph(1, 0, Theme.CheckedIcon);
                     else
-                        this.SetCharacter(1, 0, Theme.UncheckedIcon);
+                        this.SetGlyph(1, 0, Theme.UncheckedIcon);
                 }
                 else
                 {

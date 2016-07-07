@@ -1,6 +1,8 @@
 ﻿namespace SadConsole.Controls
 {
+    using Consoles;
     using Microsoft.Xna.Framework;
+    using SadConsole.Consoles;
     using SadConsole.Input;
     using System;
     using System.Runtime.Serialization;
@@ -9,7 +11,7 @@
     /// Base class for all controls.
     /// </summary>
     [DataContract]
-    public abstract class ControlBase: CellSurface, IInput
+    public abstract class ControlBase: SurfaceEditor, IInput
     {
         /// <summary>
         /// Protected variable representing the Position of the control.
@@ -121,6 +123,16 @@
             }
         }
 
+        /// <summary>
+        /// The width of the control.
+        /// </summary>
+        public int Width { get { return textSurface.Width; } }
+
+        /// <summary>
+        /// The height of the control.
+        /// </summary>
+        public int Height { get { return textSurface.Height; } }
+
         protected bool _isMouseOver = false;
         protected bool _isEnabled = true;
         protected Consoles.ControlsConsole _parent;
@@ -158,13 +170,14 @@
         /// <summary>
         /// Default constructor of the control.
         /// </summary>
-        public ControlBase()
-            : base()
+        public ControlBase(int width, int height)
+            : base(new TextSurface(width, height, Engine.DefaultFont))
         {
             IsDirty = true;
             TabStop = true;
             IsVisible = true;
             FocusOnClick = true;
+            CanFocus = false;
             _position = new Point();
             CanUseMouse = true;
             CanUseKeyboard = true;
@@ -344,8 +357,9 @@
         public virtual void Update()
         {
             Compose();
-
-            UpdateEffects(Engine.GameTimeElapsedUpdate);
+            
+            //TODO: Effects
+            //UpdateEffects(Engine.GameTimeElapsedUpdate);
         }
 
         [OnDeserializedAttribute]

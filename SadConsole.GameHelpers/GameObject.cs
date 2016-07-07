@@ -7,90 +7,171 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SadConsole.GameHelpers
+namespace SadConsole.Game
 {
+    /// <summary>
+    /// A positionable and animated game object.
+    /// </summary>
     public class GameObject
     {
-        [IgnoreDataMember]
-        private string name;
+        /// <summary>
+        /// A translation matrix of 0, 0, 0.
+        /// </summary>
+        public static Matrix NoMatrix = Matrix.CreateTranslation(0f, 0f, 0f);
 
-        public string Name { get { return name; } set { name = value != null ? value.ToLower() : null; } }
-        public CellAppearance Character { get; set; }
-        public List<Setting> Settings { get; set; }
-        public Point Position { get; set; }
+        /// <summary>
+        /// Renderer used for drawing the game object.
+        /// </summary>
+        protected Consoles.TextSurfaceRenderer renderer;
 
-        [IgnoreDataMember]
-        public WeakReference<GameObjectCollection> Parent;
+        /// <summary>
+        /// Reposition the rects of the animation.
+        /// </summary>
+        protected bool repositionRects;
 
-        [IgnoreDataMember]
-        public int Layer;
+        /// <summary>
+        /// Pixel positioning flag for position.
+        /// </summary>
+        protected bool usePixelPositioning;
 
+        /// <summary>
+        /// Where the console should be located on the screen.
+        /// </summary>
+        protected Point position;
+
+        /// <summary>
+        /// Animation for the game object.
+        /// </summary>
+        protected Consoles.AnimatedTextSurface animation;
+
+        /// <summary>
+        /// Gets or sets the position to render the cells.
+        /// </summary>
+        public Point Position
+        {
+            get { return position; }
+            set { Point previousPosition = position; position = value; if (repositionRects) UpdateRects(value); OnPositionChanged(previousPosition); }
+        }
+
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get { return usePixelPositioning; } set { usePixelPositioning = value; UpdateRects(position); } }
+
+        /// <summary>
+        /// The current animation.
+        /// </summary>
+        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; UpdateRects(position); } }
+
+        /// <summary>
+        /// When false, this <see cref="GameObject"/> won't be rendered.
+        /// </summary>
+        public bool IsVisible { get; set; } = true;
+
+        /// <summary>
+        /// When true, the position of the game object will offset all of the surface rects instead of using a positioning matrix for rendering.
+        /// </summary>
+        public bool RepositionRects
+        {
+            get { return repositionRects; }
+            set
+            {
+                repositionRects = value;
+                if (value)
+                    UpdateRects(position);
+                else
+                    UpdateRects(position, true);
+            }
+        }
+
+
+        /// <summary>
+        /// Creates a new GameObject.
+        /// </summary>
         public GameObject()
         {
-            Settings = new List<Setting>();
-            Character = new CellAppearance();
-            Character.CharacterIndex = 1;
-            Name = "New";
+            renderer = new Consoles.TextSurfaceRenderer();
         }
 
-        public GameObject Clone()
-        {
-            var newObject = new GameObject();
-            newObject.Name = Name;
-            newObject.Character = Character.Clone();
-            newObject.Settings = new List<Setting>(Settings.Count);
-            newObject.Position = Position;
+        /// <summary>
+        /// Called when the <see cref="Position" /> property changes.
+        /// </summary>
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
 
-            foreach (var item in Settings)
+        /// <summary>
+        /// Resets all of the rects of the animation based on <see cref="UsePixelPositioning"/> and if <see cref="RepositionRects"/> is true.
+        /// </summary>
+        /// <param name="position">The position of the game object.</param>
+        /// <param name="force">When true, always repositions rects.</param>
+        protected void UpdateRects(Point position, bool force = false)
+        {
+            if (repositionRects || force)
             {
-                newObject.Settings.Add(new Setting() { Name = item.Name, Value = item.Value });
-            }
+                var width = Animation.Width;
+                var height = Animation.Height;
+                var font = Animation.Font;
+                Point offset;
 
-            return newObject;
+                var rects = new Rectangle[width * height];
+
+                if (!repositionRects)
+                {
+                    offset = new Point(-animation.Center.X * font.Size.X, -animation.Center.Y * font.Size.Y);
+
+                    animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
+                }
+                else if (usePixelPositioning)
+                {
+                    offset = position + new Point(-animation.Center.X * font.Size.X, -animation.Center.Y * font.Size.Y);
+                    animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
+                }
+                else
+                {
+                    offset = new Point(position.X * font.Size.X, position.Y * font.Size.Y) + new Point(-animation.Center.X * font.Size.X, -animation.Center.Y * font.Size.Y);
+                    animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
+                }
+
+                int index = 0;
+                
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X, font.Size.Y);
+                        index++;
+                    }
+                }
+
+                animation.RenderRects = rects;
+            }
         }
 
-        public void CopyTo(GameObject destination)
+        public void UpdateAnimationRectangles()
         {
-            destination.Name = Name;
-            destination.Character = Character.Clone();
-            destination.Settings = new List<Setting>(Settings.Count);
-            destination.Position = Position;
-
-            foreach (var item in Settings)
+            UpdateRects(position, true);
+        }
+        
+        /// <summary>
+        /// Draws the game object.
+        /// </summary>
+        public virtual void Render()
+        {
+            if (IsVisible)
             {
-                destination.Settings.Add(new Setting() { Name = item.Name, Value = item.Value });
+                if (repositionRects)
+                    renderer.Render(Animation, NoMatrix);   
+                else
+                    renderer.Render(Animation, position, usePixelPositioning);
             }
-
         }
 
-        public bool HasSetting(string name)
+        /// <summary>
+        /// Updates the animation.
+        /// </summary>
+        public virtual void Update()
         {
-            return Settings.Where(s => s.Name == name).FirstOrDefault() != null;
-        }
-
-        public string GetSetting(string name)
-        {
-            return Settings.Where(s => s.Name == name).Select(s => s.Value).FirstOrDefault();
-        }
-
-        public IEnumerable<string> GetSettings(string name)
-        {
-            return Settings.Where(s => s.Name == name).Select(s => s.Value);
-        }
-
-        public virtual void Loaded(GameConsole console)
-        {
-
-        }
-
-        public virtual void Process(GameConsole console)
-        {
-
-        }
-
-        public override string ToString()
-        {
-            return Name;
+            Animation.Update();
         }
     }
 }

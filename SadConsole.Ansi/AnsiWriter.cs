@@ -11,12 +11,12 @@
 
     public class AnsiWriter
     {
-        private string ValidAnsiCodes = "HhfFAaBbCcDdJjKkMm";
+        private string ValidAnsiCodes = "HhfFAaBbCcDdJjKkMmSsUu";
         
         private bool _inEscapeCode;
         private StringBuilder _ansiCodeBuilder;
         private StringBuilder _ansiStringBuilder;
-        private Console.Cursor _cursor;
+        private Cursor _cursor;
         private Document _ansiDoc;
         private double _totalTime;
         private double _timePerCharacter;
@@ -25,10 +25,11 @@
         private byte[] _bytes;
         private Console _console;
         private State _ansiState;
+        private Point _storedCursorLocation;
 
         public ICellEffect BlinkEffect { get; set; }
 
-        public Console.Cursor Cursor { get { return _cursor; } }
+        public Cursor Cursor { get { return _cursor; } }
 
         public int CharactersPerSecond
         {
@@ -46,7 +47,7 @@
         {
             _ansiDoc = ansiDocument;
             _console = console;
-            _cursor = new Console.Cursor(console);
+            _cursor = new Cursor(console);
             CharactersPerSecond = 800;
 
             _bytes = ansiDocument.AnsiBytes;
@@ -189,34 +190,43 @@
                     case 'J':
                     case 'j':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _console.CellData.Width; i++)
-                                _console.CellData.Clear(i, _cursor.Position.Y);
+                            for (int i = _cursor.Position.X; i < _console.TextSurface.Width; i++)
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
                             for (int i = _cursor.Position.X; i >= 0; i--)
-                                _console.CellData.Clear(i, _cursor.Position.Y);
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "2")
                         {
-                            _console.CellData.Clear();
+                            _console.Clear();
                             _cursor.Position = Point.Zero;
                         }
                         break;
                     case 'K':
                     case 'k':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _console.CellData.Width; i++)
-                                _console.CellData.Clear(i, _cursor.Position.Y);
+                            for (int i = _cursor.Position.X; i < _console.TextSurface.Width; i++)
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
                             for (int i = _cursor.Position.X; i >= 0; i--)
-                                _console.CellData.Clear(i, _cursor.Position.Y);
+                                _console.Clear(i, _cursor.Position.Y);
 
                         else if (data == "2")
                         {
-                            for (int i = 0; i < _console.CellData.Width; i++)
-                                _console.CellData.Clear(i, _cursor.Position.Y);
+                            for (int i = 0; i < _console.TextSurface.Width; i++)
+                                _console.Clear(i, _cursor.Position.Y);
                         }
+                        break;
+
+                    case 'S':
+                    case 's':
+                        _storedCursorLocation = _cursor.Position;
+                        break;
+                    case 'U':
+                    case 'u':
+                        _cursor.Position = _storedCursorLocation;
                         break;
                     case 'M':
                     case 'm':
@@ -298,7 +308,7 @@
                 return true;
             }
 
-            bool onLastLine = _cursor.Position.Y == _console.CellData.Height - 1;
+            bool onLastLine = _cursor.Position.Y == _console.TextSurface.Height - 1;
 
             foreach (var item in line)
             {
@@ -364,7 +374,7 @@
             foreach (var line in lines)
             {
                 counter++;
-                bool onLastLine = _cursor.Position.Y == _console.CellData.Height - 1;
+                bool onLastLine = _cursor.Position.Y == _console.TextSurface.Height - 1;
 
                 if (AnsiReadLine(line, counter != lines.Length) == false)
                     return;

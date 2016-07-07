@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework;
 
-namespace SadConsole.GameHelpers.WorldGeneration
+namespace SadConsole.Game.WorldGeneration
 {
     public abstract class Generator<TMapConverter, TMapConverterOutput>
         where TMapConverter : IMapConverter<TMapConverterOutput>, new()

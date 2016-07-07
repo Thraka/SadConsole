@@ -8,8 +8,8 @@
 
     class BorderedConsole: Console
     {
-        public BorderedConsole(int width, int height)
-            : base(width, height)
+        public BorderedConsole()
+            : base(80, 25)
         {
             this.IsVisible = false;
 
@@ -21,13 +21,13 @@
             box.BorderBackground = Color.White;
             box.FillColor = Color.White;
             box.Fill = true;
-            box.Width = width;
-            box.Height = height;
+            box.Width = textSurface.Width;
+            box.Height = textSurface.Height;
             
             // Draw the box shape onto the CellSurface that this console is displaying.
-            box.Draw(this.CellData);
+            box.Draw(this);
 
-            this.CellData.Print(3, 1, "Shapes are easily created with only a few lines of code");
+            this.Print(3, 1, "Shapes are easily created with only a few lines of code");
 
             // Get a circle
             SadConsole.Shapes.Circle circle = new SadConsole.Shapes.Circle();
@@ -35,7 +35,7 @@
             circle.Center = new Point(60, 13);
             circle.Radius = 10;
 
-            circle.Draw(this.CellData);
+            circle.Draw(this);
 
             // Now time to make a line
             SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
@@ -43,9 +43,9 @@
             line.EndingLocation = new Point(45, 18);
             line.UseEndingCell = false;
             line.UseStartingCell = false;
-            line.CellAppearance = new Cell { Foreground = Color.Purple, Background = Color.White, CharacterIndex = 88 };
+            line.CellAppearance = new Cell { Foreground = Color.Purple, Background = Color.White, GlyphIndex = 88 };
 
-            line.Draw(this.CellData);
+            line.Draw(this);
 
         }
 

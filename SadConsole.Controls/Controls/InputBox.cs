@@ -88,6 +88,7 @@
         public bool DisableKeyboard;
 
         private string _editingText = "";
+        private Effects.EffectsManager effects;
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -189,21 +190,12 @@
         /// </summary>
         /// <param name="width">The width of the input box.</param>
         public InputBox(int width)
-            : base()
+            : base(width, 1)
         {
-            base.Resize(width, 1);
-
+            effects = new Effects.EffectsManager(textSurface);
             DetermineAppearance();
         }
         #endregion
-
-        /// <summary>
-        /// Repositions the cursor after a resize.
-        /// </summary>
-        protected override void OnResize()
-        {
-            PositionCursor();
-        }
 
         /// <summary>
         /// Draws the control.
@@ -212,13 +204,14 @@
         {
             if (this.IsDirty)
             {
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.CharacterIndex, null);
+                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
 
+                effects.RemoveAll();
 
                 if (base.IsFocused && !DisableKeyboard)
                 {
                     this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
-                    SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect.Clone());
+                    effects.SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect);
                 }
                 else
                 {
@@ -306,9 +299,9 @@
                 _carrotPos = _editingText.Length;
 
 			// Test to see if carrot is off edge of box
-			if (_carrotPos >= _width)
+			if (_carrotPos >= Width)
 			{
-				_leftDrawOffset = _editingText.Length - _width + 1;
+				_leftDrawOffset = _editingText.Length - Width + 1;
 
 				if (_leftDrawOffset < 0)
 					_leftDrawOffset = 0;
@@ -343,7 +336,7 @@
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, this.Width - 1);
+                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, textSurface.Width - 1);
 
                     this.IsDirty = true;
 
@@ -453,9 +446,9 @@
 							}
 
 							// Test to see if carrot is off edge of box
-							if (_carrotPos >= _width)
+							if (_carrotPos >= Width)
 							{
-								_leftDrawOffset = newText.Length - _width + 1;
+								_leftDrawOffset = newText.Length - Width + 1;
 
 								if (_leftDrawOffset < 0)
 									_leftDrawOffset = 0;
@@ -518,6 +511,13 @@
 
                 IsDirty = true;    
             }
+        }
+
+        public override void Update()
+        {
+            effects.UpdateEffects(Engine.GameTimeElapsedUpdate);
+
+            base.Update();
         }
 
         [OnDeserializedAttribute]

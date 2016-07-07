@@ -8,6 +8,7 @@ using Console = SadConsole.Consoles.Console;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole.Instructions;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Castle
 {
@@ -73,14 +74,14 @@ namespace Castle
 
 
             // Startup description
-            CellData.Clear();
-            _cellData.TimesShiftedUp = 0;
+            Clear();
+            TimesShiftedUp = 0;
             VirtualCursor.Print(Prompt);
 
 
             currentRoomIndex = 1;
             player = new Player();
-            player.Position = new Microsoft.Xna.Framework.Point(_cellData.Width / 2, _cellData.Height / 2);
+            player.Position = new Microsoft.Xna.Framework.Point(Width / 2, Height / 2);
 
 
 
@@ -165,15 +166,17 @@ namespace Castle
                 animation.Run();
             }
         }
-        protected override void OnAfterRender()
+
+        public override void Render()
         {
+            base.Render();
+
             player.Render();
+
             foreach (Monster monster in ItemManager.CurrentRoomMonsters)
-            {
                 monster.Render();
-            }
-            base.OnAfterRender();
         }
+        
 
         private void MovePlayer()
         {
@@ -340,7 +343,7 @@ namespace Castle
             PrintUserMessage(ItemManager.PickupItem(item));
             if (ItemManager.IsItemAtPoint(item) == false)
             {
-                this.CellData.SetCharacter(item.X, item.Y, 0, Color.White);
+                SetGlyph(item.X, item.Y, 0, Color.White);
             }
         }
         private void AttackMonster(Point monster)
@@ -445,10 +448,10 @@ namespace Castle
             int y = 0;
             foreach (CastleItem castleItem in ItemManager.CurrentRoomItems)
             {
-                this.CellData.SetCharacter(castleItem.Location.X, castleItem.Location.Y, castleItem.Character, Color.White);
+                SetGlyph(castleItem.Location.X, castleItem.Location.Y, castleItem.Character, Color.White);
 
-                this.CellData.SetCharacter(Room.MapWidth + 1, y, castleItem.Character, Color.White);
-                this.CellData.Print(Room.MapWidth + 3, y, castleItem.InventoryName, Color.White);
+                SetGlyph(Room.MapWidth + 1, y, castleItem.Character, Color.White);
+                Print(Room.MapWidth + 3, y, castleItem.InventoryName, Color.White);
                 y++;
 
             }
@@ -457,13 +460,13 @@ namespace Castle
             {
                 monster.IsVisible = true;
 
-                this.CellData.SetCharacter(Room.MapWidth + 1, y, monster.Character, Color.White);
+                SetGlyph(Room.MapWidth + 1, y, monster.Character, Color.White);
                 string monsterName = monster.InventoryName;
                 if(monster.IsAlive == false)
                 {
                     monsterName = String.Format("DEAD {0}", monster.Name);
                 }
-                this.CellData.Print(Room.MapWidth + 3, y, monsterName, Color.White);
+                Print(Room.MapWidth + 3, y, monsterName, Color.White);
                 y++;
             }
 
@@ -481,7 +484,7 @@ namespace Castle
                     {
                         mapPoint = 0;
                     }
-                    this.CellData.SetCharacter(indexX, indexY, mapPoint, Color.White);
+                    SetGlyph(indexX, indexY, mapPoint, Color.White);
                 }
             }
 
@@ -491,7 +494,7 @@ namespace Castle
                 {
                     foreach(Point doorPoint in currentRoom.Door.DoorPoints)
                     {
-                        this.CellData.SetCharacter(doorPoint.X, doorPoint.Y, 8, Color.White);
+                        SetGlyph(doorPoint.X, doorPoint.Y, 8, Color.White);
                     }
                 }
             }
@@ -502,7 +505,7 @@ namespace Castle
             currentRoom.ReplaceMapPoint(replacementPoints);
             foreach(var point in replacementPoints)
             {
-                this.CellData.SetCharacter(point.X, point.Y, point.Character, Color.White);
+                SetGlyph(point.X, point.Y, point.Character, Color.White);
             }
             
         }
@@ -511,21 +514,21 @@ namespace Castle
         {
             for (int index = 0; index < Room.DescriptionHeight; index++)
             {
-                this.CellData.Print(0, Room.MapHeight + index + 1, currentRoom.GetDescriptionLine(index), Color.White);
+                Print(0, Room.MapHeight + index + 1, currentRoom.GetDescriptionLine(index), Color.White);
             }
         }
         private void DrawBorder()
         {
             for (int x = 0; x < Room.MapWidth; x++)
             {
-                this.CellData.SetCharacter(x, Room.MapHeight, 196, Color.White);
+                SetGlyph(x, Room.MapHeight, 196, Color.White);
             }
 
-            this.CellData.SetCharacter(Room.MapWidth, Room.MapHeight, 217, Color.White);
+            SetGlyph(Room.MapWidth, Room.MapHeight, 217, Color.White);
 
             for (int y = 0; y < Room.MapHeight; y++)
             {
-                this.CellData.SetCharacter(Room.MapWidth, y, 179, Color.White);
+                SetGlyph(Room.MapWidth, y, 179, Color.White);
             }
         }
 
@@ -541,7 +544,7 @@ namespace Castle
             // Reset the command
             for (int x = Room.MapWidth + 2; x < Room.MapWidth + 16; x++)
             {
-                this.CellData.SetCharacter(x, Room.MapHeight + 4, 0, Color.White);
+                SetGlyph(x, Room.MapHeight + 4, 0, Color.White);
             }
             VirtualCursor.Position = new Point(Room.MapWidth + 1, Room.MapHeight + 4);
             VirtualCursor.Print("?");
@@ -554,7 +557,7 @@ namespace Castle
             {
                 for (int y = 0; y < Room.MapHeight - 5; y++)
                 {
-                    this.CellData.SetCharacter(x, y, 0, Color.White);
+                    SetGlyph(x, y, 0, Color.White);
                 }
             }
         }
@@ -573,9 +576,9 @@ namespace Castle
             {
                 for (int y = yStart; y < Room.MapHeight + 3; y++)
                 {
-                    this.CellData.SetCharacter(x, y, 0, Color.White);
+                    SetGlyph(x, y, 0, Color.White);
                 }
-                this.CellData.SetCharacter(x, Room.MapHeight + 5, 0, Color.White);
+                SetGlyph(x, Room.MapHeight + 5, 0, Color.White);
             }
         }
 
@@ -644,7 +647,7 @@ namespace Castle
             int index = Room.MapHeight - 5;
             foreach (string line in userMessage.Messages)
             {
-                this.CellData.Print(Room.MapWidth + 1, index, line, Color.White);
+                Print(Room.MapWidth + 1, index, line, Color.White);
                 index++;
             }
         }
@@ -688,7 +691,7 @@ namespace Castle
             UserMessage message = this.ItemManager.CommandDrop(command, dropCoordinates, collision);
             if(message.Character.HasValue)
             {
-                this.CellData.SetCharacter(dropCoordinates.X, dropCoordinates.Y, message.Character.Value, Color.White);
+                SetGlyph(dropCoordinates.X, dropCoordinates.Y, message.Character.Value, Color.White);
             }
             PrintUserMessage(message);
 
@@ -731,7 +734,7 @@ namespace Castle
                         // Erase Lock
                         foreach(Point doorPoint in currentRoom.Door.DoorPoints)
                         {
-                            this.CellData.SetCharacter(doorPoint.X, doorPoint.Y, 0, Color.White);
+                            SetGlyph(doorPoint.X, doorPoint.Y, 0, Color.White);
                         }
                     }
                 }
@@ -768,7 +771,7 @@ namespace Castle
             // Draw Walls
             foreach(Point wallPoint in currentRoom.Trap.WallPoints)
             {
-                this.CellData.SetCharacter(wallPoint.X, wallPoint.Y, 178, Color.White);
+                SetGlyph(wallPoint.X, wallPoint.Y, 178, Color.White);
             }
 
             waterXStart = currentRoom.Trap.WaterFlowXStart;
@@ -790,8 +793,8 @@ namespace Castle
                     inst.IsFinished = true;
                     gameOver = true;
                 }
-                this.CellData.SetCharacter(waterXStart, waterYStart, 176, Color.White);
-                this.CellData.SetCharacter(waterXStart, waterYEnd, 176, Color.White);
+                SetGlyph(waterXStart, waterYStart, 176, Color.White);
+                SetGlyph(waterXStart, waterYEnd, 176, Color.White);
             };
             animation.Instructions.AddLast(waterFillInstruction);
 
@@ -813,7 +816,7 @@ namespace Castle
 
         private void ShowError()
         {
-            this.CellData.Print(Room.MapWidth + 3, Room.MapHeight + 5, "WHAT???", Color.White);
+            Print(Room.MapWidth + 3, Room.MapHeight + 5, "WHAT???", Color.White);
         }
         private void ShowRoom()
         {
@@ -849,11 +852,11 @@ namespace Castle
             {
                 for (int y = Room.MapHeight + 1; y < 25; y++)
                 {
-                    this.CellData.SetCharacter(x, y, 0, Color.White);
+                    SetGlyph(x, y, 0, Color.White);
                 }
             }
 
-            this.CellData.Print(8, 24, "Press any key to continue", Color.White);
+            Print(8, 24, "Press any key to continue", Color.White);
 
         }
 

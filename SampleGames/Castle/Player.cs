@@ -5,28 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Console = SadConsole.Consoles.Console;
-using SadConsole.Entities;
 using SadConsole.Consoles;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using SadConsole.Game;
 
 namespace Castle
 {
-    internal class Player : Entity
+    internal class Player : GameObject
     {
         public Direction CurrentDirection { get; private set; }
         public Direction Facing { get; private set; }
         public int Health { get; private set; }
         public Player()
         {
-            _canUseKeyboard = true;
-            _currentAnimation.CurrentFrame[0].CharacterIndex = 5;
+            Animation = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
+            var frame = Animation.CreateFrame();
+            frame[0].GlyphIndex = 5;
             this.CurrentDirection = Direction.None;
             Health = 70;
 
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
         {
             // Process logic for moving the entity.
             bool keyHit = false;
@@ -93,13 +94,13 @@ namespace Castle
         {
             if (this.IsVisible)
             {
-                _position.X = location.X;
-                _position.Y = location.Y;
+                position.X = location.X;
+                position.Y = location.Y;
             }
         }
         public Point PreviewMove(Direction direction)
         {
-            Point preview = new Point(_position.X, _position.Y);
+            Point preview = new Point(position.X, position.Y);
 
             switch (direction)
             {
@@ -125,7 +126,7 @@ namespace Castle
         }
         public Point GetFacingPoint(Direction direction)
         {
-            Point preview = new Point(_position.X, _position.Y);
+            Point preview = new Point(position.X, position.Y);
 
             switch (Facing)
             {

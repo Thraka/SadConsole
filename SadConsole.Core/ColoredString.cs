@@ -10,11 +10,12 @@ namespace SadConsole
     /// Represents a string that has foreground and background colors for each character in the string.
     /// </summary>
     [DataContract]
-    public class ColoredString : IEnumerable<ColoredCharacter>
+    public class ColoredString : IEnumerable<ColoredGlyph>
     {
-        private List<ColoredCharacter> _characters;
+        [DataMember(Name = "Characters")]
+        private List<ColoredGlyph> _characters;
 
-        public ColoredCharacter this[int index]
+        public ColoredGlyph this[int index]
         {
             get { return _characters[index]; }
             set { _characters[index] = value; }
@@ -23,7 +24,6 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the string. When Set, the colors for each character default to the <see cref="SadConsole.ColoredString.Foreground"/> and <see cref="SadConsole.ColoredString.Background"/> property values.
         /// </summary>
-        [DataMember]
         public string String
         {
             get
@@ -34,18 +34,18 @@ namespace SadConsole
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(_characters.Count);
 
                 for (int i = 0; i < _characters.Count; i++)
-                    sb.Append(_characters[i].Character);
+                    sb.Append(_characters[i].Glyph);
 
                 return sb.ToString();
             }
             set
             {
-                _characters = new List<ColoredCharacter>(value.Length);
+                _characters = new List<ColoredGlyph>(value.Length);
 
                 for (int i = 0; i < value.Length; i++)
                 {
-                    var character = new ColoredCharacter();
-                    character.Character = value[i];
+                    var character = new ColoredGlyph();
+                    character.Glyph = value[i];
                     character.Foreground = this.Foreground;
                     character.Background = this.Background;
                     character.Effect = this.Effect;
@@ -75,10 +75,10 @@ namespace SadConsole
         public ICellEffect Effect;
 
         /// <summary>
-        /// When true, instructs a caller to not render the <see cref="Character"/>.
+        /// When true, instructs a caller to not render the glyphs of the string.
         /// </summary>
         [DataMember]
-        public bool IgnoreCharacter;
+        public bool IgnoreGlyph;
 
         /// <summary>
         /// When true, instructs a caller to not render the <see cref="Foreground"/>.
@@ -109,10 +109,10 @@ namespace SadConsole
         /// <param name="capacity">The number of blank characters.</param>
         public ColoredString(int capacity)
         {
-            _characters = new List<ColoredCharacter>(capacity);
+            _characters = new List<ColoredGlyph>(capacity);
             for (int i = 0; i < capacity; i++)
             {
-                _characters.Add(new ColoredCharacter() { Character = ' ', Background = this.Background, Foreground = this.Foreground, Effect = this.Effect });
+                _characters.Add(new ColoredGlyph() { Glyph = ' ', Background = this.Background, Foreground = this.Foreground, Effect = this.Effect });
             }
         }
         
@@ -162,7 +162,7 @@ namespace SadConsole
         /// Returns a new <see cref="ColoredString"/> object using a substring of this instance.
         /// </summary>
         /// <param name="index">The index to copy the contents from.</param>
-        /// <param name="count">The count of <see cref="ColoredCharacter"/> objects to copy.</param>
+        /// <param name="count">The count of <see cref="ColoredGlyph"/> objects to copy.</param>
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
         public ColoredString SubString(int index, int count)
         {
@@ -173,7 +173,7 @@ namespace SadConsole
 
             returnObject.IgnoreBackground = this.IgnoreBackground;
             returnObject.IgnoreForeground = this.IgnoreForeground;
-            returnObject.IgnoreCharacter = this.IgnoreCharacter;
+            returnObject.IgnoreGlyph = this.IgnoreGlyph;
             returnObject.IgnoreEffect = this.IgnoreEffect;
             returnObject.Foreground = this.Foreground;
             returnObject.Background = this.Background;
@@ -228,14 +228,14 @@ namespace SadConsole
             return this.String;
         }
 
-        public IEnumerator<ColoredCharacter> GetEnumerator()
+        public IEnumerator<ColoredGlyph> GetEnumerator()
         {
-            return ((IEnumerable<ColoredCharacter>)_characters).GetEnumerator();
+            return ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<ColoredCharacter>)_characters).GetEnumerator();
+            return ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
         }
 
 
@@ -255,7 +255,7 @@ namespace SadConsole
             for (int i = 0; i < string2.Count; i++)
                 returnString._characters[i + string1.Count] = string2._characters[i].Clone();
 
-            returnString.IgnoreCharacter = string1.IgnoreCharacter && string1.IgnoreCharacter;
+            returnString.IgnoreGlyph = string1.IgnoreGlyph && string1.IgnoreGlyph;
             returnString.IgnoreForeground = string1.IgnoreForeground && string1.IgnoreForeground;
             returnString.IgnoreBackground = string1.IgnoreBackground && string1.IgnoreBackground;
             returnString.IgnoreEffect = string1.IgnoreEffect && string1.IgnoreEffect;
@@ -267,25 +267,25 @@ namespace SadConsole
     /// <summary>
     /// Represents a single character that has a foreground and background color.
     /// </summary>
-    public class ColoredCharacter: CellAppearance
+    public class ColoredGlyph: CellAppearance
     {
         private char _character;
 
         /// <summary>
-        /// The character.
+        /// The glyph.
         /// </summary>
-        public char Character
+        public char Glyph
         {
             get { return _character; }
             set
             {
                 _character = value;
-                base.CharacterIndex = _character;
+                base.GlyphIndex = _character;
             }
         }
 
         /// <summary>
-        /// The effect for the character.
+        /// The effect for the glyph.
         /// </summary>
         public ICellEffect Effect;
 
@@ -293,9 +293,9 @@ namespace SadConsole
         /// Creates a new copy of this cell appearance.
         /// </summary>
         /// <returns>The cloned cell appearance.</returns>
-        public new ColoredCharacter Clone()
+        public new ColoredGlyph Clone()
         {
-            return new ColoredCharacter() { Foreground = this.Foreground, Background = this.Background, Effect = this.Effect != null ? this.Effect.Clone() : null, Character = this.Character };
+            return new ColoredGlyph() { Foreground = this.Foreground, Background = this.Background, Effect = this.Effect != null ? this.Effect.Clone() : null, Glyph = this.Glyph };
         }
     }
 }

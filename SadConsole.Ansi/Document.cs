@@ -18,6 +18,7 @@ namespace SadConsole.Ansi
             set
             {
                 _ansiBytes = value;
+                //_ansiData = Encoding.UTF8.GetString(_ansiBytes);
                 _ansiData = new string(_ansiBytes.Select(b => (char)b).ToArray());
 
                 if (Stream != null)

@@ -113,5 +113,17 @@
 
             return NextSelection;
         }
+
+        public override void Compose()
+        {
+            if (this.IsDirty)
+            {
+                // Redraw the control
+                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
+                this.Print(0, 0, Text.Align(TextAlignment, this.Width));
+
+                this.IsDirty = false;
+            }
+        }
     }
 }

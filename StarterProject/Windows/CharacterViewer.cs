@@ -6,6 +6,7 @@ using SadConsole;
 using Microsoft.Xna.Framework;
 using SadConsole.Controls;
 using SadConsole.Consoles;
+using SadConsole.Effects;
 
 namespace StarterProject.Windows
 {
@@ -20,6 +21,7 @@ namespace StarterProject.Windows
         private SadConsole.Input.MouseInfo _lastInfo = null;
         private SadConsole.Effects.Recolor _highlightedCellEffect = new SadConsole.Effects.Recolor();
         private int _fontRowOffset = 0;
+        private EffectsManager effects;
 
         public event EventHandler ColorsChanged;
         public int SelectedCharacterIndex = 0;
@@ -38,16 +40,16 @@ namespace StarterProject.Windows
             CloseOnESC = true;
 
             // CHARACTER SCROLL
-            _charScrollBar = new SadConsole.Controls.ScrollBar(System.Windows.Controls.Orientation.Vertical, 16)
-            {
-                Position = new Point(17, 1),
-                Name = "ScrollBar",
-                Maximum = this.Font.Rows - 16,
-                Value = 0,
-            };
+            _charScrollBar = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 16);
+            _charScrollBar.Position = new Point(17, 1);
+            _charScrollBar.Name = "ScrollBar";
+            _charScrollBar.Maximum = textSurface.Font.Rows - 16;
+            _charScrollBar.Value = 0;
             _charScrollBar.ValueChanged += new EventHandler(_charScrollBar_ValueChanged);
-            _charScrollBar.IsEnabled = this.Font.Rows > 16;
+            _charScrollBar.IsEnabled = textSurface.Font.Rows > 16;
 
+            // Effects
+            effects = new EffectsManager(textSurface);
 
             // Add all controls
             this.Add(_charScrollBar);
@@ -73,7 +75,7 @@ namespace StarterProject.Windows
             {
                 for (int x = 1; x < 17; x++)
                 {
-                    CellData.SetCharacter(x, y, charIndex);
+                    SetGlyph(x, y, charIndex);
                     charIndex++;
                 }
             }
@@ -83,11 +85,11 @@ namespace StarterProject.Windows
         {
             base.Redraw();
             // Draw the border between char sheet area and the text area
-            CellData.SetCharacter(0, this.CellData.Height - 3, 204);
-            CellData.SetCharacter(this.CellData.Width - 1, this.CellData.Height - 3, 185);
-            for (int i = 1; i < this.CellData.Width - 1; i++)
+            SetGlyph(0, textSurface.Height - 3, 204);
+            SetGlyph(textSurface.Width - 1, textSurface.Height - 3, 185);
+            for (int i = 1; i < textSurface.Width - 1; i++)
             {
-                CellData.SetCharacter(i, this.CellData.Height - 3, 205);
+                SetGlyph(i, textSurface.Height - 3, 205);
             }
             //SetCharacter(this.Width - 1, 0, 256);
 
@@ -96,7 +98,7 @@ namespace StarterProject.Windows
             {
                 for (int x = 1; x < 17; x++)
                 {
-                    CellData.SetCharacter(x, y, charIndex);
+                    SetGlyph(x, y, charIndex);
                     charIndex++;
                 }
             }
@@ -106,9 +108,9 @@ namespace StarterProject.Windows
         {
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
-                SelectedCharacterIndex = data.Cell.CharacterIndex;
+                SelectedCharacterIndex = data.Cell.GlyphIndex;
             }
-            else if (data.ConsoleLocation.X == this.CellData.Width - 1 && data.ConsoleLocation.Y == 0)
+            else if (data.ConsoleLocation.X == textSurface.Width - 1 && data.ConsoleLocation.Y == 0)
                 Hide();
 
             base.OnMouseLeftClicked(data);
@@ -119,9 +121,9 @@ namespace StarterProject.Windows
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
                 // Draw the character index and value in the status area
-                string[] items = new string[] { "Index: ", data.Cell.CharacterIndex.ToString() + " ", ((char)data.Cell.CharacterIndex).ToString() };
+                string[] items = new string[] { "Index: ", data.Cell.GlyphIndex.ToString() + " ", ((char)data.Cell.GlyphIndex).ToString() };
 
-                items[2] = items[2].PadRight(this.CellData.Width - 2 - (items[0].Length + items[1].Length));
+                items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
 
                 var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
                            items[1].CreateColored(Color.LightCoral, Color.Black, null) +
@@ -130,7 +132,7 @@ namespace StarterProject.Windows
                 text.IgnoreBackground = true;
                 text.IgnoreEffect = true;
 
-                CellData.Print(1, this.CellData.Height - 2, text);
+                Print(1, textSurface.Height - 2, text);
 
                 // Set the special effect on the current known character and clear it on the last known
                 if (_lastInfo == null)
@@ -138,7 +140,7 @@ namespace StarterProject.Windows
                 }
                 else if (_lastInfo.ConsoleLocation != data.ConsoleLocation)
                 {
-                    this.CellData.SetEffect(_lastInfo.Cell,
+                    effects.SetEffect(_lastInfo.Cell,
                     new SadConsole.Effects.Fade()
                     {
                         FadeBackground = true,
@@ -154,7 +156,7 @@ namespace StarterProject.Windows
                     );
                 }
 
-                this.CellData.SetEffect(data.Cell, _highlightedCellEffect);
+                effects.SetEffect(data.Cell, _highlightedCellEffect);
                 _lastInfo = data.Clone();
             }
             else
@@ -164,7 +166,7 @@ namespace StarterProject.Windows
                 // Clear the special effect on the last known character
                 if (_lastInfo != null)
                 {
-                    this.CellData.SetEffect(_lastInfo.Cell, null);
+                    effects.SetEffect(_lastInfo.Cell, null);
                     _lastInfo = null;
                 }
             }
@@ -175,11 +177,11 @@ namespace StarterProject.Windows
         private void DrawSelectedItemString()
         {
             // Clear the information area and redraw
-            CellData.Print(1, this.CellData.Height - 2, "".PadRight(this.CellData.Width - 2));
+            Print(1, textSurface.Height - 2, "".PadRight(textSurface.Width - 2));
 
             //string[] items = new string[] { "Current Index:", SelectedCharacterIndex.ToString() + " ", ((char)SelectedCharacterIndex).ToString() };
             string[] items = new string[] { "Selected: ", ((char)SelectedCharacterIndex).ToString(), " (", SelectedCharacterIndex.ToString(), ")" };
-            items[4] = items[4].PadRight(this.CellData.Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
+            items[4] = items[4].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
 
             var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
                        items[1].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
@@ -190,7 +192,7 @@ namespace StarterProject.Windows
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;
 
-            CellData.Print(1, this.CellData.Height - 2, text);
+            Print(1, textSurface.Height - 2, text);
         }
 
         protected override void OnMouseExit(SadConsole.Input.MouseInfo info)
@@ -221,8 +223,8 @@ namespace StarterProject.Windows
             {
                 for (int x = 1; x < 17; x++)
                 {
-                    CellData.SetForeground(x, y, Foreground);
-                    CellData.SetBackground(x, y, Background);
+                    SetForeground(x, y, Foreground);
+                    SetBackground(x, y, Background);
                 }
             }
 
@@ -236,7 +238,7 @@ namespace StarterProject.Windows
 
             string[] items = new string[] { "Current Index:", SelectedCharacterIndex.ToString() + " ", ((char)SelectedCharacterIndex).ToString() };
 
-            items[2] = items[2].PadRight(this.CellData.Width - 2 - (items[0].Length + items[1].Length));
+            items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
 
             var text = items[0].CreateColored(Color.LightBlue, Color.Black, null) +
                        items[1].CreateColored(Color.LightCoral, Color.Black, null) +
@@ -245,11 +247,17 @@ namespace StarterProject.Windows
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;
 
-            CellData.Print(1, this.CellData.Height - 2, text);
+            Print(1, textSurface.Height - 2, text);
 
             Center();
 
             base.Show(modal);
+        }
+
+        public override void Update()
+        {
+            effects.UpdateEffects(Engine.GameTimeElapsedUpdate);
+            base.Update();
         }
 
     }

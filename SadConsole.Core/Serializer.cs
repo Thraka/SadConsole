@@ -14,12 +14,11 @@
         /// <summary>
         /// The types commonly used when sesrializing a basic console.
         /// </summary>
-        public static IEnumerable<Type> ConsoleTypes
+        public static IEnumerable<Type> ConsoleTypes { get; set; }
+
+        static Serializer()
         {
-            get
-            {
-                return (new Type[] { typeof(Consoles.Console), typeof(Consoles.CellsRenderer), typeof(Consoles.ConsoleList), typeof(CellSurface), typeof(Cell), typeof(Font) }).Union(SadConsole.Engine.RegisteredEffects);
-            }
+            ConsoleTypes = new Type[] { typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceView), typeof(Consoles.ConsoleList), typeof(Consoles.TextSurfaceRenderer), typeof(Cell), typeof(CellAppearance), typeof(Consoles.Cursor), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.LayeredTextRenderer), typeof(Consoles.LayeredTextSurface), typeof(Consoles.AnimatedTextSurface) };
         }
 
         /// <summary>
@@ -113,28 +112,6 @@
     }
 }
 
-namespace SadConsole.Entities
-{
-    using System.Linq;
-    using System.Collections.Generic;
-
-    /// <summary>
-    /// Common serialization tasks for SadConsole.
-    /// </summary>
-    public static class Serializer
-    {
-        /// <summary>
-        /// The types commonly used when sesrializing an <see cref="Entity"/>.
-        /// </summary>
-        public static IEnumerable<System.Type> AnimationTypes
-        {
-            get
-            {
-                return (new System.Type[] { typeof(Animation), typeof(Entity), typeof(Frame) }).Union(SadConsole.Serializer.ConsoleTypes);
-            }
-        }
-    }
-}
 
 namespace SadConsole.Instructions
 {

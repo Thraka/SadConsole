@@ -175,13 +175,22 @@
             set { _sliderBarCharacter = value; this.IsDirty = true; }
         }
 
-        public ScrollBar(System.Windows.Controls.Orientation orientation, int size)
+        public static ScrollBar Create(System.Windows.Controls.Orientation orientation, int size)
+        {
+            if (size <= 2)
+                throw new Exception("The scroll bar must be 4 or more in size.");
+
+            if (orientation == System.Windows.Controls.Orientation.Vertical)
+                return new ScrollBar(orientation, 1, size);
+            else
+                return new ScrollBar(orientation, size, 1);
+        }
+
+
+        private ScrollBar(System.Windows.Controls.Orientation orientation, int width, int height): base(width, height)
         {
             _initialized = true;
             _barOrientation = orientation;
-
-            if (size <= 2)
-                size = 4;
 
             _sliderCharacter = 219;
 
@@ -190,15 +199,21 @@
                 _sliderBarCharacter = 176;
                 _topOrLeftCharacter = 17;
                 _bottomOrRightCharacter = 16;
-                Resize(size, 1);
             }
             else
             {
                 _sliderBarCharacter = 176;
                 _topOrLeftCharacter = 30;
                 _bottomOrRightCharacter = 31;
-                Resize(1, size);
             }
+
+            if (width > height)
+                _sliderBarSize = width - 2;
+            else
+                _sliderBarSize = height - 2;
+
+            _sliderPositionValues = new int[_sliderBarSize];
+            DetermineSliderPositions();
         }
 
         public override void DetermineAppearance()
@@ -232,66 +247,48 @@
 
                 this.IsDirty = true;
         }
-
-        protected override void OnResize()
-        {
-            base.OnResize();
-
-            if (_initialized)
-            {
-                int size;
-
-                if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
-                    size = this.Width;
-                else
-                    size = this.Height;
-
-                _sliderBarSize = size - 2;
-                _sliderPositionValues = new int[_sliderBarSize];
-                DetermineSliderPositions();
-            }
-        }
+        
 
         public override void Compose()
         {
             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
             {
                 this.SetCellAppearance(0, 0, Theme.Ends.Normal);
-                this.SetCharacter(0, 0, _topOrLeftCharacter);
+                this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                this.SetCellAppearance(Width - 1, 0, Theme.Ends.Normal);
-                this.SetCharacter(Width - 1, 0, _bottomOrRightCharacter);
+                this.SetCellAppearance(textSurface.Width - 1, 0, Theme.Ends.Normal);
+                this.SetGlyph(textSurface.Width - 1, 0, _bottomOrRightCharacter);
 
                 for (int i = 1; i <= _sliderBarSize; i++)
                 {
                     this.SetCellAppearance(i, 0, Theme.Bar.Normal);
-                    this.SetCharacter(i, 0, _sliderBarCharacter);
+                    this.SetGlyph(i, 0, _sliderBarCharacter);
                 }
 
                 if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
                 {
                     this.SetCellAppearance(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
-                    this.SetCharacter(1 + _currentSliderPosition, 0, _sliderCharacter);
+                    this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
                 }
             }
             else
             {
                 this.SetCellAppearance(0, 0, Theme.Ends.Normal);
-                this.SetCharacter(0, 0, _topOrLeftCharacter);
+                this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                this.SetCellAppearance(0, Height - 1, Theme.Ends.Normal);
-                this.SetCharacter(0, Height - 1, _bottomOrRightCharacter);
+                this.SetCellAppearance(0, textSurface.Height - 1, Theme.Ends.Normal);
+                this.SetGlyph(0, textSurface.Height - 1, _bottomOrRightCharacter);
 
                 for (int i = 0; i < _sliderBarSize; i++)
                 {
                     this.SetCellAppearance(0, i + 1, Theme.Bar.Normal);
-                    this.SetCharacter(0, i + 1, _sliderBarCharacter);
+                    this.SetGlyph(0, i + 1, _sliderBarCharacter);
                 }
 
                 if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
                 {
                     this.SetCellAppearance(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
-                    this.SetCharacter(0, 1 + _currentSliderPosition, _sliderCharacter);
+                    this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
                 }
 
             }
@@ -314,8 +311,8 @@
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.CapturedControl == null)
                 {
-                    if (info.ConsoleLocation.X >= this.Position.X && info.ConsoleLocation.X < this.Position.X + this.Width &&
-                        info.ConsoleLocation.Y >= this.Position.Y && info.ConsoleLocation.Y < this.Position.Y + this.Height)
+                    if (info.ConsoleLocation.X >= this.Position.X && info.ConsoleLocation.X < this.Position.X + textSurface.Width &&
+                        info.ConsoleLocation.Y >= this.Position.Y && info.ConsoleLocation.Y < this.Position.Y + textSurface.Height)
                     {
 
                         if (info.LeftClicked)
@@ -324,14 +321,14 @@
                             {
                                 if (mouseControlPosition.X == 0)
                                     Value -= Step;
-                                if (mouseControlPosition.X == this.Width - 1)
+                                if (mouseControlPosition.X == textSurface.Width - 1)
                                     Value += Step;
                             }
                             else
                             {
                                 if (mouseControlPosition.Y == 0)
                                     Value -= Step;
-                                if (mouseControlPosition.Y == this.Height - 1)
+                                if (mouseControlPosition.Y == textSurface.Height - 1)
                                     Value += Step;
                             }
 
@@ -361,12 +358,14 @@
 
                             Parent.FocusedControl = this;
                         }
+
+                        return true;
                     }
                 }
                 else if (Parent.CapturedControl == this)
                 {
-                    if (info.ConsoleLocation.X >= this.Position.X - 2 && info.ConsoleLocation.X < this.Position.X + this.Width + 2 &&
-                        info.ConsoleLocation.Y >= this.Position.Y - 3 && info.ConsoleLocation.Y < this.Position.Y + this.Height + 3)
+                    if (info.ConsoleLocation.X >= this.Position.X - 2 && info.ConsoleLocation.X < this.Position.X + textSurface.Width + 2 &&
+                        info.ConsoleLocation.Y >= this.Position.Y - 3 && info.ConsoleLocation.Y < this.Position.Y + textSurface.Height + 3)
                     {
                         if (info.LeftButtonDown)
                         {
@@ -412,14 +411,17 @@
                                     }
                                 }
                             }
+
+                            return true;
                         }
                         else
                             Parent.ReleaseControl();
+
+                        return false;
+
                     }
                 }
-
-                return true;
-
+                
                 //else if(Parent.CapturedControl == this && !info.LeftButtonDown)
                 //{
                 //    Parent.ReleaseControl();
@@ -490,7 +492,6 @@
         private void AfterDeserialized(StreamingContext context)
         {
             _initialized = true;
-            OnResize();
 
             var temp = _value;
             _value = -22;

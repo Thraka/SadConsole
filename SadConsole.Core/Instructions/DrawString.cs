@@ -8,7 +8,7 @@
     /// Draws a string to a console as if someone was typing.
     /// </summary>
     [DataContract]
-    public class DrawString : InstructionBase<Consoles.Console>
+    public class DrawString : InstructionBase<Consoles.SurfaceEditor>
     {
         #region Settings
         /// <summary>
@@ -28,12 +28,7 @@
         /// </summary>
         [DataMember]
         public Point Position { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether or not to use the virtual cursor to write the text.
-        /// </summary>
-        [DataMember]
-        public bool UseConsolesCursorToPrint { get; set; }
+        
         #endregion
 
         private double _timeElapsed = 0d;
@@ -43,7 +38,7 @@
         private bool _started = false;
         private Point _tempLocation;
 
-        public DrawString(Consoles.Console target)
+        public DrawString(Consoles.SurfaceEditor target)
             : base(target)
         {
         }
@@ -72,7 +67,7 @@
 
             if (TotalTimeToPrint == 0f)
             {
-                Target.CellData.Print(Position.X, Position.Y, Text);
+                Target.Print(Position.X, Position.Y, Text);
                 IsFinished = true;
             }
             else
@@ -83,12 +78,9 @@
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
                     _timeElapsed = 0d;
 
-                    SadConsole.Consoles.Console.Cursor cur;
-
-                    if (UseConsolesCursorToPrint)
-                        cur = Target.VirtualCursor;
-                    else
-                        cur = new Consoles.Console.Cursor(Target);
+                    SadConsole.Consoles.Cursor cur;
+                    
+                    cur = new Consoles.Cursor(Target);
 
                     cur.Position = _tempLocation;
 

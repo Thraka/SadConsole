@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Console = SadConsole.Consoles.Console;
-using SadConsole.Entities;
 using SadConsole.Consoles;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 
 namespace Castle
 {
-    internal class Monster : Entity
+    internal class Monster : SadConsole.Game.GameObject
     {
         public int RoomId { get; private set; }
         public bool IsAlive { get; private set; }
@@ -31,8 +30,8 @@ namespace Castle
             this.Name = inventoryName;
             this.InventoryName = name;
             this.RoomId = roomId;
-            _position.X = x;
-            _position.Y = y;
+            position.X = x;
+            position.Y = y;
             this.Character = character;
             this.Health = health;
             this.Description = description;
@@ -40,14 +39,16 @@ namespace Castle
             this.Value = 100;
             this.IsGuard = false;
 
-            _canUseKeyboard = false;
-            _currentAnimation.CurrentFrame[0].CharacterIndex = character;
+
+            Animation = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
+            var frame = Animation.CreateFrame();
+            frame[0].GlyphIndex = character;
             
         }
 
         public virtual Point PreviewMove(Point playerLocation)
         {
-            Point preview = new Point(_position.X, _position.Y);
+            Point preview = new Point(position.X, position.Y);
 
             int xDistance = Math.Abs(playerLocation.X - preview.X);
             int yDistance = Math.Abs(playerLocation.Y - preview.Y);
@@ -82,8 +83,8 @@ namespace Castle
         {
             if (this.IsVisible)
             {
-                _position.X = location.X;
-                _position.Y = location.Y;
+                position.X = location.X;
+                position.Y = location.Y;
             }
         }
 
@@ -150,7 +151,7 @@ namespace Castle
 
         public override Point PreviewMove(Point playerLocation)
         {
-            return _position;
+            return position;
         }
 
         public override UserMessage Hit(CastleItem sword)

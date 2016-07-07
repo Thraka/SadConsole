@@ -7,7 +7,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class Game1: Game
+    public class Game1: Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager _graphics;
         Console _defaultConsole;
@@ -25,48 +25,44 @@
         {
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
-            IsFixedTimeStep = true;
 
             // Uncomment these two lines to run as fast as possible
             //_graphics.SynchronizeWithVerticalRetrace = false;
             //IsFixedTimeStep = false;
 
-            // Initialize the SadConsole engine and the first effects library (provided by the SadConsole.Effects.dll binary)
-            SadConsole.Engine.Initialize(GraphicsDevice);
+            // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
+            var rootConsole = SadConsole.Engine.Initialize(_graphics, "IBM.font", 80, 25);
 
-            // Tell SadConsole to track the mouse.
-            SadConsole.Engine.UseMouse = true;
+            Theme.SetupThemes();
 
-            // Load the default font.
-            using (var stream = System.IO.File.OpenRead("Fonts/IBM.font"))
-                SadConsole.Engine.DefaultFont = SadConsole.Serializer.Deserialize<Font>(stream);
 
-            // Using the default font, resize the window to a Width,Height of cells. This example uses the MS-DOS default of 80 columns by 25 rows.
-            SadConsole.Engine.DefaultFont.ResizeGraphicsDeviceManager(_graphics, 80, 25, 0, 0);
+            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
+            // We don't want to use that for the sample project.
+            SadConsole.Engine.ConsoleRenderStack.Clear();
+            SadConsole.Engine.ActiveConsole = null;
 
-            // Create the default console, show the cursor, and let the console accept keyboard input.
-            _defaultConsole = new Console(80, 25);
-            _defaultConsole.VirtualCursor.IsVisible = true;
-            _defaultConsole.CanUseKeyboard = true;
+            rootConsole.IsVisible = false;
+            rootConsole.Fill(Color.Blue, Color.DarkGreen, 0, null);
+            rootConsole.Print(2, 2, "Hello");
+            rootConsole.Position = new Point(2, 0);
 
-            // Add the default console to the list of consoles.
-            SadConsole.Engine.ConsoleRenderStack.Add(_defaultConsole);
+            // We'll instead use our demo consoles that show various features of SadConsole.
+            SadConsole.Engine.ConsoleRenderStack
+                = new ConsoleList() {
+                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
+                                        new CustomConsoles.CursorConsole(),
+                                        new CustomConsoles.DOSConsole(),
+                                        new CustomConsoles.SceneProjectionConsole(),
+                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.StaticConsole(),
+                                        new CustomConsoles.StretchedConsole(),
+                                        new CustomConsoles.BorderedConsole(),
+                                        new CustomConsoles.GameObjectConsole(),
+                                        new CustomConsoles.RandomScrollingConsole(),
+                                        new CustomConsoles.WorldGenerationConsole(),
+                                    };
 
-            
-            // If you want to use the custom console demo provided by this starter project, uncomment out the line below.
-            SadConsole.Engine.ConsoleRenderStack = new ConsoleList() {
-                                                                       new CustomConsoles.CursorConsole(),
-                                                                       new CustomConsoles.WorldGenerationConsole(),
-                                                                       new CustomConsoles.StaticConsole(),
-                                                                       new CustomConsoles.StretchedConsole(), 
-                                                                       new CustomConsoles.BorderedConsole(80, 25), 
-                                                                       new CustomConsoles.DOSConsole(),
-                                                                       new CustomConsoles.WindowTestConsole(),
-                                                                       new CustomConsoles.EntityAndConsole(),
-                                                                       new CustomConsoles.RandomScrollingConsole(),
-                                                                       new CustomConsoles.SplashScreen(),
-                                                                     };
-
+            // Show the first console (by default all of our demo consoles are hidden)
             SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
@@ -75,10 +71,24 @@
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
+            // Uncomment to see FPS. If the unlimited FPS is not uncommented at the top, you'll probably only see 60fps.
             //Components.Add(new FPSCounterComponent(this));
 
             // Call the default initialize of the base class.
             base.Initialize();
+        }
+        
+        private void MoveNextConsole()
+        {
+            currentConsoleIndex++;
+
+            if (currentConsoleIndex >= SadConsole.Engine.ConsoleRenderStack.Count)
+                currentConsoleIndex = 0;
+
+            for (int i = 0; i < SadConsole.Engine.ConsoleRenderStack.Count; i++)
+                SadConsole.Engine.ConsoleRenderStack[i].IsVisible = currentConsoleIndex == i;
+
+            Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[currentConsoleIndex];
         }
 
         protected override void Update(GameTime gameTime)
@@ -93,15 +103,7 @@
                 // in the Initialize method above.
                 if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F1))
                 {
-                    currentConsoleIndex++;
-
-                    if (currentConsoleIndex >= SadConsole.Engine.ConsoleRenderStack.Count)
-                        currentConsoleIndex = 0;
-
-                    for (int i = 0; i < SadConsole.Engine.ConsoleRenderStack.Count; i++)
-                        SadConsole.Engine.ConsoleRenderStack[i].IsVisible = currentConsoleIndex == i;
-
-                    Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[currentConsoleIndex];
+                    MoveNextConsole();
                 }
                 else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F2))
                 {
@@ -119,7 +121,7 @@
 
             // Draw the consoles to the screen.
             SadConsole.Engine.Draw(gameTime);
-            
+
             base.Draw(gameTime);
         }
     }
@@ -127,20 +129,23 @@
 
     public class FPSCounterComponent : DrawableGameComponent
     {
-        CellsRenderer console;
+        TextSurfaceRenderer consoleRender;
+        TextSurface console;
+        SurfaceEditor editor;
 
         int frameRate = 0;
         int frameCounter = 0;
         TimeSpan elapsedTime = TimeSpan.Zero;
 
 
-        public FPSCounterComponent(Game game)
+        public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
             : base(game)
         {
-            console = new CellsRenderer(new CellSurface(30, 1), new SpriteBatch(game.GraphicsDevice));
-            console.CellData.DefaultBackground = Color.Black;
-            console.CellData.Clear();
-            console.Position = new Point(0, 10);
+            console = new TextSurface(30, 1, Engine.DefaultFont);
+            editor = new SurfaceEditor(console);
+            console.DefaultBackground = Color.Black;
+            editor.Clear();
+            consoleRender = new TextSurfaceRenderer();
         }
 
 
@@ -161,10 +166,10 @@
         {
             frameCounter++;
 
-            string fps = string.Format("fps: {0} mem : {1}", frameRate, GC.GetTotalMemory(false));
-            console.CellData.Clear();
-            console.CellData.Print(0, 0, fps);
-            console.Render();
+            string fps = string.Format("fps: {0}", frameRate);
+            editor.Clear();
+            editor.Print(0, 0, fps);
+            consoleRender.Render(console, Point.Zero);
         }
     }
 }

@@ -7,32 +7,42 @@ using System.Threading.Tasks;
 
 namespace SadConsole.GameHelpers
 {
-    [DataContract]
-
-    public class GameConsoleMetadata : Consoles.LayeredConsoleMetadata
+    /// <summary>
+    /// A text surface with metadata to help with common game functions.
+    /// </summary>
+    public class GameObjectTextSurface : TextSurface
     {
-        [DataMember]
-        public GameObjectCollection GameObjects = new GameObjectCollection();
-    }
+        public List<Trigger> Triggers;
 
-    [DataContract]
+        public List<Processor> Processors;
 
-    public class GameConsole : Consoles.LayeredConsole<GameConsoleMetadata>
-    {
-        public GameConsole(int layers, int width, int height) :base(layers, width, height) { }
+        public List<Action> Actions;
 
+        public List<GameObject> Objects;
 
-        public void AssociateLayersWithObjects()
+        public void AssociateObjects()
         {
-            for (int i = 0; i < _layers.Count; i++)
+            foreach (var item in base.Keys)
             {
-                foreach (var gameObject in _layerMetadata[i].GameObjects.Values)
-                {
-                    gameObject.Layer = i;
-                }
-                
+                var newObject = GameObjectParser.Parse(this[item]);
+
+                transformedObjects.Add(new Tuple<Point, GameObject>(item, TransformObject(newObject)));
+            }
+
+            foreach (var item in transformedObjects)
+            {
+                this[item.Item1] = item.Item2;
+
+                if (item.Item2 is Trigger)
+                    Triggers.Add((Trigger)item.Item2);
+
+                else if (item.Item2 is Processor)
+                    Processors.Add((Processor)item.Item2);
+
+                else if (item.Item2 is Action)
+                    Actions.Add((Action)item.Item2);
             }
         }
-
     }
+
 }

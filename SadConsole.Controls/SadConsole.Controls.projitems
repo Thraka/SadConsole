@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Window.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Window.Static.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\WindowRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlBase.cs" />
@@ -24,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ButtonTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\ControlsConsoleTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\InputBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Library.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ListBoxTheme.cs" />

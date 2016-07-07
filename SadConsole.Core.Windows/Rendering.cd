@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SadConsole.Consoles.Console" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="4.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SadConsole.Consoles.Console.Cursor" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\Console.Cursor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="Data" Type="SadConsole.Consoles.TextSurface">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.902" Y="-0.232" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Renderer" Type="SadConsole.Consoles.ITextSurfaceRenderer">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.64" Y="0.195" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ACQCQMgBg4ABEEKoAABQ8ABAmQABAhAAADCsoAClECA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\Console.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Data" />
+      <Property Name="Renderer" />
+    </ShowAsAssociation>
+    <Lollipop Orientation="Left" Position="0.1" />
+  </Class>
+  <Class Name="SadConsole.Consoles.TextSurface" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.5" Y="4" Width="1.5" />
+    <NestedTypes>
+      <Class Name="SadConsole.Consoles.TextSurface.CellEffectData" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\TextSurface.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ACBCjLmUJjCABBAAWEIQfEAgAjCmiAgACAAdAAPeQAg=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\TextSurface.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SadConsole.Consoles.TextSurfaceRenderer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ARAAAAAAAAAAAAAABAAAAAAAgAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\TextSurfaceRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SadConsole.Consoles.TextSurfaceView" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIBAAAAAAAAAAAAAIAAAEAAAACAAQAAICAAk=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\TextSurfaceView.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="data" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SadConsole.Entities.Animation" Collapsed="true">
+    <Position X="12.5" Y="7.25" Width="1.5" />
+    <AssociationLine Name="CurrentFrame" Type="SadConsole.Entities.Frame">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.838" Y="0.789" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EATCgIgALCAAAAAEAAEAAEQBAASAAIEUIAYAhAEKAAE=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Entities\Animation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentFrame" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SadConsole.Entities.Entity" Collapsed="true">
+    <Position X="9.25" Y="7.25" Width="1.5" />
+    <NestedTypes>
+      <Class Name="SadConsole.Entities.Entity.Serialized" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Entities\Entity.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="CurrentAnimation" Type="SadConsole.Entities.Animation">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.393" Y="0.11" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AARAgMgAgCBAEABwBIAQEkQRAACAGAAoIDSAgEACASA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Entities\Entity.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentAnimation" />
+    </ShowAsAssociation>
+    <Lollipop Position="1.054" />
+  </Class>
+  <Class Name="SadConsole.Entities.Frame" Collapsed="true">
+    <Position X="12.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Entities\Frame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="SadConsole.Consoles.IConsole" Collapsed="true">
+    <Position X="6.25" Y="4" Width="1.5" />
+    <InheritanceLine Type="SadConsole.IDraw" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.938" Y="3.062" />
+        <Point X="6.938" Y="4" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAABgAAAAAAgAAAAQAAAAAAAABAAAAAAAAAAACA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\IConsole.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SadConsole.Consoles.IConsoleList" Collapsed="true">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIAAEAAAAAAAAAACggABASAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\IParentConsole.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SadConsole.Consoles.ITextSurfaceRenderer" Collapsed="true">
+    <Position X="9.75" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ARAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\ITextSurfaceRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SadConsole.Consoles.ITextSurfaceView" Collapsed="true">
+    <Position X="12.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIBAAAAAAAAAAAAAAAAAEAAAACAAQAAICAAg=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\Consoles\ITextSurfaceView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SadConsole.IDraw" Collapsed="true">
+    <Position X="6.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEAAAAAAAEAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>E:\Code\Gits\SadConsole\SadConsole2.Core\IDraw.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

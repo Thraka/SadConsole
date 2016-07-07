@@ -132,23 +132,14 @@
             CanFocus = true;
             MouseCanFocus = true;
 
+            Renderer = new WindowRenderer();
+
             IsDirty = true;
             Redraw();
         }
         #endregion
 
         #region Base Methods
-        protected override void OnResize()
-        {
-            base.OnResize();
-
-            _border.Width = CellData.Width;
-            _border.Height = CellData.Height;
-
-            IsDirty = true;
-            Redraw();
-        }
-
         protected override void OnVisibleChanged()
         {
             base.OnVisibleChanged();
@@ -157,6 +148,15 @@
                 Show(ModalIsDefault);
             else
                 Hide();
+        }
+
+        public override void Render()
+        {
+            //TODO: Perf - cache reference?
+            ((WindowRenderer)_renderer).IsModal = _isModal;
+            ((WindowRenderer)_renderer).ModalTint = Theme.ModalTint;
+
+            base.Render();
         }
 
         /// <summary>
@@ -172,7 +172,7 @@
 
                 if (_isDragging && info.LeftButtonDown)
                 {
-                    if (base.UseAbsolutePositioning)
+                    if (base.UsePixelPositioning)
                         Position = new Point(info.ScreenLocation.X - (_previousMouseInfo.ScreenLocation.X - _consoleAtDragAbsPos.X), info.ScreenLocation.Y - (_previousMouseInfo.ScreenLocation.Y - _consoleAtDragAbsPos.Y));
                     else
                         Position = new Point(info.WorldLocation.X - _previousMouseInfo.ConsoleLocation.X, info.WorldLocation.Y - _previousMouseInfo.ConsoleLocation.Y);
@@ -230,19 +230,6 @@
             }
             else
                 return base.ProcessKeyboard(info);
-        }
-
-        protected override void OnBeforeRender()
-        {
-            if (_isModal)
-            {
-                SpriteBatch batch = new SpriteBatch(Engine.Device);
-                batch.Begin();
-                batch.Draw(Engine.BackgroundCell, new Rectangle(0, 0, Engine.Device.PresentationParameters.BackBufferWidth, Engine.Device.PresentationParameters.BackBufferHeight), null, Theme.ModalTint);
-                batch.End();
-            }
-
-            base.OnBeforeRender();
         }
         #endregion
 
@@ -316,10 +303,10 @@
             int screenWidth = SadConsole.Engine.Device.PresentationParameters.BackBufferWidth;
             int screenHeight = SadConsole.Engine.Device.PresentationParameters.BackBufferHeight;
 
-            if (UseAbsolutePositioning)
-                this.Position = new Point((screenWidth / 2) - ((this.CellData.Width * this._font.CellWidth) / 2), (screenHeight / 2) - ((this.CellData.Height * this._font.CellHeight) / 2));
+            if (UsePixelPositioning)
+                this.Position = new Point((screenWidth / 2) - ((textSurface.Width * textSurface.Font.Size.X) / 2), (screenHeight / 2) - ((textSurface.Height * textSurface.Font.Size.Y) / 2));
             else
-                this.Position = new Point(((screenWidth / this._font.CellWidth) / 2) - (this.CellData.Width / 2), ((screenHeight / this._font.CellHeight) / 2) - (this.CellData.Height / 2));
+                this.Position = new Point(((screenWidth / textSurface.Font.Size.X) / 2) - (textSurface.Width / 2), ((screenHeight / textSurface.Font.Size.Y) / 2) - (textSurface.Height / 2));
             
         }
 
@@ -328,19 +315,19 @@
         /// </summary>
         public virtual void Redraw()
         {
-            this.CellData.DefaultForeground = Theme.FillStyle.Foreground;
-            this.CellData.DefaultBackground = Theme.FillStyle.Background;
+            textSurface.DefaultForeground = Theme.FillStyle.Foreground;
+            textSurface.DefaultBackground = Theme.FillStyle.Background;
 
-            this.CellData.Clear();
+            Clear();
 
             ResetBox();
-            Border.Draw(this.CellData);
+            Border.Draw(this);
 
             // Draw title
             string adjustedText = "";
             _titleWidth = 0;
             _titleLocationX = 0;
-            int adjustedWidth = this.CellData.Width - 2;
+            int adjustedWidth = textSurface.Width - 2;
 
             if (!string.IsNullOrEmpty(_title))
             {
@@ -355,18 +342,18 @@
                 _titleWidth = adjustedText.Length;
                 if (_titleAlignment == HorizontalAlignment.Left)
                 {
-                    this.CellData.Print(1, 0, adjustedText, Theme.TitleStyle);
+                    Print(1, 0, adjustedText, Theme.TitleStyle);
                     _titleLocationX = 1;
                 }
                 else if (_titleAlignment == HorizontalAlignment.Center)
                 {
                     _titleLocationX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
-                    this.CellData.Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
+                    Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
                 }
                 else
                 {
-                    _titleLocationX = this.CellData.Width - 1 - adjustedText.Length;
-                    this.CellData.Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
+                    _titleLocationX = textSurface.Width - 1 - adjustedText.Length;
+                    Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
                 }
             }
         }

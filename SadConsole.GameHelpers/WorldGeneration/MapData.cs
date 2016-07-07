@@ -1,4 +1,4 @@
-﻿namespace SadConsole.GameHelpers.WorldGeneration
+﻿namespace SadConsole.Game.WorldGeneration
 {
     public class MapData
     {

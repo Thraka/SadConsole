@@ -52,16 +52,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Noise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\NoiseLookupTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Utilities.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Action.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObjectCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameObjectParser.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Processor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Setting.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Trigger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Generator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\MapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\River.cs" />

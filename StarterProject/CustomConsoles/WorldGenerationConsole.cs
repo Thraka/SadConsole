@@ -9,41 +9,41 @@ namespace StarterProject.CustomConsoles
     class WorldGenerationConsole : Console
     {
         //private CellSurface mainData;
-        private CellsRenderer messageData;
+        private Console messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
 
         // Zoom calculation for the width/height of a cell. Zooms out to make it look like square pixels.
-        private Point ZoomLevel = new Point(2, 4);
+        //private Point ZoomLevel = new Point(2, 4);
 
-        private SadConsole.GameHelpers.WorldGeneration.WrappingWorldGenerator<SadConsole.GameHelpers.WorldGeneration.CellSurfaceMap, CellSurface> generator;
+        private SadConsole.Game.WorldGeneration.WrappingWorldGenerator<SadConsole.Game.WorldGeneration.TextSurfaceMap, TextSurface> generator;
 
         public WorldGenerationConsole() : base(80, 25)
         {
             messageData = new Console(1, 1);
-            messageData.CellData = CellData;
+            messageData.TextSurface = textSurface;
             IsVisible = false;
             
             KeyboardHandler = (cons, info) =>
             {
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X - 1, cons.ViewArea.Y, 80 * ZoomLevel.X, 25 * ZoomLevel.Y);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X - 1, cons.TextSurface.RenderArea.Y, 80 * 2, 25 * 2);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X + 1, cons.ViewArea.Y, 80 * ZoomLevel.X, 25 * ZoomLevel.Y);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X + 1, cons.TextSurface.RenderArea.Y, 80 * 2, 25 * 2);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y - 1, 80 * ZoomLevel.X, 25 * ZoomLevel.Y);
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y - 1, 80 * 2, 25 * 2);
 
                 if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-                    cons.ViewArea = new Rectangle(cons.ViewArea.X, cons.ViewArea.Y + 1, 80 * ZoomLevel.X, 25 * ZoomLevel.Y);
-                
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y + 1, 80 * 2, 25 * 2);
+
                 if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Enter))
                 {
-                    messageData.CellData.Fill(Color.White, Color.Black, 0, null);
-                    messageData.CellData.Print(0, 0, "Generating map, please wait...");
+                    messageData.Fill(Color.White, Color.Black, 0, null);
+                    messageData.Print(0, 0, "Generating map, please wait...");
                     initialized = true;
                     initializedStep2 = false;
                     initializedStep3 = false;
@@ -51,26 +51,32 @@ namespace StarterProject.CustomConsoles
 
                 if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space))
                 {
-                    if (CellData == generator.HeightMapRenderer)
+                    var oldRenderArea = cons.TextSurface.RenderArea;
+                    var oldFont = cons.TextSurface.Font;
+
+                    if (textSurface == generator.HeightMapRenderer)
                     {
-                        CellData = generator.HeatMapRenderer;
-                        messageData.CellData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Heat    ", Color.White, Color.Black);
+                        textSurface = generator.HeatMapRenderer;
+                        messageData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Heat    ", Color.White, Color.Black);
                     }
-                    else if (CellData == generator.HeatMapRenderer)
+                    else if (textSurface == generator.HeatMapRenderer)
                     {
-                        CellData = generator.MoistureMapRenderer;
-                        messageData.CellData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Moisture", Color.White, Color.Black);
+                        textSurface = generator.MoistureMapRenderer;
+                        messageData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Moisture", Color.White, Color.Black);
                     }
-                    else if (CellData == generator.MoistureMapRenderer)
+                    else if (textSurface == generator.MoistureMapRenderer)
                     {
-                        CellData = generator.BiomeMapRenderer;
-                        messageData.CellData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Biome   ", Color.White, Color.Black);
+                        textSurface = generator.BiomeMapRenderer;
+                        messageData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Biome   ", Color.White, Color.Black);
                     }
                     else
                     {
-                        CellData = generator.HeightMapRenderer;
-                        messageData.CellData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Height  ", Color.White, Color.Black);
+                        textSurface = generator.HeightMapRenderer;
+                        messageData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Height  ", Color.White, Color.Black);
                     }
+
+                    cons.TextSurface.RenderArea = oldRenderArea;
+                    cons.TextSurface.Font = oldFont;
                 }
 
                 return true;
@@ -83,8 +89,8 @@ namespace StarterProject.CustomConsoles
             if (IsVisible && !initialized)
             {
                 // Write to the message layer
-                CellData.Clear();
-                CellData.Print(0, 0, "Generating map, please wait...");
+                Clear();
+                Print(0, 0, "Generating map, please wait...");
                 initialized = true;
             }
         }
@@ -111,14 +117,14 @@ namespace StarterProject.CustomConsoles
                 //mainData = new CellSurface(2000, 2000);
 
                 // Clear message data and make it transparent so that it acts as a layer
-                messageData.CellData.Fill(Color.White, Color.Transparent, 0, null);
+                messageData.Fill(Color.White, Color.Transparent, 0, null);
 
-                generator = new SadConsole.GameHelpers.WorldGeneration.WrappingWorldGenerator<SadConsole.GameHelpers.WorldGeneration.CellSurfaceMap, CellSurface>();
-                generator.Start(256, 256);
-                CellData = generator.BiomeMapRenderer;
-                messageData.CellData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Biome   ", Color.White, Color.Black);
-                this.CellSize = new Point(this.Font.CellWidth / ZoomLevel.X, this.Font.CellHeight / ZoomLevel.Y);
-
+                generator = new SadConsole.Game.WorldGeneration.WrappingWorldGenerator<SadConsole.Game.WorldGeneration.TextSurfaceMap, TextSurface>();
+                generator.Start(512, 256);
+                textSurface = generator.BiomeMapRenderer;
+                messageData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Biome   ", Color.White, Color.Black);
+                textSurface.Font = Engine.Fonts[Engine.DefaultFont.Name].GetFont(Font.FontSizes.Half);
+                
                 initializedStep3 = true;
             }
 
