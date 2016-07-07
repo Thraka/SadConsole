@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SadConsole.GameHelpers
+namespace SadConsole.Game
 {
     /// <summary>
     /// Helpers related to <see cref="Consoles.AnimatedTextSurface"/> animations.
     /// </summary>
-    public static class Animation
+    public static class Animations
     {
         /// <summary>
         /// 

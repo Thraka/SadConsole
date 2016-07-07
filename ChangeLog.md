@@ -18,7 +18,8 @@ This change log was more relevant when I wasn't using GitHub. Now it only lists 
 	* Fixed a bug that stopped processing mouse on any control added after a scroll bar.
 	* Windows now use a WindowRenderer instead of the standard renderer.
 * Added a new Print overload for a text surface that allows you to opt into which things you want to update (foreground, background, spriteeffect).
-
+* Entity system removed. Replaced with Consoles.AnimatedTextSurface and in the GameHelpers library, SadConsole.Game.GameObject
+* Tons more... https://github.com/Thraka/SadConsole/pull/26
 
 ## Version 2.0.1.1 (10/13/2015)
 * Updated the NuGet package and wiki. When you install from NuGet you get font files and a browser page will open that points the NuGet starter page on the wiki.

@@ -49,15 +49,15 @@
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                       // new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
-                                        //new CustomConsoles.CursorConsole(),
-                                        //new CustomConsoles.DOSConsole(),
-                                        //new CustomConsoles.SceneProjectionConsole(),
-                                        //new CustomConsoles.ControlsTest(),
-                                        //new CustomConsoles.StaticConsole(),
-                                        //new CustomConsoles.StretchedConsole(), 
-                                        //new CustomConsoles.BorderedConsole(), 
-                                        new CustomConsoles.EntityAndConsole(),
+                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
+                                        new CustomConsoles.CursorConsole(),
+                                        new CustomConsoles.DOSConsole(),
+                                        new CustomConsoles.SceneProjectionConsole(),
+                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.StaticConsole(),
+                                        new CustomConsoles.StretchedConsole(),
+                                        new CustomConsoles.BorderedConsole(),
+                                        new CustomConsoles.GameObjectConsole(),
                                         new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.WorldGenerationConsole(),
                                     };
@@ -68,104 +68,6 @@
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
 
-
-            //SadConsole.Engine.ConsoleRenderStack.Clear();
-
-            // *****************
-            // Game Console testing
-            //SadConsole.GameHelpers.GameConsole con1 = new SadConsole.GameHelpers.GameConsole(10, 10, 2);
-            //con1.LayeredTextSurface.SetActiveLayer(0);
-            //con1.SetCharacter(1, 1, 2);
-            //con1.LayeredTextSurface.SetActiveLayer(1);
-            //con1.SetCharacter(2, 2, 2);
-            //Engine.ConsoleRenderStack.Add(con1);
-
-            // ******************
-            // Testing cursor serialization
-            //var con1 = new Console(10, 10);
-            //con1.VirtualCursor.IsVisible = true;
-            //con1.VirtualCursor.PrintAppearance = new CellAppearance(Color.Blue, Color.Black);
-            //con1.CanUseKeyboard = true;
-
-            //con1.Save("andy.con", false);
-            //con1 = Console.Load("andy.con");
-            //Engine.ActiveConsole = con1;
-            //Engine.ConsoleRenderStack.Add(con1);
-
-            // *****************
-            // Layer testing
-            //var con1 = new SadConsole.Consoles.Console(10, 10);
-            //var layers = new LayeredTextSurface(10, 10, 2);
-            //con1.TextSurface = layers;
-
-            //layers.SetActiveLayer(0);
-            //con1.SetCharacter(1, 1, 2);
-            //layers.SetActiveLayer(1);
-            //con1.SetCharacter(2, 2, 2);
-
-            //con1.TextSurface.RenderArea = new Rectangle(1, 1, 5, 5);
-
-            //con1.Renderer = new LayeredTextRenderer();
-
-            //Engine.ConsoleRenderStack.Add(con1);
-
-            // ***************
-            // Test multiple surfaces
-            //SadConsole.Consoles.TextSurface surface1;
-            //surface1 = new SadConsole.Consoles.TextSurface(10, 10, Engine.DefaultFont);
-            //surface1.DefaultBackground = Color.Gray;
-            //surface1.DefaultForeground = ColorAnsi.Black;
-            //SurfaceEditor editor = new SurfaceEditor(surface1);
-            //editor.Clear();
-
-            //editor.Print(2, 1, "Hello");
-
-            //tempSurface = new SadConsole.Consoles.TextSurfaceView(surface1, new Rectangle(1, 0, 4, 6));
-            ////tempSurface2 = surface1;
-            //editor.SetForeground(2, 1, Color.CadetBlue);
-            //tempRenderer = new SadConsole.Consoles.TextSurfaceRenderer();
-            //tempConsole = new Console(surface1);
-            //tempConsole.Position = new Point(5, 7);
-            //tempConsole.UsePixelPositioning = true;
-            //tempConsole.CanUseMouse = true;
-            //tempConsole.MouseHandler = (con, info) =>
-            //{
-            //    info.Fill(con);
-
-            //    if (info.Console == con)
-            //    {
-            //        if (info.Cell != null)
-            //            info.Cell.Background = Color.Blue;
-
-            //        return true;
-            //    }
-            //    return false;
-            //};
-
-
-            //tempConsole2 = new Console((TextSurfaceView)tempSurface);
-            //tempConsole2.Position = new Point(20, 15);
-            //tempConsole2.CanUseMouse = false;
-            //tempConsole2.MouseHandler = (con, info) =>
-            //{
-            //    info.Fill(con);
-
-            //    if (info.Console == con)
-            //    {
-            //        if (info.Cell != null)
-            //            info.Cell.Background = Color.Yellow;
-
-            //        return true;
-            //    }
-            //    return false;
-            //};
-
-            //SadConsole.Engine.ConsoleRenderStack.Clear();
-            //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole);
-            //SadConsole.Engine.ConsoleRenderStack.Add(tempConsole2);
-            //SadConsole.Engine.ActiveConsole = tempConsole;
-
-
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
@@ -175,14 +77,7 @@
             // Call the default initialize of the base class.
             base.Initialize();
         }
-
-
-        SadConsole.Consoles.ITextSurfaceRendered tempSurface;
-        SadConsole.Consoles.ITextSurfaceRendered tempSurface2;
-        SadConsole.Consoles.TextSurfaceRenderer tempRenderer;
-        SadConsole.Consoles.Console tempConsole;
-        SadConsole.Consoles.Console tempConsole2;
-
+        
         private void MoveNextConsole()
         {
             currentConsoleIndex++;

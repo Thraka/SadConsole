@@ -5,127 +5,149 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
+using SadConsole.Consoles;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace SadConsole.GameHelpers
+namespace SadConsole.Game
 {
-    public class GameObjectCollection : Dictionary<Point, GameObject>
+    /// <summary>
+    /// A collection of game objects with cached renderer
+    /// </summary>
+    public class GameObjectCollection : IList<GameObject>
     {
-        [IgnoreDataMember]
-        public List<Trigger> Triggers;
+        List<GameObject> backingList = new List<GameObject>();
 
-        [IgnoreDataMember]
-        public List<Processor> Processors;
-
-        [IgnoreDataMember]
-        public List<Action> Actions;
-
-        public virtual void ParseAllObjects()
+        public GameObject this[int index]
         {
-            Triggers = new List<Trigger>();
-            Processors = new List<Processor>();
-            Actions = new List<Action>();
+            get { return backingList[index]; }
+            set { backingList[index] = value; }
+        }
 
-            List<Tuple<Point, GameObject>> transformedObjects = new List<Tuple<Point, GameObject>>();
+        public int Count
+        {
+            get { return backingList.Count; }
+        }
 
-            foreach (var item in base.Keys)
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        public void Add(GameObject item)
+        {
+            item.RepositionRects = true;
+            backingList.Add(item);
+        }
+
+        public void Clear()
+        {
+            backingList.Clear();
+        }
+
+        public bool Contains(GameObject item)
+        {
+            return backingList.Contains(item);
+        }
+
+        public void CopyTo(GameObject[] array, int arrayIndex)
+        {
+            backingList.CopyTo(array, arrayIndex);
+        }
+
+        public IEnumerator<GameObject> GetEnumerator()
+        {
+            return backingList.GetEnumerator();
+        }
+
+        public int IndexOf(GameObject item)
+        {
+            return backingList.IndexOf(item);
+        }
+
+        public void Insert(int index, GameObject item)
+        {
+            backingList.Insert(index, item);
+        }
+
+        public bool Remove(GameObject item)
+        {
+            return backingList.Remove(item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            backingList.RemoveAt(index);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return backingList.GetEnumerator();
+        }
+
+        GameObjectRenderer renderer = new GameObjectRenderer();
+
+        public void Render()
+        {
+            renderer.Start();
+
+            for (int i = 0; i < backingList.Count; i++)
+                renderer.Render(backingList[i].Animation, GameObject.NoMatrix);
+
+            renderer.End();
+        }
+
+        public void Update()
+        {
+            for (int i = 0; i < backingList.Count; i++)
+                backingList[i].Update();
+        }
+
+        private class GameObjectRenderer : Consoles.TextSurfaceRenderer
+        {
+            public void Start()
             {
-                var newObject = GameObjectParser.Parse(this[item]);
-
-                transformedObjects.Add(new Tuple<Point, GameObject>(item, TransformObject(newObject)));
+                Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                BeforeRenderCallback?.Invoke(Batch);
             }
 
-            foreach (var item in transformedObjects)
+            public override void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
             {
-                this[item.Item1] = item.Item2;
-
-                if (item.Item2 is Trigger)
-                    Triggers.Add((Trigger)item.Item2);
-
-                else if (item.Item2 is Processor)
-                    Processors.Add((Processor)item.Item2);
-
-                else if (item.Item2 is Action)
-                    Actions.Add((Action)item.Item2);
-            }
-        }
-
-        protected virtual GameObject TransformObject(GameObject gameObject)
-        {
-            return gameObject;
-        }
-
-        [OnDeserialized]
-        private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
-        {
-            SetParentOnObjects();
-        }
-
-        public void SetParentOnObjects()
-        {
-            foreach (var item in this)
-                item.Value.Parent = new WeakReference<GameObjectCollection>(this);
-        }
-
-        public static void Save(GameObjectCollection instance, string file)
-        {
-            if (System.IO.File.Exists(file))
-                System.IO.File.Delete(file);
-
-            var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(GameObjectCollection));
-            using (var stream = System.IO.File.OpenWrite(file))
-            {
-                serializer.WriteObject(stream, instance);
-            }
-        }
-
-        public static GameObjectCollection Load(string file)
-        {
-            if (System.IO.File.Exists(file))
-            {
-                using (var fileObject = System.IO.File.OpenRead(file))
+                if (surface.Tint.A != 255)
                 {
-                    var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(GameObjectCollection), new Type[] { typeof(GameObject) });
+                    Cell cell;
 
-                    var collection = serializer.ReadObject(fileObject) as GameObjectCollection;
-                    collection.SetParentOnObjects();
+                    if (surface.DefaultBackground.A != 0)
+                        Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
-                    return collection;
+                    for (int i = 0; i < surface.RenderCells.Length; i++)
+                    {
+                        cell = surface.RenderCells[i];
+
+                        if (cell.IsVisible)
+                        {
+                            if (cell.ActualBackground != Color.Transparent && cell.ActualBackground != surface.DefaultBackground)
+                                Batch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+
+                            if (cell.ActualForeground != Color.Transparent)
+                                Batch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphIndexRects[cell.ActualGlyphIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.4f);
+                        }
+                    }
+
+                    if (surface.Tint.A != 0)
+                        Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
+                }
+                else
+                {
+                    Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
                 }
             }
 
-            throw new System.IO.FileNotFoundException("File not found.", file);
-        }
-
-        public static void SaveCollection(IEnumerable<GameObjectCollection> objects, string file)
-        {
-            if (System.IO.File.Exists(file))
-                System.IO.File.Delete(file);
-
-            var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(IEnumerable<GameObjectCollection>));
-            using (var stream = System.IO.File.OpenWrite(file))
+            public void End()
             {
-                serializer.WriteObject(stream, objects);
+                AfterRenderCallback?.Invoke(Batch);
+                Batch.End();
             }
-        }
-
-        public static IEnumerable<GameObjectCollection> LoadCollection(string file)
-        {
-            if (System.IO.File.Exists(file))
-            {
-                using (var fileObject = System.IO.File.OpenRead(file))
-                {
-                    var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(IEnumerable<GameObjectCollection>), new Type[] { typeof(GameObjectCollection), typeof(GameHelpers.GameObject) });
-
-                    var collections = serializer.ReadObject(fileObject) as IEnumerable<GameObjectCollection>;
-
-                    foreach (var item in collections)
-                        item.SetParentOnObjects();
-
-                    return collections;
-                }
-            }
-
-            throw new System.IO.FileNotFoundException("File not found.", file);
         }
     }
 }

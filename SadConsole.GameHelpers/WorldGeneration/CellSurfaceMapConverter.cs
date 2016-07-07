@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole.Consoles;
 
-namespace SadConsole.GameHelpers.WorldGeneration
+namespace SadConsole.Game.WorldGeneration
 {
     public interface IMapConverter<T>
     {

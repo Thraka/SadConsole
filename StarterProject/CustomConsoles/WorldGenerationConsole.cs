@@ -17,7 +17,7 @@ namespace StarterProject.CustomConsoles
         // Zoom calculation for the width/height of a cell. Zooms out to make it look like square pixels.
         //private Point ZoomLevel = new Point(2, 4);
 
-        private SadConsole.GameHelpers.WorldGeneration.WrappingWorldGenerator<SadConsole.GameHelpers.WorldGeneration.TextSurfaceMap, TextSurface> generator;
+        private SadConsole.Game.WorldGeneration.WrappingWorldGenerator<SadConsole.Game.WorldGeneration.TextSurfaceMap, TextSurface> generator;
 
         public WorldGenerationConsole() : base(80, 25)
         {
@@ -119,7 +119,7 @@ namespace StarterProject.CustomConsoles
                 // Clear message data and make it transparent so that it acts as a layer
                 messageData.Fill(Color.White, Color.Transparent, 0, null);
 
-                generator = new SadConsole.GameHelpers.WorldGeneration.WrappingWorldGenerator<SadConsole.GameHelpers.WorldGeneration.TextSurfaceMap, TextSurface>();
+                generator = new SadConsole.Game.WorldGeneration.WrappingWorldGenerator<SadConsole.Game.WorldGeneration.TextSurfaceMap, TextSurface>();
                 generator.Start(512, 256);
                 textSurface = generator.BiomeMapRenderer;
                 messageData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Biome   ", Color.White, Color.Black);

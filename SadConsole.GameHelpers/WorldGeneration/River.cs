@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SadConsole.GameHelpers.WorldGeneration
+namespace SadConsole.Game.WorldGeneration
 {
     public enum Direction
     {
