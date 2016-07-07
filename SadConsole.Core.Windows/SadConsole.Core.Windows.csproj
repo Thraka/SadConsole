@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Rendering.cd" />
   </ItemGroup>
   <Import Project="..\SadConsole.Core\SadConsole.Core.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
