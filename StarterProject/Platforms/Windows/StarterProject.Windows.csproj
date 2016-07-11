@@ -58,6 +58,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Rendering.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\SadConsole.Ansi.Windows\SadConsole.Ansi.Windows.csproj">

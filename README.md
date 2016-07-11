@@ -1,8 +1,8 @@
 # SadConsole
 
 [![Join the chat at https://gitter.im/Thraka/SadConsole](https://badges.gitter.im/Thraka/SadConsole.svg)](https://gitter.im/Thraka/SadConsole?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![nugetpkg](https://img.shields.io/badge/nuget-SadConsole-orange.svg)](http://www.nuget.org/packages/SadConsole.Core/)
+![](https://img.shields.io/badge/.NET-4.6-blue.svg)
 
 SadConsole is an MonoGame 3.5-based game library (using .NET 4.6) that provides an engine to emulate old-school console and command prompt style graphics. One or more textures are used to represent the standard ascii character set. SadConsole allows you to create console instances which can be managed independently of each other. A console is made up of individual cells which can have a foreground, background, character, and a special effect applied to it. 
 
@@ -60,3 +60,21 @@ If you're migrating an existing 2.0 project to 3.0 here are some things to remem
 		- You can render animations as the surface of any console because of this
 	3. The GameHelpers library has a **SadConsole.Game.GameObject** type that acts like the old entity type.
 		- This type though is not part of the console system like entity was.
+3. Initialization is simpler. Use this line now. No need to load a font or resize manually, it's all handled for you
+	
+	```csharp
+	var rootConsole = SadConsole.Engine.Initialize(_graphics, "IBM.font", 80, 25);
+	```
+
+	If you're using the game component, it has changed too:
+
+	```csharp
+	var sadConsoleComponent = new SadConsole.EngineGameComponent(this, graphics, "IBM.font", 80, 60, () =>
+    {
+		// ... do init stuff, no need to resize or load the font.
+	});
+
+	Components.Add(sadConsoleComponent);
+	```
+
+	Also not that Engine.Initialize will return a console to the specified screen size (in this case 80x25) and automatically adds it to the `SadConsole.Engine.ConsoleRenderStack`.
