@@ -3,7 +3,7 @@
     /// <summary>
     /// The interface describing a cell effect
     /// </summary>
-    public interface ICellEffect : System.IEquatable<ICellEffect>
+    public interface ICellEffect// : System.IEquatable<ICellEffect>
     {
         /// <summary>
         /// True when the effect is finished but attached to the cell.

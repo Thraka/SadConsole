@@ -130,25 +130,25 @@
             };
         }
 
-        public override bool Equals(ICellEffect effect)
-        {
+        //public override bool Equals(ICellEffect effect)
+        //{
 
-            if (effect is Blink)
-            {
-                if (base.Equals(effect))
-                {
-                    var effect2 = (Blink)effect;
+        //    if (effect is Blink)
+        //    {
+        //        if (base.Equals(effect))
+        //        {
+        //            var effect2 = (Blink)effect;
 
-                    return BlinkOutColor == effect2.BlinkOutColor &&
-                           BlinkSpeed == effect2.BlinkSpeed &&
-                           UseCellBackgroundColor == effect2.UseCellBackgroundColor &&
-                           StartDelay == effect2.StartDelay &&
-                           BlinkCount == effect2.BlinkCount;
-                }
-            }
+        //            return BlinkOutColor == effect2.BlinkOutColor &&
+        //                   BlinkSpeed == effect2.BlinkSpeed &&
+        //                   UseCellBackgroundColor == effect2.UseCellBackgroundColor &&
+        //                   StartDelay == effect2.StartDelay &&
+        //                   BlinkCount == effect2.BlinkCount;
+        //        }
+        //    }
             
-            return false;
-        }
+        //    return false;
+        //}
 
         public override string ToString()
         {

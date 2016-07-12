@@ -117,26 +117,26 @@
             };
         }
 
-        public override bool Equals(ICellEffect effect)
-        {
-            if (effect is Recolor)
-            {
-                if (base.Equals(effect))
-                {
-                    var effect2 = (Recolor)effect;
+        //public override bool Equals(ICellEffect effect)
+        //{
+        //    if (effect is Recolor)
+        //    {
+        //        if (base.Equals(effect))
+        //        {
+        //            var effect2 = (Recolor)effect;
 
-                    return Foreground == effect2.Foreground &&
-                           Background == effect2.Background &&
-                           Permanent == effect2.Permanent &&
-                           RemoveOnFinished == effect2.RemoveOnFinished &&
-                           StartDelay == effect2.StartDelay &&
-                           DoForeground == effect2.DoForeground &&
-                           DoBackground == effect2.DoBackground;
-                }
-            }
+        //            return Foreground == effect2.Foreground &&
+        //                   Background == effect2.Background &&
+        //                   Permanent == effect2.Permanent &&
+        //                   RemoveOnFinished == effect2.RemoveOnFinished &&
+        //                   StartDelay == effect2.StartDelay &&
+        //                   DoForeground == effect2.DoForeground &&
+        //                   DoBackground == effect2.DoBackground;
+        //        }
+        //    }
                 
-            return false;
-        }
+        //    return false;
+        //}
 
         public override string ToString()
         {

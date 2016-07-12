@@ -219,29 +219,29 @@
             };
         }
 
-        public override bool Equals(ICellEffect effect)
-        {
-            if (effect is Fade)
-            {
-                if (base.Equals(effect))
-                {
-                var effect2 = (Fade)effect;
+        //public override bool Equals(ICellEffect effect)
+        //{
+        //    if (effect is Fade)
+        //    {
+        //        if (base.Equals(effect))
+        //        {
+        //        var effect2 = (Fade)effect;
 
-                return DestinationBackground == effect2.DestinationBackground &&
-                       DestinationForeground == effect2.DestinationForeground &&
-                       FadeForeground == effect2.FadeForeground &&
-                       FadeBackground == effect2.FadeBackground &&
-                       UseCellForeground == effect2.UseCellForeground &&
-                       UseCellBackground == effect2.UseCellBackground &&
-                       FadeDuration == effect2.FadeDuration &&
-                       Permanent == effect2.Permanent &&
-                       RemoveOnFinished == effect2.Permanent &&
-                       StartDelay == effect2.StartDelay;
-                }
-            }
-                
-            return false;
-        }
+        //        return DestinationBackground == effect2.DestinationBackground &&
+        //               DestinationForeground == effect2.DestinationForeground &&
+        //               FadeForeground == effect2.FadeForeground &&
+        //               FadeBackground == effect2.FadeBackground &&
+        //               UseCellForeground == effect2.UseCellForeground &&
+        //               UseCellBackground == effect2.UseCellBackground &&
+        //               FadeDuration == effect2.FadeDuration &&
+        //               Permanent == effect2.Permanent &&
+        //               RemoveOnFinished == effect2.RemoveOnFinished &&
+        //               StartDelay == effect2.StartDelay;
+        //        }
+        //    }
+
+        //    return false;
+        //}
 
         public override string ToString()
         {

@@ -63,21 +63,21 @@
             };
         }
 
-        public override bool Equals(ICellEffect effect)
-        {
-            if (effect is Delay)
-            {
-                if (base.Equals(effect))
-                {
-                    var effect2 = (Delay)effect;
+        //public override bool Equals(ICellEffect effect)
+        //{
+        //    if (effect is Delay)
+        //    {
+        //        if (base.Equals(effect))
+        //        {
+        //            var effect2 = (Delay)effect;
 
-                    return StartDelay == effect2.StartDelay &&
-                           DelayTime == effect2.DelayTime;
-                }
-            }
+        //            return StartDelay == effect2.StartDelay &&
+        //                   DelayTime == effect2.DelayTime;
+        //        }
+        //    }
             
-            return false;
-        }
+        //    return false;
+        //}
 
         public override string ToString()
         {

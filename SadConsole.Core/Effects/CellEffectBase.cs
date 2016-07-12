@@ -45,24 +45,24 @@
 
         public abstract ICellEffect Clone();
 
-        /// <summary>
-        /// Determines if the passed in ICellEffect equals this one or not.
-        /// </summary>
-        /// <param name="other">The other ICellEffect to test.</param>
-        /// <returns>True or false indicating equality.</returns>
-        public virtual bool Equals(ICellEffect other)
-        {
-            if (IsFinished == other.IsFinished &&
-                CloneOnApply == other.CloneOnApply &&
-                StartDelay == other.StartDelay &&
-                RemoveOnFinished == other.RemoveOnFinished &&
-                Permanent == other.Permanent &&
-                IsFinished == other.IsFinished)
+        ///// <summary>
+        ///// Determines if the passed in ICellEffect equals this one or not.
+        ///// </summary>
+        ///// <param name="other">The other ICellEffect to test.</param>
+        ///// <returns>True or false indicating equality.</returns>
+        //public virtual bool Equals(ICellEffect other)
+        //{
+        //    if (IsFinished == other.IsFinished &&
+        //        CloneOnApply == other.CloneOnApply &&
+        //        StartDelay == other.StartDelay &&
+        //        RemoveOnFinished == other.RemoveOnFinished &&
+        //        Permanent == other.Permanent &&
+        //        IsFinished == other.IsFinished)
 
-                return true;
+        //        return true;
 
-            else
-                return false;
-        }
+        //    else
+        //        return false;
+        //}
     }
 }

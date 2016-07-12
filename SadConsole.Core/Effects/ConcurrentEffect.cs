@@ -62,32 +62,32 @@
             return effect;
         }
 
-        public override bool Equals(ICellEffect other)
-        {
-            if (other is ConcurrentEffect)
-            {
-                if (base.Equals(other))
-                {
-                    var effect = (ConcurrentEffect)other;
+        //public override bool Equals(ICellEffect other)
+        //{
+        //    if (other is ConcurrentEffect)
+        //    {
+        //        if (base.Equals(other))
+        //        {
+        //            var effect = (ConcurrentEffect)other;
 
-                    var effects1 = this.Effects.ToList();
-                    var effects2 = effect.Effects.ToList();
+        //            var effects1 = this.Effects.ToList();
+        //            var effects2 = effect.Effects.ToList();
 
-                    if (effects1.Count == effects2.Count)
-                    {
-                        for (int i = 0; i < effects1.Count; i++)
-                        {
-                            if (!effects1[i].Equals(effects2[i]))
-                                return false;
-                        }
+        //            if (effects1.Count == effects2.Count)
+        //            {
+        //                for (int i = 0; i < effects1.Count; i++)
+        //                {
+        //                    if (!effects1[i].Equals(effects2[i]))
+        //                        return false;
+        //                }
 
-                        return true;
-                    }
-                }
-            }
+        //                return true;
+        //            }
+        //        }
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
         public override void Restart()
         {

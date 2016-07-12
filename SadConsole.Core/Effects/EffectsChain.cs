@@ -165,23 +165,23 @@
             return chain;
         }
 
-        public override bool Equals(ICellEffect effect)
-        {
-            if (effect is EffectsChain)
-            {
-                if (base.Equals(effect))
-                {
-                    var effect2 = (EffectsChain)effect;
+        //public override bool Equals(ICellEffect effect)
+        //{
+        //    if (effect is EffectsChain)
+        //    {
+        //        if (base.Equals(effect))
+        //        {
+        //            var effect2 = (EffectsChain)effect;
 
-                    return StartDelay == effect2.StartDelay &&
-                           RemoveOnFinished == effect2.RemoveOnFinished &&
-                           DelayBetweenEffects == effect2.DelayBetweenEffects &&
-                           Repeat == effect2.Repeat;
-                }
-            }
+        //            return StartDelay == effect2.StartDelay &&
+        //                   RemoveOnFinished == effect2.RemoveOnFinished &&
+        //                   DelayBetweenEffects == effect2.DelayBetweenEffects &&
+        //                   Repeat == effect2.Repeat;
+        //        }
+        //    }
                 
-            return false;
-        }
+        //    return false;
+        //}
 
         public override string ToString()
         {

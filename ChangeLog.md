@@ -1,7 +1,10 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
-## Version 3.0.0
+## Version 3.1.0
+* Fixed bug with effects that are added more than once not knowing they already existed in the effects manager.
+
+## Version 3.0.0 (06/07/2016)
 * Rewrote how the Console interacts with backing data and rendering.
 * CellSurface is gone and is replaced by TextSurface.
 	* TextSurfaces have viewports and the interface to read/write to the cell data.

@@ -166,8 +166,9 @@ namespace SadConsole.Effects
         #region Effect Helpers
         protected bool GetKnownEffect(ICellEffect effect, out CellEffectData effectData)
         {
-            if (_effects.TryGetValue(effect, out effectData))
+            if (_effects.ContainsKey(effect))
             {
+                effectData = _effects[effect];
                 return true;
             }
             else

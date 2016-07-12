@@ -97,23 +97,23 @@
             };
         }
 
-        public override bool Equals(ICellEffect effect)
-        {
-            if (effect is BlinkGlyph)
-            {
-                if (base.Equals(effect))
-                {
-                    var effect2 = (BlinkGlyph)effect;
+        //public override bool Equals(ICellEffect effect)
+        //{
+        //    if (effect is BlinkGlyph)
+        //    {
+        //        if (base.Equals(effect))
+        //        {
+        //            var effect2 = (BlinkGlyph)effect;
 
-                    return GlyphIndex == effect2.GlyphIndex &&
-                           BlinkSpeed == effect2.BlinkSpeed &&
-                           RemoveOnFinished == effect2.RemoveOnFinished &&
-                           StartDelay == effect2.StartDelay;
-                }
-            }
+        //            return GlyphIndex == effect2.GlyphIndex &&
+        //                   BlinkSpeed == effect2.BlinkSpeed &&
+        //                   RemoveOnFinished == effect2.RemoveOnFinished &&
+        //                   StartDelay == effect2.StartDelay;
+        //        }
+        //    }
             
-            return false;
-        }
+        //    return false;
+        //}
 
         public override string ToString()
         {
