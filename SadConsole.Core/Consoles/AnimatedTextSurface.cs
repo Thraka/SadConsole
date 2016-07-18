@@ -9,9 +9,11 @@
     /// <summary>
     /// Animates a list of frames.
     /// </summary>
-    [DataContract]
     public class AnimatedTextSurface: TextSurface
     {
+        /// <summary>
+        /// Raised when the <see cref="AnimationState"/> changes.
+        /// </summary>
         public event System.EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
 
         #region Variables
@@ -28,7 +30,6 @@
         /// <summary>
         /// The length of the animation
         /// </summary>
-        [DataMember(Name="AnimationDuration")]
         protected float _animatedTime;
 
         /// <summary>
@@ -49,7 +50,6 @@
         /// <summary>
         /// All frames of the animation
         /// </summary>
-        [DataMember(Order = 0)]
         public List<TextSurfaceBasic> Frames = new List<TextSurfaceBasic>();
 
         /// <summary>
@@ -64,13 +64,11 @@
         /// <summary>
         /// Center of the animation used in positioning.
         /// </summary>
-        [DataMember]
         public Point Center { get; set; }
 
         /// <summary>
         /// Indicates whether or not this animation will repeat once it has finished animating.
         /// </summary>
-        [DataMember]
         public bool Repeat { get; set; }
 
         /// <summary>
@@ -112,7 +110,6 @@
         /// <summary>
         /// Gets the name of this animation.
         /// </summary>
-        [DataMember]
         public string Name { get; set; }
         
         /// <summary>
@@ -295,6 +292,71 @@
             return Serialized.Load(file);
         }
 
+
+        /// <summary>
+        /// Event args for when the animation state changes
+        /// </summary>
+        public class AnimationStateChangedEventArgs : System.EventArgs
+        {
+            /// <summary>
+            /// The previous state.
+            /// </summary>
+            public readonly AnimationState PreviousState;
+
+            /// <summary>
+            /// The new state.
+            /// </summary>
+            public readonly AnimationState NewState;
+
+            /// <summary>
+            /// Creates a new instance of the event args.
+            /// </summary>
+            /// <param name="previousState">The previous state.</param>
+            /// <param name="newState">The new state.</param>
+            public AnimationStateChangedEventArgs(AnimationState previousState, AnimationState newState)
+            {
+                PreviousState = previousState;
+                NewState = newState;
+            }
+        }
+
+        /// <summary>
+        /// Represents what state the animation is in.
+        /// </summary>
+        public enum AnimationState
+        {
+            /// <summary>
+            /// The animation has never been played or was forcibly stopped.
+            /// </summary>
+            Stopped,
+
+            /// <summary>
+            /// The animation is currently playing.
+            /// </summary>
+            Playing,
+
+            /// <summary>
+            /// The animation was either manually restarted or repeated.
+            /// </summary>
+            Restarted,
+
+            /// <summary>
+            /// The animation was played and completed.
+            /// </summary>
+            Finished,
+
+            /// <summary>
+            /// The animation is now the current animation for an entity.
+            /// </summary>
+            Activated,
+
+            /// <summary>
+            /// The animation is no longer the current animation for an entity.
+            /// </summary>
+            Deactivated
+        }
+
+
         /// <summary>
         /// Serialized instance of a <see cref="AnimatedTextSurface"/>.
         /// </summary>
@@ -317,8 +379,10 @@
             public string Name;
             [DataMember]
             public bool Repeat;
+            [DataMember]
+            public Point Center;
 
-            protected Serialized(AnimatedTextSurface surface)
+            public Serialized(AnimatedTextSurface surface)
             {
                 Frames = surface.Frames.ToArray();
                 Width = surface.width;
@@ -328,6 +392,7 @@
                 FontName = surface.font.Name;
                 FontSize = surface.font.SizeMultiple;
                 Repeat = surface.Repeat;
+                Center = surface.Center;
             }
 
             public static void Save(AnimatedTextSurface surface, string file)
@@ -339,92 +404,28 @@
             public static AnimatedTextSurface Load(string file)
             {
                 var animation = Serializer.Load<Serialized>(file, new Type[] { typeof(List<TextSurfaceBasic>), typeof(Font) });
+                return Get(animation);
+            }
 
+            public static AnimatedTextSurface Get(Serialized serializedObject)
+            {
                 Font font;
 
                 // Try to find font
-                if (Engine.Fonts.ContainsKey(animation.FontName))
-                    font = Engine.Fonts[animation.FontName].GetFont(animation.FontSize);
+                if (Engine.Fonts.ContainsKey(serializedObject.FontName))
+                    font = Engine.Fonts[serializedObject.FontName].GetFont(serializedObject.FontSize);
                 else
                     font = Engine.DefaultFont;
 
-                var animationSurface = new AnimatedTextSurface(animation.Name, animation.Width, animation.Height, font);
-                animationSurface.Frames = new List<TextSurfaceBasic>(animation.Frames);
+                var animationSurface = new AnimatedTextSurface(serializedObject.Name, serializedObject.Width, serializedObject.Height, font);
+                animationSurface.Frames = new List<TextSurfaceBasic>(serializedObject.Frames);
                 animationSurface.UpdateFrameReferences();
-                animationSurface.AnimationDuration = animation.AnimationDuration;
-                animationSurface.Repeat = animation.Repeat;
+                animationSurface.AnimationDuration = serializedObject.AnimationDuration;
+                animationSurface.Repeat = serializedObject.Repeat;
+                animationSurface.Center = serializedObject.Center;
                 return animationSurface;
             }
         }
-
     }
-
-    /// <summary>
-    /// Event args for when the animation state changes
-    /// </summary>
-    public class AnimationStateChangedEventArgs : System.EventArgs
-    {
-        /// <summary>
-        /// The previous state.
-        /// </summary>
-        public readonly AnimationState PreviousState;
-
-        /// <summary>
-        /// The new state.
-        /// </summary>
-        public readonly AnimationState NewState;
-
-        /// <summary>
-        /// Creates a new instance of the event args.
-        /// </summary>
-        /// <param name="previousState">The previous state.</param>
-        /// <param name="newState">The new state.</param>
-        public AnimationStateChangedEventArgs(AnimationState previousState, AnimationState newState)
-        {
-            PreviousState = previousState;
-            NewState = newState;
-        }
-    }
-
-    /// <summary>
-    /// Represents what state the animation is in.
-    /// </summary>
-    public enum AnimationState
-    {
-        /// <summary>
-        /// The animation has never been played or was forcibly stopped.
-        /// </summary>
-        Stopped,
-
-        /// <summary>
-        /// The animation is currently playing.
-        /// </summary>
-        Playing,
-
-        /// <summary>
-        /// The animation was either manually restarted or repeated.
-        /// </summary>
-        Restarted,
-
-        /// <summary>
-        /// The animation was played and completed.
-        /// </summary>
-        Finished,
-
-        /// <summary>
-        /// The animation is now the current animation for an entity.
-        /// </summary>
-        Activated,
-
-        /// <summary>
-        /// The animation is no longer the current animation for an entity.
-        /// </summary>
-        Deactivated
-    }
-
-
-
-
-
-
+    
 }

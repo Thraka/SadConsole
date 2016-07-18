@@ -45,6 +45,25 @@ namespace SadConsole.Game
         protected Consoles.AnimatedTextSurface animation;
 
         /// <summary>
+        /// Font for the game object.
+        /// </summary>
+        protected Font font;
+
+        /// <summary>
+        /// Gets the name of this animation.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Font for the game object.
+        /// </summary>
+        public Font Font
+        {
+            get { return font; }
+            set { font = value; UpdateRects(position, true); }
+        }
+
+        /// <summary>
         /// An offset of where the object is rendered.
         /// </summary>
         protected Point renderOffset;
@@ -80,7 +99,12 @@ namespace SadConsole.Game
         /// <summary>
         /// The current animation.
         /// </summary>
-        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; UpdateRects(position, true); } }
+        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; animation.Font = font; UpdateRects(position, true); } }
+
+        /// <summary>
+        /// Collection of animations associated with this game object.
+        /// </summary>
+        public Dictionary<string, Consoles.AnimatedTextSurface> Animations { get; protected set; } = new Dictionary<string, Consoles.AnimatedTextSurface>();
 
         /// <summary>
         /// When false, this <see cref="GameObject"/> won't be rendered.
@@ -104,12 +128,13 @@ namespace SadConsole.Game
         /// <summary>
         /// Creates a new GameObject.
         /// </summary>
-        public GameObject()
+        public GameObject(Font font)
         {
             renderer = new Consoles.TextSurfaceRenderer();
             animation = new Consoles.AnimatedTextSurface("default", 1, 1, Engine.DefaultFont);
             var frame = animation.CreateFrame();
             frame[0].GlyphIndex = 1;
+            this.font = animation.Font = font;
         }
 
         /// <summary>
@@ -167,7 +192,7 @@ namespace SadConsole.Game
         }
 
         /// <summary>
-        /// Updates the render rectangles, evaluating <see cref="RepositionRects"/>.
+        /// Forces the rendering rectangles to update with positioning information.
         /// </summary>
         public void UpdateAnimationRectangles()
         {
@@ -194,6 +219,129 @@ namespace SadConsole.Game
         public virtual void Update()
         {
             Animation.Update();
+        }
+
+        public void Save(string file)
+        {
+            Serialized.Save(this, file);
+        }
+
+        public static GameObject Load(string file)
+        {
+            return Serialized.Load(file);
+        }
+
+        /// <summary>
+        /// Serialized instance of a <see cref="GameObject"/>.
+        /// </summary>
+        [DataContract]
+        public class Serialized
+        {
+            [DataMember]
+            public string storedAnimationName;
+            [DataMember]
+            public bool storedAsName;
+            [DataMember]
+            public Consoles.AnimatedTextSurface.Serialized Animation;
+            [DataMember]
+            public List<Consoles.AnimatedTextSurface.Serialized> Animations;
+            [DataMember]
+            public string FontName;
+            [DataMember]
+            public Font.FontSizes FontSize;
+            [DataMember]
+            public bool IsVisible;
+            [DataMember]
+            public Point Position;
+            [DataMember]
+            public bool RepositionRects;
+            [DataMember]
+            public bool UsePixelPositioning;
+            [DataMember]
+            public string Name;
+            [DataMember]
+            public Point RenderOffset;
+
+            public Serialized(GameObject gameObject)
+            {
+                Animations = new List<Consoles.AnimatedTextSurface.Serialized>();
+
+                foreach (var item in gameObject.Animations)
+                    Animations.Add(new Consoles.AnimatedTextSurface.Serialized(item.Value));
+
+                IsVisible = gameObject.IsVisible;
+                Position = gameObject.position;
+                RepositionRects = gameObject.repositionRects;
+                UsePixelPositioning = gameObject.usePixelPositioning;
+                Name = gameObject.Name;
+                FontName = gameObject.font.Name;
+                FontSize = gameObject.font.SizeMultiple;
+                RenderOffset = gameObject.renderOffset;
+
+                if (gameObject.Animations.ContainsValue(gameObject.animation) && gameObject.Animations.ContainsKey(gameObject.animation.Name))
+                {
+                    storedAsName = true;
+                    storedAnimationName = gameObject.animation.Name;
+                }
+                else
+                {
+                    storedAsName = false;
+                    storedAnimationName = gameObject.animation.Name;
+                    Animation = new Consoles.AnimatedTextSurface.Serialized(gameObject.animation);
+                }
+            }
+
+            public static void Save(GameObject gameObject, string file)
+            {
+                var animation = new Serialized(gameObject);
+                Serializer.Save(animation, file, new Type[] { typeof(Consoles.AnimatedTextSurface[]), typeof(Consoles.AnimatedTextSurface) });
+            }
+
+            public static GameObject Load(string file)
+            {
+                var loadedGameObject = Serializer.Load<Serialized>(file, new Type[] { typeof(Consoles.AnimatedTextSurface[]), typeof(Consoles.AnimatedTextSurface) });
+                return Get(loadedGameObject);
+                
+            }
+
+            public static GameObject Get(Serialized serializedObject)
+            {
+                Font font;
+
+                // Try to find font
+                if (Engine.Fonts.ContainsKey(serializedObject.FontName))
+                    font = Engine.Fonts[serializedObject.FontName].GetFont(serializedObject.FontSize);
+                else
+                    font = Engine.DefaultFont;
+
+                var gameObject = new GameObject(null);
+
+                gameObject.Animations = new Dictionary<string, Consoles.AnimatedTextSurface>();
+
+                foreach (var item in serializedObject.Animations)
+                {
+                    var animation = Consoles.AnimatedTextSurface.Serialized.Get(item);
+                    gameObject.Animations.Add(animation.Name, animation);
+                }
+
+                gameObject.IsVisible = serializedObject.IsVisible;
+                gameObject.position = serializedObject.Position;
+                gameObject.usePixelPositioning = serializedObject.UsePixelPositioning;
+                gameObject.Name = serializedObject.Name;
+                gameObject.font = font;
+                gameObject.repositionRects = serializedObject.RepositionRects;
+                gameObject.renderOffset = serializedObject.RenderOffset;
+
+                if (serializedObject.storedAsName)
+                    gameObject.animation = gameObject.Animations[serializedObject.storedAnimationName];
+                else
+                    gameObject.animation = Consoles.AnimatedTextSurface.Serialized.Get(serializedObject.Animation);
+
+                gameObject.animation.Font = gameObject.font;
+                gameObject.UpdateAnimationRectangles();
+
+                return gameObject;
+            }
         }
     }
 }

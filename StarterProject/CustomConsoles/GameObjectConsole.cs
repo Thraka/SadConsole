@@ -25,7 +25,7 @@ namespace StarterProject.CustomConsoles
             var frame = animation.CreateFrame();
             frame.Cells[0].GlyphIndex = 1;
 
-            player = new SadConsole.Game.GameObject();
+            player = new SadConsole.Game.GameObject(SadConsole.Engine.DefaultFont);
             player.Animation = animation;
             player.RepositionRects = true;
             player.Position = new Microsoft.Xna.Framework.Point(textSurface.Width / 2, textSurface.Height / 2);
