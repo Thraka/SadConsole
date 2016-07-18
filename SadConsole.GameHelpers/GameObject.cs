@@ -22,7 +22,7 @@ namespace SadConsole.Game
         /// <summary>
         /// Renderer used for drawing the game object.
         /// </summary>
-        protected Consoles.TextSurfaceRenderer renderer;
+        protected Consoles.ITextSurfaceRenderer renderer;
 
         /// <summary>
         /// Reposition the rects of the animation.
@@ -45,12 +45,31 @@ namespace SadConsole.Game
         protected Consoles.AnimatedTextSurface animation;
 
         /// <summary>
+        /// An offset of where the object is rendered.
+        /// </summary>
+        protected Point renderOffset;
+
+        /// <summary>
+        /// Renderer used to draw the animation of the game object to the screen.
+        /// </summary>
+        public Consoles.ITextSurfaceRenderer Renderer { get { return renderer; } set { renderer = value; } }
+
+        /// <summary>
+        /// Offset applied to drawing the game object.
+        /// </summary>
+        public Point RenderOffset
+        {
+            get { return renderOffset; }
+            set { renderOffset = value; UpdateRects(value); }
+        }
+
+        /// <summary>
         /// Gets or sets the position to render the cells.
         /// </summary>
         public Point Position
         {
             get { return position; }
-            set { Point previousPosition = position; position = value; if (repositionRects) UpdateRects(value); OnPositionChanged(previousPosition); }
+            set { Point previousPosition = position; position = value; UpdateRects(value); OnPositionChanged(previousPosition); }
         }
 
         /// <summary>
@@ -61,7 +80,7 @@ namespace SadConsole.Game
         /// <summary>
         /// The current animation.
         /// </summary>
-        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; UpdateRects(position); } }
+        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; UpdateRects(position, true); } }
 
         /// <summary>
         /// When false, this <see cref="GameObject"/> won't be rendered.
@@ -77,10 +96,7 @@ namespace SadConsole.Game
             set
             {
                 repositionRects = value;
-                if (value)
-                    UpdateRects(position);
-                else
-                    UpdateRects(position, true);
+                UpdateRects(position, true);
             }
         }
 
@@ -91,6 +107,9 @@ namespace SadConsole.Game
         public GameObject()
         {
             renderer = new Consoles.TextSurfaceRenderer();
+            animation = new Consoles.AnimatedTextSurface("default", 1, 1, Engine.DefaultFont);
+            var frame = animation.CreateFrame();
+            frame[0].GlyphIndex = 1;
         }
 
         /// <summary>
@@ -115,21 +134,21 @@ namespace SadConsole.Game
 
                 var rects = new Rectangle[width * height];
 
-                if (!repositionRects)
+                if (repositionRects && usePixelPositioning)
                 {
-                    offset = new Point(-animation.Center.X * font.Size.X, -animation.Center.Y * font.Size.Y);
-
+                    offset = position + renderOffset - new Point(animation.Center.X * font.Size.X, animation.Center.Y * font.Size.Y);
                     animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
                 }
-                else if (usePixelPositioning)
+                else if (repositionRects)
                 {
-                    offset = position + new Point(-animation.Center.X * font.Size.X, -animation.Center.Y * font.Size.Y);
+                    offset = position + renderOffset - animation.Center;
+                    offset = new Point(offset.X * font.Size.X, offset.Y * font.Size.Y);
                     animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
                 }
                 else
                 {
-                    offset = new Point(position.X * font.Size.X, position.Y * font.Size.Y) + new Point(-animation.Center.X * font.Size.X, -animation.Center.Y * font.Size.Y);
-                    animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
+                    offset = Point.Zero;
+                    animation.AbsoluteArea = new Rectangle(0, 0, animation.Width * font.Size.X, animation.Height * font.Size.Y);
                 }
 
                 int index = 0;
@@ -147,6 +166,9 @@ namespace SadConsole.Game
             }
         }
 
+        /// <summary>
+        /// Updates the render rectangles, evaluating <see cref="RepositionRects"/>.
+        /// </summary>
         public void UpdateAnimationRectangles()
         {
             UpdateRects(position, true);
@@ -162,7 +184,7 @@ namespace SadConsole.Game
                 if (repositionRects)
                     renderer.Render(Animation, NoMatrix);   
                 else
-                    renderer.Render(Animation, position, usePixelPositioning);
+                    renderer.Render(Animation, position + renderOffset - animation.Center, usePixelPositioning);
             }
         }
 
