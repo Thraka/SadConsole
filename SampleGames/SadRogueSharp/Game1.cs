@@ -20,23 +20,8 @@
                 graphics = new GraphicsDeviceManager(this);
                 Content.RootDirectory = "Content";
 
-                var sadConsoleComponent = new SadConsole.EngineGameComponent(this, () =>
+                var sadConsoleComponent = new SadConsole.EngineGameComponent(this, graphics, "Cheepicus12.font", 60, 30, () =>
                 {
-                    // Use the default square font
-                    using (var stream = System.IO.File.OpenRead("Fonts/Cheepicus12.font"))
-                        SadConsole.Engine.DefaultFont = SadConsole.Serializer.Deserialize<SadConsole.Font>(stream);
-
-                    int width = 60;
-                    int height = 30;
-
-                    // Use the IBM console style font
-                    //using (var stream = System.IO.File.OpenRead("Fonts/IBM.font"))
-                    //    SadConsole.Engine.DefaultFont = SadConsole.Serializer.Deserialize<SadConsole.Font>(stream);
-
-                    //int width = 80;
-                    //int height = 30;
-
-                    SadConsole.Engine.DefaultFont.ResizeGraphicsDeviceManager(graphics, width, height, 0, 0);
                     SadConsole.Engine.UseMouse = true;
                     SadConsole.Engine.UseKeyboard = true;
 

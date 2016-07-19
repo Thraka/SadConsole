@@ -8,13 +8,15 @@ using SadConsole.Input;
 using Microsoft.Xna.Framework.Input;
 using SadConsole.Effects;
 using Microsoft.Xna.Framework;
+using RogueSharp.MapCreation;
+using SadConsole.Consoles;
 
 namespace SadRogueSharp.Consoles
 {
 	class MapConsole : SadConsole.Consoles.Console
 	{
 		protected IMap map;
-		protected List<SadConsole.Entities.Entity> entities;
+		protected List<SadConsole.Game.GameObject> entities;
         protected Entities.Player player;
 		protected RogueSharp.Random.IRandom random = new RogueSharp.Random.DotNetRandom();
 
@@ -38,12 +40,12 @@ namespace SadRogueSharp.Consoles
 					// Our local information about each map square
 					mapData[cell.X, cell.Y] = new MapObjects.Floor();
 					// Copy the appearance we've defined for Floor or Wall or whatever, to the actual console data that is rendered
-					mapData[cell.X, cell.Y].CopyAppearanceTo(_cellData[cell.X, cell.Y]);
+					mapData[cell.X, cell.Y].CopyAppearanceTo(this[cell.X, cell.Y]);
 				}
 				else
 				{
 					mapData[cell.X, cell.Y] = new MapObjects.Wall();
-					mapData[cell.X, cell.Y].CopyAppearanceTo(_cellData[cell.X, cell.Y]);
+					mapData[cell.X, cell.Y].CopyAppearanceTo(this[cell.X, cell.Y]);
 				}
 			}
 
@@ -54,12 +56,13 @@ namespace SadRogueSharp.Consoles
 			explored.Update(10d); // Trickery to force the fade to complete to the destination color.
 
 			// Entities
-			entities = new List<SadConsole.Entities.Entity>();
+			entities = new List<SadConsole.Game.GameObject>();
 			
 			// Create the player
 			player = new Entities.Player();
 			var tempCell = GetRandomEmptyCell();
 			player.Position = new Microsoft.Xna.Framework.Point(tempCell.X, tempCell.Y);
+            player.RenderOffset = this.Position;
 			entities.Add(player);
             
             // Create a hound
@@ -78,7 +81,7 @@ namespace SadRogueSharp.Consoles
 		private void GenerateHound()
 		{
 			var hound = new Entities.Hound();
-			hound.PositionOffset = this.Position;
+			hound.RenderOffset = this.Position;
 			var tempCell = GetRandomEmptyCell();
 			hound.Position = new Microsoft.Xna.Framework.Point(tempCell.X, tempCell.Y);
 			entities.Add(hound);
@@ -153,37 +156,37 @@ namespace SadRogueSharp.Consoles
 			map.ComputeFov(player.Position.X, player.Position.Y, 20, true);
 
 			// Mark all render points as visible or not
-			for (int i = 0; i < _cellData.CellCount; i++)
+			for (int i = 0; i < this.textSurface.Cells.Length; i++)
 			{
-				var point = _cellData.GetPointFromIndex(i);
+				var point = SadConsole.Consoles.TextSurface.GetPointFromIndex(i, Width);
 				var currentCell = map.GetCell(point.X, point.Y);
 
 				if (currentCell.IsInFov)
 				{
-					if (_cellData[i].Effect != null)
+					if (this[i].Effect != null)
 					{
-						explored.Clear(_cellData[i]);
-						_cellData[i].Effect = null;
+						explored.Clear(this[i]);
+                        this[i].Effect = null;
 					}
 
-					_cellData[i].IsVisible = true;
+                    this[i].IsVisible = true;
 					map.SetCellProperties(point.X, point.Y, currentCell.IsTransparent, currentCell.IsWalkable, true);
 				}
 				else if (currentCell.IsExplored)
 				{
-					_cellData[i].IsVisible = true;
-					_cellData[i].Effect = explored;
-					explored.Apply(_cellData[i]);
+					this[i].IsVisible = true;
+                    this[i].Effect = explored;
+					explored.Apply(this[i]);
 				}
 				else
 				{
-					_cellData[i].IsVisible = false;
+                    this[i].IsVisible = false;
 				}
 			}
 
             // Calculate the view area and sync it with our player location
-            ViewArea = new Microsoft.Xna.Framework.Rectangle(player.Position.X - 15, player.Position.Y - 15, 30, 30);
-            player.PositionOffset = this.Position - ViewArea.Location;
+            textSurface.RenderArea = new Microsoft.Xna.Framework.Rectangle(player.Position.X - 15, player.Position.Y - 15, 30, 30);
+            player.RenderOffset = this.Position - textSurface.RenderArea.Location;
 
             
             // Check for entities.
@@ -196,10 +199,10 @@ namespace SadRogueSharp.Consoles
                     // Entity is in our view, but it may not be within the viewport.
                     if (entity.IsVisible)
                     {
-                        entity.PositionOffset = this.Position - ViewArea.Location;
+                        entity.RenderOffset = this.Position - textSurface.RenderArea.Location;
 
                         // If the entity is not in our view area we don't want to show it.
-                        if (!ViewArea.Contains(entity.Position))
+                        if (!textSurface.RenderArea.Contains(entity.Position))
                             entity.IsVisible = false;
                     }
 
@@ -213,8 +216,8 @@ namespace SadRogueSharp.Consoles
 
 			while (true)
 			{
-				int x = random.Next(_cellData.Width - 1);
-				int y = random.Next(_cellData.Height - 1);
+				int x = random.Next(Width - 1);
+				int y = random.Next(Height - 1);
 				if (map.IsWalkable(x, y))
 				{
 					return map.GetCell(x, y);

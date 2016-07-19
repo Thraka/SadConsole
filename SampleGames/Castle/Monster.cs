@@ -15,7 +15,6 @@ namespace Castle
     {
         public int RoomId { get; private set; }
         public bool IsAlive { get; private set; }
-        public string Name { get; private set; }
         public string InventoryName { get; private set; }
         public int Character { get; private set; }
         public int Health { get; private set; }
@@ -24,7 +23,7 @@ namespace Castle
         public int Value { get; protected set; }
         public bool IsGuard { get; protected set; }
 
-        public Monster(String name, String inventoryName, int roomId, int x, int y, int character, int health, string description, string deadDescription)
+        public Monster(String name, String inventoryName, int roomId, int x, int y, int character, int health, string description, string deadDescription): base(SadConsole.Engine.DefaultFont)
         {
             this.IsAlive = true;
             this.Name = inventoryName;

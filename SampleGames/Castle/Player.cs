@@ -17,7 +17,7 @@ namespace Castle
         public Direction CurrentDirection { get; private set; }
         public Direction Facing { get; private set; }
         public int Health { get; private set; }
-        public Player()
+        public Player() : base(SadConsole.Engine.DefaultFont)
         {
             Animation = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
             var frame = Animation.CreateFrame();

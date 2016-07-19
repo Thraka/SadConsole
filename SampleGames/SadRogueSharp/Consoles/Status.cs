@@ -13,13 +13,13 @@ namespace SadRogueSharp.Consoles
         public Status(): base(30, 30)
         {
             // Setup some fake status
-            CellData.Print(1, 0, "SadConsole + RogueSharp".Align(System.Windows.HorizontalAlignment.Center, 29).CreateGradient(Color.Moccasin, Color.Gray, null));
+            Print(1, 0, "SadConsole + RogueSharp".Align(System.Windows.HorizontalAlignment.Center, 29).CreateGradient(Color.Moccasin, Color.Gray, null));
 
-            CellData.Print(2, 2, "Health", Color.GreenYellow);
-            CellData.Print(10, 2, new string((char)176, 19).CreateGradient(Color.Red, Color.GreenYellow, null));
+            Print(2, 2, "Health", Color.GreenYellow);
+            Print(10, 2, new string((char)176, 19).CreateGradient(Color.Red, Color.GreenYellow, null));
 
-            CellData.Print(2, 4, "Energy", Color.GreenYellow);
-            CellData.Print(10, 4, new string((char)176, 19).CreateGradient(Color.Blue, Color.GreenYellow, null));
+            Print(2, 4, "Energy", Color.GreenYellow);
+            Print(10, 4, new string((char)176, 19).CreateGradient(Color.Blue, Color.GreenYellow, null));
 
 
             // Draw a line down the side
@@ -29,7 +29,7 @@ namespace SadRogueSharp.Consoles
             new CellAppearance(Color.LightGray, Color.Black, 186, Microsoft.Xna.Framework.Graphics.SpriteEffects.None).CopyAppearanceTo(line.CellAppearance);
             line.UseEndingCell = false;
             line.UseStartingCell = false;
-            line.Draw(this.CellData);
+            line.Draw(this);
 
 
             // Position the console to the right of the map view

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SadConsole.Entities;
+using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 
 namespace SadRogueSharp.Entities
 {
-	class Hound : Entity
-	{
-		public Hound()
+	class Hound : SadConsole.Game.GameObject
+    {
+		public Hound(): base(SadConsole.Engine.DefaultFont)
 		{
-			Animation anim = new Animation("default", 1, 1);
+			AnimatedTextSurface anim = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
 			var frame = anim.CreateFrame();
 			frame[0].Foreground = Color.Red;
 			frame[0].Background = Color.Black;
-			frame[0].CharacterIndex = 72;
-			anim.Commit();
+			frame[0].GlyphIndex = 72;
 
-			AddAnimation(anim);
-			SetActiveAnimation(anim);
+			Animation = anim;
 		}
 	}
 }
