@@ -11,6 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+3.1.0: GameObject now supports a string name, multiple animations, serialization, and a render offset.
+
 3.0.0: Rewrote main game helper stuff. Ripped a bunch out. Uses SadConsole 3, MonoGame 3.5, .NET 4.6.
 
 2.0.0: First NuGet release, targeting MonoGame 3.3.

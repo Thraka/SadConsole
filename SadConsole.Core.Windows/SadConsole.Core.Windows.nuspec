@@ -11,6 +11,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+3.1.1: AnimatedTextSurfaces that had fonts set would not render the current animation frame on a stopped or single frame animation.
+    
+3.1.0: Minor bug fixes. Altered a bit of the Effects system.
+    
 3.0.0: Major new release. Breaking changes everywhere. If you're in the middle of a working game, stay on 2.5 unless you want to migrate. Uses MonoGame 3.5, .NET 4.6.
     
 2.5.0: New NuGet package; Using semantic versioning - Fresh new version; Updated animation system; Target MonoGame 3.5

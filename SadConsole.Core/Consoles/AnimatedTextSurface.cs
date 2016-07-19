@@ -164,6 +164,9 @@
             area = new Rectangle(0, 0, width, height);
 
             base.ResetArea();
+
+            if (Frames.Count > 0)
+                UpdateFrameReferences();
         }
 
         /// <summary>
