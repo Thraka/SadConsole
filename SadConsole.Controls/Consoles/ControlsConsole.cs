@@ -13,6 +13,8 @@
     [DataContract]
     public class ControlsConsole: Console, IEnumerable<ControlBase>
     {
+        public static Input.KeyboardInfo KeyboardState = new Input.KeyboardInfo();
+
         [DataMember]
         private List<ControlBase> _controls;
         [DataMember]
@@ -22,6 +24,11 @@
         private bool _exlusiveBeforeCapture;
 
         private SadConsole.Themes.ControlsConsoleTheme _theme;
+
+        /// <summary>
+        /// When set to false, when the ControlsConsole has <see cref="ProcessKeyboard(Input.KeyboardInfo)"/> called, <see cref="KeyboardState"/> will not be updated.
+        /// </summary>
+        protected bool updateKeyboardState = true;
 
         #region Properties
 
@@ -375,6 +382,11 @@
         /// <param name="info">Keyboard information sent by the engine.</param>
         public override bool ProcessKeyboard(Input.KeyboardInfo info)
         {
+            info = KeyboardState;
+
+            if (updateKeyboardState)
+                info.ProcessKeys(Engine.GameTimeUpdate);
+
             var handlerResult = KeyboardHandler == null ? false : KeyboardHandler(this, info);
 
             if (!handlerResult && this.CanUseKeyboard)

@@ -123,6 +123,7 @@
         public Window(int width, int height)
             : base(width, height)
         {
+            updateKeyboardState = false;
             _border = Shapes.Box.GetDefaultBox();
             _border.Width = width;
             _border.Height = height;
@@ -223,6 +224,9 @@
         /// <param name="info">Keyboard state.</param>
         public override bool ProcessKeyboard(Input.KeyboardInfo info)
         {
+            info = KeyboardState;
+            info.ProcessKeys(Engine.GameTimeUpdate);
+
             if (CloseOnESC && info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Escape))
             {
                 this.Hide();
