@@ -53,6 +53,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Castle", "SampleGames\Castl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle.Windows", "SampleGames\Castle\Platforms\Windows\Castle.Windows.csproj", "{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SadRogueSharp", "SadRogueSharp", "{DC197B17-EB75-437F-BFE2-10DD8F813B20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadRogueSharp", "SampleGames\SadRogueSharp\SadRogueSharp.csproj", "{3B1C8085-CFD3-4C8F-8B32-891F4E921376}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{00cc441c-44bb-4b15-babd-6831b65c31d8}*SharedItemsImports = 13
@@ -189,6 +193,22 @@ Global
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|MacOS.Build.0 = Release|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Windows.ActiveCfg = Release|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Windows.Build.0 = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Linux.ActiveCfg = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Linux.Build.0 = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|MacOS.ActiveCfg = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|MacOS.Build.0 = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Windows.ActiveCfg = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Windows.Build.0 = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|Linux.ActiveCfg = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|Linux.Build.0 = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|MacOS.ActiveCfg = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|MacOS.Build.0 = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|Windows.ActiveCfg = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|Windows.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -212,5 +232,7 @@ Global
 		{695BDDEB-51D5-486E-84F4-9031786775B7} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{BD5D2B21-2CD6-448D-ACD7-5B90DA247250} = {695BDDEB-51D5-486E-84F4-9031786775B7}
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC} = {695BDDEB-51D5-486E-84F4-9031786775B7}
+		{DC197B17-EB75-437F-BFE2-10DD8F813B20} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376} = {DC197B17-EB75-437F-BFE2-10DD8F813B20}
 	EndGlobalSection
 EndGlobal
