@@ -163,30 +163,18 @@ namespace SadConsole.Consoles
             return location.Y * width + location.X;
         }
 
-        public int GetIndexFromPoint(Point location)
-        {
-            return location.Y * width + location.X;
-        }
+        
 
         public static int GetIndexFromPoint(int x, int y, int width)
         {
             return y * width + x;
         }
-
-        public int GetIndexFromPoint(int x, int y)
-        {
-            return y * width + x;
-        }
-
+        
         public static Point GetPointFromIndex(int index, int width)
         {
             return new Point(index % width, index / width);
         }
-
-        public Point GetPointFromIndex(int index)
-        {
-            return new Point(index % width, index / width);
-        }
+        
         #endregion
         
         public IEnumerator<Cell> GetEnumerator()

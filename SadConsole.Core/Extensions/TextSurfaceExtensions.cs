@@ -1,6 +1,6 @@
-﻿using SadConsole.Consoles;
+﻿using Microsoft.Xna.Framework;
 
-namespace SadConsole
+namespace SadConsole.Consoles
 {
     /// <summary>
     /// Extension methods relating to all text surface types.
@@ -55,6 +55,40 @@ namespace SadConsole
         public static Cell GetCell(this ITextSurface surface, int x, int y)
         {
             return surface.Cells[y * surface.Width + x];
+        }
+
+        /// <summary>
+        /// Gets the index of a location on the surface by point.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="location">The location of the index to get.</param>
+        /// <returns>The cell index.</returns>
+        public static int GetIndexFromPoint(this ITextSurface surface, Point location)
+        {
+            return location.Y * surface.Width + location.X;
+        }
+
+        /// <summary>
+        /// Gets the index of a location on the surface by coordinate.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="x">The x of the location.</param>
+        /// <param name="y">The y of the location.</param>
+        /// <returns>The cell index.</returns>
+        public static int GetIndexFromPoint(this ITextSurface surface, int x, int y)
+        {
+            return y * surface.Width + x;
+        }
+
+        /// <summary>
+        /// Gets the x,y of an index on the surface.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="index">The index to get.</param>
+        /// <returns>The x,y as a <see cref="Point"/>.</returns>
+        public static Point GetPointFromIndex(this ITextSurface surface, int index)
+        {
+            return new Point(index % surface.Width, index / surface.Width);
         }
         #endregion
 
