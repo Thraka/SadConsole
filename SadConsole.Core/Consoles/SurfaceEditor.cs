@@ -982,40 +982,28 @@ namespace SadConsole.Consoles
         #endregion
 
         #region Fill
-        /// <summary>
-        /// Fills the console.
-        /// </summary>
-        /// <param name="foreground">Foregorund of every cell.</param>
-        /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="glyph">Glyph of every cell.</param>
-        /// <param name="effect">Effect of every cell.</param>
-        public void Fill(Color foreground, Color background, int glyph, Effects.ICellEffect effect)
-        {
-            for (int i = 0; i < textSurface.Cells.Length; i++)
-            {
-                textSurface.Cells[i].Foreground = foreground;
-                textSurface.Cells[i].Background = background;
-                textSurface.Cells[i].GlyphIndex = glyph;
-                textSurface.Cells[i].Effect = effect;
-            }
-        }
 
         /// <summary>
         /// Fills the console.
         /// </summary>
-        /// <param name="foreground">Foregorund of every cell.</param>
-        /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="glyph">Glyph of every cell.</param>
+        /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
+        /// <param name="background">Foregorund of every cell. If null, skips.</param>
+        /// <param name="glyph">Glyph of every cell. If null, skips.</param>
         /// <param name="effect">Effect of every cell.</param>
-        /// <param name="spriteEffect">Sprite effect of every cell.</param>
-        public void Fill(Color foreground, Color background, int glyph, Effects.ICellEffect effect, SpriteEffects spriteEffect)
+        /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
+        public void Fill(Color? foreground, Color? background, int? glyph, Effects.ICellEffect effect, SpriteEffects? spriteEffect = null)
         {
             for (int i = 0; i < textSurface.Cells.Length; i++)
             {
-                textSurface.Cells[i].Foreground = foreground;
-                textSurface.Cells[i].Background = background;
-                textSurface.Cells[i].GlyphIndex = glyph;
-                textSurface.Cells[i].SpriteEffect = spriteEffect;
+                if (glyph.HasValue)
+                    textSurface.Cells[i].GlyphIndex = glyph.Value;
+                if (background.HasValue)
+                    textSurface.Cells[i].Background = background.Value;
+                if (foreground.HasValue)
+                    textSurface.Cells[i].Foreground = foreground.Value;
+                if (spriteEffect.HasValue)
+                    textSurface.Cells[i].SpriteEffect = spriteEffect.Value;
+
                 textSurface.Cells[i].Effect = effect;
             }
         }
@@ -1024,11 +1012,12 @@ namespace SadConsole.Consoles
         /// Fills the specified area.
         /// </summary>
         /// <param name="area">The area to fill.</param>
-        /// <param name="foreground">Foregorund of every cell.</param>
-        /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="glyph">Glyph of every cell.</param>
+        /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
+        /// <param name="background">Foregorund of every cell. If null, skips.</param>
+        /// <param name="glyph">Glyph of every cell. If null, skips.</param>
         /// <param name="effect">Effect of every cell.</param>
-        public void FillArea(Rectangle area, Color foreground, Color background, int glyph, Effects.ICellEffect effect)
+        /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
+        public void Fill(Rectangle area, Color? foreground, Color? background, int? glyph, Effects.ICellEffect effect, SpriteEffects? spriteEffect = null)
         {
             // Check for valid rect
             Rectangle consoleArea = new Rectangle(0, 0, textSurface.Width, textSurface.Height);
@@ -1039,39 +1028,16 @@ namespace SadConsole.Consoles
                     for (int y = area.Y; y < area.Bottom; y++)
                     {
                         Cell cell = textSurface.Cells[y * textSurface.Width + x];
-                        cell.Foreground = foreground;
-                        cell.Background = background;
-                        cell.GlyphIndex = glyph;
-                        cell.Effect = effect;
-                    }
-                }
-            }
-        }
 
-        /// <summary>
-        /// Fills the specified area.
-        /// </summary>
-        /// <param name="area">The area to fill.</param>
-        /// <param name="foreground">Foregorund of every cell.</param>
-        /// <param name="background">Foregorund of every cell.</param>
-        /// <param name="glyph">Glyph of every cell.</param>
-        /// <param name="effect">Effect of every cell.</param>
-        /// <param name="spriteEffect">Sprite effect of every cell.</param>
-        public void FillArea(Rectangle area, Color foreground, Color background, int glyph, Effects.ICellEffect effect, SpriteEffects spriteEffect)
-        {
-            // Check for valid rect
-            Rectangle consoleArea = new Rectangle(0, 0, textSurface.Width, textSurface.Height);
-            if (consoleArea.Contains(area))
-            {
-                for (int x = area.X; x < area.Right; x++)
-                {
-                    for (int y = area.Y; y < area.Bottom; y++)
-                    {
-                        Cell cell = textSurface.Cells[y * textSurface.Width + x];
-                        cell.Foreground = foreground;
-                        cell.Background = background;
-                        cell.GlyphIndex = glyph;
-                        cell.SpriteEffect = spriteEffect;
+                        if (glyph.HasValue)
+                            cell.GlyphIndex = glyph.Value;
+                        if (background.HasValue)
+                            cell.Background = background.Value;
+                        if (foreground.HasValue)
+                            cell.Foreground = foreground.Value;
+                        if (spriteEffect.HasValue)
+                            cell.SpriteEffect = spriteEffect.Value;
+
                         cell.Effect = effect;
                     }
                 }
