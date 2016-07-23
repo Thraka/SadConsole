@@ -44,7 +44,7 @@ namespace Microsoft.Xna.Framework
             for (int i = 1; i < steps - 1; i++)
             {
                 lerpTotal += stopStrength;
-                
+
                 colors[i] = Color.Lerp(color, endingColor, lerpTotal);
             }
 
@@ -201,7 +201,108 @@ namespace Microsoft.Xna.Framework
             return $"{color.R},{color.G},{color.B},{color.A}";
         }
 
+        /// <summary>
+        /// Gets a color in the format of <see cref="SadConsole.ColoredString.ParseCommandRecolor"/>.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Color FromParser(this Color color, string value, out bool keepR, out bool keepG, out bool keepB, out bool keepA, out bool useDefault)
+        {
+            useDefault = false;
+            keepR = false;
+            keepG = false;
+            keepB = false;
+            keepA = false;
+
+            ArgumentException exception = new ArgumentException("Cannot parse color string");
+            Color returnColor = color;
+
+            if (value.Contains(","))
+            {
+                string[] channels = value.Trim(' ').Split(',');
+
+                if (channels.Length >= 3)
+                {
+
+                    byte colorValue;
+
+                    // Red
+                    if (channels[0] == "x")
+                        keepR = true;
+                    else if (byte.TryParse(channels[0], out colorValue))
+                        returnColor.R = colorValue;
+                    else
+                        throw exception;
+
+                    // Green
+                    if (channels[1] == "x")
+                        keepG = true;
+                    else if (byte.TryParse(channels[1], out colorValue))
+                        returnColor.G = colorValue;
+                    else
+                        throw exception;
+
+                    // Blue
+                    if (channels[2] == "x")
+                        keepB = true;
+                    else if (byte.TryParse(channels[2], out colorValue))
+                        returnColor.B = colorValue;
+                    else
+                        throw exception;
+
+                    if (channels.Length == 4)
+                    {
+                        // Alpha
+                        if (channels[3] == "x")
+                            keepA = true;
+                        else if (byte.TryParse(channels[3], out colorValue))
+                            returnColor.A = colorValue;
+                        else
+                            throw exception;
+                    }
+                    else
+                        returnColor.A = 255;
+
+                    return returnColor;
+                }
+                else
+                    throw exception;
+            }
+            else if (value == "default")
+            {
+                useDefault = true;
+                return returnColor;
+            }
+            else
+            {
+                value = value.ToLower();
+                // Lookup color in framework
+                Color testColor = Color.AliceBlue;
+                Type colorType = testColor.GetType();
+                if (null != colorType)
+                {
+                    System.Reflection.PropertyInfo[] propInfoList =
+                     colorType.GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly
+                        | System.Reflection.BindingFlags.Public);
+                    int nNumProps = propInfoList.Length;
+
+                    for (int i = 0; i < nNumProps; i++)
+                    {
+                        if (propInfoList[i].Name.ToLower() == value)
+                        {
+                            return (Color)propInfoList[i].GetValue(null, null);
+                        }
+                    }
+
+                    throw exception;
+                }
+                else
+                    throw exception;
+            }
+        }
     }
+
 
 #if SILVERLIGHT
 

@@ -67,6 +67,10 @@ namespace SadConsole
                                     case "u":
                                         commandObject = new ParseCommandUndo(commandParams, commandStacks);
                                         break;
+                                    case "grad":
+                                    case "g":
+                                        commandObject = new ParseCommandGradient(commandParams);
+                                        break;
                                     default:
                                         break;
                                 }
@@ -221,6 +225,7 @@ namespace SadConsole
                 if (commands != null && commands.Contains(command))
                 {
                     commands.Remove(command);
+                    commands.Reverse();
 
                     switch (command.CommandType)
                     {
@@ -257,6 +262,66 @@ namespace SadConsole
         /// <summary>
         /// Recolors a glyph.
         /// </summary>
+        public sealed class ParseCommandGradient : ParseCommandBase
+        {
+            public ColoredString GradientString;
+            public int Length;
+            public int Counter;
+
+            public ParseCommandGradient(string parameters)
+            {
+
+                var badCommandException = new ArgumentException("command is invalid for Recolor: " + parameters);
+
+                string[] parametersArray = parameters.Split(':');
+
+                if (parametersArray.Length > 3)
+                {
+                    CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
+                    Counter = Length = int.Parse(parametersArray[parametersArray.Length - 1]);
+
+                    bool keep;
+                    bool useDefault;
+
+                    List<Color> steps = new List<Color>();
+
+                    for (int i = 1; i < parametersArray.Length - 1; i++)
+                    {
+                        steps.Add(Color.AliceBlue.FromParser(parametersArray[i], out keep, out keep, out keep, out keep, out useDefault));
+                    }
+
+                    GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));
+                }
+
+                else
+                    throw badCommandException;
+            }
+
+            public ParseCommandGradient()
+            {
+
+            }
+
+            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            {
+                if (CommandType == CommandTypes.Background)
+                    glyphState.Background = GradientString[Length - Counter].Foreground;
+                else
+                    glyphState.Foreground = GradientString[Length - Counter].Foreground;
+
+                Counter--;
+
+                if (Counter == 0)
+                    commandStack.RemoveSafe(this);
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// Recolors a glyph.
+        /// </summary>
         public sealed class ParseCommandRecolor : ParseCommandBase
         {
             public bool Default;
@@ -286,92 +351,12 @@ namespace SadConsole
                 if (parametersArray.Length >= 2)
                 {
                     CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
-                    string colorString = parametersArray[1];
+                    Color color = Color.AliceBlue.FromParser(parametersArray[1], out KeepRed, out KeepGreen, out KeepBlue, out KeepAlpha, out Default);
 
-                    if (colorString.Contains(","))
-                    {
-                        string[] channels = colorString.Trim(' ').Split(',');
-
-                        if (channels.Length >= 3)
-                        {
-
-                            byte colorValue;
-
-                            // Red
-                            if (channels[0] == "x")
-                                KeepRed = true;
-                            else if (byte.TryParse(channels[0], out colorValue))
-                                R = colorValue;
-                            else
-                                throw badCommandException;
-
-                            // Green
-                            if (channels[1] == "x")
-                                KeepGreen = true;
-                            else if (byte.TryParse(channels[1], out colorValue))
-                                G = colorValue;
-                            else
-                                throw badCommandException;
-
-                            // Blue
-                            if (channels[2] == "x")
-                                KeepBlue = true;
-                            else if (byte.TryParse(channels[2], out colorValue))
-                                B = colorValue;
-                            else
-                                throw badCommandException;
-
-                            if (channels.Length == 4)
-                            {
-                                // Alpha
-                                if (channels[3] == "x")
-                                    KeepAlpha = true;
-                                else if (byte.TryParse(channels[3], out colorValue))
-                                    A = colorValue;
-                                else
-                                    throw badCommandException;
-                            }
-                            else
-                                A = 255;
-                        }
-                    }
-                    else if (colorString == "default")
-                    {
-                        Default = true;
-                    }
-                    else
-                    {
-                        // Lookup color in framework
-                        Color testColor = Color.AliceBlue;
-                        Type colorType = testColor.GetType();
-                        if (null != colorType)
-                        {
-                            System.Reflection.PropertyInfo[] propInfoList =
-                             colorType.GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly
-                                | System.Reflection.BindingFlags.Public);
-                            int nNumProps = propInfoList.Length;
-
-                            bool found = false;
-
-                            for (int i = 0; i < nNumProps; i++)
-                            {
-                                if (propInfoList[i].Name.ToLower() == colorString)
-                                {
-                                    Color color = (Color)propInfoList[i].GetValue(null, null);
-                                    R = color.R;
-                                    G = color.G;
-                                    B = color.B;
-                                    A = color.A;
-                                    found = true;
-                                    break;
-                                }
-                            }
-
-                            if (!found)
-                                CommandType = CommandTypes.Invalid;
-                        }
-
-                    }
+                    R = color.R;
+                    G = color.G;
+                    B = color.B;
+                    A = color.A;
                 }
                 else
                     throw badCommandException;
