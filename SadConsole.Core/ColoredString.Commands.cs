@@ -3,15 +3,16 @@ using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SadConsole.StringParser;
 
 namespace SadConsole
 {
     public partial class ColoredString
     {
         /// <summary>
-        /// Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", text surface, command stacks).
+        /// Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
         /// </summary>
-        public static Func<string, string, ITextSurface, ParseCommandStacks, ParseCommandBase> CustomProcessor;
+        public static Func<string, string, ColoredGlyph[], ITextSurface, SurfaceEditor, ParseCommandStacks, ParseCommandBase> CustomProcessor;
 
         /// <summary>
         /// Creates a colored string by parsing commands embedded in the string.
@@ -19,15 +20,18 @@ namespace SadConsole
         /// <param name="value">The string to parse.</param>
         /// <param name="surfaceIndex">Index of where this string will be printed.</param>
         /// <param name="surface">The surface the string will be printed to.</param>
+        /// <param name="editor">A surface editor associated with the text surface.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
         /// <returns></returns>
-        public static ColoredString Parse(string value, int surfaceIndex = -1, Consoles.ITextSurface surface = null, ParseCommandStacks initialBehaviors = null)
+        public static ColoredString Parse(string value, int surfaceIndex = -1, Consoles.ITextSurface surface = null, SurfaceEditor editor = null, ParseCommandStacks initialBehaviors = null)
         {
             var commandStacks = initialBehaviors != null ? initialBehaviors : new ParseCommandStacks();
             List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);
 
             for (int i = 0; i < value.Length; i++)
             {
+                var existingGlyphs = glyphs.ToArray();
+
                 if (value[i] == '`' && i + 1 < value.Length && value[i + 1] == '[')
                     continue;
 
@@ -49,7 +53,7 @@ namespace SadConsole
                             }
 
                             // Check for custom command
-                            ParseCommandBase commandObject = CustomProcessor != null ? CustomProcessor(command, commandParams, surface, commandStacks) : null;
+                            ParseCommandBase commandObject = CustomProcessor != null ? CustomProcessor(command, commandParams, existingGlyphs, surface, editor, commandStacks) : null;
 
                             // No custom command found, run build in ones
                             if (commandObject == null)
@@ -71,11 +75,15 @@ namespace SadConsole
                                     case "g":
                                         commandObject = new ParseCommandGradient(commandParams);
                                         break;
+                                    case "blink":
+                                    case "b":
+                                        commandObject = new ParseCommandBlink(commandParams, existingGlyphs, commandStacks, editor);
+                                        break;
                                     default:
                                         break;
                                 }
 
-                            if (commandObject != null && commandObject.CommandType != ParseCommandBase.CommandTypes.Invalid)
+                            if (commandObject != null && commandObject.CommandType != CommandTypes.Invalid)
                             {
                                 commandStacks.AddSafe(commandObject);
 
@@ -106,502 +114,31 @@ namespace SadConsole
                 else
                     newGlyph = new ColoredGlyph(new Cell()) { Glyph = value[i] };
 
+
                 // Foreground
                 if (commandStacks.Foreground.Count != 0)
-                    commandStacks.Foreground.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                    commandStacks.Foreground.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
 
                 // Background
                 if (commandStacks.Background.Count != 0)
-                    commandStacks.Background.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                    commandStacks.Background.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
 
                 if (commandStacks.Glyph.Count != 0)
-                    commandStacks.Glyph.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                    commandStacks.Glyph.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
 
                 // SpriteEffect
                 if (commandStacks.SpriteEffect.Count != 0)
-                    commandStacks.SpriteEffect.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                    commandStacks.SpriteEffect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
 
                 // Effect
                 if (commandStacks.Effect.Count != 0)
-                    commandStacks.Effect.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                    commandStacks.Effect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
 
                 glyphs.Add(newGlyph);
             }
 
-            return new ColoredString(glyphs.ToArray());
-        }
-
-        /// <summary>
-        /// A list of behaviors applied as a string is processed.
-        /// </summary>
-        public class ParseCommandStacks
-        {
-            public Stack<ParseCommandBase> Foreground;
-            public Stack<ParseCommandBase> Background;
-            public Stack<ParseCommandBase> Glyph;
-            public Stack<ParseCommandBase> SpriteEffect;
-            public Stack<ParseCommandBase> Effect;
-            public Stack<ParseCommandBase> All;
-
-            public ParseCommandStacks()
-            {
-                Foreground = new Stack<ParseCommandBase>(4);
-                Background = new Stack<ParseCommandBase>(4);
-                Glyph = new Stack<ParseCommandBase>(4);
-                SpriteEffect = new Stack<ParseCommandBase>(4);
-                Effect = new Stack<ParseCommandBase>(4);
-                All = new Stack<ParseCommandBase>(10);
-            }
-
-            /// <summary>
-            /// Adds a behavior to the <see cref="All"/> collection and the collection based on the <see cref="ParseCommandBase.CommandType"/> type.
-            /// </summary>
-            /// <param name="command"></param>
-            public void AddSafe(ParseCommandBase command)
-            {
-                switch (command.CommandType)
-                {
-                    case ParseCommandBase.CommandTypes.Foreground:
-                        Foreground.Push(command);
-                        All.Push(command);
-                        break;
-                    case ParseCommandBase.CommandTypes.Background:
-                        Background.Push(command);
-                        All.Push(command);
-                        break;
-                    case ParseCommandBase.CommandTypes.SpriteEffect:
-                        SpriteEffect.Push(command);
-                        All.Push(command);
-                        break;
-                    case ParseCommandBase.CommandTypes.Effect:
-                        Effect.Push(command);
-                        All.Push(command);
-                        break;
-                    case ParseCommandBase.CommandTypes.Glyph:
-                        Glyph.Push(command);
-                        All.Push(command);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            /// <summary>
-            /// Removes a command from the appropriate command stack and from the <see cref="All"/> stack.
-            /// </summary>
-            /// <param name="command">The command to remove</param>
-            public void RemoveSafe(ParseCommandBase command)
-            {
-                List<ParseCommandBase> commands = null;
-
-                // Get the stack we need to remove from
-                switch (command.CommandType)
-                {
-                    case ParseCommandBase.CommandTypes.Foreground:
-                        if (Foreground.Count != 0)
-                            commands = new List<ParseCommandBase>(Foreground);
-                        break;
-                    case ParseCommandBase.CommandTypes.Background:
-                        if (Background.Count != 0)
-                            commands = new List<ParseCommandBase>(Background);
-                        break;
-                    case ParseCommandBase.CommandTypes.SpriteEffect:
-                        if (SpriteEffect.Count != 0)
-                            commands = new List<ParseCommandBase>(SpriteEffect);
-                        break;
-                    case ParseCommandBase.CommandTypes.Effect:
-                        if (Effect.Count != 0)
-                            commands = new List<ParseCommandBase>(Effect);
-                        break;
-                    case ParseCommandBase.CommandTypes.Glyph:
-                        if (Glyph.Count != 0)
-                            commands = new List<ParseCommandBase>(Glyph);
-                        break;
-                    default:
-                        return;
-                }
-
-                // If we have one, remove and restore stack
-                if (commands != null && commands.Contains(command))
-                {
-                    commands.Remove(command);
-                    commands.Reverse();
-
-                    switch (command.CommandType)
-                    {
-                        case ParseCommandBase.CommandTypes.Foreground:
-                            Foreground = new Stack<ParseCommandBase>(commands);
-                            break;
-                        case ParseCommandBase.CommandTypes.Background:
-                            Background = new Stack<ParseCommandBase>(commands);
-                            break;
-                        case ParseCommandBase.CommandTypes.SpriteEffect:
-                            SpriteEffect = new Stack<ParseCommandBase>(commands);
-                            break;
-                        case ParseCommandBase.CommandTypes.Effect:
-                            Effect = new Stack<ParseCommandBase>(commands);
-                            break;
-                        case ParseCommandBase.CommandTypes.Glyph:
-                            Glyph = new Stack<ParseCommandBase>(commands);
-                            break;
-                        default:
-                            return;
-                    }
-                }
-
-                List<ParseCommandBase> all = new List<ParseCommandBase>(All);
-
-                if (all.Contains(command))
-                {
-                    all.Remove(command);
-                    All = new Stack<ParseCommandBase>(all);
-                }
-            }
+            return new ColoredString(glyphs.ToArray()) { IgnoreEffect = !commandStacks.TurnOnEffects };
         }
         
-        /// <summary>
-        /// Recolors a glyph.
-        /// </summary>
-        public sealed class ParseCommandGradient : ParseCommandBase
-        {
-            public ColoredString GradientString;
-            public int Length;
-            public int Counter;
-
-            public ParseCommandGradient(string parameters)
-            {
-
-                var badCommandException = new ArgumentException("command is invalid for Recolor: " + parameters);
-
-                string[] parametersArray = parameters.Split(':');
-
-                if (parametersArray.Length > 3)
-                {
-                    CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
-                    Counter = Length = int.Parse(parametersArray[parametersArray.Length - 1]);
-
-                    bool keep;
-                    bool useDefault;
-
-                    List<Color> steps = new List<Color>();
-
-                    for (int i = 1; i < parametersArray.Length - 1; i++)
-                    {
-                        steps.Add(Color.AliceBlue.FromParser(parametersArray[i], out keep, out keep, out keep, out keep, out useDefault));
-                    }
-
-                    GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));
-                }
-
-                else
-                    throw badCommandException;
-            }
-
-            public ParseCommandGradient()
-            {
-
-            }
-
-            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
-            {
-                if (CommandType == CommandTypes.Background)
-                    glyphState.Background = GradientString[Length - Counter].Foreground;
-                else
-                    glyphState.Foreground = GradientString[Length - Counter].Foreground;
-
-                Counter--;
-
-                if (Counter == 0)
-                    commandStack.RemoveSafe(this);
-            }
-        }
-
-
-
-
-        /// <summary>
-        /// Recolors a glyph.
-        /// </summary>
-        public sealed class ParseCommandRecolor : ParseCommandBase
-        {
-            public bool Default;
-            public bool KeepRed;
-            public bool KeepGreen;
-            public bool KeepBlue;
-            public bool KeepAlpha;
-
-            public byte R;
-            public byte G;
-            public byte B;
-            public byte A;
-
-            public int Counter;
-
-            public ParseCommandRecolor(string parameters)
-            {
-                var badCommandException = new ArgumentException("command is invalid for Recolor: " + parameters);
-
-                string[] parametersArray = parameters.Split(':');
-
-                if (parametersArray.Length == 3)
-                    Counter = int.Parse(parametersArray[2]);
-                else
-                    Counter = -1;
-
-                if (parametersArray.Length >= 2)
-                {
-                    CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
-                    Color color = Color.AliceBlue.FromParser(parametersArray[1], out KeepRed, out KeepGreen, out KeepBlue, out KeepAlpha, out Default);
-
-                    R = color.R;
-                    G = color.G;
-                    B = color.B;
-                    A = color.A;
-                }
-                else
-                    throw badCommandException;
-
-
-            }
-
-            public ParseCommandRecolor()
-            {
-
-            }
-
-            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
-            {
-                Color newColor;
-
-                if (Default)
-                {
-                    if (CommandType == CommandTypes.Background)
-                        newColor = surface != null ? surface.DefaultBackground : Color.Transparent;
-                    else
-                        newColor = surface != null ? surface.DefaultForeground : Color.White;
-                }
-                else
-                {
-                    if (CommandType == CommandTypes.Background)
-                        newColor = glyphState.Background;
-                    else
-                        newColor = glyphState.Foreground;
-
-                    if (!KeepRed)
-                        newColor.R = R;
-                    if (!KeepGreen)
-                        newColor.G = G;
-                    if (!KeepBlue)
-                        newColor.B = B;
-                    if (!KeepAlpha)
-                        newColor.A = A;
-                }
-
-                if (CommandType == CommandTypes.Background)
-                    glyphState.Background = newColor;
-                else
-                    glyphState.Foreground = newColor;
-
-                if (Counter != -1)
-                {
-                    Counter--;
-
-                    if (Counter == 0)
-                        commandStack.RemoveSafe(this);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sets the <see cref="Microsoft.Xna.Framework.Graphics.SpriteEffects"/> of a glyph.
-        /// </summary>
-        public sealed class ParseCommandSpriteEffect : ParseCommandBase
-        {
-            public Microsoft.Xna.Framework.Graphics.SpriteEffects Effect;
-            public int Counter;
-
-            public ParseCommandSpriteEffect(string parameters)
-            {
-                var badCommandException = new ArgumentException("command is invalid for SpriteEffect: " + parameters);
-
-                string[] paramArray = parameters.Split(':');
-
-                if (paramArray.Length == 2)
-                    Counter = int.Parse(paramArray[1]);
-                else
-                    Counter = -1;
-
-                if (Enum.TryParse(paramArray[0], out Effect))
-                    CommandType = CommandTypes.SpriteEffect;
-                else
-                    throw badCommandException;
-            }
-
-            public ParseCommandSpriteEffect()
-            {
-
-            }
-
-            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
-            {
-                glyphState.SpriteEffect = Effect;
-
-                if (Counter != -1)
-                {
-                    Counter--;
-
-                    if (Counter == 0)
-                        commandStack.RemoveSafe(this);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Pops a behavior off of a <see cref="ParseCommandStacks"/>.
-        /// </summary>
-        public sealed class ParseCommandUndo : ParseCommandBase
-        {
-            public ParseCommandUndo(string parameters, ParseCommandStacks stacks)
-            {
-                var badCommandException = new ArgumentException("command is invalid for Undo: " + parameters);
-                string[] parts = parameters.Split(new char[] { ':' }, 3);
-                int times = 1;
-                bool isSpecificStack = false;
-                CommandTypes stackType = CommandTypes.Invalid;
-
-                if (parts.Length > 1)
-                {
-                    isSpecificStack = true;
-
-                    switch (parts[1])
-                    {
-                        case "f":
-                            stackType = CommandTypes.Foreground;
-                            break;
-                        case "b":
-                            stackType = CommandTypes.Background;
-                            break;
-                        case "g":
-                            stackType = CommandTypes.Glyph;
-                            break;
-                        case "e":
-                            stackType = CommandTypes.Effect;
-                            break;
-                        case "m":
-                            stackType = CommandTypes.SpriteEffect;
-                            break;
-                        case "a":
-                            isSpecificStack = false;
-                            break;
-                        default:
-                            throw badCommandException;
-                    }
-                }
-
-                if (parts.Length >= 1 && parts[0] != "")
-                    times = int.Parse(parts[0]);
-
-
-                for (int i = 0; i < times; i++)
-                {
-                    ParseCommandBase behavior = null;
-
-                    if (!isSpecificStack)
-                    {
-                        if (stacks.All.Count != 0)
-                        {
-                            behavior = stacks.All.Pop();
-
-                            switch (behavior.CommandType)
-                            {
-                                case CommandTypes.Foreground:
-                                    stacks.Foreground.Pop();
-                                    break;
-                                case CommandTypes.Background:
-                                    stacks.Background.Pop();
-                                    break;
-                                case CommandTypes.Glyph:
-                                    stacks.Glyph.Pop();
-                                    break;
-                                case CommandTypes.SpriteEffect:
-                                    stacks.SpriteEffect.Pop();
-                                    break;
-                                case CommandTypes.Effect:
-                                    stacks.Effect.Pop();
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        else
-                            break;
-                    }
-                    else
-                    {
-                        switch (stackType)
-                        {
-                            case CommandTypes.Foreground:
-                                if (stacks.Foreground.Count != 0)
-                                    behavior = stacks.Foreground.Pop();
-                                break;
-                            case CommandTypes.Background:
-                                if (stacks.Background.Count != 0)
-                                    behavior = stacks.Background.Pop();
-                                break;
-                            case CommandTypes.Glyph:
-                                if (stacks.Glyph.Count != 0)
-                                    behavior = stacks.Glyph.Pop();
-                                break;
-                            case CommandTypes.SpriteEffect:
-                                if (stacks.SpriteEffect.Count != 0)
-                                    behavior = stacks.SpriteEffect.Pop();
-                                break;
-                            case CommandTypes.Effect:
-                                if (stacks.Effect.Count != 0)
-                                    behavior = stacks.Effect.Pop();
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if (behavior != null)
-                        {
-                            List<ParseCommandBase> all = new List<ParseCommandBase>(stacks.All);
-                            all.Remove(behavior);
-                            stacks.All = new Stack<ParseCommandBase>(all);
-                        }
-                    }
-                }
-            
-                CommandType = CommandTypes.PureCommand;
-            }
-
-            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
-            {
-                
-            }
-        }
-
-        /// <summary>
-        /// Base class for a string processor behavior.
-        /// </summary>
-        public abstract class ParseCommandBase
-        {
-            public enum CommandTypes
-            {
-                Foreground,
-                Background,
-                Glyph,
-                SpriteEffect,
-                Effect,
-                PureCommand,
-                Invalid
-            }
-
-            public CommandTypes CommandType = CommandTypes.Invalid;
-
-
-            public abstract void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack);
-        }
     }
 }

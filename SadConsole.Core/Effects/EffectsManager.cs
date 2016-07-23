@@ -142,6 +142,14 @@ namespace SadConsole.Effects
             return _effectCells.ContainsKey(cell) ? _effectCells[cell].Effect : null;
         }
 
+        public IEnumerable<ICellEffect> GetEffects()
+        {
+            if (_effects.Keys.Count == 0)
+                return null;
+            
+            return _effects.Keys;
+        }
+
         /// <summary>
         /// Removes an effect and associated cells from the manager.
         /// </summary>
@@ -255,8 +263,10 @@ namespace SadConsole.Effects
 
 
 
-
-        protected class CellEffectData
+        /// <summary>
+        /// Represents a mapping of a single effect and associated cells.
+        /// </summary>
+        public class CellEffectData
         {
             public ICellEffect Effect;
             public List<Cell> Cells;

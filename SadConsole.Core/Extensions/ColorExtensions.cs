@@ -28,8 +28,28 @@ namespace Microsoft.Xna.Framework
         public static readonly Color WhiteBright = new Color(255, 255, 255);
     }
 
-    public static class ColorEx
+    public static class ColorExtensions
     {
+        /// <summary>
+        /// Custom color mappings for the <see cref="FromParser(Color, string, out bool, out bool, out bool, out bool, out bool)"/> method.
+        /// </summary>
+        public static Dictionary<string, Color> ColorMappings = new Dictionary<string, Color>(16) { { "ansiblack", ColorAnsi.Black },
+                                                                                                    { "ansired", ColorAnsi.Red },
+                                                                                                    { "ansigreen", ColorAnsi.Green },
+                                                                                                    { "ansiyellow", ColorAnsi.Yellow },
+                                                                                                    { "ansiblue", ColorAnsi.Blue },
+                                                                                                    { "ansimagenta", ColorAnsi.Magenta },
+                                                                                                    { "ansicyan", ColorAnsi.Cyan },
+                                                                                                    { "ansiwhite", ColorAnsi.White },
+                                                                                                    { "ansiblackbright", ColorAnsi.BlackBright },
+                                                                                                    { "ansiredbright", ColorAnsi.RedBright },
+                                                                                                    { "ansigreenbright", ColorAnsi.GreenBright },
+                                                                                                    { "ansiyellowbright", ColorAnsi.YellowBright },
+                                                                                                    { "ansibluebright", ColorAnsi.BlueBright },
+                                                                                                    { "ansimagentabright", ColorAnsi.MagentaBright },
+                                                                                                    { "ansicyanbright", ColorAnsi.CyanBright },
+                                                                                                    { "ansiwhitebright", ColorAnsi.WhiteBright } };
+
         public static Color[] LerpSteps(this Color color, Color endingColor, int steps)
         {
             Color[] colors = new Color[steps];
@@ -192,7 +212,7 @@ namespace Microsoft.Xna.Framework
         #endregion
 
         /// <summary>
-        /// Converts a color to the format used by <see cref="SadConsole.ColoredString.ParseCommandRecolor"/> command.
+        /// Converts a color to the format used by <see cref="SadConsole.ParseCommandRecolor"/> command.
         /// </summary>
         /// <param name="color">The color to convert.</param>
         /// <returns>A string in this format R,G,B,A so for <see cref="Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
@@ -202,7 +222,7 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
-        /// Gets a color in the format of <see cref="SadConsole.ColoredString.ParseCommandRecolor"/>.
+        /// Gets a color in the format of <see cref="SadConsole.ParseCommandRecolor"/>.
         /// </summary>
         /// <param name="color"></param>
         /// <param name="value"></param>
@@ -277,14 +297,18 @@ namespace Microsoft.Xna.Framework
             else
             {
                 value = value.ToLower();
-                // Lookup color in framework
-                Color testColor = Color.AliceBlue;
-                Type colorType = testColor.GetType();
-                if (null != colorType)
+
+                try
                 {
+                    return ColorMappings[value];
+                }
+                catch (Exception)
+                {
+                    // Lookup color in framework
+                    Type colorType = typeof(Color);
                     System.Reflection.PropertyInfo[] propInfoList =
-                     colorType.GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly
-                        | System.Reflection.BindingFlags.Public);
+                        colorType.GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public);
+
                     int nNumProps = propInfoList.Length;
 
                     for (int i = 0; i < nNumProps; i++)
@@ -297,8 +321,6 @@ namespace Microsoft.Xna.Framework
 
                     throw exception;
                 }
-                else
-                    throw exception;
             }
         }
     }

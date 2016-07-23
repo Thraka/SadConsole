@@ -86,5 +86,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\IShape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Line.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandBlink.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandGradient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandRecolor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandSpriteEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandStacks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandUndo.cs" />
   </ItemGroup>
 </Project>

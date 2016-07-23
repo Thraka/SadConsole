@@ -7,6 +7,7 @@ using System.Linq;
 using SadConsole.Consoles;
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole.StringParser;
 
 namespace SadConsole
 {
@@ -114,9 +115,9 @@ namespace SadConsole
         public ColoredString(string value, Color foreground, Color background, SpriteEffects spriteEffect = SpriteEffects.None)
         {
             var stacks = new ParseCommandStacks();
-            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Foreground });
-            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Background });
-            stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect, CommandType = ColoredString.ParseCommandBase.CommandTypes.SpriteEffect });
+            stacks.AddSafe(new ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground });
+            stacks.AddSafe(new ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
+            stacks.AddSafe(new ParseCommandSpriteEffect() { Effect = spriteEffect, CommandType = CommandTypes.SpriteEffect });
             _characters = ColoredString.Parse(value, initialBehaviors: stacks)._characters;
         }
 

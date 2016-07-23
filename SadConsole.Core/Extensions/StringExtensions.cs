@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Effects;
+using SadConsole.StringParser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,16 +83,16 @@ namespace System
         /// <returns>A <see cref="ColoredString"/> object instace.</returns>
         public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Microsoft.Xna.Framework.Graphics.SpriteEffects? spriteEffect = null)
         {
-            var stacks = new ColoredString.ParseCommandStacks();
+            var stacks = new ParseCommandStacks();
 
             if (foreground.HasValue)
-                stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Foreground });
+                stacks.AddSafe(new ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = CommandTypes.Foreground });
 
             if (background.HasValue)
-                stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Background });
+                stacks.AddSafe(new ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = CommandTypes.Background });
 
             if (spriteEffect.HasValue)
-                stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.CommandTypes.SpriteEffect });
+                stacks.AddSafe(new ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = CommandTypes.SpriteEffect });
 
             ColoredString newString = ColoredString.Parse(value, initialBehaviors: stacks);
 

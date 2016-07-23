@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using SadConsole.Effects;
 using System.Runtime.Serialization;
+using SadConsole.StringParser;
 
 namespace SadConsole.Consoles
 {
@@ -35,7 +36,7 @@ namespace SadConsole.Consoles
         public int Height { get { return textSurface.Height; } }
 
         /// <summary>
-        /// When true, the <see cref="ColoredString.Parse(string, int, ITextSurface, ColoredString.ParseCommandStacks)"/> command is used to print strings.
+        /// When true, the <see cref="ColoredString.Parse(string, int, ITextSurface, ParseCommandStacks)"/> command is used to print strings.
         /// </summary>
         public bool UsePrintProcessor = true;
 
@@ -296,7 +297,17 @@ namespace SadConsole.Consoles
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(int x, int y, Effects.ICellEffect effect)
         {
-            Effects.SetEffect(textSurface.Cells[y * textSurface.Width + x], effect);
+            Effects.SetEffect(textSurface[y * textSurface.Width + x], effect);
+        }
+
+        /// <summary>
+        /// Changes the effect of a cell to the specified effect.
+        /// </summary>
+        /// <param name="index">Index of the cell.</param>
+        /// <param name="effect">The desired effect.</param>
+        public void SetEffect(int index, ICellEffect effect)
+        {
+            Effects.SetEffect(textSurface[index], effect);
         }
 
         /// <summary>
@@ -420,7 +431,7 @@ namespace SadConsole.Consoles
                 }
             }
             else
-                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface));
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this));
 
         }
         
@@ -454,10 +465,10 @@ namespace SadConsole.Consoles
             }
             else
             {
-                var behavior = new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Foreground };
-                var stacks = new ColoredString.ParseCommandStacks();
+                var behavior = new ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground };
+                var stacks = new ParseCommandStacks();
                 stacks.AddSafe(behavior);
-                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this, stacks));
             }
         }
 
@@ -493,12 +504,12 @@ namespace SadConsole.Consoles
             }
             else
             {
-                var behaviorFore = new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Foreground };
-                var behaviorBack = new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Background };
-                var stacks = new ColoredString.ParseCommandStacks();
+                var behaviorFore = new ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground };
+                var behaviorBack = new ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background };
+                var stacks = new ParseCommandStacks();
                 stacks.AddSafe(behaviorFore);
                 stacks.AddSafe(behaviorBack);
-                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this, stacks));
             }
         }
 
@@ -541,18 +552,18 @@ namespace SadConsole.Consoles
             }
             else
             {
-                var stacks = new ColoredString.ParseCommandStacks();
+                var stacks = new ParseCommandStacks();
 
                 if (foreground.HasValue)
-                    stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Foreground });
+                    stacks.AddSafe(new ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = CommandTypes.Foreground });
 
                 if (background.HasValue)
-                    stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Background });
+                    stacks.AddSafe(new ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = CommandTypes.Background });
 
                 if (spriteEffect.HasValue)
-                    stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.CommandTypes.SpriteEffect });
+                    stacks.AddSafe(new ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = CommandTypes.SpriteEffect });
 
-                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this, stacks));
             }
         }
 
@@ -598,23 +609,7 @@ namespace SadConsole.Consoles
                 throw new Exception("X,Y is out of range for Print");
 
             int index = y * textSurface.Width + x;
-            int total = index + text.Count > textSurface.Cells.Length ? textSurface.Cells.Length : index + text.Count;
-            int charIndex = 0;
-
-            for (; index < total; index++)
-            {
-                if (!text.IgnoreGlyph)
-                    textSurface.Cells[index].GlyphIndex = text[charIndex].Glyph;
-                if (!text.IgnoreBackground)
-                    textSurface.Cells[index].Background = text[charIndex].Background;
-                if (!text.IgnoreForeground)
-                    textSurface.Cells[index].Foreground = text[charIndex].Foreground;
-                if (!text.IgnoreSpriteEffect)
-                    textSurface.Cells[index].SpriteEffect = text[charIndex].SpriteEffect;
-                if (!text.IgnoreEffect)
-                    textSurface.Cells[index].Effect = text[charIndex].Effect;
-                charIndex++;
-            }
+            PrintNoCheck(index, text);
         }
         
 
@@ -622,7 +617,7 @@ namespace SadConsole.Consoles
         {
             int total = index + text.Count > textSurface.Cells.Length ? textSurface.Cells.Length : index + text.Count;
             int charIndex = 0;
-
+            
             for (; index < total; index++)
             {
                 if (!text.IgnoreGlyph)
@@ -634,7 +629,7 @@ namespace SadConsole.Consoles
                 if (!text.IgnoreSpriteEffect)
                     textSurface.Cells[index].SpriteEffect = text[charIndex].SpriteEffect;
                 if (!text.IgnoreEffect)
-                    textSurface.Cells[index].Effect = text[charIndex].Effect;
+                    SetEffect(index, text[charIndex].Effect);
                 charIndex++;
             }
         }
