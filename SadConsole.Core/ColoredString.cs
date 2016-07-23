@@ -114,9 +114,9 @@ namespace SadConsole
         public ColoredString(string value, Color foreground, Color background, SpriteEffects spriteEffect = SpriteEffects.None)
         {
             var stacks = new ParseCommandStacks();
-            stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
-            stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
-            stacks.SafeAdd(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
+            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
+            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
+            stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
             _characters = ColoredString.Parse(value, initialBehaviors: stacks)._characters;
         }
 

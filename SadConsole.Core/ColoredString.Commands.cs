@@ -71,7 +71,7 @@ namespace SadConsole
 
                             if (behavior != null && behavior.CommandType != ParseCommandBase.ProcessType.Invalid)
                             {
-                                commandStacks.SafeAdd(behavior);
+                                commandStacks.AddSafe(behavior);
 
                                 i = commandExitIndex;
                                 continue;
@@ -145,29 +145,93 @@ namespace SadConsole
             /// <summary>
             /// Adds a behavior to the <see cref="All"/> collection and the collection based on the <see cref="ParseCommandBase.CommandType"/> type.
             /// </summary>
-            /// <param name="behavior"></param>
-            public void SafeAdd(ParseCommandBase behavior)
+            /// <param name="command"></param>
+            public void AddSafe(ParseCommandBase command)
             {
-                switch (behavior.CommandType)
+                switch (command.CommandType)
                 {
                     case ParseCommandBase.ProcessType.Foreground:
-                        Foreground.Push(behavior);
-                        All.Push(behavior);
+                        Foreground.Push(command);
+                        All.Push(command);
                         break;
                     case ParseCommandBase.ProcessType.Background:
-                        Background.Push(behavior);
-                        All.Push(behavior);
+                        Background.Push(command);
+                        All.Push(command);
                         break;
                     case ParseCommandBase.ProcessType.SpriteEffect:
-                        SpriteEffect.Push(behavior);
-                        All.Push(behavior);
+                        SpriteEffect.Push(command);
+                        All.Push(command);
                         break;
                     case ParseCommandBase.ProcessType.Effect:
-                        Effect.Push(behavior);
-                        All.Push(behavior);
+                        Effect.Push(command);
+                        All.Push(command);
                         break;
                     default:
                         break;
+                }
+            }
+
+            /// <summary>
+            /// Removes a command from the appropriate command stack and from the <see cref="All"/> stack.
+            /// </summary>
+            /// <param name="command">The command to remove</param>
+            public void RemoveSafe(ParseCommandBase command)
+            {
+                List<ParseCommandBase> commands = null;
+
+                // Get the stack we need to remove from
+                switch (command.CommandType)
+                {
+                    case ParseCommandBase.ProcessType.Foreground:
+                        if (Foreground.Count != 0)
+                            commands = new List<ParseCommandBase>(Foreground);
+                        break;
+                    case ParseCommandBase.ProcessType.Background:
+                        if (Background.Count != 0)
+                            commands = new List<ParseCommandBase>(Background);
+                        break;
+                    case ParseCommandBase.ProcessType.SpriteEffect:
+                        if (SpriteEffect.Count != 0)
+                            commands = new List<ParseCommandBase>(SpriteEffect);
+                        break;
+                    case ParseCommandBase.ProcessType.Effect:
+                        if (Effect.Count != 0)
+                            commands = new List<ParseCommandBase>(Effect);
+                        break;
+                    default:
+                        return;
+                }
+
+                // If we have one, remove and restore stack
+                if (commands != null && commands.Contains(command))
+                {
+                    commands.Remove(command);
+
+                    switch (command.CommandType)
+                    {
+                        case ParseCommandBase.ProcessType.Foreground:
+                            Foreground = new Stack<ParseCommandBase>(commands);
+                            break;
+                        case ParseCommandBase.ProcessType.Background:
+                            Background = new Stack<ParseCommandBase>(commands);
+                            break;
+                        case ParseCommandBase.ProcessType.SpriteEffect:
+                            SpriteEffect = new Stack<ParseCommandBase>(commands);
+                            break;
+                        case ParseCommandBase.ProcessType.Effect:
+                            Effect = new Stack<ParseCommandBase>(commands);
+                            break;
+                        default:
+                            return;
+                    }
+                }
+
+                List<ParseCommandBase> all = new List<ParseCommandBase>(All);
+
+                if (all.Contains(command))
+                {
+                    all.Remove(command);
+                    All = new Stack<ParseCommandBase>(all);
                 }
             }
         }
@@ -188,13 +252,20 @@ namespace SadConsole
             public byte B;
             public byte A;
 
+            public int Counter;
+
             public ParseCommandRecolor(string subCommand)
             {
                 var badCommandException = new ArgumentException("command is invalid for Recolor: " + subCommand);
 
                 string[] parameters = subCommand.Split(':');
 
-                if (parameters.Length == 2)
+                if (parameters.Length == 3)
+                    Counter = int.Parse(parameters[2]);
+                else
+                    Counter = -1;
+
+                if (parameters.Length >= 2)
                 {
                     CommandType = parameters[0] == "b" ? ProcessType.Background : ProcessType.Foreground;
                     string colorString = parameters[1];
@@ -295,7 +366,7 @@ namespace SadConsole
 
             }
 
-            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks behaviors)
+            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
             {
                 Color newColor;
 
@@ -327,6 +398,14 @@ namespace SadConsole
                     glyphState.Background = newColor;
                 else
                     glyphState.Foreground = newColor;
+
+                if (Counter != -1)
+                {
+                    Counter--;
+
+                    if (Counter == 0)
+                        commandStack.RemoveSafe(this);
+                }
             }
         }
 
@@ -336,12 +415,20 @@ namespace SadConsole
         public sealed class ParseCommandSpriteEffect : ParseCommandBase
         {
             public Microsoft.Xna.Framework.Graphics.SpriteEffects Effect;
+            public int Counter;
 
             public ParseCommandSpriteEffect(string subCommand)
             {
                 var badCommandException = new ArgumentException("command is invalid for SpriteEffect: " + subCommand);
 
-                if (Enum.TryParse(subCommand, out Effect))
+                string[] parameters = subCommand.Split(':');
+
+                if (parameters.Length == 2)
+                    Counter = int.Parse(parameters[1]);
+                else
+                    Counter = -1;
+
+                if (Enum.TryParse(parameters[0], out Effect))
                     CommandType = ProcessType.SpriteEffect;
                 else
                     throw badCommandException;
@@ -352,9 +439,17 @@ namespace SadConsole
 
             }
 
-            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks behaviors)
+            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
             {
                 glyphState.SpriteEffect = Effect;
+
+                if (Counter != -1)
+                {
+                    Counter--;
+
+                    if (Counter == 0)
+                        commandStack.RemoveSafe(this);
+                }
             }
         }
 
@@ -468,7 +563,7 @@ namespace SadConsole
                 CommandType = ProcessType.PureCommand;
             }
 
-            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks behaviors)
+            public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
             {
                 
             }
@@ -492,7 +587,7 @@ namespace SadConsole
             public ProcessType CommandType = ProcessType.Invalid;
 
 
-            public abstract void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks behaviors);
+            public abstract void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack);
         }
     }
 }

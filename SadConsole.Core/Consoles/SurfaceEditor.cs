@@ -456,7 +456,7 @@ namespace SadConsole.Consoles
             {
                 var behavior = new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground };
                 var stacks = new ColoredString.ParseCommandStacks();
-                stacks.SafeAdd(behavior);
+                stacks.AddSafe(behavior);
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
             }
         }
@@ -496,8 +496,8 @@ namespace SadConsole.Consoles
                 var behaviorFore = new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground };
                 var behaviorBack = new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background };
                 var stacks = new ColoredString.ParseCommandStacks();
-                stacks.SafeAdd(behaviorFore);
-                stacks.SafeAdd(behaviorBack);
+                stacks.AddSafe(behaviorFore);
+                stacks.AddSafe(behaviorBack);
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
             }
         }
@@ -544,13 +544,13 @@ namespace SadConsole.Consoles
                 var stacks = new ColoredString.ParseCommandStacks();
 
                 if (foreground.HasValue)
-                    stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
+                    stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
 
                 if (background.HasValue)
-                    stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
+                    stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
 
                 if (spriteEffect.HasValue)
-                    stacks.SafeAdd(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
+                    stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
 
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
             }

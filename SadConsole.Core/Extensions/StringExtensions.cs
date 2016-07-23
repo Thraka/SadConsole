@@ -85,13 +85,13 @@ namespace System
             var stacks = new ColoredString.ParseCommandStacks();
 
             if (foreground.HasValue)
-                stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
+                stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
 
             if (background.HasValue)
-                stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
+                stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
 
             if (spriteEffect.HasValue)
-                stacks.SafeAdd(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
+                stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
 
             ColoredString newString = ColoredString.Parse(value, initialBehaviors: stacks);
 
