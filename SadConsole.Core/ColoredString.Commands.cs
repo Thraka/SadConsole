@@ -39,39 +39,41 @@ namespace SadConsole
                         {
                             int commandExitIndex = value.IndexOf(']', i + 2);
                             string command = value.Substring(i + 3, commandExitIndex - (i + 3));
-                            string subCommand = "";
+                            string commandParams = "";
 
                             if (command.Contains(" "))
                             {
                                 var commandSections = command.Split(new char[] { ' ' }, 2);
                                 command = commandSections[0].ToLower();
-                                subCommand = commandSections[1];
+                                commandParams = commandSections[1];
                             }
 
-                            ParseCommandBase behavior;
+                            // Check for custom command
+                            ParseCommandBase commandObject = CustomProcessor != null ? CustomProcessor(command, commandParams, surface, commandStacks) : null;
 
-                            switch (command)
-                            {
-                                case "recolor":
-                                case "r":
-                                    behavior = new ParseCommandRecolor(subCommand);
-                                    break;
-                                case "mirror":
-                                case "m":
-                                    behavior = new ParseCommandSpriteEffect(subCommand);
-                                    break;
-                                case "undo":
-                                case "u":
-                                    behavior = new ParseCommandUndo(subCommand, commandStacks);
-                                    break;
-                                default:
-                                    behavior = CustomProcessor != null ? CustomProcessor(command, subCommand, surface, commandStacks) : null;
-                                    break;
-                            }
+                            // No custom command found, run build in ones
+                            if (commandObject == null)
+                                switch (command)
+                                {
+                                    case "recolor":
+                                    case "r":
+                                        commandObject = new ParseCommandRecolor(commandParams);
+                                        break;
+                                    case "mirror":
+                                    case "m":
+                                        commandObject = new ParseCommandSpriteEffect(commandParams);
+                                        break;
+                                    case "undo":
+                                    case "u":
+                                        commandObject = new ParseCommandUndo(commandParams, commandStacks);
+                                        break;
+                                    default:
+                                        break;
+                                }
 
-                            if (behavior != null && behavior.CommandType != ParseCommandBase.ProcessType.Invalid)
+                            if (commandObject != null && commandObject.CommandType != ParseCommandBase.CommandTypes.Invalid)
                             {
-                                commandStacks.AddSafe(behavior);
+                                commandStacks.AddSafe(commandObject);
 
                                 i = commandExitIndex;
                                 continue;
@@ -108,6 +110,9 @@ namespace SadConsole
                 if (commandStacks.Background.Count != 0)
                     commandStacks.Background.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
+                if (commandStacks.Glyph.Count != 0)
+                    commandStacks.Glyph.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+
                 // SpriteEffect
                 if (commandStacks.SpriteEffect.Count != 0)
                     commandStacks.SpriteEffect.Peek().Build(ref newGlyph, fixedSurfaceIndex, surface, ref i, value, commandStacks);
@@ -129,6 +134,7 @@ namespace SadConsole
         {
             public Stack<ParseCommandBase> Foreground;
             public Stack<ParseCommandBase> Background;
+            public Stack<ParseCommandBase> Glyph;
             public Stack<ParseCommandBase> SpriteEffect;
             public Stack<ParseCommandBase> Effect;
             public Stack<ParseCommandBase> All;
@@ -137,6 +143,7 @@ namespace SadConsole
             {
                 Foreground = new Stack<ParseCommandBase>(4);
                 Background = new Stack<ParseCommandBase>(4);
+                Glyph = new Stack<ParseCommandBase>(4);
                 SpriteEffect = new Stack<ParseCommandBase>(4);
                 Effect = new Stack<ParseCommandBase>(4);
                 All = new Stack<ParseCommandBase>(10);
@@ -150,20 +157,24 @@ namespace SadConsole
             {
                 switch (command.CommandType)
                 {
-                    case ParseCommandBase.ProcessType.Foreground:
+                    case ParseCommandBase.CommandTypes.Foreground:
                         Foreground.Push(command);
                         All.Push(command);
                         break;
-                    case ParseCommandBase.ProcessType.Background:
+                    case ParseCommandBase.CommandTypes.Background:
                         Background.Push(command);
                         All.Push(command);
                         break;
-                    case ParseCommandBase.ProcessType.SpriteEffect:
+                    case ParseCommandBase.CommandTypes.SpriteEffect:
                         SpriteEffect.Push(command);
                         All.Push(command);
                         break;
-                    case ParseCommandBase.ProcessType.Effect:
+                    case ParseCommandBase.CommandTypes.Effect:
                         Effect.Push(command);
+                        All.Push(command);
+                        break;
+                    case ParseCommandBase.CommandTypes.Glyph:
+                        Glyph.Push(command);
                         All.Push(command);
                         break;
                     default:
@@ -182,21 +193,25 @@ namespace SadConsole
                 // Get the stack we need to remove from
                 switch (command.CommandType)
                 {
-                    case ParseCommandBase.ProcessType.Foreground:
+                    case ParseCommandBase.CommandTypes.Foreground:
                         if (Foreground.Count != 0)
                             commands = new List<ParseCommandBase>(Foreground);
                         break;
-                    case ParseCommandBase.ProcessType.Background:
+                    case ParseCommandBase.CommandTypes.Background:
                         if (Background.Count != 0)
                             commands = new List<ParseCommandBase>(Background);
                         break;
-                    case ParseCommandBase.ProcessType.SpriteEffect:
+                    case ParseCommandBase.CommandTypes.SpriteEffect:
                         if (SpriteEffect.Count != 0)
                             commands = new List<ParseCommandBase>(SpriteEffect);
                         break;
-                    case ParseCommandBase.ProcessType.Effect:
+                    case ParseCommandBase.CommandTypes.Effect:
                         if (Effect.Count != 0)
                             commands = new List<ParseCommandBase>(Effect);
+                        break;
+                    case ParseCommandBase.CommandTypes.Glyph:
+                        if (Glyph.Count != 0)
+                            commands = new List<ParseCommandBase>(Glyph);
                         break;
                     default:
                         return;
@@ -209,17 +224,20 @@ namespace SadConsole
 
                     switch (command.CommandType)
                     {
-                        case ParseCommandBase.ProcessType.Foreground:
+                        case ParseCommandBase.CommandTypes.Foreground:
                             Foreground = new Stack<ParseCommandBase>(commands);
                             break;
-                        case ParseCommandBase.ProcessType.Background:
+                        case ParseCommandBase.CommandTypes.Background:
                             Background = new Stack<ParseCommandBase>(commands);
                             break;
-                        case ParseCommandBase.ProcessType.SpriteEffect:
+                        case ParseCommandBase.CommandTypes.SpriteEffect:
                             SpriteEffect = new Stack<ParseCommandBase>(commands);
                             break;
-                        case ParseCommandBase.ProcessType.Effect:
+                        case ParseCommandBase.CommandTypes.Effect:
                             Effect = new Stack<ParseCommandBase>(commands);
+                            break;
+                        case ParseCommandBase.CommandTypes.Glyph:
+                            Glyph = new Stack<ParseCommandBase>(commands);
                             break;
                         default:
                             return;
@@ -254,21 +272,21 @@ namespace SadConsole
 
             public int Counter;
 
-            public ParseCommandRecolor(string subCommand)
+            public ParseCommandRecolor(string parameters)
             {
-                var badCommandException = new ArgumentException("command is invalid for Recolor: " + subCommand);
+                var badCommandException = new ArgumentException("command is invalid for Recolor: " + parameters);
 
-                string[] parameters = subCommand.Split(':');
+                string[] parametersArray = parameters.Split(':');
 
-                if (parameters.Length == 3)
-                    Counter = int.Parse(parameters[2]);
+                if (parametersArray.Length == 3)
+                    Counter = int.Parse(parametersArray[2]);
                 else
                     Counter = -1;
 
-                if (parameters.Length >= 2)
+                if (parametersArray.Length >= 2)
                 {
-                    CommandType = parameters[0] == "b" ? ProcessType.Background : ProcessType.Foreground;
-                    string colorString = parameters[1];
+                    CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
+                    string colorString = parametersArray[1];
 
                     if (colorString.Contains(","))
                     {
@@ -350,7 +368,7 @@ namespace SadConsole
                             }
 
                             if (!found)
-                                CommandType = ProcessType.Invalid;
+                                CommandType = CommandTypes.Invalid;
                         }
 
                     }
@@ -372,14 +390,14 @@ namespace SadConsole
 
                 if (Default)
                 {
-                    if (CommandType == ProcessType.Background)
+                    if (CommandType == CommandTypes.Background)
                         newColor = surface != null ? surface.DefaultBackground : Color.Transparent;
                     else
                         newColor = surface != null ? surface.DefaultForeground : Color.White;
                 }
                 else
                 {
-                    if (CommandType == ProcessType.Background)
+                    if (CommandType == CommandTypes.Background)
                         newColor = glyphState.Background;
                     else
                         newColor = glyphState.Foreground;
@@ -394,7 +412,7 @@ namespace SadConsole
                         newColor.A = A;
                 }
 
-                if (CommandType == ProcessType.Background)
+                if (CommandType == CommandTypes.Background)
                     glyphState.Background = newColor;
                 else
                     glyphState.Foreground = newColor;
@@ -417,19 +435,19 @@ namespace SadConsole
             public Microsoft.Xna.Framework.Graphics.SpriteEffects Effect;
             public int Counter;
 
-            public ParseCommandSpriteEffect(string subCommand)
+            public ParseCommandSpriteEffect(string parameters)
             {
-                var badCommandException = new ArgumentException("command is invalid for SpriteEffect: " + subCommand);
+                var badCommandException = new ArgumentException("command is invalid for SpriteEffect: " + parameters);
 
-                string[] parameters = subCommand.Split(':');
+                string[] paramArray = parameters.Split(':');
 
-                if (parameters.Length == 2)
-                    Counter = int.Parse(parameters[1]);
+                if (paramArray.Length == 2)
+                    Counter = int.Parse(paramArray[1]);
                 else
                     Counter = -1;
 
-                if (Enum.TryParse(parameters[0], out Effect))
-                    CommandType = ProcessType.SpriteEffect;
+                if (Enum.TryParse(paramArray[0], out Effect))
+                    CommandType = CommandTypes.SpriteEffect;
                 else
                     throw badCommandException;
             }
@@ -458,13 +476,13 @@ namespace SadConsole
         /// </summary>
         public sealed class ParseCommandUndo : ParseCommandBase
         {
-            public ParseCommandUndo(string subCommand, ParseCommandStacks stacks)
+            public ParseCommandUndo(string parameters, ParseCommandStacks stacks)
             {
-                var badCommandException = new ArgumentException("command is invalid for Undo: " + subCommand);
-                string[] parts = subCommand.Split(new char[] { ':' }, 3);
+                var badCommandException = new ArgumentException("command is invalid for Undo: " + parameters);
+                string[] parts = parameters.Split(new char[] { ':' }, 3);
                 int times = 1;
                 bool isSpecificStack = false;
-                ProcessType stackType = ProcessType.Invalid;
+                CommandTypes stackType = CommandTypes.Invalid;
 
                 if (parts.Length > 1)
                 {
@@ -473,16 +491,19 @@ namespace SadConsole
                     switch (parts[1])
                     {
                         case "f":
-                            stackType = ProcessType.Foreground;
+                            stackType = CommandTypes.Foreground;
                             break;
                         case "b":
-                            stackType = ProcessType.Background;
+                            stackType = CommandTypes.Background;
+                            break;
+                        case "g":
+                            stackType = CommandTypes.Glyph;
                             break;
                         case "e":
-                            stackType = ProcessType.Effect;
+                            stackType = CommandTypes.Effect;
                             break;
-                        case "s":
-                            stackType = ProcessType.SpriteEffect;
+                        case "m":
+                            stackType = CommandTypes.SpriteEffect;
                             break;
                         case "a":
                             isSpecificStack = false;
@@ -508,16 +529,19 @@ namespace SadConsole
 
                             switch (behavior.CommandType)
                             {
-                                case ProcessType.Foreground:
+                                case CommandTypes.Foreground:
                                     stacks.Foreground.Pop();
                                     break;
-                                case ProcessType.Background:
+                                case CommandTypes.Background:
                                     stacks.Background.Pop();
                                     break;
-                                case ProcessType.SpriteEffect:
+                                case CommandTypes.Glyph:
+                                    stacks.Glyph.Pop();
+                                    break;
+                                case CommandTypes.SpriteEffect:
                                     stacks.SpriteEffect.Pop();
                                     break;
-                                case ProcessType.Effect:
+                                case CommandTypes.Effect:
                                     stacks.Effect.Pop();
                                     break;
                                 default:
@@ -531,19 +555,23 @@ namespace SadConsole
                     {
                         switch (stackType)
                         {
-                            case ProcessType.Foreground:
+                            case CommandTypes.Foreground:
                                 if (stacks.Foreground.Count != 0)
                                     behavior = stacks.Foreground.Pop();
                                 break;
-                            case ProcessType.Background:
+                            case CommandTypes.Background:
                                 if (stacks.Background.Count != 0)
                                     behavior = stacks.Background.Pop();
                                 break;
-                            case ProcessType.SpriteEffect:
+                            case CommandTypes.Glyph:
+                                if (stacks.Glyph.Count != 0)
+                                    behavior = stacks.Glyph.Pop();
+                                break;
+                            case CommandTypes.SpriteEffect:
                                 if (stacks.SpriteEffect.Count != 0)
                                     behavior = stacks.SpriteEffect.Pop();
                                 break;
-                            case ProcessType.Effect:
+                            case CommandTypes.Effect:
                                 if (stacks.Effect.Count != 0)
                                     behavior = stacks.Effect.Pop();
                                 break;
@@ -560,7 +588,7 @@ namespace SadConsole
                     }
                 }
             
-                CommandType = ProcessType.PureCommand;
+                CommandType = CommandTypes.PureCommand;
             }
 
             public override void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
@@ -574,17 +602,18 @@ namespace SadConsole
         /// </summary>
         public abstract class ParseCommandBase
         {
-            public enum ProcessType
+            public enum CommandTypes
             {
                 Foreground,
                 Background,
+                Glyph,
                 SpriteEffect,
                 Effect,
                 PureCommand,
                 Invalid
             }
 
-            public ProcessType CommandType = ProcessType.Invalid;
+            public CommandTypes CommandType = CommandTypes.Invalid;
 
 
             public abstract void Build(ref ColoredGlyph glyphState, int surfaceIndex, ITextSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack);

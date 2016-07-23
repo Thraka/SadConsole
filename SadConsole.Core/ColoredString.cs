@@ -114,9 +114,9 @@ namespace SadConsole
         public ColoredString(string value, Color foreground, Color background, SpriteEffects spriteEffect = SpriteEffects.None)
         {
             var stacks = new ParseCommandStacks();
-            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
-            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
-            stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
+            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Foreground });
+            stacks.AddSafe(new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.CommandTypes.Background });
+            stacks.AddSafe(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect, CommandType = ColoredString.ParseCommandBase.CommandTypes.SpriteEffect });
             _characters = ColoredString.Parse(value, initialBehaviors: stacks)._characters;
         }
 
@@ -259,6 +259,15 @@ namespace SadConsole
                 _character = value;
                 base.GlyphIndex = _character;
             }
+        }
+
+        /// <summary>
+        /// Sets the glyph by index.
+        /// </summary>
+        public new int GlyphIndex
+        {
+            get { return base.GlyphIndex; }
+            set { Glyph = (char)value; }
         }
 
         /// <summary>

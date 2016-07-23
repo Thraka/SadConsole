@@ -191,6 +191,16 @@ namespace Microsoft.Xna.Framework
         }
         #endregion
 
+        /// <summary>
+        /// Converts a color to the format used by <see cref="SadConsole.ColoredString.ParseCommandRecolor"/> command.
+        /// </summary>
+        /// <param name="color">The color to convert.</param>
+        /// <returns>A string in this format R,G,B,A so for <see cref="Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
+        public static string ToParser(this Color color)
+        {
+            return $"{color.R},{color.G},{color.B},{color.A}";
+        }
+
     }
 
 #if SILVERLIGHT
