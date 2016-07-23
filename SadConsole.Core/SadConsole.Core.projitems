@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Algorithms.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellAppearance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\AnimatedTextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\CachedTextSurfaceRenderer.cs" />
@@ -84,5 +85,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Ellipse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\IShape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Line.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringCommand.cs" />
   </ItemGroup>
 </Project>

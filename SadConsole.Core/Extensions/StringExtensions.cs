@@ -9,7 +9,10 @@ using System.Windows;
 
 namespace System
 {
-    public static class StringEx
+    /// <summary>
+    /// Helpers for strings.
+    /// </summary>
+    public static class StringExtensions
     {
         /// <summary>
         /// Aligns a string given a total character width and alignment style. Fills in the extra space with the space character.
@@ -68,103 +71,60 @@ namespace System
 
             return adjustedText;
         }
-
-        /// <summary>
-        /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground, background, and cell effect.
-        /// </summary>
-        /// <param name="value">The current string.</param>
-        /// <param name="foreground">The foreground color.</param>
-        /// <param name="background">The background color.</param>
-        /// <param name="effect">The cell effect.</param>
-        /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateColored(this string value, Color foreground, Color background, ICellEffect effect)
-        {
-            ColoredString newString = new ColoredString(value);
-            newString.Foreground = foreground;
-            newString.Background = background;
-            newString.Effect = effect;
-            newString.UpdateWithDefaults();
-            return newString;
-        }
-
+        
         /// <summary>
         /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
         /// </summary>
         /// <param name="value">The current string.</param>
         /// <param name="foreground">The foreground color. If null, <see cref="ColoredString.IgnoreForeground"/> will be set.</param>
         /// <param name="background">The background color. If null, <see cref="ColoredString.IgnoreBackground"/> will be set.</param>
+        /// <param name="spriteEffect">The background color. If null, <see cref="ColoredString.IgnoreEffect"/> will be set.</param>
         /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateColored(this string value, Color? foreground, Color? background)
+        public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Microsoft.Xna.Framework.Graphics.SpriteEffects? spriteEffect = null)
         {
-            ColoredString newString = new ColoredString(value);
+            var stacks = new ColoredString.ParseCommandStacks();
+
             if (foreground.HasValue)
-                newString.Foreground = foreground.Value;
-            else
-                newString.IgnoreForeground = true;
+                stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
 
             if (background.HasValue)
-                newString.Background = background.Value;
-            else
+                stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
+
+            if (spriteEffect.HasValue)
+                stacks.SafeAdd(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
+
+            ColoredString newString = ColoredString.Parse(value, initialBehaviors: stacks);
+
+            if (!foreground.HasValue)
+                newString.IgnoreForeground = true;
+
+            if (!background.HasValue)
                 newString.IgnoreBackground = true;
 
-            newString.Effect = null;
-            newString.IgnoreEffect = true;
-            newString.UpdateWithDefaults();
-
+            if (!spriteEffect.HasValue)
+                newString.IgnoreSpriteEffect = true;
+            
             return newString;
         }
-
-        /// <summary>
-        /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground and background.
-        /// </summary>
-        /// <param name="value">The current string.</param>
-        /// <param name="appearance">The foreground and background color.</param>
-        /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateColored(this string value, ICellAppearance appearance)
-        {
-            ColoredString newString = new ColoredString(value);
-            newString.Foreground = appearance.Foreground;
-            newString.Background = appearance.Background;
-            newString.Effect = null;
-            newString.UpdateWithDefaults();
-            return newString;
-        }
-
-        /// <summary>
-        /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground, background, and cell effect.
-        /// </summary>
-        /// <param name="value">The current string.</param>
-        /// <param name="appearance">The foreground and background color.</param>
-        /// <param name="effect">The cell effect.</param>
-        /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateColored(this string value, ICellAppearance appearance, ICellEffect effect)
-        {
-            ColoredString newString = new ColoredString(value);
-            newString.Foreground = appearance.Foreground;
-            newString.Background = appearance.Background;
-            newString.Effect = effect;
-            newString.UpdateWithDefaults();
-            return newString;
-        }
-
+        
         /// <summary>
         /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground gradient and cell effect. 
         /// </summary>
         /// <param name="value">The current string.</param>
         /// <param name="startingForeground">The starting foreground color to blend.</param>
         /// <param name="endingForeground">The ending foreground color to blend.</param>
-        /// <param name="effect">The cell effect.</param>
         /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground, ICellEffect effect)
+        public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground)
         {
             ColoredString newString = new ColoredString(value);
 
             for (int i = 0; i < value.Length; i++)
             {
                 newString[i].Foreground = Color.Lerp(startingForeground, endingForeground, (float)i / (float)value.Length);
-                newString[i].Background = newString.Background;
-                newString[i].Effect = newString.Effect;
             }
+
+            newString.IgnoreBackground = true;
+            newString.IgnoreSpriteEffect = true;
 
             return newString;
         }
@@ -177,9 +137,8 @@ namespace System
         /// <param name="endingForeground">The ending foreground color to blend.</param>
         /// <param name="startingBackground">The starting background color to blend.</param>
         /// <param name="endingBackground">The ending background color to blend.</param>
-        /// <param name="effect">The cell effect.</param>
         /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground, Color startingBackground, Color endingBackground, ICellEffect effect)
+        public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground, Color startingBackground, Color endingBackground)
         {
             ColoredString newString = new ColoredString(value);
 
@@ -187,8 +146,9 @@ namespace System
             {
                 newString[i].Foreground = Color.Lerp(startingForeground, endingForeground, (float)i / (float)value.Length);
                 newString[i].Background = Color.Lerp(startingBackground, endingBackground, (float)i / (float)value.Length);
-                newString[i].Effect = newString.Effect;
             }
+
+            newString.IgnoreSpriteEffect = true;
 
             return newString;
         }

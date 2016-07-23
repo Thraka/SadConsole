@@ -24,8 +24,20 @@ namespace SadConsole.Consoles
         public int TimesShiftedLeft;
         public int TimesShiftedUp;
 
+        /// <summary>
+        /// The width of the text surface being edited.
+        /// </summary>
         public int Width { get { return textSurface.Width; } }
+
+        /// <summary>
+        /// The height of the text surface being edited.
+        /// </summary>
         public int Height { get { return textSurface.Height; } }
+
+        /// <summary>
+        /// When true, the <see cref="ColoredString.Parse(string, int, ITextSurface, ColoredString.ParseCommandStacks)"/> command is used to print strings.
+        /// </summary>
+        public bool UsePrintProcessor = true;
 
         /// <summary>
         /// The text surface being changed.
@@ -396,12 +408,151 @@ namespace SadConsole.Consoles
                 throw new Exception("X,Y is out of range for Print");
 
             int index = y * textSurface.Width + x;
-            int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
-            int charIndex = 0;
-            for (; index < total; index++)
+
+            if (!UsePrintProcessor)
             {
-                textSurface.Cells[index].GlyphIndex = text[charIndex];
-                charIndex++;
+                int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
+                int charIndex = 0;
+                for (; index < total; index++)
+                {
+                    textSurface.Cells[index].GlyphIndex = text[charIndex];
+                    charIndex++;
+                }
+            }
+            else
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface));
+
+        }
+        
+        /// <summary>
+        /// Draws the string on the console at the specified location and color, wrapping if needed.
+        /// </summary>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="text">The string to display.</param>
+        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
+        public void Print(int x, int y, string text, Color foreground)
+        {
+            if (String.IsNullOrEmpty(text))
+                return;
+
+            if (x >= textSurface.Width || x < 0 || y >= textSurface.Height || y < 0)
+                throw new Exception("X,Y is out of range for Print");
+
+            int index = y * textSurface.Width + x;
+
+            if (!UsePrintProcessor)
+            {
+                int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
+                int charIndex = 0;
+                for (; index < total; index++)
+                {
+                    textSurface.Cells[index].GlyphIndex = text[charIndex];
+                    textSurface.Cells[index].Foreground = foreground;
+                    charIndex++;
+                }
+            }
+            else
+            {
+                var behavior = new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground };
+                var stacks = new ColoredString.ParseCommandStacks();
+                stacks.SafeAdd(behavior);
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
+            }
+        }
+
+        /// <summary>
+        /// Draws the string on the console at the specified location with the specified foreground and background color, wrapping if needed.
+        /// </summary>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="text">The string to display.</param>
+        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
+        /// <param name="background">Sets the background of all characters in the text.</param>
+        public void Print(int x, int y, string text, Color foreground, Color background)
+        {
+            if (String.IsNullOrEmpty(text))
+                return;
+
+            if (x >= textSurface.Width || x < 0 || y >= textSurface.Height || y < 0)
+                throw new Exception("X,Y is out of range for Print");
+
+            int index = y * textSurface.Width + x;
+
+            if (!UsePrintProcessor)
+            {
+                int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
+                int charIndex = 0;
+                for (; index < total; index++)
+                {
+                    textSurface.Cells[index].GlyphIndex = text[charIndex];
+                    textSurface.Cells[index].Background = background;
+                    textSurface.Cells[index].Foreground = foreground;
+                    charIndex++;
+                }
+            }
+            else
+            {
+                var behaviorFore = new ColoredString.ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground };
+                var behaviorBack = new ColoredString.ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background };
+                var stacks = new ColoredString.ParseCommandStacks();
+                stacks.SafeAdd(behaviorFore);
+                stacks.SafeAdd(behaviorBack);
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
+            }
+        }
+
+        /// <summary>
+        /// Draws the string on the console at the specified location with the specified settings. 
+        /// </summary>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="text">The string to display.</param>
+        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
+        /// <param name="background">Sets the background of all characters in the text.</param>
+        /// <param name="spriteEffect">The sprite effect to set on the cell.</param>
+        public void Print(int x, int y, string text, Color? foreground = null, Color? background = null, SpriteEffects? spriteEffect = null)
+        {
+            if (String.IsNullOrEmpty(text))
+                return;
+
+            if (x >= textSurface.Width || x < 0 || y >= textSurface.Height || y < 0)
+                throw new Exception("X,Y is out of range for Print");
+
+            int index = y * textSurface.Width + x;
+
+            if (!UsePrintProcessor)
+            {
+                int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
+                int charIndex = 0;
+                for (; index < total; index++)
+                {
+                    textSurface.Cells[index].GlyphIndex = text[charIndex];
+
+                    if (background.HasValue)
+                        textSurface.Cells[index].Background = background.Value;
+                    if (foreground.HasValue)
+                        textSurface.Cells[index].Foreground = foreground.Value;
+                    if (spriteEffect.HasValue)
+                        textSurface.Cells[index].SpriteEffect = spriteEffect.Value;
+
+                    charIndex++;
+                }
+            }
+            else
+            {
+                var stacks = new ColoredString.ParseCommandStacks();
+
+                if (foreground.HasValue)
+                    stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Foreground });
+
+                if (background.HasValue)
+                    stacks.SafeAdd(new ColoredString.ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = ColoredString.ParseCommandBase.ProcessType.Background });
+
+                if (spriteEffect.HasValue)
+                    stacks.SafeAdd(new ColoredString.ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = ColoredString.ParseCommandBase.ProcessType.SpriteEffect });
+
+                PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, stacks));
             }
         }
 
@@ -436,60 +587,6 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Draws the string on the console at the specified location and color, wrapping if needed.
-        /// </summary>
-        /// <param name="x">X location of the text.</param>
-        /// <param name="y">Y location of the text.</param>
-        /// <param name="text">The string to display.</param>
-        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
-        public void Print(int x, int y, string text, Color foreground)
-        {
-            if (String.IsNullOrEmpty(text))
-                return;
-
-            if (x >= textSurface.Width || x < 0 || y >= textSurface.Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
-
-            int index = y * textSurface.Width + x;
-            int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
-            int charIndex = 0;
-            for (; index < total; index++)
-            {
-                textSurface.Cells[index].GlyphIndex = text[charIndex];
-                textSurface.Cells[index].Foreground = foreground;
-                charIndex++;
-            }
-        }
-
-        /// <summary>
-        /// Draws the string on the console at the specified location with the specified foreground and background color, wrapping if needed.
-        /// </summary>
-        /// <param name="x">X location of the text.</param>
-        /// <param name="y">Y location of the text.</param>
-        /// <param name="text">The string to display.</param>
-        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
-        /// <param name="background">Sets the background of all characters in the text.</param>
-        public void Print(int x, int y, string text, Color foreground, Color background)
-        {
-            if (String.IsNullOrEmpty(text))
-                return;
-
-            if (x >= textSurface.Width || x < 0 || y >= textSurface.Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
-
-            int index = y * textSurface.Width + x;
-            int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
-            int charIndex = 0;
-            for (; index < total; index++)
-            {
-                textSurface.Cells[index].GlyphIndex = text[charIndex];
-                textSurface.Cells[index].Background = background;
-                textSurface.Cells[index].Foreground = foreground;
-                charIndex++;
-            }
-        }
-
-        /// <summary>
         /// Draws the string on the console at the specified location, wrapping if needed.
         /// </summary>
         /// <param name="x">X location of the text.</param>
@@ -512,43 +609,32 @@ namespace SadConsole.Consoles
                     textSurface.Cells[index].Background = text[charIndex].Background;
                 if (!text.IgnoreForeground)
                     textSurface.Cells[index].Foreground = text[charIndex].Foreground;
+                if (!text.IgnoreSpriteEffect)
+                    textSurface.Cells[index].SpriteEffect = text[charIndex].SpriteEffect;
                 if (!text.IgnoreEffect)
                     textSurface.Cells[index].Effect = text[charIndex].Effect;
                 charIndex++;
             }
         }
+        
 
-        /// <summary>
-        /// Draws the string on the console at the specified location with the specified settings. 
-        /// </summary>
-        /// <param name="x">X location of the text.</param>
-        /// <param name="y">Y location of the text.</param>
-        /// <param name="text">The string to display.</param>
-        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
-        /// <param name="background">Sets the background of all characters in the text.</param>
-        /// <param name="spriteEffect">The sprite effect to set on the cell.</param>
-        public void Print(int x, int y, string text, Color? foreground = null, Color? background = null, SpriteEffects? spriteEffect = null)
+        private void PrintNoCheck(int index, ColoredString text)
         {
-            if (String.IsNullOrEmpty(text))
-                return;
-
-            if (x >= textSurface.Width || x < 0 || y >= textSurface.Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
-
-            int index = y * textSurface.Width + x;
-            int total = index + text.Length > textSurface.Cells.Length ? textSurface.Cells.Length - index : index + text.Length;
+            int total = index + text.Count > textSurface.Cells.Length ? textSurface.Cells.Length : index + text.Count;
             int charIndex = 0;
+
             for (; index < total; index++)
             {
-                textSurface.Cells[index].GlyphIndex = text[charIndex];
-
-                if (background.HasValue)
-                    textSurface.Cells[index].Background = background.Value;
-                if (foreground.HasValue)
-                    textSurface.Cells[index].Foreground = foreground.Value;
-                if (spriteEffect.HasValue)
-                    textSurface.Cells[index].SpriteEffect = spriteEffect.Value;
-
+                if (!text.IgnoreGlyph)
+                    textSurface.Cells[index].GlyphIndex = text[charIndex].Glyph;
+                if (!text.IgnoreBackground)
+                    textSurface.Cells[index].Background = text[charIndex].Background;
+                if (!text.IgnoreForeground)
+                    textSurface.Cells[index].Foreground = text[charIndex].Foreground;
+                if (!text.IgnoreSpriteEffect)
+                    textSurface.Cells[index].SpriteEffect = text[charIndex].SpriteEffect;
+                if (!text.IgnoreEffect)
+                    textSurface.Cells[index].Effect = text[charIndex].Effect;
                 charIndex++;
             }
         }
@@ -989,9 +1075,8 @@ namespace SadConsole.Consoles
         /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
         /// <param name="background">Foregorund of every cell. If null, skips.</param>
         /// <param name="glyph">Glyph of every cell. If null, skips.</param>
-        /// <param name="effect">Effect of every cell.</param>
         /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
-        public void Fill(Color? foreground, Color? background, int? glyph, Effects.ICellEffect effect, SpriteEffects? spriteEffect = null)
+        public Cell[] Fill(Color? foreground, Color? background, int? glyph, SpriteEffects? spriteEffect = null)
         {
             for (int i = 0; i < textSurface.Cells.Length; i++)
             {
@@ -1003,9 +1088,9 @@ namespace SadConsole.Consoles
                     textSurface.Cells[i].Foreground = foreground.Value;
                 if (spriteEffect.HasValue)
                     textSurface.Cells[i].SpriteEffect = spriteEffect.Value;
-
-                textSurface.Cells[i].Effect = effect;
             }
+
+            return textSurface.Cells;
         }
 
         /// <summary>
@@ -1015,19 +1100,21 @@ namespace SadConsole.Consoles
         /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
         /// <param name="background">Foregorund of every cell. If null, skips.</param>
         /// <param name="glyph">Glyph of every cell. If null, skips.</param>
-        /// <param name="effect">Effect of every cell.</param>
         /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
-        public void Fill(Rectangle area, Color? foreground, Color? background, int? glyph, Effects.ICellEffect effect, SpriteEffects? spriteEffect = null)
+        public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, SpriteEffects? spriteEffect = null)
         {
             // Check for valid rect
             Rectangle consoleArea = new Rectangle(0, 0, textSurface.Width, textSurface.Height);
             if (consoleArea.Contains(area))
             {
+                var cells = new Cell[consoleArea.Width * consoleArea.Height];
+                int cellIndex = 0;
+
                 for (int x = area.X; x < area.Right; x++)
                 {
                     for (int y = area.Y; y < area.Bottom; y++)
                     {
-                        Cell cell = textSurface.Cells[y * textSurface.Width + x];
+                        Cell cell = textSurface[y * textSurface.Width + x];
 
                         if (glyph.HasValue)
                             cell.GlyphIndex = glyph.Value;
@@ -1038,10 +1125,15 @@ namespace SadConsole.Consoles
                         if (spriteEffect.HasValue)
                             cell.SpriteEffect = spriteEffect.Value;
 
-                        cell.Effect = effect;
+                        cells[cellIndex] = cell;
+                        cellIndex++;
                     }
                 }
+
+                return cells;
             }
+
+            return new Cell[] { };
         }
         #endregion
 
