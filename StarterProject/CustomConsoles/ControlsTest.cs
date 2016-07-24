@@ -237,7 +237,7 @@ namespace StarterProject.CustomConsoles
 
         private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7)
         {
-            return text.PadRight(stringLength).Substring(0, stringLength).CreateColored(start, null) + new string((char)219, 15).CreateGradient(start, end, null) + text.PadLeft(stringLength).Substring(0, stringLength).CreateColored(end, null);
+            return text.PadRight(stringLength).Substring(0, stringLength).CreateColored(start) + new string((char)219, 15).CreateGradient(start, end) + text.PadLeft(stringLength).Substring(0, stringLength).CreateColored(end);
         }
     }
 }

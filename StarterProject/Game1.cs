@@ -6,6 +6,8 @@
     using Console = SadConsole.Consoles.Console;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using System.Collections.Generic;
+    using SadConsole.StringParser;
 
     public class Game1: Microsoft.Xna.Framework.Game
     {
@@ -41,15 +43,16 @@
             SadConsole.Engine.ConsoleRenderStack.Clear();
             SadConsole.Engine.ActiveConsole = null;
 
-            rootConsole.IsVisible = false;
-            rootConsole.Fill(Color.Blue, Color.DarkGreen, 0, null);
-            rootConsole.Print(2, 2, "Hello");
-            rootConsole.Position = new Point(2, 0);
+
+            
+
+            
 
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
                                         new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
+                                        new CustomConsoles.StringParsingConsole(),
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.DOSConsole(),
                                         new CustomConsoles.SceneProjectionConsole(),

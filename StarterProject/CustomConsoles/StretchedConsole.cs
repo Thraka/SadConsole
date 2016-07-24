@@ -19,7 +19,7 @@
             // area.
             textSurface.Font = Engine.Fonts.Values.First().GetFont(Font.FontSizes.Two);
 
-            ColoredString colorString = "Text using a colored string gradient that wraps around".CreateGradient(Color.DarkGreen, Color.LightGreen, null);
+            ColoredString colorString = "Text using a colored string gradient that wraps around".CreateGradient(Color.DarkGreen, Color.LightGreen);
             Print(2, 3, colorString);
 
             IsVisible = false;
