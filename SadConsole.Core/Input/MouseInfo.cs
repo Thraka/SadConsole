@@ -1,8 +1,9 @@
-﻿#if !SHARPDX
-using Microsoft.Xna.Framework;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using SFML.System;
 #else
-using SharpDX.DirectInput;
-using SharpDX.Toolkit;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 #endif
 using SadConsole.Consoles;
 
@@ -94,12 +95,12 @@ namespace SadConsole.Input
         /// Fills out the state of the mouse.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void ProcessMouse(Microsoft.Xna.Framework.GameTime gameTime)
+        public void ProcessMouse(GameTime gameTime)
         {
-            Microsoft.Xna.Framework.Input.MouseState currentState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+            MouseState currentState = Mouse.GetState();
 
-            bool leftDown = currentState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;
-            bool rightDown = currentState.RightButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;
+            bool leftDown = currentState.LeftButton == ButtonState.Pressed;
+            bool rightDown = currentState.RightButton == ButtonState.Pressed;
 
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
@@ -157,7 +158,7 @@ namespace SadConsole.Input
             if (ConsoleLocation.X >= 0 && ConsoleLocation.X <= data.TextSurface.RenderArea.Width - 1 &&
                 ConsoleLocation.Y >= 0 && ConsoleLocation.Y <= data.TextSurface.RenderArea.Height - 1)
             {
-                ConsoleLocation = new Point(ConsoleLocation.X + data.TextSurface.RenderArea.Location.X, ConsoleLocation.Y + data.TextSurface.RenderArea.Location.Y);
+                ConsoleLocation = new Point(ConsoleLocation.X + data.TextSurface.RenderArea.Left, ConsoleLocation.Y + data.TextSurface.RenderArea.Top);
                 Cell = data.TextSurface.Cells[ConsoleLocation.Y * data.TextSurface.RenderArea.Width + ConsoleLocation.X];
                 Console = data;
 

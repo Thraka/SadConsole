@@ -1,7 +1,13 @@
-﻿using Rectangle = Microsoft.Xna.Framework.Rectangle;
+﻿
+#if SFML
+using Vector2 = SFML.System.Vector2f;
+using Rectangle = SFML.Graphics.IntRect;
+using SFML.Graphics;
+#else
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using SpriteEffects = Microsoft.Xna.Framework.Graphics.SpriteEffects;
-
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -91,7 +97,7 @@ namespace SadConsole.Consoles
             protected set { textSurface.Cells[index] = value; }
         }
 
-        #region Constructors
+#region Constructors
         /// <summary>
         /// Creates a new cell surface that can be resized and also have its textSurface.Cells resized.
         /// </summary>
@@ -100,7 +106,7 @@ namespace SadConsole.Consoles
         {
             TextSurface = surface;
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Called when the <see cref="TextSurface"/> property is changed. Sets <see cref="Effects"/> to a new instance of <see cref="EffectsManager"/>.
@@ -112,7 +118,7 @@ namespace SadConsole.Consoles
             Effects = new EffectsManager(newSurface);
         }
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
@@ -127,7 +133,7 @@ namespace SadConsole.Consoles
                 textSurface.Cells[i].Background = pixels[i];
         }
 
-        #region IsValidCell
+#region IsValidCell
         /// <summary>
         /// Tests if a cell is valid based on its x,y position.
         /// </summary>
@@ -169,12 +175,12 @@ namespace SadConsole.Consoles
         {
             return index >= 0 && index < textSurface.Cells.Length;
         }
-        #endregion
+#endregion
 
 
-        #region Cell Manipulation
+#region Cell Manipulation
 
-        #region Cell Specifics
+#region Cell Specifics
         /// <summary>
         /// Changes the glyph of a specified cell to a new value.
         /// </summary>
@@ -391,9 +397,9 @@ namespace SadConsole.Consoles
                 for (int x = 0; x < textSurface.Width; x++)
                 {
                     SetGlyph(x, y, charCounter);
-                    SetForeground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
+                    SetForeground(x, y, new Color((byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), 255));
                     SetBackground(x, y, textSurface.DefaultBackground);
-                    SetBackground(x, y, new Color(Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), Engine.Random.Next(0, 256), 255));
+                    SetBackground(x, y, new Color((byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), 255));
                     SetSpriteEffect(x, y, (SpriteEffects)Engine.Random.Next(0, 4));
                     charCounter++;
                     if (charCounter > 255)
@@ -401,9 +407,9 @@ namespace SadConsole.Consoles
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region Print
+#region Print
         /// <summary>
         /// Draws the string on the console at the specified location, wrapping if needed.
         /// </summary>
@@ -634,9 +640,9 @@ namespace SadConsole.Consoles
             }
         }
 
-        #endregion
+#endregion
 
-        #region Get String
+#region Get String
         /// <summary>
         /// Builds a string from the text surface from the specified coordinates.
         /// </summary>
@@ -713,9 +719,9 @@ namespace SadConsole.Consoles
 
             return new ColoredString(string.Empty);
         }
-        #endregion
+#endregion
 
-        #region Clear
+#region Clear
         /// <summary>
         /// Clears the console data. Characters are reset to 0, the forground and background are set to default, and effect set to none.
         /// </summary>
@@ -736,9 +742,9 @@ namespace SadConsole.Consoles
             cell.Foreground = textSurface.DefaultForeground;
             cell.Background = textSurface.DefaultBackground;
         }
-        #endregion
+#endregion
 
-        #region Shifting Rows
+#region Shifting Rows
 
         public void ClearShiftValues()
         {
@@ -1060,9 +1066,9 @@ namespace SadConsole.Consoles
                 }
         }
 
-        #endregion
+#endregion
 
-        #region Fill
+#region Fill
 
         /// <summary>
         /// Fills the console.
@@ -1100,14 +1106,15 @@ namespace SadConsole.Consoles
         {
             // Check for valid rect
             Rectangle consoleArea = new Rectangle(0, 0, textSurface.Width, textSurface.Height);
+
             if (consoleArea.Contains(area))
             {
                 var cells = new Cell[consoleArea.Width * consoleArea.Height];
                 int cellIndex = 0;
 
-                for (int x = area.X; x < area.Right; x++)
+                for (int x = area.Left; x < area.Left + area.Width; x++)
                 {
-                    for (int y = area.Y; y < area.Bottom; y++)
+                    for (int y = area.Top; y < area.Top + area.Height; y++)
                     {
                         Cell cell = textSurface[y * textSurface.Width + x];
 
@@ -1130,10 +1137,10 @@ namespace SadConsole.Consoles
 
             return new Cell[] { };
         }
-        #endregion
+#endregion
 
-        #endregion
-        #endregion
+#endregion
+#endregion
 
 
         ///// <summary>

@@ -1,9 +1,13 @@
-﻿namespace SadConsole.Instructions
-{
-    using Microsoft.Xna.Framework;
-    using SadConsole.Effects;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#else
+using Microsoft.Xna.Framework;
+#endif
 
+using System.Runtime.Serialization;
+
+namespace SadConsole.Instructions
+{
     /// <summary>
     /// Draws a string to a console as if someone was typing.
     /// </summary>

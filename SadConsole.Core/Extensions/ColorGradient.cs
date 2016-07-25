@@ -1,9 +1,21 @@
-﻿namespace Microsoft.Xna.Framework
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using MyMathHelper = SadConsole.MathHelper;
+#else
+using ColorHelper = Microsoft.Xna.Framework.Color;
+using MyMathHelper = Microsoft.Xna.Framework.MathHelper;
+#endif
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Collections;
+
+
+#if SFML
+namespace SFML.Graphics
+#else
+namespace Microsoft.Xna.Framework
+#endif
+{
     /// <summary>
     /// Represents a gradient with multiple color stops.
     /// </summary>
@@ -28,7 +40,7 @@
 
 
             if (colorList.Length != stopList.Length)
-                throw new Exception("Both colors and stops much match in array length.");
+                throw new global::System.Exception("Both colors and stops much match in array length.");
 
             Stops = new ColorGradientStop[colorList.Length];
 
@@ -57,7 +69,7 @@
         public ColorGradient(params Color[] colors)
         {
             if (colors.Length == 0)
-                throw new ArgumentException("At least one color must be provided on this constructor.");
+                throw new global::System.ArgumentException("At least one color must be provided on this constructor.");
 
             if (colors.Length == 1)
             {
@@ -93,7 +105,7 @@
         /// Gets an enumerator with all of the gradient stops.
         /// </summary>
         /// <returns>An enumerator.</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return Stops.GetEnumerator();
         }
@@ -108,7 +120,7 @@
             SadConsole.ColoredString stringObject = new SadConsole.ColoredString(text);
 
             if (Stops.Length == 0)
-                throw new System.IndexOutOfRangeException("The ColorGradient object does not have any gradient stops defined.");
+                throw new global::System.IndexOutOfRangeException("The ColorGradient object does not have any gradient stops defined.");
 
             else if (Stops.Length == 1)
             {
@@ -129,11 +141,11 @@
                 for (counter = 0; counter < Stops.Length && Stops[counter].Stop < lerpTotal; counter++) ;
 
                 counter--;
-                counter = (int)MathHelper.Clamp(counter, 0, Stops.Length - 2);
+                counter = (int)MyMathHelper.Clamp(counter, 0, Stops.Length - 2);
 
                 float newLerp = (Stops[counter].Stop - (float)lerpTotal) / (Stops[counter].Stop - Stops[counter + 1].Stop);
 
-                stringObject[i].Foreground = Color.Lerp(Stops[counter].Color, Stops[counter + 1].Color, newLerp);
+                stringObject[i].Foreground = ColorHelper.Lerp(Stops[counter].Color, Stops[counter + 1].Color, newLerp);
             }
 
             return stringObject;
@@ -147,7 +159,7 @@
         public Color Lerp(float amount)
         {
             if (Stops.Length == 0)
-                throw new System.IndexOutOfRangeException("The ColorGradient object does not have any gradient stops defined.");
+                throw new global::System.IndexOutOfRangeException("The ColorGradient object does not have any gradient stops defined.");
 
             else if (Stops.Length == 1)
             {
@@ -158,11 +170,11 @@
             for (counter = 0; counter < Stops.Length && Stops[counter].Stop < amount; counter++) ;
 
             counter--;
-            counter = (int)MathHelper.Clamp(counter, 0, Stops.Length - 2);
+            counter = (int)MyMathHelper.Clamp(counter, 0, Stops.Length - 2);
 
             float newLerp = (Stops[counter].Stop - (float)amount) / (Stops[counter].Stop - Stops[counter + 1].Stop);
 
-            return Color.Lerp(Stops[counter].Color, Stops[counter + 1].Color, newLerp);
+            return ColorHelper.Lerp(Stops[counter].Color, Stops[counter + 1].Color, newLerp);
         }
 
         public static implicit operator ColorGradient(Color color)

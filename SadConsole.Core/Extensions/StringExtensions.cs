@@ -1,11 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using Rectangle = SFML.Graphics.IntRect;
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ColorHelper = Microsoft.Xna.Framework.Color;
+#endif
+
 using SadConsole;
-using SadConsole.Effects;
 using SadConsole.StringParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace System
@@ -81,7 +84,7 @@ namespace System
         /// <param name="background">The background color. If null, <see cref="ColoredString.IgnoreBackground"/> will be set.</param>
         /// <param name="spriteEffect">The background color. If null, <see cref="ColoredString.IgnoreEffect"/> will be set.</param>
         /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Microsoft.Xna.Framework.Graphics.SpriteEffects? spriteEffect = null)
+        public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, SpriteEffects? spriteEffect = null)
         {
             var stacks = new ParseCommandStacks();
 
@@ -121,7 +124,7 @@ namespace System
 
             for (int i = 0; i < value.Length; i++)
             {
-                newString[i].Foreground = Color.Lerp(startingForeground, endingForeground, (float)i / (float)value.Length);
+                newString[i].Foreground = ColorHelper.Lerp(startingForeground, endingForeground, (float)i / (float)value.Length);
             }
 
             newString.IgnoreBackground = true;
@@ -145,8 +148,8 @@ namespace System
 
             for (int i = 0; i < value.Length; i++)
             {
-                newString[i].Foreground = Color.Lerp(startingForeground, endingForeground, (float)i / (float)value.Length);
-                newString[i].Background = Color.Lerp(startingBackground, endingBackground, (float)i / (float)value.Length);
+                newString[i].Foreground = ColorHelper.Lerp(startingForeground, endingForeground, (float)i / (float)value.Length);
+                newString[i].Background = ColorHelper.Lerp(startingBackground, endingBackground, (float)i / (float)value.Length);
             }
 
             newString.IgnoreSpriteEffect = true;

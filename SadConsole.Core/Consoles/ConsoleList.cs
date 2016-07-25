@@ -1,12 +1,14 @@
-﻿namespace SadConsole.Consoles
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#else
+using Microsoft.Xna.Framework;
+#endif
 
+using System;
+using System.Collections.Generic;
+
+namespace SadConsole.Consoles
+{
     /// <summary>
     /// Represents a list of consoles. By calling the <see cref="Update"/> or <see cref="Render"/> methods, all contained consoles will be called in order.
     /// </summary>
@@ -35,7 +37,7 @@
 
         public bool ExclusiveFocus { get; set; }
 
-        public Microsoft.Xna.Framework.Point Position { get; set; }
+        public Point Position { get; set; }
 
         public ITextSurfaceRendered TextSurface
         {

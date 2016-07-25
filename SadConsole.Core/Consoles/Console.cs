@@ -1,20 +1,25 @@
-﻿namespace SadConsole.Consoles
-{
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-    using SadConsole.Input;
-    using System;
-    using System.Runtime.Serialization;
-    using System.Linq;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Keys = SFML.Window.Keyboard.Key;
+#else
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+#endif
+using SadConsole.Input;
+using System;
+using System.Runtime.Serialization;
+using System.Linq;
 
+namespace SadConsole.Consoles
+{
     /// <summary>
     /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
     /// </summary>
     public partial class Console : SurfaceEditor, IConsole
     {
 
-        #region Events
+#region Events
         /// <summary>
         /// Raised when the a mosue button is clicked on this console.
         /// </summary>
@@ -34,7 +39,7 @@
         /// Raised when the mouse enters this console.
         /// </summary>
         public event EventHandler<MouseEventArgs> MouseEnter;
-        #endregion
+#endregion
 
         /// <summary>
         /// The renderer used to draw the <see cref="TextSurface"/>.
@@ -259,7 +264,7 @@
         /// </summary>
         public bool UsePixelPositioning { get; set; } = false;
 
-        #region Constructors
+#region Constructors
         //public Console() : this(1, 1, Engine.DefaultFont) { }
 
         public Console(int width, int height): this(width, height, Engine.DefaultFont) { }
@@ -272,7 +277,7 @@
             Renderer = new TextSurfaceRenderer();
             textSurface = textData;
         }
-        #endregion
+#endregion
         
         protected virtual void OnMouseEnter(MouseInfo info)
         {
@@ -385,11 +390,19 @@
                                 this._virtualCursor.Print(key.Character.ToString());
                                 didSomething = true;
                                 break;
+#if !SFML
                             case Keys.Enter:
+#else
+                            case Keys.Return:
+#endif
                                 this._virtualCursor.CarriageReturn().LineFeed();
                                 didSomething = true;
                                 break;
-#if !SILVERLIGHT
+
+                            case Keys.Pause:
+                            case Keys.Escape:
+                            case Keys.F1:case Keys.F2:case Keys.F3:case Keys.F4:case Keys.F5:case Keys.F6:case Keys.F7:case Keys.F8:case Keys.F9: case Keys.F10:case Keys.F11:case Keys.F12:
+#if !SFML
                             case Keys.LeftShift:
                             case Keys.RightShift:
                             case Keys.LeftAlt:
@@ -398,15 +411,14 @@
                             case Keys.RightControl:
                             case Keys.LeftWindows:
                             case Keys.RightWindows:
-                            case Keys.F1:case Keys.F2:case Keys.F3:case Keys.F4:case Keys.F5:case Keys.F6:case Keys.F7:case Keys.F8:case Keys.F9:case Keys.F10:
-                            case Keys.F11:case Keys.F12:case Keys.F13:case Keys.F14:case Keys.F15:case Keys.F16:case Keys.F17:case Keys.F18:case Keys.F19:case Keys.F20:
-                            case Keys.F21:case Keys.F22:case Keys.F23:case Keys.F24:
-                            case Keys.Pause:
-                            case Keys.Escape:
+                            case Keys.F13:case Keys.F14:case Keys.F15:case Keys.F16:case Keys.F17:case Keys.F18:case Keys.F19:case Keys.F20:case Keys.F21:case Keys.F22:case Keys.F23:case Keys.F24:
 #else
-							case Keys.Shift:
-							case Keys.Alt:
-							case Keys.Ctrl:
+							case Keys.LShift:
+							case Keys.RShift:
+                            case Keys.LAlt:
+                            case Keys.RAlt:
+							case Keys.LControl:
+							case Keys.RControl:
 #endif
                                 //this._virtualCursor.Print(key.Character.ToString());
                                 break;
@@ -426,12 +438,14 @@
                                 this._virtualCursor.Down(1);
                                 didSomething = true;
                                 break;
+#if MONOGAME
                             case Keys.None:
                                 break;
                             case Keys.Back:
                                 this._virtualCursor.Left(1).Print(" ").Left(1);
                                 didSomething = true;
                                 break;
+#endif
                             default:
                                 this._virtualCursor.Print(key.Character.ToString());
                                 didSomething = true;
@@ -491,8 +505,8 @@
             if (VirtualCursor.IsVisible)
             {
                 int virtualCursorLocationIndex = Consoles.TextSurface.GetIndexFromPoint(
-                    new Point(VirtualCursor.Position.X - TextSurface.RenderArea.X,
-                              VirtualCursor.Position.Y - TextSurface.RenderArea.Y), TextSurface.RenderArea.Width);
+                    new Point(VirtualCursor.Position.X - TextSurface.RenderArea.Left,
+                              VirtualCursor.Position.Y - TextSurface.RenderArea.Top), TextSurface.RenderArea.Width);
 
                 if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
                 {
@@ -553,7 +567,7 @@
         }
 
 
-        #region Serialization
+#region Serialization
         /// <summary>
         /// Saves the <see cref="Console"/> to a file.
         /// </summary>
@@ -693,7 +707,7 @@
                 return console;
             }
         }
-        #endregion
+#endregion
 
     }
 }

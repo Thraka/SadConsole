@@ -1,7 +1,13 @@
-﻿namespace SadConsole.Effects
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+#endif
+
+using System.Runtime.Serialization;
+
+namespace SadConsole.Effects
 {
-    using Microsoft.Xna.Framework;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// Fades both the background and foreground to seperate colors.

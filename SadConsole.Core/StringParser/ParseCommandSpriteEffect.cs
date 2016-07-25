@@ -1,17 +1,21 @@
-﻿using SadConsole.Consoles;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework.Graphics;
+#endif
+
+using SadConsole.Consoles;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SadConsole.StringParser
 {
 
     /// <summary>
-    /// Sets the <see cref="Microsoft.Xna.Framework.Graphics.SpriteEffects"/> of a glyph.
+    /// Sets the <see cref="SpriteEffects"/> of a glyph.
     /// </summary>
     public sealed class ParseCommandSpriteEffect : ParseCommandBase
     {
-        public Microsoft.Xna.Framework.Graphics.SpriteEffects Effect;
+        public SpriteEffects Effect;
         public int Counter;
 
         public ParseCommandSpriteEffect(string parameters)

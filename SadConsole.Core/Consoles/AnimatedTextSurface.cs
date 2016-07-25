@@ -1,7 +1,11 @@
 ﻿namespace SadConsole.Consoles
 {
-    using Consoles;
+#if SFML
+    using Point = SFML.System.Vector2i;
+    using Rectangle = SFML.Graphics.IntRect;
+#else
     using Microsoft.Xna.Framework;
+#endif
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System;

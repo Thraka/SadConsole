@@ -1,7 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#if SFML
+using SFML.Graphics;
+#else
 using Microsoft.Xna.Framework;
+#endif
+
+using System;
 using System.Runtime.Serialization;
 
 namespace SadConsole.Consoles

@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#else
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.Consoles
 {

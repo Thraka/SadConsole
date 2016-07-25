@@ -7,11 +7,23 @@ namespace SadConsole
 
     public static class MathHelper
     {
+        public static float Clamp(float v, float l, float h)
+        {
+            if (v < l) v = l;
+            if (v > h) v = h;
+            return v;
+        }
+
         public static double Clamp(double v, double l, double h)
         {
             if (v < l) v = l;
             if (v > h) v = h;
             return v;
+        }
+
+        public static float Lerp(float t, float a, float b)
+        {
+            return a + t * (b - a);
         }
 
         public static double Lerp(double t, double a, double b)

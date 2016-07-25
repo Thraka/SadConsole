@@ -1,9 +1,13 @@
-﻿namespace SadConsole.Consoles
-{
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using System;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#else
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endif
+using System;
 
+namespace SadConsole.Consoles
+{
     /// <summary>
     /// Represents the ability to render cell data to the screen.
     /// </summary>

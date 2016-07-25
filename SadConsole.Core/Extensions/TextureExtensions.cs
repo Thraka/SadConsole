@@ -1,24 +1,48 @@
-﻿namespace Microsoft.Xna.Framework.Graphics
-{
-    using SadConsole;
-    using SadConsole.Consoles;
-    using System;
+﻿using SadConsole.Consoles;
+using SadConsole;
 
+#if SFML
+using Texture2D = SFML.Graphics.Texture;
+namespace SFML.Graphics
+#else
+namespace Microsoft.Xna.Framework.Graphics
+#endif
+{
     public static class TextureExtensions
     {
-        public static TextSurface ToSurface(this Texture2D image, Font font, bool blockMode = false)
+        public static TextSurface ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
         {
-            TextSurface surface = new TextSurface(image.Width / font.Size.X, image.Height / font.Size.Y, font);
-            SurfaceEditor editor = new SurfaceEditor(surface);
-            Color[] pixels = new Color[image.Width * image.Height];
-            image.GetData<Color>(pixels);
 
-            System.Threading.Tasks.Parallel.For(0, image.Height / surface.Font.Size.Y, (h) =>
-            //for (int h = 0; h < image.Height / surface.Font.Size.Y; h++)
+#if SFML
+            int imageWidth = (int)image.Size.X;
+            int imageHeight = (int)image.Size.Y;
+            Color[] pixels;
+            using (var imageData = image.CopyToImage())
+            {
+                using (var memStream = new global::System.IO.MemoryStream())
+                {
+                    var binForm = new global::System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    memStream.Write(imageData.Pixels, 0, imageData.Pixels.Length);
+                    memStream.Seek(0, global::System.IO.SeekOrigin.Begin);
+                    pixels = (Color[])binForm.Deserialize(memStream);
+                }
+            }
+#else
+            int imageWidth = image.Width;
+            int imageHeight = image.Height;
+            Color[] pixels = new Color[imageWidth * imageHeight];
+            image.GetData<Color>(pixels);
+#endif
+
+            TextSurface surface = new TextSurface(imageWidth / font.Size.X, imageHeight / font.Size.Y, font);
+            SurfaceEditor editor = new SurfaceEditor(surface);
+
+            global::System.Threading.Tasks.Parallel.For(0, imageHeight / surface.Font.Size.Y, (h) =>
+            //for (int h = 0; h < imageHeight / surface.Font.Size.Y; h++)
             {
                 int startY = (h * surface.Font.Size.Y);
-                //System.Threading.Tasks.Parallel.For(0, image.Width / surface.Font.Size.X, (w) =>
-                for (int w = 0; w < image.Width / surface.Font.Size.X; w++)
+                //System.Threading.Tasks.Parallel.For(0, imageWidth / surface.Font.Size.X, (w) =>
+                for (int w = 0; w < imageWidth / surface.Font.Size.X; w++)
                 {
                     int startX = (w * surface.Font.Size.X);
 
@@ -33,7 +57,7 @@
                             int cY = y + startY;
                             int cX = x + startX;
 
-                            Color color = pixels[cY * image.Width + cX];
+                            Color color = pixels[cY * imageWidth + cX];
 
                             allR += color.R;
                             allG += color.G;
@@ -92,15 +116,34 @@
 
         public static void ToSurface(this Texture2D image, TextSurface surface, Color[] cachedColorArray, bool blockMode = false)
         {
-            SurfaceEditor editor = new SurfaceEditor(surface);
+#if SFML
+            int imageWidth = (int)image.Size.X;
+            int imageHeight = (int)image.Size.Y;
+            Color[] pixels;
+            using (var imageData = image.CopyToImage())
+            {
+                using (var memStream = new global::System.IO.MemoryStream())
+                {
+                    var binForm = new global::System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    memStream.Write(imageData.Pixels, 0, imageData.Pixels.Length);
+                    memStream.Seek(0, global::System.IO.SeekOrigin.Begin);
+                    pixels = (Color[])binForm.Deserialize(memStream);
+                }
+            }
+#else
+            int imageWidth = image.Width;
+            int imageHeight = image.Height;
             image.GetData<Color>(cachedColorArray);
+#endif
+
+            SurfaceEditor editor = new SurfaceEditor(surface);
             editor.Clear();
-            System.Threading.Tasks.Parallel.For(0, image.Height / surface.Font.Size.Y, (h) =>
-            //for (int h = 0; h < image.Height / surface.Font.Size.Y; h++)
+            global::System.Threading.Tasks.Parallel.For(0, imageHeight / surface.Font.Size.Y, (h) =>
+            //for (int h = 0; h < imageHeight / surface.Font.Size.Y; h++)
             {
                 int startY = (h * surface.Font.Size.Y);
-                //System.Threading.Tasks.Parallel.For(0, image.Width / surface.Font.Size.X, (w) =>
-                for (int w = 0; w < image.Width / surface.Font.Size.X; w++)
+                //System.Threading.Tasks.Parallel.For(0, imageWidth / surface.Font.Size.X, (w) =>
+                for (int w = 0; w < imageWidth / surface.Font.Size.X; w++)
                 {
                     int startX = (w * surface.Font.Size.X);
 
@@ -115,7 +158,7 @@
                             int cY = y + startY;
                             int cX = x + startX;
 
-                            Color color = cachedColorArray[cY * image.Width + cX];
+                            Color color = cachedColorArray[cY * imageWidth + cX];
 
                             allR += color.R;
                             allG += color.G;

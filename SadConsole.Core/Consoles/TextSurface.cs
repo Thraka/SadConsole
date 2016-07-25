@@ -1,10 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using Rectangle = SFML.Graphics.IntRect;
+using Point = SFML.System.Vector2i;
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Effects;
-using System;
+#endif
+
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace SadConsole.Consoles
 {
@@ -69,7 +73,22 @@ namespace SadConsole.Consoles
 
                 if (area == null)
                     area = new Rectangle(0, 0, width, height);
+#if SFML
+                if (area.Width > width)
+                    area.Width = width;
+                if (area.Height > height)
+                    area.Height = height;
 
+                if (area.Left < 0)
+                    area.Left = 0;
+                if (area.Top < 0)
+                    area.Top = 0;
+
+                if (area.Left + area.Width > width)
+                    area.Left = width - area.Width;
+                if (area.Top + area.Height > height)
+                    area.Top = height - area.Height;
+#else
                 if (area.Width > width)
                     area.Width = width;
                 if (area.Height > height)
@@ -84,11 +103,12 @@ namespace SadConsole.Consoles
                     area.X = width - area.Width;
                 if (area.Y + area.Height > height)
                     area.Y = height - area.Height;
+#endif
 
                 ResetArea();
             }
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Creates a new text surface with the specified width and height.
@@ -155,7 +175,7 @@ namespace SadConsole.Consoles
         }
 
 
-        #region Static Methods
+#region Static Methods
 
 
         public static int GetIndexFromPoint(Point location, int width)
@@ -175,7 +195,7 @@ namespace SadConsole.Consoles
             return new Point(index % width, index / width);
         }
         
-        #endregion
+#endregion
         
         public IEnumerator<Cell> GetEnumerator()
         {
@@ -187,7 +207,7 @@ namespace SadConsole.Consoles
             return cells.GetEnumerator();
         }
 
-        #region Serialization
+#region Serialization
         /// <summary>
         /// Saves the <see cref="TextSurface"/> to a file.
         /// </summary>
@@ -227,6 +247,6 @@ namespace SadConsole.Consoles
 
             Font = font;
         }
-        #endregion
+#endregion
     }
 }

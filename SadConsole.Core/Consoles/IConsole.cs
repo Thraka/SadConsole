@@ -1,8 +1,12 @@
-﻿namespace SadConsole.Consoles
-{
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#else
     using Microsoft.Xna.Framework;
-    using SadConsole.Input;
+#endif
+using SadConsole.Input;
 
+namespace SadConsole.Consoles
+{
     /// <summary>
     /// Supports basic console management and input functionallity.
     /// </summary>

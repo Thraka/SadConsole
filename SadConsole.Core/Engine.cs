@@ -1,11 +1,11 @@
-﻿#if !SHARPDX
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using SFML.Graphics;
+#else
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#else
-using SharpDX.Toolkit.Graphics;
-using SharpDX;
-using SharpDX.Toolkit;
 #endif
+
 using SadConsole.Input;
 using System;
 using System.Collections.Generic;
@@ -145,11 +145,14 @@ namespace SadConsole
         #endregion
 
         #region Properties
+#if SFML
+        public static RenderWindow Device { get; private set; }
+#else
         /// <summary>
         /// The graphics device used by SadConsole.
         /// </summary>
         public static GraphicsDevice Device { get; private set; }
-
+#endif
         /// <summary>
         /// A collection of fonts.
         /// </summary>
@@ -167,11 +170,16 @@ namespace SadConsole
         /// <param name="consoleWidth">The width of the default root console (and game window).</param>
         /// <param name="consoleHeight">The height of the default root console (and game window).</param>
         /// <returns>The default active console.</returns>
+#if SFML
+        public static Consoles.Console Initialize(RenderWindow deviceManager, string font, int consoleWidth, int consoleHeight)
+        {
+            Device = deviceManager;
+#else
         public static Consoles.Console Initialize(GraphicsDeviceManager deviceManager, string font, int consoleWidth, int consoleHeight)
         {
             if (Device == null)
                 Device = deviceManager.GraphicsDevice;
-
+#endif
             Fonts = new Dictionary<string, FontMaster>();
             ConsoleRenderStack = new Consoles.ConsoleList();
             RegisterCellEffect<Effects.Blink>();
@@ -196,9 +204,9 @@ namespace SadConsole
 
             return (Consoles.Console)ActiveConsole;
         }
-        #endregion
+#endregion
 
-        #region Cell Effects
+#region Cell Effects
         /// <summary>
         /// Informs the engine of the cell effect. Helps with serialization.
         /// </summary>
@@ -209,7 +217,7 @@ namespace SadConsole
             _cellEffects.Add(typeof(TEffectType));
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
@@ -270,7 +278,11 @@ namespace SadConsole
                     //Device.DisplayMode.
                     if (ProcessMouseWhenOffScreen ||
                         (Mouse.ScreenLocation.X >= 0 && Mouse.ScreenLocation.Y >= 0 &&
+#if SFML
+                         Mouse.ScreenLocation.X < Device.Size.X && Mouse.ScreenLocation.Y < Device.Size.Y))
+#else
                          Mouse.ScreenLocation.X < Device.Viewport.Width && Mouse.ScreenLocation.Y < Device.Viewport.Height))
+#endif
                     {
                         if (_activeConsole != null && _activeConsole.ExclusiveFocus)
                             _activeConsole.ProcessMouse(Mouse);
@@ -294,7 +306,7 @@ namespace SadConsole
             ConsoleRenderStack.Update();
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Returns the amount of cells (X,Y) given the specified <see cref="Font"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
@@ -317,6 +329,7 @@ namespace SadConsole
         }
     }
 
+#if MONOGAME
     /// <summary>
     /// A game component to handle the SadConsole engine initialization, update, and drawing.
     /// </summary>
@@ -360,4 +373,5 @@ namespace SadConsole
             base.Draw(gameTime);
         }
     }
+#endif
 }

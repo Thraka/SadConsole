@@ -1,11 +1,10 @@
-﻿#if !SHARPDX
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
+﻿#if SFML
+using Keys = SFML.Window.Keyboard.Key;
 #else
-using SharpDX.DirectInput;
-using SharpDX.Toolkit;
-using Keys = SharpDX.DirectInput.Key;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 #endif
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -67,20 +66,13 @@ namespace SadConsole.Input
             this.KeysPressed.Clear();
             this.KeysReleased.Clear();
 
-#if !SILVERLIGHT && !SHARPDX
+#if MONOGAME
             KeyboardState state = Keyboard.GetState();
             bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
             var keys = state.GetPressedKeys();
-#elif SHARPDX
-            Keyboard k = new Keyboard(new DirectInput());
-            KeyboardState state = k.GetCurrentState();
-            k.Dispose();
-
-            bool shiftPressed = state.IsPressed(Keys.LeftShift) || state.IsPressed(Keys.RightShift);
-            var keys = state.PressedKeys;
 #else
             KeyboardState state = Keyboard.GetState();
-            bool shiftPressed = state.IsKeyDown(Keys.Shift);
+            bool shiftPressed = state.IsKeyDown(Keys.LShift) || state.IsKeyDown(Keys.RShift);
             var keys = state.GetPressedKeys();
 #endif
 

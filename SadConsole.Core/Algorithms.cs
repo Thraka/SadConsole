@@ -1,9 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Vector2 = SFML.System.Vector2f;
+using Rectangle = SFML.Graphics.IntRect;
+using MyMathHelper = SadConsole.MathHelper;
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+using ColorHelper = Microsoft.Xna.Framework.Color;
+using MyMathHelper = Microsoft.Xna.Framework.MathHelper;
+#endif
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SadConsole
 {
@@ -158,9 +167,9 @@ namespace SadConsole
             double start = x1 * angleVector.X + y1 * angleVector.Y;
             double end = x2 * angleVector.X + y2 * angleVector.Y;
 
-            for (int x = area.X; x < area.Width; x++)
+            for (int x = area.Left; x < area.Width; x++)
             {
-                for (int y = area.Y; y < area.Height; y++)
+                for (int y = area.Top; y < area.Height; y++)
                 {
                     // but we need vectors from (-1, -1) to (1, 1)
                     // instead of pixels from (0, 0) to (width, height)
@@ -173,17 +182,17 @@ namespace SadConsole
 
                     //lerp = Math.Abs((lerp - (int)lerp));
 
-                    lerp = MathHelper.Clamp((float)lerp, 0f, 1.0f);
+                    lerp = MyMathHelper.Clamp((float)lerp, 0f, 1.0f);
 
                     int counter;
                     for (counter = 0; counter < gradient.Stops.Length && gradient.Stops[counter].Stop < (float)lerp; counter++) ;
 
                     counter--;
-                    counter = (int)MathHelper.Clamp(counter, 0, gradient.Stops.Length - 2);
+                    counter = (int)MyMathHelper.Clamp(counter, 0, gradient.Stops.Length - 2);
 
                     float newLerp = (gradient.Stops[counter].Stop - (float)lerp) / (gradient.Stops[counter].Stop - gradient.Stops[counter + 1].Stop);
 
-                    applyAction(x, y, Color.Lerp(gradient.Stops[counter].Color, gradient.Stops[counter + 1].Color, newLerp));
+                    applyAction(x, y, ColorHelper.Lerp(gradient.Stops[counter].Color, gradient.Stops[counter + 1].Color, newLerp));
                 }
             }
         }

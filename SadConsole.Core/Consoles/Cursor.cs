@@ -1,19 +1,25 @@
-﻿namespace SadConsole.Consoles
-{
-    using Microsoft.Xna.Framework;
-    using System;
-    using System.Text;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using Microsoft.Xna.Framework.Graphics;
-    using SadConsole.Effects;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using SFML.Graphics;
+using Vector2 = SFML.System.Vector2f;
+using Rectangle = SFML.Graphics.IntRect;
+#else
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+#endif
 
+using System;
+using System.Runtime.Serialization;
+using SadConsole.Effects;
+
+namespace SadConsole.Consoles
+{
     //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
     [DataContract]
     public class Cursor
     {
         private WeakReference _console;
-        private Point _position = Point.Zero;
+        private Point _position = new Point();
 
         private int _cursorCharacter = 95;
 

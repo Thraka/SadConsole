@@ -1,6 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Runtime.Serialization;
+
+#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
+#endif
+
 
 namespace SadConsole
 {
@@ -103,12 +109,12 @@ namespace SadConsole
         /// </summary>
         public SpriteEffects ActualSpriteEffect { get; set; }
 
-        #region Constructors
+#region Constructors
         public Cell()
         {
             Reset();
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Resets this cell with default values.

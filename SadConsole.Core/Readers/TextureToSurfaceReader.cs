@@ -1,9 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using SFML.Graphics;
+using Texture2D = SFML.Graphics.Texture;
+#else
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endif
+
+
 using SadConsole.Consoles;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SadConsole.Readers
 {
@@ -75,7 +80,21 @@ namespace SadConsole.Readers
         public TextSurface GetSurface(Texture2D image)
         {
             editor.Clear();
+
+#if SFML
+            using (var imageData = image.CopyToImage())
+            {
+                using (var memStream = new global::System.IO.MemoryStream())
+                {
+                    var binForm = new global::System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    memStream.Write(imageData.Pixels, 0, imageData.Pixels.Length);
+                    memStream.Seek(0, global::System.IO.SeekOrigin.Begin);
+                    pixels = (Color[])binForm.Deserialize(memStream);
+                }
+            }
+#else
             image.GetData<Color>(pixels);
+#endif
 
             System.Threading.Tasks.Parallel.For(0, surface.Width * surface.Height, (i) =>
             //for (int i = 0; i < surface.Width * surface.Height; i++)

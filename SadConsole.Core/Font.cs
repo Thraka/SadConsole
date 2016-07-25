@@ -1,8 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+#if SFML
+using Point = SFML.System.Vector2i;
+using Rectangle = SFML.Graphics.IntRect;
+using Texture2D = SFML.Graphics.Texture;
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endif
+
 using System;
 using System.Runtime.Serialization;
-using System.Xml.Linq;
 
 namespace SadConsole
 {
@@ -144,6 +152,15 @@ namespace SadConsole
         /// <param name="height">The height glyphs.</param>
         /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+#if SFML
+        public void ResizeGraphicsDeviceManager(RenderWindow manager, int width, int height, int additionalWidth, int additionalHeight)
+        {
+            manager.Size = new SFML.System.Vector2u((uint)((Size.X * width) + additionalWidth), (uint)((Size.Y * height) + additionalHeight));
+
+            Engine.WindowWidth = (int)manager.Size.X;
+            Engine.WindowHeight = (int)manager.Size.Y;
+        }
+#else
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
             manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
@@ -153,6 +170,8 @@ namespace SadConsole
             Engine.WindowWidth = manager.PreferredBackBufferWidth;
             Engine.WindowHeight = manager.PreferredBackBufferHeight;
         }
+#endif
+
 
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
@@ -208,8 +227,11 @@ namespace SadConsole
         /// The total rows in the font.
         /// </summary>
         [IgnoreDataMember]
+#if SFML
+        public int Rows { get { return (int)Image.Size.Y / (GlyphHeight + GlyphPadding); } }
+#else
         public int Rows { get { return Image.Height / (GlyphHeight + GlyphPadding); } }
-
+#endif
         /// <summary>
         /// The texture used by the font.
         /// </summary>
@@ -222,17 +244,18 @@ namespace SadConsole
         [IgnoreDataMember]
         public Rectangle[] GlyphIndexRects;
 
-        #region Methods
+#region Methods
         /// <summary>
         /// After the font has been loaded, (with the <see cref="FilePath"/>, <see cref="GlyphHeight"/>, and <see cref="GlyphWidth"/> fields filled out) this method will create the actual texture.
         /// </summary>
         public void Generate()
         {
+#if SFML
+            Image = new Texture2D(FilePath);
+#else
             using (System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath))
-            {
                 Image = Texture2D.FromStream(Engine.Device, fontStream);
-            }
-
+#endif
             ConfigureRects();
         }
 
@@ -284,6 +307,6 @@ namespace SadConsole
         {
             Generate();
         }
-        #endregion
+#endregion
     }
 }

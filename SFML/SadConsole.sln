@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsoleMain", "SadConsoleMain\SadConsoleMain.csproj", "{C6F85951-97A0-4E0F-B5E7-9C2880EDEB2B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Core", "..\..\..\..\..\Code\SadConsole\SadConsole.Core\SadConsole.Core.shproj", "{BDDF43CD-1BDE-472A-A3D9-A003A6BF14D9}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\..\..\..\Code\SadConsole\SadConsole.Core\SadConsole.Core.projitems*{bddf43cd-1bde-472a-a3d9-a003a6bf14d9}*SharedItemsImports = 13
+		..\..\..\..\..\Code\SadConsole\SadConsole.Core\SadConsole.Core.projitems*{c6f85951-97a0-4e0f-b5e7-9c2880edeb2b}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6F85951-97A0-4E0F-B5E7-9C2880EDEB2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F85951-97A0-4E0F-B5E7-9C2880EDEB2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F85951-97A0-4E0F-B5E7-9C2880EDEB2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F85951-97A0-4E0F-B5E7-9C2880EDEB2B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

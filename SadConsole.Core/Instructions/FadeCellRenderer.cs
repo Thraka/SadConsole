@@ -1,10 +1,14 @@
-﻿namespace SadConsole.Instructions
-{
-    using Microsoft.Xna.Framework;
-    using SadConsole.Effects;
-    using System;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+#endif
 
+using System;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Instructions
+{
     /// <summary>
     /// Animates the change to the tint of a <see cref="SadConsole.Consoles.CellsRenderer"/>.
     /// </summary>

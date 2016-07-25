@@ -1,9 +1,16 @@
-﻿namespace SadConsole.Input
-{
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Input;
-    using SadConsole.Consoles;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Keys = SFML.Window.Keyboard.Key;
+using Rectangle = SFML.Graphics.IntRect;
+#else
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+#endif
 
+using SadConsole.Consoles;
+
+namespace SadConsole.Input
+{
     public class ConsoleViewInputHandler
     {
         private bool _mouseDown;
@@ -83,8 +90,13 @@
                         {
                             Rectangle viewport = console.TextSurface.RenderArea;
 
+#if SFML
+                            viewport.Left += _mouseLastLocation.X - currentLocation.X;
+                            viewport.Top += _mouseLastLocation.Y - currentLocation.Y;
+#else
                             viewport.X += _mouseLastLocation.X - currentLocation.X;
                             viewport.Y += _mouseLastLocation.Y - currentLocation.Y;
+#endif
                             _mouseLastLocation = currentLocation;
 
                             console.TextSurface.RenderArea = viewport;
@@ -114,22 +126,38 @@
 
                 if (info.IsKeyDown(MoveLeftKey))
                 {
+#if SFML
+                    view.Left -= 1;
+#else
                     view.X -= 1;
+#endif
                     handled = true;
                 }
                 else if (info.IsKeyDown(MoveRightKey))
                 {
+#if SFML
+                    view.Left += 1;
+#else
                     view.X += 1;
+#endif
                     handled = true;
                 }
                 if (info.IsKeyDown(MoveUpKey))
                 {
+#if SFML
+                    view.Top -= 1;
+#else
                     view.Y -= 1;
+#endif
                     handled = true;
                 }
                 else if (info.IsKeyDown(MoveDownKey))
                 {
+#if SFML
+                    view.Top += 1;
+#else
                     view.Y += 1;
+#endif
                     handled = true;
                 }
 

@@ -1,12 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endif
+
 using SadConsole.Effects;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Collections;
-using System.Linq;
-using SadConsole.Consoles;
-using System;
-using Microsoft.Xna.Framework.Graphics;
 using SadConsole.StringParser;
 
 namespace SadConsole

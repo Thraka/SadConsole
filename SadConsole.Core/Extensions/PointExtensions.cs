@@ -1,6 +1,11 @@
 ﻿using SadConsole;
 
+#if SFML
+using Point = SFML.System.Vector2i;
+namespace SFML.System
+#else
 namespace Microsoft.Xna.Framework
+#endif
 {
     public static class PointExtensions
     {

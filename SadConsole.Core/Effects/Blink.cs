@@ -1,8 +1,13 @@
-﻿namespace SadConsole.Effects
-{
-    using Microsoft.Xna.Framework;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+#endif
 
+using System.Runtime.Serialization;
+
+namespace SadConsole.Effects
+{
     /// <summary>
     /// Switches between the normal foreground of a cell and a specified color for an amount of time, and then repeats.
     /// </summary>
@@ -152,7 +157,7 @@
 
         public override string ToString()
         {
-            return string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.PackedValue, BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
+            return string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.ToInteger(), BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
         }
     }
 }

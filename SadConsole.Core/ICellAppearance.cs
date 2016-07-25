@@ -1,9 +1,12 @@
-﻿namespace SadConsole
-{
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using SadConsole.Effects;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endif
 
+namespace SadConsole
+{
     /// <summary>
     /// Describes the appearance of a cell. This includes the foreground and background colors, and the effect.
     /// </summary>

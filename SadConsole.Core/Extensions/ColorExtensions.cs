@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
 
 
+#if SFML
+namespace SFML.Graphics
+#else
+using ColorHelper = Microsoft.Xna.Framework.Color;
 namespace Microsoft.Xna.Framework
+#endif
 {
     public static class ColorAnsi
     {
@@ -50,6 +52,11 @@ namespace Microsoft.Xna.Framework
                                                                                                     { "ansicyanbright", ColorAnsi.CyanBright },
                                                                                                     { "ansiwhitebright", ColorAnsi.WhiteBright } };
 
+        public static uint ToInteger(this Color color)
+        {
+            return color.PackedValue;
+        }
+
         public static Color[] LerpSteps(this Color color, Color endingColor, int steps)
         {
             Color[] colors = new Color[steps];
@@ -65,7 +72,7 @@ namespace Microsoft.Xna.Framework
             {
                 lerpTotal += stopStrength;
 
-                colors[i] = Color.Lerp(color, endingColor, lerpTotal);
+                colors[i] = ColorHelper.Lerp(color, endingColor, lerpTotal);
             }
 
             return colors;
@@ -110,7 +117,7 @@ namespace Microsoft.Xna.Framework
 
         public static Color GetRandomColor(this Color color, Random random)
         {
-            return new Color(random.Next(255), random.Next(255), random.Next(255));
+            return new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
         }
 
         /// <summary>
@@ -306,8 +313,8 @@ namespace Microsoft.Xna.Framework
                 {
                     // Lookup color in framework
                     Type colorType = typeof(Color);
-                    System.Reflection.PropertyInfo[] propInfoList =
-                        colorType.GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public);
+                    global::System.Reflection.PropertyInfo[] propInfoList =
+                        colorType.GetProperties(global::System.Reflection.BindingFlags.Static | global::System.Reflection.BindingFlags.DeclaredOnly | global::System.Reflection.BindingFlags.Public);
 
                     int nNumProps = propInfoList.Length;
 

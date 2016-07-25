@@ -1,10 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using SFML.Graphics;
+using Point = SFML.System.Vector2i;
+#else
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endif
+
 using SadConsole.Consoles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SadConsole.Shapes
 {
