@@ -14,10 +14,25 @@ namespace SadConsoleMain
 
             window.Closed += Window_Closed;
             window.SetFramerateLimit(10);
-            
-            SFML.Graphics.Texture texture = new SFML.Graphics.Texture("IBM8x16.png");
 
-            SFML.Graphics.Sprite sprite = new SFML.Graphics.Sprite(texture);
+
+            var fontMaster = LoadFont("IBM.font");
+            var font = fontMaster.GetFont(SadConsole.Font.FontSizes.One);
+
+
+            SFML.Graphics.Sprite sprite = new SFML.Graphics.Sprite(font.FontImage);
+
+            var surface = new SadConsole.Consoles.TextSurface(10, 10, font);
+            surface[50].GlyphIndex = 1;
+            surface[10].GlyphIndex = 1;
+            surface[1].GlyphIndex = 2;
+            surface[11].GlyphIndex = 3;
+            surface[2].GlyphIndex = 4;
+            surface[12].GlyphIndex = 5;
+
+            SFML.Graphics.SpriteBatch batch = new SFML.Graphics.SpriteBatch();
+            batch.Update(surface);
+
             sprite.Position = new SFML.System.Vector2f(32f, 1f);
             sprite.TextureRect = new SFML.Graphics.IntRect(10, 0, 8, 16);
             sprite.Color = new SFML.Graphics.Color(255, 255, 0, 100);
@@ -25,8 +40,12 @@ namespace SadConsoleMain
             while (window.IsOpen)
             {
                 window.Clear(SFML.Graphics.Color.Black);
+                
 
-                sprite.Draw(window, SFML.Graphics.RenderStates.Default);
+                window.Draw(batch);
+
+
+
 
                 window.Display();
 
@@ -38,5 +57,20 @@ namespace SadConsoleMain
         {
             ((SFML.Window.Window)sender).Close();
         }
+
+        public static SadConsole.FontMaster LoadFont(string font)
+        {
+            if (!System.IO.File.Exists(font))
+                throw new Exception($"Font does not exist: {font}");
+
+            using (var stream = System.IO.File.OpenRead(font))
+            {
+                var masterFont = SadConsole.Serializer.Deserialize<SadConsole.FontMaster>(stream);
+
+                return masterFont;
+            }
+        }
     }
+
+    
 }

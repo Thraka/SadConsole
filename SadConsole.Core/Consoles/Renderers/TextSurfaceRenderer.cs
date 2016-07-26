@@ -2,6 +2,7 @@
 using Point = SFML.System.Vector2i;
 using Vector2 = SFML.System.Vector2f;
 using SFML.System;
+using Matrix = SFML.Graphics.Transform;
 #else
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -68,6 +69,7 @@ namespace SadConsole.Consoles
                 {
                     cell = surface.RenderCells[i];
 
+                    Batch
                     if (cell.IsVisible)
                     {
                         if (cell.ActualBackground != Color.Transparent && cell.ActualBackground != surface.DefaultBackground)

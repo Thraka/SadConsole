@@ -46,7 +46,7 @@ namespace SadConsole.Consoles
             {
                 for (int x = 0; x < area.Width; x++)
                 {
-                    RenderRects[index] = new Rectangle(x * Font.Size.X, y * Font.Size.Y, Font.Size.X, Font.Size.Y);
+                    RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = base.cells[(y + area.Top) * surface.Width + (x + area.Left)];
                     index++;
                 }

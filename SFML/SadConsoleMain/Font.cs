@@ -108,7 +108,7 @@ namespace SadConsole
         private void Initialize(FontMaster masterFont, FontSizes fontMultiple)
         {
             FontImage = masterFont.Image;
-            MaxGlyphIndex = masterFont.Rows * Engine.FontColumns - 1;
+            MaxGlyphIndex = masterFont.Rows * 16 - 1;
 
             switch (fontMultiple)
             {
@@ -157,10 +157,9 @@ namespace SadConsole
         {
             manager.Size = new SFML.System.Vector2u((uint)((Size.X * width) + additionalWidth), (uint)((Size.Y * height) + additionalHeight));
 
-            Engine.WindowWidth = (int)manager.Size.X;
-            Engine.WindowHeight = (int)manager.Size.Y;
+            //Engine.WindowWidth = (int)manager.Size.X;
+            //Engine.WindowHeight = (int)manager.Size.Y;
         }
-
 #else
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
@@ -172,31 +171,7 @@ namespace SadConsole
             Engine.WindowHeight = manager.PreferredBackBufferHeight;
         }
 #endif
-
-        public Rectangle GetRenderRect(int x, int y)
-        {
-            Rectangle rect = new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
-#if SFML
-            // SFML handles rects for rendering differnetly
-            rect.Width = rect.Left + rect.Width;
-            rect.Height = rect.Top + rect.Height;
-#endif
-            return rect;
-        }
-
-        [OnDeserialized]
-        private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
-        {
-            if (Engine.Fonts.ContainsKey(Name))
-            {
-                var master = Engine.Fonts[Name];
-                Initialize(master, SizeMultiple);
-            }
-            else
-            {
-                throw new Exception($"A font is being used that has not been added to the engine. Name: {Name}");
-            }
-        }
+        
     }
 
     /// <summary>
@@ -275,24 +250,18 @@ namespace SadConsole
         /// </summary>
         public void ConfigureRects()
         {
-            GlyphIndexRects = new Rectangle[Rows * Engine.FontColumns];
+            GlyphIndexRects = new Rectangle[Rows * 16];
 
             for (int i = 0; i < GlyphIndexRects.Length; i++)
             {
-                var cx = i % Engine.FontColumns;
-                var cy = i / Engine.FontColumns;
+                var cx = i % 16;
+                var cy = i / 16;
 
                 if (GlyphPadding != 0)
                     GlyphIndexRects[i] = new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
                                                            (cy * GlyphHeight) + ((cy + 1) * GlyphPadding), GlyphWidth, GlyphHeight);
                 else
                     GlyphIndexRects[i] = new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
-
-#if SFML
-                // rects are used differently with SFML
-                GlyphIndexRects[i].Width = GlyphIndexRects[i].Left + GlyphIndexRects[i].Width;
-                GlyphIndexRects[i].Height = GlyphIndexRects[i].Top + GlyphIndexRects[i].Height;
-#endif
             }
         }
 

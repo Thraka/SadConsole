@@ -159,7 +159,7 @@ namespace SadConsole.Consoles
             {
                 for (int x = 0; x < area.Width; x++)
                 {
-                    RenderRects[index] = font.GetRenderRect(x, y);
+                    RenderRects[index] = new Rectangle(x * font.Size.X, y * font.Size.Y, font.Size.X, font.Size.Y);
                     RenderCells[index] = cells[(y + area.Top) * width + (x + area.Left)];
                     index++;
                 }
@@ -214,7 +214,6 @@ namespace SadConsole.Consoles
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serializer.Save(this, file);
         }
 
         /// <summary>
@@ -224,7 +223,7 @@ namespace SadConsole.Consoles
         /// <returns></returns>
         public static TextSurface Load(string file)
         {
-            return Serializer.Load<TextSurface>(file);
+            return null;
         }
 
         [OnSerializing]
@@ -233,20 +232,7 @@ namespace SadConsole.Consoles
             fontName = Font.Name;
             fontSize = Font.SizeMultiple;
         }
-
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            Font font;
-
-            // Try to find font
-            if (Engine.Fonts.ContainsKey(fontName))
-                font = Engine.Fonts[fontName].GetFont(fontSize);
-            else
-                font = Engine.DefaultFont;
-
-            Font = font;
-        }
+        
 #endregion
     }
 }
