@@ -98,9 +98,11 @@ namespace SadConsole
                         }
                         
                     }
-                    catch (System.Exception)
+                    catch (System.Exception e1)
                     {
-                        // bad parsing, just skip it then
+#if DEBUG
+                        throw e1;
+#endif
                     }
                 }
 

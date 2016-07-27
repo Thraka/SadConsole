@@ -15,6 +15,7 @@ namespace SadConsoleMain
             window.Closed += Window_Closed;
             window.SetFramerateLimit(10);
 
+            
 
             var fontMaster = LoadFont("IBM.font");
             var font = fontMaster.GetFont(SadConsole.Font.FontSizes.One);
@@ -23,9 +24,9 @@ namespace SadConsoleMain
             surface.Fill(SFML.Graphics.Color.Green, null, 1, null);
             surface.TextSurface.Font = font = fontMaster.GetFont(SadConsole.Font.FontSizes.Two);
             SadConsole.Consoles.TextSurfaceRenderer renderer = new SadConsole.Consoles.TextSurfaceRenderer();
-            surface.Position = new SFML.System.Vector2i(1, 1);
             font.ResizeGraphicsDeviceManager(window, 20, 20, 0, 0);
             //batch.Update(surface);
+            surface.Print(2, 2, "LL[c:g f:White:Black:11]LLLLLLLLLLLLL");
             
             while (window.IsOpen)
             {

@@ -23,12 +23,12 @@ namespace SadConsole
 
         public static float Lerp(float t, float a, float b)
         {
-            return a + t * (b - a);
+            return t + (a - t) * b;
         }
 
         public static double Lerp(double t, double a, double b)
         {
-            return a + t * (b - a);
+            return t + (a - t) * b;
         }
 
         public static double QuinticBlend(double t)

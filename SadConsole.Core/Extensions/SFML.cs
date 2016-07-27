@@ -42,11 +42,13 @@ namespace SFML.Graphics
         public static Color Lerp(Color value1, Color value2, float amount)
         {
             amount = SadConsole.MathHelper.Clamp(amount, 0, 1);
-            return new Color(
+            var col = new Color(
                 (byte)SadConsole.MathHelper.Lerp(value1.R, value2.R, amount),
                 (byte)SadConsole.MathHelper.Lerp(value1.G, value2.G, amount),
                 (byte)SadConsole.MathHelper.Lerp(value1.B, value2.B, amount),
                 (byte)SadConsole.MathHelper.Lerp(value1.A, value2.A, amount));
+
+            return col;
         }
 
     }
@@ -281,6 +283,8 @@ namespace SadConsole
 
     public class GameTime
     {
+        private System.Diagnostics.Stopwatch timer;
+
         public TimeSpan TotalGameTime { get; set; }
 
         public TimeSpan ElapsedGameTime { get; set; }
@@ -292,20 +296,21 @@ namespace SadConsole
             TotalGameTime = TimeSpan.Zero;
             ElapsedGameTime = TimeSpan.Zero;
             IsRunningSlowly = false;
+
+            timer = new System.Diagnostics.Stopwatch();
+        }
+        
+        public void Start()
+        {
+            timer.Start();
         }
 
-        public GameTime(TimeSpan totalGameTime, TimeSpan elapsedGameTime)
+        public void Update()
         {
-            TotalGameTime = totalGameTime;
-            ElapsedGameTime = elapsedGameTime;
-            IsRunningSlowly = false;
-        }
-
-        public GameTime(TimeSpan totalRealTime, TimeSpan elapsedRealTime, bool isRunningSlowly)
-        {
-            TotalGameTime = totalRealTime;
-            ElapsedGameTime = elapsedRealTime;
-            IsRunningSlowly = isRunningSlowly;
+            var currentTicks = timer.Elapsed.Ticks;
+            ElapsedGameTime = new TimeSpan(currentTicks);
+            TotalGameTime += ElapsedGameTime;
+            timer.Restart();   
         }
     }
 }

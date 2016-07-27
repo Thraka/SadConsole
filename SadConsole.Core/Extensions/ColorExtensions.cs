@@ -317,13 +317,28 @@ namespace Microsoft.Xna.Framework
                     global::System.Reflection.PropertyInfo[] propInfoList =
                         colorType.GetProperties(global::System.Reflection.BindingFlags.Static | global::System.Reflection.BindingFlags.DeclaredOnly | global::System.Reflection.BindingFlags.Public);
 
-                    int nNumProps = propInfoList.Length;
 
-                    for (int i = 0; i < nNumProps; i++)
+                    if (propInfoList.Length != 0)
                     {
-                        if (propInfoList[i].Name.ToLower() == value)
+                        for (int i = 0; i < propInfoList.Length; i++)
                         {
-                            return (Color)propInfoList[i].GetValue(null, null);
+                            if (propInfoList[i].Name.ToLower() == value)
+                            {
+                                return (Color)propInfoList[i].GetValue(null, null);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var fieldInfoList =
+                        colorType.GetFields(global::System.Reflection.BindingFlags.Static | global::System.Reflection.BindingFlags.DeclaredOnly | global::System.Reflection.BindingFlags.Public);
+
+                        for (int i = 0; i < fieldInfoList.Length; i++)
+                        {
+                            if (fieldInfoList[i].Name.ToLower() == value)
+                            {
+                                return (Color)fieldInfoList[i].GetValue(null);
+                            }
                         }
                     }
 

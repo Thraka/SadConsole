@@ -125,6 +125,8 @@ namespace SadConsole
         /// Centralized sudo random number generator used by SadConsole. Replace it with your own seed to replicate specific randomness.
         /// </summary>
         public static Random Random = new Random();
+
+        private static System.Diagnostics.Stopwatch gameTimer;
         #endregion
 
         #region Constructors
@@ -174,6 +176,9 @@ namespace SadConsole
         public static Consoles.Console Initialize(RenderWindow deviceManager, string font, int consoleWidth, int consoleHeight)
         {
             Device = deviceManager;
+            Mouse.Setup(Device);
+            GameTimeDraw.Start();
+            GameTimeUpdate.Start();
 #else
         public static Consoles.Console Initialize(GraphicsDeviceManager deviceManager, string font, int consoleWidth, int consoleHeight)
         {
@@ -255,26 +260,40 @@ namespace SadConsole
             }
         }
 
-        public static void Draw(GameTime gameTime)
+        public static void Draw()
         {
+#if MONOGAME
             GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
             GameTimeDraw = gameTime;
+#elif SFML
+
+            GameTimeDraw.Update();
+            GameTimeElapsedRender = GameTimeDraw.ElapsedGameTime.TotalSeconds;
+#endif
+            
             ConsoleRenderStack.Render(); 
         }
 
+#if MONOGAME
         public static void Update(GameTime gameTime, bool windowIsActive)
         {
             GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
             GameTimeUpdate = gameTime;
 
+#elif SFML
+        public static void Update(bool windowIsActive)
+        {
+            GameTimeUpdate.Update();
+            GameTimeElapsedUpdate = GameTimeUpdate.ElapsedGameTime.TotalSeconds;
+#endif
             if (windowIsActive)
             {
                 if (UseKeyboard)
-                    Keyboard.ProcessKeys(gameTime);
+                    Keyboard.ProcessKeys(GameTimeUpdate);
 
                 if (UseMouse)
                 {
-                    Mouse.ProcessMouse(gameTime);
+                    Mouse.ProcessMouse(GameTimeUpdate);
                     //Device.DisplayMode.
                     if (ProcessMouseWhenOffScreen ||
                         (Mouse.ScreenLocation.X >= 0 && Mouse.ScreenLocation.Y >= 0 &&

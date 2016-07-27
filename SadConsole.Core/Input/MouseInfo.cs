@@ -1,5 +1,6 @@
 ﻿#if SFML
 using Point = SFML.System.Vector2i;
+using SFML.Graphics;
 using SFML.System;
 #else
 using Microsoft.Xna.Framework;
@@ -97,37 +98,56 @@ namespace SadConsole.Input
         /// <param name="gameTime"></param>
         public void ProcessMouse(GameTime gameTime)
         {
-            //MouseState currentState = Mouse.GetState();
 
-            //bool leftDown = currentState.LeftButton == ButtonState.Pressed;
-            //bool rightDown = currentState.RightButton == ButtonState.Pressed;
+#if MONOGAME
+            MouseState currentState = Mouse.GetState();
 
-            //bool newLeftClicked = LeftButtonDown && !leftDown;
-            //bool newRightClicked = RightButtonDown && !rightDown;
+            bool leftDown = currentState.LeftButton == ButtonState.Pressed;
+            bool rightDown = currentState.RightButton == ButtonState.Pressed;
+            
+            ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
+            ScrollWheelValue = currentState.ScrollWheelValue;
 
-            //if (!newLeftClicked)
-            //    LeftDoubleClicked = false;
-            //if (!newRightClicked)
-            //    RightDoubleClicked = false;
+            ScreenLocation = new Point(currentState.X, currentState.Y);
+#elif SFML
+            bool leftDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
+            bool rightDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Right);
 
-            //if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
-            //    LeftDoubleClicked = true;
-            //if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
-            //    RightDoubleClicked = true;
+            ScreenLocation = SFML.Window.Mouse.GetPosition();
+#endif
+            bool newLeftClicked = LeftButtonDown && !leftDown;
+            bool newRightClicked = RightButtonDown && !rightDown;
 
-            //LeftClicked = newLeftClicked;
-            //RightClicked = newRightClicked;
-            //_leftLastClickedTime = gameTime.ElapsedGameTime;
-            //_rightLastClickedTime = gameTime.ElapsedGameTime;
-            //LeftButtonDown = leftDown;
-            //RightButtonDown = rightDown;
+            if (!newLeftClicked)
+                LeftDoubleClicked = false;
+            if (!newRightClicked)
+                RightDoubleClicked = false;
 
-            //ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
-            //ScrollWheelValue = currentState.ScrollWheelValue;
+            if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
+                LeftDoubleClicked = true;
+            if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
+                RightDoubleClicked = true;
 
-            //ScreenLocation = new Point(currentState.X, currentState.Y);
+            LeftClicked = newLeftClicked;
+            RightClicked = newRightClicked;
+            _leftLastClickedTime = gameTime.ElapsedGameTime;
+            _rightLastClickedTime = gameTime.ElapsedGameTime;
+            LeftButtonDown = leftDown;
+            RightButtonDown = rightDown;
         }
 
+#if SFML
+        public void Setup(RenderWindow window)
+        {
+            window.MouseWheelScrolled += Window_MouseWheelScrolled;
+        }
+
+        private void Window_MouseWheelScrolled(object sender, SFML.Window.MouseWheelScrollEventArgs e)
+        {
+            ScrollWheelValueChange = (int)e.Delta;
+            ScrollWheelValue += (int)e.Delta;
+        }
+#endif
         /// <summary>
         /// Sets the WorldLocation and ConsoleLocation properties based on the cell size of the provided console. If absolute positioning is used on the console, then the properties will represent pixels.
         /// </summary>
