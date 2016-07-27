@@ -97,35 +97,35 @@ namespace SadConsole.Input
         /// <param name="gameTime"></param>
         public void ProcessMouse(GameTime gameTime)
         {
-            MouseState currentState = Mouse.GetState();
+            //MouseState currentState = Mouse.GetState();
 
-            bool leftDown = currentState.LeftButton == ButtonState.Pressed;
-            bool rightDown = currentState.RightButton == ButtonState.Pressed;
+            //bool leftDown = currentState.LeftButton == ButtonState.Pressed;
+            //bool rightDown = currentState.RightButton == ButtonState.Pressed;
 
-            bool newLeftClicked = LeftButtonDown && !leftDown;
-            bool newRightClicked = RightButtonDown && !rightDown;
+            //bool newLeftClicked = LeftButtonDown && !leftDown;
+            //bool newRightClicked = RightButtonDown && !rightDown;
 
-            if (!newLeftClicked)
-                LeftDoubleClicked = false;
-            if (!newRightClicked)
-                RightDoubleClicked = false;
+            //if (!newLeftClicked)
+            //    LeftDoubleClicked = false;
+            //if (!newRightClicked)
+            //    RightDoubleClicked = false;
 
-            if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
-                LeftDoubleClicked = true;
-            if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
-                RightDoubleClicked = true;
+            //if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
+            //    LeftDoubleClicked = true;
+            //if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
+            //    RightDoubleClicked = true;
 
-            LeftClicked = newLeftClicked;
-            RightClicked = newRightClicked;
-            _leftLastClickedTime = gameTime.ElapsedGameTime;
-            _rightLastClickedTime = gameTime.ElapsedGameTime;
-            LeftButtonDown = leftDown;
-            RightButtonDown = rightDown;
+            //LeftClicked = newLeftClicked;
+            //RightClicked = newRightClicked;
+            //_leftLastClickedTime = gameTime.ElapsedGameTime;
+            //_rightLastClickedTime = gameTime.ElapsedGameTime;
+            //LeftButtonDown = leftDown;
+            //RightButtonDown = rightDown;
 
-            ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
-            ScrollWheelValue = currentState.ScrollWheelValue;
+            //ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
+            //ScrollWheelValue = currentState.ScrollWheelValue;
 
-            ScreenLocation = new Point(currentState.X, currentState.Y);
+            //ScreenLocation = new Point(currentState.X, currentState.Y);
         }
 
         /// <summary>

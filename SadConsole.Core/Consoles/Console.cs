@@ -1,6 +1,7 @@
 ﻿#if SFML
 using Point = SFML.System.Vector2i;
 using Keys = SFML.Window.Keyboard.Key;
+using SFML.Graphics;
 #else
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

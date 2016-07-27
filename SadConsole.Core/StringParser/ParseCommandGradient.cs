@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+#endif
 using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
@@ -34,7 +38,7 @@ namespace SadConsole.StringParser
 
                 for (int i = 1; i < parametersArray.Length - 1; i++)
                 {
-                    steps.Add(Color.AliceBlue.FromParser(parametersArray[i], out keep, out keep, out keep, out keep, out useDefault));
+                    steps.Add(Color.White.FromParser(parametersArray[i], out keep, out keep, out keep, out keep, out useDefault));
                 }
 
                 GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));

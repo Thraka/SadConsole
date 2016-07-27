@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+#endif
+
 using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;

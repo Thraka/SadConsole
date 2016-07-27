@@ -18,34 +18,21 @@ namespace SadConsoleMain
 
             var fontMaster = LoadFont("IBM.font");
             var font = fontMaster.GetFont(SadConsole.Font.FontSizes.One);
-
-
-            SFML.Graphics.Sprite sprite = new SFML.Graphics.Sprite(font.FontImage);
-
-            var surface = new SadConsole.Consoles.TextSurface(10, 10, font);
-            surface[50].GlyphIndex = 1;
-            surface[10].GlyphIndex = 1;
-            surface[1].GlyphIndex = 2;
-            surface[11].GlyphIndex = 3;
-            surface[2].GlyphIndex = 4;
-            surface[12].GlyphIndex = 5;
-
-            SFML.Graphics.SpriteBatch batch = new SFML.Graphics.SpriteBatch();
-            batch.Update(surface);
-
-            sprite.Position = new SFML.System.Vector2f(32f, 1f);
-            sprite.TextureRect = new SFML.Graphics.IntRect(10, 0, 8, 16);
-            sprite.Color = new SFML.Graphics.Color(255, 255, 0, 100);
+            var surface = SadConsole.Engine.Initialize(window, "IBM.font", 20, 20);
+            surface.TextSurface.DefaultBackground = SFML.Graphics.Color.Yellow;
+            surface.Fill(SFML.Graphics.Color.Green, null, 1, null);
+            surface.TextSurface.Font = font = fontMaster.GetFont(SadConsole.Font.FontSizes.Two);
+            SadConsole.Consoles.TextSurfaceRenderer renderer = new SadConsole.Consoles.TextSurfaceRenderer();
+            surface.Position = new SFML.System.Vector2i(1, 1);
+            font.ResizeGraphicsDeviceManager(window, 20, 20, 0, 0);
+            //batch.Update(surface);
             
             while (window.IsOpen)
             {
                 window.Clear(SFML.Graphics.Color.Black);
-                
 
-                window.Draw(batch);
-
-
-
+                //renderer.Render(surface.TextSurface, new SFML.System.Vector2i(2, 2));
+                SadConsole.Engine.Draw(new SadConsole.GameTime());
 
                 window.Display();
 

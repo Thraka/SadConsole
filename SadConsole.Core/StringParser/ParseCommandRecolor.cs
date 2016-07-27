@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+#endif
 using SadConsole.Consoles;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SadConsole.StringParser
 {
@@ -38,7 +40,7 @@ namespace SadConsole.StringParser
             if (parametersArray.Length >= 2)
             {
                 CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
-                Color color = Color.AliceBlue.FromParser(parametersArray[1], out KeepRed, out KeepGreen, out KeepBlue, out KeepAlpha, out Default);
+                Color color = Color.White.FromParser(parametersArray[1], out KeepRed, out KeepGreen, out KeepBlue, out KeepAlpha, out Default);
 
                 R = color.R;
                 G = color.G;

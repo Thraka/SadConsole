@@ -54,7 +54,8 @@ namespace Microsoft.Xna.Framework
 
         public static uint ToInteger(this Color color)
         {
-            return color.PackedValue;
+            //return color.PackedValue;
+            return 0;
         }
 
         public static Color[] LerpSteps(this Color color, Color endingColor, int steps)

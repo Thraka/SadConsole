@@ -1,13 +1,15 @@
-﻿namespace SadConsole
-{
-    using Microsoft.Xna.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
+﻿#if SFML
+using SFML.Graphics;
+#else
+using Microsoft.Xna.Framework;
+#endif
 
+using System;
+using System.Runtime.Serialization;
+
+
+namespace SadConsole
+{
     [DataContract]
     public sealed class DoubleAnimation
     {

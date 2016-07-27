@@ -3,6 +3,7 @@ using Point = SFML.System.Vector2i;
 using Vector2 = SFML.System.Vector2f;
 using SFML.System;
 using Matrix = SFML.Graphics.Transform;
+using SFML.Graphics;
 #else
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -42,7 +43,14 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Creates a new renderer.
         /// </summary>
-        public TextSurfaceRenderer() { Batch = new SpriteBatch(Engine.Device); }
+        public TextSurfaceRenderer()
+        {
+#if MONOGAME
+            Batch = new SpriteBatch(Engine.Device);
+#else
+            Batch = new SpriteBatch();
+#endif
+        }
 
 
         /// <summary>
@@ -52,7 +60,7 @@ namespace SadConsole.Consoles
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
-
+#if MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
@@ -91,6 +99,40 @@ namespace SadConsole.Consoles
             AfterRenderCallback?.Invoke(Batch);
 
             Batch.End();
+#elif SFML
+            Batch.Start(surface, renderingMatrix);
+
+            BeforeRenderCallback?.Invoke(Batch);
+
+            if (surface.Tint.A != 255)
+            {
+                Cell cell;
+
+                if (surface.DefaultBackground.A != 0)
+                {
+                    Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
+
+                    for (int i = 0; i < surface.RenderCells.Length; i++)
+                    {
+                        cell = surface.RenderCells[i];
+
+                        if (cell.IsVisible)
+                        {
+                            Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
+                        }
+                    }
+
+                    if (surface.Tint.A != 0)
+                        Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
+                }
+                else
+                    if (surface.Tint.A != 0)
+                    Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
+
+            }
+            AfterRenderCallback?.Invoke(Batch);
+            Batch.End(Engine.Device, RenderStates.Default);
+#endif
         }
 
         /// <summary>
@@ -144,13 +186,24 @@ namespace SadConsole.Consoles
             else
                 worldLocation = position.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
 
+#if SFML
+            var transform = Matrix.Identity;
+            transform.Translate(worldLocation.X, worldLocation.Y);
+            
+            return transform;
+#else
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
+#endif
         }
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
+#if SFML
+            Batch = new SpriteBatch();
+#else
             Batch = new SpriteBatch(Engine.Device);
+#endif
         }
     }
 }

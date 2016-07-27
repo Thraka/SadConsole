@@ -156,7 +156,7 @@ namespace SadConsole
         public void ResizeGraphicsDeviceManager(RenderWindow manager, int width, int height, int additionalWidth, int additionalHeight)
         {
             manager.Size = new SFML.System.Vector2u((uint)((Size.X * width) + additionalWidth), (uint)((Size.Y * height) + additionalHeight));
-
+            manager.SetView(new View(new FloatRect(0, 0, manager.Size.X, manager.Size.Y)));
             Engine.WindowWidth = (int)manager.Size.X;
             Engine.WindowHeight = (int)manager.Size.Y;
         }
