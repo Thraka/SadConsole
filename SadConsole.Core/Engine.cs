@@ -260,17 +260,18 @@ namespace SadConsole
             }
         }
 
-        public static void Draw()
-        {
 #if MONOGAME
+        public static void Draw(GameTime gameTime)
+        {
             GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
             GameTimeDraw = gameTime;
 #elif SFML
-
+        public static void Draw()
+        {
             GameTimeDraw.Update();
             GameTimeElapsedRender = GameTimeDraw.ElapsedGameTime.TotalSeconds;
 #endif
-            
+
             ConsoleRenderStack.Render(); 
         }
 

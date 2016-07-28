@@ -7,10 +7,6 @@ using SFML.Graphics;
 using System;
 using SadConsole;
 using SadConsole.Consoles;
-#else
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-#endif
 
 
 namespace SFML.Graphics
@@ -180,3 +176,4 @@ namespace SFML.Graphics
         }
     }
 }
+#endif

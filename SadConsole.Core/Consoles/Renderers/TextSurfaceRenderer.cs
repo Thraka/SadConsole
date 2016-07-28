@@ -77,7 +77,6 @@ namespace SadConsole.Consoles
                 {
                     cell = surface.RenderCells[i];
 
-                    Batch
                     if (cell.IsVisible)
                     {
                         if (cell.ActualBackground != Color.Transparent && cell.ActualBackground != surface.DefaultBackground)

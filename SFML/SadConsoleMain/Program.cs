@@ -33,7 +33,7 @@ namespace SadConsoleMain
                 window.Clear(SFML.Graphics.Color.Black);
 
                 //renderer.Render(surface.TextSurface, new SFML.System.Vector2i(2, 2));
-                SadConsole.Engine.Draw(new SadConsole.GameTime());
+                SadConsole.Engine.Draw();
 
                 window.Display();
 
