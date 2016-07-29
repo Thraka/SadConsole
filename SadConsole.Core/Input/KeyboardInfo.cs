@@ -1,6 +1,7 @@
 ﻿#if SFML
 using Keys = SFML.Window.Keyboard.Key;
-#else
+using SFML.Graphics;
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endif
@@ -63,90 +64,90 @@ namespace SadConsole.Input
         /// <param name="gameTime"></param>
         public void ProcessKeys(GameTime gameTime)
         {
-//            this.KeysPressed.Clear();
-//            this.KeysReleased.Clear();
+            this.KeysPressed.Clear();
+            this.KeysReleased.Clear();
 
-//#if MONOGAME
-//            KeyboardState state = Keyboard.GetState();
-//            bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
-//            var keys = state.GetPressedKeys();
-//#else
-//            KeyboardState state = Keyboard.GetState();
-//            bool shiftPressed = state.IsKeyDown(Keys.LShift) || state.IsKeyDown(Keys.RShift);
-//            var keys = state.GetPressedKeys();
-//#endif
+            // Cycle all the keys down known if any are up currently, remove
 
+#if MONOGAME
+            KeyboardState state = Keyboard.GetState();
+            bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
+            var keys = state.GetPressedKeys();
+            for (int i = 0; i < this.KeysDown.Count;)
+            {
+                if (state.IsKeyUp(this.KeysDown[i].XnaKey))
+                {
+                    KeysReleased.Add(this.KeysDown[i]);
+                    this.KeysDown.Remove(this.KeysDown[i]);
+                }
+                else
+                    i++;
+            }   
+#elif SFML
+            bool shiftPressed = SFML.Window.Keyboard.IsKeyPressed(Keys.LShift) || SFML.Window.Keyboard.IsKeyPressed(Keys.RShift);
+            for (int i = 0; i < this.KeysDown.Count;)
+            {
+                if (!SFML.Window.Keyboard.IsKeyPressed(this.KeysDown[i].XnaKey))
+                {
+                    tempKeysDown.Remove(this.KeysDown[i].XnaKey);
+                    KeysReleased.Add(this.KeysDown[i]);
+                    this.KeysDown.Remove(this.KeysDown[i]);
+                }
+                else
+                    i++;
+            }
+            var keys = tempKeysDown.ToArray();
+#endif
 
+            // For all new keys down, if we don't know them, add them to pressed, add them to down.
+            for (int i = 0; i < keys.Length; i++)
+            {
+                bool firstPressed = false;
 
-//            // Cycle all the keys down known if any are up currently, remove
-//            for (int i = 0; i < this.KeysDown.Count; )
-//            {
-//#if SHARPDX
-//                if (!state.PressedKeys.Contains(this.KeysDown[i].XnaKey))
-//#else
-//                if (state.IsKeyUp(this.KeysDown[i].XnaKey))
-//#endif
-//                {
-//                    KeysReleased.Add(this.KeysDown[i]);
-//                    this.KeysDown.Remove(this.KeysDown[i]);
-//                }
-//                else
-//                    i++;
-//            }
+                AsciiKey key = new AsciiKey();
+                AsciiKey keyOppositeShift = new AsciiKey();
+                AsciiKey activeKey;
 
-//            // For all new keys down, if we don't know them, add them to pressed, add them to down.
-//#if SHARPDX
-//            for (int i = 0; i < keys.Count; i++)
-//#else
-//            for (int i = 0; i < keys.Length; i++)
-//#endif
-//            {
-//                bool firstPressed = false;
+                key.Fill(keys[i], shiftPressed);
+                keyOppositeShift.Fill(keys[i], !shiftPressed);
 
-//                Input.AsciiKey key = new AsciiKey();
-//                Input.AsciiKey keyOppositeShift = new AsciiKey();
-//                Input.AsciiKey activeKey;
+                if (this.KeysDown.Contains(key))
+                {
+                    activeKey = this.KeysDown.First(k => k == key);
+                    activeKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    this.KeysDown.Remove(key);
+                }
+                else if (this.KeysDown.Contains(keyOppositeShift))
+                {
+                    activeKey = this.KeysDown.First(k => k == keyOppositeShift);
+                    activeKey.Character = key.Character;
+                    activeKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    this.KeysDown.Remove(keyOppositeShift);
+                }
+                else
+                {
+                    activeKey = key;
+                    firstPressed = true;
+                }
 
-//                key.Fill(keys[i], shiftPressed);
-//                keyOppositeShift.Fill(keys[i], !shiftPressed);
+                if (firstPressed)
+                {
+                    this.KeysPressed.Add(activeKey);
+                }
+                else if (activeKey.PreviouslyPressed == false && activeKey.TimeHeld >= InitialRepeatDelay)
+                {
+                    activeKey.PreviouslyPressed = true;
+                    activeKey.TimeHeld = 0f;
+                    this.KeysPressed.Add(activeKey);
+                }
+                else if (activeKey.PreviouslyPressed == true && activeKey.TimeHeld >= RepeatDelay)
+                {
+                    activeKey.TimeHeld = 0f;
+                    this.KeysPressed.Add(activeKey);
+                }
 
-//                if (this.KeysDown.Contains(key))
-//                {
-//                    activeKey = this.KeysDown.First(k => k == key);
-//                    activeKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
-//                    this.KeysDown.Remove(key);
-//                }
-//                else if (this.KeysDown.Contains(keyOppositeShift))
-//                {
-//                    activeKey = this.KeysDown.First(k => k == keyOppositeShift);
-//                    activeKey.Character = key.Character;
-//                    activeKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
-//                    this.KeysDown.Remove(keyOppositeShift);
-//                }
-//                else
-//                {
-//                    activeKey = key;
-//                    firstPressed = true;
-//                }
-
-//                if (firstPressed)
-//                {
-//                    this.KeysPressed.Add(activeKey);
-//                }
-//                else if (activeKey.PreviouslyPressed == false && activeKey.TimeHeld >= InitialRepeatDelay)
-//                {
-//                    activeKey.PreviouslyPressed = true;
-//                    activeKey.TimeHeld = 0f;
-//                    this.KeysPressed.Add(activeKey);
-//                }
-//                else if (activeKey.PreviouslyPressed == true && activeKey.TimeHeld >= RepeatDelay)
-//                {
-//                    activeKey.TimeHeld = 0f;
-//                    this.KeysPressed.Add(activeKey);
-//                }
-
-//                this.KeysDown.Add(activeKey);
-//            }
+                this.KeysDown.Add(activeKey);
+            }
         }
 
         /// <summary>
@@ -178,5 +179,27 @@ namespace SadConsole.Input
         {
             return KeysReleased.Contains(AsciiKey.Get(key));
         }
+
+#if SFML
+        public void Setup(RenderWindow window)
+        {
+            window.KeyPressed += Window_KeyPressed;
+            //window.KeyReleased += Window_KeyReleased;
+        }
+
+        private void Window_KeyReleased(object sender, SFML.Window.KeyEventArgs e)
+        {
+            if (tempKeysDown.Contains(e.Code))
+                tempKeysDown.Remove(e.Code);
+        }
+
+        private void Window_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
+        {
+            if (!tempKeysDown.Contains(e.Code))
+                tempKeysDown.Add(e.Code);
+        }
+
+        List<Keys> tempKeysDown = new List<Keys>(5);
+#endif
     }
 }

@@ -13,7 +13,7 @@ namespace SadConsoleMain
             var window = new SFML.Graphics.RenderWindow(new SFML.Window.VideoMode(400, 500), "Test", SFML.Window.Styles.Default);
 
             window.Closed += Window_Closed;
-            window.SetFramerateLimit(10);
+            window.SetFramerateLimit(60);
 
             
 
@@ -32,7 +32,7 @@ namespace SadConsoleMain
             {
                 window.Clear(SFML.Graphics.Color.Black);
 
-                //renderer.Render(surface.TextSurface, new SFML.System.Vector2i(2, 2));
+                SadConsole.Engine.Update(window.HasFocus());
                 SadConsole.Engine.Draw();
 
                 window.Display();

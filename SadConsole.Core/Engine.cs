@@ -177,9 +177,10 @@ namespace SadConsole
         {
             Device = deviceManager;
             Mouse.Setup(Device);
+            Keyboard.Setup(Device);
             GameTimeDraw.Start();
             GameTimeUpdate.Start();
-#else
+#elif MONOGAME
         public static Consoles.Console Initialize(GraphicsDeviceManager deviceManager, string font, int consoleWidth, int consoleHeight)
         {
             if (Device == null)

@@ -190,7 +190,7 @@ namespace SadConsole.Consoles
             transform.Translate(worldLocation.X, worldLocation.Y);
             
             return transform;
-#else
+#elif MONOGAME
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
 #endif
         }
@@ -200,7 +200,7 @@ namespace SadConsole.Consoles
         {
 #if SFML
             Batch = new SpriteBatch();
-#else
+#elif MONOGAME
             Batch = new SpriteBatch(Engine.Device);
 #endif
         }
