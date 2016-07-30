@@ -110,28 +110,24 @@ namespace SadConsole.Consoles
             {
                 Cell cell;
 
-                if (surface.Tint.A != 255)
+                if (surface.DefaultBackground.A != 0)
+                Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
+
+                for (int i = 0; i < surface.RenderCells.Length; i++)
                 {
-                    if (surface.DefaultBackground.A != 0)
-                    Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
+                    cell = surface.RenderCells[i];
 
-                    for (int i = 0; i < surface.RenderCells.Length; i++)
+                    if (cell.IsVisible)
                     {
-                        cell = surface.RenderCells[i];
-
-                        if (cell.IsVisible)
-                        {
-                            Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
-                        }
+                        Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
                     }
-
                 }
-
-                if (surface.Tint.A != 0)
-                    Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
 
             }
             AfterRenderCallback?.Invoke(Batch);
+
+            if (surface.Tint.A != 0)
+                Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
 
             if (CallBatchEnd)
                 Batch.End(Engine.Device, RenderStates.Default);

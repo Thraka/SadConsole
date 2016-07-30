@@ -22,6 +22,11 @@ namespace SadConsole
         #endregion
 
         #region Fields
+        public static event EventHandler EngineUpdated;
+        public static event EventHandler EngineDrawFrame;
+        public static event EventHandler<ShutdownEventArgs> EngineShutdown;
+        public static event EventHandler EngineStart;
+
         private static Consoles.IConsole _activeConsole;
         private static List<Type> _cellEffects;
 
@@ -225,6 +230,7 @@ namespace SadConsole
             
             SetupInputsAndTimers();
 
+            EngineStart?.Invoke(null, EventArgs.Empty);
 
             // Create the default console.
             return SetupStartingConsole(consoleWidth, consoleHeight);
@@ -246,6 +252,8 @@ namespace SadConsole
             SetupFontAndEffects(font);
 
             DefaultFont.ResizeGraphicsDeviceManager(window, consoleWidth, consoleHeight, 0, 0);
+
+            EngineStart?.Invoke(null, EventArgs.Empty);
 
             // Create the default console.
             return SetupStartingConsole(consoleWidth, consoleHeight);
@@ -300,8 +308,30 @@ namespace SadConsole
 
             ConsoleRenderStack.Add(ActiveConsole);
 
+            EngineStart?.Invoke(null, EventArgs.Empty);
+
             return (Consoles.Console)ActiveConsole;
         }
+
+        /// <summary>
+        /// Prepares the engine for use. This must be the first method you call on the engine. After, call <see cref="Run"/>.
+        /// </summary>
+        /// <param name="deviceManager">The graphics device manager from MonoGame.</param>
+        /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
+        /// <param name="consoleWidth">The width of the default root console (and game window).</param>
+        /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <returns>The default active console.</returns>
+        public static void Initialize(string font, int consoleWidth, int consoleHeight)
+        {
+            monoGameGame = new SadConsoleGame(font, consoleWidth, consoleHeight);
+        }
+
+        public static void Run()
+        {
+            monoGameGame.Run();
+        }
+
+        internal static SadConsoleGame monoGameGame;
 #endif
         #endregion
 
@@ -367,9 +397,7 @@ namespace SadConsole
 #endif
 
             ConsoleRenderStack.Render();
-#if SFML
             EngineDrawFrame?.Invoke(null, EventArgs.Empty);
-#endif
         }
 
 #if MONOGAME
@@ -421,9 +449,7 @@ namespace SadConsole
                     _activeConsole.ProcessKeyboard(Keyboard);
             }
             ConsoleRenderStack.Update();
-#if SFML
             EngineUpdated?.Invoke(null, EventArgs.Empty);
-#endif
         }
 
 #endregion
@@ -448,18 +474,17 @@ namespace SadConsole
             return new Point(WindowWidth / surface.Font.Size.X, WindowHeight / surface.Font.Size.Y);
         }
 
-#if SFML
+        /// <summary>
+        /// Sent with the <see cref="EngineShutdown" /> event.
+        /// </summary>
         public class ShutdownEventArgs : EventArgs
         {
+            /// <summary>
+            /// When true, prevents the engine from shutting down.
+            /// </summary>
             public bool BlockShutdown;
         }
 
-
-        public static event EventHandler EngineUpdated;
-        public static event EventHandler EngineDrawFrame;
-        public static event EventHandler<ShutdownEventArgs> EngineShutdown;
-        //public void Run()
-#endif
     }
 
 #if MONOGAME
@@ -506,5 +531,51 @@ namespace SadConsole
             base.Draw(gameTime);
         }
     }
+
+    internal class SadConsoleGame: Game
+    {
+        private string font;
+        private int consoleWidth;
+        private int consoleHeight;
+        private GraphicsDeviceManager _graphics;
+
+        private int currentConsoleIndex = 0;
+
+        public SadConsoleGame(string font, int consoleWidth, int consoleHeight)
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            this.font = font;
+            this.consoleHeight = consoleHeight;
+            this.consoleWidth = consoleWidth;
+        }
+
+        protected override void Initialize()
+        {
+            // Let the XNA framework show the mouse.
+            IsMouseVisible = true;
+
+            // Uncomment these two lines to run as fast as possible
+            //_graphics.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
+
+            // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
+            Components.Add(new EngineGameComponent(this, _graphics, font, consoleWidth, consoleHeight, () =>
+                {
+                }
+            ));
+
+            // Call the default initialize of the base class.
+            base.Initialize();
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+
+            base.Draw(gameTime);
+        }
+    }
+
 #endif
 }

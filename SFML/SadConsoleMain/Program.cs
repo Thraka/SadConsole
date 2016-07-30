@@ -19,12 +19,12 @@ namespace SadConsoleMain
             
             fps = new FPSCounterComponent();
             
-            RandomScrollingConsole surface1 = new RandomScrollingConsole();
-            surface1.IsVisible = true;
-            Engine.ConsoleRenderStack.Clear();
-            Engine.ConsoleRenderStack.Add(surface1);
-            Engine.ActiveConsole = surface1;
-            console = surface1;
+            //RandomScrollingConsole surface1 = new RandomScrollingConsole();
+            //surface1.IsVisible = true;
+            //Engine.ConsoleRenderStack.Clear();
+            //Engine.ConsoleRenderStack.Add(surface1);
+            //Engine.ActiveConsole = surface1;
+            //console = surface1;
 
             Engine.Run();
         }
@@ -37,7 +37,6 @@ namespace SadConsoleMain
         private static void Engine_EngineUpdated(object sender, EventArgs e)
         {
             fps.Update();
-            console.Print(2, 5, "Hello", SFML.Graphics.Color.Green, SFML.Graphics.Color.Black, SFML.Graphics.SpriteEffects.None);
         }
 
         private static void Engine_EngineDrawFrame(object sender, EventArgs e)
