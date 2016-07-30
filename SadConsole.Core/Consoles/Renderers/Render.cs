@@ -15,9 +15,8 @@ namespace SFML.Graphics
     {
         Vertex[] m_verticies;
         int vertIndexCounter;
-        SadConsole.Font font;
+        Texture2D texture;
         Rectangle solidRect;
-        Color backColor;
         Rectangle fillRect;
         Matrix transform;
 
@@ -26,12 +25,23 @@ namespace SFML.Graphics
             m_verticies = new Vertex[0];
         }
 
+        public void Start(int renderQuads, Texture2D texture, Matrix transform)
+        {
+            int count = 4 * renderQuads;
+
+            if (m_verticies.Length != count)
+                m_verticies = new Vertex[count];
+
+            vertIndexCounter = 0;
+            this.texture = texture;
+            this.transform = transform;
+        }
+
         public void Start(ITextSurfaceRendered surface, Matrix transform)
         {
-            backColor = surface.DefaultBackground;
             fillRect = surface.AbsoluteArea;
-            font = surface.Font;
-            solidRect = font.GlyphIndexRects[font.SolidGlyphIndex];
+            texture = surface.Font.FontImage;
+            solidRect = surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex];
             this.transform = transform;
 
             int count = 4 + (surface.RenderCells.Length * 4 * 2) + 4;
@@ -78,19 +88,58 @@ namespace SFML.Graphics
             }
         }
 
+        public unsafe void DrawQuad(Rectangle screenRect, Rectangle textCoords, Color color)
+        {
+            fixed (Vertex* verts = m_verticies)
+            {
+                verts[vertIndexCounter].Position.X = screenRect.Left;
+                verts[vertIndexCounter].Position.Y = screenRect.Top;
+                verts[vertIndexCounter].TexCoords.X = textCoords.Left;
+                verts[vertIndexCounter].TexCoords.Y = textCoords.Top;
+                verts[vertIndexCounter].Color = color;
+                vertIndexCounter++;
+
+                verts[vertIndexCounter].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
+                verts[vertIndexCounter].Position.Y = screenRect.Top;
+                verts[vertIndexCounter].TexCoords.X = textCoords.Width;
+                verts[vertIndexCounter].TexCoords.Y = textCoords.Top;
+                verts[vertIndexCounter].Color = color;
+                vertIndexCounter++;
+
+                verts[vertIndexCounter].Position.X = screenRect.Width;
+                verts[vertIndexCounter].Position.Y = screenRect.Height;
+                verts[vertIndexCounter].TexCoords.X = textCoords.Width;
+                verts[vertIndexCounter].TexCoords.Y = textCoords.Height;
+                verts[vertIndexCounter].Color = color;
+                vertIndexCounter++;
+
+                verts[vertIndexCounter].Position.X = screenRect.Left;
+                verts[vertIndexCounter].Position.Y = screenRect.Height;
+                verts[vertIndexCounter].TexCoords.X = textCoords.Left;
+                verts[vertIndexCounter].TexCoords.Y = textCoords.Height;
+                verts[vertIndexCounter].Color = color;
+                vertIndexCounter++;
+            }
+        }
+
         public unsafe void DrawCell(Cell cell, Rectangle screenRect, Color defaultBackground, SadConsole.Font font)
         {
             if (cell.IsVisible)
             {
                 var glyphRect = font.GlyphIndexRects[cell.ActualGlyphIndex];
 
-                if (cell.ActualSpriteEffect == SpriteEffects.FlipHorizontally)
+                if ((cell.ActualSpriteEffect & SpriteEffects.FlipHorizontally) == SpriteEffects.FlipHorizontally)
                 {
-
+                    var temp = glyphRect.Left;
+                    glyphRect.Left = glyphRect.Width;
+                    glyphRect.Width = temp;
                 }
-                else if (cell.ActualSpriteEffect == SpriteEffects.FlipVertically)
-                {
 
+                if ((cell.ActualSpriteEffect & SpriteEffects.FlipVertically) == SpriteEffects.FlipVertically)
+                {
+                    var temp = glyphRect.Top;
+                    glyphRect.Top = glyphRect.Height;
+                    glyphRect.Height = temp;
                 }
 
                 fixed (Vertex* verts = m_verticies)
@@ -168,11 +217,11 @@ namespace SFML.Graphics
 
         public void End(RenderTarget target, RenderStates state)
         {
-            Vertex[] vertCopy = new Vertex[vertIndexCounter];
-            Array.Copy(m_verticies, vertCopy, vertCopy.Length);
+            //Vertex[] vertCopy = new Vertex[vertIndexCounter];
+            //Array.Copy(m_verticies, vertCopy, vertCopy.Length);
             state.Transform *= transform;
-            state.Texture = font.FontImage;
-            target.Draw(vertCopy, PrimitiveType.Quads, state);
+            state.Texture = texture;
+            target.Draw(m_verticies, 0, (uint)vertIndexCounter, PrimitiveType.Quads, state);
         }
     }
 }

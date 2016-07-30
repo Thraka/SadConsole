@@ -25,6 +25,8 @@ namespace SadConsole.Consoles
         //private Point oldPosition;
         //private Point oldAbsolutePosition;
 
+        public bool CallBatchEnd = true;
+
         /// <summary>
         /// The sprite batch used for drawing to the screen.
         /// </summary>
@@ -47,7 +49,7 @@ namespace SadConsole.Consoles
         {
 #if MONOGAME
             Batch = new SpriteBatch(Engine.Device);
-#else
+#elif SFML
             Batch = new SpriteBatch();
 #endif
         }
@@ -97,7 +99,8 @@ namespace SadConsole.Consoles
 
             AfterRenderCallback?.Invoke(Batch);
 
-            Batch.End();
+            if (CallBatchEnd)
+                Batch.End();
 #elif SFML
             Batch.Start(surface, renderingMatrix);
 
@@ -107,8 +110,9 @@ namespace SadConsole.Consoles
             {
                 Cell cell;
 
-                if (surface.DefaultBackground.A != 0)
+                if (surface.Tint.A != 255)
                 {
+                    if (surface.DefaultBackground.A != 0)
                     Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
 
                     for (int i = 0; i < surface.RenderCells.Length; i++)
@@ -121,16 +125,16 @@ namespace SadConsole.Consoles
                         }
                     }
 
-                    if (surface.Tint.A != 0)
-                        Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
                 }
-                else
-                    if (surface.Tint.A != 0)
+
+                if (surface.Tint.A != 0)
                     Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
 
             }
             AfterRenderCallback?.Invoke(Batch);
-            Batch.End(Engine.Device, RenderStates.Default);
+
+            if (CallBatchEnd)
+                Batch.End(Engine.Device, RenderStates.Default);
 #endif
         }
 

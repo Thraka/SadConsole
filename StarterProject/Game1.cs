@@ -29,14 +29,15 @@
             IsMouseVisible = true;
 
             // Uncomment these two lines to run as fast as possible
-            //_graphics.SynchronizeWithVerticalRetrace = false;
-            //IsFixedTimeStep = false;
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             var rootConsole = SadConsole.Engine.Initialize(_graphics, "IBM.font", 80, 25);
 
             Theme.SetupThemes();
-
+            ///Engine.DefaultFont = Engine.Fonts["IBM"].GetFont(Font.FontSizes.Two);
+            //Engine.DefaultFont.ResizeGraphicsDeviceManager(_graphics, 80, 25, 0, 0);
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project.
@@ -51,18 +52,18 @@
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
-                                        new CustomConsoles.StringParsingConsole(),
-                                        new CustomConsoles.CursorConsole(),
-                                        new CustomConsoles.DOSConsole(),
-                                        new CustomConsoles.SceneProjectionConsole(),
-                                        new CustomConsoles.ControlsTest(),
-                                        new CustomConsoles.StaticConsole(),
-                                        new CustomConsoles.StretchedConsole(),
-                                        new CustomConsoles.BorderedConsole(),
-                                        new CustomConsoles.GameObjectConsole(),
+                                        //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
+                                        //new CustomConsoles.StringParsingConsole(),
+                                        //new CustomConsoles.CursorConsole(),
+                                        //new CustomConsoles.DOSConsole(),
+                                        //new CustomConsoles.SceneProjectionConsole(),
+                                        //new CustomConsoles.ControlsTest(),
+                                        //new CustomConsoles.StaticConsole(),
+                                        //new CustomConsoles.StretchedConsole(),
+                                        //new CustomConsoles.BorderedConsole(),
+                                        //new CustomConsoles.GameObjectConsole(),
                                         new CustomConsoles.RandomScrollingConsole(),
-                                        new CustomConsoles.WorldGenerationConsole(),
+                                        //new CustomConsoles.WorldGenerationConsole(),
                                     };
 
             // Show the first console (by default all of our demo consoles are hidden)
@@ -75,7 +76,29 @@
             _characterWindow = new Windows.CharacterViewer();
 
             // Uncomment to see FPS. If the unlimited FPS is not uncommented at the top, you'll probably only see 60fps.
-            //Components.Add(new FPSCounterComponent(this));
+            Components.Add(new FPSCounterComponent(this));
+
+            //var surface = rootConsole;
+            //surface.TextSurface.DefaultBackground = Color.Yellow;
+            //surface.Fill(Color.Green, null, 1, null);
+            //surface.TextSurface.Font = SadConsole.Engine.Fonts["IBM"].GetFont(SadConsole.Font.FontSizes.Two);
+            //SadConsole.Consoles.TextSurfaceRenderer renderer = new SadConsole.Consoles.TextSurfaceRenderer();
+            //surface.TextSurface.Font.ResizeGraphicsDeviceManager(_graphics, 80, 25, 0, 0);
+            ////batch.Update(surface);
+            //surface.Print(2, 2, "LL[c:g f:White:Black:11]LLLLLLLLLLLLL");
+            //surface.Print(5, 5, "P ", spriteEffect: SpriteEffects.FlipHorizontally);
+            //surface.Print(7, 5, "P ", spriteEffect: SpriteEffects.FlipVertically);
+            //surface.Print(9, 5, "P ", spriteEffect: SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally);
+            ////surface.Renderer = new SadConsole.Consoles.CachedTextSurfaceRenderer(surface.TextSurface);
+            //SadConsole.Engine.ConsoleRenderStack.Clear();
+
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    var console = new SadConsole.Consoles.Console(surface.TextSurface);
+            //    console.Renderer = new CachedTextSurfaceRenderer(surface.TextSurface);
+            //    Engine.ConsoleRenderStack.Add(console);
+            //}
+
 
             // Call the default initialize of the base class.
             base.Initialize();
