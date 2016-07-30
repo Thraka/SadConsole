@@ -1,10 +1,7 @@
 ﻿#if SFML
-using Point = SFML.System.Vector2i;
 using Rectangle = SFML.Graphics.IntRect;
 using Texture2D = SFML.Graphics.Texture;
 using Matrix = SFML.Graphics.Transform;
-using SFML.Graphics;
-using System;
 using SadConsole;
 using SadConsole.Consoles;
 
@@ -37,14 +34,14 @@ namespace SFML.Graphics
             this.transform = transform;
         }
 
-        public void Start(ITextSurfaceRendered surface, Matrix transform)
+        public void Start(ITextSurfaceRendered surface, Matrix transform, int additionalDraws = 0)
         {
             fillRect = surface.AbsoluteArea;
             texture = surface.Font.FontImage;
             solidRect = surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex];
             this.transform = transform;
 
-            int count = 4 + (surface.RenderCells.Length * 4 * 2) + 4;
+            int count = ((surface.RenderCells.Length + 8 + additionalDraws) * 4 * 2);
             if (m_verticies.Length != count)
                 m_verticies = new Vertex[count];
 
@@ -217,8 +214,6 @@ namespace SFML.Graphics
 
         public void End(RenderTarget target, RenderStates state)
         {
-            //Vertex[] vertCopy = new Vertex[vertIndexCounter];
-            //Array.Copy(m_verticies, vertCopy, vertCopy.Length);
             state.Transform *= transform;
             state.Texture = texture;
             target.Draw(m_verticies, 0, (uint)vertIndexCounter, PrimitiveType.Quads, state);

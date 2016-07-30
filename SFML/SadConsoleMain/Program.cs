@@ -8,65 +8,43 @@ namespace SadConsoleMain
 {
     class Program
     {
+        private static RandomScrollingConsole console;
+        private static FPSCounterComponent fps;
         static void Main(string[] args)
         {
-            var window = new SFML.Graphics.RenderWindow(new SFML.Window.VideoMode(400, 500), "Test", SFML.Window.Styles.Default);
-
-            window.Closed += Window_Closed;
-            //window.SetFramerateLimit(60);
-
+            var surface = SadConsole.Engine.Initialize("IBM.font", 80, 25);
+            Engine.EngineDrawFrame += Engine_EngineDrawFrame;
+            Engine.EngineUpdated += Engine_EngineUpdated;
+            Engine.EngineShutdown += Engine_EngineShutdown;
             
-
-            var surface = SadConsole.Engine.Initialize(window, "IBM.font", 80, 25);
-            //Engine.DefaultFont = Engine.Fonts["IBM"].GetFont(Font.FontSizes.Two);
-            //Engine.DefaultFont.ResizeGraphicsDeviceManager(window, 80, 25, 0, 0);
-
-            //surface.TextSurface.DefaultBackground = SFML.Graphics.Color.Yellow;
-            //surface.Fill(SFML.Graphics.Color.Green, null, 1, null);
-            //surface.TextSurface.Font = SadConsole.Engine.Fonts["IBM"].GetFont(SadConsole.Font.FontSizes.Two);
-            //SadConsole.Consoles.TextSurfaceRenderer renderer = new SadConsole.Consoles.TextSurfaceRenderer();
-            //surface.TextSurface.Font.ResizeGraphicsDeviceManager(window, 80, 25, 0, 0);
-            ////batch.Update(surface);
-            //surface.Print(2, 2, "LL[c:g f:White:Black:11]LLLLLLLLLLLLL");
-            //surface.Print(5, 5, "P ", spriteEffect: SFML.Graphics.SpriteEffects.FlipHorizontally);
-            //surface.Print(7, 5, "P ", spriteEffect: SFML.Graphics.SpriteEffects.FlipVertically);
-            //surface.Print(9, 5, "P ", spriteEffect: SFML.Graphics.SpriteEffects.FlipVertically | SFML.Graphics.SpriteEffects.FlipHorizontally);
-            ////surface.Renderer = new SadConsole.Consoles.CachedTextSurfaceRenderer(surface.TextSurface);
-
-            var fps = new FPSCounterComponent();
-
-            for (int i = 0; i < 5; i++)
-            {
-                //SadConsole.Engine.ConsoleRenderStack.Add(new SadConsole.Consoles.Console(surface.TextSurface));
-            }
-
+            fps = new FPSCounterComponent();
+            
             RandomScrollingConsole surface1 = new RandomScrollingConsole();
             surface1.IsVisible = true;
             Engine.ConsoleRenderStack.Clear();
             Engine.ConsoleRenderStack.Add(surface1);
-
             Engine.ActiveConsole = surface1;
+            console = surface1;
 
-            while (window.IsOpen)
-            {
-                window.Clear(SFML.Graphics.Color.Black);
-
-                SadConsole.Engine.Update(window.HasFocus());
-                SadConsole.Engine.Draw();
-
-                fps.Update();
-                fps.Draw();
-
-                window.Display();
-
-                window.DispatchEvents();
-            }
+            Engine.Run();
         }
 
-        private static void Window_Closed(object sender, EventArgs e)
+        private static void Engine_EngineShutdown(object sender, Engine.ShutdownEventArgs e)
         {
-            ((SFML.Window.Window)sender).Close();
+            
         }
+
+        private static void Engine_EngineUpdated(object sender, EventArgs e)
+        {
+            fps.Update();
+            console.Print(2, 5, "Hello", SFML.Graphics.Color.Green, SFML.Graphics.Color.Black, SFML.Graphics.SpriteEffects.None);
+        }
+
+        private static void Engine_EngineDrawFrame(object sender, EventArgs e)
+        {
+            fps.Draw();
+        }
+
         public class FPSCounterComponent
         {
             SadConsole.Consoles.TextSurfaceRenderer consoleRender;
@@ -128,18 +106,33 @@ namespace SadConsoleMain
 
                 KeyboardHandler = (cons, info) =>
                 {
-
+                    bool keyHit = false;
                     if (info.IsKeyDown(SFML.Window.Keyboard.Key.Left))
+                    {
                         cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left - 1, cons.TextSurface.RenderArea.Top, 80, 25);
+                        keyHit = true;
+                    }
 
                     if (info.IsKeyDown(SFML.Window.Keyboard.Key.Right))
+                    {
                         cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left + 1, cons.TextSurface.RenderArea.Top, 80, 25);
+                        keyHit = true;
+                    }
 
                     if (info.IsKeyDown(SFML.Window.Keyboard.Key.Up))
+                    {
                         cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top - 1, 80, 25);
+                        keyHit = true;
+                    }
 
                     if (info.IsKeyDown(SFML.Window.Keyboard.Key.Down))
+                    {
                         cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top + 1, 80, 25);
+                        keyHit = true;
+                    }
+
+                    //if (keyHit)
+                    //    ((CachedTextSurfaceRenderer)Renderer).Update(TextSurface);
 
                     return true;
                 };
@@ -175,7 +168,7 @@ namespace SadConsoleMain
                         base.Render();
 
                         // Generate the content
-                        TextSurface = new TextSurface(2000, 2000, Engine.DefaultFont); //500mb ?? why?
+                        TextSurface = new TextSurface(200, 200, Engine.DefaultFont); //500mb ?? why?
                                                                                        //Data = new TextSurface(2000, 2000);
                                                                                        //DataViewport = new Rectangle(0, 0, 80, 25);
                         TextSurface.RenderArea = new Rectangle(0, 0, 80, 25);
@@ -186,6 +179,7 @@ namespace SadConsoleMain
                         // We need to set celldata to the big console data so we can use the FillWithRandom method.
                         FillWithRandomGarbage();
                         initializedStep3 = true;
+                        //Renderer = new CachedTextSurfaceRenderer(TextSurface);
                     }
 
                     else
