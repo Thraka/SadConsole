@@ -27,6 +27,11 @@ namespace SadConsole
         public static event EventHandler<ShutdownEventArgs> EngineShutdown;
         public static event EventHandler EngineStart;
 
+        /// <summary>
+        /// Clears the screen this color each frame.
+        /// </summary>
+        public static Color ClearFrameColor = Color.Black;
+
         private static Consoles.IConsole _activeConsole;
         private static List<Type> _cellEffects;
 
@@ -263,7 +268,7 @@ namespace SadConsole
         {
             while (Device.IsOpen)
             {
-                Device.Clear(SFML.Graphics.Color.Black);
+                Device.Clear(ClearFrameColor);
 
                 Update(Device.HasFocus());
                 Draw();
@@ -275,7 +280,7 @@ namespace SadConsole
 
 #elif MONOGAME
         /// <summary>
-        /// Prepares the engine for use. This must be the first method you call on the engine.
+        /// Prepares the engine for use. This must be the first method you call on the engine when you provide your own <see cref="GraphicsDeviceManager"/>.
         /// </summary>
         /// <param name="deviceManager">The graphics device manager from MonoGame.</param>
         /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
@@ -314,24 +319,23 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Prepares the engine for use. This must be the first method you call on the engine. After, call <see cref="Run"/>.
+        /// Prepares the engine for use. This must be the first method you call on the engine, then call <see cref="Run"/> to start SadConsole.
         /// </summary>
-        /// <param name="deviceManager">The graphics device manager from MonoGame.</param>
         /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
         /// <param name="consoleWidth">The width of the default root console (and game window).</param>
         /// <param name="consoleHeight">The height of the default root console (and game window).</param>
         /// <returns>The default active console.</returns>
         public static void Initialize(string font, int consoleWidth, int consoleHeight)
         {
-            monoGameGame = new SadConsoleGame(font, consoleWidth, consoleHeight);
+            MonoGameInstance = new SadConsoleGame(font, consoleWidth, consoleHeight);
         }
 
         public static void Run()
         {
-            monoGameGame.Run();
+            MonoGameInstance.Run();
         }
 
-        internal static SadConsoleGame monoGameGame;
+        public static SadConsoleGame MonoGameInstance;
 #endif
         #endregion
 
@@ -532,19 +536,21 @@ namespace SadConsole
         }
     }
 
-    internal class SadConsoleGame: Game
+    /// <summary>
+    /// A MonoGame <see cref="Game"/> instance that runs SadConsole. This is used when you don't provide one and call <see cref="Engine.Initialize(string, int, int)"/>.
+    /// </summary>
+    public class SadConsoleGame: Game
     {
         private string font;
         private int consoleWidth;
         private int consoleHeight;
-        private GraphicsDeviceManager _graphics;
+        public GraphicsDeviceManager GraphicsDeviceManager;
 
-        private int currentConsoleIndex = 0;
-
-        public SadConsoleGame(string font, int consoleWidth, int consoleHeight)
+        internal SadConsoleGame(string font, int consoleWidth, int consoleHeight)
         {
-            _graphics = new GraphicsDeviceManager(this);
+            GraphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
             this.font = font;
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
@@ -556,14 +562,11 @@ namespace SadConsole
             IsMouseVisible = true;
 
             // Uncomment these two lines to run as fast as possible
-            //_graphics.SynchronizeWithVerticalRetrace = false;
+            //GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
             //IsFixedTimeStep = false;
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
-            Components.Add(new EngineGameComponent(this, _graphics, font, consoleWidth, consoleHeight, () =>
-                {
-                }
-            ));
+            Components.Add(new EngineGameComponent(this, GraphicsDeviceManager, font, consoleWidth, consoleHeight, () => { }));
 
             // Call the default initialize of the base class.
             base.Initialize();
@@ -571,9 +574,58 @@ namespace SadConsole
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Engine.ClearFrameColor);
 
             base.Draw(gameTime);
+        }
+    }
+
+    /// <summary>
+    /// A component to draw how many frames per second the engine is performing at.
+    /// </summary>
+    public class FPSCounterComponent : DrawableGameComponent
+    {
+        TextSurfaceRenderer consoleRender;
+        TextSurface console;
+        SurfaceEditor editor;
+
+        int frameRate = 0;
+        int frameCounter = 0;
+        TimeSpan elapsedTime = TimeSpan.Zero;
+
+
+        public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
+            : base(game)
+        {
+            console = new TextSurface(30, 1, Engine.DefaultFont);
+            editor = new SurfaceEditor(console);
+            console.DefaultBackground = Color.Black;
+            editor.Clear();
+            consoleRender = new TextSurfaceRenderer();
+        }
+
+
+        public override void Update(GameTime gameTime)
+        {
+            elapsedTime += gameTime.ElapsedGameTime;
+
+            if (elapsedTime > TimeSpan.FromSeconds(1))
+            {
+                elapsedTime -= TimeSpan.FromSeconds(1);
+                frameRate = frameCounter;
+                frameCounter = 0;
+            }
+        }
+
+
+        public override void Draw(GameTime gameTime)
+        {
+            frameCounter++;
+
+            string fps = string.Format("fps: {0}", frameRate);
+            editor.Clear();
+            editor.Print(0, 0, fps);
+            consoleRender.Render(console, Point.Zero);
         }
     }
 

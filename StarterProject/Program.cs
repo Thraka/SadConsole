@@ -3,11 +3,6 @@ using Console = SadConsole.Consoles.Console;
 using System;
 using SadConsole;
 
-#if MACOS
-using MonoMac.AppKit;
-using MonoMac.Foundation;
-#endif
-
 namespace StarterProject
 {
 	class Program
@@ -61,7 +56,7 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },//Engine.ConsoleRenderStack.Remove(Engine.ConsoleRenderStack[0]); currentConsoleIndex--; } },
+                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         new CustomConsoles.StringParsingConsole(),
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.DOSConsole(),
