@@ -1,12 +1,15 @@
-﻿namespace SadConsole.Controls
-{
-    using Consoles;
-    using Microsoft.Xna.Framework;
-    using SadConsole.Consoles;
-    using SadConsole.Input;
-    using System;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
 
+using SadConsole.Consoles;
+using SadConsole.Input;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Controls
+{
     /// <summary>
     /// Base class for all controls.
     /// </summary>

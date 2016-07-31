@@ -1,8 +1,14 @@
-﻿
+﻿#if SFML
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+using ColorHelper = Microsoft.Xna.Framework.Color;
+#endif
+
+using System.Runtime.Serialization;
+
 namespace SadConsole.Themes
 {
-    using Microsoft.Xna.Framework;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// The library of themes. Holds the themes of all controls.
@@ -91,20 +97,20 @@ namespace SadConsole.Themes
 
             ScrollBarTheme = new ScrollBarTheme();
             ScrollBarTheme.Bar = new ThemePartBase();
-            ScrollBarTheme.Bar.Normal = new CellAppearance(Color.LightGray, Color.Black);
-            ScrollBarTheme.Bar.Focused = new CellAppearance(Color.LightGray, Color.Black);
-            ScrollBarTheme.Bar.Disabled = new CellAppearance(Color.Gray, Color.Black);
-            ScrollBarTheme.Bar.MouseOver = new CellAppearance(Color.LightGray, Color.Black);
+            ScrollBarTheme.Bar.Normal = new CellAppearance(ColorHelper.LightGray, ColorHelper.Black);
+            ScrollBarTheme.Bar.Focused = new CellAppearance(ColorHelper.LightGray, ColorHelper.Black);
+            ScrollBarTheme.Bar.Disabled = new CellAppearance(ColorHelper.Gray, ColorHelper.Black);
+            ScrollBarTheme.Bar.MouseOver = new CellAppearance(ColorHelper.LightGray, ColorHelper.Black);
             ScrollBarTheme.Ends = new ThemePartBase();
-            ScrollBarTheme.Ends.Normal = new CellAppearance(Color.White, Color.Black);
-            ScrollBarTheme.Ends.Focused = new CellAppearance(Color.LightGray, Color.Black);
-            ScrollBarTheme.Ends.Disabled = new CellAppearance(Color.Gray, Color.Black);
-            ScrollBarTheme.Ends.MouseOver = new CellAppearance(Color.White, Color.Black);
+            ScrollBarTheme.Ends.Normal = new CellAppearance(ColorHelper.White, ColorHelper.Black);
+            ScrollBarTheme.Ends.Focused = new CellAppearance(ColorHelper.LightGray, ColorHelper.Black);
+            ScrollBarTheme.Ends.Disabled = new CellAppearance(ColorHelper.Gray, ColorHelper.Black);
+            ScrollBarTheme.Ends.MouseOver = new CellAppearance(ColorHelper.White, ColorHelper.Black);
             ScrollBarTheme.Slider = new ThemePartBase();
-            ScrollBarTheme.Slider.Normal = new CellAppearance(Color.White, Color.Black);
-            ScrollBarTheme.Slider.Focused = new CellAppearance(Color.LightGray, Color.Black);
-            ScrollBarTheme.Slider.Disabled = new CellAppearance(Color.Gray, Color.Black);
-            ScrollBarTheme.Slider.MouseOver = new CellAppearance(Color.White, Color.Black);
+            ScrollBarTheme.Slider.Normal = new CellAppearance(ColorHelper.White, ColorHelper.Black);
+            ScrollBarTheme.Slider.Focused = new CellAppearance(ColorHelper.LightGray, ColorHelper.Black);
+            ScrollBarTheme.Slider.Disabled = new CellAppearance(ColorHelper.Gray, ColorHelper.Black);
+            ScrollBarTheme.Slider.MouseOver = new CellAppearance(ColorHelper.White, ColorHelper.Black);
 
             WindowTheme = new WindowTheme();
             WindowTheme.TitleStyle = new CellAppearance(ColorAnsi.Black, ColorAnsi.WhiteBright);
@@ -118,56 +124,56 @@ namespace SadConsole.Themes
             CheckBoxTheme.CheckedIcon = 251;
             CheckBoxTheme.UncheckedIcon = 0;
             CheckBoxTheme.Button = new ThemePartSelected();
-            CheckBoxTheme.Button.Normal = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            CheckBoxTheme.Button.Focused = new CellAppearance(ColorAnsi.Blue, Color.Transparent);
+            CheckBoxTheme.Button.Normal = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            CheckBoxTheme.Button.Focused = new CellAppearance(ColorAnsi.Blue, ColorHelper.Transparent);
             CheckBoxTheme.Button.MouseOver = new CellAppearance(ColorAnsi.White, ColorAnsi.WhiteBright);
-            CheckBoxTheme.Button.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            CheckBoxTheme.Button.Disabled = new CellAppearance(ColorAnsi.Black, Color.Transparent);
-            CheckBoxTheme.Button.Selected = new CellAppearance(ColorAnsi.YellowBright, Color.Transparent);
-            CheckBoxTheme.Normal = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            CheckBoxTheme.Focused = new CellAppearance(ColorAnsi.Blue, Color.Transparent);
+            CheckBoxTheme.Button.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            CheckBoxTheme.Button.Disabled = new CellAppearance(ColorAnsi.Black, ColorHelper.Transparent);
+            CheckBoxTheme.Button.Selected = new CellAppearance(ColorAnsi.YellowBright, ColorHelper.Transparent);
+            CheckBoxTheme.Normal = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            CheckBoxTheme.Focused = new CellAppearance(ColorAnsi.Blue, ColorHelper.Transparent);
             CheckBoxTheme.MouseOver = new CellAppearance(ColorAnsi.White, ColorAnsi.WhiteBright);
-            CheckBoxTheme.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            CheckBoxTheme.Disabled = new CellAppearance(ColorAnsi.Black, Color.Transparent);
-            CheckBoxTheme.Selected = new CellAppearance(ColorAnsi.YellowBright, Color.Transparent);
+            CheckBoxTheme.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            CheckBoxTheme.Disabled = new CellAppearance(ColorAnsi.Black, ColorHelper.Transparent);
+            CheckBoxTheme.Selected = new CellAppearance(ColorAnsi.YellowBright, ColorHelper.Transparent);
 
             RadioButtonTheme = new RadioButtonTheme();
             RadioButtonTheme.CheckedIcon = 7;
             RadioButtonTheme.UncheckedIcon = 0;
             RadioButtonTheme.Button = new ThemePartSelected();
-            RadioButtonTheme.Button.Normal = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            RadioButtonTheme.Button.Focused = new CellAppearance(ColorAnsi.Blue, Color.Transparent);
+            RadioButtonTheme.Button.Normal = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            RadioButtonTheme.Button.Focused = new CellAppearance(ColorAnsi.Blue, ColorHelper.Transparent);
             RadioButtonTheme.Button.MouseOver = new CellAppearance(ColorAnsi.White, ColorAnsi.WhiteBright);
-            RadioButtonTheme.Button.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            RadioButtonTheme.Button.Disabled = new CellAppearance(ColorAnsi.Black, Color.Transparent);
-            RadioButtonTheme.Button.Selected = new CellAppearance(ColorAnsi.YellowBright, Color.Transparent);
-            RadioButtonTheme.Normal = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            RadioButtonTheme.Focused = new CellAppearance(ColorAnsi.Blue, Color.Transparent);
+            RadioButtonTheme.Button.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            RadioButtonTheme.Button.Disabled = new CellAppearance(ColorAnsi.Black, ColorHelper.Transparent);
+            RadioButtonTheme.Button.Selected = new CellAppearance(ColorAnsi.YellowBright, ColorHelper.Transparent);
+            RadioButtonTheme.Normal = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            RadioButtonTheme.Focused = new CellAppearance(ColorAnsi.Blue, ColorHelper.Transparent);
             RadioButtonTheme.MouseOver = new CellAppearance(ColorAnsi.White, ColorAnsi.WhiteBright);
-            RadioButtonTheme.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            RadioButtonTheme.Disabled = new CellAppearance(ColorAnsi.Black, Color.Transparent);
-            RadioButtonTheme.Selected = new CellAppearance(ColorAnsi.YellowBright, Color.Transparent);
+            RadioButtonTheme.MouseClicking = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            RadioButtonTheme.Disabled = new CellAppearance(ColorAnsi.Black, ColorHelper.Transparent);
+            RadioButtonTheme.Selected = new CellAppearance(ColorAnsi.YellowBright, ColorHelper.Transparent);
 
             ListBoxTheme = new ListBoxTheme();
-            ListBoxTheme.Border = new CellAppearance(Color.LightGray, Color.Black);
+            ListBoxTheme.Border = new CellAppearance(ColorHelper.LightGray, ColorHelper.Black);
             ListBoxTheme.Item = new ThemePartSelected();
-            ListBoxTheme.Item.Normal = new CellAppearance(Color.White, Color.Transparent);
-            ListBoxTheme.Item.Focused = new CellAppearance(Color.White, Color.Transparent);
-            ListBoxTheme.Item.MouseClicking = new CellAppearance(Color.White, Color.Transparent);
-            ListBoxTheme.Item.Disabled = new CellAppearance(Color.White, Color.Transparent);
-            ListBoxTheme.Item.MouseOver = new CellAppearance(Color.LightGray, Color.Gray);
-            ListBoxTheme.Item.Selected = new CellAppearance(Color.Yellow, Color.Gray);
+            ListBoxTheme.Item.Normal = new CellAppearance(ColorHelper.White, ColorHelper.Transparent);
+            ListBoxTheme.Item.Focused = new CellAppearance(ColorHelper.White, ColorHelper.Transparent);
+            ListBoxTheme.Item.MouseClicking = new CellAppearance(ColorHelper.White, ColorHelper.Transparent);
+            ListBoxTheme.Item.Disabled = new CellAppearance(ColorHelper.White, ColorHelper.Transparent);
+            ListBoxTheme.Item.MouseOver = new CellAppearance(ColorHelper.LightGray, ColorHelper.Gray);
+            ListBoxTheme.Item.Selected = new CellAppearance(ColorHelper.Yellow, ColorHelper.Gray);
             ListBoxTheme.ScrollBarTheme = (ScrollBarTheme)ScrollBarTheme.Clone();
-            ListBoxTheme.Normal = new CellAppearance(ColorAnsi.WhiteBright, Color.Transparent);
-            ListBoxTheme.Focused = new CellAppearance(ColorAnsi.Blue, Color.Transparent);
+            ListBoxTheme.Normal = new CellAppearance(ColorAnsi.WhiteBright, ColorHelper.Transparent);
+            ListBoxTheme.Focused = new CellAppearance(ColorAnsi.Blue, ColorHelper.Transparent);
             ListBoxTheme.MouseOver = new CellAppearance(ColorAnsi.White, ColorAnsi.WhiteBright);
-            ListBoxTheme.Disabled = new CellAppearance(ColorAnsi.Black, Color.Transparent);
+            ListBoxTheme.Disabled = new CellAppearance(ColorAnsi.Black, ColorHelper.Transparent);
 
             InputBoxTheme = new InputBoxTheme();
-            InputBoxTheme.Normal = new CellAppearance(Color.Blue, Color.DimGray);
-            InputBoxTheme.Focused = new CellAppearance(Color.DarkBlue, Color.DarkGray);
-            InputBoxTheme.MouseOver = new CellAppearance(Color.DarkBlue, Color.DarkGray);
-            InputBoxTheme.Disabled = new CellAppearance(Color.Black, ColorAnsi.White);
+            InputBoxTheme.Normal = new CellAppearance(ColorHelper.Blue, ColorHelper.DimGray);
+            InputBoxTheme.Focused = new CellAppearance(ColorHelper.DarkBlue, ColorHelper.DarkGray);
+            InputBoxTheme.MouseOver = new CellAppearance(ColorHelper.DarkBlue, ColorHelper.DarkGray);
+            InputBoxTheme.Disabled = new CellAppearance(ColorHelper.Black, ColorAnsi.White);
             InputBoxTheme.CarrotEffect = new Effects.BlinkGlyph()
             {
                 GlyphIndex = 95,

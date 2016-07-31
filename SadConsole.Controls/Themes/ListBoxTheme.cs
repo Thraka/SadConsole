@@ -1,9 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
+using System.Runtime.Serialization;
 
 namespace SadConsole.Themes
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// The theme for a ListBox control.
     /// </summary>

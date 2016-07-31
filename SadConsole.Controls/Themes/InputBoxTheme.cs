@@ -1,8 +1,7 @@
-﻿namespace SadConsole.Themes
-{
-    using Microsoft.Xna.Framework;
-    using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
+namespace SadConsole.Themes
+{
     /// <summary>
     /// A theme for the input box control.
     /// </summary>

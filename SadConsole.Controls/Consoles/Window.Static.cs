@@ -1,9 +1,12 @@
-﻿using SadConsole.Controls;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
+using SadConsole.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SadConsole.Consoles
 {
@@ -39,8 +42,8 @@ namespace SadConsole.Consoles
             Button yesButton = new Button(yesPrompt.Length + 2, 1);
             Button noButton = new Button(noPrompt.Length + 2, 1);
 
-            yesButton.Position = new Microsoft.Xna.Framework.Point(2, window.textSurface.Height - 2);
-            noButton.Position = new Microsoft.Xna.Framework.Point(window.textSurface.Width - noButton.Width - 2, window.textSurface.Height - 2);
+            yesButton.Position = new Point(2, window.textSurface.Height - 2);
+            noButton.Position = new Point(window.textSurface.Width - noButton.Width - 2, window.textSurface.Height - 2);
 
             yesButton.Text = yesPrompt;
             noButton.Text = noPrompt;
@@ -87,7 +90,7 @@ namespace SadConsole.Consoles
 
             Button closeButton = new Button(closeButtonText.Length + 2, 1);
 
-            closeButton.Position = new Microsoft.Xna.Framework.Point(2, window.textSurface.Height - 2);
+            closeButton.Position = new Point(2, window.textSurface.Height - 2);
 
             closeButton.Text = closeButtonText;
 

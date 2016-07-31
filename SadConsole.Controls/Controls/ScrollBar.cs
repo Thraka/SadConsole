@@ -1,13 +1,15 @@
-﻿namespace SadConsole.Controls
-{
-    using SadConsole.Themes;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
 
+using SadConsole.Themes;
+using System;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Controls
+{
     /// <summary>
     /// Represents a scrollbar control.
     /// </summary>
@@ -306,7 +308,7 @@
                 base.ProcessMouse(info);
 
 
-                var mouseControlPosition = new Microsoft.Xna.Framework.Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+                var mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
 
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.CapturedControl == null)

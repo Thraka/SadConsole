@@ -200,7 +200,7 @@ namespace SadConsole.Input
                 tempKeysDown.Add(e.Code);
         }
 
-        List<Keys> tempKeysDown = new List<Keys>(5);
+        public static List<Keys> tempKeysDown = new List<Keys>(5);
 #endif
     }
 }

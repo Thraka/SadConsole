@@ -1,12 +1,17 @@
-﻿namespace SadConsole.Consoles
-{
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using System;
-    using System.Windows;
-    using System.Linq;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Keys = SFML.Window.Keyboard.Key;
+#elif MONOGAME
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
+#endif
 
+using System;
+using System.Windows;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Consoles
+{
     [DataContract]
     public partial class Window: ControlsConsole
     {
@@ -227,7 +232,7 @@
             info = KeyboardState;
             info.ProcessKeys(Engine.GameTimeUpdate);
 
-            if (CloseOnESC && info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Escape))
+            if (CloseOnESC && info.IsKeyReleased(Keys.Escape))
             {
                 this.Hide();
                 return true;
@@ -304,9 +309,13 @@
         /// </summary>
         public void Center()
         {
+#if SFML
+            int screenWidth = (int)SadConsole.Engine.Device.Size.X;
+            int screenHeight = (int)SadConsole.Engine.Device.Size.Y;
+#elif MONOGAME
             int screenWidth = SadConsole.Engine.Device.PresentationParameters.BackBufferWidth;
             int screenHeight = SadConsole.Engine.Device.PresentationParameters.BackBufferHeight;
-
+#endif
             if (UsePixelPositioning)
                 this.Position = new Point((screenWidth / 2) - ((textSurface.Width * textSurface.Font.Size.X) / 2), (screenHeight / 2) - ((textSurface.Height * textSurface.Font.Size.Y) / 2));
             else
@@ -386,6 +395,6 @@
             _previousMouseInfo = new Input.MouseInfo();
             //Redraw();
         }
-        #endregion
+#endregion
     }
 }

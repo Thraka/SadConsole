@@ -1,14 +1,25 @@
-﻿namespace SadConsole.Controls
+﻿#if SFML
+using Rectangle = SFML.Graphics.IntRect;
+using Point = SFML.System.Vector2i;
+using SFML.Graphics;
+using Keys = SFML.Window.Keyboard.Key;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+#endif
+
+using SadConsole.Consoles;
+using SadConsole.Themes;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Windows;
+
+namespace SadConsole.Controls
 {
-    using Microsoft.Xna.Framework;
-    using SadConsole.Consoles;
-    using SadConsole.Themes;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Runtime.Serialization;
-    using System.Windows;
+
 
     [DataContract]
     public class ListBox : ListBox<ListBoxItem>
@@ -396,7 +407,7 @@
         public override bool ProcessKeyboard(Input.KeyboardInfo info)
         {
             //if (_hasFocus)
-            if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Up))
+            if (info.IsKeyReleased(Keys.Up))
             {
                 int index = Items.IndexOf(_selectedItem);
                 if (_selectedItem != null)
@@ -412,7 +423,7 @@
                 }
                 return true;
             }
-            else if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Down))
+            else if (info.IsKeyReleased(Keys.Down))
             {
                 int index = Items.IndexOf(_selectedItem);
                 if (_selectedItem != null)
@@ -430,7 +441,11 @@
                     SelectedItem = Items[0];
                 return true;
             }
-            else if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Enter))
+#if SFML
+            else if (info.IsKeyReleased(Keys.Return))
+#elif MONOGAME
+            else if (info.IsKeyReleased(Keys.Enter))
+#endif
             {
                 if (_selectedItem != null)
                     OnItemAction();
@@ -733,13 +748,13 @@
             else if (value.Length > area.Width)
                 value = value.Substring(0, area.Width);
             var editor = new SurfaceEditor(surface);
-            editor.Print(area.X, area.Y, value, _currentAppearance);
+            editor.Print(area.Left, area.Top, value, _currentAppearance);
             _isDirty = false;
         }
 
         protected virtual void OnItemChanged(object oldItem, object newItem) { }
 
-        #region INotifyPropertyChanged Members
+#region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -748,7 +763,7 @@
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
-        #endregion
+#endregion
     }
 
     [DataContract]
@@ -766,23 +781,23 @@
                 if (Item is Color)
                 {
                     cellLook.Background = (Color)Item;
-                    editor.Print(area.X + 1, area.Y, value, cellLook);
+                    editor.Print(area.Left + 1, area.Top, value, cellLook);
                 }
                 else
                 {
                     cellLook.Foreground = ((Tuple<Color, Color, string>)Item).Item2;
                     cellLook.Background = ((Tuple<Color, Color, string>)Item).Item1;
                     value = ((Tuple<Color, Color, string>)Item).Item3.Align(HorizontalAlignment.Left, area.Width - 2);
-                    editor.Print(area.X + 1, area.Y, value, cellLook);
+                    editor.Print(area.Left + 1, area.Top, value, cellLook);
                 }
 
-                editor.Print(area.X, area.Y, " ", _currentAppearance);
-                editor.Print(area.X + area.Width - 1, area.Y, " ", _currentAppearance);
+                editor.Print(area.Left, area.Top, " ", _currentAppearance);
+                editor.Print(area.Left + area.Width - 1, area.Top, " ", _currentAppearance);
 
                 if (IsSelected)
                 {
-                    editor.SetGlyph(area.X, area.Y, 16);
-                    editor.SetGlyph(area.X + area.Width - 1, area.Y, 17);
+                    editor.SetGlyph(area.Left, area.Top, 16);
+                    editor.SetGlyph(area.Left + area.Width - 1, area.Top, 17);
                 }
 
                 IsDirty = false;

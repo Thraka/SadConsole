@@ -1,12 +1,23 @@
-﻿namespace SadConsole.Controls
+﻿#if SFML
+using SFML.Graphics;
+using Keys = SFML.Window.Keyboard.Key;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+#endif
+
+using SadConsole.Input;
+using SadConsole.Themes;
+
+using System;
+using System.Runtime.Serialization;
+using System.Windows;
+
+namespace SadConsole.Controls
 {
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Input;
-    using SadConsole.Input;
-    using SadConsole.Themes;
-    using System;
-    using System.Runtime.Serialization;
-    using System.Windows;
+
+
+
 
     /// <summary>
     /// InputBox control that allows text input.
@@ -325,7 +336,11 @@
                 {
                     for (int i = 0; i < info.KeysPressed.Count; i++)
                     {
+#if SFML
+                        if (info.KeysPressed[i].XnaKey == Keys.Return)
+#elif MONOGAME
                         if (info.KeysPressed[i].XnaKey == Keys.Enter)
+#endif
                         {
                             this.IsDirty = true;
                             DisableKeyboard = false;
@@ -344,11 +359,18 @@
 					{
 						if (_isNumeric)
 						{
-							if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
+#if SFML
+                            if (info.KeysPressed[i].XnaKey == Keys.BackSpace && newText.Length != 0)
+                                newText.Remove(newText.Length - 1, 1);
+
+                            else if (info.KeysPressed[i].XnaKey == Keys.Return)
+#elif MONOGAME
+                            if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
 								newText.Remove(newText.Length - 1, 1);
 
 							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
-							{
+#endif
+                            {
 								DisableKeyboard = true;
 
 								Text = _editingText;
@@ -371,9 +393,13 @@
 
 						else
 						{
-							if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0 && _carrotPos != 0)
-							{
-								if (_carrotPos == newText.Length)
+#if SFML
+                            if (info.KeysPressed[i].XnaKey == Keys.BackSpace && newText.Length != 0 && _carrotPos != 0)
+#elif MONOGAME
+                            if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0 && _carrotPos != 0)
+#endif
+                            {
+                                if (_carrotPos == newText.Length)
 									newText.Remove(newText.Length - 1, 1);
 								else
 									newText.Remove(_carrotPos - 1, 1);
@@ -400,9 +426,13 @@
 									_carrotPos = newText.Length;
 							}
 
+#if SFML
+							else if (info.KeysPressed[i].XnaKey == Keys.Return)
+#elif MONOGAME
 							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
-							{
-								Text = _editingText;
+#endif
+                            {
+                                Text = _editingText;
 								DisableKeyboard = true;
 								return true;
 							}

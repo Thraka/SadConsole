@@ -313,7 +313,11 @@ namespace Microsoft.Xna.Framework
                 catch (Exception)
                 {
                     // Lookup color in framework
+#if SFML
+                    Type colorType = typeof(ColorHelper);
+#elif MONOGAME
                     Type colorType = typeof(Color);
+#endif
                     global::System.Reflection.PropertyInfo[] propInfoList =
                         colorType.GetProperties(global::System.Reflection.BindingFlags.Static | global::System.Reflection.BindingFlags.DeclaredOnly | global::System.Reflection.BindingFlags.Public);
 

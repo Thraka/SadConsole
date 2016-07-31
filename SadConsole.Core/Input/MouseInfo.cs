@@ -102,7 +102,7 @@ namespace SadConsole.Input
             bool leftDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
             bool rightDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Right);
 
-            ScreenLocation = SFML.Window.Mouse.GetPosition();
+            ScreenLocation = SFML.Window.Mouse.GetPosition(Engine.Device);
 #elif MONOGAME
             MouseState currentState = Mouse.GetState();
 

@@ -56,7 +56,7 @@ namespace StarterProject
         private static void Engine_EngineStart(object sender, EventArgs e)
         {
             // Setup our custom theme.
-            //Theme.SetupThemes();
+            Theme.SetupThemes();
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
@@ -71,7 +71,7 @@ namespace StarterProject
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.DOSConsole(),
                                         //new CustomConsoles.SceneProjectionConsole(),
-                                        //new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.ControlsTest(),
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.BorderedConsole(),

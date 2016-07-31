@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\ControlsConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ControlsConsoleRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Window.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Window.Static.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\WindowRenderer.cs" />

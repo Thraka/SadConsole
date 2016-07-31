@@ -5,7 +5,13 @@ using SadConsole;
 using System.Text;
 using SadConsole.Input;
 using System.Linq;
+#if SFML
+using Point = SFML.System.Vector2i;
+using Keys = SFML.Window.Keyboard.Key;
+using SFML.Graphics;
+#elif MONOGAME
 using Microsoft.Xna.Framework;
+#endif
 
 namespace StarterProject.CustomConsoles
 {
@@ -21,39 +27,39 @@ namespace StarterProject.CustomConsoles
             
             var button1 = new SadConsole.Controls.Button(11, 1);
             button1.Text = "Click";
-            button1.Position = new Microsoft.Xna.Framework.Point(1, 3);
+            button1.Position = new Point(1, 3);
             button1.ButtonClicked += (s, e) => Window.Message("Clicked!", "OK");
             Add(button1);
 
             var radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 1 Option 1";
-            radioButton.Position = new Microsoft.Xna.Framework.Point(1, 5);
+            radioButton.Position = new Point(1, 5);
             Add(radioButton);
 
             radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 1 Option 2";
-            radioButton.Position = new Microsoft.Xna.Framework.Point(1, 7);
+            radioButton.Position = new Point(1, 7);
             Add(radioButton);
 
             radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 2 Option 1";
-            radioButton.Position = new Microsoft.Xna.Framework.Point(1, 9);
+            radioButton.Position = new Point(1, 9);
             radioButton.GroupName = "group2";
             Add(radioButton);
 
             radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 2 Option 2";
-            radioButton.Position = new Microsoft.Xna.Framework.Point(1, 11);
+            radioButton.Position = new Point(1, 11);
             radioButton.GroupName = "group2";
             Add(radioButton);
 
             var checkbox = new SadConsole.Controls.CheckBox(13, 1);
             checkbox.Text = "Check box";
-            checkbox.Position = new Microsoft.Xna.Framework.Point(1, 13);
+            checkbox.Position = new Point(1, 13);
             Add(checkbox);
 
             var listbox = new SadConsole.Controls.ListBox(20, 6);
-            listbox.Position = new Microsoft.Xna.Framework.Point(25, 3);
+            listbox.Position = new Point(25, 3);
             listbox.HideBorder = false;
             listbox.Items.Add("item 1");
             listbox.Items.Add("item 2");
@@ -66,17 +72,17 @@ namespace StarterProject.CustomConsoles
             Add(listbox);
 
             var slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Horizontal, 20);
-            slider.Position = new Microsoft.Xna.Framework.Point(25, 10);
+            slider.Position = new Point(25, 10);
             slider.Maximum = 18;
             Add(slider);
 
             slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 8);
-            slider.Position = new Microsoft.Xna.Framework.Point(47, 3);
+            slider.Position = new Point(47, 3);
             slider.Maximum = 6;
             Add(slider);
 
             var input = new SadConsole.Controls.InputBox(20);
-            input.Position = new Microsoft.Xna.Framework.Point(25, 12);
+            input.Position = new Point(25, 12);
             Add(input);
 
             var selButton = new SadConsole.Controls.SelectionButton(20, 1);
@@ -166,7 +172,7 @@ namespace StarterProject.CustomConsoles
 
         public override bool ProcessKeyboard(KeyboardInfo info)
         {
-            if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.C))
+            if (info.IsKeyReleased(Keys.C))
             {
                 backIndex++;
 
@@ -178,7 +184,6 @@ namespace StarterProject.CustomConsoles
                 Theme = theme;
                 
             }
-
 
             return base.ProcessKeyboard(info);
         }
@@ -195,7 +200,7 @@ namespace StarterProject.CustomConsoles
             Print(50, 2, "CLICK BTN - USE UP/DOWN KEYS", StarterProject.Theme.YellowDark);
 
             Print(1, 1, "CONTROL LIBRARY TEST", StarterProject.Theme.YellowDark);
-            Print(1, 2, "____________________", spriteEffect: Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically);
+            Print(1, 2, "____________________", spriteEffect: SpriteEffects.FlipVertically);
 
             Print(2, 15, "RED ".CreateColored(StarterProject.Theme.Red, null) +
                                       "PURPLE ".CreateColored(StarterProject.Theme.Purple, null) +

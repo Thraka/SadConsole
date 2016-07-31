@@ -1,13 +1,15 @@
-﻿namespace SadConsole.Controls
-{
-    using SadConsole.Themes;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
+﻿#if SFML
+using Keys = SFML.Window.Keyboard.Key;
+#elif MONOGAME
+using Microsoft.Xna.Framework.Input;
+#endif
 
+using SadConsole.Themes;
+using System;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Controls
+{
     /// <summary>
     /// Provides a button-like control that changes focus to a designated previous or next selection button when the arrow keys are pushed.
     /// </summary>
@@ -73,14 +75,14 @@
         {
             base.ProcessKeyboard(info);
 
-            if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Up) && PreviousSelection != null)
+            if (info.IsKeyReleased(Keys.Up) && PreviousSelection != null)
             {
                 PreviousSelection.IsFocused = true;
 
                 return true;
             }
 
-            else if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Down) && NextSelection != null)
+            else if (info.IsKeyReleased(Keys.Down) && NextSelection != null)
             {
                 NextSelection.IsFocused = true;
 

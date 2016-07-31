@@ -1,12 +1,13 @@
-﻿namespace SadConsole.Themes
+﻿#if SFML
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
+using System.Runtime.Serialization;
+
+namespace SadConsole.Themes
 {
-    using Microsoft.Xna.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A theme for a Window object.

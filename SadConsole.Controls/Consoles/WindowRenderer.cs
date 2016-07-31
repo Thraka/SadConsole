@@ -1,16 +1,22 @@
-﻿using SadConsole.Consoles;
+﻿#if SFML
+using Matrix = SFML.Graphics.Transform;
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endif
+
+using SadConsole.Consoles;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.Consoles
 {
     /// <summary>
     /// Renders a popup window taking into account the modal setting.
     /// </summary>
-    public class WindowRenderer: TextSurfaceRenderer
+    public class WindowRenderer: ControlsConsoleRenderer
     {
         /// <summary>
         /// Creates a new renderer.
@@ -25,7 +31,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// The color of the modal background.
         /// </summary>
-        public Color ModalTint { get; set; } = Color.Black * 0.25f;
+        public Color ModalTint { get; set; } = new Color(0, 0, 0, (byte)(255f * 0.25f));
 
         /// <summary>
         /// Renders a 
@@ -35,11 +41,17 @@ namespace SadConsole.Consoles
 
         public override void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
-            if (IsModal)
+            if (IsModal && ModalTint.A != 0)
             {
+#if SFML
+                Batch.Start(surface, Matrix.Identity);
+                Batch.DrawQuad(new IntRect(0, 0, (int)Engine.Device.Size.X, (int)Engine.Device.Size.Y), surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], ModalTint);
+                Batch.End(Engine.Device, RenderStates.Default);
+#elif MONOGAME
                 Batch.Begin(samplerState: SamplerState.PointClamp);
                 Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Engine.Device.PresentationParameters.BackBufferWidth, Engine.Device.PresentationParameters.BackBufferHeight), surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], ModalTint);
                 Batch.End();
+#endif
             }
 
             base.Render(surface, renderingMatrix);

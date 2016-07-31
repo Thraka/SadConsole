@@ -1,12 +1,21 @@
-﻿namespace SadConsole.Consoles
-{
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using SadConsole.Controls;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Keys = SFML.Window.Keyboard.Key;
+using Rectangle = SFML.Graphics.IntRect;
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
+#endif
 
+using SadConsole.Controls;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Consoles
+{
     /// <summary>
     /// A basic console that can contain controls.
     /// </summary>
@@ -131,6 +140,7 @@
             MouseCanFocus = true;
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
+            Renderer = new ControlsConsoleRenderer();
             Invalidate();
         }
         #endregion
@@ -376,6 +386,13 @@
             Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, Theme.FillStyle.GlyphIndex, null);
         }
 
+        public override void Render()
+        {
+            ((ControlsConsoleRenderer)_renderer).Controls = _controls;
+
+            base.Render();
+        }
+
         /// <summary>
         /// Processes the keyboard for the console.
         /// </summary>
@@ -397,20 +414,28 @@
                     canTab = FocusedControl.TabStop;
 
                 if (canTab)
-                    if (((info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift)  ||
-                        info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightShift)) || 
-                        
-                        info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.LeftShift)  ||
-                        info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.RightShift)) 
+                    if (
+#if SFML
+                        ((info.IsKeyDown(Keys.LShift) ||
+                        info.IsKeyDown(Keys.RShift)) ||
 
-                        && 
-                        info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Tab))
+                        info.IsKeyReleased(Keys.LShift) ||
+                        info.IsKeyReleased(Keys.RShift))
+#elif MONOGAME
+                        ((info.IsKeyDown(Keys.LeftShift)  ||
+                        info.IsKeyDown(Keys.RightShift)) || 
+                        
+                        info.IsKeyReleased(Keys.LeftShift)  ||
+                        info.IsKeyReleased(Keys.RightShift)) 
+#endif
+                        &&
+                        info.IsKeyReleased(Keys.Tab))
                     {
                         // TODO: Handle tab by changing focused control unless existing control doesn't support tab
                         TabPreviousControl();
                         return true;
                     }
-                    else if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Tab))
+                    else if (info.IsKeyReleased(Keys.Tab))
                     {
                         // TODO: Handle tab by changing focused control unless existing control doesn't support tab
                         TabNextControl();
@@ -502,55 +527,6 @@
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return _controls.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Renders the controls on top of the already rendered console.
-        /// </summary>
-        /// <param name="spriteBatch">The sprite batch that rendered the console cells.</param>
-        protected override void OnAfterRender(SpriteBatch Batch)
-        {
-            int cellCount;
-            Rectangle rect;
-            Point point;
-            ControlBase control;
-            Cell cell;
-
-
-            // For each control
-            for (int i = 0; i < _controls.Count; i++)
-            {
-                if (_controls[i].IsVisible)
-                {
-                    control = _controls[i];
-                    cellCount = control.TextSurface.Cells.Length;
-
-                    var font = control.AlternateFont == null ? textSurface.Font : control.AlternateFont;
-
-                    // Draw background of each cell for the control
-                    for (int cellIndex = 0; cellIndex < cellCount; cellIndex++)
-                    {
-                        cell = control[cellIndex];
-
-                        if (cell.IsVisible)
-                        {
-                            point = Consoles.TextSurface.GetPointFromIndex(cellIndex, control.TextSurface.Width);
-                            point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
-
-                            if (TextSurface.RenderArea.Contains(point))
-                            {
-                                point = new Point(point.X - TextSurface.RenderArea.X, point.Y - TextSurface.RenderArea.Y);
-                                rect = textSurface.RenderRects[Consoles.TextSurface.GetIndexFromPoint(point, textSurface.Width)];
-
-                                if (cell.ActualBackground != Color.Transparent)
-                                    Batch.Draw(font.FontImage, rect, font.GlyphIndexRects[font.SolidGlyphIndex], cell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.23f);
-                                if (cell.ActualForeground != Color.Transparent)
-                                    Batch.Draw(font.FontImage, rect, font.GlyphIndexRects[cell.ActualGlyphIndex], cell.ActualForeground, 0f, Vector2.Zero, cell.ActualSpriteEffect, 0.26f);
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>

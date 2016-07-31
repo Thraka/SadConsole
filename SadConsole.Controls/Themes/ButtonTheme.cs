@@ -1,9 +1,7 @@
-﻿
+﻿using System.Runtime.Serialization;
+
 namespace SadConsole.Themes
 {
-    using Microsoft.Xna.Framework;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// The theme of the button control
     /// </summary>

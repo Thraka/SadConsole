@@ -1,10 +1,15 @@
-﻿namespace SadConsole.Controls
-{
-    using Microsoft.Xna.Framework;
-    using SadConsole.Themes;
-    using System;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using Keys = SFML.Window.Keyboard.Key;
+#elif MONOGAME
+using Microsoft.Xna.Framework.Input;
+#endif
 
+using SadConsole.Themes;
+using System;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Controls
+{
     [DataContract]
     public class Button: ControlBase
     {
@@ -130,7 +135,11 @@
         /// <param name="info"></param>
         public override bool ProcessKeyboard(Input.KeyboardInfo info)
         {
-            if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space) || info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Enter))
+#if SFML
+            if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Return))
+#elif MONOGAME
+            if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
+#endif
             {
                 Click();
                 return true;

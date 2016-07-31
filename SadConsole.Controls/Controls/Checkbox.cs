@@ -1,10 +1,16 @@
-﻿namespace SadConsole.Controls
-{
-    using Microsoft.Xna.Framework;
-    using SadConsole.Themes;
-    using System;
-    using System.Runtime.Serialization;
+﻿#if SFML
+using Keys = SFML.Window.Keyboard.Key;
+#elif MONOGAME
+using Microsoft.Xna.Framework.Input;
+#endif
 
+using SadConsole.Themes;
+using System;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Controls
+{
+    
     /// <summary>
     /// Represents a button that can be toggled on/off within a group of other buttons.
     /// </summary>
@@ -181,7 +187,11 @@
         /// <returns>True if the keyboard was handled by this control.</returns>
         public override bool ProcessKeyboard(Input.KeyboardInfo info)
         {
-            if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space) || info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Enter))
+#if SFML
+            if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Return))
+#elif MONOGAME
+            if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
+#endif
             {
                 IsSelected = !IsSelected;
 
@@ -189,10 +199,10 @@
             }
             else if (Parent != null)
             {
-                if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Up))
+                if (info.IsKeyReleased(Keys.Up))
                     Parent.TabPreviousControl();
 
-                else if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Down))
+                else if (info.IsKeyReleased(Keys.Down))
                     Parent.TabNextControl();
 
                 return true;

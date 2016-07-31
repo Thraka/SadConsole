@@ -315,6 +315,8 @@ namespace SadConsole
 
             ConsoleRenderStack.Add(ActiveConsole);
 
+            EngineStart?.Invoke(null, EventArgs.Empty);
+
             return (Consoles.Console)ActiveConsole;
         }
 
@@ -332,7 +334,6 @@ namespace SadConsole
 
         public static void Run()
         {
-            EngineStart?.Invoke(null, EventArgs.Empty);
             MonoGameInstance.Run();
         }
 

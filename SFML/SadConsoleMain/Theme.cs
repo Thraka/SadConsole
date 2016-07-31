@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SFML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -61,7 +61,7 @@ namespace StarterProject
         public static SadConsole.CellAppearance Appearance_ControlMouseDown = new SadConsole.CellAppearance(Color_ControlBackSelected, Color_TextSelectedDark);
         public static SadConsole.CellAppearance Appearance_ControlFocused = new SadConsole.CellAppearance(Cyan, Color_ControlBackDim);
 
-        public static SadConsole.CellAppearance Appearance_ControlTextBoxNormal = new SadConsole.CellAppearance(Color_Text, ClearAlpha(Color_ControlBack * 0.7f));
+        public static SadConsole.CellAppearance Appearance_ControlTextBoxNormal = new SadConsole.CellAppearance(Color_Text, ClearAlpha(new Color((byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.G * 0.7f), (byte)(Color_ControlBack.B * 0.7f), Color_ControlBack.A)));
 
         public static SadConsole.Themes.RadioButtonTheme NoCheckRadioButtonTheme;
         #endregion
