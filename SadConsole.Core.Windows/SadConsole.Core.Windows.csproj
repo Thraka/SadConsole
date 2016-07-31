@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;MONOGAME</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\SadConsole.Core.Windows.xml</DocumentationFile>
@@ -63,7 +63,7 @@
   </Target>
   -->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
-    <Exec Command="nuget pack $(ProjectName).csproj -Symbols -Prop Configuration=Release" >
+    <Exec Command="nuget pack $(ProjectName).csproj -Symbols -Prop Configuration=Release">
     </Exec>
   </Target>
 </Project>
