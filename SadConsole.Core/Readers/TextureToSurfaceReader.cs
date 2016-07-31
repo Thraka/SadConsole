@@ -2,7 +2,7 @@
 using Point = SFML.System.Vector2i;
 using SFML.Graphics;
 using Texture2D = SFML.Graphics.Texture;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
@@ -92,7 +92,7 @@ namespace SadConsole.Readers
                     pixels = (Color[])binForm.Deserialize(memStream);
                 }
             }
-#else
+#elif MONOGAME
             image.GetData<Color>(pixels);
 #endif
 

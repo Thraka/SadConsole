@@ -1,6 +1,6 @@
 ﻿#if SFML
 using MyMathHelper = SadConsole.MathHelper;
-#else
+#elif MONOGAME
 using ColorHelper = Microsoft.Xna.Framework.Color;
 using MyMathHelper = Microsoft.Xna.Framework.MathHelper;
 #endif
@@ -12,7 +12,7 @@ using System.Collections;
 
 #if SFML
 namespace SFML.Graphics
-#else
+#elif MONOGAME
 namespace Microsoft.Xna.Framework
 #endif
 {

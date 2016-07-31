@@ -4,7 +4,7 @@ using Vector2 = SFML.System.Vector2f;
 using SFML.System;
 using Matrix = SFML.Graphics.Transform;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
@@ -45,11 +45,11 @@ namespace SadConsole.Consoles
         /// </summary>
         public CachedTextSurfaceRenderer(ITextSurfaceRendered source)
         {
-#if MONOGAME
-            Batch = new SpriteBatch(Engine.Device);
-#elif SFML
+#if SFML
             Batch = new SpriteBatch();
             renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
+#elif MONOGAME
+            Batch = new SpriteBatch(Engine.Device);
 #endif
             Update(source);
         }
@@ -61,17 +61,7 @@ namespace SadConsole.Consoles
         public void Update(ITextSurfaceRendered source)
         {
 
-#if MONOGAME
-            if (renderedConsole != null)
-                renderedConsole.Dispose();
-
-            renderedConsole = new RenderTarget2D(Engine.Device, source.AbsoluteArea.Width, source.AbsoluteArea.Height, false, Engine.Device.DisplayMode.Format, DepthFormat.Depth24);
-            Engine.Device.SetRenderTarget(renderedConsole);
-            Engine.Device.Clear(Color.Transparent);
-            TextSurfaceRenderer renderer = new TextSurfaceRenderer();
-            renderer.Render(source, new Point(0, 0));
-            Engine.Device.SetRenderTarget(null);
-#elif SFML
+#if SFML
             if (renderedConsole != null && renderedConsole.Size.X != (uint)source.AbsoluteArea.Width && renderedConsole.Size.Y != (uint)source.AbsoluteArea.Height)
             {
                 renderedConsole.Dispose();
@@ -83,6 +73,16 @@ namespace SadConsole.Consoles
             renderer.AfterRenderCallback = (batch) => batch.End(renderedConsole, RenderStates.Default);
             renderer.Render(source, new Vector2i(0, 0));
             renderedConsole.Display();
+#elif MONOGAME
+            if (renderedConsole != null)
+                renderedConsole.Dispose();
+
+            renderedConsole = new RenderTarget2D(Engine.Device, source.AbsoluteArea.Width, source.AbsoluteArea.Height, false, Engine.Device.DisplayMode.Format, DepthFormat.Depth24);
+            Engine.Device.SetRenderTarget(renderedConsole);
+            Engine.Device.Clear(Color.Transparent);
+            TextSurfaceRenderer renderer = new TextSurfaceRenderer();
+            renderer.Render(source, new Point(0, 0));
+            Engine.Device.SetRenderTarget(null);
 #endif
         }
 
@@ -93,7 +93,19 @@ namespace SadConsole.Consoles
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
-#if MONOGAME
+#if SFML
+            Batch.Start(1, renderedConsole.Texture, renderingMatrix);
+            BeforeRenderCallback?.Invoke(Batch);
+            if (surface.Tint == Color.Transparent)
+                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, Color.White);
+            else
+                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, surface.Tint);
+
+            AfterRenderCallback?.Invoke(Batch);
+
+            Batch.End(Engine.Device, RenderStates.Default);
+
+#elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
@@ -111,17 +123,6 @@ namespace SadConsole.Consoles
             AfterRenderCallback?.Invoke(Batch);
 
             Batch.End();
-#elif SFML
-            Batch.Start(1, renderedConsole.Texture, renderingMatrix);
-            BeforeRenderCallback?.Invoke(Batch);
-            if (surface.Tint == Color.Transparent)
-                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, Color.White);
-            else
-                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, surface.Tint);
-
-            AfterRenderCallback?.Invoke(Batch);
-
-            Batch.End(Engine.Device, RenderStates.Default);
 
 #endif
         }

@@ -3,7 +3,7 @@
 #if SFML
 using Point = SFML.System.Vector2i;
 namespace SFML.System
-#else
+#elif MONOGAME
 namespace Microsoft.Xna.Framework
 #endif
 {

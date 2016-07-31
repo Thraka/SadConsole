@@ -4,7 +4,7 @@ using Vector2 = SFML.System.Vector2f;
 using Rectangle = SFML.Graphics.IntRect;
 using MyMathHelper = SadConsole.MathHelper;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 using MyMathHelper = Microsoft.Xna.Framework.MathHelper;

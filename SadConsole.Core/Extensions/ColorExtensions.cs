@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 #if SFML
 namespace SFML.Graphics
-#else
+#elif MONOGAME
 using ColorHelper = Microsoft.Xna.Framework.Color;
 namespace Microsoft.Xna.Framework
 #endif

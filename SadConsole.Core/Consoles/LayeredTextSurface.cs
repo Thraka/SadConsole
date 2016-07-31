@@ -1,6 +1,6 @@
 ﻿#if SFML
 using Rectangle = SFML.Graphics.IntRect;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 #endif
 using System;

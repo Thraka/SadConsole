@@ -2,11 +2,12 @@
 using Point = SFML.System.Vector2i;
 using Keys = SFML.Window.Keyboard.Key;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 #endif
+
 using SadConsole.Input;
 using System;
 using System.Runtime.Serialization;
@@ -391,9 +392,9 @@ namespace SadConsole.Consoles
                                 this._virtualCursor.Print(key.Character.ToString());
                                 didSomething = true;
                                 break;
-#if !SFML
+#if MONOGAME
                             case Keys.Enter:
-#else
+#elif SFML
                             case Keys.Return:
 #endif
                                 this._virtualCursor.CarriageReturn().LineFeed();
@@ -403,7 +404,7 @@ namespace SadConsole.Consoles
                             case Keys.Pause:
                             case Keys.Escape:
                             case Keys.F1:case Keys.F2:case Keys.F3:case Keys.F4:case Keys.F5:case Keys.F6:case Keys.F7:case Keys.F8:case Keys.F9: case Keys.F10:case Keys.F11:case Keys.F12:
-#if !SFML
+#if MONOGAME
                             case Keys.LeftShift:
                             case Keys.RightShift:
                             case Keys.LeftAlt:
@@ -413,7 +414,7 @@ namespace SadConsole.Consoles
                             case Keys.LeftWindows:
                             case Keys.RightWindows:
                             case Keys.F13:case Keys.F14:case Keys.F15:case Keys.F16:case Keys.F17:case Keys.F18:case Keys.F19:case Keys.F20:case Keys.F21:case Keys.F22:case Keys.F23:case Keys.F24:
-#else
+#elif SFML
 							case Keys.LShift:
 							case Keys.RShift:
                             case Keys.LAlt:

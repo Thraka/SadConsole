@@ -2,7 +2,7 @@
 using Rectangle = SFML.Graphics.IntRect;
 using Point = SFML.System.Vector2i;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
@@ -88,7 +88,7 @@ namespace SadConsole.Consoles
                     area.Left = width - area.Width;
                 if (area.Top + area.Height > height)
                     area.Top = height - area.Height;
-#else
+#elif MONOGAME
                 if (area.Width > width)
                     area.Width = width;
                 if (area.Height > height)

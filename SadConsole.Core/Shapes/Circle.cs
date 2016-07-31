@@ -1,7 +1,7 @@
 ﻿#if SFML
 using SFML.Graphics;
 using Point = SFML.System.Vector2i;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif

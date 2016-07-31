@@ -34,7 +34,7 @@ namespace SFML.Graphics
             this.transform = transform;
         }
 
-        public void Start(ITextSurfaceRendered surface, Matrix transform, int additionalDraws = 0)
+        public void Start(ITextSurfaceRendered surface, Matrix transform, int additionalDraws = 250)
         {
             fillRect = surface.AbsoluteArea;
             texture = surface.Font.FontImage;

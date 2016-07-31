@@ -69,21 +69,7 @@ namespace SadConsole.Input
 
             // Cycle all the keys down known if any are up currently, remove
 
-#if MONOGAME
-            KeyboardState state = Keyboard.GetState();
-            bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
-            var keys = state.GetPressedKeys();
-            for (int i = 0; i < this.KeysDown.Count;)
-            {
-                if (state.IsKeyUp(this.KeysDown[i].XnaKey))
-                {
-                    KeysReleased.Add(this.KeysDown[i]);
-                    this.KeysDown.Remove(this.KeysDown[i]);
-                }
-                else
-                    i++;
-            }   
-#elif SFML
+#if SFML
             bool shiftPressed = SFML.Window.Keyboard.IsKeyPressed(Keys.LShift) || SFML.Window.Keyboard.IsKeyPressed(Keys.RShift);
             for (int i = 0; i < this.KeysDown.Count;)
             {
@@ -97,6 +83,21 @@ namespace SadConsole.Input
                     i++;
             }
             var keys = tempKeysDown.ToArray();
+#elif MONOGAME
+            KeyboardState state = Keyboard.GetState();
+            bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
+            var keys = state.GetPressedKeys();
+            for (int i = 0; i < this.KeysDown.Count;)
+            {
+                if (state.IsKeyUp(this.KeysDown[i].XnaKey))
+                {
+                    KeysReleased.Add(this.KeysDown[i]);
+                    this.KeysDown.Remove(this.KeysDown[i]);
+                }
+                else
+                    i++;
+            }   
+
 #endif
 
             // For all new keys down, if we don't know them, add them to pressed, add them to down.

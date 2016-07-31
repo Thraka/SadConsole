@@ -4,7 +4,7 @@ using Vector2 = SFML.System.Vector2f;
 using SFML.System;
 using Matrix = SFML.Graphics.Transform;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
@@ -25,7 +25,43 @@ namespace SadConsole.Consoles
         {
             var layers = ((LayeredTextSurface)surface).GetLayers();
 
-#if MONOGAME
+#if SFML
+            Batch.Start(surface, renderingMatrix);
+
+            BeforeRenderCallback?.Invoke(Batch);
+
+            if (surface.Tint.A != 255)
+            {
+                Cell cell;
+
+                if (surface.DefaultBackground.A != 0)
+                    Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
+
+                for (int l = 0; l < layers.Length; l++)
+                {
+                    if (layers[l].IsVisible)
+                    {
+                        for (int i = 0; i < layers[l].RenderCells.Length; i++)
+                        {
+                            cell = layers[l].RenderCells[i];
+
+                            if (cell.IsVisible)
+                            {
+                                Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (surface.Tint.A != 0)
+                Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
+
+            AfterRenderCallback?.Invoke(Batch);
+
+            if (CallBatchEnd)
+                Batch.End(Engine.Device, RenderStates.Default);
+#elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
@@ -65,42 +101,6 @@ namespace SadConsole.Consoles
             AfterRenderCallback?.Invoke(Batch);
 
             Batch.End();
-#elif SFML
-            Batch.Start(surface, renderingMatrix);
-
-            BeforeRenderCallback?.Invoke(Batch);
-
-            if (surface.Tint.A != 255)
-            {
-                Cell cell;
-
-                if (surface.DefaultBackground.A != 0)
-                    Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
-
-                for (int l = 0; l < layers.Length; l++)
-                {
-                    if (layers[l].IsVisible)
-                    {
-                        for (int i = 0; i < layers[l].RenderCells.Length; i++)
-                        {
-                            cell = layers[l].RenderCells[i];
-
-                            if (cell.IsVisible)
-                            {
-                                Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (surface.Tint.A != 0)
-                Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
-
-            AfterRenderCallback?.Invoke(Batch);
-
-            if (CallBatchEnd)
-                Batch.End(Engine.Device, RenderStates.Default);
 #endif
         }
 

@@ -4,7 +4,7 @@ using Vector2 = SFML.System.Vector2f;
 using SFML.System;
 using Matrix = SFML.Graphics.Transform;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
@@ -47,10 +47,10 @@ namespace SadConsole.Consoles
         /// </summary>
         public TextSurfaceRenderer()
         {
-#if MONOGAME
-            Batch = new SpriteBatch(Engine.Device);
-#elif SFML
+#if SFML
             Batch = new SpriteBatch();
+#elif MONOGAME
+            Batch = new SpriteBatch(Engine.Device);
 #endif
         }
 
@@ -62,7 +62,37 @@ namespace SadConsole.Consoles
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
-#if MONOGAME
+#if SFML
+            Batch.Start(surface, renderingMatrix);
+
+            BeforeRenderCallback?.Invoke(Batch);
+
+            if (surface.Tint.A != 255)
+            {
+                Cell cell;
+
+                if (surface.DefaultBackground.A != 0)
+                    Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
+
+                for (int i = 0; i < surface.RenderCells.Length; i++)
+                {
+                    cell = surface.RenderCells[i];
+
+                    if (cell.IsVisible)
+                    {
+                        Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
+                    }
+                }
+
+            }
+            AfterRenderCallback?.Invoke(Batch);
+
+            if (surface.Tint.A != 0)
+                Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
+
+            if (CallBatchEnd)
+                Batch.End(Engine.Device, RenderStates.Default);
+#elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
@@ -101,36 +131,6 @@ namespace SadConsole.Consoles
 
             if (CallBatchEnd)
                 Batch.End();
-#elif SFML
-            Batch.Start(surface, renderingMatrix);
-
-            BeforeRenderCallback?.Invoke(Batch);
-
-            if (surface.Tint.A != 255)
-            {
-                Cell cell;
-
-                if (surface.DefaultBackground.A != 0)
-                Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
-
-                for (int i = 0; i < surface.RenderCells.Length; i++)
-                {
-                    cell = surface.RenderCells[i];
-
-                    if (cell.IsVisible)
-                    {
-                        Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
-                    }
-                }
-
-            }
-            AfterRenderCallback?.Invoke(Batch);
-
-            if (surface.Tint.A != 0)
-                Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
-
-            if (CallBatchEnd)
-                Batch.End(Engine.Device, RenderStates.Default);
 #endif
         }
 

@@ -1,6 +1,6 @@
 ﻿#if SFML
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 #endif
 

@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
-
-#if SFML
+﻿#if SFML
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
 
+using System.Runtime.Serialization;
 
 namespace SadConsole
 {

@@ -3,7 +3,7 @@ using Point = SFML.System.Vector2i;
 using SFML.Graphics;
 using Vector2 = SFML.System.Vector2f;
 using Rectangle = SFML.Graphics.IntRect;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 #endif
@@ -433,7 +433,7 @@ namespace SadConsole.Consoles
         {
 #if SFML
             batch.DrawCell(CursorRenderCell, renderArea, Color.Transparent, font);
-#else
+#elif MONOGAME
             batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[font.SolidGlyphIndex], CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
             batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[CursorRenderCell.ActualGlyphIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
 #endif

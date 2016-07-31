@@ -1,10 +1,9 @@
 ﻿using SadConsole.Consoles;
-using SadConsole;
 
 #if SFML
 using Texture2D = SFML.Graphics.Texture;
 namespace SFML.Graphics
-#else
+#elif MONOGAME
 namespace Microsoft.Xna.Framework.Graphics
 #endif
 {
@@ -27,7 +26,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     pixels = (Color[])binForm.Deserialize(memStream);
                 }
             }
-#else
+#elif MONOGAME
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             Color[] pixels = new Color[imageWidth * imageHeight];
@@ -130,7 +129,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     pixels = (Color[])binForm.Deserialize(memStream);
                 }
             }
-#else
+#elif MONOGAME
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             image.GetData<Color>(cachedColorArray);

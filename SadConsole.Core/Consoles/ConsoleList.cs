@@ -1,6 +1,6 @@
 ﻿#if SFML
 using Point = SFML.System.Vector2i;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 #endif
 

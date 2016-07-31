@@ -4,7 +4,7 @@ using Point = SFML.System.Vector2i;
 using Rectangle = SFML.Graphics.IntRect;
 using Texture2D = SFML.Graphics.Texture;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
@@ -161,7 +161,7 @@ namespace SadConsole
             Engine.WindowHeight = (int)manager.Size.Y;
         }
 
-#else
+#elif MONOGAME
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
             manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
@@ -240,7 +240,7 @@ namespace SadConsole
         [IgnoreDataMember]
 #if SFML
         public int Rows { get { return (int)Image.Size.Y / (GlyphHeight + GlyphPadding); } }
-#else
+#elif MONOGAME
         public int Rows { get { return Image.Height / (GlyphHeight + GlyphPadding); } }
 #endif
         /// <summary>
@@ -263,7 +263,7 @@ namespace SadConsole
         {
 #if SFML
             Image = new Texture2D(FilePath);
-#else
+#elif MONOGAME
             using (System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath))
                 Image = Texture2D.FromStream(Engine.Device, fontStream);
 #endif

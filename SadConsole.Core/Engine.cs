@@ -1,7 +1,7 @@
 ﻿#if SFML
 using Point = SFML.System.Vector2i;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
@@ -158,8 +158,11 @@ namespace SadConsole
 
         #region Properties
 #if SFML
+        /// <summary>
+        /// The window being rendered to.
+        /// </summary>
         public static RenderWindow Device { get; private set; }
-#else
+#elif MONOGAME
         /// <summary>
         /// The graphics device used by SadConsole.
         /// </summary>
@@ -385,34 +388,34 @@ namespace SadConsole
                     _activeConsole.IsFocused = true;
             }
         }
-
-#if MONOGAME
-        public static void Draw(GameTime gameTime)
-        {
-            GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
-            GameTimeDraw = gameTime;
-#elif SFML
+#if SFML
         public static void Draw()
         {
             GameTimeDraw.Update();
             GameTimeElapsedRender = GameTimeDraw.ElapsedGameTime.TotalSeconds;
+
+#elif MONOGAME
+        public static void Draw(GameTime gameTime)
+        {
+            GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
+            GameTimeDraw = gameTime;
 #endif
 
             ConsoleRenderStack.Render();
             EngineDrawFrame?.Invoke(null, EventArgs.Empty);
         }
 
-#if MONOGAME
-        public static void Update(GameTime gameTime, bool windowIsActive)
-        {
-            GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
-            GameTimeUpdate = gameTime;
-
-#elif SFML
+#if SFML
         public static void Update(bool windowIsActive)
         {
             GameTimeUpdate.Update();
             GameTimeElapsedUpdate = GameTimeUpdate.ElapsedGameTime.TotalSeconds;
+
+#elif MONOGAME
+        public static void Update(GameTime gameTime, bool windowIsActive)
+        {
+            GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
+            GameTimeUpdate = gameTime;
 #endif
             if (windowIsActive)
             {

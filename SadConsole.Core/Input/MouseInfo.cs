@@ -2,7 +2,7 @@
 using Point = SFML.System.Vector2i;
 using SFML.Graphics;
 using SFML.System;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endif
@@ -98,8 +98,12 @@ namespace SadConsole.Input
         /// <param name="gameTime"></param>
         public void ProcessMouse(GameTime gameTime)
         {
+#if SFML
+            bool leftDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
+            bool rightDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Right);
 
-#if MONOGAME
+            ScreenLocation = SFML.Window.Mouse.GetPosition();
+#elif MONOGAME
             MouseState currentState = Mouse.GetState();
 
             bool leftDown = currentState.LeftButton == ButtonState.Pressed;
@@ -109,11 +113,6 @@ namespace SadConsole.Input
             ScrollWheelValue = currentState.ScrollWheelValue;
 
             ScreenLocation = new Point(currentState.X, currentState.Y);
-#elif SFML
-            bool leftDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
-            bool rightDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Right);
-
-            ScreenLocation = SFML.Window.Mouse.GetPosition();
 #endif
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;

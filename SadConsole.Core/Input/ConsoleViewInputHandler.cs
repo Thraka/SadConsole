@@ -2,7 +2,7 @@
 using Point = SFML.System.Vector2i;
 using Keys = SFML.Window.Keyboard.Key;
 using Rectangle = SFML.Graphics.IntRect;
-#else
+#elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endif
@@ -93,7 +93,7 @@ namespace SadConsole.Input
 #if SFML
                             viewport.Left += _mouseLastLocation.X - currentLocation.X;
                             viewport.Top += _mouseLastLocation.Y - currentLocation.Y;
-#else
+#elif MONOGAME
                             viewport.X += _mouseLastLocation.X - currentLocation.X;
                             viewport.Y += _mouseLastLocation.Y - currentLocation.Y;
 #endif
@@ -128,7 +128,7 @@ namespace SadConsole.Input
                 {
 #if SFML
                     view.Left -= 1;
-#else
+#elif MONOGAME
                     view.X -= 1;
 #endif
                     handled = true;
@@ -137,7 +137,7 @@ namespace SadConsole.Input
                 {
 #if SFML
                     view.Left += 1;
-#else
+#elif MONOGAME
                     view.X += 1;
 #endif
                     handled = true;
@@ -146,7 +146,7 @@ namespace SadConsole.Input
                 {
 #if SFML
                     view.Top -= 1;
-#else
+#elif MONOGAME
                     view.Y -= 1;
 #endif
                     handled = true;
@@ -155,7 +155,7 @@ namespace SadConsole.Input
                 {
 #if SFML
                     view.Top += 1;
-#else
+#elif MONOGAME
                     view.Y += 1;
 #endif
                     handled = true;

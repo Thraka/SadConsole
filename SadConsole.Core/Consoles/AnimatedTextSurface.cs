@@ -1,15 +1,16 @@
-﻿namespace SadConsole.Consoles
-{
-#if SFML
-    using Point = SFML.System.Vector2i;
-    using Rectangle = SFML.Graphics.IntRect;
-#else
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Rectangle = SFML.Graphics.IntRect;
+#elif MONOGAME
     using Microsoft.Xna.Framework;
 #endif
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-    using System;
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System;
+
+namespace SadConsole.Consoles
+{
     /// <summary>
     /// Animates a list of frames.
     /// </summary>

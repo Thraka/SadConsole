@@ -1,9 +1,8 @@
-﻿
-#if SFML
+﻿#if SFML
 using Vector2 = SFML.System.Vector2f;
 using Rectangle = SFML.Graphics.IntRect;
 using SFML.Graphics;
-#else
+#elif MONOGAME
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using SpriteEffects = Microsoft.Xna.Framework.Graphics.SpriteEffects;
