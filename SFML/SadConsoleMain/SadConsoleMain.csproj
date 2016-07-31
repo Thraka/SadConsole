@@ -69,6 +69,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomConsoles\BorderedConsole.cs" />
+    <Compile Include="CustomConsoles\CachedConsole.cs" />
+    <Compile Include="CustomConsoles\CursorConsole.cs" />
+    <Compile Include="CustomConsoles\DOSConsole.cs" />
+    <Compile Include="CustomConsoles\RandomScrollingConsole.cs" />
+    <Compile Include="CustomConsoles\SplashScreen.cs" />
+    <Compile Include="CustomConsoles\StaticConsole.cs" />
+    <Compile Include="CustomConsoles\StretchedConsole.cs" />
+    <Compile Include="CustomConsoles\StringParsingConsole.cs" />
+    <Compile Include="CustomConsoles\ViewsAndSubViews.cs" />
+    <Compile Include="InputHandling\ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -83,6 +94,12 @@
     <Content Include="IBM8x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="sad.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Windows\" />
   </ItemGroup>
   <Import Project="..\..\SadConsole.Core\SadConsole.Core.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

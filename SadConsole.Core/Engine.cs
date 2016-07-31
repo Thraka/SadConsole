@@ -235,8 +235,6 @@ namespace SadConsole
             
             SetupInputsAndTimers();
 
-            EngineStart?.Invoke(null, EventArgs.Empty);
-
             // Create the default console.
             return SetupStartingConsole(consoleWidth, consoleHeight);
         }
@@ -258,7 +256,6 @@ namespace SadConsole
 
             DefaultFont.ResizeGraphicsDeviceManager(window, consoleWidth, consoleHeight, 0, 0);
 
-            EngineStart?.Invoke(null, EventArgs.Empty);
 
             // Create the default console.
             return SetupStartingConsole(consoleWidth, consoleHeight);
@@ -266,6 +263,8 @@ namespace SadConsole
 
         public static void Run()
         {
+            EngineStart?.Invoke(null, EventArgs.Empty);
+
             while (Device.IsOpen)
             {
                 Device.Clear(ClearFrameColor);
@@ -313,8 +312,6 @@ namespace SadConsole
 
             ConsoleRenderStack.Add(ActiveConsole);
 
-            EngineStart?.Invoke(null, EventArgs.Empty);
-
             return (Consoles.Console)ActiveConsole;
         }
 
@@ -332,6 +329,7 @@ namespace SadConsole
 
         public static void Run()
         {
+            EngineStart?.Invoke(null, EventArgs.Empty);
             MonoGameInstance.Run();
         }
 

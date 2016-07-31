@@ -3,22 +3,26 @@ using SadConsole;
 using SadConsole.Consoles;
 using Console = SadConsole.Consoles.Console;
 using Rectangle = SFML.Graphics.IntRect;
+using static SFML.Window.Keyboard;
 
-namespace SadConsoleMain
+namespace StarterProject
 {
     class Program
     {
-        private static RandomScrollingConsole console;
         private static FPSCounterComponent fps;
+        //private static Windows.CharacterViewer _characterWindow;
+        private static int currentConsoleIndex;
+
         static void Main(string[] args)
         {
             var surface = SadConsole.Engine.Initialize("IBM.font", 80, 25);
             Engine.EngineDrawFrame += Engine_EngineDrawFrame;
             Engine.EngineUpdated += Engine_EngineUpdated;
             Engine.EngineShutdown += Engine_EngineShutdown;
-            
+            Engine.EngineStart += Engine_EngineStart;
+
             fps = new FPSCounterComponent();
-            
+
             //RandomScrollingConsole surface1 = new RandomScrollingConsole();
             //surface1.IsVisible = true;
             //Engine.ConsoleRenderStack.Clear();
@@ -29,14 +33,79 @@ namespace SadConsoleMain
             Engine.Run();
         }
 
-        private static void Engine_EngineShutdown(object sender, Engine.ShutdownEventArgs e)
-        {
-            
-        }
-
         private static void Engine_EngineUpdated(object sender, EventArgs e)
         {
+            //if (!_characterWindow.IsVisible)
+            {
+                // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
+                // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
+                // in the Initialize method above.
+                if (SadConsole.Engine.Keyboard.IsKeyReleased(Key.F1))
+                {
+                    MoveNextConsole();
+                }
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Key.F2))
+                {
+                   // _characterWindow.Show(true);
+                }
+            }
+
             fps.Update();
+        }
+
+        private static void Engine_EngineStart(object sender, EventArgs e)
+        {
+            // Setup our custom theme.
+            //Theme.SetupThemes();
+
+            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
+            // We don't want to use that for the sample project so we'll remove it.
+            SadConsole.Engine.ConsoleRenderStack.Clear();
+            SadConsole.Engine.ActiveConsole = null;
+
+            // We'll instead use our demo consoles that show various features of SadConsole.
+            SadConsole.Engine.ConsoleRenderStack
+                = new ConsoleList() {
+                                        //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
+                                        new CustomConsoles.StringParsingConsole(),
+                                        new CustomConsoles.CursorConsole(),
+                                        new CustomConsoles.DOSConsole(),
+                                        //new CustomConsoles.SceneProjectionConsole(),
+                                        //new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.StaticConsole(),
+                                        new CustomConsoles.StretchedConsole(),
+                                        new CustomConsoles.BorderedConsole(),
+                                        //new CustomConsoles.GameObjectConsole(),
+                                        new CustomConsoles.RandomScrollingConsole(),
+                                        //new CustomConsoles.WorldGenerationConsole(),
+                                    };
+
+            // Show the first console (by default all of our demo consoles are hidden)
+            SadConsole.Engine.ConsoleRenderStack[0].IsVisible = true;
+
+            // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
+            SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
+
+            // Initialize the windows
+            //_characterWindow = new Windows.CharacterViewer();
+        }
+
+        private static void MoveNextConsole()
+        {
+            currentConsoleIndex++;
+
+            if (currentConsoleIndex >= SadConsole.Engine.ConsoleRenderStack.Count)
+                currentConsoleIndex = 0;
+
+            for (int i = 0; i < SadConsole.Engine.ConsoleRenderStack.Count; i++)
+                SadConsole.Engine.ConsoleRenderStack[i].IsVisible = currentConsoleIndex == i;
+
+            Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[currentConsoleIndex];
+        }
+
+        private static void Engine_EngineShutdown(object sender, Engine.ShutdownEventArgs e)
+        {
+
         }
 
         private static void Engine_EngineDrawFrame(object sender, EventArgs e)
@@ -88,114 +157,5 @@ namespace SadConsoleMain
                 consoleRender.Render(console, new SFML.System.Vector2i(0, 0));
             }
         }
-
-        class RandomScrollingConsole : Console
-        {
-            private TextSurface mainData;
-            private SurfaceEditor messageData;
-            private bool initialized;
-            private bool initializedStep2;
-            private bool initializedStep3;
-
-            public RandomScrollingConsole() : base(80, 25)
-            {
-                messageData = new SurfaceEditor(new TextSurface(10, 1, Engine.DefaultFont));
-                IsVisible = false;
-
-
-                KeyboardHandler = (cons, info) =>
-                {
-                    bool keyHit = false;
-                    if (info.IsKeyDown(SFML.Window.Keyboard.Key.Left))
-                    {
-                        cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left - 1, cons.TextSurface.RenderArea.Top, 80, 25);
-                        keyHit = true;
-                    }
-
-                    if (info.IsKeyDown(SFML.Window.Keyboard.Key.Right))
-                    {
-                        cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left + 1, cons.TextSurface.RenderArea.Top, 80, 25);
-                        keyHit = true;
-                    }
-
-                    if (info.IsKeyDown(SFML.Window.Keyboard.Key.Up))
-                    {
-                        cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top - 1, 80, 25);
-                        keyHit = true;
-                    }
-
-                    if (info.IsKeyDown(SFML.Window.Keyboard.Key.Down))
-                    {
-                        cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top + 1, 80, 25);
-                        keyHit = true;
-                    }
-
-                    //if (keyHit)
-                    //    ((CachedTextSurfaceRenderer)Renderer).Update(TextSurface);
-
-                    return true;
-                };
-
-            }
-
-            protected override void OnVisibleChanged()
-            {
-                if (IsVisible && !initialized)
-                {
-                    // Write to the message layer
-                    Print(0, 0, "Generating random console data, please wait...");
-                    initialized = true;
-                }
-            }
-
-            public override void Render()
-            {
-                // These 3 render calls are a hack to get the console data generated and display a message to the user
-                // Should add in async calls that let us generate these in the background... That would be cool.
-                if (IsVisible)
-                {
-                    if (!initialized)
-                        base.Render();
-
-                    else if (!initializedStep2)
-                    {
-                        initializedStep2 = true;
-                        base.Render();
-                    }
-                    else if (!initializedStep3)
-                    {
-                        base.Render();
-
-                        // Generate the content
-                        TextSurface = new TextSurface(200, 200, Engine.DefaultFont); //500mb ?? why?
-                                                                                       //Data = new TextSurface(2000, 2000);
-                                                                                       //DataViewport = new Rectangle(0, 0, 80, 25);
-                        TextSurface.RenderArea = new Rectangle(0, 0, 80, 25);
-
-                        // Clear message data and make it transparent so that it acts as a layer
-                        messageData.Fill(SFML.Graphics.Color.White, SFML.Graphics.Color.Transparent, 0, null);
-
-                        // We need to set celldata to the big console data so we can use the FillWithRandom method.
-                        FillWithRandomGarbage();
-                        initializedStep3 = true;
-                        //Renderer = new CachedTextSurfaceRenderer(TextSurface);
-                    }
-
-                    else
-                    {
-                        // Set message data information about where the viewport is located
-                        //messageData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Y}            ", Color.White, Color.Black);
-
-                        // Create a faux layering system.
-                        base.Render();
-
-                        //Renderer.Render(messageData.TextSurface, new Point(0, 0));
-                    }
-                }
-            }
-        }
-
     }
-
-
 }
