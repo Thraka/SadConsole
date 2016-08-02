@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#if SFML
+using Color = SFML.Graphics.Color;
+#elif MONOGAME
+using Color = Microsoft.Xna.Framework.Color;
+#endif
 
 namespace SadConsole.Game
 {
@@ -10,13 +12,13 @@ namespace SadConsole.Game
     public static class Animations
     {
         /// <summary>
-        /// 
+        /// Creates an animated surface that looks like static.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="frames"></param>
-        /// <param name="blankChance"></param>
-        /// <returns></returns>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="frames">How many frames the animation should have.</param>
+        /// <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="System.Random.NextDouble"/>.</param>
+        /// <returns>An animation.</returns>
         public static Consoles.AnimatedTextSurface CreateStatic(int width, int height, int frames, double blankChance)
         {
             var animation = new Consoles.AnimatedTextSurface("default", width, height, Engine.DefaultFont);
@@ -37,7 +39,12 @@ namespace SadConsole.Game
                             character = 32;
 
                         editor.SetGlyph(x, y, character);
-                        editor.SetForeground(x, y, Microsoft.Xna.Framework.Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
+#if SFML
+                        byte randomValue = (byte)((float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d) * 255);
+                        editor.SetForeground(x, y, new Color(randomValue, randomValue, randomValue));
+#elif MONOGAME
+                        editor.SetForeground(x, y, Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
+#endif
                     }
                 }
 

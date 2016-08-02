@@ -1,11 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using SadConsole;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Rectangle = SFML.Graphics.IntRect;
+using Matrix = SFML.Graphics.Transform;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SadConsole.Game
 {
@@ -17,8 +20,11 @@ namespace SadConsole.Game
         /// <summary>
         /// A translation matrix of 0, 0, 0.
         /// </summary>
+#if SFML
+        public static Matrix NoMatrix = Matrix.Identity;
+#elif MONOGAME
         public static Matrix NoMatrix = Matrix.CreateTranslation(0f, 0f, 0f);
-
+#endif
         /// <summary>
         /// Renderer used for drawing the game object.
         /// </summary>
@@ -172,7 +178,7 @@ namespace SadConsole.Game
                 }
                 else
                 {
-                    offset = Point.Zero;
+                    offset = new Point();
                     animation.AbsoluteArea = new Rectangle(0, 0, animation.Width * font.Size.X, animation.Height * font.Size.Y);
                 }
 

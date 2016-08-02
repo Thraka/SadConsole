@@ -94,12 +94,13 @@ namespace SadConsole.Consoles
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
 #if SFML
-            Batch.Start(1, renderedConsole.Texture, renderingMatrix);
+            //Batch.Start(1, renderedConsole.Texture, renderingMatrix);
+            Batch.Reset(renderingMatrix);
             BeforeRenderCallback?.Invoke(Batch);
             if (surface.Tint == Color.Transparent)
-                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, Color.White);
+                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, Color.White, renderedConsole.Texture);
             else
-                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, surface.Tint);
+                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, surface.Tint, renderedConsole.Texture);
 
             AfterRenderCallback?.Invoke(Batch);
 

@@ -1,13 +1,17 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+using Vector2 = SFML.System.Vector2f;
+using SFML.System;
+using Matrix = SFML.Graphics.Transform;
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endif
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections;
 using SadConsole.Consoles;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.Game
 {
@@ -105,6 +109,14 @@ namespace SadConsole.Game
 
         private class GameObjectRenderer : Consoles.TextSurfaceRenderer
         {
+            private SpriteBatchBuilder batchBuilder = new SpriteBatchBuilder();
+#if SFML
+            public void Start()
+            {
+                Batch.Start()
+            }
+
+#elif MONOGAME
             public void Start()
             {
                 Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
@@ -148,6 +160,7 @@ namespace SadConsole.Game
                 AfterRenderCallback?.Invoke(Batch);
                 Batch.End();
             }
+#endif
         }
     }
 }

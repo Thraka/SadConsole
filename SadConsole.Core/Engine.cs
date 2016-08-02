@@ -233,7 +233,7 @@ namespace SadConsole
                 if (!args.BlockShutdown)
                     ((SFML.Window.Window)o).Close();
             };
-            window.SetFramerateLimit(60);
+            //window.SetFramerateLimit(60);
             Device = window;
             
             SetupInputsAndTimers();

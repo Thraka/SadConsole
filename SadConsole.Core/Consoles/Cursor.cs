@@ -432,7 +432,7 @@ namespace SadConsole.Consoles
         public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
         {
 #if SFML
-            batch.DrawCell(CursorRenderCell, renderArea, Color.Transparent, font);
+            batch.DrawCell(CursorRenderCell, renderArea, font.SolidGlyphRectangle, Color.Transparent, font);
 #elif MONOGAME
             batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[font.SolidGlyphIndex], CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
             batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[CursorRenderCell.ActualGlyphIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);

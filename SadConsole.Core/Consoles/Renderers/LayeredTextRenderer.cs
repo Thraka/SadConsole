@@ -26,7 +26,8 @@ namespace SadConsole.Consoles
             var layers = ((LayeredTextSurface)surface).GetLayers();
 
 #if SFML
-            Batch.Start(surface, renderingMatrix);
+            //Batch.Start(surface, renderingMatrix);
+            Batch.Reset(renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
 
@@ -35,7 +36,7 @@ namespace SadConsole.Consoles
                 Cell cell;
 
                 if (surface.DefaultBackground.A != 0)
-                    Batch.DrawSurfaceFill(surface.DefaultBackground, Color.Transparent);
+                    Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font.FontImage);
 
                 for (int l = 0; l < layers.Length; l++)
                 {
@@ -47,7 +48,7 @@ namespace SadConsole.Consoles
 
                             if (cell.IsVisible)
                             {
-                                Batch.DrawCell(cell, surface.RenderRects[i], surface.DefaultBackground, surface.Font);
+                                Batch.DrawCell(cell, surface.RenderRects[i], surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font);
                             }
                         }
                     }
@@ -55,7 +56,7 @@ namespace SadConsole.Consoles
             }
 
             if (surface.Tint.A != 0)
-                Batch.DrawSurfaceFill(surface.Tint, Color.Transparent);
+                Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.Tint, surface.Font.FontImage);
 
             AfterRenderCallback?.Invoke(Batch);
 

@@ -4,8 +4,6 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 
-using SFML.Graphics;
-
 namespace SFML.Graphics
 {
     using global::System;

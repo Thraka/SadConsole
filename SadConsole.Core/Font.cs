@@ -20,6 +20,9 @@ namespace SadConsole
     [DataContract]
     public sealed class Font
     {
+        private int solidGlyphIndex;
+        private Rectangle solidGlyphRect;
+
         /// <summary>
         /// The size options of a font.
         /// </summary>
@@ -74,7 +77,9 @@ namespace SadConsole
         /// <summary>
         /// Which glyph index is considered completely solid. Used for shading.
         /// </summary>
-        public int SolidGlyphIndex { get; set; }
+        public int SolidGlyphIndex { get { return solidGlyphIndex; } set { solidGlyphIndex = value; solidGlyphRect = GlyphIndexRects[value]; } }
+
+        public Rectangle SolidGlyphRectangle { get { return solidGlyphRect; } }
 
         /// <summary>
         /// A cached array of rectangles of individual glyphs.
