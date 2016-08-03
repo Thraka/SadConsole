@@ -109,8 +109,8 @@ namespace SadConsole.Game
 
         private class GameObjectRenderer : Consoles.TextSurfaceRenderer
         {
-            private SpriteBatchBuilder batchBuilder = new SpriteBatchBuilder();
 #if SFML
+            private SpriteBatchBuilder batchBuilder = new SpriteBatchBuilder();
             public void Start()
             {
                 Batch.Start()

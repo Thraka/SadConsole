@@ -69,8 +69,9 @@ namespace SadConsole.Consoles
             }
             renderedConsole.Clear(Color.Transparent);
             TextSurfaceRenderer renderer = new TextSurfaceRenderer();
-            renderer.CallBatchEnd = false;
-            renderer.AfterRenderCallback = (batch) => batch.End(renderedConsole, RenderStates.Default);
+            //renderer.CallBatchEnd = false;
+            //renderer.AfterRenderCallback = (batch) => batch.End(renderedConsole, RenderStates.Default);
+            renderer.AlternativeRenderTarget = renderedConsole;
             renderer.Render(source, new Vector2i(0, 0));
             renderedConsole.Display();
 #elif MONOGAME
@@ -95,7 +96,7 @@ namespace SadConsole.Consoles
         {
 #if SFML
             //Batch.Start(1, renderedConsole.Texture, renderingMatrix);
-            Batch.Reset(renderingMatrix);
+            Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
             BeforeRenderCallback?.Invoke(Batch);
             if (surface.Tint == Color.Transparent)
                 Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, Color.White, renderedConsole.Texture);
@@ -104,7 +105,7 @@ namespace SadConsole.Consoles
 
             AfterRenderCallback?.Invoke(Batch);
 
-            Batch.End(Engine.Device, RenderStates.Default);
+            Batch.End();
 
 #elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);

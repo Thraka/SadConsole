@@ -57,7 +57,7 @@ namespace StarterProject
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
                                         //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
-                                        //new CustomConsoles.StringParsingConsole(),
+                                        new CustomConsoles.StringParsingConsole(),
                                         //new CustomConsoles.CursorConsole(),
                                         //new CustomConsoles.DOSConsole(),
                                         //new CustomConsoles.SceneProjectionConsole(),
@@ -78,6 +78,9 @@ namespace StarterProject
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
+
+            Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(Engine.MonoGameInstance));
+            Engine.MonoGameInstance.UnlockFPS();
         }
 
         private static void MoveNextConsole()

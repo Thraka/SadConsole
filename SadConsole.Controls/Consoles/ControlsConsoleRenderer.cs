@@ -69,7 +69,7 @@ namespace SadConsole.Consoles
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
 #if SFML
-            Batch.Reset(renderingMatrix);
+            Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
 
@@ -140,7 +140,7 @@ namespace SadConsole.Consoles
                 Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.Tint, surface.Font.FontImage);
 
             if (CallBatchEnd)
-                Batch.End(Engine.Device, RenderStates.Default);
+                Batch.End();
 #elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 

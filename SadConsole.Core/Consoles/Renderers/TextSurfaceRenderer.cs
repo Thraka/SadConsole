@@ -54,6 +54,9 @@ namespace SadConsole.Consoles
 #endif
         }
 
+#if SFML
+        public RenderTarget AlternativeRenderTarget;
+#endif
 
         /// <summary>
         /// Renders a surface to the screen.
@@ -63,8 +66,11 @@ namespace SadConsole.Consoles
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
 #if SFML
-            Batch.Reset(renderingMatrix);
-
+            if (AlternativeRenderTarget == null)
+                Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
+            else
+                Batch.Reset(AlternativeRenderTarget, RenderStates.Default, renderingMatrix);
+            
             BeforeRenderCallback?.Invoke(Batch);
 
             if (surface.Tint.A != 255)
@@ -91,7 +97,7 @@ namespace SadConsole.Consoles
                 Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.Tint, surface.Font.FontImage);
 
             if (CallBatchEnd)
-                Batch.End(Engine.Device, RenderStates.Default);
+                Batch.End();
 #elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 

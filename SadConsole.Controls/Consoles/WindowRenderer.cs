@@ -45,9 +45,9 @@ namespace SadConsole.Consoles
             {
 #if SFML
                 //Batch.Start(surface, Matrix.Identity);
-                Batch.Reset();
+                Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
                 Batch.DrawQuad(new IntRect(0, 0, (int)Engine.Device.Size.X, (int)Engine.Device.Size.Y), surface.Font.SolidGlyphRectangle, ModalTint, surface.Font.FontImage);
-                Batch.End(Engine.Device, RenderStates.Default);
+                Batch.End();
 #elif MONOGAME
                 Batch.Begin(samplerState: SamplerState.PointClamp);
                 Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Engine.Device.PresentationParameters.BackBufferWidth, Engine.Device.PresentationParameters.BackBufferHeight), surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], ModalTint);

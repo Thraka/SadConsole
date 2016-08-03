@@ -27,7 +27,7 @@ namespace SadConsole.Consoles
 
 #if SFML
             //Batch.Start(surface, renderingMatrix);
-            Batch.Reset(renderingMatrix);
+            Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
 
@@ -61,7 +61,7 @@ namespace SadConsole.Consoles
             AfterRenderCallback?.Invoke(Batch);
 
             if (CallBatchEnd)
-                Batch.End(Engine.Device, RenderStates.Default);
+                Batch.End();
 #elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 

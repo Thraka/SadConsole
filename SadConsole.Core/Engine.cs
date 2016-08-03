@@ -560,13 +560,12 @@ namespace SadConsole
 
         protected override void Initialize()
         {
+            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
+
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
-
-            // Uncomment these two lines to run as fast as possible
-            //GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            //IsFixedTimeStep = false;
-
+            
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             Components.Add(new EngineGameComponent(this, GraphicsDeviceManager, font, consoleWidth, consoleHeight, () => { }));
 
@@ -579,6 +578,13 @@ namespace SadConsole
             GraphicsDevice.Clear(Engine.ClearFrameColor);
 
             base.Draw(gameTime);
+        }
+
+        public void UnlockFPS()
+        {
+            // Uncomment these two lines to run as fast as possible
+            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
         }
     }
 
