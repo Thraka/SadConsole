@@ -200,7 +200,6 @@ namespace SFML.Graphics
         {
             if (lastDrawCall.VertIndex != 0)
             {
-                state.Transform *= transform;
                 state.Texture = lastDrawCall.Texture;
                 target.Draw(lastDrawCall.Verticies, 0, (uint)(lastDrawCall.VertIndex), PrimitiveType.Quads, state);
             }

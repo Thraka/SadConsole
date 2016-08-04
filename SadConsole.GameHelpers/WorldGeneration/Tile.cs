@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
 using System.Collections.Generic;
 
 namespace SadConsole.Game.WorldGeneration

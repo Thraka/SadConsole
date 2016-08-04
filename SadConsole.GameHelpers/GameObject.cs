@@ -168,19 +168,22 @@ namespace SadConsole.Game
                 if (repositionRects && usePixelPositioning)
                 {
                     offset = position + renderOffset - new Point(animation.Center.X * font.Size.X, animation.Center.Y * font.Size.Y);
-                    animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
                 }
                 else if (repositionRects)
                 {
                     offset = position + renderOffset - animation.Center;
                     offset = new Point(offset.X * font.Size.X, offset.Y * font.Size.Y);
-                    animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
                 }
                 else
                 {
                     offset = new Point();
-                    animation.AbsoluteArea = new Rectangle(0, 0, animation.Width * font.Size.X, animation.Height * font.Size.Y);
                 }
+
+#if SFML
+                animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, (width * font.Size.X) + offset.X, (height * font.Size.Y) + offset.Y);
+#elif MONOGAME
+                animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
+#endif
 
                 int index = 0;
                 
@@ -188,7 +191,11 @@ namespace SadConsole.Game
                 {
                     for (int x = 0; x < width; x++)
                     {
+#if SFML
+                        rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X + (x * font.Size.X + offset.X), font.Size.Y + (y * font.Size.Y + offset.Y));
+#elif MONOGAME
                         rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X, font.Size.Y);
+#endif
                         index++;
                     }
                 }

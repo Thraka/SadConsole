@@ -1,8 +1,14 @@
-﻿using System;
+﻿#if SFML
+using Keys = SFML.Window.Keyboard.Key;
+using Rectangle = SFML.Graphics.IntRect;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
 using SadConsole;
 using SadConsole.Consoles;
 using Console = SadConsole.Consoles.Console;
-using Microsoft.Xna.Framework;
+using SFML.Graphics;
 
 namespace StarterProject.CustomConsoles
 {
@@ -28,19 +34,19 @@ namespace StarterProject.CustomConsoles
             KeyboardHandler = (cons, info) =>
             {
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X - 1, cons.TextSurface.RenderArea.Y, 80 * 2, 25 * 2);
+                if (info.IsKeyDown(Keys.Left))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left - 1, cons.TextSurface.RenderArea.Top, 80 * 2, 25 * 2);
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X + 1, cons.TextSurface.RenderArea.Y, 80 * 2, 25 * 2);
+                if (info.IsKeyDown(Keys.Right))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left + 1, cons.TextSurface.RenderArea.Top, 80 * 2, 25 * 2);
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y - 1, 80 * 2, 25 * 2);
+                if (info.IsKeyDown(Keys.Up))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top - 1, 80 * 2, 25 * 2);
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y + 1, 80 * 2, 25 * 2);
+                if (info.IsKeyDown(Keys.Down))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top + 1, 80 * 2, 25 * 2);
 
-                if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Enter))
+                if (info.IsKeyReleased(Keys.Return))
                 {
                     messageData.Fill(Color.White, Color.Black, 0, null);
                     messageData.Print(0, 0, "Generating map, please wait...");
@@ -49,7 +55,7 @@ namespace StarterProject.CustomConsoles
                     initializedStep3 = false;
                 }
 
-                if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space))
+                if (info.IsKeyReleased(Keys.Space))
                 {
                     var oldRenderArea = cons.TextSurface.RenderArea;
                     var oldFont = cons.TextSurface.Font;
@@ -123,7 +129,7 @@ namespace StarterProject.CustomConsoles
                 generator.Start(512, 256);
                 textSurface = generator.BiomeMapRenderer;
                 messageData.Print(0, 0, $"[SPACE] Change Map Info [ENTER] New Map -- Biome   ", Color.White, Color.Black);
-                textSurface.Font = Engine.Fonts[Engine.DefaultFont.Name].GetFont(Font.FontSizes.Half);
+                textSurface.Font = Engine.Fonts[Engine.DefaultFont.Name].GetFont(SadConsole.Font.FontSizes.Half);
                 
                 initializedStep3 = true;
             }
@@ -131,7 +137,7 @@ namespace StarterProject.CustomConsoles
             else
             {
                 // Set message data information about where the viewport is located
-                //messageData.CellData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Y}            ", Color.White, Color.Black);
+                //messageData.CellData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Top}            ", Color.White, Color.Black);
 
                 // Create a faux layering system.
                 base.Render();

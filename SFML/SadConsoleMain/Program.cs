@@ -67,6 +67,9 @@ namespace StarterProject
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
                                         //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
+                                        //new CustomConsoles.WorldGenerationConsole(),
+                                        new CustomConsoles.GameObjectConsole(),
+                                        new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.StringParsingConsole(),
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.DOSConsole(),
@@ -75,9 +78,8 @@ namespace StarterProject
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.BorderedConsole(),
-                                        //new CustomConsoles.GameObjectConsole(),
                                         new CustomConsoles.RandomScrollingConsole(),
-                                        //new CustomConsoles.WorldGenerationConsole(),
+                                        
                                     };
 
             // Show the first console (by default all of our demo consoles are hidden)

@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Console = SadConsole.Consoles.Console;
 using SadConsole.Consoles;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Keys = SFML.Window.Keyboard.Key;
 
 namespace StarterProject.CustomConsoles
 {
@@ -16,7 +14,7 @@ namespace StarterProject.CustomConsoles
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
         private SadConsole.Game.GameObject player;
-        private Point playerPreviousPosition;
+        private SFML.System.Vector2i playerPreviousPosition;
 
         public GameObjectConsole()
             : base(80, 25)
@@ -27,8 +25,8 @@ namespace StarterProject.CustomConsoles
 
             player = new SadConsole.Game.GameObject(SadConsole.Engine.DefaultFont);
             player.Animation = animation;
-            player.RepositionRects = true;
-            player.Position = new Microsoft.Xna.Framework.Point(textSurface.Width / 2, textSurface.Height / 2);
+            //player.RepositionRects = true;
+            player.Position = new SFML.System.Vector2i(textSurface.Width / 2, textSurface.Height / 2);
             playerPreviousPosition = player.Position;
 
             // Setup this console to accept keyboard input.
@@ -41,7 +39,7 @@ namespace StarterProject.CustomConsoles
             base.Update();
 
             // Normally you call update on game objects to have them animate, we dont have an animation.
-            //player.Update();
+            player.Update();
         }
 
         public override void Render()
@@ -66,23 +64,23 @@ namespace StarterProject.CustomConsoles
 
             if (info.IsKeyReleased(Keys.Up))
             {
-                player.Position = new Point(player.Position.X, player.Position.Y - 1);
+                player.Position = new SFML.System.Vector2i(player.Position.X, player.Position.Y - 1);
                 keyHit = true;
             }
             else if (info.IsKeyReleased(Keys.Down))
             {
-                player.Position = new Point(player.Position.X, player.Position.Y + 1);
+                player.Position = new SFML.System.Vector2i(player.Position.X, player.Position.Y + 1);
                 keyHit = true;
             }
 
             if (info.IsKeyReleased(Keys.Left))
             {
-                player.Position = new Point(player.Position.X - 1, player.Position.Y);
+                player.Position = new SFML.System.Vector2i(player.Position.X - 1, player.Position.Y);
                 keyHit = true;
             }
             else if (info.IsKeyReleased(Keys.Right))
             {
-                player.Position = new Point(player.Position.X + 1, player.Position.Y);
+                player.Position = new SFML.System.Vector2i(player.Position.X + 1, player.Position.Y);
                 keyHit = true;
             }
 

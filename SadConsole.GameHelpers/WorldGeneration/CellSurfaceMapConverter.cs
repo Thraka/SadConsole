@@ -2,6 +2,8 @@
 using SFML.Graphics;
 #elif MONOGAME
 using Microsoft.Xna.Framework;
+using ColorF = Microsoft.Xna.Framework.Color;
+using ColorHelper = Microsoft.Xna.Framework.Color;
 #endif
 using SadConsole.Consoles;
 
@@ -15,51 +17,71 @@ namespace SadConsole.Game.WorldGeneration
         T GetBiomeMapTexture(int width, int height, Tile[,] tiles, float coldest, float colder, float cold);
     }
     
+    internal struct ColorF
+    {
+        byte R;
+        byte G;
+        byte B;
+        byte A;
+        public ColorF(float r, float g, float b, float a)
+        {
+            R = (byte)(r * 255);
+            G = (byte)(g * 255);
+            B = (byte)(b * 255);
+            A = (byte)(a * 255);
+        }
+
+        // User-defined conversion from Digit to double
+        public static implicit operator Color(ColorF f)
+        {
+            return new Color(f.R, f.G, f.B, f.A);
+        }
+    }
 
     public class TextSurfaceMap: IMapConverter<TextSurface>
     {
         #region Colors
         // Height Map Colors
-        private static Color DeepColor = new Color(15 / 255f, 30 / 255f, 80 / 255f, 1);
-        private static Color ShallowColor = new Color(15 / 255f, 40 / 255f, 90 / 255f, 1);
-        private static Color RiverColor = new Color(30 / 255f, 120 / 255f, 200 / 255f, 1);
-        private static Color SandColor = new Color(198 / 255f, 190 / 255f, 31 / 255f, 1);
-        private static Color GrassColor = new Color(50 / 255f, 220 / 255f, 20 / 255f, 1);
-        private static Color ForestColor = new Color(16 / 255f, 160 / 255f, 0, 1);
-        private static Color RockColor = new Color(0.5f, 0.5f, 0.5f, 1);
-        private static Color SnowColor = new Color(1f, 1f, 1f, 1f);
+        private static Color DeepColor = new ColorF(15 / 255f, 30 / 255f, 80 / 255f, 1);
+        private static Color ShallowColor = new ColorF(15 / 255f, 40 / 255f, 90 / 255f, 1);
+        private static Color RiverColor = new ColorF(30 / 255f, 120 / 255f, 200 / 255f, 1);
+        private static Color SandColor = new ColorF(198 / 255f, 190 / 255f, 31 / 255f, 1);
+        private static Color GrassColor = new ColorF(50 / 255f, 220 / 255f, 20 / 255f, 1);
+        private static Color ForestColor = new ColorF(16 / 255f, 160 / 255f, 0, 1);
+        private static Color RockColor = new ColorF(0.5f, 0.5f, 0.5f, 1);
+        private static Color SnowColor = new ColorF(1f, 1f, 1f, 1f);
 
-        private static Color IceWater = new Color(210 / 255f, 255 / 255f, 252 / 255f, 1);
-        private static Color ColdWater = new Color(119 / 255f, 156 / 255f, 213 / 255f, 1);
-        private static Color RiverWater = new Color(65 / 255f, 110 / 255f, 179 / 255f, 1);
+        private static Color IceWater = new ColorF(210 / 255f, 255 / 255f, 252 / 255f, 1);
+        private static Color ColdWater = new ColorF(119 / 255f, 156 / 255f, 213 / 255f, 1);
+        private static Color RiverWater = new ColorF(65 / 255f, 110 / 255f, 179 / 255f, 1);
 
         // Height Map Colors
-        private static Color Coldest = new Color(0f, 1, 1, 1);
-        private static Color Colder = new Color(170 / 255f, 1, 1, 1);
-        private static Color Cold = new Color(0f, 229 / 255f, 133 / 255f, 1);
-        private static Color Warm = new Color(1f, 1, 100 / 255f, 1);
-        private static Color Warmer = new Color(1f, 100 / 255f, 0, 1);
-        private static Color Warmest = new Color(241 / 255f, 12 / 255f, 0, 1);
+        private static Color Coldest = new ColorF(0f, 1, 1, 1);
+        private static Color Colder = new ColorF(170 / 255f, 1, 1, 1);
+        private static Color Cold = new ColorF(0f, 229 / 255f, 133 / 255f, 1);
+        private static Color Warm = new ColorF(1f, 1, 100 / 255f, 1);
+        private static Color Warmer = new ColorF(1f, 100 / 255f, 0, 1);
+        private static Color Warmest = new ColorF(241 / 255f, 12 / 255f, 0, 1);
 
         //Moisture map
-        private static Color Dryest = new Color(255 / 255f, 139 / 255f, 17 / 255f, 1);
-        private static Color Dryer = new Color(245 / 255f, 245 / 255f, 23 / 255f, 1);
-        private static Color Dry = new Color(80 / 255f, 255 / 255f, 0 / 255f, 1);
-        private static Color Wet = new Color(85 / 255f, 255 / 255f, 255 / 255f, 1);
-        private static Color Wetter = new Color(20 / 255f, 70 / 255f, 255 / 255f, 1);
-        private static Color Wettest = new Color(0 / 255f, 0 / 255f, 100 / 255f, 1);
+        private static Color Dryest = new ColorF(255 / 255f, 139 / 255f, 17 / 255f, 1);
+        private static Color Dryer = new ColorF(245 / 255f, 245 / 255f, 23 / 255f, 1);
+        private static Color Dry = new ColorF(80 / 255f, 255 / 255f, 0 / 255f, 1);
+        private static Color Wet = new ColorF(85 / 255f, 255 / 255f, 255 / 255f, 1);
+        private static Color Wetter = new ColorF(20 / 255f, 70 / 255f, 255 / 255f, 1);
+        private static Color Wettest = new ColorF(0 / 255f, 0 / 255f, 100 / 255f, 1);
 
         //biome map
         private static Color Ice = Color.White;
-        private static Color Desert = new Color(238 / 255f, 218 / 255f, 130 / 255f, 1);
-        private static Color Savanna = new Color(177 / 255f, 209 / 255f, 110 / 255f, 1);
-        private static Color TropicalRainforest = new Color(66 / 255f, 123 / 255f, 25 / 255f, 1);
-        private static Color Tundra = new Color(96 / 255f, 131 / 255f, 112 / 255f, 1);
-        private static Color TemperateRainforest = new Color(29 / 255f, 73 / 255f, 40 / 255f, 1);
-        private static Color Grassland = new Color(164 / 255f, 225 / 255f, 99 / 255f, 1);
-        private static Color SeasonalForest = new Color(73 / 255f, 100 / 255f, 35 / 255f, 1);
-        private static Color BorealForest = new Color(95 / 255f, 115 / 255f, 62 / 255f, 1);
-        private static Color Woodland = new Color(139 / 255f, 175 / 255f, 90 / 255f, 1);
+        private static Color Desert = new ColorF(238 / 255f, 218 / 255f, 130 / 255f, 1);
+        private static Color Savanna = new ColorF(177 / 255f, 209 / 255f, 110 / 255f, 1);
+        private static Color TropicalRainforest = new ColorF(66 / 255f, 123 / 255f, 25 / 255f, 1);
+        private static Color Tundra = new ColorF(96 / 255f, 131 / 255f, 112 / 255f, 1);
+        private static Color TemperateRainforest = new ColorF(29 / 255f, 73 / 255f, 40 / 255f, 1);
+        private static Color Grassland = new ColorF(164 / 255f, 225 / 255f, 99 / 255f, 1);
+        private static Color SeasonalForest = new ColorF(73 / 255f, 100 / 255f, 35 / 255f, 1);
+        private static Color BorealForest = new ColorF(95 / 255f, 115 / 255f, 62 / 255f, 1);
+        private static Color Woodland = new ColorF(139 / 255f, 175 / 255f, 90 / 255f, 1);
         #endregion
 
 
@@ -119,28 +141,28 @@ namespace SadConsole.Game.WorldGeneration
                     switch (tiles[x, y].HeightType)
                     {
                         case HeightType.DeepWater:
-                            pixels[x + y * width] = new Color(0, 0, 0, 1);
+                            pixels[x + y * width] = new ColorF(0, 0, 0, 1);
                             break;
                         case HeightType.ShallowWater:
-                            pixels[x + y * width] = new Color(0, 0, 0, 1);
+                            pixels[x + y * width] = new ColorF(0, 0, 0, 1);
                             break;
                         case HeightType.Sand:
-                            pixels[x + y * width] = new Color(0.3f, 0.3f, 0.3f, 1);
+                            pixels[x + y * width] = new ColorF(0.3f, 0.3f, 0.3f, 1);
                             break;
                         case HeightType.Grass:
-                            pixels[x + y * width] = new Color(0.45f, 0.45f, 0.45f, 1);
+                            pixels[x + y * width] = new ColorF(0.45f, 0.45f, 0.45f, 1);
                             break;
                         case HeightType.Forest:
-                            pixels[x + y * width] = new Color(0.6f, 0.6f, 0.6f, 1);
+                            pixels[x + y * width] = new ColorF(0.6f, 0.6f, 0.6f, 1);
                             break;
                         case HeightType.Rock:
-                            pixels[x + y * width] = new Color(0.75f, 0.75f, 0.75f, 1);
+                            pixels[x + y * width] = new ColorF(0.75f, 0.75f, 0.75f, 1);
                             break;
                         case HeightType.Snow:
-                            pixels[x + y * width] = new Color(1, 1, 1, 1);
+                            pixels[x + y * width] = new ColorF(1, 1, 1, 1);
                             break;
                         case HeightType.River:
-                            pixels[x + y * width] = new Color(0, 0, 0, 1);
+                            pixels[x + y * width] = new ColorF(0, 0, 0, 1);
                             break;
                     }
 
@@ -196,7 +218,7 @@ namespace SadConsole.Game.WorldGeneration
 
                     //darken the color if a edge tile
                     if ((int)tiles[x, y].HeightType > 2 && tiles[x, y].Bitmask != 15)
-                        pixels[x + y * width] = Color.Lerp(pixels[x + y * width], Color.Black, 0.4f);
+                        pixels[x + y * width] = ColorHelper.Lerp(pixels[x + y * width], Color.Black, 0.4f);
                 }
             }
             
@@ -296,11 +318,11 @@ namespace SadConsole.Game.WorldGeneration
                         float heatValue = tiles[x, y].HeatValue;
 
                         if (tiles[x, y].HeatType == HeatType.Coldest)
-                            pixels[x + y * width] = Color.Lerp(IceWater, ColdWater, (heatValue) / (coldest));
+                            pixels[x + y * width] = ColorHelper.Lerp(IceWater, ColdWater, (heatValue) / (coldest));
                         else if (tiles[x, y].HeatType == HeatType.Colder)
-                            pixels[x + y * width] = Color.Lerp(ColdWater, RiverWater, (heatValue - coldest) / (colder - coldest));
+                            pixels[x + y * width] = ColorHelper.Lerp(ColdWater, RiverWater, (heatValue - coldest) / (colder - coldest));
                         else if (tiles[x, y].HeatType == HeatType.Cold)
-                            pixels[x + y * width] = Color.Lerp(RiverWater, ShallowColor, (heatValue - colder) / (cold - colder));
+                            pixels[x + y * width] = ColorHelper.Lerp(RiverWater, ShallowColor, (heatValue - colder) / (cold - colder));
                         else
                             pixels[x + y * width] = ShallowColor;
                     }
@@ -310,7 +332,7 @@ namespace SadConsole.Game.WorldGeneration
                     if (tiles[x, y].HeightType >= HeightType.Shore && tiles[x, y].HeightType != HeightType.River)
                     {
                         if (tiles[x, y].BiomeBitmask != 15)
-                            pixels[x + y * width] = Color.Lerp(pixels[x + y * width], Color.Black, 0.35f);
+                            pixels[x + y * width] = ColorHelper.Lerp(pixels[x + y * width], Color.Black, 0.35f);
                     }
                 }
             }

@@ -24,4 +24,14 @@ namespace Microsoft.Xna.Framework
             return point.Y * areaWidth + point.X;
         }
     }
+
+#if SFML
+    public static class Vector2fExtensions
+    {
+        public static float Length(this Vector2f v)
+        {
+            return (float)global::System.Math.Sqrt((v.X * v.X) + (v.Y * v.Y));
+        }
+    }
+#endif
 }

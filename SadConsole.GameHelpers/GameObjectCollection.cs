@@ -110,10 +110,35 @@ namespace SadConsole.Game
         private class GameObjectRenderer : Consoles.TextSurfaceRenderer
         {
 #if SFML
-            private SpriteBatchBuilder batchBuilder = new SpriteBatchBuilder();
             public void Start()
             {
-                Batch.Start()
+                Batch.Reset(Engine.Device, RenderStates.Default, Transform.Identity);
+                BeforeRenderCallback?.Invoke(Batch);
+            }
+
+            public override void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
+            {
+                if (surface.Tint.A != 255)
+                {
+                    Cell cell;
+
+                    if (surface.DefaultBackground.A != 0)
+                        Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font.FontImage);
+
+                    for (int i = 0; i < surface.RenderCells.Length; i++)
+                    {
+                        cell = surface.RenderCells[i];
+
+                        if (cell.IsVisible)
+                        {
+                            Batch.DrawCell(cell, surface.RenderRects[i], surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font);
+                        }
+                    }
+
+                }
+
+                if (surface.Tint.A != 0)
+                    Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.Tint, surface.Font.FontImage);
             }
 
 #elif MONOGAME
@@ -154,13 +179,12 @@ namespace SadConsole.Game
                     Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
                 }
             }
-
+#endif
             public void End()
             {
                 AfterRenderCallback?.Invoke(Batch);
                 Batch.End();
             }
-#endif
         }
     }
 }
