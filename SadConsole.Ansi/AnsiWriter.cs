@@ -1,13 +1,19 @@
-﻿namespace SadConsole.Ansi
+﻿#if SFML
+using SFML.Graphics;
+using Point = SFML.System.Vector2i;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
+using SadConsole.Consoles;
+using SadConsole.Effects;
+using System;
+using System.Linq;
+using System.Text;
+using Console = SadConsole.Consoles.Console;
+
+namespace SadConsole.Ansi
 {
-    using Microsoft.Xna.Framework;
-    using SadConsole.Consoles;
-    using SadConsole.Effects;
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using Console = SadConsole.Consoles.Console;
 
     public class AnsiWriter
     {
@@ -200,7 +206,7 @@
                         else if (data == "2")
                         {
                             _console.Clear();
-                            _cursor.Position = Point.Zero;
+                            _cursor.Position = new Point(0, 0);
                         }
                         break;
                     case 'K':

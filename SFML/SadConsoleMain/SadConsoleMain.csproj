@@ -108,6 +108,7 @@
   <Import Project="..\..\SadConsole.Core\SadConsole.Core.projitems" Label="Shared" />
   <Import Project="..\..\SadConsole.Controls\SadConsole.Controls.projitems" Label="Shared" />
   <Import Project="..\..\SadConsole.GameHelpers\SadConsole.GameHelpers.projitems" Label="Shared" />
+  <Import Project="..\..\SadConsole.Ansi\SadConsole.Ansi.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Graphnode.SFML.Net.2.3\build\Graphnode.SFML.Net.targets" Condition="Exists('..\..\packages\Graphnode.SFML.Net.2.3\build\Graphnode.SFML.Net.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

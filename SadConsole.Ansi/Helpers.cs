@@ -1,7 +1,11 @@
-﻿namespace SadConsole.Ansi
+﻿#if SFML
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
+namespace SadConsole.Ansi
 {
-    using Microsoft.Xna.Framework;
-    using System;
 
     public static class Helpers
     {

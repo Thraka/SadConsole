@@ -1,8 +1,12 @@
-﻿namespace SadConsole.Ansi
-{
-    using Microsoft.Xna.Framework;
-    using System;
+﻿#if SFML
+using SFML.Graphics;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
 
+
+namespace SadConsole.Ansi
+{
     public class State
     {
         public bool Bold { get; set; }
