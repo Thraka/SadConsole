@@ -28,7 +28,7 @@
             if (info.IsKeyReleased(Key.Space))
             {
                 Renderer = _renderer == oldRenderer ? cachedRenderer : oldRenderer;
-                TextSurface.Tint = _renderer == oldRenderer ? Color.Transparent : new Color(0, 0, 0, 70);
+                TextSurface.Tint = _renderer == oldRenderer ? Color.Transparent : new Color(255, 255, 255, 70);
             }
 
             return false;
