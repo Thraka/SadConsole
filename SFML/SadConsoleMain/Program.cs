@@ -68,8 +68,8 @@ namespace StarterProject
                 = new ConsoleList() {
                                         //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         //new CustomConsoles.WorldGenerationConsole(),
-                                        new CustomConsoles.GameObjectConsole(),
-                                        new CustomConsoles.CachedConsoleConsole(),
+                                        //new CustomConsoles.GameObjectConsole(),
+                                        //new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.StringParsingConsole(),
                                         new CustomConsoles.CursorConsole(),
                                         new CustomConsoles.DOSConsole(),

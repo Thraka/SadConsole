@@ -57,7 +57,7 @@ namespace StarterProject
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
                                         //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
-                                        new CustomConsoles.CachedConsoleConsole(),
+                                        //new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.StringParsingConsole(),
                                         //new CustomConsoles.CursorConsole(),
                                         //new CustomConsoles.DOSConsole(),

@@ -62,6 +62,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\MonoGame\FPSCounterComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\MonoGame\SadConsoleGame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\MonoGame\EngineGameComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\MonoGame\MonoGameEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\SFML\SFMLEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ICellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
