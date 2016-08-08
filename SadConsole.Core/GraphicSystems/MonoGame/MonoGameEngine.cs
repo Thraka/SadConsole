@@ -35,18 +35,8 @@ namespace SadConsole
             if (Device == null)
                 Device = deviceManager.GraphicsDevice;
 
-            Fonts = new Dictionary<string, FontMaster>();
-            ConsoleRenderStack = new Consoles.ConsoleList();
-            RegisterCellEffect<Effects.Blink>();
-            RegisterCellEffect<Effects.BlinkGlyph>();
-            RegisterCellEffect<Effects.ConcurrentEffect>();
-            RegisterCellEffect<Effects.Delay>();
-            RegisterCellEffect<Effects.EffectsChain>();
-            RegisterCellEffect<Effects.Fade>();
-            RegisterCellEffect<Effects.Recolor>();
+            SetupFontAndEffects(font);
 
-            // Load the default font and screen size
-            DefaultFont = LoadFont(font).GetFont(Font.FontSizes.One);
             DefaultFont.ResizeGraphicsDeviceManager(deviceManager, consoleWidth, consoleHeight, 0, 0);
 
             // Create the default console.

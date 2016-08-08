@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SadConsole.GameHelpers</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>Thraka</owners>
+    <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>
+3.1.0: GameObject now supports a string name, multiple animations, serialization, and a render offset.
+
+3.0.0: Rewrote main game helper stuff. Ripped a bunch out. Uses SadConsole 3, MonoGame 3.5, .NET 4.6.
+
+2.0.0: First NuGet release, targeting MonoGame 3.3.
+    </releaseNotes>
+    <copyright>Copyright 2016 Steve De George JR</copyright>
+    <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+  </metadata>
+</package>

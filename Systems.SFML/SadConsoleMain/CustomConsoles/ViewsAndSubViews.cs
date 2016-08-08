@@ -1,0 +1,15 @@
+﻿using SadConsole.Consoles;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace StarterProject.CustomConsoles
+{
+    class ViewsAndSubViews: SadConsole.Consoles.Console
+    {
+        public ViewsAndSubViews() : base(40, 25)
+        {
+            // A smaller console. We'll render/process this one AND a sub view of it.
+        }
+    }
+}

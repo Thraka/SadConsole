@@ -10,22 +10,7 @@ namespace SadConsole
         /// The window being rendered to.
         /// </summary>
         public static RenderWindow Device { get; private set; }
-
-        private static void SetupFontAndEffects(string font)
-        {
-            Fonts = new Dictionary<string, FontMaster>();
-            ConsoleRenderStack = new Consoles.ConsoleList();
-            RegisterCellEffect<Effects.Blink>();
-            RegisterCellEffect<Effects.BlinkGlyph>();
-            RegisterCellEffect<Effects.ConcurrentEffect>();
-            RegisterCellEffect<Effects.Delay>();
-            RegisterCellEffect<Effects.EffectsChain>();
-            RegisterCellEffect<Effects.Fade>();
-            RegisterCellEffect<Effects.Recolor>();
-
-            // Load the default font and screen size
-            DefaultFont = LoadFont(font).GetFont(Font.FontSizes.One);
-        }
+        
         private static void SetupInputsAndTimers()
         {
             Mouse.Setup(Device);

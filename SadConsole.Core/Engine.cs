@@ -213,7 +213,25 @@ namespace SadConsole
             }
         }
 
-        #endregion 
+        #endregion
+
+        #region Initalize
+        private static void SetupFontAndEffects(string font)
+        {
+            Fonts = new Dictionary<string, FontMaster>();
+            ConsoleRenderStack = new Consoles.ConsoleList();
+            RegisterCellEffect<Effects.Blink>();
+            RegisterCellEffect<Effects.BlinkGlyph>();
+            RegisterCellEffect<Effects.ConcurrentEffect>();
+            RegisterCellEffect<Effects.Delay>();
+            RegisterCellEffect<Effects.EffectsChain>();
+            RegisterCellEffect<Effects.Fade>();
+            RegisterCellEffect<Effects.Recolor>();
+
+            // Load the default font and screen size
+            DefaultFont = LoadFont(font).GetFont(Font.FontSizes.One);
+        }
+        #endregion
 
         /// <summary>
         /// Returns the amount of cells (X,Y) given the specified <see cref="Font"/> and current <see cref="Engine.WindowWidth"/> and <see cref="Engine.WindowHeight"/> properties.
