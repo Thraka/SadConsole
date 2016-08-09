@@ -7,12 +7,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Libraries", "01_Librarie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_Platforms", "02_Platforms", "{CFB2D176-40FA-4D97-80ED-2C43B3552E68}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoGame DX", "MonoGame DX", "{E37CC7AB-090B-410B-8017-3DC57780FA8E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoGame GL", "MonoGame GL", "{E37CC7AB-090B-410B-8017-3DC57780FA8E}"
 	ProjectSection(SolutionItems) = preProject
-		src\Projects.MonoGameDX\SadConsole.Ansi\SadConsole.Ansi.Windows.nuspec = src\Projects.MonoGameDX\SadConsole.Ansi\SadConsole.Ansi.Windows.nuspec
-		src\Projects.MonoGameDX\SadConsole.Controls\SadConsole.Controls.Windows.nuspec = src\Projects.MonoGameDX\SadConsole.Controls\SadConsole.Controls.Windows.nuspec
-		src\Projects.MonoGameDX\SadConsole.Core\SadConsole.Core.Windows.nuspec = src\Projects.MonoGameDX\SadConsole.Core\SadConsole.Core.Windows.nuspec
-		src\Projects.MonoGameDX\SadConsole.GameHelpers\SadConsole.GameHelpers.Windows.nuspec = src\Projects.MonoGameDX\SadConsole.GameHelpers\SadConsole.GameHelpers.Windows.nuspec
+		src\Projects.MonoGameGL\SadConsole.Ansi\SadConsole.Ansi.OpenGL.nuspec = src\Projects.MonoGameGL\SadConsole.Ansi\SadConsole.Ansi.OpenGL.nuspec
+		src\Projects.MonoGameGL\SadConsole.Controls\SadConsole.Controls.OpenGL.nuspec = src\Projects.MonoGameGL\SadConsole.Controls\SadConsole.Controls.OpenGL.nuspec
+		src\Projects.MonoGameGL\SadConsole.Core\SadConsole.Core.OpenGL.nuspec = src\Projects.MonoGameGL\SadConsole.Core\SadConsole.Core.OpenGL.nuspec
+		src\Projects.MonoGameGL\SadConsole.GameHelpers\SadConsole.GameHelpers.OpenGL.nuspec = src\Projects.MonoGameGL\SadConsole.GameHelpers\SadConsole.GameHelpers.OpenGL.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_Misc", "00_Misc", "{6431B21D-D031-4E1F-99DC-8343B030A050}"
@@ -31,13 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Snake", "Snake", "{4A49FF3D
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Snake", "SampleGames\Snake\Snake.shproj", "{7A8507B4-DB2C-453E-A72B-2384175BDFF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake.Windows", "SampleGames\Snake\Platforms\Windows\Snake.Windows.csproj", "{F1046DE6-C3F6-4838-B9E1-2FF67292730E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castle", "Castle", "{695BDDEB-51D5-486E-84F4-9031786775B7}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Castle", "SampleGames\Castle\Castle.shproj", "{BD5D2B21-2CD6-448D-ACD7-5B90DA247250}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle.Windows", "SampleGames\Castle\Platforms\Windows\Castle.Windows.csproj", "{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SadRogueSharp", "SadRogueSharp", "{DC197B17-EB75-437F-BFE2-10DD8F813B20}"
 EndProject
@@ -51,17 +47,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.GameHelpers", "s
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Core", "src\SadConsole.Core\SadConsole.Core.shproj", "{BDDF43CD-1BDE-472A-A3D9-A003A6BF14D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Ansi.Windows", "src\Projects.MonoGameDX\SadConsole.Ansi\SadConsole.Ansi.Windows.csproj", "{55695088-7D09-4704-9D0C-7C69E0DE6D47}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Controls.Windows", "src\Projects.MonoGameDX\SadConsole.Controls\SadConsole.Controls.Windows.csproj", "{46F11907-CEF3-4069-B041-0A88880981E6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Core.Windows", "src\Projects.MonoGameDX\SadConsole.Core\SadConsole.Core.Windows.csproj", "{9A7432D8-0C8B-4C46-B405-B6D1080E6811}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.GameHelpers.Windows", "src\Projects.MonoGameDX\SadConsole.GameHelpers\SadConsole.GameHelpers.Windows.csproj", "{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StarterProject", "src\StarterProject\SharedCode\StarterProject.shproj", "{B41A356C-4BA6-40CC-AC03-0E5D46B0B981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Windows", "src\StarterProject\MonoGameDX\StarterProject.Windows.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Ansi.OpenGL", "src\Projects.MonoGameGL\SadConsole.Ansi\SadConsole.Ansi.OpenGL.csproj", "{55695088-7D09-4704-9D0C-7C69E0DE6D47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Controls.OpenGL", "src\Projects.MonoGameGL\SadConsole.Controls\SadConsole.Controls.OpenGL.csproj", "{46F11907-CEF3-4069-B041-0A88880981E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Core.OpenGL", "src\Projects.MonoGameGL\SadConsole.Core\SadConsole.Core.OpenGL.csproj", "{9A7432D8-0C8B-4C46-B405-B6D1080E6811}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.GameHelpers.OpenGL", "src\Projects.MonoGameGL\SadConsole.GameHelpers\SadConsole.GameHelpers.OpenGL.csproj", "{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.OpenGL", "src\StarterProject\MonoGameGL\StarterProject.OpenGL.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -72,13 +68,11 @@ Global
 		src\SadConsole.Ansi\SadConsole.Ansi.projitems*{5fe599b4-4b47-46e7-931b-b01c2cae40d4}*SharedItemsImports = 13
 		src\StarterProject\SharedCode\StarterProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{7a8507b4-db2c-453e-a72b-2384175bdff1}*SharedItemsImports = 13
-		SampleGames\Castle\Castle.projitems*{99eb89b5-bab6-47cb-899d-55653fc2b8dc}*SharedItemsImports = 4
 		src\SadConsole.Core\SadConsole.Core.projitems*{9a7432d8-0c8b-4c46-b405-b6d1080e6811}*SharedItemsImports = 4
 		src\StarterProject\SharedCode\StarterProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
 		SampleGames\Castle\Castle.projitems*{bd5d2b21-2cd6-448d-acd7-5b90da247250}*SharedItemsImports = 13
 		src\SadConsole.Core\SadConsole.Core.projitems*{bddf43cd-1bde-472a-a3d9-a003a6bf14d9}*SharedItemsImports = 13
 		src\SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{d348c254-ab16-4b48-9f61-2ffee51dfd4a}*SharedItemsImports = 4
-		SampleGames\Snake\Snake.projitems*{f1046de6-c3f6-4838-b9e1-2ff67292730e}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,78 +95,6 @@ Global
 		ReleaseBuild|x86 = ReleaseBuild|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|Linux.ActiveCfg = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|Linux.Build.0 = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|MacOS.ActiveCfg = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|MacOS.Build.0 = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|Windows.ActiveCfg = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|Windows.Build.0 = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|x64.Build.0 = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|x86.Build.0 = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Linux.ActiveCfg = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Linux.Build.0 = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|MacOS.ActiveCfg = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|MacOS.Build.0 = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Windows.ActiveCfg = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|Windows.Build.0 = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|x64.ActiveCfg = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|x64.Build.0 = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|x86.ActiveCfg = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|x86.Build.0 = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Linux.ActiveCfg = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Linux.Build.0 = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|MacOS.ActiveCfg = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|MacOS.Build.0 = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Windows.ActiveCfg = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Windows.Build.0 = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|x64.ActiveCfg = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|x64.Build.0 = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|x86.ActiveCfg = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|x86.Build.0 = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Linux.ActiveCfg = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Linux.Build.0 = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|MacOS.ActiveCfg = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|MacOS.Build.0 = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Windows.ActiveCfg = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|Windows.Build.0 = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|x64.Build.0 = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|x86.Build.0 = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Linux.ActiveCfg = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Linux.Build.0 = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|MacOS.ActiveCfg = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|MacOS.Build.0 = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Windows.ActiveCfg = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|Windows.Build.0 = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|x64.ActiveCfg = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|x64.Build.0 = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|x86.ActiveCfg = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|x86.Build.0 = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Linux.ActiveCfg = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Linux.Build.0 = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|MacOS.ActiveCfg = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|MacOS.Build.0 = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Windows.ActiveCfg = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Windows.Build.0 = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|x64.ActiveCfg = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|x64.Build.0 = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|x86.ActiveCfg = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|x86.Build.0 = ReleaseBuild|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|Linux.ActiveCfg = Debug|Any CPU
@@ -398,21 +320,19 @@ Global
 		{B033AC07-53C2-4F0B-B6B1-812EB7D36CCC} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{4A49FF3D-25BC-49EF-AC19-970B4C95C5D2} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{7A8507B4-DB2C-453E-A72B-2384175BDFF1} = {4A49FF3D-25BC-49EF-AC19-970B4C95C5D2}
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E} = {4A49FF3D-25BC-49EF-AC19-970B4C95C5D2}
 		{695BDDEB-51D5-486E-84F4-9031786775B7} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{BD5D2B21-2CD6-448D-ACD7-5B90DA247250} = {695BDDEB-51D5-486E-84F4-9031786775B7}
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC} = {695BDDEB-51D5-486E-84F4-9031786775B7}
 		{DC197B17-EB75-437F-BFE2-10DD8F813B20} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376} = {DC197B17-EB75-437F-BFE2-10DD8F813B20}
 		{5FE599B4-4B47-46E7-931B-B01C2CAE40D4} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{25C2DBD3-8AC1-4163-A29A-A7F756FA4A5F} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{00CC441C-44BB-4B15-BABD-6831B65C31D8} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{BDDF43CD-1BDE-472A-A3D9-A003A6BF14D9} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
+		{B41A356C-4BA6-40CC-AC03-0E5D46B0B981} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 		{55695088-7D09-4704-9D0C-7C69E0DE6D47} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{46F11907-CEF3-4069-B041-0A88880981E6} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{9A7432D8-0C8B-4C46-B405-B6D1080E6811} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{D348C254-AB16-4B48-9F61-2FFEE51DFD4A} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
-		{B41A356C-4BA6-40CC-AC03-0E5D46B0B981} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 		{74327CCC-4606-40B8-9587-60E55B1D6A80} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 	EndGlobalSection
 EndGlobal
