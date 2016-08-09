@@ -73,7 +73,6 @@
   </Target>
   -->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'ReleaseBuild'">
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
     <Exec Command="nuget pack $(ProjectName).csproj -Symbols -Prop Configuration=Release">
     </Exec>
   </Target>
