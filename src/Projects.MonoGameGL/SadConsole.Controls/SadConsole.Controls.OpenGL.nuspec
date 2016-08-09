@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SadConsole.Controls.OpenGL</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>Thraka</owners>
+    <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>
+3.0.0: Fixed various bugs and upgraded to SadConsole 3. Uses MonoGame 3.5 and .NET 4.6.
+    
+2.5.0: New NuGet package; Using semantic versioning - Fresh new version; Target MonoGame 3.5
+
+2.0.0: First NuGet release, targeting MonoGame 3.3.
+    </releaseNotes>
+    <copyright>Copyright 2016 Steve De George JR</copyright>
+    <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+  </metadata>
+</package>

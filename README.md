@@ -78,3 +78,8 @@ If you're migrating an existing 2.0 project to 3.0 here are some things to remem
 	```
 
 	Also not that Engine.Initialize will return a console to the specified screen size (in this case 80x25) and automatically adds it to the `SadConsole.Engine.ConsoleRenderStack`.
+
+
+## License
+
+There is currently no license associated with SadConsole. Code taken from MonoGame remain under the MonoGame license: [Microsoft Public License](https://opensource.org/licenses/MS-PL).
