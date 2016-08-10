@@ -81,7 +81,7 @@
   </Target>
   -->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'ReleaseBuild'">
-    <Exec Command="nuget pack $(ProjectName).csproj -Symbols -Prop Configuration=Release -OutputDirectory ..\..\..\nuget\">
+    <Exec Command="nuget pack $(ProjectName).csproj -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory ..\..\..\nuget\">
     </Exec>
   </Target>
 </Project>
