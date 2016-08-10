@@ -138,5 +138,27 @@ namespace SadConsole.Consoles
                 cells[i].OnCreated();
             }
         }
+
+        #region Serialization
+        /// <summary>
+        /// Saves the <see cref="TextSurfaceBasic"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public void Save(string file)
+        {
+            Serializer.Save(this, file);
+        }
+
+        /// <summary>
+        /// Loads a <see cref="TextSurfaceBasic"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static TextSurfaceBasic Load(string file)
+        {
+            return Serializer.Load<TextSurfaceBasic>(file);
+        }
+        
+        #endregion
     }
 }

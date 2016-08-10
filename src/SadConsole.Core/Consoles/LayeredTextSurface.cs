@@ -64,6 +64,8 @@ namespace SadConsole.Consoles
             }
         }
 
+        private bool initDone = false;
+
         /// <summary>
         /// Layers for the surface.
         /// </summary>
@@ -102,10 +104,15 @@ namespace SadConsole.Consoles
         /// <param name="font">The font.</param>
         public LayeredTextSurface(int width, int height, Font font, int layers): base(width, height, font)
         {
+            initDone = true;
+
             this.layers = new List<Layer>(layers);
 
             for (int i = 0; i < layers; i++)
                 this.layers.Add(new Layer());
+
+            InitializeCells();
+            ResetArea();
 
             SetActiveLayer(0);
         }
@@ -136,6 +143,9 @@ namespace SadConsole.Consoles
 
         protected override void InitializeCells()
         {
+            if (!initDone)
+                return;
+
             for (int i = 0; i < LayerCount; i++)
             {
                 InitializeLayer(layers[i]);
@@ -159,6 +169,9 @@ namespace SadConsole.Consoles
 
         protected override void ResetArea()
         {
+            if (!initDone)
+                return;
+
             RenderRects = new Rectangle[area.Width * area.Height];
             
             for (int l = 0; l < LayerCount; l++)
