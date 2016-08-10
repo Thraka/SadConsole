@@ -75,7 +75,7 @@
   <Target Name="BeforeBuild">
   </Target>-->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'ReleaseBuild'">
-    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Symbols -Prop Configuration=Release">
+    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Symbols -Prop Configuration=Release -OutputDirectory ..\..\..\nuget\">
     </Exec>
   </Target>
 </Project>
