@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{46F11907-CEF3-4069-B041-0A88880981E6}</ProjectGuid>
+    <ProjectGuid>{9E492091-1393-4ABB-91AC-417AA31A692D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SadConsole.Controls</RootNamespace>

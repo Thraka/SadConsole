@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D348C254-AB16-4B48-9F61-2FFEE51DFD4A}</ProjectGuid>
+    <ProjectGuid>{55B5C786-3419-4625-8E49-8A53C176185F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SadConsole.GameHelpers</RootNamespace>
