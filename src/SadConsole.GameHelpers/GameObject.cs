@@ -234,11 +234,20 @@ namespace SadConsole.Game
             Animation.Update();
         }
 
+        /// <summary>
+        /// Saves this <see cref="GameObject"/> to a file.
+        /// </summary>
+        /// <param name="file">The file to save.</param>
         public void Save(string file)
         {
             Serialized.Save(this, file);
         }
 
+        /// <summary>
+        /// Loads a <see cref="GameObject"/> from a file.
+        /// </summary>
+        /// <param name="file">The file to load.</param>
+        /// <returns></returns>
         public static GameObject Load(string file)
         {
             return Serialized.Load(file);
@@ -327,7 +336,7 @@ namespace SadConsole.Game
                 else
                     font = Engine.DefaultFont;
 
-                var gameObject = new GameObject(null);
+                var gameObject = new GameObject(font);
 
                 gameObject.Animations = new Dictionary<string, Consoles.AnimatedTextSurface>();
 
