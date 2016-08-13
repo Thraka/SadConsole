@@ -84,6 +84,10 @@ namespace SadConsole
                                     case "b":
                                         commandObject = new ParseCommandBlink(commandParams, existingGlyphs, commandStacks, editor);
                                         break;
+                                    case "sglyph":
+                                    case "sg":
+                                        commandObject = new ParseCommandSetGlyph(commandParams);
+                                        break;
                                     default:
                                         break;
                                 }

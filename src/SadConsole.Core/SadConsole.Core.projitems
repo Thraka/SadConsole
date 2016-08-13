@@ -96,6 +96,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandBlink.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandRecolor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandSpriteEffect.cs" />
