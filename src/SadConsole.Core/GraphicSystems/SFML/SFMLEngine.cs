@@ -37,8 +37,9 @@ namespace SadConsole
         /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
         /// <param name="consoleWidth">The width of the default root console (and game window).</param>
         /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <param name="frameLimit">Defaults to 60 fps. Use 0 to indicate unlimited.</param>
         /// <returns>The default active console.</returns>
-        public static Consoles.Console Initialize(string font, int consoleWidth, int consoleHeight)
+        public static Consoles.Console Initialize(string font, int consoleWidth, int consoleHeight, int frameLimit = 60)
         {
             SetupFontAndEffects(font);
 
@@ -53,7 +54,10 @@ namespace SadConsole
                 if (!args.BlockShutdown)
                     ((SFML.Window.Window)o).Close();
             };
-            //window.SetFramerateLimit(60);
+
+            if (frameLimit != 0)
+                window.SetFramerateLimit((uint)frameLimit);
+
             Device = window;
             
             SetupInputsAndTimers();
