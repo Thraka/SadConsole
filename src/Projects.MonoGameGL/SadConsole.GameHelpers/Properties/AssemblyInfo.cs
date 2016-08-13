@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SadConsole.GameHelpers")]
+[assembly: AssemblyTitle("SadConsole.GameHelpers.MonoGameGL")]
 [assembly: AssemblyDescription("A helper library for SadConsole that provides things like world generation and game object management.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SadLogic")]

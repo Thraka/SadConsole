@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SadConsole.Core\SadConsole.Core.OpenGL.csproj">
-      <Project>{9a7432d8-0c8b-4c46-b405-b6d1080e6811}</Project>
+      <Project>{9f1bfe2a-5381-41fc-9363-bd757b9fa1ce}</Project>
       <Name>SadConsole.Core.OpenGL</Name>
     </ProjectReference>
   </ItemGroup>
