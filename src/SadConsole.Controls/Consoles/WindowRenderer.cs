@@ -44,8 +44,7 @@ namespace SadConsole.Consoles
             if (IsModal && ModalTint.A != 0)
             {
 #if SFML
-                //Batch.Start(surface, Matrix.Identity);
-                Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
+                Batch.Reset(Engine.Device, RenderStates.Default, Matrix.Identity);
                 Batch.DrawQuad(new IntRect(0, 0, (int)Engine.Device.Size.X, (int)Engine.Device.Size.Y), surface.Font.SolidGlyphRectangle, ModalTint, surface.Font.FontImage);
                 Batch.End();
 #elif MONOGAME

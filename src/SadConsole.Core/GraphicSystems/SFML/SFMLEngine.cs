@@ -43,6 +43,9 @@ namespace SadConsole
             SetupFontAndEffects(font);
 
             var window = new RenderWindow(new SFML.Window.VideoMode((uint)(DefaultFont.Size.X * consoleWidth), (uint)(DefaultFont.Size.Y * consoleHeight)), "SadConsole Game", SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close);
+            WindowWidth = (int)window.Size.X;
+            WindowHeight = (int)window.Size.Y;
+
             window.Closed += (o, e) =>
             {
                 ShutdownEventArgs args = new ShutdownEventArgs();
