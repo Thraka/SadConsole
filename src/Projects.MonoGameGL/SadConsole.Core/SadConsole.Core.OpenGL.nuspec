@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>SadConsole.Core.OpenGL</id>
+    <id>SadConsole.Core.MonoGameGL</id>
     <version>4.0.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
@@ -9,7 +9,7 @@
     <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
 4.0.0: Engine has changed a bit. Provides simple init system now. Other minor interface changes.
       

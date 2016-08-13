@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>SadConsole.Ansi.OpenGL</id>
+    <id>SadConsole.Ansi.MonoGameGL</id>
     <version>3.0.1</version>
     <title>$title$</title>
     <authors>$author$</authors>
@@ -9,7 +9,7 @@
     <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
 3.0.1: Minor changes.
 

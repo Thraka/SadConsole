@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>SadConsole.Ansi</id>
+    <id>SadConsole.Ansi.SFML</id>
     <version>3.0.1</version>
     <title>$title$</title>
     <authors>$author$</authors>

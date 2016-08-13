@@ -9,7 +9,7 @@
     <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
 3.0.1: Minor changes.
       

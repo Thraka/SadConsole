@@ -1,22 +1,16 @@
-﻿#if MONOGAME
-using Keys = Microsoft.Xna.Framework.Input.Keys;
-#elif SFML
-using Keys = SFML.Window.Keyboard.Key;
-#endif
-
-using SadConsole.Consoles;
+﻿using SadConsole.Consoles;
 using System;
 using SadConsole;
 
 namespace StarterProject
 {
-	class Program
-	{
+    class Program
+    {
         private static Windows.CharacterViewer _characterWindow;
         private static int currentConsoleIndex;
 
         static void Main(string[] args)
-		{
+        {
             // Setup the engine and creat the main window.
             SadConsole.Engine.Initialize("IBM.font", 80, 25);
 
@@ -27,10 +21,10 @@ namespace StarterProject
             SadConsole.Engine.EngineUpdated += Engine_EngineUpdated;
 
             SadConsole.Engine.EngineDrawFrame += Engine_EngineDrawFrame;
-            
+
             // Start the game.
             SadConsole.Engine.Run();
-		}
+        }
 
         private static void Engine_EngineDrawFrame(object sender, EventArgs e)
         {
@@ -44,11 +38,11 @@ namespace StarterProject
                 // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
                 // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
                 // in the Initialize method above.
-                if (SadConsole.Engine.Keyboard.IsKeyReleased(Keys.F1))
+                if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F1))
                 {
                     MoveNextConsole();
                 }
-                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Keys.F2))
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F2))
                 {
                     _characterWindow.Show(true);
                 }
