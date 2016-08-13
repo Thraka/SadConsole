@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{96295828-71BF-408F-9CCC-B2D56EC4111C}</ProjectGuid>
+    <ProjectGuid>{74327CCC-4606-40B8-9587-60E55B1D6A80}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StarterProject</RootNamespace>
@@ -107,19 +107,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Projects.SFML\SadConsole.Ansi\SadConsole.Ansi.SFML.csproj">
-      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
+      <Project>{697f7073-7a98-45ab-aa05-b10288af60bb}</Project>
       <Name>SadConsole.Ansi.SFML</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects.SFML\SadConsole.Controls\SadConsole.Controls.SFML.csproj">
-      <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
+      <Project>{9e492091-1393-4abb-91ac-417aa31a692d}</Project>
       <Name>SadConsole.Controls.SFML</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects.SFML\SadConsole.Core\SadConsole.Core.SFML.csproj">
-      <Project>{9a7432d8-0c8b-4c46-b405-b6d1080e6811}</Project>
+      <Project>{a3c334c1-37d2-4616-ace5-90c1676f7574}</Project>
       <Name>SadConsole.Core.SFML</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects.SFML\SadConsole.GameHelpers\SadConsole.GameHelpers.SFML.csproj">
-      <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
+      <Project>{55b5c786-3419-4625-8e49-8a53c176185f}</Project>
       <Name>SadConsole.GameHelpers.SFML</Name>
     </ProjectReference>
   </ItemGroup>

@@ -81,19 +81,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Projects.MonoGameGL\SadConsole.Ansi\SadConsole.Ansi.OpenGL.csproj">
-      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
+      <Project>{d750add6-7736-479d-999b-8b1faf9126be}</Project>
       <Name>SadConsole.Ansi.OpenGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects.MonoGameGL\SadConsole.Controls\SadConsole.Controls.OpenGL.csproj">
-      <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
+      <Project>{64794b96-3346-498f-afe1-cd36caa97c9f}</Project>
       <Name>SadConsole.Controls.OpenGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects.MonoGameGL\SadConsole.Core\SadConsole.Core.OpenGL.csproj">
-      <Project>{9a7432d8-0c8b-4c46-b405-b6d1080e6811}</Project>
+      <Project>{9f1bfe2a-5381-41fc-9363-bd757b9fa1ce}</Project>
       <Name>SadConsole.Core.OpenGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects.MonoGameGL\SadConsole.GameHelpers\SadConsole.GameHelpers.OpenGL.csproj">
-      <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
+      <Project>{3d23009e-4892-4bec-abe4-b778d3968cf1}</Project>
       <Name>SadConsole.GameHelpers.OpenGL</Name>
     </ProjectReference>
   </ItemGroup>
