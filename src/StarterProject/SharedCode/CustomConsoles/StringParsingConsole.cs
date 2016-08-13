@@ -25,6 +25,7 @@ namespace StarterProject.CustomConsoles
 
 
             Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]String parsing supports...                                                    ");
+            SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
 
             r = 2;
             Color a = Color.Green;
@@ -40,6 +41,7 @@ namespace StarterProject.CustomConsoles
 
             r += 2;
             Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]Examples                                                                      ");
+            SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
 
             r += 2;
 

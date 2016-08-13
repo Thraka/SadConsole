@@ -8,6 +8,7 @@
     <owners>Thraka</owners>
     <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
