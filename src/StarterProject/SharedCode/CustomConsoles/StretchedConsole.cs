@@ -24,8 +24,10 @@ namespace StarterProject.CustomConsoles
             // area.
             textSurface.Font = Engine.Fonts.Values.First().GetFont(SadConsole.Font.FontSizes.Two);
 
-            ColoredString colorString = "Text using a colored string gradient that wraps around".CreateGradient(ColorHelper.DarkGreen, ColorHelper.LightGreen);
+            ColoredString colorString = "Text using a colored string gradient".CreateGradient(ColorHelper.DarkGreen, ColorHelper.LightGreen);
             Print(2, 3, colorString);
+
+            Print(2, 6, "Same font as others, just doubled");
 
             IsVisible = false;
         }

@@ -35,7 +35,7 @@ namespace StarterProject.CustomConsoles
             // Enable the keyboard and setup the prompt.
             CanUseKeyboard = true;
             VirtualCursor.IsVisible = true;
-            Prompt = "DOS Prompt> ";
+            Prompt = "Prompt> ";
 
 
             // Startup description
@@ -43,7 +43,8 @@ namespace StarterProject.CustomConsoles
             VirtualCursor.Position = new Point(0, 24);
             VirtualCursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
             _keyboardHandlerObject.VirtualCursorLastY = 24;
-            //Data.TimesShiftedUp = 0;
+            TimesShiftedUp = 0;
+
             VirtualCursor.Print(Prompt);
         }
 
@@ -57,10 +58,19 @@ namespace StarterProject.CustomConsoles
         private void EnterPressedActionHandler(string value)
         {
             if (value.ToLower() == "help")
-                VirtualCursor.Print("  There is no help available right now, sorry.").NewLine();
-
+            {
+                VirtualCursor.NewLine().
+                              Print("  Advanced Example: Command Prompt - HELP").NewLine().
+                              Print("  =======================================").NewLine().NewLine().
+                              Print("  help      - Display this help info").NewLine().
+                              Print("  ver       - Display version info").NewLine().
+                              Print("  cls       - Clear the screen").NewLine().
+                              Print("  look      - Example adventure game cmd").NewLine().
+                              Print("  exit,quit - Quit the program").NewLine().
+                              Print("  ").NewLine();
+            }
             else if (value.ToLower() == "ver")
-                VirtualCursor.Print("  SadConsole for MonoGame and XNA 4.0").NewLine();
+                VirtualCursor.Print("  SadConsole for MonoGame and SFML").NewLine();
 
             else if (value.ToLower() == "cls")
                 ClearText();

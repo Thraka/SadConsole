@@ -8,6 +8,7 @@ using Keys = SFML.Window.Keyboard.Key;
 
 using SadConsole.Consoles;
 using SadConsole.Input;
+using Console = SadConsole.Consoles.Console;
 using System;
 
 namespace StarterProject.InputHandling
@@ -20,8 +21,11 @@ namespace StarterProject.InputHandling
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public Action<string> EnterPressedAction = (s) => { int i = s.Length; };
 
-        public bool HandleKeyboard(IConsole console, KeyboardInfo info)
+        public bool HandleKeyboard(IConsole consoleObject, KeyboardInfo info)
         {
+            // Upcast this because we know we're only using it with a Console type.
+            var console = (Console)consoleObject;
+
             // Check each key pressed.
             foreach (var key in info.KeysPressed)
             {
@@ -39,12 +43,12 @@ namespace StarterProject.InputHandling
                     // Get the prompt that the console has.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
 
-                    //// If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
-                    //if (console.Data.TimesShiftedUp != 0)
-                    //{
-                    //    VirtualCursorLastY -= console.Data.TimesShiftedUp;
-                    //    console.Data.TimesShiftedUp = 0;
-                    //}
+                    // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
+                    if (console.TimesShiftedUp != 0)
+                    {
+                        VirtualCursorLastY -= console.TimesShiftedUp;
+                        console.TimesShiftedUp = 0;
+                    }
 
                     // Do not let them backspace into the prompt
                     if (console.VirtualCursor.Position.Y != VirtualCursorLastY || console.VirtualCursor.Position.X > prompt.Length)
@@ -58,12 +62,12 @@ namespace StarterProject.InputHandling
                 else if (key.XnaKey == Keys.Return)
 #endif
                 {
-                    //// If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
-                    //if (console.Data.TimesShiftedUp != 0)
-                    //{
-                    //    VirtualCursorLastY -= console.Data.TimesShiftedUp;
-                    //    console.Data.TimesShiftedUp = 0;
-                    //}
+                    // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
+                    if (console.TimesShiftedUp != 0)
+                    {
+                        VirtualCursorLastY -= console.TimesShiftedUp;
+                        console.TimesShiftedUp = 0;
+                    }
 
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
@@ -82,7 +86,7 @@ namespace StarterProject.InputHandling
                     VirtualCursorLastY = console.VirtualCursor.Position.Y;
 
                     // Preparing the next lines could have scrolled the console, reset the counter
-                    //console.Data.TimesShiftedUp = 0;
+                    console.TimesShiftedUp = 0;
                 }
             }
 
