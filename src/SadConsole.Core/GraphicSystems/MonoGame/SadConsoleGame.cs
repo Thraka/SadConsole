@@ -36,6 +36,8 @@ namespace SadConsole
 
             // Call the default initialize of the base class.
             base.Initialize();
+
+            Engine.InitializeCompleted();
         }
 
         protected override void Draw(GameTime gameTime)

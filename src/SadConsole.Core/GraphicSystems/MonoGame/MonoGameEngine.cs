@@ -46,9 +46,7 @@ namespace SadConsole
             ((Consoles.Console)ActiveConsole).Clear();
 
             ConsoleRenderStack.Add(ActiveConsole);
-
-            EngineStart?.Invoke(null, System.EventArgs.Empty);
-
+            
             return (Consoles.Console)ActiveConsole;
         }
 
@@ -62,6 +60,11 @@ namespace SadConsole
         public static void Initialize(string font, int consoleWidth, int consoleHeight)
         {
             MonoGameInstance = new SadConsoleGame(font, consoleWidth, consoleHeight);
+        }
+
+        internal static void InitializeCompleted()
+        {
+            EngineStart?.Invoke(null, System.EventArgs.Empty);
         }
 
         public static void Run()
