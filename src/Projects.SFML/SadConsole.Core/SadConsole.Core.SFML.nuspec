@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.SFML</id>
-    <version>4.0.2</version>
+    <version>4.0.3</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,6 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+4.0.3: Texture ToSurface extension stopped working when I downgraded to .NET 4.0. Wrote manual code.
+
 4.0.2: Engine was running with unlimited FPS. Now defaults to 60, can be changed through init.
 
 4.0.1: Fixed window popup render bug and mouse input bug.

@@ -9,21 +9,29 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public static class TextureExtensions
     {
-        public static TextSurface ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
+        public unsafe static TextSurface ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
         {
-
 #if SFML
             int imageWidth = (int)image.Size.X;
             int imageHeight = (int)image.Size.Y;
-            Color[] pixels;
+            Color[] pixels = new Color[imageWidth * imageHeight];
             using (var imageData = image.CopyToImage())
             {
-                using (var memStream = new global::System.IO.MemoryStream())
+                int pixelChanIndex = 0;
+                fixed (byte* pixelChan = imageData.Pixels)
                 {
-                    var binForm = new global::System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    memStream.Write(imageData.Pixels, 0, imageData.Pixels.Length);
-                    memStream.Seek(0, global::System.IO.SeekOrigin.Begin);
-                    pixels = (Color[])binForm.Deserialize(memStream);
+                    fixed(Color* color = pixels)
+                    {
+                        for (int i = 0; i < pixels.Length; i++)
+                        {
+                            color[i].R = pixelChan[pixelChanIndex];
+                            color[i].G = pixelChan[pixelChanIndex + 1];
+                            color[i].B = pixelChan[pixelChanIndex + 2];
+                            color[i].A = pixelChan[pixelChanIndex + 3];
+
+                            pixelChanIndex += 4;
+                        }
+                    }
                 }
             }
 #elif MONOGAME
@@ -113,20 +121,29 @@ namespace Microsoft.Xna.Framework.Graphics
             return surface;
         }
 
-        public static void ToSurface(this Texture2D image, TextSurface surface, Color[] cachedColorArray, bool blockMode = false)
+        public unsafe static void ToSurface(this Texture2D image, TextSurface surface, Color[] cachedColorArray, bool blockMode = false)
         {
 #if SFML
             int imageWidth = (int)image.Size.X;
             int imageHeight = (int)image.Size.Y;
-            Color[] pixels;
+            Color[] pixels = new Color[imageWidth * imageHeight];
             using (var imageData = image.CopyToImage())
             {
-                using (var memStream = new global::System.IO.MemoryStream())
+                int pixelChanIndex = 0;
+                fixed (byte* pixelChan = imageData.Pixels)
                 {
-                    var binForm = new global::System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    memStream.Write(imageData.Pixels, 0, imageData.Pixels.Length);
-                    memStream.Seek(0, global::System.IO.SeekOrigin.Begin);
-                    pixels = (Color[])binForm.Deserialize(memStream);
+                    fixed (Color* color = pixels)
+                    {
+                        for (int i = 0; i < pixels.Length; i++)
+                        {
+                            color[i].R = pixelChan[pixelChanIndex];
+                            color[i].G = pixelChan[pixelChanIndex + 1];
+                            color[i].B = pixelChan[pixelChanIndex + 2];
+                            color[i].A = pixelChan[pixelChanIndex + 3];
+
+                            pixelChanIndex += 4;
+                        }
+                    }
                 }
             }
 #elif MONOGAME
