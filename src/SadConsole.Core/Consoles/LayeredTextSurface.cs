@@ -413,7 +413,7 @@ namespace SadConsole.Consoles
                 font = Engine.Fonts[fontName].GetFont(fontSize);
             else
                 font = Engine.DefaultFont;
-
+            initDone = true;
             Font = font;
             SyncLayerIndex();
             SetActiveLayer(ActiveLayerIndex);

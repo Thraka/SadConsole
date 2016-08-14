@@ -21,7 +21,7 @@ namespace StarterProject
             SadConsole.Engine.EngineUpdated += Engine_EngineUpdated;
 
             SadConsole.Engine.EngineDrawFrame += Engine_EngineDrawFrame;
-
+            
             // Start the game.
             SadConsole.Engine.Run();
         }
@@ -45,6 +45,9 @@ namespace StarterProject
                 else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F2))
                 {
                     _characterWindow.Show(true);
+                }
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
+                {
                 }
             }
         }
@@ -88,7 +91,11 @@ namespace StarterProject
 
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
             //SadConsole.Engine.MonoGameInstance.UnlockFPS();
+
+            SadConsole.Game.GameObject.Load("temp.entity");
         }
+
+        
 
         private static void MoveNextConsole()
         {

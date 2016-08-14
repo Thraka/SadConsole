@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.GameHelpers</id>
-    <version>3.1.1</version>
+    <version>3.2.2</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,6 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
+3.2.2: Fixed entity load. Added SimpleLayerMetadata type to support SadConsoleEditor.
+
 3.1.1: Minor updates.
 
 3.1.0: GameObject now supports a string name, multiple animations, serialization, and a render offset.

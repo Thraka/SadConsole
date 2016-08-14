@@ -160,21 +160,41 @@ namespace SadConsole
 #if SFML
         public void ResizeGraphicsDeviceManager(RenderWindow manager, int width, int height, int additionalWidth, int additionalHeight)
         {
+            int oldWidth = (int)manager.Size.X;
+            int oldHeight = (int)manager.Size.Y;
+
             manager.Size = new SFML.System.Vector2u((uint)((Size.X * width) + additionalWidth), (uint)((Size.Y * height) + additionalHeight));
             manager.SetView(new View(new FloatRect(0, 0, manager.Size.X, manager.Size.Y)));
             Engine.WindowWidth = (int)manager.Size.X;
             Engine.WindowHeight = (int)manager.Size.Y;
+
+            int diffWidth = (Engine.WindowWidth - oldWidth) / 2;
+            int diffHeight = (Engine.WindowHeight - oldHeight) / 2;
+
+            manager.Position = new Point(manager.Position.X - diffWidth, manager.Position.Y - diffHeight);
         }
 
 #elif MONOGAME
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
+            int oldWidth = manager.PreferredBackBufferWidth;
+            int oldHeight = manager.PreferredBackBufferHeight;
+
             manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
             manager.PreferredBackBufferHeight = (Size.Y * height) + additionalHeight;
-            manager.ApplyChanges();
-
+            
             Engine.WindowWidth = manager.PreferredBackBufferWidth;
             Engine.WindowHeight = manager.PreferredBackBufferHeight;
+
+            int diffWidth = (Engine.WindowWidth - oldWidth) / 2;
+            int diffHeight = (Engine.WindowHeight - oldHeight) / 2;
+
+
+            if (Engine.MonoGameInstance != null)
+                Engine.MonoGameInstance.Window.Position = new Point(Engine.MonoGameInstance.Window.Position.X - diffWidth, Engine.MonoGameInstance.Window.Position.Y - diffHeight);
+
+            manager.ApplyChanges();
+
         }
 #endif
 
