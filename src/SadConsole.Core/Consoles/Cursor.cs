@@ -75,6 +75,12 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
+        /// When true, prevents the <see cref="Print"/> method from breaking words up by spaces when wrapping lines.
+        /// </summary>
+        [DataMember]
+        public bool DisableWordBreak;
+
+        /// <summary>
         /// Gets or sets the row of the cursor postion.
         /// </summary>
         public int Row
@@ -178,9 +184,16 @@ namespace SadConsole.Consoles
         public Cursor Print(ColoredString text)
         {
             var console = (Console)_console.Target;
+            string stringText = text.String;
 
-            foreach (var glyph in text)
+            bool containsSpaces = stringText.Contains(" ") && stringText.Length > 1;
+
+            for (int i = 0; i < text.Count; i++)
             {
+                var glyph = text[i];
+
+                RestartLoop:
+
                 if (glyph.Glyph == '\r')
                     CarriageReturn();
 
@@ -189,6 +202,40 @@ namespace SadConsole.Consoles
 
                 else
                 {
+                    if (!DisableWordBreak && containsSpaces)
+                    {
+                        if (glyph.Glyph != ' ')
+                        {
+                            int remainingSpace = console.TextSurface.Width - _position.X;
+
+                            // last character?
+                            if (i != stringText.Length - 1)
+                            {
+                                int nextSpace = stringText.IndexOf(' ', i + 1);
+
+                                if (nextSpace == -1)
+                                    nextSpace = stringText.Length - i;
+                                else
+                                    nextSpace -= i;
+
+                                if (nextSpace >= 0 && remainingSpace < nextSpace)
+                                {
+                                    for (int s = 0; s < remainingSpace + 1; s++)
+                                    {
+                                        if (i == 0)
+                                            goto RestartLoop;
+                                    }
+
+                                    i -= 1;
+
+                                    continue;
+                                }
+                            }
+                        }
+                        else if (_position.X == 0)
+                            continue;
+                    }
+
                     var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
 
                     if (!PrintOnlyCharacterData)
@@ -241,9 +288,14 @@ namespace SadConsole.Consoles
             //((SurfaceEditor)_console.Target).DrawString(_location.X, _location.Y, text, PrintAppearance.Foreground, PrintAppearance.Background, PrintAppearance.Effect);
 
             var console = (Console)_console.Target;
+            bool containsSpaces = text.Contains(" ") && text.Length > 1;
+            bool isFirstWord = true;
+            bool hadRealLetter = false;
 
-            foreach (var character in text)
+            for (int i = 0; i < text.Length; i++)
             {
+                var character = text[i];
+
                 if (character == '\r')
                 {
                     CarriageReturn();
@@ -254,6 +306,40 @@ namespace SadConsole.Consoles
                 }
                 else
                 {
+                    if (character != ' ')
+                        hadRealLetter = true;
+
+                    if (!DisableWordBreak && containsSpaces && hadRealLetter)
+                    {
+                        if (character != ' ')
+                        {
+                            int remainingSpace = console.TextSurface.Width - _position.X;
+
+                            // last character?
+                            if (i != text.Length - 1)
+                            {
+                                int nextSpace = text.IndexOf(' ', i + 1);
+
+                                if (nextSpace == -1)
+                                    nextSpace = text.Length - i;
+                                else
+                                    nextSpace -= i;
+
+                                if (nextSpace >= 0 && remainingSpace < nextSpace && nextSpace - remainingSpace < console.Width)
+                                {
+                                    for (int s = 0; s < remainingSpace + 1; s++)
+                                        text = text.Insert(i, " ");
+
+                                    i -= 1;
+
+                                    continue;
+                                }
+                            }
+                        }
+                        else if (_position.X == 0)
+                            continue;
+                    }
+
                     var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
 
                     if (!PrintOnlyCharacterData)
@@ -263,7 +349,7 @@ namespace SadConsole.Consoles
                     }
 
                     cell.GlyphIndex = character;
-
+                    
                     _position.X += 1;
                     if (_position.X >= console.TextSurface.Width)
                     {
