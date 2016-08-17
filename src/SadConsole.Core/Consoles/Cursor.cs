@@ -78,7 +78,13 @@ namespace SadConsole.Consoles
         /// When true, prevents the <see cref="Print"/> method from breaking words up by spaces when wrapping lines.
         /// </summary>
         [DataMember]
-        public bool DisableWordBreak;
+        public bool DisableWordBreak = false;
+
+        /// <summary>
+        /// Enables linux-like string parsing where a \n behaves like a \r\n.
+        /// </summary>
+        [DataMember]
+        public bool UseLinuxLineEndings = false;
 
         /// <summary>
         /// Gets or sets the row of the cursor postion.
@@ -164,6 +170,45 @@ namespace SadConsole.Consoles
 
             return this;
         }
+        
+
+        private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
+        {
+            var console = (Console)_console.Target;
+            var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
+
+            if (!PrintOnlyCharacterData)
+            {
+                if (!settings.IgnoreBackground)
+                    cell.Background = glyph.Background;
+                if (!settings.IgnoreForeground)
+                    cell.Foreground = glyph.Foreground;
+                if (!settings.IgnoreEffect)
+                    cell.Effect = glyph.Effect;
+                if (!settings.IgnoreSpriteEffect)
+                    cell.SpriteEffect = glyph.SpriteEffect;
+            }
+
+            if (!settings.IgnoreGlyph)
+                cell.GlyphIndex = glyph.Glyph;
+
+            _position.X += 1;
+            if (_position.X >= console.TextSurface.Width)
+            {
+                _position.X = 0;
+                _position.Y += 1;
+
+                if (_position.Y >= console.TextSurface.Height)
+                {
+                    _position.Y -= 1;
+
+                    if (AutomaticallyShiftRowsUp)
+                    {
+                        console.ShiftUp();
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Prints text to the console using the default print appearance.
@@ -177,105 +222,6 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
-        /// Prints text to the console using the appearance of the colored string.
-        /// </summary>
-        /// <param name="text">The text to print.</param>
-        /// <returns>Returns this cursor object.</returns>
-        public Cursor Print(ColoredString text)
-        {
-            var console = (Console)_console.Target;
-            string stringText = text.String;
-
-            bool containsSpaces = stringText.Contains(" ") && stringText.Length > 1;
-
-            for (int i = 0; i < text.Count; i++)
-            {
-                var glyph = text[i];
-
-                RestartLoop:
-
-                if (glyph.Glyph == '\r')
-                    CarriageReturn();
-
-                else if (glyph.Glyph == '\n')
-                    LineFeed();
-
-                else
-                {
-                    if (!DisableWordBreak && containsSpaces)
-                    {
-                        if (glyph.Glyph != ' ')
-                        {
-                            int remainingSpace = console.TextSurface.Width - _position.X;
-
-                            // last character?
-                            if (i != stringText.Length - 1)
-                            {
-                                int nextSpace = stringText.IndexOf(' ', i + 1);
-
-                                if (nextSpace == -1)
-                                    nextSpace = stringText.Length - i;
-                                else
-                                    nextSpace -= i;
-
-                                if (nextSpace >= 0 && remainingSpace < nextSpace)
-                                {
-                                    for (int s = 0; s < remainingSpace + 1; s++)
-                                    {
-                                        if (i == 0)
-                                            goto RestartLoop;
-                                    }
-
-                                    i -= 1;
-
-                                    continue;
-                                }
-                            }
-                        }
-                        else if (_position.X == 0)
-                            continue;
-                    }
-
-                    var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
-
-                    if (!PrintOnlyCharacterData)
-                    {
-                        if (!text.IgnoreGlyph)
-                            cell.GlyphIndex = glyph.Glyph;
-                        if (!text.IgnoreBackground)
-                            cell.Background = glyph.Background;
-                        if (!text.IgnoreForeground)
-                            cell.Foreground = glyph.Foreground;
-                        if (!text.IgnoreEffect)
-                            cell.Effect = glyph.Effect;
-                    }
-
-                    _position.X += 1;
-                    if (_position.X >= console.TextSurface.Width)
-                    {
-                        _position.X = 0;
-                        _position.Y += 1;
-
-                        if (_position.Y >= console.TextSurface.Height)
-                        {
-                            _position.Y -= 1;
-
-                            if (AutomaticallyShiftRowsUp)
-                            {
-                                console.ShiftUp();
-
-                                //if (console.Data.ResizeOnShift)
-                                //    _position.Y++;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return this;
-        }
-
-        /// <summary>
         /// Prints text on the console.
         /// </summary>
         /// <param name="text">The text to print.</param>
@@ -284,94 +230,145 @@ namespace SadConsole.Consoles
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(string text, ICellAppearance template, ICellEffect templateEffect)
         {
-            // TODO: Look for the flag 7 on settings. This means allow word wrap. So without it we need to test if the text will reach the end of the screen and cut it off.
-            //((SurfaceEditor)_console.Target).DrawString(_location.X, _location.Y, text, PrintAppearance.Foreground, PrintAppearance.Background, PrintAppearance.Effect);
+            var coloredString = text.CreateColored(template.Foreground, template.Background, template.SpriteEffect);
+            coloredString.SetEffect(templateEffect);
 
-            var console = (Console)_console.Target;
-            bool containsSpaces = text.Contains(" ") && text.Length > 1;
-            bool isFirstWord = true;
-            bool hadRealLetter = false;
+            return Print(coloredString);
+        }
 
-            for (int i = 0; i < text.Length; i++)
+        /// <summary>
+        /// Prints text to the console using the appearance of the colored string.
+        /// </summary>
+        /// <param name="text">The text to print.</param>
+        /// <returns>Returns this cursor object.</returns>
+        public Cursor Print(ColoredString text)
+        {
+            // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
+            // Then use the pretty print system.
+            if (!DisableWordBreak || text.String.Length != 1)
             {
-                var character = text[i];
+                var console = (Console)_console.Target;
+                ColoredGlyph glyph;
+                ColoredGlyph spaceGlyph = text[0].Clone();
+                string stringText = text.String.TrimEnd(' ');
+                string[] parts = stringText.Split(' ');
 
-                if (character == '\r')
-                {
-                    CarriageReturn();
-                }
-                else if (character == '\n')
-                {
-                    LineFeed();
-                }
-                else
-                {
-                    if (character != ' ')
-                        hadRealLetter = true;
+                spaceGlyph.Glyph = ' ';
 
-                    if (!DisableWordBreak && containsSpaces && hadRealLetter)
+                int c = 0;
+
+                for (int wordMajor = 0; wordMajor < parts.Length; wordMajor++)
+                {
+                    // Words broken up by spaces = parts
+                    if (parts[wordMajor].Length != 0)
                     {
-                        if (character != ' ')
+                        // Parts broken by new lines = newLineParts
+                        string[] newlineParts = parts[wordMajor].Split('\n');
+
+                        for (int indexNL = 0; indexNL < newlineParts.Length; indexNL++)
                         {
-                            int remainingSpace = console.TextSurface.Width - _position.X;
-
-                            // last character?
-                            if (i != text.Length - 1)
+                            if (newlineParts[indexNL].Length != 0)
                             {
-                                int nextSpace = text.IndexOf(' ', i + 1);
+                                int currentLine = _position.Y;
 
-                                if (nextSpace == -1)
-                                    nextSpace = text.Length - i;
-                                else
-                                    nextSpace -= i;
+                                // New line parts broken up by carriage returns = returnParts
+                                string[] returnParts = newlineParts[indexNL].Split('\r');
 
-                                if (nextSpace >= 0 && remainingSpace < nextSpace && nextSpace - remainingSpace < console.Width)
+                                for (int indexR = 0; indexR < returnParts.Length; indexR++)
                                 {
-                                    for (int s = 0; s < remainingSpace + 1; s++)
-                                        text = text.Insert(i, " ");
+                                    // If the text we'll print will move off the edge, fill with spaces to get a fresh line
+                                    if (returnParts[indexR].Length > console.Width - _position.X && _position.X != 0)
+                                    {
+                                        var spaces = console.Width - _position.X;
 
-                                    i -= 1;
+                                        // Fill rest of line with spaces
+                                        for (int i = 0; i < spaces; i++)
+                                            PrintGlyph(spaceGlyph, text);
+                                    }
 
-                                    continue;
+                                    // Print the rest of the text as normal.
+                                    for (int i = 0; i < returnParts[indexR].Length; i++)
+                                    {
+                                        glyph = text[c];
+
+                                        PrintGlyph(glyph, text);
+
+                                        c++;
+                                    }
+
+                                    // If we had a \r in the string, handle it by going back
+                                    if (returnParts.Length != 1 && indexR != returnParts.Length - 1)
+                                    {
+                                        // Wrapped to a new line through print glyph, which triggerd \r\n. We don't want the \n so return back.
+                                        if (_position.X == 0 && _position.Y != currentLine)
+                                            _position.Y -= 1;
+                                        else
+                                            CarriageReturn();
+                                        c++;
+                                    }
                                 }
                             }
-                        }
-                        else if (_position.X == 0)
-                            continue;
-                    }
 
-                    var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
-
-                    if (!PrintOnlyCharacterData)
-                    {
-                        template.CopyAppearanceTo(cell);
-                        cell.Effect = templateEffect;
-                    }
-
-                    cell.GlyphIndex = character;
-                    
-                    _position.X += 1;
-                    if (_position.X >= console.TextSurface.Width)
-                    {
-                        _position.X = 0;
-                        _position.Y += 1;
-
-                        if (_position.Y >= console.TextSurface.Height)
-                        {
-                            _position.Y -= 1;
-
-                            if (AutomaticallyShiftRowsUp)
+                            // We had \n in the string, handle them.
+                            if (newlineParts.Length != 1 && indexNL != newlineParts.Length - 1)
                             {
-                                console.ShiftUp();
-
-                                //if (console.Data.ResizeOnShift)
-                                //    _position.Y++;
+                                if (!UseLinuxLineEndings)
+                                    LineFeed();
+                                else
+                                    NewLine();
+                                c++;
                             }
                         }
+                    }
+
+                    // Not last part
+                    if (wordMajor != parts.Length - 1 && _position.X != 0)
+                    {
+                        PrintGlyph(spaceGlyph, text);
+                        c++;
+                    }
+                    else
+                        c++;
+                }
+            }
+            else
+            {
+                bool movedLines = false;
+                int oldLine = _position.Y;
+
+                foreach (var glyph in text)
+                {
+                    // Check if the previous print moved us down a line (from print at end of the line) and move use back for the \r
+                    if (movedLines)
+                    {
+                        if (_position.X == 0 && glyph.Glyph == '\r')
+                        {
+                            _position.Y -= 1;
+                            continue;
+                        }
+                        else
+                            movedLines = false;
+                    }
+
+                    if (glyph.Glyph == '\r')
+                        CarriageReturn();
+
+                    else if (glyph.Glyph == '\n')
+                    {
+                        if (!UseLinuxLineEndings)
+                            LineFeed();
+                        else
+                            NewLine();
+                    }
+                    else
+                    {
+                        PrintGlyph(glyph, text);
+
+                        // Lines changed and it wasn't a \n that caused it, so it was a print that did it.
+                        movedLines = _position.Y != oldLine;
                     }
                 }
             }
-
             return this;
         }
 
