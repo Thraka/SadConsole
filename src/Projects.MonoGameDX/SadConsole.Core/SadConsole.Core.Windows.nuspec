@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core</id>
-    <version>4.0.2-pre5</version>
+    <version>4.1.2-pre5</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-4.0.2: Fixed Layered console serialization. Window centers after resize now. Virtual cursor now support wrapping lines at the word level and linux line endings
+4.1.2: Fixed Layered console serialization. Window centers after resize now. Virtual cursor now support wrapping lines at the word level and linux line endings
 
 4.0.1: Fixed startup edge case.
 
