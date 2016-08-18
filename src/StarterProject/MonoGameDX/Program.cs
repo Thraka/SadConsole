@@ -61,7 +61,7 @@ namespace StarterProject
             // We don't want to use that for the sample project so we'll remove it.
             SadConsole.Engine.ConsoleRenderStack.Clear();
             SadConsole.Engine.ActiveConsole = null;
-
+            
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {

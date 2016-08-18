@@ -49,7 +49,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugBuild\</OutputPath>
     <DefineConstants>TRACE;DEBUG;MONOGAME</DefineConstants>
-    <DocumentationFile>bin\Debug\SadConsole.Controls.Windows.xml</DocumentationFile>
+    <DocumentationFile>bin\DebugBuild\SadConsole.Controls.Windows.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -92,7 +92,7 @@
     </Exec>
   </Target>
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'DebugBuild'">
-    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory ..\..\..\nuget\">
+    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Symbols -Prop Configuration=DebugBuild -OutputDirectory ..\..\..\nuget\">
     </Exec>
   </Target>
 </Project>
