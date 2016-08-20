@@ -247,14 +247,27 @@ namespace SadConsole.Consoles
             // Then use the pretty print system.
             if (!DisableWordBreak || text.String.Length != 1)
             {
+                // Prep
                 var console = (Console)_console.Target;
                 ColoredGlyph glyph;
                 ColoredGlyph spaceGlyph = text[0].Clone();
-                string stringText = text.String.TrimEnd(' ');
-                string[] parts = stringText.Split(' ');
-
                 spaceGlyph.Glyph = ' ';
+                string stringText = text.String.TrimEnd(' ');
 
+                // Pull any starting spaces off
+                var newStringText = stringText.TrimStart(' ');
+                int spaceCount = stringText.Length - newStringText.Length;
+
+                for (int i = 0; i < spaceCount; i++)
+                    PrintGlyph(spaceGlyph, text);
+                    
+                if (spaceCount != 0)
+                    text = text.SubString(spaceCount, text.Count - spaceCount);
+
+                stringText = newStringText;
+                string[] parts = stringText.Split(' ');
+                
+                // Start processing the string
                 int c = 0;
 
                 for (int wordMajor = 0; wordMajor < parts.Length; wordMajor++)
