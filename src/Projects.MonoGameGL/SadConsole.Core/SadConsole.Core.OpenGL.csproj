@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9F1BFE2A-5381-41FC-9363-BD757B9FA1CE}</ProjectGuid>
+    <ProjectGuid>{9A7432D8-0C8B-4C46-B405-B6D1080E6811}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SadConsole.Core.Windows</RootNamespace>
@@ -37,7 +37,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseBuild|AnyCPU'">
     <OutputPath>bin\ReleaseBuild\</OutputPath>
     <DefineConstants>TRACE;MONOGAME</DefineConstants>
-    <DocumentationFile>bin\Release\SadConsole.Core.Windows.xml</DocumentationFile>
+    <DocumentationFile>bin\ReleaseBuild\SadConsole.Core.Windows.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
