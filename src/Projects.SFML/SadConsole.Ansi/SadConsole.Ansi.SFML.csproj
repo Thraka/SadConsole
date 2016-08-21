@@ -37,7 +37,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseBuild|AnyCPU'">
     <OutputPath>bin\ReleaseBuild\</OutputPath>
     <DefineConstants>TRACE;SFML</DefineConstants>
-    <DocumentationFile>bin\Release\SadConsole.Ansi.SFML.xml</DocumentationFile>
+    <DocumentationFile>bin\ReleaseBuild\SadConsole.Ansi.SFML.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

@@ -37,13 +37,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseBuild|AnyCPU'">
     <OutputPath>bin\ReleaseBuild\</OutputPath>
     <DefineConstants>TRACE;MONOGAME</DefineConstants>
-    <DocumentationFile>bin\Release\SadConsole.Ansi.Windows.xml</DocumentationFile>
+    <DocumentationFile>bin\ReleaseBuild\SadConsole.Ansi.Windows.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugBuild|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugBuild\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;MONOGAME</DefineConstants>
+    <DocumentationFile>bin\DebugBuild\SadConsole.Ansi.Windows.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL">
@@ -76,8 +86,8 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>-->
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'ReleaseBuild'">
-    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory ..\..\..\nuget\">
-    </Exec>
-  </Target>
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'ReleaseBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'DebugBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=DebugBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+  </PropertyGroup>
 </Project>

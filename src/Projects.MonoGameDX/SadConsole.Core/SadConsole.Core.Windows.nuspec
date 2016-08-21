@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core</id>
-    <version>4.0.1</version>
+    <version>4.2.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,13 +12,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-4.0.1: Fixed startup edge case.
-
-4.0.0: Engine has changed a bit. Provides simple init system now. Other minor interface changes. Uses .NET 4.5 now.
-
-3.1.1: AnimatedTextSurfaces that had fonts set would not render the current animation frame on a stopped or single frame animation.
-    
-3.1.0: Minor bug fixes. Altered a bit of the Effects system.
+- Fixed Layered console serialization. 
+- Window centers after resize now. 
+- Virtual cursor now support wrapping lines at the word level and linux line endings. 
+- Added REXPaint image support back in.
+- Jumped to version 4.2.0 to fix how how I was using versioning incorrectly.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

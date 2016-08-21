@@ -86,6 +86,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)IDraw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\TextureToSurfaceReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Box.cs" />

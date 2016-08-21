@@ -21,7 +21,7 @@ namespace StarterProject
             SadConsole.Engine.EngineUpdated += Engine_EngineUpdated;
 
             SadConsole.Engine.EngineDrawFrame += Engine_EngineDrawFrame;
-
+            
             // Start the game.
             SadConsole.Engine.Run();
         }
@@ -46,6 +46,9 @@ namespace StarterProject
                 {
                     _characterWindow.Show(true);
                 }
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
+                {
+                }
             }
         }
 
@@ -58,7 +61,7 @@ namespace StarterProject
             // We don't want to use that for the sample project so we'll remove it.
             SadConsole.Engine.ConsoleRenderStack.Clear();
             SadConsole.Engine.ActiveConsole = null;
-
+            
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
@@ -89,6 +92,8 @@ namespace StarterProject
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
             //SadConsole.Engine.MonoGameInstance.UnlockFPS();
         }
+
+        
 
         private static void MoveNextConsole()
         {

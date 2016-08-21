@@ -37,7 +37,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseBuild|AnyCPU'">
     <OutputPath>bin\ReleaseBuild\</OutputPath>
     <DefineConstants>TRACE;MONOGAME</DefineConstants>
-    <DocumentationFile>bin\Release\SadConsole.Core.Windows.xml</DocumentationFile>
+    <DocumentationFile>bin\ReleaseBuild\SadConsole.Core.Windows.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

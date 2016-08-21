@@ -40,7 +40,7 @@
     <OutputPath>bin\ReleaseBuild\</OutputPath>
     <DefineConstants>TRACE;SFML</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\SadConsole.Core.SFML.xml</DocumentationFile>
+    <DocumentationFile>bin\ReleaseBuild\SadConsole.Core.SFML.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

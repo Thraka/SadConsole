@@ -39,6 +39,11 @@ namespace StarterProject
                 {
                     _characterWindow.Show(true);
                 }
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(SFML.Window.Keyboard.Key.F3))
+                {
+                    _characterWindow.Show(true);
+                    Engine.DefaultFont.ResizeGraphicsDeviceManager(Engine.Device, 120, 60, 0, 0);
+                }
             }
         }
 
