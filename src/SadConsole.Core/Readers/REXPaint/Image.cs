@@ -40,8 +40,11 @@ namespace SadConsole.Readers.REXPaint
         /// <summary>
         /// The total number of layers for this image.
         /// </summary>
-        public int LayerCount { get; private set; }
+        public int LayerCount { get { return layers.Count; } }
 
+        /// <summary>
+        /// A read-only collection of layers.
+        /// </summary>
         public System.Collections.ObjectModel.ReadOnlyCollection<Layer> Layers { get { return new System.Collections.ObjectModel.ReadOnlyCollection<Layer>(layers); } }
 
         /// <summary>
