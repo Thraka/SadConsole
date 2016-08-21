@@ -87,12 +87,8 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>-->
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'ReleaseBuild'">
-    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory ..\..\..\nuget\">
-    </Exec>
-  </Target>
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'DebugBuild'">
-    <Exec Command="nuget pack $(ProjectName).csproj -IncludeReferencedProjects -Symbols -Prop Configuration=DebugBuild -OutputDirectory ..\..\..\nuget\">
-    </Exec>
-  </Target>
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'ReleaseBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'DebugBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=DebugBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+  </PropertyGroup>
 </Project>
