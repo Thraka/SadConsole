@@ -173,10 +173,11 @@ namespace SadConsole.Readers.REXPaint
                         layer = image.Create();
 
                     // Process cells (could probably be streamlined into index processing instead of x,y...
-                    for (int y = 0; y < height; y++)
+                    for (int x = 0; x < width; x++)
                     {
-                        for (int x = 0; x < width; x++)
+                        for (int y = 0; y < height; y++)
                         {
+
                             var cell = new Cell(reader.ReadInt32(),                                                  // character
                                                 new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte()),  // foreground
                                                 new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte())); // background
