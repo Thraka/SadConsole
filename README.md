@@ -1,6 +1,7 @@
 ![SadConsole Logo](images/SadConsoleLogo.gif)
 
 [![Join us on Reddit](https://img.shields.io/badge/reddit-SadConsole-red.svg)](http://reddit.com/r/sadconsole)
+[![Join the chat at https://gitter.im/Thraka/SadConsole](https://badges.gitter.im/Thraka/SadConsole.svg)](https://gitter.im/Thraka/SadConsole?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub commits](https://img.shields.io/github/commits-since/Thraka/SadConsole/V2.svg?maxAge=2592000)]()
 
 
