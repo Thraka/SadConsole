@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.MonoGameGL</id>
-    <version>4.2.0</version>
+    <version>4.2.1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,11 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
-- Fixed Layered console serialization. 
-- Window centers after resize now. 
-- Virtual cursor now support wrapping lines at the word level and linux line endings. 
-- Added REXPaint image support back in.
-- Jumped to version 4.2.0 to fix how how I was using versioning incorrectly.
+Fixed RexPaint image loading to be column-major.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
