@@ -142,10 +142,20 @@ namespace SadConsole.Consoles
                 }
             }
         }
-        
+
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Creates a new animation with the specified name, width, and height.
+        /// </summary>
+        /// <param name="name">The name of the animation.</param>
+        /// <param name="width">The width of each frame this animation will have.</param>
+        /// <param name="height">The height of each frame this animation will have.</param>
+        public AnimatedTextSurface(string name, int width, int height) : this(name, width, height, Engine.DefaultFont)
+        {
+        }
+
         /// <summary>
         /// Creates a new animation with the specified name, width, and height.
         /// </summary>

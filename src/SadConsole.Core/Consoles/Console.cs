@@ -266,13 +266,27 @@ namespace SadConsole.Consoles
         /// </summary>
         public bool UsePixelPositioning { get; set; } = false;
 
-#region Constructors
-        //public Console() : this(1, 1, Engine.DefaultFont) { }
+        #region Constructors
 
+        /// <summary>
+        /// Creates a new console with the specified width and height, using the <see cref="Engine.DefaultFont"/>.
+        /// </summary>
+        /// <param name="width">The width of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
+        /// <param name="height">The height of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
         public Console(int width, int height): this(width, height, Engine.DefaultFont) { }
 
+        /// <summary>
+        /// Creates a new console with the specified width and height, using the specified font.
+        /// </summary>
+        /// <param name="width">The width of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
+        /// <param name="height">The height of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
+        /// <param name="font">The font to use.</param>
         public Console(int width, int height, Font font) : this(new TextSurface(width, height, font)) { }
 
+        /// <summary>
+        /// Wraps an existing text surface using a <see cref="TextSurfaceRenderer"/> to render.
+        /// </summary>
+        /// <param name="textData">The backing text surface.</param>
         public Console(ITextSurfaceRendered textData): base(textData)
         {
             _virtualCursor = new Cursor(this);

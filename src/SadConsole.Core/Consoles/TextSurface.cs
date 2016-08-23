@@ -108,13 +108,22 @@ namespace SadConsole.Consoles
                 ResetArea();
             }
         }
-#endregion
+        #endregion
+
+        /// <summary>
+        /// Creates a new text surface with the specified width and height and <see cref="Engine.DefaultFont"/>.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        public TextSurface(int width, int height) : this(width, height, Engine.DefaultFont)
+        {
+        }
 
         /// <summary>
         /// Creates a new text surface with the specified width and height.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
-        /// <param name="height">THe height of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         public TextSurface(int width, int height, Font font): base(width, height)
         {
@@ -123,10 +132,20 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
+        /// Creates a new text surface with the specified width, height, and initial set of cell data. Uses <see cref="Engine.DefaultFont"/>.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="initialCells"></param>
+        public TextSurface(int width, int height, Cell[] initialCells) : this(width, height, initialCells, Engine.DefaultFont)
+        {
+        }
+
+        /// <summary>
         /// Creates a new text surface with the specified width, height, and initial set of cell data.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
-        /// <param name="height">THe height of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells"></param>
         public TextSurface(int width, int height, Cell[] initialCells, Font font) : base(width, height, initialCells)

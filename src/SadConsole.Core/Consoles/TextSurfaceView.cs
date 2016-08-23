@@ -15,6 +15,10 @@ namespace SadConsole.Consoles
     public class TextSurfaceView : TextSurface
     {
         private ITextSurfaceRendered data;
+
+        /// <summary>
+        /// The original area used when creating this view.
+        /// </summary>
         protected Rectangle originalArea;
         
         /// <summary>
