@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core</id>
-    <version>4.2.1</version>
+    <version>4.2.2-pre1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-Fixed RexPaint image loading to be column-major.
+Added default constructors for types that use font. Defaults use Engine.DefaultFont now.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
