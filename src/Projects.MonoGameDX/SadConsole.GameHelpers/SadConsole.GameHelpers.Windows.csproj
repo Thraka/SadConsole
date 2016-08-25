@@ -91,7 +91,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(Configuration)' == 'ReleaseBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(Configuration)' == 'DebugBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=DebugBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'ReleaseBuild'">nuget pack $(MSBuildProjectFullPath) -IncludeReferencedProjects -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'DebugBuild'">nuget pack $(MSBuildProjectFullPath) -IncludeReferencedProjects -Symbols -Prop Configuration=DebugBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
   </PropertyGroup>
 </Project>
