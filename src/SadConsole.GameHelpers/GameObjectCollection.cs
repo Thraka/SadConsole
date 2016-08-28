@@ -22,68 +22,123 @@ namespace SadConsole.Game
     {
         List<GameObject> backingList = new List<GameObject>();
 
+        /// <summary>
+        /// Gets or sets a game object by index.
+        /// </summary>
+        /// <param name="index">Index in the collection.</param>
+        /// <returns>A game object.</returns>
         public GameObject this[int index]
         {
             get { return backingList[index]; }
-            set { backingList[index] = value; }
+            set { backingList[index] = value; value.RepositionRects = true; }
         }
 
+        /// <summary>
+        /// The amount of items in the collection.
+        /// </summary>
         public int Count
         {
             get { return backingList.Count; }
         }
 
+        /// <summary>
+        /// Always false.
+        /// </summary>
         public bool IsReadOnly
         {
             get { return false; }
         }
 
+        /// <summary>
+        /// Adds a game object to the collection and sets <see cref="GameObject.RepositionRects"/> to true.
+        /// </summary>
+        /// <param name="item">The game object.</param>
         public void Add(GameObject item)
         {
             item.RepositionRects = true;
             backingList.Add(item);
         }
 
+        /// <summary>
+        /// Removes all game objects from the collection.
+        /// </summary>
         public void Clear()
         {
             backingList.Clear();
         }
 
+        /// <summary>
+        /// Returns true when the specified game object exists.
+        /// </summary>
+        /// <param name="item">The game object.</param>
+        /// <returns>True or false.</returns>
         public bool Contains(GameObject item)
         {
             return backingList.Contains(item);
         }
 
+        /// <summary>
+        /// Copies the collection to an array, starting at the specified index.
+        /// </summary>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="arrayIndex">The starting index.</param>
         public void CopyTo(GameObject[] array, int arrayIndex)
         {
             backingList.CopyTo(array, arrayIndex);
         }
 
+        /// <summary>
+        /// Gets an enumerator for the collection.
+        /// </summary>
+        /// <returns>The enumerator.</returns>
         public IEnumerator<GameObject> GetEnumerator()
         {
             return backingList.GetEnumerator();
         }
 
+        /// <summary>
+        /// Gets the index of a game object.
+        /// </summary>
+        /// <param name="item">The game object.</param>
+        /// <returns></returns>
         public int IndexOf(GameObject item)
         {
             return backingList.IndexOf(item);
         }
 
+        /// <summary>
+        /// Inserts a game object at the specified index.
+        /// </summary>
+        /// <param name="index">The index of where the game object will be inserted at.</param>
+        /// <param name="item">The game object.</param>
         public void Insert(int index, GameObject item)
         {
             backingList.Insert(index, item);
         }
 
+        /// <summary>
+        /// Removes the first occurrence of a game object.
+        /// </summary>
+        /// <param name="item">The game object.</param>
+        /// <returns>Returns true if successful.</returns>
         public bool Remove(GameObject item)
         {
             return backingList.Remove(item);
         }
 
+        /// <summary>
+        /// Removes a game object at the specified index.
+        /// </summary>
+        /// <param name="index">The index to remove at.</param>
         public void RemoveAt(int index)
         {
             backingList.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Gets an enumerator for the collection.
+        /// </summary>
+        /// <returns>The enumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return backingList.GetEnumerator();
@@ -91,16 +146,52 @@ namespace SadConsole.Game
 
         GameObjectRenderer renderer = new GameObjectRenderer();
 
+        /// <summary>
+        /// Creates a new empty game object collection.
+        /// </summary>
+        public GameObjectCollection() { }
+
+        /// <summary>
+        /// Links (by reference) an existing list of game objects to be managed by this collection object.
+        /// </summary>
+        /// <param name="managedList">The game object list.</param>
+        public GameObjectCollection(ref List<GameObject> managedList)
+        {
+            backingList = managedList;
+
+            foreach (var item in backingList)
+                item.RepositionRects = true;
+        }
+
+        /// <summary>
+        /// Creates a new game object collection with the specified objects.
+        /// </summary>
+        /// <param name="initialObjects">The objects to add to this game collection.</param>
+        public GameObjectCollection(GameObject[] initialObjects)
+        {
+            backingList.AddRange(initialObjects);
+
+            foreach (var item in backingList)
+                item.RepositionRects = true;
+        }
+
+        /// <summary>
+        /// Draws all of the game objects to the screen.
+        /// </summary>
         public void Render()
         {
             renderer.Start();
 
             for (int i = 0; i < backingList.Count; i++)
-                renderer.Render(backingList[i].Animation, GameObject.NoMatrix);
+                if (backingList[i].IsVisible)
+                    renderer.Render(backingList[i].Animation, GameObject.NoMatrix);
 
             renderer.End();
         }
 
+        /// <summary>
+        /// Processes the updates for each game object.
+        /// </summary>
         public void Update()
         {
             for (int i = 0; i < backingList.Count; i++)
