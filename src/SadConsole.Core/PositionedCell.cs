@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SadConsole
 {
-    public class PositionedCell: Cell
+    internal class PositionedCell: Cell
     {
         /// <summary>
         /// The desired X location of the cell.

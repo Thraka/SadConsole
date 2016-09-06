@@ -9,13 +9,14 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using SadConsole.Consoles;
 
 namespace SadConsole.Game
 {
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
-    public class GameObject
+    public partial class GameObject: Consoles.ITextSurfaceRendered
     {
         /// <summary>
         /// A translation matrix of 0, 0, 0.
@@ -130,6 +131,92 @@ namespace SadConsole.Game
             }
         }
 
+        public Rectangle AbsoluteArea { get; set; }
+
+        public Rectangle[] RenderRects { get; set; }
+
+        public Cell[] RenderCells
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation).RenderCells;
+            }
+        }
+
+        public Color Tint
+        {
+            get { return ((ITextSurfaceRendered)animation).Tint; }
+            set { ((ITextSurfaceRendered)animation).Tint = value; }
+        }
+
+        public Rectangle RenderArea { get; set; }
+
+        public int Width
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation).Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation).Height;
+            }
+        }
+
+        public Color DefaultBackground
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation).DefaultBackground;
+            }
+
+            set
+            {
+                ((ITextSurfaceRendered)animation).DefaultBackground = value;
+            }
+        }
+
+        public Color DefaultForeground
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation).DefaultForeground;
+            }
+
+            set
+            {
+                ((ITextSurfaceRendered)animation).DefaultForeground = value;
+            }
+        }
+
+        public Cell[] Cells
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation).Cells;
+            }
+        }
+
+        public Cell this[int x, int y]
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation)[x, y];
+            }
+        }
+
+        public Cell this[int index]
+        {
+            get
+            {
+                return ((ITextSurfaceRendered)animation)[index];
+            }
+        }
+
 
         /// <summary>
         /// Creates a new GameObject.
@@ -180,9 +267,9 @@ namespace SadConsole.Game
                 }
 
 #if SFML
-                animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, (width * font.Size.X) + offset.X, (height * font.Size.Y) + offset.Y);
+                AbsoluteArea = new Rectangle(offset.X, offset.Y, (width * font.Size.X) + offset.X, (height * font.Size.Y) + offset.Y);
 #elif MONOGAME
-                animation.AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
+                AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
 #endif
 
                 int index = 0;
@@ -200,7 +287,7 @@ namespace SadConsole.Game
                     }
                 }
 
-                animation.RenderRects = rects;
+                RenderRects = rects;
             }
         }
 
@@ -220,9 +307,9 @@ namespace SadConsole.Game
             if (IsVisible)
             {
                 if (repositionRects)
-                    renderer.Render(Animation, NoMatrix);   
+                    renderer.Render(this, NoMatrix);   
                 else
-                    renderer.Render(Animation, position + renderOffset - animation.Center, usePixelPositioning);
+                    renderer.Render(this, position + renderOffset - animation.Center, usePixelPositioning);
             }
         }
 
@@ -232,138 +319,6 @@ namespace SadConsole.Game
         public virtual void Update()
         {
             Animation.Update();
-        }
-
-        /// <summary>
-        /// Saves this <see cref="GameObject"/> to a file.
-        /// </summary>
-        /// <param name="file">The file to save.</param>
-        public void Save(string file)
-        {
-            Serialized.Save(this, file);
-        }
-
-        /// <summary>
-        /// Loads a <see cref="GameObject"/> from a file.
-        /// </summary>
-        /// <param name="file">The file to load.</param>
-        /// <returns></returns>
-        public static GameObject Load(string file)
-        {
-            return Serialized.Load(file);
-        }
-
-        /// <summary>
-        /// Serialized instance of a <see cref="GameObject"/>.
-        /// </summary>
-        [DataContract]
-        public class Serialized
-        {
-            [DataMember]
-            public string storedAnimationName;
-            [DataMember]
-            public bool storedAsName;
-            [DataMember]
-            public Consoles.AnimatedTextSurface.Serialized Animation;
-            [DataMember]
-            public List<Consoles.AnimatedTextSurface.Serialized> Animations;
-            [DataMember]
-            public string FontName;
-            [DataMember]
-            public Font.FontSizes FontSize;
-            [DataMember]
-            public bool IsVisible;
-            [DataMember]
-            public Point Position;
-            [DataMember]
-            public bool RepositionRects;
-            [DataMember]
-            public bool UsePixelPositioning;
-            [DataMember]
-            public string Name;
-            [DataMember]
-            public Point RenderOffset;
-
-            public Serialized(GameObject gameObject)
-            {
-                Animations = new List<Consoles.AnimatedTextSurface.Serialized>();
-
-                foreach (var item in gameObject.Animations)
-                    Animations.Add(new Consoles.AnimatedTextSurface.Serialized(item.Value));
-
-                IsVisible = gameObject.IsVisible;
-                Position = gameObject.position;
-                RepositionRects = gameObject.repositionRects;
-                UsePixelPositioning = gameObject.usePixelPositioning;
-                Name = gameObject.Name;
-                FontName = gameObject.font.Name;
-                FontSize = gameObject.font.SizeMultiple;
-                RenderOffset = gameObject.renderOffset;
-
-                if (gameObject.Animations.ContainsValue(gameObject.animation) && gameObject.Animations.ContainsKey(gameObject.animation.Name))
-                {
-                    storedAsName = true;
-                    storedAnimationName = gameObject.animation.Name;
-                }
-                else
-                {
-                    storedAsName = false;
-                    storedAnimationName = gameObject.animation.Name;
-                    Animation = new Consoles.AnimatedTextSurface.Serialized(gameObject.animation);
-                }
-            }
-
-            public static void Save(GameObject gameObject, string file)
-            {
-                var animation = new Serialized(gameObject);
-                Serializer.Save(animation, file, new Type[] { typeof(Consoles.AnimatedTextSurface[]), typeof(Consoles.AnimatedTextSurface) });
-            }
-
-            public static GameObject Load(string file)
-            {
-                var loadedGameObject = Serializer.Load<Serialized>(file, new Type[] { typeof(Consoles.AnimatedTextSurface[]), typeof(Consoles.AnimatedTextSurface) });
-                return Get(loadedGameObject);
-                
-            }
-
-            public static GameObject Get(Serialized serializedObject)
-            {
-                Font font;
-
-                // Try to find font
-                if (Engine.Fonts.ContainsKey(serializedObject.FontName))
-                    font = Engine.Fonts[serializedObject.FontName].GetFont(serializedObject.FontSize);
-                else
-                    font = Engine.DefaultFont;
-
-                var gameObject = new GameObject(font);
-
-                gameObject.Animations = new Dictionary<string, Consoles.AnimatedTextSurface>();
-
-                foreach (var item in serializedObject.Animations)
-                {
-                    var animation = Consoles.AnimatedTextSurface.Serialized.Get(item);
-                    gameObject.Animations.Add(animation.Name, animation);
-                }
-
-                gameObject.IsVisible = serializedObject.IsVisible;
-                gameObject.position = serializedObject.Position;
-                gameObject.usePixelPositioning = serializedObject.UsePixelPositioning;
-                gameObject.Name = serializedObject.Name;
-                gameObject.font = font;
-                gameObject.repositionRects = serializedObject.RepositionRects;
-                gameObject.renderOffset = serializedObject.RenderOffset;
-
-                if (serializedObject.storedAsName)
-                    gameObject.animation = gameObject.Animations[serializedObject.storedAnimationName];
-                else
-                    gameObject.animation = Consoles.AnimatedTextSurface.Serialized.Get(serializedObject.Animation);
-
-                gameObject.animation.Font = gameObject.font;
-                gameObject.UpdateAnimationRectangles();
-
-                return gameObject;
-            }
         }
     }
 }

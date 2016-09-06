@@ -79,6 +79,9 @@ namespace SadConsole
         /// </summary>
         public int SolidGlyphIndex { get { return solidGlyphIndex; } set { solidGlyphIndex = value; solidGlyphRect = GlyphIndexRects[value]; } }
 
+        /// <summary>
+        /// The rectangle associated with the <see cref="SolidGlyphIndex"/>.
+        /// </summary>
         public Rectangle SolidGlyphRectangle { get { return solidGlyphRect; } }
 
         /// <summary>

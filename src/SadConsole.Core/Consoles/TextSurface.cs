@@ -18,12 +18,7 @@ namespace SadConsole.Consoles
     [DataContract]
     public class TextSurface : TextSurfaceBasic, IEnumerable<Cell>, ITextSurfaceRendered
     {
-        [DataMember(Name = "FontName")]
-        protected string fontName;
-
-        [DataMember(Name = "FontSize")]
-        protected Font.FontSizes fontSize;
-
+        [DataMember(Name = "Font")]
         protected Font font;
 
         [DataMember(Name = "Area")]
@@ -226,46 +221,46 @@ namespace SadConsole.Consoles
             return cells.GetEnumerator();
         }
 
-#region Serialization
-        /// <summary>
-        /// Saves the <see cref="TextSurface"/> to a file.
-        /// </summary>
-        /// <param name="file">The destination file.</param>
-        public void Save(string file)
-        {
-            Serializer.Save(this, file);
-        }
+//#region Serialization
+//        /// <summary>
+//        /// Saves the <see cref="TextSurface"/> to a file.
+//        /// </summary>
+//        /// <param name="file">The destination file.</param>
+//        public void Save(string file)
+//        {
+//            Serializer.Save(this, file);
+//        }
 
-        /// <summary>
-        /// Loads a <see cref="TextSurface"/> from a file.
-        /// </summary>
-        /// <param name="file">The source file.</param>
-        /// <returns></returns>
-        public static TextSurface Load(string file)
-        {
-            return Serializer.Load<TextSurface>(file);
-        }
+//        /// <summary>
+//        /// Loads a <see cref="TextSurface"/> from a file.
+//        /// </summary>
+//        /// <param name="file">The source file.</param>
+//        /// <returns></returns>
+//        public static TextSurface Load(string file)
+//        {
+//            return Serializer.Load<TextSurface>(file);
+//        }
 
-        [OnSerializing]
-        private void BeforeSerializing(StreamingContext context)
-        {
-            fontName = Font.Name;
-            fontSize = Font.SizeMultiple;
-        }
+//        [OnSerializing]
+//        private void BeforeSerializing(StreamingContext context)
+//        {
+//            fontName = Font.Name;
+//            fontSize = Font.SizeMultiple;
+//        }
 
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            Font font;
+//        [OnDeserialized]
+//        private void AfterDeserialized(StreamingContext context)
+//        {
+//            Font font;
 
-            // Try to find font
-            if (Engine.Fonts.ContainsKey(fontName))
-                font = Engine.Fonts[fontName].GetFont(fontSize);
-            else
-                font = Engine.DefaultFont;
+//            // Try to find font
+//            if (Engine.Fonts.ContainsKey(fontName))
+//                font = Engine.Fonts[fontName].GetFont(fontSize);
+//            else
+//                font = Engine.DefaultFont;
 
-            Font = font;
-        }
-#endregion
+//            Font = font;
+//        }
+//#endregion
     }
 }

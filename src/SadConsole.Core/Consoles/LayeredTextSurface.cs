@@ -80,6 +80,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// The current zero-based active layer index.
         /// </summary>
+        [DataMember(Name = "ActiveLayer")]
         public int ActiveLayerIndex { get; private set; }
 
         /// <summary>
@@ -396,25 +397,16 @@ namespace SadConsole.Consoles
         }
 
 
-        [OnSerializing]
-        private void BeforeSerializing(StreamingContext context)
-        {
-            fontName = Font.Name;
-            fontSize = Font.SizeMultiple;
-        }
+        //[OnSerializing]
+        //private void BeforeSerializing(StreamingContext context)
+        //{
+        //    fontName = Font.Name;
+        //    fontSize = Font.SizeMultiple;
+        //}
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
-            Font font;
-
-            // Try to find font
-            if (Engine.Fonts.ContainsKey(fontName))
-                font = Engine.Fonts[fontName].GetFont(fontSize);
-            else
-                font = Engine.DefaultFont;
-            initDone = true;
-            Font = font;
             SyncLayerIndex();
             SetActiveLayer(ActiveLayerIndex);
         }

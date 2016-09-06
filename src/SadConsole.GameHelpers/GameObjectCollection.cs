@@ -198,6 +198,7 @@ namespace SadConsole.Game
                 backingList[i].Update();
         }
 
+        [System.Runtime.Serialization.DataContract]
         private class GameObjectRenderer : Consoles.TextSurfaceRenderer
         {
 #if SFML

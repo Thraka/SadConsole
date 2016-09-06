@@ -18,6 +18,7 @@ namespace SadConsole.Consoles
     /// <summary>
     /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
     /// </summary>
+    [DataContract]
     public partial class Console : SurfaceEditor, IConsole
     {
 
@@ -42,7 +43,6 @@ namespace SadConsole.Consoles
         /// </summary>
         public event EventHandler<MouseEventArgs> MouseEnter;
 #endregion
-
         /// <summary>
         /// The renderer used to draw the <see cref="TextSurface"/>.
         /// </summary>
