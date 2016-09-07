@@ -169,6 +169,9 @@ namespace SadConsole
             else if (type == typeof(FrameworkRect))
                 return typeof(SerializedTypes.Rectangle);
 
+            else if (type == typeof(Consoles.AnimatedTextSurface))
+                return typeof(SerializedTypes.AnimatedTextSurface);
+
 #if MONOGAME
             else if (type == typeof(FrameworkSpriteEffect))
                 return typeof(SerializedTypes.SpriteEffects);
@@ -191,6 +194,9 @@ namespace SadConsole
             else if (obj is FrameworkRect)
                 return SerializedTypes.Rectangle.FromFramework((FrameworkRect)obj);
 
+            else if (obj is Consoles.AnimatedTextSurface)
+                return SerializedTypes.AnimatedTextSurface.FromFramework((Consoles.AnimatedTextSurface)obj);
+
 #if MONOGAME
             else if (obj is FrameworkSpriteEffect)
                 return (SerializedTypes.SpriteEffects)obj;
@@ -212,6 +218,9 @@ namespace SadConsole
 
             else if (obj is SerializedTypes.Rectangle)
                 return SerializedTypes.Rectangle.ToFramework((SerializedTypes.Rectangle)obj);
+
+            else if (obj is SerializedTypes.AnimatedTextSurface)
+                return SerializedTypes.AnimatedTextSurface.ToFramework((SerializedTypes.AnimatedTextSurface)obj);
 
 #if MONOGAME
             else if (obj is SerializedTypes.SpriteEffects)

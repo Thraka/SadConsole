@@ -67,6 +67,11 @@ namespace SadConsole.Consoles
                 renderedConsole.Dispose();
                 renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
             }
+            else if (renderedConsole == null)
+            {
+                renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
+            }
+
             renderedConsole.Clear(Color.Transparent);
             TextSurfaceRenderer renderer = new TextSurfaceRenderer();
             //renderer.CallBatchEnd = false;
