@@ -632,6 +632,8 @@ namespace SadConsole.Consoles
             if (!serializeTextSurface)
                 textSurface = new TextSurface(serializedWidth, serializedHeight, Engine.DefaultFont);
 
+            base.textSurface = textSurface;
+
             _virtualCursor.AttachConsole(this);
             //_virtualCursor.ResetCursorEffect();
 

@@ -300,12 +300,20 @@ namespace SadConsole.Consoles
         }
 
         #endregion
-
+        /// <summary>
+        /// Saves the animated text surface to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
             Serializer.Save(this, file);
         }
 
+        /// <summary>
+        /// Loads an animated text surface from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
         public static AnimatedTextSurface Load(string file)
         {
             return Serializer.Load<AnimatedTextSurface>(file);

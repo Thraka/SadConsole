@@ -153,6 +153,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// A tint used in rendering.
         /// </summary>
+        [DataMember]
         public Color Tint { get; set; }
 
         /// <summary>
