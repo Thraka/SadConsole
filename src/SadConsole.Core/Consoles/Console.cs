@@ -634,6 +634,9 @@ namespace SadConsole.Consoles
 
             _virtualCursor.AttachConsole(this);
             //_virtualCursor.ResetCursorEffect();
+
+            if (_renderer is ITextSurfaceRendererUpdate)
+                ((ITextSurfaceRendererUpdate)_renderer).Update(textSurface);
         }
 
         #region Serialization
