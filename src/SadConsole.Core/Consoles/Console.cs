@@ -21,8 +21,14 @@ namespace SadConsole.Consoles
     [DataContract]
     public partial class Console : SurfaceEditor, IConsole
     {
+        [DataMember(Name = "WidthNTS")]
+        private int serializedWidth;
+        [DataMember(Name = "HeightNTS")]
+        private int serializedHeight;
+        [DataMember]
+        private bool serializeTextSurface;
 
-#region Events
+        #region Events
         /// <summary>
         /// Raised when the a mosue button is clicked on this console.
         /// </summary>
@@ -42,15 +48,17 @@ namespace SadConsole.Consoles
         /// Raised when the mouse enters this console.
         /// </summary>
         public event EventHandler<MouseEventArgs> MouseEnter;
-#endregion
+        #endregion
         /// <summary>
         /// The renderer used to draw the <see cref="TextSurface"/>.
         /// </summary>
+        [DataMember(Name = "Renderer")]
         protected ITextSurfaceRenderer _renderer;
 
         /// <summary>
         /// Where the console should be located on the screen.
         /// </summary>
+        [DataMember(Name = "Position")]
         protected Point _position;
 
         /// <summary>
@@ -71,11 +79,13 @@ namespace SadConsole.Consoles
         /// <summary>
         /// The private virtual curser reference.
         /// </summary>
+        [DataMember]
         protected Cursor _virtualCursor;
 
         /// <summary>
         /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
         /// </summary>
+        [DataMember]
         public bool AutoCursorOnFocus { get; set; }
 
         /// <summary>
@@ -134,36 +144,43 @@ namespace SadConsole.Consoles
         /// <summary>
         /// When true, this console will move to the front of its parent console when focused.
         /// </summary>
+        [DataMember]
         public bool MoveToFrontOnMouseFocus { get; set; }
 
         /// <summary>
         /// Allows the mouse (with a click) to focus this console.
         /// </summary>
+        [DataMember]
         public bool MouseCanFocus { get; set; }
 
         /// <summary>
         /// Allows this console to accept keyboard input.
         /// </summary>
+        [DataMember]
         public bool CanUseKeyboard { get; set; } = true;
 
         /// <summary>
         /// Allows this console to accept mouse input.
         /// </summary>
+        [DataMember]
         public bool CanUseMouse { get; set; } = true;
 
         /// <summary>
         /// Allows this console to be focusable.
         /// </summary>
+        [DataMember]
         public bool CanFocus { get; set; }
 
         /// <summary>
         /// Indicates whether or not this console is visible.
         /// </summary>
+        [DataMember]
         public bool IsVisible { get { return _isVisible; } set { _isVisible = value; OnVisibleChanged(); } }
 
         /// <summary>
         /// When false, does not perform the code within the <see cref="Update"/> method. Defaults to true.
         /// </summary>
+        [DataMember]
         public bool DoUpdate { get; set; } = true;
 
         /// <summary>
@@ -185,6 +202,7 @@ namespace SadConsole.Consoles
                 _renderer.AfterRenderCallback = this.OnAfterRender;
             }
         }
+        [DataMember]
         protected ITextSurfaceRendered textSurface;
 
         /// <summary>
@@ -209,6 +227,7 @@ namespace SadConsole.Consoles
         /// Gets or sets this console as the <see cref="Engine.ActiveConsole"/> value.
         /// </summary>
         /// <remarks>If the <see cref="Engine.ActiveConsole"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
+        [DataMember]
         public bool IsFocused
         {
             get { return Engine.ActiveConsole == this; }
@@ -249,6 +268,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Gets or sets whether or not this console has exclusive access to the mouse events.
         /// </summary>
+        [DataMember]
         public bool ExclusiveFocus { get; set; }
 
         /// <summary>
@@ -264,6 +284,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
         /// </summary>
+        [DataMember]
         public bool UsePixelPositioning { get; set; } = false;
 
         #region Constructors
@@ -273,7 +294,7 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="width">The width of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
         /// <param name="height">The height of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
-        public Console(int width, int height): this(width, height, Engine.DefaultFont) { }
+        public Console(int width, int height) : this(width, height, Engine.DefaultFont) { }
 
         /// <summary>
         /// Creates a new console with the specified width and height, using the specified font.
@@ -287,14 +308,14 @@ namespace SadConsole.Consoles
         /// Wraps an existing text surface using a <see cref="TextSurfaceRenderer"/> to render.
         /// </summary>
         /// <param name="textData">The backing text surface.</param>
-        public Console(ITextSurfaceRendered textData): base(textData)
+        public Console(ITextSurfaceRendered textData) : base(textData)
         {
             _virtualCursor = new Cursor(this);
             Renderer = new TextSurfaceRenderer();
             textSurface = textData;
         }
-#endregion
-        
+        #endregion
+
         protected virtual void OnMouseEnter(MouseInfo info)
         {
             if (MouseEnter != null)
@@ -328,7 +349,7 @@ namespace SadConsole.Consoles
                 MouseButtonClicked(this, new MouseEventArgs(info));
         }
 
-        
+
         /// <summary>
         /// Processes the mouse.
         /// </summary>
@@ -417,7 +438,7 @@ namespace SadConsole.Consoles
 
                             case Keys.Pause:
                             case Keys.Escape:
-                            case Keys.F1:case Keys.F2:case Keys.F3:case Keys.F4:case Keys.F5:case Keys.F6:case Keys.F7:case Keys.F8:case Keys.F9: case Keys.F10:case Keys.F11:case Keys.F12:
+                            case Keys.F1: case Keys.F2: case Keys.F3: case Keys.F4: case Keys.F5: case Keys.F6: case Keys.F7: case Keys.F8: case Keys.F9: case Keys.F10: case Keys.F11: case Keys.F12:
 #if MONOGAME
                             case Keys.LeftShift:
                             case Keys.RightShift:
@@ -427,7 +448,7 @@ namespace SadConsole.Consoles
                             case Keys.RightControl:
                             case Keys.LeftWindows:
                             case Keys.RightWindows:
-                            case Keys.F13:case Keys.F14:case Keys.F15:case Keys.F16:case Keys.F17:case Keys.F18:case Keys.F19:case Keys.F20:case Keys.F21:case Keys.F22:case Keys.F23:case Keys.F24:
+                            case Keys.F13: case Keys.F14: case Keys.F15: case Keys.F16: case Keys.F17: case Keys.F18: case Keys.F19: case Keys.F20: case Keys.F21: case Keys.F22: case Keys.F23: case Keys.F24:
 #elif SFML
 							case Keys.LShift:
 							case Keys.RShift:
@@ -481,7 +502,7 @@ namespace SadConsole.Consoles
             return handlerResult;
         }
 
-        
+
 
         /// <summary>
         /// Called when the visibility of the console changes.
@@ -582,8 +603,40 @@ namespace SadConsole.Consoles
             }
         }
 
+        private object oldTextSurface;
 
-#region Serialization
+        [OnSerializing]
+        private void BeforeSerializing(StreamingContext context)
+        {
+            if (!serializeTextSurface)
+            {
+                oldTextSurface = textSurface;
+                serializedWidth = textSurface.Width;
+                serializedHeight = textSurface.Height;
+                textSurface = null;
+            }
+        }
+
+        [OnSerialized]
+        private void AfterSerializing(StreamingContext context)
+        {
+            if (!serializeTextSurface)
+                textSurface = (ITextSurfaceRendered)oldTextSurface;
+
+            oldTextSurface = null;
+        }
+
+        [OnDeserialized]
+        private void AfterDeserialized(StreamingContext context)
+        {
+            if (!serializeTextSurface)
+                textSurface = new TextSurface(serializedWidth, serializedHeight, Engine.DefaultFont);
+
+            _virtualCursor.AttachConsole(this);
+            //_virtualCursor.ResetCursorEffect();
+        }
+
+        #region Serialization
         /// <summary>
         /// Saves the <see cref="Console"/> to a file.
         /// </summary>
@@ -592,8 +645,10 @@ namespace SadConsole.Consoles
         /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
         public void Save(string file, bool saveTextSurface, params Type[] knownTypes)
         {
-            new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            //new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
             //Serializer.Save(this, file, new Type[] { typeof(CellAppearance) });
+            serializeTextSurface = saveTextSurface;
+            Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes));
         }
 
         /// <summary>
@@ -605,124 +660,10 @@ namespace SadConsole.Consoles
         public static Console Load(string file, params Type[] knownTypes)
         {
             //return Serializer.Load<Console>(file, new Type[] { typeof(CellAppearance) });
-            return Serialized.Load(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            //return Serialized.Load(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            return Serializer.Load<Console>(file, knownTypes.Union(Serializer.ConsoleTypes));
         }
-
-        /// <summary>
-        /// Serialized instance of a <see cref="Console"/>.
-        /// </summary>
-        [DataContract]
-        public class Serialized
-        {
-            [DataMember]
-            public bool AutoCursorOnFocus;
-            [DataMember]
-            public bool CanFocus;
-            [DataMember]
-            public bool CanUseKeyboard;
-            [DataMember]
-            public bool CanUseMouse;
-            [DataMember]
-            public ITextSurfaceRendered TextSurface;
-            [DataMember]
-            public bool DoUpdate;
-            [DataMember]
-            public bool ExclusiveFocus;
-            [DataMember]
-            public bool IsFocused;
-            [DataMember]
-            public bool IsVisible;
-            [DataMember]
-            public bool MouseCanFocus;
-            [DataMember]
-            public bool MoveToFrontOnMouseFocus;
-            [DataMember]
-            public Point Position;
-            [DataMember]
-            public ITextSurfaceRenderer Renderer;
-            [DataMember]
-            public bool UsePixelPositioning;
-            [DataMember]
-            public Cursor VirtualCursor;
-            [DataMember]
-            public int Width;
-            [DataMember]
-            public int Height;
-
-            /// <summary>
-            /// Creates a serialized object from an existing <see cref="Console"/>.
-            /// </summary>
-            /// <param name="surface">The surface to serialize.</param>
-            public Serialized(Console console, bool serializeTextSurface)
-            {
-                AutoCursorOnFocus = console.AutoCursorOnFocus;
-                CanFocus = console.CanFocus;
-                CanUseKeyboard = console.CanUseKeyboard;
-                CanUseMouse = console.CanUseMouse;
-                if (serializeTextSurface)
-                    TextSurface = console.TextSurface;
-
-                Width = console.Width;
-                Height = console.Height;
-                DoUpdate = console.DoUpdate;
-                ExclusiveFocus = console.ExclusiveFocus;
-                IsFocused = console.IsFocused;
-                IsVisible = console.IsVisible;
-                MouseCanFocus = console.MouseCanFocus;
-                MoveToFrontOnMouseFocus = console.MoveToFrontOnMouseFocus;
-                Position = console.Position;
-                Renderer = console.Renderer;
-                UsePixelPositioning = console.UsePixelPositioning;
-                VirtualCursor = console.VirtualCursor;
-            }
-
-            protected Serialized() { }
-
-            /// <summary>
-            /// Saves the serialized <see cref="Console"/> to a file.
-            /// </summary>
-            /// <param name="file">The destination file.</param>
-            public void Save(string file, params Type[] knownTypes)
-            {
-                SadConsole.Serializer.Save(this, file, knownTypes);
-            }
-
-            /// <summary>
-            /// Loads a <see cref="Consoles.TextSurface"/> from a file.
-            /// </summary>
-            /// <param name="file">The source file.</param>
-            /// <returns>A surface.</returns>
-            public static Console Load(string file, params Type[] knownTypes)
-            {
-                var data = Serializer.Load<Serialized>(file, knownTypes);
-                Console console = new Console(data.TextSurface);
-
-                console.AutoCursorOnFocus = data.AutoCursorOnFocus;
-                console.CanFocus = data.CanFocus;
-                console.CanUseKeyboard = data.CanUseKeyboard;
-                console.CanUseMouse = data.CanUseMouse;
-
-                if (data.TextSurface != null)
-                    console.TextSurface = data.TextSurface;
-                else
-                    console.TextSurface = new TextSurface(data.Width, data.Height, Engine.DefaultFont);
-
-                console.DoUpdate = data.DoUpdate;
-                console.ExclusiveFocus = data.ExclusiveFocus;
-                console.IsFocused = data.IsFocused;
-                console.IsVisible = data.IsVisible;
-                console.MouseCanFocus = data.MouseCanFocus;
-                console.MoveToFrontOnMouseFocus = data.MoveToFrontOnMouseFocus;
-                console.Position = data.Position;
-                console.Renderer = data.Renderer;
-                console.UsePixelPositioning = data.UsePixelPositioning;
-                console._virtualCursor = data.VirtualCursor;
-                console._virtualCursor.AttachConsole(console);
-                console._virtualCursor.ResetCursorEffect();
-
-                return console;
-            }
-        }
+        
 #endregion
 
     }

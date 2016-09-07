@@ -72,6 +72,7 @@ namespace StarterProject
                                         //new CustomConsoles.DOSConsole(),
                                         //new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.ViewsAndSubViews(),
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.BorderedConsole(),
@@ -89,8 +90,16 @@ namespace StarterProject
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
+            //SadConsole.Effects.Fade a = new SadConsole.Effects.Fade();
+            //a.DestinationForeground = Microsoft.Xna.Framework.Color.Turquoise;
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
             //SadConsole.Engine.MonoGameInstance.UnlockFPS();
+
+            var testConosle = new SadConsole.Consoles.Console(10, 10);
+            testConosle.Print(0, 0, "hello");
+            //Serializer.Save(testConosle, "test.console");
+            testConosle.Save("test.console", true);
+            testConosle = SadConsole.Consoles.Console.Load("test.console");
         }
 
         

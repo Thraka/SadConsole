@@ -14,17 +14,17 @@ namespace SadConsole.SerializedTypes
     [DataContract]
     public struct Point
     {
-        public int Xabc;
+        public int X;
         public int Y;
 
         public static Point FromFramework(FrameworkPoint point)
         {
-            return new Point() { Xabc = point.X, Y = point.Y };
+            return new Point() { X = point.X, Y = point.Y };
         }
 
         public static FrameworkPoint ToFramework(Point point)
         {
-            return new FrameworkPoint(point.Xabc, point.Y);
+            return new FrameworkPoint(point.X, point.Y);
         }
     }
 }

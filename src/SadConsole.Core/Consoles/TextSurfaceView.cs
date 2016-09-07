@@ -14,11 +14,15 @@ namespace SadConsole.Consoles
     /// <summary>
     /// A sub-view of an existing surface. Treated as it's own surface though, it shares the cell data with the original surface.
     /// </summary>
+    [DataContract]
     public class TextSurfaceView : ITextSurfaceRendered
     {
         protected Cell[] cells;
+
+        [DataMember(Name = "Font")]
         protected Font font;
         protected Rectangle renderArea;
+        [DataMember(Name = "ViewArea")]
         protected Rectangle viewArea;
         protected Rectangle[] renderRects;
 
@@ -71,11 +75,13 @@ namespace SadConsole.Consoles
         /// <summary>
         /// The default background color.
         /// </summary>
+        [DataMember]
         public Color DefaultBackground { get; set; }
 
         /// <summary>
         /// The default foreground color.
         /// </summary>
+        [DataMember]
         public Color DefaultForeground { get; set; }
 
         /// <summary>
@@ -254,23 +260,9 @@ namespace SadConsole.Consoles
         /// <returns>A surface view.</returns>
         public static TextSurfaceView Load(string file, ITextSurfaceRendered surfaceHydrate)
         {
-            //Serialized data = Serializer.Load<Serialized>(file);
-            //Font font;
-            //// Try to find font
-            //if (Engine.Fonts.ContainsKey(data.FontName))
-            //    font = Engine.Fonts[data.FontName].GetFont(data.FontMultiple);
-            //else
-            //    font = Engine.DefaultFont;
-
-            //TextSurfaceView newSurface = new TextSurfaceView(surfaceHydrate, data.Area);
-            //newSurface.Font = font;
-            //newSurface.DefaultBackground = data.DefaultBackground;
-            //newSurface.DefaultForeground = data.DefaultForeground;
-            //newSurface.Tint = data.Tint;
-
-            //return newSurface;
-
-            return null;
+            TextSurfaceView surface = Serializer.Load<TextSurfaceView>(file);
+            surface.Hydrate(surfaceHydrate);
+            return surface;
         }
     }
 }

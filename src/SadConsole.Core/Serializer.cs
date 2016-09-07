@@ -34,7 +34,7 @@ namespace SadConsole
 
         static Serializer()
         {
-            ConsoleTypes = new Type[] { typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceView), typeof(Consoles.ConsoleList), typeof(Consoles.TextSurfaceRenderer), typeof(Cell), typeof(CellAppearance), typeof(Consoles.Cursor), typeof(Consoles.LayeredTextSurface) };//typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.LayeredTextRenderer) };
+            ConsoleTypes = new Type[] { typeof(Consoles.AnimatedTextSurface), typeof(Consoles.ConsoleList), typeof(Consoles.LayeredTextSurface), typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceBasic), typeof(Consoles.TextSurfaceView), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.TextSurfaceRenderer), typeof(CellAppearance) };
         }
 
         ///// <summary>
