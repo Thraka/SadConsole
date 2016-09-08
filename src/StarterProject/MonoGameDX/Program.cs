@@ -94,6 +94,10 @@ namespace StarterProject
             //a.DestinationForeground = Microsoft.Xna.Framework.Color.Turquoise;
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
             //SadConsole.Engine.MonoGameInstance.UnlockFPS();
+
+            var gameObj = new SadConsole.Game.GameObject() { Animation = SadConsole.Game.Animations.CreateStatic(10, 10, 10, 0.5d) };
+            gameObj.Save("test.gameobject");
+            gameObj = SadConsole.Game.GameObject.Load("test.gameobject");
         }
 
         

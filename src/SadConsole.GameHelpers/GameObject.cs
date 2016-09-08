@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Linq;
 using SadConsole.Consoles;
 
 namespace SadConsole.Game
@@ -16,6 +17,7 @@ namespace SadConsole.Game
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
+    [DataContract]
     public partial class GameObject: Consoles.ITextSurfaceRendered
     {
         /// <summary>
@@ -59,7 +61,7 @@ namespace SadConsole.Game
         /// <summary>
         /// Gets the name of this animation.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// Font for the game object.
@@ -219,6 +221,11 @@ namespace SadConsole.Game
 
 
         /// <summary>
+        /// Creates a new GameObject with the default font.
+        /// </summary>
+        public GameObject() : this(Engine.DefaultFont) { }
+
+        /// <summary>
         /// Creates a new GameObject.
         /// </summary>
         public GameObject(Font font)
@@ -319,6 +326,35 @@ namespace SadConsole.Game
         public virtual void Update()
         {
             Animation.Update();
+        }
+
+        /// <summary>
+        /// Saves this <see cref="GameObject"/> to a file.
+        /// </summary>
+        /// <param name="file">The file to save.</param>
+        /// <param name="knownTypes">The type of <see cref="GameObject.Renderer"/>.</param>
+        public void Save(string file, params Type[] knownTypes)
+        {
+            EnsureMapping();
+            Serializer.Save(this, file, Serializer.ConsoleTypes.Union(knownTypes).Union(new Type[] { typeof(GameObjectSerialized), typeof(Consoles.AnimatedTextSurface), typeof(Consoles.AnimatedTextSurface[]) }));
+        }
+
+        /// <summary>
+        /// Loads a <see cref="GameObject"/> from a file.
+        /// </summary>
+        /// <param name="file">The file to load.</param>
+        /// <param name="knownTypes">The type of <see cref="GameObject.Renderer"/>.</param>
+        /// <returns>A new GameObject.</returns>
+        public static GameObject Load(string file, params Type[] knownTypes)
+        {
+            EnsureMapping();
+            return Serializer.Load<GameObject>(file, Serializer.ConsoleTypes.Union(knownTypes));
+        }
+
+        internal static void EnsureMapping()
+        {
+            if (!Serializer.HasMapping(typeof(GameObject), typeof(GameObjectSerialized)))
+                Serializer.AddMapping(typeof(GameObject), typeof(GameObjectSerialized), (obj) => { return (object)GameObjectSerialized.FromFramework((GameObject)obj); }, (obj) => { return (object)GameObjectSerialized.ToFramework((GameObjectSerialized)obj); });
         }
     }
 }

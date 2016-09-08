@@ -27,6 +27,30 @@ namespace SadConsole
     /// </summary>
     public static partial class Serializer
     {
+        internal static Dictionary<Type, TypeMapping> TypeMappingsToTarget = new Dictionary<Type, TypeMapping>();
+        internal static Dictionary<Type, TypeMapping> TypeMappingsToSource = new Dictionary<Type, TypeMapping>();
+
+        public static void AddMapping(Type sourceType, Type targetType, Func<object, object> toTarget, Func<object, object> fromTarget)
+        {
+            TypeMapping mapping = new TypeMapping();
+
+            mapping.SourceType = sourceType;
+            mapping.TargetType = targetType;
+            mapping.ToTarget = toTarget;
+            mapping.FromTarget = fromTarget;
+
+            TypeMappingsToTarget[mapping.SourceType] = mapping;
+            TypeMappingsToSource[mapping.TargetType] = mapping;
+        }
+
+        public static bool HasMapping(Type sourceType, Type targetType)
+        {
+            if (TypeMappingsToTarget.ContainsKey(sourceType))
+                return TypeMappingsToTarget[sourceType].TargetType == targetType;
+
+            return false;
+        }
+
         /// <summary>
         /// The types commonly used when sesrializing a basic console.
         /// </summary>
@@ -151,7 +175,13 @@ namespace SadConsole
         }
     }
 
-    
+    internal class TypeMapping
+    {
+        public Type SourceType;
+        public Type TargetType;
+        public Func<object, object> ToTarget;
+        public Func<object, object> FromTarget;
+    }
 
     internal class SerializerSurrogate : IDataContractSurrogate
     {
@@ -177,6 +207,9 @@ namespace SadConsole
                 return typeof(SerializedTypes.SpriteEffects);
 #endif
 
+            else if (Serializer.TypeMappingsToTarget.ContainsKey(type))
+                return Serializer.TypeMappingsToTarget[type].TargetType;
+
             return type;
         }
 
@@ -201,7 +234,10 @@ namespace SadConsole
             else if (obj is FrameworkSpriteEffect)
                 return (SerializedTypes.SpriteEffects)obj;
 #endif
-
+            
+            else if (Serializer.TypeMappingsToTarget.ContainsKey(obj.GetType()))
+                return Serializer.TypeMappingsToTarget[obj.GetType()].ToTarget(obj);
+            
             return obj;
         }
 
@@ -226,6 +262,9 @@ namespace SadConsole
             else if (obj is SerializedTypes.SpriteEffects)
                 return (FrameworkSpriteEffect)obj;
 #endif
+
+            else if (Serializer.TypeMappingsToSource.ContainsKey(obj.GetType()))
+                return Serializer.TypeMappingsToSource[obj.GetType()].FromTarget(obj);
 
             return obj;
         }

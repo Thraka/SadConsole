@@ -12,14 +12,17 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Collections;
 using SadConsole.Consoles;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Game
 {
     /// <summary>
     /// A collection of game objects with cached renderer
     /// </summary>
+    [DataContract]
     public class GameObjectCollection : IList<GameObject>
     {
+        [DataMember(Name = "Objects")]
         List<GameObject> backingList = new List<GameObject>();
 
         /// <summary>
@@ -198,7 +201,7 @@ namespace SadConsole.Game
                 backingList[i].Update();
         }
 
-        [System.Runtime.Serialization.DataContract]
+        [DataContract]
         private class GameObjectRenderer : Consoles.TextSurfaceRenderer
         {
 #if SFML
