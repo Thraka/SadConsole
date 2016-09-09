@@ -14,6 +14,7 @@ namespace SadConsole.Consoles
     /// <summary>
     /// Animates a list of frames.
     /// </summary>
+    [DataContract]
     public class AnimatedTextSurface: TextSurface
     {
         /// <summary>
@@ -142,10 +143,20 @@ namespace SadConsole.Consoles
                 }
             }
         }
-        
+
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Creates a new animation with the specified name, width, and height.
+        /// </summary>
+        /// <param name="name">The name of the animation.</param>
+        /// <param name="width">The width of each frame this animation will have.</param>
+        /// <param name="height">The height of each frame this animation will have.</param>
+        public AnimatedTextSurface(string name, int width, int height) : this(name, width, height, Engine.DefaultFont)
+        {
+        }
+
         /// <summary>
         /// Creates a new animation with the specified name, width, and height.
         /// </summary>
@@ -289,15 +300,23 @@ namespace SadConsole.Consoles
         }
 
         #endregion
-
+        /// <summary>
+        /// Saves the animated text surface to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serialized.Save(this, file);
+            Serializer.Save(this, file);
         }
 
+        /// <summary>
+        /// Loads an animated text surface from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
         public static AnimatedTextSurface Load(string file)
         {
-            return Serialized.Load(file);
+            return Serializer.Load<AnimatedTextSurface>(file);
         }
 
 
@@ -362,77 +381,6 @@ namespace SadConsole.Consoles
             /// The animation is no longer the current animation for an entity.
             /// </summary>
             Deactivated
-        }
-
-
-        /// <summary>
-        /// Serialized instance of a <see cref="AnimatedTextSurface"/>.
-        /// </summary>
-        [DataContract]
-        public class Serialized
-        {
-            [DataMember]
-            public TextSurfaceBasic[] Frames;
-            [DataMember]
-            public int Width;
-            [DataMember]
-            public int Height;
-            [DataMember]
-            public float AnimationDuration;
-            [DataMember]
-            public string FontName;
-            [DataMember]
-            public Font.FontSizes FontSize;
-            [DataMember]
-            public string Name;
-            [DataMember]
-            public bool Repeat;
-            [DataMember]
-            public Point Center;
-
-            public Serialized(AnimatedTextSurface surface)
-            {
-                Frames = surface.Frames.ToArray();
-                Width = surface.width;
-                Height = surface.height;
-                AnimationDuration = surface.AnimationDuration;
-                Name = surface.Name;
-                FontName = surface.font.Name;
-                FontSize = surface.font.SizeMultiple;
-                Repeat = surface.Repeat;
-                Center = surface.Center;
-            }
-
-            public static void Save(AnimatedTextSurface surface, string file)
-            {
-                var animation = new Serialized(surface);
-                Serializer.Save(animation, file, new Type[] { typeof(List<TextSurfaceBasic>), typeof(Font) });
-            }
-
-            public static AnimatedTextSurface Load(string file)
-            {
-                var animation = Serializer.Load<Serialized>(file, new Type[] { typeof(List<TextSurfaceBasic>), typeof(Font) });
-                return Get(animation);
-            }
-
-            public static AnimatedTextSurface Get(Serialized serializedObject)
-            {
-                Font font;
-
-                // Try to find font
-                if (Engine.Fonts.ContainsKey(serializedObject.FontName))
-                    font = Engine.Fonts[serializedObject.FontName].GetFont(serializedObject.FontSize);
-                else
-                    font = Engine.DefaultFont;
-
-                var animationSurface = new AnimatedTextSurface(serializedObject.Name, serializedObject.Width, serializedObject.Height, font);
-                animationSurface.Frames = new List<TextSurfaceBasic>(serializedObject.Frames);
-                animationSurface.UpdateFrameReferences();
-                animationSurface.AnimationDuration = serializedObject.AnimationDuration;
-                animationSurface.Repeat = serializedObject.Repeat;
-                animationSurface.Center = serializedObject.Center;
-                return animationSurface;
-            }
         }
     }
     

@@ -17,10 +17,6 @@ namespace SadConsole
 {
     public static partial class Engine
     {
-        #region Constants
-        public const int FontColumns = 16;
-        #endregion
-
         #region Fields
         public static event EventHandler EngineUpdated;
         public static event EventHandler EngineDrawFrame;
@@ -187,16 +183,13 @@ namespace SadConsole
             if (!System.IO.File.Exists(font))
                 throw new Exception($"Font does not exist: {font}");
 
-            using (var stream = System.IO.File.OpenRead(font))
-            {
-                var masterFont = SadConsole.Serializer.Deserialize<FontMaster>(stream);
+            var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
 
-                if (Fonts.ContainsKey(masterFont.Name))
-                    Fonts.Remove(masterFont.Name);
+            if (Fonts.ContainsKey(masterFont.Name))
+                Fonts.Remove(masterFont.Name);
 
-                Fonts.Add(masterFont.Name, masterFont);
-                return masterFont;
-            }
+            Fonts.Add(masterFont.Name, masterFont);
+            return masterFont;
         }
 
         private static void changeActiveConsole(IConsole oldConsole, IConsole newConsole)

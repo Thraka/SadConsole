@@ -31,7 +31,6 @@ namespace SadConsole.Consoles
             /// <summary>
             /// The cells that will be rendered.
             /// </summary>
-            [DataMember]
             public Cell[] RenderCells;
 
             /// <summary>
@@ -80,6 +79,7 @@ namespace SadConsole.Consoles
         /// <summary>
         /// The current zero-based active layer index.
         /// </summary>
+        [DataMember(Name = "ActiveLayer")]
         public int ActiveLayerIndex { get; private set; }
 
         /// <summary>
@@ -141,6 +141,9 @@ namespace SadConsole.Consoles
                 SetActiveLayer(layers.IndexOf(layer));
         }
 
+        /// <summary>
+        /// Sets up all the cells of a layer for the first time.
+        /// </summary>
         protected override void InitializeCells()
         {
             if (!initDone)
@@ -152,6 +155,11 @@ namespace SadConsole.Consoles
             }
         }
 
+
+        /// <summary>
+        /// Initializes a layers cells.
+        /// </summary>
+        /// <param name="layer">The layer to setup.</param>
         protected void InitializeLayer(Layer layer)
         {
             layer.Cells = new Cell[width * height];
@@ -167,6 +175,9 @@ namespace SadConsole.Consoles
             layer.RenderCells = layer.Cells;
         }
 
+        /// <summary>
+        /// Resets all layer areas.
+        /// </summary>
         protected override void ResetArea()
         {
             if (!initDone)
@@ -192,6 +203,10 @@ namespace SadConsole.Consoles
             AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
         }
 
+        /// <summary>
+        /// Sets up the layers render cells.
+        /// </summary>
+        /// <param name="layer"></param>
         protected void ResetAreaLayer(Layer layer)
         {
             layer.RenderCells = new Cell[area.Width * area.Height];
@@ -231,7 +246,12 @@ namespace SadConsole.Consoles
             return layer;
         }
 
-        public Layer Import(ITextSurfaceRendered surface)
+        /// <summary>
+        /// Creates and adds a new layer based on an existing surface.
+        /// </summary>
+        /// <param name="surface">The surface. Must be the same width/height of this </param>
+        /// <returns></returns>
+        public Layer Add(ITextSurface surface)
         {
             if (surface.Cells.Length != width * height)
                 throw new Exception("The length of cells passed in must match the width * height of this surface");
@@ -349,42 +369,32 @@ namespace SadConsole.Consoles
         /// Saves the <see cref="LayeredTextSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
-        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
+        /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
         public void Save(string file, params Type[] knownTypes)
         {
-            Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            if (knownTypes.Length != 0)
+                Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            else
+                Serializer.Save(this, file);
         }
 
         /// <summary>
         /// Loads a <see cref="LayeredTextSurface"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
-        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
+        /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
         /// <returns>The <see cref="LayeredTextSurface"/>.</returns>
         public static LayeredTextSurface Load(string file, params Type[] knownTypes)
         {
-            return Serializer.Load<LayeredTextSurface>(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            if (knownTypes.Length != 0)
+                return Serializer.Load<LayeredTextSurface>(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+            else
+                return Serializer.Load<LayeredTextSurface>(file);
         }
 
         /// <summary>
-        /// Saves the <see cref="LayeredTextSurface"/> to a file.
+        /// Sets the <see cref="Layer.Index"/> of each layer to the index it appears in the <see cref="layers"/>.
         /// </summary>
-        /// <param name="file">The destination file.</param>
-        public new void Save(string file)
-        {
-            Serializer.Save(this, file, Serializer.ConsoleTypes);
-        }
-
-        /// <summary>
-        /// Loads a <see cref="LayeredTextSurface"/> from a file.
-        /// </summary>
-        /// <param name="file">The source file.</param>
-        /// <returns></returns>
-        public new static LayeredTextSurface Load(string file)
-        {
-            return Serializer.Load<LayeredTextSurface>(file, Serializer.ConsoleTypes);
-        }
-
         protected void SyncLayerIndex()
         {
             int i = 0;
@@ -394,28 +404,13 @@ namespace SadConsole.Consoles
                 i++;
             }
         }
-
-
-        [OnSerializing]
-        private void BeforeSerializing(StreamingContext context)
-        {
-            fontName = Font.Name;
-            fontSize = Font.SizeMultiple;
-        }
-
+        
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
-            Font font;
-
-            // Try to find font
-            if (Engine.Fonts.ContainsKey(fontName))
-                font = Engine.Fonts[fontName].GetFont(fontSize);
-            else
-                font = Engine.DefaultFont;
             initDone = true;
-            Font = font;
             SyncLayerIndex();
+            ResetArea();
             SetActiveLayer(ActiveLayerIndex);
         }
         #endregion

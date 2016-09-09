@@ -86,6 +86,9 @@ namespace SadConsole.Consoles
         [DataMember]
         public bool UseLinuxLineEndings = false;
 
+        [DataMember]
+        public bool UseStringParser = false;
+
         /// <summary>
         /// Gets or sets the row of the cursor postion.
         /// </summary>
@@ -230,8 +233,18 @@ namespace SadConsole.Consoles
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(string text, ICellAppearance template, ICellEffect templateEffect)
         {
-            var coloredString = text.CreateColored(template.Foreground, template.Background, template.SpriteEffect);
-            coloredString.SetEffect(templateEffect);
+            ColoredString coloredString;
+
+            if (UseStringParser)
+            {
+                var console = (Console)_console.Target;
+                coloredString = ColoredString.Parse(text, _position.Y * console.TextSurface.Width + _position.X, console.TextSurface, console, new StringParser.ParseCommandStacks());
+            }
+            else
+            {
+                coloredString = text.CreateColored(template.Foreground, template.Background, template.SpriteEffect);
+                coloredString.SetEffect(templateEffect);
+            }
 
             return Print(coloredString);
         }
@@ -245,7 +258,7 @@ namespace SadConsole.Consoles
         {
             // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
             // Then use the pretty print system.
-            if (!DisableWordBreak || text.String.Length != 1)
+            if (!DisableWordBreak && text.String.Length != 1)
             {
                 // Prep
                 var console = (Console)_console.Target;

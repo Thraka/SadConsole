@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\LayeredTextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Renderers\CachedTextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Renderers\ITextSurfaceRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Renderers\ITextSurfaceRendererUpdate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Renderers\LayeredTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Renderers\Render.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Consoles\Renderers\TextSurfaceRenderer.cs" />
@@ -91,13 +92,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Image.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\TextureToSurfaceReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\AnimatedTextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Point.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\SpriteEffects.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Box.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Circle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Ellipse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\IShape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Line.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StringCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandBlink.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandGlyph.cs" />

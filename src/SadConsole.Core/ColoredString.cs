@@ -247,8 +247,10 @@ namespace SadConsole
     /// <summary>
     /// Represents a single character that has a foreground and background color.
     /// </summary>
+    [DataContract]
     public class ColoredGlyph: CellAppearance
     {
+        [DataMember(Name = "Glyph")]
         private char _character;
 
         /// <summary>
@@ -276,6 +278,7 @@ namespace SadConsole
         /// <summary>
         /// The effect for the glyph.
         /// </summary>
+        [DataMember]
         public ICellEffect Effect;
 
         /// <summary>

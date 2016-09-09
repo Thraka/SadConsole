@@ -98,7 +98,6 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">THe height of the surface.</param>
-        /// <param name="font">The font used with rendering.</param>
         public TextSurfaceBasic(int width, int height)
         {
             this.width = width;
@@ -111,7 +110,6 @@ namespace SadConsole.Consoles
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">THe height of the surface.</param>
-        /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells"></param>
         public TextSurfaceBasic(int width, int height, Cell[] initialCells)
         {

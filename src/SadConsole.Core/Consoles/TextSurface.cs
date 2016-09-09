@@ -18,12 +18,7 @@ namespace SadConsole.Consoles
     [DataContract]
     public class TextSurface : TextSurfaceBasic, IEnumerable<Cell>, ITextSurfaceRendered
     {
-        [DataMember(Name = "FontName")]
-        protected string fontName;
-
-        [DataMember(Name = "FontSize")]
-        protected Font.FontSizes fontSize;
-
+        [DataMember(Name = "Font")]
         protected Font font;
 
         [DataMember(Name = "Area")]
@@ -108,13 +103,22 @@ namespace SadConsole.Consoles
                 ResetArea();
             }
         }
-#endregion
+        #endregion
+
+        /// <summary>
+        /// Creates a new text surface with the specified width and height and <see cref="Engine.DefaultFont"/>.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        public TextSurface(int width, int height) : this(width, height, Engine.DefaultFont)
+        {
+        }
 
         /// <summary>
         /// Creates a new text surface with the specified width and height.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
-        /// <param name="height">THe height of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         public TextSurface(int width, int height, Font font): base(width, height)
         {
@@ -123,10 +127,20 @@ namespace SadConsole.Consoles
         }
 
         /// <summary>
+        /// Creates a new text surface with the specified width, height, and initial set of cell data. Uses <see cref="Engine.DefaultFont"/>.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="initialCells"></param>
+        public TextSurface(int width, int height, Cell[] initialCells) : this(width, height, initialCells, Engine.DefaultFont)
+        {
+        }
+
+        /// <summary>
         /// Creates a new text surface with the specified width, height, and initial set of cell data.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
-        /// <param name="height">THe height of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells"></param>
         public TextSurface(int width, int height, Cell[] initialCells, Font font) : base(width, height, initialCells)
@@ -207,7 +221,6 @@ namespace SadConsole.Consoles
             return cells.GetEnumerator();
         }
 
-#region Serialization
         /// <summary>
         /// Saves the <see cref="TextSurface"/> to a file.
         /// </summary>
@@ -227,26 +240,46 @@ namespace SadConsole.Consoles
             return Serializer.Load<TextSurface>(file);
         }
 
-        [OnSerializing]
-        private void BeforeSerializing(StreamingContext context)
-        {
-            fontName = Font.Name;
-            fontSize = Font.SizeMultiple;
-        }
+        //#region Serialization
+        //        /// <summary>
+        //        /// Saves the <see cref="TextSurface"/> to a file.
+        //        /// </summary>
+        //        /// <param name="file">The destination file.</param>
+        //        public void Save(string file)
+        //        {
+        //            Serializer.Save(this, file);
+        //        }
 
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            Font font;
+        //        /// <summary>
+        //        /// Loads a <see cref="TextSurface"/> from a file.
+        //        /// </summary>
+        //        /// <param name="file">The source file.</param>
+        //        /// <returns></returns>
+        //        public static TextSurface Load(string file)
+        //        {
+        //            return Serializer.Load<TextSurface>(file);
+        //        }
 
-            // Try to find font
-            if (Engine.Fonts.ContainsKey(fontName))
-                font = Engine.Fonts[fontName].GetFont(fontSize);
-            else
-                font = Engine.DefaultFont;
+        //        [OnSerializing]
+        //        private void BeforeSerializing(StreamingContext context)
+        //        {
+        //            fontName = Font.Name;
+        //            fontSize = Font.SizeMultiple;
+        //        }
 
-            Font = font;
-        }
-#endregion
+        //        [OnDeserialized]
+        //        private void AfterDeserialized(StreamingContext context)
+        //        {
+        //            Font font;
+
+        //            // Try to find font
+        //            if (Engine.Fonts.ContainsKey(fontName))
+        //                font = Engine.Fonts[fontName].GetFont(fontSize);
+        //            else
+        //                font = Engine.DefaultFont;
+
+        //            Font = font;
+        //        }
+        //#endregion
     }
 }

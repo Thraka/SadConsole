@@ -13,6 +13,11 @@ namespace SadConsole
         public static SadConsoleGame MonoGameInstance;
 
         /// <summary>
+        /// When true, does not lock at 60fps. Must be set before <see cref="Initialize(string, int, int)"/> is called.
+        /// </summary>
+        public static bool UnlimitedFPS;
+
+        /// <summary>
         /// The graphics device used by SadConsole.
         /// </summary>
         public static GraphicsDevice Device { get; private set; }

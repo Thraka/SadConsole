@@ -25,8 +25,11 @@ namespace SadConsole
 
         protected override void Initialize()
         {
-            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
+            if (Engine.UnlimitedFPS)
+            {
+                GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+                IsFixedTimeStep = false;
+            }
 
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
@@ -45,13 +48,6 @@ namespace SadConsole
             GraphicsDevice.Clear(Engine.ClearFrameColor);
 
             base.Draw(gameTime);
-        }
-
-        public void UnlockFPS()
-        {
-            // Uncomment these two lines to run as fast as possible
-            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
         }
     }
 }

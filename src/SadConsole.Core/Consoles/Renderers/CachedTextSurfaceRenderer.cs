@@ -18,7 +18,7 @@ namespace SadConsole.Consoles
     /// Caches a text surface by rendering to a texture. That texture is then rendered at draw time. Reduces draw calls for a non-changing console.
     /// </summary>
     [DataContract]
-    public class CachedTextSurfaceRenderer : ITextSurfaceRenderer
+    public class CachedTextSurfaceRenderer : ITextSurfaceRenderer, ITextSurfaceRendererUpdate
     {
 #if SFML
         private RenderTexture renderedConsole;
@@ -67,6 +67,11 @@ namespace SadConsole.Consoles
                 renderedConsole.Dispose();
                 renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
             }
+            else if (renderedConsole == null)
+            {
+                renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
+            }
+
             renderedConsole.Clear(Color.Transparent);
             TextSurfaceRenderer renderer = new TextSurfaceRenderer();
             //renderer.CallBatchEnd = false;

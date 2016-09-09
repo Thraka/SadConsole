@@ -6,7 +6,7 @@
     <SharedGUID>00cc441c-44bb-4b15-babd-6831b65c31d8</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>SadConsole.GameHelpers</Import_RootNamespace>
+    <Import_RootNamespace>SadConsole.Game</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Cache.cs" />
@@ -54,7 +54,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)AccidentalNoise\Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameObject.Serialized.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObjectCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SimpleLayerMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Generator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\MapData.cs" />

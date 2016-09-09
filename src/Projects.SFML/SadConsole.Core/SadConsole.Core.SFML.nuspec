@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.SFML</id>
-    <version>4.2.1</version>
+    <version>5.0.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Fixed RexPaint image loading to be column-major.
+Updated all serialization for base types.
+TextSurfaceView now a proper type that doesn't inherit from TextSurface for its function.
+Cursor supports using the ColoredString parser system.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml monogame roguelike cli game development console ansi ascii</tags>

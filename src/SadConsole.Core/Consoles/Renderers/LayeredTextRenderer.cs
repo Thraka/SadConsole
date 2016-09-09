@@ -14,6 +14,7 @@ namespace SadConsole.Consoles
     /// <summary>
     /// Renders a <see cref="LayeredTextSurface"/>.
     /// </summary>
+    [System.Runtime.Serialization.DataContract]
     public class LayeredTextRenderer : TextSurfaceRenderer
     {
         /// <summary>

@@ -65,15 +65,16 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
+                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
+                                        new CustomConsoles.StretchedConsole(),
                                         //new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.StringParsingConsole(),
                                         //new CustomConsoles.CursorConsole(),
                                         //new CustomConsoles.DOSConsole(),
                                         //new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.ViewsAndSubViews(),
                                         new CustomConsoles.StaticConsole(),
-                                        new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),
                                         new CustomConsoles.RandomScrollingConsole(),
@@ -89,11 +90,11 @@ namespace StarterProject
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
+            //SadConsole.Effects.Fade a = new SadConsole.Effects.Fade();
+            //a.DestinationForeground = Microsoft.Xna.Framework.Color.Turquoise;
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
-            //SadConsole.Engine.MonoGameInstance.UnlockFPS();
+            
         }
-
-        
 
         private static void MoveNextConsole()
         {
