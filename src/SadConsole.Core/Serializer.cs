@@ -111,22 +111,7 @@ namespace SadConsole
             if (System.IO.File.Exists(file))
                 System.IO.File.Delete(file);
 
-            System.Runtime.Serialization.Json.DataContractJsonSerializer serializer;
-
-            System.Runtime.Serialization.Json.DataContractJsonSerializerSettings settings = new System.Runtime.Serialization.Json.DataContractJsonSerializerSettings();
-            settings.DataContractSurrogate = new SerializerSurrogate();
-
-            if (knownTypes != null)
-                settings.KnownTypes = knownTypes;
-
-            //if (knownTypes != null)
-            //    serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes,);
-            //else
-            //    serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
-
-            //serializer.DataContractSurrogate = new SerializerSurrogate();
-
-            serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), settings);
+            var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
 
             using (var stream = System.IO.File.OpenWrite(file))
                 serializer.WriteObject(stream, instance);
@@ -145,27 +130,7 @@ namespace SadConsole
             {
                 using (var fileObject = System.IO.File.OpenRead(file))
                 {
-                    System.Runtime.Serialization.Json.DataContractJsonSerializer serializer;
-
-                    System.Runtime.Serialization.Json.DataContractJsonSerializerSettings settings = new System.Runtime.Serialization.Json.DataContractJsonSerializerSettings();
-                    settings.DataContractSurrogate = new SerializerSurrogate();
-
-                    if (knownTypes != null)
-                        settings.KnownTypes = knownTypes;
-
-                    //if (knownTypes != null)
-                    //    serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes,);
-                    //else
-                    //    serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
-
-                    //serializer.DataContractSurrogate = new SerializerSurrogate();
-
-                    serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), settings);
-
-                    //if (knownTypes != null)
-                    //    serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
-                    //else
-                    //    serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
+                    var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
 
                     return (T)serializer.ReadObject(fileObject);
                 }

@@ -65,7 +65,7 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
+                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         //new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.StringParsingConsole(),
                                         //new CustomConsoles.CursorConsole(),
@@ -93,12 +93,8 @@ namespace StarterProject
             //SadConsole.Effects.Fade a = new SadConsole.Effects.Fade();
             //a.DestinationForeground = Microsoft.Xna.Framework.Color.Turquoise;
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
-            //SadConsole.Engine.MonoGameInstance.UnlockFPS();
-
-            var gameObj = new SadConsole.Game.GameObject() { Animation = SadConsole.Game.Animations.CreateStatic(10, 10, 10, 0.5d) };
-            gameObj.Save("test.gameobject");
-            gameObj.Animation.Save("test.animation")
-            gameObj = SadConsole.Game.GameObject.Load("test.gameobject");
+            SadConsole.Engine.MonoGameInstance.UnlockFPS();
+            
         }
 
         private static void MoveNextConsole()

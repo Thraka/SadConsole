@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if SFML
+using Point = SFML.System.Vector2i;
+#elif MONOGAME
+using Microsoft.Xna.Framework;
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

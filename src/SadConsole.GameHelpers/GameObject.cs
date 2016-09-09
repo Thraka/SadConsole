@@ -2,6 +2,7 @@
 using Point = SFML.System.Vector2i;
 using Rectangle = SFML.Graphics.IntRect;
 using Matrix = SFML.Graphics.Transform;
+using SFML.Graphics;
 #elif MONOGAME
 using Microsoft.Xna.Framework;
 #endif

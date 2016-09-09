@@ -17,10 +17,6 @@ namespace SadConsole
 {
     public static partial class Engine
     {
-        #region Constants
-        public const int FontColumns = 16;
-        #endregion
-
         #region Fields
         public static event EventHandler EngineUpdated;
         public static event EventHandler EngineDrawFrame;

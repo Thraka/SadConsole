@@ -25,9 +25,6 @@ namespace SadConsole
 
         protected override void Initialize()
         {
-            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
-
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
 
@@ -47,6 +44,9 @@ namespace SadConsole
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// Makes monogame run at an unlimited framerate.
+        /// </summary>
         public void UnlockFPS()
         {
             // Uncomment these two lines to run as fast as possible
