@@ -97,10 +97,9 @@ namespace StarterProject
 
             var gameObj = new SadConsole.Game.GameObject() { Animation = SadConsole.Game.Animations.CreateStatic(10, 10, 10, 0.5d) };
             gameObj.Save("test.gameobject");
+            gameObj.Animation.Save("test.animation")
             gameObj = SadConsole.Game.GameObject.Load("test.gameobject");
         }
-
-        
 
         private static void MoveNextConsole()
         {

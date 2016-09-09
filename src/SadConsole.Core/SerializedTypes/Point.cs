@@ -14,7 +14,9 @@ namespace SadConsole.SerializedTypes
     [DataContract]
     public struct Point
     {
+        [DataMember]
         public int X;
+        [DataMember]
         public int Y;
 
         public static Point FromFramework(FrameworkPoint point)

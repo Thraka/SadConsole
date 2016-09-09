@@ -57,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameObject.Serialized.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObjectCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SimpleLayerMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Generator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\MapData.cs" />

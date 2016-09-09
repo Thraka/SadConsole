@@ -88,7 +88,7 @@ namespace SadConsole.Game
         public Point RenderOffset
         {
             get { return renderOffset; }
-            set { renderOffset = value; UpdateRects(value); }
+            set { renderOffset = value; UpdateRects(position); }
         }
 
         /// <summary>
@@ -335,7 +335,6 @@ namespace SadConsole.Game
         /// <param name="knownTypes">The type of <see cref="GameObject.Renderer"/>.</param>
         public void Save(string file, params Type[] knownTypes)
         {
-            EnsureMapping();
             Serializer.Save(this, file, Serializer.ConsoleTypes.Union(knownTypes).Union(new Type[] { typeof(GameObjectSerialized), typeof(Consoles.AnimatedTextSurface), typeof(Consoles.AnimatedTextSurface[]) }));
         }
 
@@ -347,7 +346,6 @@ namespace SadConsole.Game
         /// <returns>A new GameObject.</returns>
         public static GameObject Load(string file, params Type[] knownTypes)
         {
-            EnsureMapping();
             return Serializer.Load<GameObject>(file, Serializer.ConsoleTypes.Union(knownTypes));
         }
 
