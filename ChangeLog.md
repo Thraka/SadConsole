@@ -1,6 +1,23 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
+## 09/08/2016
+Versions are no longer the same across all libraries.
+
+### Core
+- Updated all serialization for base types.
+- TextSurfaceView now a proper type that doesn't inherit from TextSurface for its function.
+- Cursor supports using the ColoredString parser system.
+- Fixed RexPaint support.
+- Main game window centers after resizing.
+- Virtual cursor now support wrapping lines at the word level and linux line endings. 
+- Rewrote the initialization system. Cut out the MonoGame.Game object and wrapped it behind the scenes. Easier for new users.
+- Fixed various bugs in the AnimatedTextSurface.
+
+### GameHelpers
+- Reworked serialization.
+- GameObject now implements ITextSurfaceRendered, bypasses using the Animation for rendering and instead consumes the animation data.
+
 ## Version 3.1.0
 * Fixed bug with effects that are added more than once not knowing they already existed in the effects manager.
 
