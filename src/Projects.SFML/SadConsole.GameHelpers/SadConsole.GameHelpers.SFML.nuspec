@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.GameHelpers.SFML</id>
-    <version>3.2.0</version>
+    <version>4.0.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      Fixed entity load. Added SimpleLayerMetadata type to support SadConsoleEditor.
+Reworked serialization.
+GameObject now implements ITextSurfaceRendered, bypasses using the Animation for rendering and instead consumes the animation data.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml sadconsole roguelike cli game development console ansi ascii</tags>
