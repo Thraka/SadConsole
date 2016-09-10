@@ -18,9 +18,6 @@ SadConsole targets Windows and Linux using MonoGame 3.5 or SFML.
 
 There is source code for a screen editor written in SadConsole. It's the most comprehensive project to date using SadConsole and is available at https://github.com/Thraka/SadConsoleEditor/  
 
->**NOTE**  
->The editor is not yet upgraded to SadConsole 3.0 and cannot be used with it.
-
 Some sample games are provided in the [SampleGames](https://github.com/Thraka/SadConsole/tree/master/SampleGames) folder and are now part of the Visual Studio solution file.
 
 * [Features](#features)
