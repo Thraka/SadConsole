@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Controls</id>
-    <version>3.0.1</version>
+    <version>3.0.3</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,13 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-3.0.1: Minor updates.
-
-3.0.0: Fixed various bugs and upgraded to SadConsole 3. Uses MonoGame 3.5 and .NET 4.6.
-    
-2.5.0: New NuGet package; Using semantic versioning - Fresh new version; Target MonoGame 3.5
-
-2.0.0: First NuGet release, targeting MonoGame 3.3.
+Fixed bug with button control rendering.
+Fixed DLL version.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
