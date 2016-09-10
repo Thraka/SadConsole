@@ -191,13 +191,16 @@ namespace SadConsole.Controls
             {
                 // Redraw the control
                 this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
-                this.Print(1, 0, (Text).Align(TextAlignment, this.TextSurface.Width - 2));
 
                 if (ShowEnds)
                 {
+                    this.Print(1, 0, (Text).Align(TextAlignment, this.TextSurface.Width - 2));
                     SetGlyph(0, 0, EndCharacterLeft);
                     SetGlyph(this.TextSurface.Width - 1, 0, EndCharacterRight);
                 }
+                else
+                    this.Print(0, 0, (Text).Align(TextAlignment, this.TextSurface.Width));
+
 
                 this.IsDirty = false;
             }
