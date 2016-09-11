@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Controls</id>
-    <version>3.0.3</version>
+    <version>3.0.4</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,8 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-Fixed bug with button control rendering.
-Fixed DLL version.
+Fixed released (previously captured) control not giving back Engine.ActiveConsole.
+Scroll bar now hides slider position when IsEnabled = False.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
