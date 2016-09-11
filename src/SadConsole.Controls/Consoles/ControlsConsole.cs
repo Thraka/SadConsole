@@ -31,6 +31,7 @@ namespace SadConsole.Consoles
         [DataMember]
         private ControlBase _capturedControl;
         private bool _exlusiveBeforeCapture;
+        private IConsole _activeBeforeCapture;
 
         private SadConsole.Themes.ControlsConsoleTheme _theme;
 
@@ -496,6 +497,7 @@ namespace SadConsole.Consoles
         /// <param name="control">The control to capture</param>
         public void CaptureControl(ControlBase control)
         {
+            _activeBeforeCapture = Engine.ActiveConsole;
             Engine.ActiveConsole = this;
             _exlusiveBeforeCapture = ExclusiveFocus;
             ExclusiveFocus = true;
@@ -507,6 +509,7 @@ namespace SadConsole.Consoles
         /// </summary>
         public void ReleaseControl()
         {
+            Engine.ActiveConsole = _activeBeforeCapture;
             ExclusiveFocus = _exlusiveBeforeCapture;
             _capturedControl = null;
         }
