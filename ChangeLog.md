@@ -1,6 +1,15 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
+## 09/11/206
+
+### Core
+- Fixed possible recursive bug with mouse handling when calling ProcessMouse on console B while in ProcessMouse on console A.
+
+### Controls
+- Fixed released (previously captured) control not giving back Engine.ActiveConsole.
+- Scroll bar now hides slider position when IsEnabled = False.
+
 ## 09/08/2016
 Versions are no longer the same across all libraries.
 
