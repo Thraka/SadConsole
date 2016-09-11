@@ -269,8 +269,11 @@ namespace SadConsole.Controls
 
                 if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
                 {
-                    this.SetCellAppearance(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
-                    this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
+                    if (IsEnabled)
+                    {
+                        this.SetCellAppearance(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
+                        this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
+                    }
                 }
             }
             else
@@ -289,8 +292,11 @@ namespace SadConsole.Controls
 
                 if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
                 {
-                    this.SetCellAppearance(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
-                    this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
+                    if (IsEnabled)
+                    {
+                        this.SetCellAppearance(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
+                        this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
+                    }
                 }
 
             }
