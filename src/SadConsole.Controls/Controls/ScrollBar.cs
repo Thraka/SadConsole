@@ -224,19 +224,19 @@ namespace SadConsole.Controls
             CellAppearance currentappearanceBar = _currentAppearanceBar;
             CellAppearance currentappearanceSlider = _currentAppearanceSlider;
 
-            if (!_isEnabled)
+            if (!isEnabled)
             {
                 _currentAppearanceEnds = Theme.Ends.Disabled;
                 _currentAppearanceBar = Theme.Bar.Disabled;
                 _currentAppearanceSlider = Theme.Slider.Disabled;
             }
-            else if (_isMouseOver)
+            else if (isMouseOver)
             {
                 _currentAppearanceEnds = Theme.Ends.MouseOver;
                 _currentAppearanceBar = Theme.Bar.MouseOver;
                 _currentAppearanceSlider = Theme.Slider.MouseOver;
             }
-            else if (!_isMouseOver)
+            else if (!isMouseOver)
             {
                 _currentAppearanceEnds = Theme.Ends.Normal;
                 _currentAppearanceBar = Theme.Bar.Normal;
