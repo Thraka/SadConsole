@@ -174,7 +174,8 @@ namespace SadConsole.Consoles
         {
             if (_titleWidth != 0 && _isVisible)
             {
-                info.Fill(this);
+                if (!SkipMouseDataFill)
+                    info.Fill(this);
 
                 if (_isDragging && info.LeftButtonDown)
                 {
