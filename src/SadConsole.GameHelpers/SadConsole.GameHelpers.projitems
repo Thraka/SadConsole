@@ -67,5 +67,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\TileGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\WorldGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\WrappingWorldGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Zone.cs" />
   </ItemGroup>
 </Project>

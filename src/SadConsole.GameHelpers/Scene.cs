@@ -3,22 +3,59 @@ using System.Collections.Generic;
 using System.Text;
 using SadConsole.Consoles;
 using Console = SadConsole.Consoles.Console;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Game
 {
-    class Scene
+    /// <summary>
+    /// Groups a <see cref="LayeredTextSurface"/> and a list of <see cref="GameObject"/> types together.
+    /// </summary>
+    [DataContract]
+    public class Scene
     {
-        public List<GameObject> Objects;
+        private bool isVisible;
 
-        public Console BackgroundConsole;
+        /// <summary>
+        /// The objects for the scene.
+        /// </summary>
+        [DataMember]
+        public GameObjectCollection Objects;
 
+        /// <summary>
+        /// The background of the scene.
+        /// </summary>
+        [DataMember]
+        public LayeredTextSurface BackgroundConsole;
+
+        /// <summary>
+        /// Width of the backing <see cref="LayeredTextSurface"/>.
+        /// </summary>
         public int Width { get { return BackgroundConsole.Width; } }
+
+        /// <summary>
+        /// Height of the backing <see cref="LayeredTextSurface"/>.
+        /// </summary>
         public int Height { get { return BackgroundConsole.Height; } }
 
-        public Scene(Console backConsole)
+
+        /// <summary>
+        /// Creates a new Scene from an existing <see cref="LayeredTextSurface"/>.
+        /// </summary>
+        /// <param name="surface">The surface for the scene.</param>
+        public Scene(LayeredTextSurface surface)
         {
-            BackgroundConsole = backConsole;
-            Objects = new List<GameObject>();
+            BackgroundConsole = surface;
+            Objects = new GameObjectCollection();
+        }
+
+        public static Scene Load(string file, params Type[] types)
+        {
+            return SadConsole.Serializer.Load<Scene>(file, types);
+        }
+
+        public void Save(string file, params Type[] types)
+        {
+            SadConsole.Serializer.Save<Scene>(this, file, types);
         }
     }
 }
