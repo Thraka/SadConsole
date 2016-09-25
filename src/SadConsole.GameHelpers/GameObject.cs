@@ -70,7 +70,7 @@ namespace SadConsole.Game
         public Font Font
         {
             get { return font; }
-            set { font = value; UpdateRects(position, true); }
+            set { font = value; UpdateRects(position); }
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace SadConsole.Game
         /// <summary>
         /// The current animation.
         /// </summary>
-        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; animation.Font = font; UpdateRects(position, true); } }
+        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; animation.Font = font; UpdateRects(position); } }
 
         /// <summary>
         /// Collection of animations associated with this game object.
@@ -130,7 +130,7 @@ namespace SadConsole.Game
             set
             {
                 repositionRects = value;
-                UpdateRects(position, true);
+                UpdateRects(position);
             }
         }
 
@@ -249,54 +249,51 @@ namespace SadConsole.Game
         /// </summary>
         /// <param name="position">The position of the game object.</param>
         /// <param name="force">When true, always repositions rects.</param>
-        protected void UpdateRects(Point position, bool force = false)
+        protected void UpdateRects(Point position)
         {
-            if (repositionRects || force)
+            var width = Animation.Width;
+            var height = Animation.Height;
+            var font = Animation.Font;
+            Point offset;
+
+            var rects = new Rectangle[width * height];
+
+            if (repositionRects && usePixelPositioning)
             {
-                var width = Animation.Width;
-                var height = Animation.Height;
-                var font = Animation.Font;
-                Point offset;
-
-                var rects = new Rectangle[width * height];
-
-                if (repositionRects && usePixelPositioning)
-                {
-                    offset = position + renderOffset - new Point(animation.Center.X * font.Size.X, animation.Center.Y * font.Size.Y);
-                }
-                else if (repositionRects)
-                {
-                    offset = position + renderOffset - animation.Center;
-                    offset = new Point(offset.X * font.Size.X, offset.Y * font.Size.Y);
-                }
-                else
-                {
-                    offset = new Point();
-                }
-
-#if SFML
-                AbsoluteArea = new Rectangle(offset.X, offset.Y, (width * font.Size.X) + offset.X, (height * font.Size.Y) + offset.Y);
-#elif MONOGAME
-                AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
-#endif
-
-                int index = 0;
-                
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-#if SFML
-                        rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X + (x * font.Size.X + offset.X), font.Size.Y + (y * font.Size.Y + offset.Y));
-#elif MONOGAME
-                        rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X, font.Size.Y);
-#endif
-                        index++;
-                    }
-                }
-
-                RenderRects = rects;
+                offset = position + renderOffset - new Point(animation.Center.X * font.Size.X, animation.Center.Y * font.Size.Y);
             }
+            else if (repositionRects)
+            {
+                offset = position + renderOffset - animation.Center;
+                offset = new Point(offset.X * font.Size.X, offset.Y * font.Size.Y);
+            }
+            else
+            {
+                offset = new Point();
+            }
+
+#if SFML
+            AbsoluteArea = new Rectangle(offset.X, offset.Y, (width * font.Size.X) + offset.X, (height * font.Size.Y) + offset.Y);
+#elif MONOGAME
+            AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
+#endif
+
+            int index = 0;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+#if SFML
+                    rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X + (x * font.Size.X + offset.X), font.Size.Y + (y * font.Size.Y + offset.Y));
+#elif MONOGAME
+                    rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X, font.Size.Y);
+#endif
+                    index++;
+                }
+            }
+
+            RenderRects = rects;
         }
 
         /// <summary>
@@ -304,7 +301,7 @@ namespace SadConsole.Game
         /// </summary>
         public void UpdateAnimationRectangles()
         {
-            UpdateRects(position, true);
+            UpdateRects(position);
         }
         
         /// <summary>
