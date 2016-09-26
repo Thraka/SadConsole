@@ -238,7 +238,7 @@ namespace SadConsole.Controls
                 _slider.IsVisible = false;
                 _slider.Theme = this.Theme.ScrollBarTheme;
                 _sliderRenderLocation = new Point(Width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
-                _slider.Position = new Point(_position.X + _sliderRenderLocation.X, _position.Y + _sliderRenderLocation.Y);
+                _slider.Position = new Point(position.X + _sliderRenderLocation.X, position.Y + _sliderRenderLocation.Y);
                 _border.Width = Width;
                 _border.Height = Height;
 
@@ -545,7 +545,7 @@ namespace SadConsole.Controls
 
         public override bool ProcessMouse(Input.MouseInfo info)
         {
-            if (_isEnabled)
+            if (isEnabled)
             {
                 base.ProcessMouse(info);
 

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Controls.SFML</id>
-    <version>3.0.4</version>
+    <version>3.1.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,8 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Fixed released (previously captured) control not giving back Engine.ActiveConsole.
-Scroll bar now hides slider position when IsEnabled = False.
+Refactored some protected variables.
+Added Control.Bounds to indicate the area the control uses on the parent.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml sadconsole roguelike cli game development console ansi ascii</tags>

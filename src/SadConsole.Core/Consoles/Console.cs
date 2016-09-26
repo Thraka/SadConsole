@@ -287,6 +287,8 @@ namespace SadConsole.Consoles
         [DataMember]
         public bool UsePixelPositioning { get; set; } = false;
 
+        internal protected bool SkipMouseDataFill = false;
+
         #region Constructors
 
         /// <summary>
@@ -363,7 +365,8 @@ namespace SadConsole.Consoles
             {
                 if (this.IsVisible && this.CanUseMouse)
                 {
-                    info.Fill(this);
+                    if (!SkipMouseDataFill)
+                        info.Fill(this);
 
                     if (info.Console == this)
                     {

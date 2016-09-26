@@ -110,16 +110,16 @@ namespace SadConsole.Controls
         {
             CellAppearance currentappearance = _currentAppearance;
 
-            if (!_isEnabled)
+            if (!isEnabled)
                 _currentAppearance = Theme.Disabled;
 
-            else if (!_isMouseDown && _isMouseOver)
+            else if (!_isMouseDown && isMouseOver)
                 _currentAppearance = Theme.MouseOver;
 
-            else if (!_isMouseDown && !_isMouseOver && IsFocused && Engine.ActiveConsole == _parent)
+            else if (!_isMouseDown && !isMouseOver && IsFocused && Engine.ActiveConsole == parent)
                 _currentAppearance = Theme.Focused;
 
-            else if (_isMouseDown && _isMouseOver)
+            else if (_isMouseDown && isMouseOver)
                 _currentAppearance = Theme.MouseClicking;
 
             else
@@ -178,7 +178,7 @@ namespace SadConsole.Controls
         {
             base.OnLeftMouseClicked(info);
 
-            if (_isEnabled)
+            if (isEnabled)
                 Click();
         }
 

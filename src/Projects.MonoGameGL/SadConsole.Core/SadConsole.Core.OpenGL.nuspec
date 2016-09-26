@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.MonoGameGL</id>
-    <version>5.0.1</version>
+    <version>5.0.3</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
-Fixed possible recursive bug with mouse handling when calling ProcessMouse on console B while in ProcessMouse on console A.
+Minor bug fixes.
+AnimatedTextSurface.CreateFrame now clears the frame with the default fore/back colors.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

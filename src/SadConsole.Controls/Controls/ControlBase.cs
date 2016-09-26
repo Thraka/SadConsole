@@ -1,5 +1,6 @@
 ﻿#if SFML
 using Point = SFML.System.Vector2i;
+using Rectangle = SFML.Graphics.IntRect;
 #elif MONOGAME
 using Microsoft.Xna.Framework;
 #endif
@@ -16,10 +17,11 @@ namespace SadConsole.Controls
     [DataContract]
     public abstract class ControlBase: SurfaceEditor, IInput
     {
-        /// <summary>
-        /// Protected variable representing the Position of the control.
-        /// </summary>
-        protected Point _position;
+        protected Point position;
+        protected Rectangle bounds;
+        protected bool isMouseOver = false;
+        protected bool isEnabled = true;
+        protected Consoles.ControlsConsole parent;
 
         [DataMember]
         public bool CanUseKeyboard { get; set; }
@@ -40,7 +42,7 @@ namespace SadConsole.Controls
         /// Indicates he rendering location of this control.
         /// </summary>
         [DataMember]
-        public Point Position { get { return _position; } set { _position = value; OnPositionChanged(); } }
+        public Point Position { get { return position; } set { position = value; bounds = new Rectangle(position.X, position.Y, Width, Height); OnPositionChanged(); } }
 
         /// <summary>
         /// Indicates weather or not this control is visible.
@@ -118,10 +120,10 @@ namespace SadConsole.Controls
         [DataMember]
         public bool IsEnabled
         {
-            get { return _isEnabled; }
+            get { return isEnabled; }
             set
             {
-                _isEnabled = value;
+                isEnabled = value;
                 DetermineAppearance();
             }
         }
@@ -136,17 +138,18 @@ namespace SadConsole.Controls
         /// </summary>
         public int Height { get { return textSurface.Height; } }
 
-        protected bool _isMouseOver = false;
-        protected bool _isEnabled = true;
-        protected Consoles.ControlsConsole _parent;
-
+        /// <summary>
+        /// The area this control covers.
+        /// </summary>
+        public Rectangle Bounds { get { return bounds; } }
+        
         /// <summary>
         /// Gets or sets the parent console of this control.
         /// </summary>
         public Consoles.ControlsConsole Parent
         {
-            get { return _parent; }
-            set { _parent = value; OnParentChanged(); }
+            get { return parent; }
+            set { parent = value; OnParentChanged(); }
         }
 
         /// <summary>
@@ -181,9 +184,10 @@ namespace SadConsole.Controls
             IsVisible = true;
             FocusOnClick = true;
             CanFocus = false;
-            _position = new Point();
+            position = new Point();
             CanUseMouse = true;
             CanUseKeyboard = true;
+            bounds = new Rectangle(0, 0, width, height);
         }
         #endregion
 
@@ -216,9 +220,9 @@ namespace SadConsole.Controls
                 if (info.ConsoleLocation.X >= Position.X && info.ConsoleLocation.X < Position.X + Width &&
                     info.ConsoleLocation.Y >= Position.Y && info.ConsoleLocation.Y < Position.Y + Height)
                 {
-                    if (_isMouseOver != true)
+                    if (isMouseOver != true)
                     {
-                        _isMouseOver = true;
+                        isMouseOver = true;
                         OnMouseEnter(info);
                     }
 
@@ -232,9 +236,9 @@ namespace SadConsole.Controls
                 }
                 else
                 {
-                    if (_isMouseOver)
+                    if (isMouseOver)
                     {
-                        _isMouseOver = false;
+                        isMouseOver = false;
                         OnMouseExit(info);
                     }
                 }
@@ -369,6 +373,7 @@ namespace SadConsole.Controls
         private void AfterDeserialized(StreamingContext context)
         {
             IsDirty = true;
+            bounds = new Rectangle(position.X, position.Y, Width, Height);
         }
     }
 }

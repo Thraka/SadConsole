@@ -206,6 +206,7 @@ namespace SadConsole.Consoles
                 Frames = new List<TextSurfaceBasic>();
 
             var frame = new TextSurfaceBasic(Width, Height);
+            new SurfaceEditor(frame).Clear();
             Frames.Add(frame);
             UpdateFrameReferences();
             return frame;

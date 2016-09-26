@@ -240,10 +240,10 @@ namespace SadConsole.Controls
         {
             CellAppearance currentappearance = _currentAppearance;
 
-            if (_isMouseOver)
+            if (isMouseOver)
                 _currentAppearance = Theme.MouseOver;
 
-            else if (base.IsFocused && Engine.ActiveConsole == _parent)
+            else if (base.IsFocused && Engine.ActiveConsole == parent)
                 _currentAppearance = Theme.Focused;
             else
                 _currentAppearance = Theme.Normal;

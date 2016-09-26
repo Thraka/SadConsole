@@ -114,25 +114,25 @@ namespace SadConsole.Controls
             CellAppearance currentappearanceButton = _currentAppearanceButton;
             CellAppearance currentappearanceText = _currentAppearanceText;
 
-            if (!_isEnabled)
+            if (!isEnabled)
             {
                 _currentAppearanceButton = Theme.Button.Disabled;
                 _currentAppearanceText = Theme.Disabled;
             }
 
-            else if (!_isMouseDown && _isMouseOver)
+            else if (!_isMouseDown && isMouseOver)
             {
                 _currentAppearanceButton = Theme.Button.MouseOver;
                 _currentAppearanceText = Theme.MouseOver;
             }
 
-            else if (!_isMouseDown && !_isMouseOver && IsFocused && Engine.ActiveConsole == _parent)
+            else if (!_isMouseDown && !isMouseOver && IsFocused && Engine.ActiveConsole == parent)
             {
                 _currentAppearanceButton = Theme.Button.Focused;
                 _currentAppearanceText = Theme.Focused;
             }
 
-            else if (_isMouseDown && _isMouseOver)
+            else if (_isMouseDown && isMouseOver)
             {
                 _currentAppearanceButton = Theme.Button.MouseClicking;
                 _currentAppearanceText = Theme.MouseClicking;
@@ -158,14 +158,14 @@ namespace SadConsole.Controls
 
         protected override void OnMouseIn(Input.MouseInfo info)
         {
-            _isMouseOver = true;
+            isMouseOver = true;
 
             base.OnMouseIn(info);
         }
 
         protected override void OnMouseExit(Input.MouseInfo info)
         {
-            _isMouseOver = false;
+            isMouseOver = false;
 
             base.OnMouseExit(info);
         }
@@ -174,7 +174,7 @@ namespace SadConsole.Controls
         {
             base.OnLeftMouseClicked(info);
 
-            if (_isEnabled)
+            if (isEnabled)
             {
                 IsSelected = !IsSelected;
             }

@@ -189,7 +189,15 @@ namespace SadConsole.Input
                         var info = this.Clone();
                         var oldConsole = Engine.LastMouseConsole;
                         Engine.LastMouseConsole = data;
-                        oldConsole.ProcessMouse(info);
+
+                        if (oldConsole is Console)
+                        {
+                            ((Console)oldConsole).SkipMouseDataFill = true;
+                            oldConsole.ProcessMouse(info);
+                            ((Console)oldConsole).SkipMouseDataFill = false;
+                        }
+                        else
+                            oldConsole.ProcessMouse(info);
                     }
                     else
                         Engine.LastMouseConsole = data;
