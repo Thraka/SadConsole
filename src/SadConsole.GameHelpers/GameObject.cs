@@ -129,8 +129,11 @@ namespace SadConsole.Game
             get { return repositionRects; }
             set
             {
-                repositionRects = value;
-                UpdateRects(position, true);
+                if (repositionRects != value)
+                {
+                    repositionRects = value;
+                    UpdateRects(position, true);
+                }
             }
         }
 
