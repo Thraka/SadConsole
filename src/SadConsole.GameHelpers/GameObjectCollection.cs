@@ -22,6 +22,9 @@ namespace SadConsole.Game
     [DataContract]
     public class GameObjectCollection : IList<GameObject>
     {
+        [DataMember(Name = "UseRepositionRects")]
+        private bool useRepositionRects;
+
         [DataMember(Name = "Objects")]
         List<GameObject> backingList = new List<GameObject>();
 
@@ -34,6 +37,18 @@ namespace SadConsole.Game
         {
             get { return backingList[index]; }
             set { backingList[index] = value; value.RepositionRects = true; }
+        }
+
+        public bool UseRepositionRects
+        {
+            get { return useRepositionRects; }
+            set
+            {
+                useRepositionRects = value;
+
+                for (int i = 0; i < backingList.Count; i++)
+                    backingList[i].RepositionRects = value;
+            }
         }
 
         /// <summary>
@@ -58,7 +73,7 @@ namespace SadConsole.Game
         /// <param name="item">The game object.</param>
         public void Add(GameObject item)
         {
-            item.RepositionRects = true;
+            item.RepositionRects = useRepositionRects;
             backingList.Add(item);
         }
 

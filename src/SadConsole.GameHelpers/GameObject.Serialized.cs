@@ -64,8 +64,8 @@ namespace SadConsole.Game
             foreach (var item in serializedObject.Animations)
                 gameObject.Animations.Add(item.Name, item);
 
-            if (gameObject.Animations.ContainsKey(serializedObject.Name))
-                gameObject.Animation = gameObject.Animations[serializedObject.Name];
+            if (gameObject.Animations.ContainsKey(serializedObject.AnimationName))
+                gameObject.Animation = gameObject.Animations[serializedObject.AnimationName];
             else
                 gameObject.Animation = serializedObject.Animations[0];
 
