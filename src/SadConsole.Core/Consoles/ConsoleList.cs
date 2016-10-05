@@ -14,7 +14,7 @@ namespace SadConsole.Consoles
     /// </summary>
     public class ConsoleList : IConsoleList
     {
-        private List<IConsole> _consoles;
+        protected List<IConsole> _consoles;
         
         /// <summary>
         /// The parent console.

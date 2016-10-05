@@ -1,5 +1,6 @@
 ﻿#if SFML
 using Point = SFML.System.Vector2i;
+using Rectangle = SFML.Graphics.IntRect;
 #elif MONOGAME
 using Microsoft.Xna.Framework;
 #endif

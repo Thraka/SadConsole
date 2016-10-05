@@ -1,7 +1,25 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
-## 09/11/206
+## 10/01/2016
+
+### Core
+- Minor bug fixes.
+
+### GameHelpers
+- Added a Zone type and a Scene type.
+
+## 09/26/2016
+
+### Core
+- AnimatedTextSurface now clears the frame from CreateFrame with the default foreground and background colors.
+
+### Controls
+- Fixed possible recursive bug with mouse handling that Core had but was also in the Window console type.
+- Refactored Control base class. Protected members modified.
+- Added Control.Bounds for calculating the space the control uses visually.
+
+## 09/11/2016
 
 ### Core
 - Fixed possible recursive bug with mouse handling when calling ProcessMouse on console B while in ProcessMouse on console A.

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.GameHelpers.SFML</id>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,8 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Reworked serialization.
-GameObject now implements ITextSurfaceRendered, bypasses using the Animation for rendering and instead consumes the animation data.
+Added UseRepositionRects to GameObjectCollection to allow toggle.
+Added Scene and supporting types.
+Fixed GameObject deserialization forgetting which animation was selected.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml sadconsole roguelike cli game development console ansi ascii</tags>
