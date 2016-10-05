@@ -23,6 +23,12 @@ namespace Microsoft.Xna.Framework
         {
             return point.Y * areaWidth + point.X;
         }
+
+        public static Point TranslateFont(this Point point, Font sourceFont, Font targetFont)
+        {
+            var world = point.ConsoleLocationToWorld(sourceFont.Size.X, sourceFont.Size.Y);
+            return world.WorldLocationToConsole(targetFont.Size.X, targetFont.Size.Y);
+        }
     }
 
 #if SFML
