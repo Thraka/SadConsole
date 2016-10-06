@@ -1,6 +1,11 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
+## 10/05/2016
+
+- Minor bug fixes all around.
+
+
 ## 10/01/2016
 
 ### Core

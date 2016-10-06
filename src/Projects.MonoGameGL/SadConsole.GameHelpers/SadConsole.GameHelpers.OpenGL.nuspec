@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.GameHelpers.MonoGameGL</id>
-    <version>4.1.0</version>
+    <version>4.2.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,9 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
-Added UseRepositionRects to GameObjectCollection to allow toggle.
-Added Scene and supporting types.
-Fixed GameObject deserialization forgetting which animation was selected.
+Added some new helper types.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

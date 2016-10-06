@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.SFML</id>
-    <version>5.0.4</version>
+    <version>5.0.5</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-ConsoleList now has the consoles variable protected instead of private.
+Added extension method to Point to allow translation of screen location between fonts.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml monogame roguelike cli game development console ansi ascii</tags>
