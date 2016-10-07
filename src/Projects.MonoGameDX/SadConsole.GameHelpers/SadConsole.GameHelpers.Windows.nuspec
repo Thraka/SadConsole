@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.GameHelpers</id>
-    <version>4.2.0</version>
+    <version>4.3.0-pre1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-Added some new helper types.
+Improved debug attributes of zone.
+Added hotspot type.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
