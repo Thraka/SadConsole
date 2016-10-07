@@ -145,7 +145,7 @@ namespace SadConsole.Controls
             {
                 // Check if we'll get the same container or not.
                 var newContainer = GetContainer(value);
-                if (newContainer != null && newContainer != _selectedItemContainer)
+                if (newContainer != _selectedItemContainer)
                 {
                     if (_selectedItemContainer != null)
                         _selectedItemContainer.IsSelected = false;
@@ -154,10 +154,10 @@ namespace SadConsole.Controls
                     _selectedItemContainer = newContainer;
                     _selectedIndex = Items.IndexOf(_selectedItem);
 
-                    _selectedItemContainer.IsSelected = true;
+                    if (_selectedItemContainer != null)
+                        _selectedItemContainer.IsSelected = true;
 
                     OnSelectedItemChanged();
-
                 }
             }
         }
