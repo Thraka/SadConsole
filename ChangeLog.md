@@ -1,6 +1,16 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
+## 10/09/2016
+
+### Core
+- Helper method added to cells that lets them render themselves to screen without the TextSurface system.
+- Fixed LayeredTextSurface saving out information from base class when it is already contained in the Layers array.
+
+### GameHelpers
+- Improved debug attributes of zone.
+- Added hotspot type.
+
 ## 10/05/2016
 
 - Minor bug fixes all around.

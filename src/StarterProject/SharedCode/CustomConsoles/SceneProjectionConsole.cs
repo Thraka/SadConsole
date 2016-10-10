@@ -69,7 +69,7 @@ namespace StarterProject.CustomConsoles
 
             if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.B))
             {
-                blockMode = !blockMode;
+                reader1.UseBlockMode = !reader1.UseBlockMode;
             }
         }
         
