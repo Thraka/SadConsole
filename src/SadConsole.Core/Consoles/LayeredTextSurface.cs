@@ -260,7 +260,8 @@ namespace SadConsole.Consoles
 
             layer.Cells = surface.Cells;
             ResetAreaLayer(layer);
-
+            layers.Add(layer);
+            SyncLayerIndex();
             return layer;
         }
 
