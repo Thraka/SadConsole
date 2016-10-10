@@ -1,5 +1,7 @@
 ﻿#if SFML
 using SFML.Graphics;
+using Rectangle = SFML.Graphics.IntRect;
+using Point = SFML.System.Vector2i;
 #elif MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -200,7 +202,7 @@ namespace SadConsole
         public void Render(SpriteBatch batch, Rectangle drawingRectangle, Font font)
         {
 #if SFML
-            Batch.DrawCell(cell, drawingRectangle, font.SolidGlyphRectangle, Color.Transparent, font);
+            batch.DrawCell(this, drawingRectangle, font.SolidGlyphRectangle, Color.Transparent, font);
 #elif MONOGAME
             if (ActualBackground != Color.Transparent)
                 batch.Draw(font.FontImage, drawingRectangle, font.GlyphIndexRects[font.SolidGlyphIndex], ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);

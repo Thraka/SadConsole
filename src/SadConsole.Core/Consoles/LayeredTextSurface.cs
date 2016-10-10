@@ -404,7 +404,33 @@ namespace SadConsole.Consoles
                 i++;
             }
         }
-        
+
+        Cell[] serializationCells;
+        Cell[] serializationRenderCells;
+        Rectangle[] serializationRenderRects;
+
+        [OnSerializing]
+        private void BeforeSerialized(StreamingContext context)
+        {
+            serializationCells = cells;
+            serializationRenderCells = RenderCells;
+            serializationRenderRects = RenderRects;
+            cells = null;
+            RenderCells = null;
+            RenderRects = null;
+        }
+
+        [OnSerialized]
+        private void AfterSerialized(StreamingContext context)
+        {
+            cells = serializationCells;
+            RenderCells = serializationRenderCells;
+            RenderRects = serializationRenderRects;
+            serializationCells = null;
+            serializationRenderCells = null;
+            serializationRenderRects = null;
+        }
+
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {

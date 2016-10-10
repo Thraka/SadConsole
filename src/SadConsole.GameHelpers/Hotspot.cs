@@ -4,8 +4,9 @@ using Rectangle = SFML.Graphics.IntRect;
 using SFML.Graphics;
 #elif MONOGAME
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 #endif
+
+using System.Collections.Generic;
 
 namespace SadConsole.Game
 {
