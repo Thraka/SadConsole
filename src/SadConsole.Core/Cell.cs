@@ -104,11 +104,11 @@ namespace SadConsole
         [DataMember]
         /// <summary>
         /// The SpriteBatch sprite mirror effect used when rendering the cell.
-        /// <remarks>The actual sprite effect may or may not match the desired sprite effect. When cell effects are processed, they may change this value. If the cell effect is removed, the actual sprite effect is taken from desired sprite effect.</remarks>
         /// </summary>
+        /// <remarks>The actual sprite effect may or may not match the desired sprite effect. When cell effects are processed, they may change this value. If the cell effect is removed, the actual sprite effect is taken from desired sprite effect.</remarks>
         public SpriteEffects ActualSpriteEffect { get; set; }
 
-#region Constructors
+        #region Constructors
         public Cell()
         {
             Reset();
@@ -177,6 +177,37 @@ namespace SadConsole
                 Effect.Update(elapsedTime);
                 Effect.Apply(this);
             }
+        }
+
+        /// <summary>
+        /// Draws a single cell using the specified SpriteBatch.
+        /// </summary>
+        /// <param name="batch">Rendering batch.</param>
+        /// <param name="position">Pixel position on the screen to render.</param>
+        /// <param name="size">Rendering size of the cell.</param>
+        /// <param name="font">Font used to draw the cell.</param>
+        public void Render(SpriteBatch batch, Point position, Point size, Font font)
+        {
+            Render(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
+        }
+
+        /// <summary>
+        /// Draws a single cell using the specified SpriteBatch.
+        /// </summary>
+        /// <param name="batch">Rendering batch.</param>
+        /// <param name="drawingRectangle">Where on the sreen to draw the cell, in pixels.</param>
+        /// <param name="font">Font used to draw the cell.</param>
+        public void Render(SpriteBatch batch, Rectangle drawingRectangle, Font font)
+        {
+#if SFML
+            Batch.DrawCell(cell, drawingRectangle, font.SolidGlyphRectangle, Color.Transparent, font);
+#elif MONOGAME
+            if (ActualBackground != Color.Transparent)
+                batch.Draw(font.FontImage, drawingRectangle, font.GlyphIndexRects[font.SolidGlyphIndex], ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+
+            if (ActualForeground != Color.Transparent)
+                batch.Draw(font.FontImage, drawingRectangle, font.GlyphIndexRects[ActualGlyphIndex], ActualForeground, 0f, Vector2.Zero, ActualSpriteEffect, 0.4f);
+#endif
         }
     }
 }

@@ -47,6 +47,12 @@ namespace SadConsole.Game
         public List<Zone> Zones;
 
         /// <summary>
+        /// Hotspots defined for the scene.
+        /// </summary>
+        [DataMember]
+        public List<Hotspot> Hotspots;
+
+        /// <summary>
         /// Width of the backing <see cref="LayeredTextSurface"/>.
         /// </summary>
         public int Width { get { return BackgroundSurface.Width; } }
@@ -251,6 +257,7 @@ namespace SadConsole.Game
             backgroundSurface = surface;
             Objects = new GameObjectCollection();
             Zones = new List<Zone>();
+            Hotspots = new List<Hotspot>();
         }
 
         public static Scene Load(string file, Console baseConsole = null, params Type[] types)
