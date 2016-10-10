@@ -6,6 +6,7 @@ This change log was more relevant when I wasn't using GitHub. Now it only lists 
 ### Core
 - Helper method added to cells that lets them render themselves to screen without the TextSurface system.
 - Fixed LayeredTextSurface saving out information from base class when it is already contained in the Layers array.
+- Fixed LayeredTextSurface Add method that did not actually add a new layer if you supplied a source TextSurface.
 
 ### GameHelpers
 - Improved debug attributes of zone.
