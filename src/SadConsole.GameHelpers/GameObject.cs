@@ -29,6 +29,12 @@ namespace SadConsole.Game
 #elif MONOGAME
         public static Matrix NoMatrix = Matrix.CreateTranslation(0f, 0f, 0f);
 #endif
+
+        /// <summary>
+        /// Automatically forwards the <see cref="AnimatedTextSurface.AnimationStateChanged"/> event.
+        /// </summary>
+        public event System.EventHandler<AnimatedTextSurface.AnimationStateChangedEventArgs> AnimationStateChanged;
+
         /// <summary>
         /// Renderer used for drawing the game object.
         /// </summary>
@@ -109,7 +115,26 @@ namespace SadConsole.Game
         /// <summary>
         /// The current animation.
         /// </summary>
-        public Consoles.AnimatedTextSurface Animation { get { return animation; } set { animation = value; animation.Font = font; UpdateRects(position, true); } }
+        public Consoles.AnimatedTextSurface Animation
+        {
+            get { return animation; }
+            set
+            {
+                if (animation != null)
+                {
+                    animation.State = AnimatedTextSurface.AnimationState.Deactivated;
+                    animation.AnimationStateChanged -= ForwardAnimationStateChanged;
+                }
+
+                animation = value;
+                animation.Font = font;
+                UpdateRects(position, true);
+
+                animation.AnimationStateChanged += ForwardAnimationStateChanged;
+                animation.State = AnimatedTextSurface.AnimationState.Activated;
+
+            }
+        }
 
         /// <summary>
         /// Collection of animations associated with this game object.
@@ -239,6 +264,11 @@ namespace SadConsole.Game
             var frame = animation.CreateFrame();
             frame[0].GlyphIndex = 1;
             this.font = animation.Font = font;
+        }
+
+        private void ForwardAnimationStateChanged(object sender, AnimatedTextSurface.AnimationStateChangedEventArgs e)
+        {
+            AnimationStateChanged?.Invoke(sender, e);
         }
 
         /// <summary>
