@@ -1,6 +1,16 @@
 ﻿>**NOTE**
 This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
 
+## 10/24/2016
+
+### Core
+- Added DoUpdate and DoRender flags to Engine.
+- MonoGame correctly calls the Shutdown event now.
+- AnimatedTextSurface.State can be set publically now.
+
+### GameHelpers
+- Added AnimationStateChanged to GameObject which forwards the AnimatedTextSurface.AnimationStateChanged event automatically.
+
 ## 10/09/2016
 
 ### Core

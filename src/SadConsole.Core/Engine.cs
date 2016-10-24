@@ -18,9 +18,24 @@ namespace SadConsole
     public static partial class Engine
     {
         #region Fields
+        /// <summary>
+        /// Called after each frame of update logic has happened.
+        /// </summary>
         public static event EventHandler EngineUpdated;
+
+        /// <summary>
+        /// Called after a frame has been drawn.
+        /// </summary>
         public static event EventHandler EngineDrawFrame;
+
+        /// <summary>
+        /// Called when the game window closes.
+        /// </summary>
         public static event EventHandler<ShutdownEventArgs> EngineShutdown;
+        
+        /// <summary>
+        /// Called after SadConsole has been initialized.
+        /// </summary>
         public static event EventHandler EngineStart;
 
         /// <summary>
@@ -32,6 +47,16 @@ namespace SadConsole
         private static List<Type> _cellEffects;
 
         internal static IConsole LastMouseConsole;
+
+        /// <summary>
+        /// When false, does not run the render logic. <see cref="EngineDrawFrame"/> will still be called.
+        /// </summary>
+        public static bool DoRender { get; set; } = true;
+
+        /// <summary>
+        /// When false, does not run the update logic. <see cref="EngineUpdated"/> will still be called.
+        /// </summary>
+        public static bool DoUpdate { get; set; } = true;
 
         /// <summary>
         /// The width of the game window.
