@@ -39,8 +39,8 @@ namespace SadConsole.Consoles
 
             window.Print(2, 2, message);
 
-            Button yesButton = new Button(yesPrompt.Length + 2, 1);
-            Button noButton = new Button(noPrompt.Length + 2, 1);
+            Button yesButton = new Button(yesPrompt.Length + 2);
+            Button noButton = new Button(noPrompt.Length + 2);
 
             yesButton.Position = new Point(2, window.textSurface.Height - 2);
             noButton.Position = new Point(window.textSurface.Width - noButton.Width - 2, window.textSurface.Height - 2);
@@ -48,8 +48,8 @@ namespace SadConsole.Consoles
             yesButton.Text = yesPrompt;
             noButton.Text = noPrompt;
 
-            yesButton.ButtonClicked += (o, e) => { window.DialogResult = true; window.Hide(); };
-            noButton.ButtonClicked += (o, e) => { window.DialogResult = false; window.Hide(); };
+            yesButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); };
+            noButton.Click += (o, e) => { window.DialogResult = false; window.Hide(); };
 
             window.Add(yesButton);
             window.Add(noButton);
@@ -88,13 +88,13 @@ namespace SadConsole.Consoles
 
             window.Print(2, 2, message);
 
-            Button closeButton = new Button(closeButtonText.Length + 2, 1);
+            Button closeButton = new Button(closeButtonText.Length + 2);
 
             closeButton.Position = new Point(2, window.textSurface.Height - 2);
 
             closeButton.Text = closeButtonText;
 
-            closeButton.ButtonClicked += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
+            closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
 
             window.Add(closeButton);
 

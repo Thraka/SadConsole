@@ -28,10 +28,10 @@ namespace StarterProject.CustomConsoles
             IsVisible = false;
             
             
-            var button1 = new SadConsole.Controls.Button(11, 1);
+            var button1 = new SadConsole.Controls.Button(11);
             button1.Text = "Click";
             button1.Position = new Point(1, 3);
-            button1.ButtonClicked += (s, e) => Window.Message("Clicked!", "OK");
+            button1.Click += (s, e) => Window.Message("Clicked!", "OK");
             Add(button1);
 
             var radioButton = new SadConsole.Controls.RadioButton(20, 1);
@@ -88,27 +88,27 @@ namespace StarterProject.CustomConsoles
             input.Position = new Point(25, 12);
             Add(input);
 
-            var selButton = new SadConsole.Controls.SelectionButton(20, 1);
+            var selButton = new SadConsole.Controls.SelectionButton(20);
             selButton.Text = "Selection Button 1";
             selButton.Position = new Point(55, 3);
             Add(selButton);
 
-            var selButton1 = new SadConsole.Controls.SelectionButton(20, 1);
+            var selButton1 = new SadConsole.Controls.SelectionButton(20);
             selButton1.Text = "Selection Button 2";
             selButton1.Position = new Point(55, 4);
             Add(selButton1);
 
-            var selButton2 = new SadConsole.Controls.SelectionButton(20, 1);
+            var selButton2 = new SadConsole.Controls.SelectionButton(20);
             selButton2.Text = "Selection Button 3";
             selButton2.Position = new Point(55, 5);
             Add(selButton2);
 
-            var selButton3 = new SadConsole.Controls.SelectionButton(20, 1);
+            var selButton3 = new SadConsole.Controls.SelectionButton(20);
             selButton3.Text = "Selection Button 4";
             selButton3.Position = new Point(55, 6);
             Add(selButton3);
 
-            var selButton4 = new SadConsole.Controls.SelectionButton(20, 1);
+            var selButton4 = new SadConsole.Controls.SelectionButton(20);
             selButton4.Text = "Selection Button 5";
             selButton4.Position = new Point(55, 7);
             Add(selButton4);

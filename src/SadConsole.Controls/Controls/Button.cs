@@ -10,67 +10,59 @@ using System.Runtime.Serialization;
 
 namespace SadConsole.Controls
 {
+    /// <summary>
+    /// Base class for creating a button type control.
+    /// </summary>
+    /// <typeparam name="TTheme"></typeparam>
     [DataContract]
-    public class Button: ControlBase
+    public abstract class ButtonBase<TTheme>: ControlBase
+        where TTheme : ButtonTheme
     {
+        /// <summary>
+        /// The theme override for the button.
+        /// </summary>
+        [DataMember(Name = "Theme")]
+        protected TTheme theme;
+
+        /// <summary>
+        /// The default theme if a theme is not set for the button.
+        /// </summary>
+        protected TTheme defaultTheme;
+
         /// <summary>
         /// Raised when the button is clicked.
         /// </summary>
-        public event EventHandler ButtonClicked;
+        public event EventHandler Click;
 
-        [DataMember(Name="Theme")]
-        protected ButtonTheme _theme;
+        /// <summary>
+        /// True when the mouse is down.
+        /// </summary>
+        protected bool isMouseDown;
+
+        /// <summary>
+        /// The display text of the button.
+        /// </summary>
         [DataMember(Name = "Text")]
-        protected string _text;
-        protected bool _isMouseDown;
+        protected string text;
+
+        /// <summary>
+        /// The alignment of the <see cref="text"/>.
+        /// </summary>
         [DataMember(Name = "TextAlignment")]
-        protected System.Windows.HorizontalAlignment _textAlignment = System.Windows.HorizontalAlignment.Center;
-        protected CellAppearance _currentAppearance;
+        protected System.Windows.HorizontalAlignment textAlignment = System.Windows.HorizontalAlignment.Center;
 
         /// <summary>
-        /// When true, renders the <see cref="EndCharacterLeft"/> and <see cref="EndCharacterRight"/> on the button.
+        /// Selected part of the theme based on the state of the control.
         /// </summary>
-        [DataMember]
-        public bool ShowEnds { get; set; } = true;
-
-        /// <summary>
-        /// The character on the left side of the button. Defaults to '<'.
-        /// </summary>
-        [DataMember]
-        public int EndCharacterLeft { get; set; } = (int)'<';
-
-        /// <summary>
-        /// The character on the right side of the button. Defaults to '>'.
-        /// </summary>
-        [DataMember]
-        public int EndCharacterRight { get; set; } = (int)'>';
-        //public int Margin = 0;
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public virtual ButtonTheme Theme
-        {
-            get
-            {
-                if (_theme == null)
-                    return Library.Default.ButtonTheme;
-                else
-                    return _theme;
-            }
-            set
-            {
-                _theme = value;
-            }
-        }
+        protected CellAppearance currentAppearance;
 
         /// <summary>
         /// The text displayed on the control.
         /// </summary>
         public string Text
         {
-            get { return _text; }
-            set { _text = value; Compose(true); }
+            get { return text; }
+            set { text = value; Compose(true); }
         }
 
         /// <summary>
@@ -78,29 +70,42 @@ namespace SadConsole.Controls
         /// </summary>
         public System.Windows.HorizontalAlignment TextAlignment
         {
-            get { return _textAlignment; }
-            set { _textAlignment = value; Compose(true); }
+            get { return textAlignment; }
+            set { textAlignment = value; Compose(true); }
         }
 
         /// <summary>
-        /// Creates an instance of the button control with the specified width and height.
+        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        /// <param name="width">Width of the control.</param>
-        /// <param name="height">Height of the control.</param>
-        public Button(int width, int height)
-            : base(width, height)
+        public virtual TTheme Theme
         {
-
-            DetermineAppearance();
+            get
+            {
+                if (theme == null)
+                    return defaultTheme;
+                else
+                    return theme;
+            }
+            set
+            {
+                theme = value;
+            }
         }
 
         /// <summary>
-        /// Raises the <see cref="ButtonClicked"/> event.
+        /// Creates a new button control.
         /// </summary>
-        public virtual void Click()
+        /// <param name="width">Width of the button.</param>
+        /// <param name="height">Height of the button.</param>
+        /// <param name="defaultTheme">The default theme, cannot be null.</param>
+        public ButtonBase(int width, int height, TTheme defaultTheme): base(width, height) { this.defaultTheme = defaultTheme; }
+
+        /// <summary>
+        /// Raises the <see cref="Click"/> event.
+        /// </summary>
+        public virtual void DoClick()
         {
-            if (ButtonClicked != null)
-                ButtonClicked(this, new EventArgs());
+            Click?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -108,24 +113,24 @@ namespace SadConsole.Controls
         /// </summary>
         public override void DetermineAppearance()
         {
-            CellAppearance currentappearance = _currentAppearance;
+            CellAppearance currentappearance = currentAppearance;
 
             if (!isEnabled)
-                _currentAppearance = Theme.Disabled;
+                currentAppearance = Theme.Disabled;
 
-            else if (!_isMouseDown && isMouseOver)
-                _currentAppearance = Theme.MouseOver;
+            else if (!isMouseDown && isMouseOver)
+                currentAppearance = Theme.MouseOver;
 
-            else if (!_isMouseDown && !isMouseOver && IsFocused && Engine.ActiveConsole == parent)
-                _currentAppearance = Theme.Focused;
+            else if (!isMouseDown && !isMouseOver && IsFocused && Engine.ActiveConsole == parent)
+                currentAppearance = Theme.Focused;
 
-            else if (_isMouseDown && isMouseOver)
-                _currentAppearance = Theme.MouseClicking;
+            else if (isMouseDown && isMouseOver)
+                currentAppearance = Theme.MouseClicking;
 
             else
-                _currentAppearance = Theme.Normal;
+                currentAppearance = Theme.Normal;
 
-            if (currentappearance != _currentAppearance)
+            if (currentappearance != currentAppearance)
                 IsDirty = true;
         }
 
@@ -141,7 +146,7 @@ namespace SadConsole.Controls
             if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
 #endif
             {
-                Click();
+                DoClick();
                 return true;
             }
 
@@ -154,7 +159,7 @@ namespace SadConsole.Controls
         /// <param name="info">The mouse state.</param>
         protected override void OnMouseIn(Input.MouseInfo info)
         {
-            _isMouseDown = info.LeftButtonDown;
+            isMouseDown = info.LeftButtonDown;
 
             base.OnMouseIn(info);
         }
@@ -165,7 +170,7 @@ namespace SadConsole.Controls
         /// <param name="info">The mouse state.</param>
         protected override void OnMouseExit(Input.MouseInfo info)
         {
-            _isMouseDown = false;
+            isMouseDown = false;
 
             base.OnMouseExit(info);
         }
@@ -179,7 +184,42 @@ namespace SadConsole.Controls
             base.OnLeftMouseClicked(info);
 
             if (isEnabled)
-                Click();
+                DoClick();
+        }
+    }
+
+    /// <summary>
+    /// Simple button control with a height of 1.
+    /// </summary>
+    [DataContract]
+    public class Button: ButtonBase<ButtonTheme>
+    {
+        /// <summary>
+        /// When true, renders the <see cref="EndCharacterLeft"/> and <see cref="EndCharacterRight"/> on the button.
+        /// </summary>
+        [DataMember]
+        public bool ShowEnds { get; set; } = true;
+
+        /// <summary>
+        /// The character on the left side of the button. Defaults to '&lt;'.
+        /// </summary>
+        [DataMember]
+        public int EndCharacterLeft { get; set; } = (int)'<';
+
+        /// <summary>
+        /// The character on the right side of the button. Defaults to '>'.
+        /// </summary>
+        [DataMember]
+        public int EndCharacterRight { get; set; } = (int)'>';
+
+        /// <summary>
+        /// Creates an instance of the button control with the specified width.
+        /// </summary>
+        /// <param name="width">Width of the control.</param>
+        public Button(int width)
+            : base(width, 1, Themes.Library.Default.ButtonTheme)
+        {
+            DetermineAppearance();
         }
 
         /// <summary>
@@ -190,7 +230,7 @@ namespace SadConsole.Controls
             if (this.IsDirty)
             {
                 // Redraw the control
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
+                this.Fill(currentAppearance.Foreground, currentAppearance.Background, currentAppearance.GlyphIndex, null);
 
                 if (ShowEnds)
                 {
@@ -206,7 +246,7 @@ namespace SadConsole.Controls
             }
         }
 
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             DetermineAppearance();

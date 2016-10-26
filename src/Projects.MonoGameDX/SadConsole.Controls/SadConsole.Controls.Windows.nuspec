@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Controls</id>
-    <version>3.1.1</version>
+    <version>4.0.0-pre1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,12 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-Minor bug fix with listbox.
+Changed Button and SelectionButton control.
+- New types of buttons:  ...
+- Constructor changed.
+- Event name ButtonClicked simplified to Click.
+- Button click method Click changed to DoClick.
+
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

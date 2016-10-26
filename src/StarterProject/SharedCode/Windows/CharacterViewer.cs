@@ -59,7 +59,7 @@ namespace StarterProject.Windows
             // Add all controls
             this.Add(_charScrollBar);
 
-            _closeButton = new Button(6, 1) { Text = "Ok", Position = new Point(19, 1) }; Add(_closeButton); _closeButton.ButtonClicked += (sender, e) => { DialogResult = true; Hide(); };
+            _closeButton = new Button(6) { Text = "Ok", Position = new Point(19, 1) }; Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
 
             _highlightedCellEffect.Foreground = Color.Blue;
             _highlightedCellEffect.Background = ColorHelper.DarkGray;
