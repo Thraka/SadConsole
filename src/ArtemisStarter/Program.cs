@@ -4,7 +4,7 @@ using Console = SadConsole.Consoles.Console;
 using SadConsole.Consoles;
 using Microsoft.Xna.Framework;
 
-namespace SadConsoleGame
+namespace SadConsoleArtemis
 {
     class Program
     {
@@ -28,8 +28,6 @@ namespace SadConsoleGame
             var defaultConsole = (Console)SadConsole.Engine.ActiveConsole;
 
             defaultConsole.Print(1, 1, "Welcome to SadConsole", Color.Aqua, Color.Black);
-
-            SadConsole.Engine.MonoGameInstance.Window.Title = "My Game";
         }
 
         private static void Engine_EngineUpdated(object sender, EventArgs e)
