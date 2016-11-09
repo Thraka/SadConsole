@@ -29,6 +29,25 @@ namespace Microsoft.Xna.Framework
             var world = point.ConsoleLocationToWorld(sourceFont.Size.X, sourceFont.Size.Y);
             return world.WorldLocationToConsole(targetFont.Size.X, targetFont.Size.Y);
         }
+
+        public static Matrix ToPositionMatrix(this Point position, Point cellSize, bool absolutePositioning)
+        {
+            Point worldLocation;
+
+            if (absolutePositioning)
+                worldLocation = position;
+            else
+                worldLocation = position.ConsoleLocationToWorld(cellSize.X, cellSize.Y);
+
+#if SFML
+            var transform = Matrix.Identity;
+            transform.Translate(worldLocation.X, worldLocation.Y);
+            
+            return transform;
+#elif MONOGAME
+            return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
+#endif
+        }
     }
 
 #if SFML
