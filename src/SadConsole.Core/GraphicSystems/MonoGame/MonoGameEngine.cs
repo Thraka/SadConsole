@@ -42,6 +42,8 @@ namespace SadConsole
 
             SetupFontAndEffects(font);
 
+            DeviceManager = deviceManager;
+
             DefaultFont.ResizeGraphicsDeviceManager(deviceManager, consoleWidth, consoleHeight, 0, 0);
 
             // Create the default console.

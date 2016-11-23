@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core</id>
-    <version>5.0.9-pre</version>
+    <version>5.0.9</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -13,6 +13,8 @@
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
 Point extension ToPositionMatrix added.
+SadConsole.Engine.DeviceManager is now set to the instance used to init monogame.
+When deserializing a Console type, the TextSurface did not have the RenderCells set properly.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
