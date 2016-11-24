@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core</id>
-    <version>5.0.10</version>
+    <version>5.0.11-pre1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,9 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-Point extension ToPositionMatrix added.
-SadConsole.Engine.DeviceManager is now set to the instance used to init monogame.
-When deserializing a Console type, the TextSurface did not have the RenderCells set properly.
+Clear now resets the SpriteEffect to none.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

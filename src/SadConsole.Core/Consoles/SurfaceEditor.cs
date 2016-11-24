@@ -726,7 +726,7 @@ namespace SadConsole.Consoles
         /// </summary>
         public void Clear()
         {
-            Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, 0, null);
+            Fill(textSurface.DefaultForeground, textSurface.DefaultBackground, 0, SpriteEffects.None);
         }
 
         /// <summary>
@@ -740,6 +740,7 @@ namespace SadConsole.Consoles
             cell.Reset();
             cell.Foreground = textSurface.DefaultForeground;
             cell.Background = textSurface.DefaultBackground;
+            cell.SpriteEffect = SpriteEffects.None;
         }
 #endregion
 
