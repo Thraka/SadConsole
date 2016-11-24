@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.SFML</id>
-    <version>5.0.8</version>
+    <version>5.0.10</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,9 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-AnimatedTextSurface.State can be set publically now.
-Added DoUpdate and DoRender flags to Engine.
-MonoGame correctly calls the Shutdown event now.
+Point extension ToPositionMatrix added.
+SadConsole.Engine.DeviceManager is now set to the instance used to init monogame.
+When deserializing a Console type, the TextSurface did not have the RenderCells set properly.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml monogame roguelike cli game development console ansi ascii</tags>

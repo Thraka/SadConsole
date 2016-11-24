@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.GameHelpers.SFML</id>
-    <version>4.4.0</version>
+    <version>4.5.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Added AnimationStateChanged to GameObject which forwards the AnimatedTextSurface.AnimationStateChanged event automatically.
+Added RangeInt and RangeDouble types for generating a value between two numbers.
+Fixed some bugs with init of a scene.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml sadconsole roguelike cli game development console ansi ascii</tags>
