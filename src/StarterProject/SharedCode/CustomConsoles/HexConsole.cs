@@ -20,7 +20,36 @@ namespace StarterProject.CustomConsoles
         int lastCell = -1;
         bool lastCellHexRow = false;
 
-        public HexConsole(int width, int height) : base(new HexTextSurface(width, height)) { }
+        public HexConsole(int width, int height) : base(new HexTextSurface(width, height))
+        {
+            Position = new Point(3, 2);
+            textSurface.Font = Engine.LoadFont("Cheepicus12.font").GetFont(Font.FontSizes.One);
+
+            Fill(Color.Red, null, glyph: 176);
+
+            for (int x = 0; x < width; x++)
+            {
+                bool isHexColumn = x % 2 == 1;
+
+                for (int y = 0; y < height; y++)
+                {
+                    bool isHexRow = y % 2 == 1;
+
+                    if (isHexColumn && isHexRow)
+                    {
+                        SetForeground(x, y, Color.Blue * 0.6f);
+                    }
+                    else if (isHexRow)
+                    {
+                        SetForeground(x, y, Color.AliceBlue * 0.6f);
+                    }
+                    else if (isHexColumn)
+                    {
+                        SetForeground(x, y, Color.DarkRed);
+                    }
+                }
+            }
+        }
 
         public override bool ProcessMouse(MouseInfo info)
         {
