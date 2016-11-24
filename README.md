@@ -60,7 +60,7 @@ As a MonoMac project, Xcode must be installed along with the full Xamarin develo
 SadConsole for Linux should work with no problems. If you compile for Mono and use the [SadConsole OpenGL](http://www.nuget.org/packages/SadConsole.Core.MonoGameGL/) library (instead of the default DirectX library) then everything should just work. I've only tested this on Ubuntu.
 
 ## Starter Project
-[StarterProject](./StarterProject) demonstrates how to use SadConsole in a multi-platform environment.
+[StarterProject](./src/StarterProject) demonstrates how to use SadConsole in a multi-platform environment.
 
 
 # 2.0 --> 3.0 Migration Notes

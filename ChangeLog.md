@@ -1,5 +1,25 @@
-﻿>**NOTE**
-This change log was more relevant when I wasn't using GitHub. Now it only lists major releases and updates to NuGet. The source code iterates much faster and can be checked through the commit history.
+﻿## 11/23/2016
+
+### Core
+
+- Point extension ToPositionMatrix added.
+- SadConsole.Engine.DeviceManager is now set to the instance used to init monogame.
+- When deserializing a Console type, the TextSurface did not have the RenderCells set properly.
+
+### GameHelpers
+
+- Added RangeInt and RangeDouble types for generating a value between two numbers.
+- Fixed some bugs with init of a scene.
+
+## 10/24/2016
+
+### Core
+- Added DoUpdate and DoRender flags to Engine.
+- MonoGame correctly calls the Shutdown event now.
+- AnimatedTextSurface.State can be set publically now.
+
+### GameHelpers
+- Added AnimationStateChanged to GameObject which forwards the AnimatedTextSurface.AnimationStateChanged event automatically.
 
 ## 10/09/2016
 

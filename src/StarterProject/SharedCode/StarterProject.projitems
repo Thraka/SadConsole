@@ -11,12 +11,14 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CachedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ControlsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\HexConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\GameObjectConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ScrollableConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />

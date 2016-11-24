@@ -25,31 +25,13 @@ namespace SadConsole.Controls
         /// The selection button to focus when the UP key is pressed or the SelectNext() method is called.
         /// </summary>
         public SelectionButton NextSelection { get; set; }
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public override ButtonTheme Theme
-        {
-            get
-            {
-                if (_theme == null)
-                    return Library.Default.SelectionButtonTheme;
-                else
-                    return _theme;
-            }
-            set
-            {
-                _theme = value;
-            }
-        }
+        
 
         /// <summary>
         /// Creates a new Selection Button with a specific width and height.
         /// </summary>
         /// <param name="width">The width of the selection button.</param>
-        /// <param name="height">The height of the selection button.</param>
-        public SelectionButton(int width, int height) : base(width, height) { }
+        public SelectionButton(int width) : base(width) { defaultTheme = Library.Default.SelectionButtonTheme; }
 
         /// <summary>
         /// Sets the next selection button and optionally sets the previous of the referenced selection to this button.
@@ -114,18 +96,6 @@ namespace SadConsole.Controls
                 NextSelection.IsFocused = true;
 
             return NextSelection;
-        }
-
-        public override void Compose()
-        {
-            if (this.IsDirty)
-            {
-                // Redraw the control
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
-                this.Print(0, 0, Text.Align(TextAlignment, this.Width));
-
-                this.IsDirty = false;
-            }
         }
     }
 }

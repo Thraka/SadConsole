@@ -96,8 +96,11 @@ namespace SadConsole
             {
                 Device.Clear(ClearFrameColor);
 
-                Update(Device.HasFocus());
-                Draw();
+                if (DoUpdate)
+                    Update(Device.HasFocus());
+
+                if (DoRender)
+                    Draw();
                 
                 Device.Display();
                 Device.DispatchEvents();

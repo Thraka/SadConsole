@@ -84,7 +84,7 @@ namespace StarterProject
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
-
+            
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
             //SadConsole.Engine.MonoGameInstance.UnlockFPS();
         }

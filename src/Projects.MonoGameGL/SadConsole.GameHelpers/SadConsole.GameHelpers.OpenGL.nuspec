@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.GameHelpers.MonoGameGL</id>
-    <version>4.3.0</version>
+    <version>4.5.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,8 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
-Improved debug attributes of zone.
-Added hotspot type.
+Added RangeInt and RangeDouble types for generating a value between two numbers.
+Fixed some bugs with init of a scene.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.SFML</id>
-    <version>5.0.7</version>
+    <version>5.0.10</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,12 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
--- Update: Since 5.0.6 was released today, including previous notes...
-      
-Helper method added to cells that lets them render themselves to screen without the TextSurface system.
-Fixed LayeredTextSurface saving out information from base class when it is already contained in the Layers array.
-
-Fixed LayeredTextSurface Add method that did not actually add a new layer if you supplied a source TextSurface.
+Point extension ToPositionMatrix added.
+SadConsole.Engine.DeviceManager is now set to the instance used to init monogame.
+When deserializing a Console type, the TextSurface did not have the RenderCells set properly.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml monogame roguelike cli game development console ansi ascii</tags>

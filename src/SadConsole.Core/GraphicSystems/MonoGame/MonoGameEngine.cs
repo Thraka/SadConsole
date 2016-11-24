@@ -42,6 +42,8 @@ namespace SadConsole
 
             SetupFontAndEffects(font);
 
+            DeviceManager = deviceManager;
+
             DefaultFont.ResizeGraphicsDeviceManager(deviceManager, consoleWidth, consoleHeight, 0, 0);
 
             // Create the default console.
@@ -65,6 +67,7 @@ namespace SadConsole
         public static void Initialize(string font, int consoleWidth, int consoleHeight)
         {
             MonoGameInstance = new SadConsoleGame(font, consoleWidth, consoleHeight);
+            MonoGameInstance.Exiting += (s, e) => EngineShutdown?.Invoke(null, new ShutdownEventArgs() { });
         }
 
         internal static void InitializeCompleted()
@@ -82,7 +85,9 @@ namespace SadConsole
             GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
             GameTimeDraw = gameTime;
 
-            ConsoleRenderStack.Render();
+            if (DoRender)
+                ConsoleRenderStack.Render();
+
             EngineDrawFrame?.Invoke(null, System.EventArgs.Empty);
         }
 
@@ -91,38 +96,41 @@ namespace SadConsole
             GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
             GameTimeUpdate = gameTime;
 
-            if (windowIsActive)
+            if (DoUpdate)
             {
-                if (UseKeyboard)
-                    Keyboard.ProcessKeys(GameTimeUpdate);
-
-                if (UseMouse)
+                if (windowIsActive)
                 {
-                    Mouse.ProcessMouse(GameTimeUpdate);
-                    if (ProcessMouseWhenOffScreen ||
-                        (Mouse.ScreenLocation.X >= 0 && Mouse.ScreenLocation.Y >= 0 &&
-                         Mouse.ScreenLocation.X < WindowWidth && Mouse.ScreenLocation.Y < WindowHeight))
+                    if (UseKeyboard)
+                        Keyboard.ProcessKeys(GameTimeUpdate);
+
+                    if (UseMouse)
                     {
-                        if (_activeConsole != null && _activeConsole.ExclusiveFocus)
-                            _activeConsole.ProcessMouse(Mouse);
-                        else
-                            ConsoleRenderStack.ProcessMouse(Mouse);
-                    }
-                    else
-                    {
-                        // DOUBLE CHECK if mouse left screen then we should stop kill off lastmouse
-                        if (LastMouseConsole != null)
+                        Mouse.ProcessMouse(GameTimeUpdate);
+                        if (ProcessMouseWhenOffScreen ||
+                            (Mouse.ScreenLocation.X >= 0 && Mouse.ScreenLocation.Y >= 0 &&
+                             Mouse.ScreenLocation.X < WindowWidth && Mouse.ScreenLocation.Y < WindowHeight))
                         {
-                            Engine.LastMouseConsole.ProcessMouse(Mouse);
-                            Engine.LastMouseConsole = null;
+                            if (_activeConsole != null && _activeConsole.ExclusiveFocus)
+                                _activeConsole.ProcessMouse(Mouse);
+                            else
+                                ConsoleRenderStack.ProcessMouse(Mouse);
+                        }
+                        else
+                        {
+                            // DOUBLE CHECK if mouse left screen then we should stop kill off lastmouse
+                            if (LastMouseConsole != null)
+                            {
+                                Engine.LastMouseConsole.ProcessMouse(Mouse);
+                                Engine.LastMouseConsole = null;
+                            }
                         }
                     }
-                }
 
-                if (_activeConsole != null)
-                    _activeConsole.ProcessKeyboard(Keyboard);
+                    if (_activeConsole != null)
+                        _activeConsole.ProcessKeyboard(Keyboard);
+                }
+                ConsoleRenderStack.Update();
             }
-            ConsoleRenderStack.Update();
             EngineUpdated?.Invoke(null, System.EventArgs.Empty);
         }
 

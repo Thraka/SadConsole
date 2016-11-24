@@ -132,7 +132,7 @@ namespace SadConsole.Consoles
         public AnimationState State
         {
             get { return state; }
-            internal set
+            set
             {
                 var oldState = state;
 

@@ -221,6 +221,12 @@ namespace SadConsole.Consoles
             return cells.GetEnumerator();
         }
 
+        [OnDeserialized]
+        private void AfterDeserialized(StreamingContext context)
+        {
+            ResetArea();
+        }
+
         /// <summary>
         /// Saves the <see cref="TextSurface"/> to a file.
         /// </summary>

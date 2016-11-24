@@ -62,6 +62,11 @@ namespace SadConsole.Game
         /// </summary>
         public int Height { get { return BackgroundSurface.Height; } }
 
+        /// <summary>
+        /// Access to the backing console that is internally wrapped in this scene.
+        /// </summary>
+        public Console BackingConsole { get { return baseConsole; } }
+
         #region CONSOLE
         public Point Position
         {
@@ -265,7 +270,9 @@ namespace SadConsole.Game
             var scene = SadConsole.Serializer.Load<Scene>(file, types);
 
             if (baseConsole == null)
-                scene.baseConsole = new Console(scene.backgroundSurface);
+                scene.baseConsole = new Console(scene.backgroundSurface) { Renderer = new LayeredTextRenderer() };
+            else
+                scene.baseConsole = baseConsole;
 
             return scene;
         }
