@@ -64,7 +64,7 @@ namespace SadConsole.Consoles
             {
                 if (_console != null)
                 {
-                    Console console = (Console)_console.Target;
+                    SurfaceEditor console = (SurfaceEditor)_console.Target;
 
                     if (!(value.X < 0 || value.X >= console.TextSurface.Width))
                         _position.X = value.X;
@@ -177,7 +177,7 @@ namespace SadConsole.Consoles
 
         private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
         {
-            var console = (Console)_console.Target;
+            var console = (SurfaceEditor)_console.Target;
             var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
 
             if (!PrintOnlyCharacterData)
@@ -237,7 +237,7 @@ namespace SadConsole.Consoles
 
             if (UseStringParser)
             {
-                var console = (Console)_console.Target;
+                var console = (SurfaceEditor)_console.Target;
                 coloredString = ColoredString.Parse(text, _position.Y * console.TextSurface.Width + _position.X, console.TextSurface, console, new StringParser.ParseCommandStacks());
             }
             else
@@ -261,7 +261,7 @@ namespace SadConsole.Consoles
             if (!DisableWordBreak && text.String.Length != 1)
             {
                 // Prep
-                var console = (Console)_console.Target;
+                var console = (SurfaceEditor)_console.Target;
                 ColoredGlyph glyph;
                 ColoredGlyph spaceGlyph = text[0].Clone();
                 spaceGlyph.Glyph = ' ';
