@@ -100,13 +100,11 @@ namespace SadConsole.Consoles
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
 #if SFML
-            //Batch.Start(1, renderedConsole.Texture, renderingMatrix);
             Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
+
             BeforeRenderCallback?.Invoke(Batch);
-            if (surface.Tint == Color.Transparent)
-                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, Color.White, renderedConsole.Texture);
-            else
-                Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, surface.Tint, renderedConsole.Texture);
+            
+            Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, surface.Tint, renderedConsole.Texture);
 
             AfterRenderCallback?.Invoke(Batch);
 
@@ -117,20 +115,11 @@ namespace SadConsole.Consoles
 
             BeforeRenderCallback?.Invoke(Batch);
 
-            if (surface.Tint.A != 255)
-            {
-                Batch.Draw(renderedConsole, Vector2.Zero, Color.White);
-
-                if (surface.Tint.A != 0)
-                    Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
-            }
-            else
-                Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
-
+            Batch.Draw(renderedConsole, Vector2.Zero, surface.Tint);
+            
             AfterRenderCallback?.Invoke(Batch);
 
             Batch.End();
-
 #endif
         }
 
