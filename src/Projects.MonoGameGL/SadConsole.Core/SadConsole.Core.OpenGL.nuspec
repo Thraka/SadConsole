@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.MonoGameGL</id>
-    <version>5.0.10</version>
+    <version>5.1.1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,9 +12,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
-Point extension ToPositionMatrix added.
-SadConsole.Engine.DeviceManager is now set to the instance used to init monogame.
-When deserializing a Console type, the TextSurface did not have the RenderCells set properly.
+Clear now resets the SpriteEffect to none.
+Fixed cached renderer in how it handles the tint of a surface.
+Renamed FadeCellRenderer instruction to FadeTextSurfaceTint.
+Reduced requirements of Cursor interaction down from Console to SurfaceEditor.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

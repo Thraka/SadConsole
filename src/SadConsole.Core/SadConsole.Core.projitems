@@ -54,6 +54,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Engine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\NonMonoGame\GameTime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\NonMonoGame\SpriteEffects.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PrimitiveStatic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SFML.cs" />
@@ -80,7 +82,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\ConcurrentInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\DoubleInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\DrawString.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Instructions\FadeCellRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\FadeTextSurfaceTint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />

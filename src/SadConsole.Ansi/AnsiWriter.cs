@@ -29,7 +29,7 @@ namespace SadConsole.Ansi
         private int _charsPerSecond;
         private int _readerIndex;
         private byte[] _bytes;
-        private Console _console;
+        private SurfaceEditor _editor;
         private State _ansiState;
         private Point _storedCursorLocation;
 
@@ -49,11 +49,14 @@ namespace SadConsole.Ansi
             }
         }
 
-        public AnsiWriter(Document ansiDocument, Console console)
+        public AnsiWriter(Document ansiDocument, SurfaceEditor editor)
         {
             _ansiDoc = ansiDocument;
-            _console = console;
-            _cursor = new Cursor(console);
+            _editor = editor;
+            _cursor = new Cursor(editor);
+            _cursor.UseStringParser = false;
+            _cursor.DisableWordBreak = true;
+                        
             CharactersPerSecond = 800;
 
             _bytes = ansiDocument.AnsiBytes;
@@ -149,15 +152,15 @@ namespace SadConsole.Ansi
                     case 'h':
                         if (values.Length == 2)
                         {
-                            if (values[0] == "")
+                            if (values[1] == "")
                                 _cursor.Position = new Point(0, _cursor.Position.Y);
                             else
-                                _cursor.Position = new Point(Convert.ToInt32(values[0]) - 1, _cursor.Position.Y);
+                                _cursor.Position = new Point(Convert.ToInt32(values[1]) - 1, _cursor.Position.Y);
 
-                            if (values[1] == "")
+                            if (values[0] == "")
                                 _cursor.Position = new Point(_cursor.Position.X, 0);
                             else
-                                _cursor.Position = new Point(_cursor.Position.X, Convert.ToInt32(values[1]) - 1);
+                                _cursor.Position = new Point(_cursor.Position.X, Convert.ToInt32(values[0]) - 1);
                         }
                         //else
                         //    System.Diagnostics.Debugger.Break();
@@ -196,33 +199,33 @@ namespace SadConsole.Ansi
                     case 'J':
                     case 'j':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _console.TextSurface.Width; i++)
-                                _console.Clear(i, _cursor.Position.Y);
+                            for (int i = _cursor.Position.X; i < _editor.TextSurface.Width; i++)
+                                _editor.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
                             for (int i = _cursor.Position.X; i >= 0; i--)
-                                _console.Clear(i, _cursor.Position.Y);
+                                _editor.Clear(i, _cursor.Position.Y);
 
                         else if (data == "2")
                         {
-                            _console.Clear();
+                            _editor.Clear();
                             _cursor.Position = new Point(0, 0);
                         }
                         break;
                     case 'K':
                     case 'k':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _console.TextSurface.Width; i++)
-                                _console.Clear(i, _cursor.Position.Y);
+                            for (int i = _cursor.Position.X; i < _editor.TextSurface.Width; i++)
+                                _editor.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
                             for (int i = _cursor.Position.X; i >= 0; i--)
-                                _console.Clear(i, _cursor.Position.Y);
+                                _editor.Clear(i, _cursor.Position.Y);
 
                         else if (data == "2")
                         {
-                            for (int i = 0; i < _console.TextSurface.Width; i++)
-                                _console.Clear(i, _cursor.Position.Y);
+                            for (int i = 0; i < _editor.TextSurface.Width; i++)
+                                _editor.Clear(i, _cursor.Position.Y);
                         }
                         break;
 
@@ -314,7 +317,7 @@ namespace SadConsole.Ansi
                 return true;
             }
 
-            bool onLastLine = _cursor.Position.Y == _console.TextSurface.Height - 1;
+            bool onLastLine = _cursor.Position.Y == _editor.TextSurface.Height - 1;
 
             foreach (var item in line)
             {
@@ -380,7 +383,7 @@ namespace SadConsole.Ansi
             foreach (var line in lines)
             {
                 counter++;
-                bool onLastLine = _cursor.Position.Y == _console.TextSurface.Height - 1;
+                bool onLastLine = _cursor.Position.Y == _editor.TextSurface.Height - 1;
 
                 if (AnsiReadLine(line, counter != lines.Length) == false)
                     return;
