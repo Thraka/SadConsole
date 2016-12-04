@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.MonoGameGL</id>
-    <version>5.1.0</version>
+    <version>5.1.1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -15,6 +15,7 @@
 Clear now resets the SpriteEffect to none.
 Fixed cached renderer in how it handles the tint of a surface.
 Renamed FadeCellRenderer instruction to FadeTextSurfaceTint.
+Reduced requirements of Cursor interaction down from Console to SurfaceEditor.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
