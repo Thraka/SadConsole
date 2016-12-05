@@ -58,6 +58,31 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Initializes SadConsole with only a <see cref="GraphicsDevice"/>.
+        /// </summary>
+        /// <param name="deviceManager">The graphics device manager from MonoGame.</param>
+        /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
+        /// <param name="consoleWidth">The width of the default root console (and game window).</param>
+        /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <returns>The default active console.</returns>
+        public static Consoles.Console Initialize(GraphicsDevice device, string font, int consoleWidth, int consoleHeight)
+        {
+            Device = device;
+
+            SetupFontAndEffects(font);
+
+            // Create the default console.
+            ActiveConsole = new Consoles.Console(consoleWidth, consoleHeight);
+            ActiveConsole.TextSurface.DefaultBackground = Color.Black;
+            ActiveConsole.TextSurface.DefaultForeground = ColorAnsi.White;
+            ((Consoles.Console)ActiveConsole).Clear();
+
+            ConsoleRenderStack.Add(ActiveConsole);
+
+            return (Consoles.Console)ActiveConsole;
+        }
+
+        /// <summary>
         /// Prepares the engine for use. This must be the first method you call on the engine, then call <see cref="Run"/> to start SadConsole.
         /// </summary>
         /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>

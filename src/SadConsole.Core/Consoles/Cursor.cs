@@ -18,6 +18,7 @@ namespace SadConsole.Consoles
     [DataContract]
     public class Cursor
     {
+        private SurfaceEditor privateEditor;
         private WeakReference _console;
         private Point _position = new Point();
 
@@ -120,10 +121,24 @@ namespace SadConsole.Consoles
         public Cursor(SurfaceEditor console)
         {
             _console = new WeakReference(console);
+
+            Constructor();
+        }
+
+        public Cursor(ITextSurface surface)
+        {
+            privateEditor = new SurfaceEditor(surface);
+            _console = new WeakReference(privateEditor);
+
+            Constructor();
+        }
+
+        private void Constructor()
+        {
             IsVisible = false;
+            AutomaticallyShiftRowsUp = true;
 
             PrintAppearance = new CellAppearance(Color.White, Color.Black);
-            AutomaticallyShiftRowsUp = true;
 
             CursorRenderCell = new Cell();
             CursorRenderCell.GlyphIndex = _cursorCharacter;
@@ -144,6 +159,9 @@ namespace SadConsole.Consoles
         /// <param name="console">The console the cursor works with.</param>
         public void AttachConsole(SurfaceEditor console)
         {
+            if (privateEditor != null)
+                privateEditor = null;
+
             _console = new WeakReference(console);
         }
 

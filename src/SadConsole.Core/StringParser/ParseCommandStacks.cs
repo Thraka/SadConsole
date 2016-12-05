@@ -129,6 +129,7 @@ namespace SadConsole.StringParser
             if (all.Contains(command))
             {
                 all.Remove(command);
+                all.Reverse();
                 All = new Stack<ParseCommandBase>(all);
             }
         }
