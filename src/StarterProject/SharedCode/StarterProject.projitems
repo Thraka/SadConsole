@@ -9,8 +9,10 @@
     <Import_RootNamespace>StarterProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AnsiConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CachedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ControlsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AutoTypingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\HexConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
@@ -23,6 +25,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StaticConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StringParsingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\FadeConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SubConsoleCursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ViewsAndSubViews.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\WorldGenerationConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
@@ -30,11 +34,32 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\CharacterViewer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\QS-SIERR.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-BTC1.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-CCU3.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-DGZN.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Cheepicus12.font">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="$(MSBuildThisFileDirectory)IBM.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Ansi\files.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Cheepicus_12x12.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)Game.ico" />
     <Content Include="$(MSBuildThisFileDirectory)GameThumbnail.png" />
     <Content Include="$(MSBuildThisFileDirectory)IBM8x16.png">

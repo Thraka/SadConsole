@@ -63,11 +63,11 @@ namespace StarterProject
                                         new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.StringParsingConsole(),
+                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.FadingExample(),
                                         new CustomConsoles.DOSConsole(),
                                         new CustomConsoles.ViewsAndSubViews(),
-                                        //new CustomConsoles.CursorConsole(),
-                                        //new CustomConsoles.SceneProjectionConsole(),
-                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.AnsiConsole(),
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),
@@ -80,7 +80,6 @@ namespace StarterProject
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
-            SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack;
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
