@@ -54,16 +54,17 @@ namespace SadConsole
                         resizeBusy = false;
 
                         GraphicsDevice.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport((GraphicsDeviceManager.PreferredBackBufferWidth - Engine.WindowWidth) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - Engine.WindowHeight) / 2, Engine.WindowWidth, Engine.WindowHeight);
-                        RenderScale = new Point(1, 1);
                     //}
                     //else
                     //{
                     //}
                 }
             }
+
+            RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Window.ClientBounds.Height);
         }
 
-        public Point RenderScale { get; private set; }
+        public Vector2 RenderScale { get; private set; }
 
         protected override void Initialize()
         {
@@ -84,6 +85,8 @@ namespace SadConsole
 
             // Hook window change for resolution fixes
             Window.ClientSizeChanged += Window_ClientSizeChanged;
+
+            RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Window.ClientBounds.Height);
 
             // Tell the main engine we're ready
             Engine.InitializeCompleted();

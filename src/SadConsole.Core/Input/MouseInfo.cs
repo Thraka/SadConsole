@@ -110,17 +110,9 @@ namespace SadConsole.Input
             bool rightDown = currentState.RightButton == ButtonState.Pressed;
             
             ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
-            ScrollWheelValue = currentState.ScrollWheelValue;
+            ScrollWheelValue = currentState.ScrollWheelValue;            
 
-            //Vector2 TargetResolutionScale = new Vector2
-            //(
-            //   Engine.WindowWidth * 1.0f / Engine.Device.Adapter.CurrentDisplayMode.Width,
-            //   Engine.WindowHeight * 1.0f / VIRTUAL_RESOLUTION_HEIGHT
-            //);
-
-            //ScreenLocation = new Point((int)(currentState.X * TargetResolutionScale.X), (int)(currentState.Y * TargetResolutionScale.Y));
-
-            ScreenLocation = new Point(currentState.X, currentState.Y);
+            ScreenLocation = new Point((int)(currentState.X * Engine.MonoGameInstance.RenderScale.X), (int)(currentState.Y * Engine.MonoGameInstance.RenderScale.Y)) - new Point(Engine.Device.Viewport.X, Engine.Device.Viewport.Y);
 #endif
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
