@@ -1,6 +1,7 @@
 ﻿#if MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace SadConsole
@@ -88,10 +89,11 @@ namespace SadConsole
         /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
         /// <param name="consoleWidth">The width of the default root console (and game window).</param>
         /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <param name="ctorCallback">Optional callback from the MonoGame Game class constructor.</param>
         /// <returns>The default active console.</returns>
-        public static void Initialize(string font, int consoleWidth, int consoleHeight)
+        public static void Initialize(string font, int consoleWidth, int consoleHeight, Action<SadConsoleGame> ctorCallback = null)
         {
-            MonoGameInstance = new SadConsoleGame(font, consoleWidth, consoleHeight);
+            MonoGameInstance = new SadConsoleGame(font, consoleWidth, consoleHeight, ctorCallback);
             MonoGameInstance.Exiting += (s, e) => EngineShutdown?.Invoke(null, new ShutdownEventArgs() { });
         }
 
@@ -158,7 +160,21 @@ namespace SadConsole
             }
             EngineUpdated?.Invoke(null, System.EventArgs.Empty);
         }
+        
+        /// <summary>
+        /// Toggles between fullscreen. This safely restores the original window size.
+        /// </summary>
+        public static void ToggleFullScreen()
+        {
+            // Coming back from fullscreen
+            if (DeviceManager.IsFullScreen)
+            {
+                DeviceManager.PreferredBackBufferWidth = WindowWidth;
+                DeviceManager.PreferredBackBufferHeight = WindowHeight;
+            }
 
+            DeviceManager.ToggleFullScreen();
+        }
     }
 }
 #endif

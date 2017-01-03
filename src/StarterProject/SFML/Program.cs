@@ -60,6 +60,7 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
+                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.StringParsingConsole(),
@@ -71,7 +72,6 @@ namespace StarterProject
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),
-                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.WorldGenerationConsole(),
                                     };
 
@@ -83,9 +83,6 @@ namespace StarterProject
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
-            
-            //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
-            //SadConsole.Engine.MonoGameInstance.UnlockFPS();
         }
 
         private static void MoveNextConsole()
