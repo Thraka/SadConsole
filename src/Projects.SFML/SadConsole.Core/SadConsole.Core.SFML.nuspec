@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.SFML</id>
-    <version>5.1.1</version>
+    <version>5.2.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,10 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Clear now resets the SpriteEffect to none.
-Fixed cached renderer in how it handles the tint of a surface.
-Renamed FadeCellRenderer instruction to FadeTextSurfaceTint.
-Reduced requirements of Cursor interaction down from Console to SurfaceEditor.
+Cursor can now be created with just a text surface alone. Allows for better standalone (no console) scenarios.
+MonoGame supports init with just a standalone graphics device object.
+Fixed bug in [c:u] (the undo command) removing in the wrong order.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>sfml monogame roguelike cli game development console ansi ascii</tags>

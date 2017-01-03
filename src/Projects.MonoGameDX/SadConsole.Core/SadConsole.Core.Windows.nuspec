@@ -15,6 +15,7 @@
 Cursor can now be created with just a text surface alone. Allows for better standalone (no console) scenarios.
 MonoGame supports init with just a standalone graphics device object.
 Fixed bug in [c:u] (the undo command) removing in the wrong order.
+Updated code for fullscreen support. Use Engine.ToggleFullscreen().
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
