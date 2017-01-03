@@ -110,9 +110,9 @@ namespace SadConsole.Input
             bool rightDown = currentState.RightButton == ButtonState.Pressed;
             
             ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
-            ScrollWheelValue = currentState.ScrollWheelValue;
+            ScrollWheelValue = currentState.ScrollWheelValue;            
 
-            ScreenLocation = new Point(currentState.X, currentState.Y);
+            ScreenLocation = new Point((int)(currentState.X * Engine.MonoGameInstance.RenderScale.X), (int)(currentState.Y * Engine.MonoGameInstance.RenderScale.Y)) - new Point(Engine.Device.Viewport.X, Engine.Device.Viewport.Y);
 #endif
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;

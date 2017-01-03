@@ -60,18 +60,18 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
+                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.StringParsingConsole(),
+                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.FadingExample(),
                                         new CustomConsoles.DOSConsole(),
                                         new CustomConsoles.ViewsAndSubViews(),
-                                        //new CustomConsoles.CursorConsole(),
-                                        //new CustomConsoles.SceneProjectionConsole(),
-                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.AnsiConsole(),
                                         new CustomConsoles.StaticConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),
-                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.WorldGenerationConsole(),
                                     };
 
@@ -80,13 +80,9 @@ namespace StarterProject
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
             SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack[0];
-            SadConsole.Engine.ActiveConsole = SadConsole.Engine.ConsoleRenderStack;
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
-            
-            //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
-            //SadConsole.Engine.MonoGameInstance.UnlockFPS();
         }
 
         private static void MoveNextConsole()

@@ -67,17 +67,17 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
-                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.AutoTypingConsole(),
                                         new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         new CustomConsoles.StretchedConsole(),
-                                        //new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.StringParsingConsole(),
-                                        //new CustomConsoles.CursorConsole(),
-                                        //new CustomConsoles.DOSConsole(),
-                                        //new CustomConsoles.SceneProjectionConsole(),
-                                        new CustomConsoles.ScrollableConsole(10, 10, 20),
+                                        new CustomConsoles.ControlsTest(),
+                                        new CustomConsoles.FadingExample(),
+                                        new CustomConsoles.DOSConsole(),
+                                        new CustomConsoles.AnsiConsole(),
                                         new CustomConsoles.ViewsAndSubViews(),
                                         new CustomConsoles.StaticConsole(),
+                                        new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),
                                         new CustomConsoles.RandomScrollingConsole(),

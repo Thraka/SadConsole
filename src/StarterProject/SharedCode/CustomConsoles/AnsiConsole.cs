@@ -1,8 +1,15 @@
-﻿using System;
-using SadConsole;
+﻿#if MONOGAME
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+#elif SFML
+using SFML.Graphics;
+using Point = SFML.System.Vector2i;
+using Rectangle = SFML.Graphics.IntRect;
+using Keys = SFML.Window.Keyboard.Key;
+#endif
+
 using SadConsole.Consoles;
 using Console = SadConsole.Consoles.Console;
-using Microsoft.Xna.Framework;
 using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
@@ -15,8 +22,9 @@ namespace StarterProject.CustomConsoles
         public AnsiConsole(): base(80, 25)
         {
             IsVisible = false;
-
-            files = SadConsole.Serializer.Load<string[]>("./ansi/files.json");
+            CanUseKeyboard = true;
+            //files = SadConsole.Serializer.Load<string[]>("./ansi/files.json");
+            files = System.IO.Directory.GetFiles("./ansi");
 
             NextAnsi();
             LoadAnsi();
@@ -24,25 +32,25 @@ namespace StarterProject.CustomConsoles
             KeyboardHandler = (cons, info) =>
             {
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X - 1, cons.TextSurface.RenderArea.Y, 80, 25);
+                if (info.IsKeyDown(Keys.Left))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left - 1, cons.TextSurface.RenderArea.Top, 80, 25);
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X + 1, cons.TextSurface.RenderArea.Y, 80, 25);
+                if (info.IsKeyDown(Keys.Right))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left + 1, cons.TextSurface.RenderArea.Top, 80, 25);
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y - 1, 80, 25);
+                if (info.IsKeyDown(Keys.Up))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top - 1, 80, 25);
 
-                if (info.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.X, cons.TextSurface.RenderArea.Y + 1, 80, 25);
+                if (info.IsKeyDown(Keys.Down))
+                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top + 1, 80, 25);
 
-                if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space))
+                if (info.IsKeyReleased(Keys.Space))
                 {
                     NextAnsi();
                     LoadAnsi();
                 }
 
-                if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.L))
+                if (info.IsKeyReleased(Keys.L))
                 {
                     if (writer == null || lineCounter == lines.Length)
                     {
@@ -72,7 +80,7 @@ namespace StarterProject.CustomConsoles
             if (fileIndex >= files.Length)
                 fileIndex = 0;
 
-            doc = new SadConsole.Ansi.Document($"./ansi/{files[fileIndex]}");
+            doc = new SadConsole.Ansi.Document($"{files[fileIndex]}");
         }
 
         private SadConsole.Ansi.Document doc;
@@ -94,11 +102,6 @@ namespace StarterProject.CustomConsoles
 
         public override bool ProcessKeyboard(KeyboardInfo info)
         {
-            
-
-
-            
-
             return base.ProcessKeyboard(info);
         }
     }

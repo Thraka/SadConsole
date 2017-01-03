@@ -1,4 +1,25 @@
-﻿## 11/23/2016
+﻿## 01/03/2016
+
+### Core
+
+- Cursor can now be created with just a text surface alone. Allows for better standalone (no console) scenarios.
+- MonoGame supports init with just a standalone graphics device object.
+- Fixed bug in [c:u] (the undo command) removing in the wrong order.
+- Updated code for fullscreen support. Use Engine.ToggleFullscreen(). (Monogame only)
+
+### Controls
+
+Changed Button and SelectionButton control.
+- New base class.
+- Constructor changed.
+- Event name ButtonClicked simplified to Click.
+- Button click method Click changed to DoClick.
+
+### Ansi
+
+- Loading multiple docs through a single writer now correctly resets the cursor state.
+
+## 11/23/2016
 
 ### Core
 

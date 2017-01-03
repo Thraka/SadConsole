@@ -378,6 +378,7 @@ namespace SadConsole.Ansi
         public void ReadEntireDocument()
         {
             string[] lines = _ansiDoc.AnsiString.Split('\n');
+            _ansiState.AnsiResetVideo();
             int counter = 0;
 
             foreach (var line in lines)

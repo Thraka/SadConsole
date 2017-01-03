@@ -1,10 +1,12 @@
 ﻿#if MONOGAME
 using Microsoft.Xna.Framework;
+using ColorHelper = Microsoft.Xna.Framework.Color;
 #elif SFML
 using SFML.Graphics;
 using Point = SFML.System.Vector2i;
 using Rectangle = SFML.Graphics.IntRect;
 using SFML.System;
+using ColorHelper = SFML.Graphics.ColorHelper;
 #endif
 
 using SadConsole;
@@ -22,9 +24,9 @@ namespace StarterProject.CustomConsoles
 
         public HexConsole(int width, int height) : base(new HexTextSurface(width, height))
         {
+            IsVisible = false;
             Position = new Point(3, 2);
-            textSurface.Font = Engine.LoadFont("Cheepicus12.font").GetFont(Font.FontSizes.One);
-
+            textSurface.Font = Engine.LoadFont("Cheepicus12.font").GetFont(SadConsole.Font.FontSizes.One);
             Fill(Color.Red, null, glyph: 176);
 
             for (int x = 0; x < width; x++)
@@ -37,15 +39,15 @@ namespace StarterProject.CustomConsoles
 
                     if (isHexColumn && isHexRow)
                     {
-                        SetForeground(x, y, Color.Blue * 0.6f);
+                        SetForeground(x, y, ColorHelper.Blue);
                     }
                     else if (isHexRow)
                     {
-                        SetForeground(x, y, Color.AliceBlue * 0.6f);
+                        SetForeground(x, y, ColorHelper.AliceBlue);
                     }
                     else if (isHexColumn)
                     {
-                        SetForeground(x, y, Color.DarkRed);
+                        SetForeground(x, y, ColorHelper.DarkRed);
                     }
                 }
             }

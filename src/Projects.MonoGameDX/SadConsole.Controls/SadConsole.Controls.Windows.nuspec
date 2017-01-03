@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Controls</id>
-    <version>4.0.0-pre1</version>
+    <version>4.0.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -13,11 +13,10 @@
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
 Changed Button and SelectionButton control.
-- New types of buttons:  ...
+- New base class.
 - Constructor changed.
 - Event name ButtonClicked simplified to Click.
 - Button click method Click changed to DoClick.
-
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

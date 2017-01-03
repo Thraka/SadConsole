@@ -1,5 +1,6 @@
 ﻿#if MONOGAME
 using Microsoft.Xna.Framework;
+using System;
 
 namespace SadConsole
 {
@@ -8,12 +9,20 @@ namespace SadConsole
     /// </summary>
     public class SadConsoleGame : Game
     {
+        private bool resizeBusy = false;
         private string font;
         private int consoleWidth;
         private int consoleHeight;
         public GraphicsDeviceManager GraphicsDeviceManager;
 
-        internal SadConsoleGame(string font, int consoleWidth, int consoleHeight)
+        /// <summary>
+        /// The type of resizing options for the window.
+        /// </summary>
+        public WindowResizeOptions DisplayOptions;
+
+        
+
+        internal SadConsoleGame(string font, int consoleWidth, int consoleHeight, Action<SadConsoleGame> ctorCallback = null)
         {
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -21,7 +30,42 @@ namespace SadConsole
             this.font = font;
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
+            GraphicsDeviceManager.HardwareModeSwitch = false;
+
+            ctorCallback?.Invoke(this);
+
+
+            DisplayOptions = WindowResizeOptions.Center;
         }
+
+
+        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            if (!resizeBusy)
+            {
+                if (DisplayOptions != WindowResizeOptions.Stretch)
+                {
+                    //if (DisplayOptions == DisplayWindowOptions.Center)
+                    //{
+                        GraphicsDeviceManager.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                        GraphicsDeviceManager.PreferredBackBufferHeight = Window.ClientBounds.Height;
+
+                        resizeBusy = true;
+                        GraphicsDeviceManager.ApplyChanges();
+                        resizeBusy = false;
+
+                        GraphicsDevice.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport((GraphicsDeviceManager.PreferredBackBufferWidth - Engine.WindowWidth) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - Engine.WindowHeight) / 2, Engine.WindowWidth, Engine.WindowHeight);
+                    //}
+                    //else
+                    //{
+                    //}
+                }
+            }
+
+            RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Window.ClientBounds.Height);
+        }
+
+        public Vector2 RenderScale { get; private set; }
 
         protected override void Initialize()
         {
@@ -40,6 +84,12 @@ namespace SadConsole
             // Call the default initialize of the base class.
             base.Initialize();
 
+            // Hook window change for resolution fixes
+            Window.ClientSizeChanged += Window_ClientSizeChanged;
+
+            RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Window.ClientBounds.Height);
+
+            // Tell the main engine we're ready
             Engine.InitializeCompleted();
         }
 
@@ -48,6 +98,13 @@ namespace SadConsole
             GraphicsDevice.Clear(Engine.ClearFrameColor);
 
             base.Draw(gameTime);
+        }
+
+        public enum WindowResizeOptions
+        {
+            Stretch,
+            Center,
+            Scale,
         }
     }
 }

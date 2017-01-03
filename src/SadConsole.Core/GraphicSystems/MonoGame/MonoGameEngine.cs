@@ -1,6 +1,7 @@
 ﻿#if MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace SadConsole
@@ -58,15 +59,41 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Initializes SadConsole with only a <see cref="GraphicsDevice"/>.
+        /// </summary>
+        /// <param name="deviceManager">The graphics device manager from MonoGame.</param>
+        /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
+        /// <param name="consoleWidth">The width of the default root console (and game window).</param>
+        /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <returns>The default active console.</returns>
+        public static Consoles.Console Initialize(GraphicsDevice device, string font, int consoleWidth, int consoleHeight)
+        {
+            Device = device;
+
+            SetupFontAndEffects(font);
+
+            // Create the default console.
+            ActiveConsole = new Consoles.Console(consoleWidth, consoleHeight);
+            ActiveConsole.TextSurface.DefaultBackground = Color.Black;
+            ActiveConsole.TextSurface.DefaultForeground = ColorAnsi.White;
+            ((Consoles.Console)ActiveConsole).Clear();
+
+            ConsoleRenderStack.Add(ActiveConsole);
+
+            return (Consoles.Console)ActiveConsole;
+        }
+
+        /// <summary>
         /// Prepares the engine for use. This must be the first method you call on the engine, then call <see cref="Run"/> to start SadConsole.
         /// </summary>
         /// <param name="font">The font to load as the <see cref="DefaultFont"/>.</param>
         /// <param name="consoleWidth">The width of the default root console (and game window).</param>
         /// <param name="consoleHeight">The height of the default root console (and game window).</param>
+        /// <param name="ctorCallback">Optional callback from the MonoGame Game class constructor.</param>
         /// <returns>The default active console.</returns>
-        public static void Initialize(string font, int consoleWidth, int consoleHeight)
+        public static void Initialize(string font, int consoleWidth, int consoleHeight, Action<SadConsoleGame> ctorCallback = null)
         {
-            MonoGameInstance = new SadConsoleGame(font, consoleWidth, consoleHeight);
+            MonoGameInstance = new SadConsoleGame(font, consoleWidth, consoleHeight, ctorCallback);
             MonoGameInstance.Exiting += (s, e) => EngineShutdown?.Invoke(null, new ShutdownEventArgs() { });
         }
 
@@ -133,7 +160,21 @@ namespace SadConsole
             }
             EngineUpdated?.Invoke(null, System.EventArgs.Empty);
         }
+        
+        /// <summary>
+        /// Toggles between fullscreen. This safely restores the original window size.
+        /// </summary>
+        public static void ToggleFullScreen()
+        {
+            // Coming back from fullscreen
+            if (DeviceManager.IsFullScreen)
+            {
+                DeviceManager.PreferredBackBufferWidth = WindowWidth;
+                DeviceManager.PreferredBackBufferHeight = WindowHeight;
+            }
 
+            DeviceManager.ToggleFullScreen();
+        }
     }
 }
 #endif

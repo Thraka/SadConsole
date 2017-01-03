@@ -54,7 +54,7 @@ namespace StarterProject.CustomConsoles
             line.Draw(this);
 
             Print(1, r, "Some `[c:r f:red]text`[c:u] to print                       ");
-            Print(c + 2, r, $"Some [c:r f:{Color.Red.ToParser()}]text[c:u] to [c:r f:red]print");
+            Print(c + 2, r, $"Some [c:r f:{Color.Red.ToParser()}]text[c:u] to print");
 
             Print(1, ++r, "Some `[c:r f:100,100,33]text`[c:u] to print");
             Print(c + 2, r, "Some [c:r f:255,255,0]text[c:u] to print");
