@@ -30,6 +30,7 @@ namespace SadConsole
             this.font = font;
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
+            GraphicsDeviceManager.HardwareModeSwitch = false;
 
             ctorCallback?.Invoke(this);
 
