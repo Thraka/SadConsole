@@ -314,8 +314,8 @@ namespace SadConsole.Consoles
             int screenWidth = (int)SadConsole.Engine.Device.Size.X;
             int screenHeight = (int)SadConsole.Engine.Device.Size.Y;
 #elif MONOGAME
-            int screenWidth = SadConsole.Engine.Device.PresentationParameters.BackBufferWidth;
-            int screenHeight = SadConsole.Engine.Device.PresentationParameters.BackBufferHeight;
+            int screenWidth = SadConsole.Engine.Device.Viewport.Width;
+            int screenHeight = SadConsole.Engine.Device.Viewport.Height;
 #endif
             if (UsePixelPositioning)
                 this.Position = new Point((screenWidth / 2) - ((textSurface.Width * textSurface.Font.Size.X) / 2), (screenHeight / 2) - ((textSurface.Height * textSurface.Font.Size.Y) / 2));
