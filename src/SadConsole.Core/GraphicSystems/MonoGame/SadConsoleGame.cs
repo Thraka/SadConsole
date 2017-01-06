@@ -35,7 +35,7 @@ namespace SadConsole
             ctorCallback?.Invoke(this);
 
 
-            DisplayOptions = WindowResizeOptions.Center;
+            DisplayOptions = WindowResizeOptions.Scale;
         }
 
 
@@ -45,27 +45,18 @@ namespace SadConsole
             {
                 if (DisplayOptions != WindowResizeOptions.Stretch)
                 {
-                    //if (DisplayOptions == DisplayWindowOptions.Center)
-                    //{
-                        GraphicsDeviceManager.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                        GraphicsDeviceManager.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                    GraphicsDeviceManager.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                    GraphicsDeviceManager.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
-                        resizeBusy = true;
-                        GraphicsDeviceManager.ApplyChanges();
-                        resizeBusy = false;
-
-                        GraphicsDevice.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport((GraphicsDeviceManager.PreferredBackBufferWidth - Engine.WindowWidth) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - Engine.WindowHeight) / 2, Engine.WindowWidth, Engine.WindowHeight);
-                    //}
-                    //else
-                    //{
-                    //}
+                    resizeBusy = true;
+                    GraphicsDeviceManager.ApplyChanges();
+                    resizeBusy = false;
                 }
             }
 
-            RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Window.ClientBounds.Height);
+            Engine.ResetRendering();
         }
 
-        public Vector2 RenderScale { get; private set; }
 
         protected override void Initialize()
         {
@@ -86,8 +77,6 @@ namespace SadConsole
 
             // Hook window change for resolution fixes
             Window.ClientSizeChanged += Window_ClientSizeChanged;
-
-            RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Window.ClientBounds.Height);
 
             // Tell the main engine we're ready
             Engine.InitializeCompleted();

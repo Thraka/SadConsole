@@ -49,7 +49,7 @@ namespace SadConsole.Consoles
                 Batch.End();
 #elif MONOGAME
                 Batch.Begin(samplerState: SamplerState.PointClamp);
-                Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Engine.Device.PresentationParameters.BackBufferWidth, Engine.Device.PresentationParameters.BackBufferHeight), surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], ModalTint);
+                Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Engine.RenderRect.Width, Engine.RenderRect.Height), surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], ModalTint);
                 Batch.End();
 #endif
             }

@@ -8,6 +8,20 @@ namespace SadConsole
 {
     public static partial class Engine
     {
+        private static RenderTarget2D renderTarget;
+        private static SpriteBatch renderBatch;
+
+        /// <summary>
+        /// Where on the screen the engine will be rendered.
+        /// </summary>
+        public static Rectangle RenderRect { get; set; }
+        
+        /// <summary>
+        /// If the <see cref="RenderRect"/> is stretched, this is the ratio difference between unstretched.
+        /// </summary>
+        public static Vector2 RenderScale { get; set; }
+
+
         /// <summary>
         /// A game instance for SadConsole used when calling <see cref="Initialize(string, int, int)"/>.
         /// </summary>
@@ -54,8 +68,51 @@ namespace SadConsole
             ((Consoles.Console)ActiveConsole).Clear();
 
             ConsoleRenderStack.Add(ActiveConsole);
-            
+
+            renderBatch = new SpriteBatch(Device);
+
+            ResetRendering();
+
             return (Consoles.Console)ActiveConsole;
+        }
+
+        /// <summary>
+        /// Resets the render target and render rect to the size of the <see cref="WindowWidth"/> and <see cref="WindowHeight"/>.
+        /// </summary>
+        public static void ResetRendering()
+        {
+            renderTarget = new RenderTarget2D(Device, WindowWidth, WindowHeight);
+            
+
+            if (MonoGameInstance.DisplayOptions == SadConsoleGame.WindowResizeOptions.Center)
+            {
+                RenderRect = new Rectangle((DeviceManager.PreferredBackBufferWidth - Engine.WindowWidth) / 2, (DeviceManager.PreferredBackBufferHeight - Engine.WindowHeight) / 2, Engine.WindowWidth, Engine.WindowHeight);
+                RenderScale = new Vector2(1);
+            }
+            else if (MonoGameInstance.DisplayOptions == SadConsoleGame.WindowResizeOptions.Scale)
+            {
+                int multiple = 2;
+
+                // Find the bounds
+                while (true)
+                {
+                    if (Engine.WindowWidth * multiple > DeviceManager.PreferredBackBufferWidth || Engine.WindowHeight * multiple > DeviceManager.PreferredBackBufferHeight)
+                    {
+                        multiple--;
+                        break;
+                    }
+
+                    multiple++;
+                }
+
+                RenderRect = new Rectangle((DeviceManager.PreferredBackBufferWidth - (Engine.WindowWidth * multiple)) / 2, (DeviceManager.PreferredBackBufferHeight - (Engine.WindowHeight * multiple)) / 2, Engine.WindowWidth * multiple, Engine.WindowHeight * multiple);
+                RenderScale = new Vector2(WindowWidth / ((float)WindowWidth * multiple), WindowHeight / (float)(WindowHeight * multiple));
+            }
+            else
+            {
+                RenderRect = new Rectangle(0, 0, WindowWidth, WindowHeight);
+                RenderScale = new Vector2((float)DeviceManager.PreferredBackBufferWidth / Engine.MonoGameInstance.Window.ClientBounds.Width, (float)DeviceManager.PreferredBackBufferHeight / Engine.MonoGameInstance.Window.ClientBounds.Height);
+            }
         }
 
         /// <summary>
@@ -79,6 +136,10 @@ namespace SadConsole
             ((Consoles.Console)ActiveConsole).Clear();
 
             ConsoleRenderStack.Add(ActiveConsole);
+            
+            renderBatch = new SpriteBatch(Device);
+
+            ResetRendering();
 
             return (Consoles.Console)ActiveConsole;
         }
@@ -113,7 +174,17 @@ namespace SadConsole
             GameTimeDraw = gameTime;
 
             if (DoRender)
+            {
+                Device.SetRenderTarget(renderTarget);
                 ConsoleRenderStack.Render();
+                Device.SetRenderTarget(null);
+
+                // Render based on full screen settings
+
+                renderBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                renderBatch.Draw(renderTarget, RenderRect, Color.White);
+                renderBatch.End();
+            }
 
             EngineDrawFrame?.Invoke(null, System.EventArgs.Empty);
         }
@@ -161,6 +232,14 @@ namespace SadConsole
             EngineUpdated?.Invoke(null, System.EventArgs.Empty);
         }
         
+        /// <summary>
+        /// Only call this if you steal away the render target during the render process.
+        /// </summary>
+        public static void RestoreRenderTarget()
+        {
+            Device.SetRenderTarget(renderTarget);
+        }
+
         /// <summary>
         /// Toggles between fullscreen. This safely restores the original window size.
         /// </summary>
