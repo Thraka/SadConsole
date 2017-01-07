@@ -1,4 +1,14 @@
-﻿## 01/03/2016
+﻿## 01/06/2016
+
+### Core
+
+- Full screen works even better now (Monogame only)
+
+### Controls
+
+- Fix for window.center in full screen mode
+
+## 01/03/2016
 
 ### Core
 
