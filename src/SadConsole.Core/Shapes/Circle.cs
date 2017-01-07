@@ -1,10 +1,5 @@
-﻿#if SFML
-using SFML.Graphics;
-using Point = SFML.System.Vector2i;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 using SadConsole.Consoles;
 

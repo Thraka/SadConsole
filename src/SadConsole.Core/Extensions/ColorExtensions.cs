@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
-#if SFML
-namespace SFML.Graphics
-#elif MONOGAME
 using ColorHelper = Microsoft.Xna.Framework.Color;
+
 namespace Microsoft.Xna.Framework
-#endif
 {
     public static class ColorAnsi
     {

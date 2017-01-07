@@ -1,13 +1,7 @@
-﻿#if SFML
-using FrameworkColor = SFML.Graphics.Color;
-using FrameworkPoint = SFML.System.Vector2i;
-using FrameworkRect = SFML.Graphics.IntRect;
-#elif MONOGAME
-using FrameworkColor = Microsoft.Xna.Framework.Color;
+﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
 using FrameworkPoint = Microsoft.Xna.Framework.Point;
 using FrameworkRect = Microsoft.Xna.Framework.Rectangle;
 using FrameworkSpriteEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects;
-#endif
 
 
 namespace SadConsole

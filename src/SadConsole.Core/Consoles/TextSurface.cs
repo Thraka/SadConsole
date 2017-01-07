@@ -1,11 +1,5 @@
-﻿#if SFML
-using Rectangle = SFML.Graphics.IntRect;
-using Point = SFML.System.Vector2i;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -68,22 +62,6 @@ namespace SadConsole.Consoles
 
                 if (area == null)
                     area = new Rectangle(0, 0, width, height);
-#if SFML
-                if (area.Width > width)
-                    area.Width = width;
-                if (area.Height > height)
-                    area.Height = height;
-
-                if (area.Left < 0)
-                    area.Left = 0;
-                if (area.Top < 0)
-                    area.Top = 0;
-
-                if (area.Left + area.Width > width)
-                    area.Left = width - area.Width;
-                if (area.Top + area.Height > height)
-                    area.Top = height - area.Height;
-#elif MONOGAME
                 if (area.Width > width)
                     area.Width = width;
                 if (area.Height > height)
@@ -98,7 +76,6 @@ namespace SadConsole.Consoles
                     area.X = width - area.Width;
                 if (area.Y + area.Height > height)
                     area.Y = height - area.Height;
-#endif
 
                 ResetArea();
             }

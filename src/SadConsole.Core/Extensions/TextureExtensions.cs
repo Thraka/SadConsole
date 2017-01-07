@@ -1,45 +1,15 @@
 ﻿using SadConsole.Consoles;
 
-#if SFML
-using Texture2D = SFML.Graphics.Texture;
-namespace SFML.Graphics
-#elif MONOGAME
 namespace Microsoft.Xna.Framework.Graphics
-#endif
 {
     public static class TextureExtensions
     {
         public unsafe static TextSurface ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
         {
-#if SFML
-            int imageWidth = (int)image.Size.X;
-            int imageHeight = (int)image.Size.Y;
-            Color[] pixels = new Color[imageWidth * imageHeight];
-            using (var imageData = image.CopyToImage())
-            {
-                int pixelChanIndex = 0;
-                fixed (byte* pixelChan = imageData.Pixels)
-                {
-                    fixed(Color* color = pixels)
-                    {
-                        for (int i = 0; i < pixels.Length; i++)
-                        {
-                            color[i].R = pixelChan[pixelChanIndex];
-                            color[i].G = pixelChan[pixelChanIndex + 1];
-                            color[i].B = pixelChan[pixelChanIndex + 2];
-                            color[i].A = pixelChan[pixelChanIndex + 3];
-
-                            pixelChanIndex += 4;
-                        }
-                    }
-                }
-            }
-#elif MONOGAME
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             Color[] pixels = new Color[imageWidth * imageHeight];
             image.GetData<Color>(pixels);
-#endif
 
             TextSurface surface = new TextSurface(imageWidth / font.Size.X, imageHeight / font.Size.Y, font);
             SurfaceEditor editor = new SurfaceEditor(surface);
@@ -123,34 +93,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public unsafe static void ToSurface(this Texture2D image, TextSurface surface, Color[] cachedColorArray, bool blockMode = false)
         {
-#if SFML
-            int imageWidth = (int)image.Size.X;
-            int imageHeight = (int)image.Size.Y;
-            Color[] pixels = new Color[imageWidth * imageHeight];
-            using (var imageData = image.CopyToImage())
-            {
-                int pixelChanIndex = 0;
-                fixed (byte* pixelChan = imageData.Pixels)
-                {
-                    fixed (Color* color = pixels)
-                    {
-                        for (int i = 0; i < pixels.Length; i++)
-                        {
-                            color[i].R = pixelChan[pixelChanIndex];
-                            color[i].G = pixelChan[pixelChanIndex + 1];
-                            color[i].B = pixelChan[pixelChanIndex + 2];
-                            color[i].A = pixelChan[pixelChanIndex + 3];
-
-                            pixelChanIndex += 4;
-                        }
-                    }
-                }
-            }
-#elif MONOGAME
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             image.GetData<Color>(cachedColorArray);
-#endif
 
             SurfaceEditor editor = new SurfaceEditor(surface);
             editor.Clear();

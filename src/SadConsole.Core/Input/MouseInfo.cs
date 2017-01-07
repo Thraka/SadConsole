@@ -1,11 +1,5 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using SFML.Graphics;
-using SFML.System;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#endif
 using SadConsole.Consoles;
 
 namespace SadConsole.Input
@@ -98,12 +92,6 @@ namespace SadConsole.Input
         /// <param name="gameTime"></param>
         public void ProcessMouse(GameTime gameTime)
         {
-#if SFML
-            bool leftDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
-            bool rightDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Right);
-
-            ScreenLocation = SFML.Window.Mouse.GetPosition(Engine.Device);
-#elif MONOGAME
             MouseState currentState = Mouse.GetState();
 
             bool leftDown = currentState.LeftButton == ButtonState.Pressed;
@@ -113,7 +101,6 @@ namespace SadConsole.Input
             ScrollWheelValue = currentState.ScrollWheelValue;
 
             ScreenLocation = new Point((int)(currentState.X * Engine.RenderScale.X), (int)(currentState.Y * Engine.RenderScale.Y)) - new Point((int)(Engine.RenderRect.X * Engine.RenderScale.X), (int)(Engine.RenderRect.Y * Engine.RenderScale.Y));
-#endif
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
 
@@ -135,18 +122,6 @@ namespace SadConsole.Input
             RightButtonDown = rightDown;
         }
 
-#if SFML
-        public void Setup(RenderWindow window)
-        {
-            window.MouseWheelScrolled += Window_MouseWheelScrolled;
-        }
-
-        private void Window_MouseWheelScrolled(object sender, SFML.Window.MouseWheelScrollEventArgs e)
-        {
-            ScrollWheelValueChange = (int)e.Delta;
-            ScrollWheelValue += (int)e.Delta;
-        }
-#endif
         /// <summary>
         /// Sets the WorldLocation and ConsoleLocation properties based on the cell size of the provided console. If absolute positioning is used on the console, then the properties will represent pixels.
         /// </summary>

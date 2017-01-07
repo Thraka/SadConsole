@@ -1,12 +1,5 @@
-﻿#if SFML
-using Rectangle = SFML.Graphics.IntRect;
-using Point = SFML.System.Vector2i;
-using SFML.Graphics;
-using Keys = SFML.Window.Keyboard.Key;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#endif
 
 using SadConsole.Consoles;
 using SadConsole.Themes;
@@ -441,11 +434,7 @@ namespace SadConsole.Controls
                     SelectedItem = Items[0];
                 return true;
             }
-#if SFML
-            else if (info.IsKeyReleased(Keys.Return))
-#elif MONOGAME
             else if (info.IsKeyReleased(Keys.Enter))
-#endif
             {
                 if (_selectedItem != null)
                     OnItemAction();

@@ -1,10 +1,5 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Keys = SFML.Window.Keyboard.Key;
-#elif MONOGAME
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-#endif
 
 using System;
 using System.Windows;
@@ -310,13 +305,9 @@ namespace SadConsole.Consoles
         /// </summary>
         public void Center()
         {
-#if SFML
-            int screenWidth = (int)SadConsole.Engine.Device.Size.X;
-            int screenHeight = (int)SadConsole.Engine.Device.Size.Y;
-#elif MONOGAME
             int screenWidth = Engine.WindowWidth;
             int screenHeight = Engine.WindowHeight;
-#endif
+
             if (UsePixelPositioning)
                 this.Position = new Point((screenWidth / 2) - ((textSurface.Width * textSurface.Font.Size.X) / 2), (screenHeight / 2) - ((textSurface.Height * textSurface.Font.Size.Y) / 2));
             else

@@ -1,20 +1,12 @@
-﻿#if SFML
-using MyMathHelper = SadConsole.MathHelper;
-#elif MONOGAME
-using ColorHelper = Microsoft.Xna.Framework.Color;
+﻿using ColorHelper = Microsoft.Xna.Framework.Color;
 using MyMathHelper = Microsoft.Xna.Framework.MathHelper;
-#endif
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Collections;
 
 
-#if SFML
-namespace SFML.Graphics
-#elif MONOGAME
 namespace Microsoft.Xna.Framework
-#endif
 {
     /// <summary>
     /// Represents a gradient with multiple color stops.

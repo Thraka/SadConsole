@@ -54,11 +54,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Engine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\NonMonoGame\GameTime.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\NonMonoGame\SpriteEffects.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PrimitiveStatic.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SFML.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextSurfaceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />
@@ -68,8 +65,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\MonoGame\SadConsoleGame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\MonoGame\EngineGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\MonoGame\MonoGameEngine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\SFML\FPSComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GraphicSystems\SFML\SFMLEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ICellAppearance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
@@ -88,6 +83,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDraw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NonMonoGame\GameTime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NonMonoGame\SFML.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NonMonoGame\SpriteEffects.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Color.cs" />
@@ -114,5 +112,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandSpriteEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandStacks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandUndo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)GraphicSystems\NonMonogame\" />
   </ItemGroup>
 </Project>

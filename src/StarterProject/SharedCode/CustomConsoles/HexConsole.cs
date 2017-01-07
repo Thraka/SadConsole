@@ -1,13 +1,5 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
-#elif SFML
-using SFML.Graphics;
-using Point = SFML.System.Vector2i;
-using Rectangle = SFML.Graphics.IntRect;
-using SFML.System;
-using ColorHelper = SFML.Graphics.ColorHelper;
-#endif
 
 using SadConsole;
 using SadConsole.Input;
@@ -169,12 +161,7 @@ namespace StarterProject.CustomConsoles
             {
                 for (int x = 0; x < area.Width; x++)
                 {
-#if MONOGAME
                     RenderRects[GetIndexFromPoint(x, y, area.Width)].Offset(font.Size.X / 2, 0);
-#elif SFML
-                    RenderRects[GetIndexFromPoint(x, y, area.Width)].Left += font.Size.X / 2;
-                    RenderRects[GetIndexFromPoint(x, y, area.Width)].Width += font.Size.X / 2;
-#endif
                 }
             }
         }

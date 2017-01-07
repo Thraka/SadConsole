@@ -1,11 +1,4 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Rectangle = SFML.Graphics.IntRect;
-using Matrix = SFML.Graphics.Transform;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
-#endif
+﻿using Microsoft.Xna.Framework;
 
 using System;
 using System.Collections.Generic;
@@ -24,11 +17,7 @@ namespace SadConsole.Game
         /// <summary>
         /// A translation matrix of 0, 0, 0.
         /// </summary>
-#if SFML
-        public static Matrix NoMatrix = Matrix.Identity;
-#elif MONOGAME
         public static Matrix NoMatrix = Matrix.CreateTranslation(0f, 0f, 0f);
-#endif
 
         /// <summary>
         /// Automatically forwards the <see cref="AnimatedTextSurface.AnimationStateChanged"/> event.
@@ -307,11 +296,7 @@ namespace SadConsole.Game
                     offset = new Point();
                 }
 
-#if SFML
-                AbsoluteArea = new Rectangle(offset.X, offset.Y, (width * font.Size.X) + offset.X, (height * font.Size.Y) + offset.Y);
-#elif MONOGAME
                 AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
-#endif
 
                 int index = 0;
                 
@@ -319,11 +304,7 @@ namespace SadConsole.Game
                 {
                     for (int x = 0; x < width; x++)
                     {
-#if SFML
-                        rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X + (x * font.Size.X + offset.X), font.Size.Y + (y * font.Size.Y + offset.Y));
-#elif MONOGAME
                         rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X, font.Size.Y);
-#endif
                         index++;
                     }
                 }

@@ -13,8 +13,10 @@ namespace StarterProject
 
         static void Main(string[] args)
         {
+            SadConsole.Engine.UnlimitedFPS = true;
+
             // Setup the engine and creat the main window.
-            SadConsole.Engine.Initialize("IBM.font", 80, 25);
+            SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Engine.EngineStart += Engine_EngineStart;
@@ -51,6 +53,10 @@ namespace StarterProject
                 else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
                 {
                 }
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
+                {
+                    SadConsole.Engine.ToggleFullScreen();
+                }
             }
         }
 
@@ -58,21 +64,23 @@ namespace StarterProject
         {
             // Setup our custom theme.
             Theme.SetupThemes();
-
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
             SadConsole.Engine.ConsoleRenderStack.Clear();
             SadConsole.Engine.ActiveConsole = null;
+            SadConsole.Engine.ProcessMouseWhenOffScreen = true;
 
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
+                    //new CustomConsoles.CachedConsoleConsole(),
+                                        //new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.AutoTypingConsole(),
-                                        new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
+                                        //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.StringParsingConsole(),
                                         new CustomConsoles.ControlsTest(),
-                                        new CustomConsoles.FadingExample(),
+                                        //new CustomConsoles.FadingExample(),
                                         new CustomConsoles.DOSConsole(),
                                         new CustomConsoles.AnsiConsole(),
                                         new CustomConsoles.ViewsAndSubViews(),
@@ -80,7 +88,6 @@ namespace StarterProject
                                         new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),
-                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.WorldGenerationConsole(),
                                     };
 

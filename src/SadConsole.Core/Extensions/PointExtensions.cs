@@ -1,13 +1,6 @@
 ﻿using SadConsole;
 
-#if SFML
-using Point = SFML.System.Vector2i;
-using Matrix = SFML.Graphics.Transform;
-
-namespace SFML.System
-#elif MONOGAME
 namespace Microsoft.Xna.Framework
-#endif
 {
     public static class PointExtensions
     {
@@ -75,24 +68,7 @@ namespace Microsoft.Xna.Framework
             else
                 worldLocation = position.ConsoleLocationToWorld(cellSize.X, cellSize.Y);
 
-#if SFML
-            var transform = Matrix.Identity;
-            transform.Translate(worldLocation.X, worldLocation.Y);
-            
-            return transform;
-#elif MONOGAME
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
-#endif
         }
     }
-
-#if SFML
-    public static class Vector2fExtensions
-    {
-        public static float Length(this Vector2f v)
-        {
-            return (float)global::System.Math.Sqrt((v.X * v.X) + (v.Y * v.Y));
-        }
-    }
-#endif
 }

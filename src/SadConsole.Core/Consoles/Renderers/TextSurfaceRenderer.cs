@@ -1,13 +1,5 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Vector2 = SFML.System.Vector2f;
-using SFML.System;
-using Matrix = SFML.Graphics.Transform;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 using System;
 using System.Runtime.Serialization;
@@ -47,16 +39,8 @@ namespace SadConsole.Consoles
         /// </summary>
         public TextSurfaceRenderer()
         {
-#if SFML
-            Batch = new SpriteBatch();
-#elif MONOGAME
             Batch = new SpriteBatch(Engine.Device);
-#endif
         }
-
-#if SFML
-        public RenderTarget AlternativeRenderTarget;
-#endif
 
         /// <summary>
         /// Renders a surface to the screen.
@@ -65,40 +49,6 @@ namespace SadConsole.Consoles
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
-#if SFML
-            if (AlternativeRenderTarget == null)
-                Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
-            else
-                Batch.Reset(AlternativeRenderTarget, RenderStates.Default, renderingMatrix);
-            
-            BeforeRenderCallback?.Invoke(Batch);
-
-            if (surface.Tint.A != 255)
-            {
-                Cell cell;
-
-                if (surface.DefaultBackground.A != 0)
-                    Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font.FontImage);
-
-                for (int i = 0; i < surface.RenderCells.Length; i++)
-                {
-                    cell = surface.RenderCells[i];
-
-                    if (cell.IsVisible)
-                    {
-                        Batch.DrawCell(cell, surface.RenderRects[i], surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font);
-                    }
-                }
-
-            }
-            AfterRenderCallback?.Invoke(Batch);
-
-            if (surface.Tint.A != 0)
-                Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.Tint, surface.Font.FontImage);
-
-            if (CallBatchEnd)
-                Batch.End();
-#elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
@@ -137,7 +87,6 @@ namespace SadConsole.Consoles
 
             if (CallBatchEnd)
                 Batch.End();
-#endif
         }
 
         /// <summary>
@@ -191,24 +140,13 @@ namespace SadConsole.Consoles
             else
                 worldLocation = position.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
 
-#if SFML
-            var transform = Matrix.Identity;
-            transform.Translate(worldLocation.X, worldLocation.Y);
-            
-            return transform;
-#elif MONOGAME
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
-#endif
         }
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
-#if SFML
-            Batch = new SpriteBatch();
-#elif MONOGAME
             Batch = new SpriteBatch(Engine.Device);
-#endif
         }
     }
 }

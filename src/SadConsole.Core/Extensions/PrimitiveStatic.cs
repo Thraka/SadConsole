@@ -1,11 +1,5 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Vector2 = SFML.System.Vector2f;
-using SFML.System;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 namespace SadConsole
 {

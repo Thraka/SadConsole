@@ -1,13 +1,7 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ColorHelper = Microsoft.Xna.Framework.Color;
-#elif SFML
-using Keys = SFML.Window.Keyboard.Key;
-using Rectangle = SFML.Graphics.IntRect;
-using SFML.Graphics;
-#endif
 
 using SadConsole;
 using SadConsole.Consoles;

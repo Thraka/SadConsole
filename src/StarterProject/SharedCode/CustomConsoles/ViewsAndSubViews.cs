@@ -1,11 +1,5 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
-#elif SFML
-using SFML.Graphics;
-using Point = SFML.System.Vector2i;
-using Rectangle = SFML.Graphics.IntRect;
-#endif
 
 using SadConsole.Consoles;
 using System;

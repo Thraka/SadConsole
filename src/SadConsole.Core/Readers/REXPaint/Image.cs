@@ -1,8 +1,4 @@
-﻿#if MONOGAME
-using FrameworkColor = Microsoft.Xna.Framework.Color;
-#elif SFML
-using FrameworkColor = SFML.Graphics.Color;
-#endif
+﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
 
 using System;
 using System.Collections.Generic;

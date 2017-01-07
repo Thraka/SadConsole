@@ -1,10 +1,5 @@
-﻿#if SFML
-using Keys = SFML.Window.Keyboard.Key;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#endif
 
 using System.Collections.Generic;
 using System.Linq;
@@ -68,22 +63,6 @@ namespace SadConsole.Input
             this.KeysReleased.Clear();
 
             // Cycle all the keys down known if any are up currently, remove
-
-#if SFML
-            bool shiftPressed = SFML.Window.Keyboard.IsKeyPressed(Keys.LShift) || SFML.Window.Keyboard.IsKeyPressed(Keys.RShift);
-            for (int i = 0; i < this.KeysDown.Count;)
-            {
-                if (!SFML.Window.Keyboard.IsKeyPressed(this.KeysDown[i].XnaKey))
-                {
-                    tempKeysDown.Remove(this.KeysDown[i].XnaKey);
-                    KeysReleased.Add(this.KeysDown[i]);
-                    this.KeysDown.Remove(this.KeysDown[i]);
-                }
-                else
-                    i++;
-            }
-            var keys = tempKeysDown.ToArray();
-#elif MONOGAME
             KeyboardState state = Keyboard.GetState();
             bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
             var keys = state.GetPressedKeys();
@@ -98,7 +77,6 @@ namespace SadConsole.Input
                     i++;
             }   
 
-#endif
 
             // For all new keys down, if we don't know them, add them to pressed, add them to down.
             for (int i = 0; i < keys.Length; i++)
@@ -180,27 +158,5 @@ namespace SadConsole.Input
         {
             return KeysReleased.Contains(AsciiKey.Get(key));
         }
-
-#if SFML
-        public void Setup(RenderWindow window)
-        {
-            window.KeyPressed += Window_KeyPressed;
-            //window.KeyReleased += Window_KeyReleased;
-        }
-
-        private void Window_KeyReleased(object sender, SFML.Window.KeyEventArgs e)
-        {
-            if (tempKeysDown.Contains(e.Code))
-                tempKeysDown.Remove(e.Code);
-        }
-
-        private void Window_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
-        {
-            if (!tempKeysDown.Contains(e.Code))
-                tempKeysDown.Add(e.Code);
-        }
-
-        public static List<Keys> tempKeysDown = new List<Keys>(5);
-#endif
     }
 }

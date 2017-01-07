@@ -1,8 +1,4 @@
-﻿#if SFML
-using Keys = SFML.Window.Keyboard.Key;
-#elif MONOGAME
-using Microsoft.Xna.Framework.Input;
-#endif
+﻿using Microsoft.Xna.Framework.Input;
 using System.Linq;
 
 namespace SadConsole.Input
@@ -199,112 +195,68 @@ namespace SadConsole.Input
                     else
                         this.Character = (char)122;
                     break;
-#if MONOGAME
                 case Keys.OemComma:
-#elif SFML
-                case Keys.Comma:
-#endif
                     if (shiftPressed)
                         this.Character = (char)60;
                     else
                         this.Character = (char)44;
                     break;
-#if MONOGAME
                 case Keys.OemMinus:
-#elif SFML
-                case Keys.Dash:
-#endif
                     if (shiftPressed)
                         this.Character = (char)95;
                     else
                         this.Character = (char)45;
                     break;
-#if MONOGAME
                 case Keys.OemOpenBrackets:
-#elif SFML
-                case Keys.LBracket:
-#endif
                     if (shiftPressed)
                         this.Character = (char)91;
                     else
                         this.Character = (char)123;
                     break;
-#if MONOGAME
                 case Keys.OemCloseBrackets:
-#elif SFML
-                case Keys.RBracket:
-#endif
                     if (shiftPressed)
                         this.Character = (char)93;
                     else
                         this.Character = (char)125;
                     break;
-#if MONOGAME
                 case Keys.OemPeriod:
-#elif SFML
-                case Keys.Period:
-#endif
                     if (shiftPressed)
                         this.Character = (char)62;
                     else
                         this.Character = (char)46;
                     break;
-#if MONOGAME
                 case Keys.OemBackslash:
                 case Keys.OemPipe:
-#elif SFML
-                case Keys.BackSlash:
-#endif
                     if (shiftPressed)
                         this.Character = (char)124;
                     else
                         this.Character = (char)92;
                     break;
-#if MONOGAME
                 case Keys.OemPlus:
-#elif SFML
-                case Keys.Equal:
-#endif
                     if (shiftPressed)
                         this.Character = (char)43;
                     else
                         this.Character = (char)61;
                     break;
-#if MONOGAME
                 case Keys.OemQuestion:
-#elif SFML
-                case Keys.Slash:
-#endif
                     if (shiftPressed)
                         this.Character = (char)63;
                     else
                         this.Character = (char)47;
                     break;
-#if MONOGAME
                 case Keys.OemQuotes:
-#elif SFML
-                case Keys.Quote:
-#endif
                     if (shiftPressed)
                         this.Character = (char)34;
                     else
                         this.Character = (char)39;
                     break;
-#if MONOGAME
                 case Keys.OemSemicolon:
-#elif SFML
-                case Keys.SemiColon:
-#endif
                     if (shiftPressed)
                         this.Character = (char)58;
                     else
                         this.Character = (char)59;
                     break;
-#if MONOGAME
                 case Keys.OemTilde:
-#elif SFML
-                case Keys.Tilde:
-#endif
                     if (shiftPressed)
                         this.Character = (char)126;
                     else
@@ -314,11 +266,9 @@ namespace SadConsole.Input
                 case Keys.Space:
                     this.Character = ' ';
                     break;
-#if MONOGAME
                 case Keys.Decimal:
                     this.Character = (char)46;
                     break;
-#endif
                 case Keys.Divide:
                     this.Character = (char)47;
                     break;
@@ -331,122 +281,71 @@ namespace SadConsole.Input
                 case Keys.Add:
                     this.Character = (char)43;
                     break;
-#if MONOGAME
                 case Keys.D0:
                 case Keys.NumPad0:
-#elif SFML
-                case Keys.Num0:
-                case Keys.Numpad0:
-#endif
-
                     if (shiftPressed)
                         this.Character = (char)41;
                     else
                         this.Character = (char)48;
                     break;
-#if MONOGAME
                 case Keys.D1:
                 case Keys.NumPad1:
-#elif SFML
-                case Keys.Num1:
-                case Keys.Numpad1:
-#endif
                     if (shiftPressed)
                         this.Character = (char)33;
                     else
                         this.Character = (char)49;
                     break;
-#if MONOGAME
                 case Keys.D2:
                 case Keys.NumPad2:
-#elif SFML
-                case Keys.Num2:
-                case Keys.Numpad2:
-#endif
                     if (shiftPressed)
                         this.Character = (char)64;
                     else
                         this.Character = (char)50;
                     break;
-#if MONOGAME
                 case Keys.D3:
                 case Keys.NumPad3:
-#elif SFML
-                case Keys.Num3:
-                case Keys.Numpad3:
-#endif
                     if (shiftPressed)
                         this.Character = (char)35;
                     else
                         this.Character = (char)51;
                     break;
-#if MONOGAME
                 case Keys.D4:
                 case Keys.NumPad4:
-#elif SFML
-                case Keys.Num4:
-                case Keys.Numpad4:
-#endif
                     if (shiftPressed)
                         this.Character = (char)36;
                     else
                         this.Character = (char)52;
                     break;
-#if MONOGAME
                 case Keys.D5:
                 case Keys.NumPad5:
-#elif SFML
-                case Keys.Num5:
-                case Keys.Numpad5:
-#endif
                     if (shiftPressed)
                         this.Character = (char)37;
                     else
                         this.Character = (char)53;
                     break;
-#if MONOGAME
                 case Keys.D6:
                 case Keys.NumPad6:
-#elif SFML
-                case Keys.Num6:
-                case Keys.Numpad6:
-#endif
                     if (shiftPressed)
                         this.Character = (char)94;
                     else
                         this.Character = (char)54;
                     break;
-#if MONOGAME
                 case Keys.D7:
                 case Keys.NumPad7:
-#elif SFML
-                case Keys.Num7:
-                case Keys.Numpad7:
-#endif
                     if (shiftPressed)
                         this.Character = (char)38;
                     else
                         this.Character = (char)55;
                     break;
-#if MONOGAME
                 case Keys.D8:
                 case Keys.NumPad8:
-#elif SFML
-                case Keys.Num8:
-                case Keys.Numpad8:
-#endif
                     if (shiftPressed)
                         this.Character = (char)42;
                     else
                         this.Character = (char)56;
                     break;
-#if MONOGAME
                 case Keys.D9:
                 case Keys.NumPad9:
-#elif SFML
-                case Keys.Num9:
-                case Keys.Numpad9:
-#endif
                     if (shiftPressed)
                         this.Character = (char)40;
                     else

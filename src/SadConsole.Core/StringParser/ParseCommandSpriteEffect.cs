@@ -1,8 +1,4 @@
-﻿#if SFML
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework.Graphics;
-#endif
+﻿using Microsoft.Xna.Framework.Graphics;
 
 using SadConsole.Consoles;
 using System;

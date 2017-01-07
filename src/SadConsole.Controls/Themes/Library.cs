@@ -1,9 +1,5 @@
-﻿#if SFML
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
-#endif
 
 using System.Runtime.Serialization;
 

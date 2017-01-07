@@ -1,8 +1,4 @@
-﻿#if SFML
-using Keys = SFML.Window.Keyboard.Key;
-#elif MONOGAME
-using Microsoft.Xna.Framework.Input;
-#endif
+﻿using Microsoft.Xna.Framework.Input;
 
 using SadConsole.Themes;
 using System;
@@ -187,11 +183,7 @@ namespace SadConsole.Controls
         /// <returns>True if the keyboard was handled by this control.</returns>
         public override bool ProcessKeyboard(Input.KeyboardInfo info)
         {
-#if SFML
-            if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Return))
-#elif MONOGAME
             if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
-#endif
             {
                 IsSelected = !IsSelected;
 

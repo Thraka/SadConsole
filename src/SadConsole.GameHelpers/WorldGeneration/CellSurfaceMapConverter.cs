@@ -1,10 +1,6 @@
-﻿#if SFML
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ColorF = Microsoft.Xna.Framework.Color;
 using ColorHelper = Microsoft.Xna.Framework.Color;
-#endif
 using SadConsole.Consoles;
 
 namespace SadConsole.Game.WorldGeneration

@@ -1,8 +1,4 @@
-﻿#if SFML
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
-#endif
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Runtime.Serialization;
 

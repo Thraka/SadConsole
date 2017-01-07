@@ -1,13 +1,5 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Vector2 = SFML.System.Vector2f;
-using SFML.System;
-using Matrix = SFML.Graphics.Transform;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 using System;
 using System.Runtime.Serialization;
@@ -20,11 +12,7 @@ namespace SadConsole.Consoles
     [DataContract]
     public class CachedTextSurfaceRenderer : ITextSurfaceRenderer, ITextSurfaceRendererUpdate
     {
-#if SFML
-        private RenderTexture renderedConsole;
-#elif MONOGAME
         private RenderTarget2D renderedConsole;
-#endif
         /// <summary>
         /// The sprite batch used for drawing to the screen.
         /// </summary>
@@ -45,12 +33,7 @@ namespace SadConsole.Consoles
         /// </summary>
         public CachedTextSurfaceRenderer(ITextSurfaceRendered source)
         {
-#if SFML
-            Batch = new SpriteBatch();
-            renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
-#elif MONOGAME
             Batch = new SpriteBatch(Engine.Device);
-#endif
             Update(source);
         }
 
@@ -60,26 +43,6 @@ namespace SadConsole.Consoles
         /// <param name="source">The surface to render and cache.</param>
         public void Update(ITextSurfaceRendered source)
         {
-
-#if SFML
-            if (renderedConsole != null && renderedConsole.Size.X != (uint)source.AbsoluteArea.Width && renderedConsole.Size.Y != (uint)source.AbsoluteArea.Height)
-            {
-                renderedConsole.Dispose();
-                renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
-            }
-            else if (renderedConsole == null)
-            {
-                renderedConsole = new RenderTexture((uint)source.AbsoluteArea.Width, (uint)source.AbsoluteArea.Height, false);
-            }
-
-            renderedConsole.Clear(Color.Transparent);
-            TextSurfaceRenderer renderer = new TextSurfaceRenderer();
-            //renderer.CallBatchEnd = false;
-            //renderer.AfterRenderCallback = (batch) => batch.End(renderedConsole, RenderStates.Default);
-            renderer.AlternativeRenderTarget = renderedConsole;
-            renderer.Render(source, new Vector2i(0, 0));
-            renderedConsole.Display();
-#elif MONOGAME
             if (renderedConsole != null)
                 renderedConsole.Dispose();
 
@@ -89,7 +52,6 @@ namespace SadConsole.Consoles
             TextSurfaceRenderer renderer = new TextSurfaceRenderer();
             renderer.Render(source, new Point(0, 0));
             Engine.RestoreRenderTarget();
-#endif
         }
 
         /// <summary>
@@ -99,18 +61,6 @@ namespace SadConsole.Consoles
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
         public virtual void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
         {
-#if SFML
-            Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
-
-            BeforeRenderCallback?.Invoke(Batch);
-            
-            Batch.DrawQuad(surface.AbsoluteArea, surface.AbsoluteArea, surface.Tint, renderedConsole.Texture);
-
-            AfterRenderCallback?.Invoke(Batch);
-
-            Batch.End();
-
-#elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
@@ -120,7 +70,6 @@ namespace SadConsole.Consoles
             AfterRenderCallback?.Invoke(Batch);
 
             Batch.End();
-#endif
         }
 
         /// <summary>
@@ -174,14 +123,7 @@ namespace SadConsole.Consoles
             else
                 worldLocation = position.ConsoleLocationToWorld(CellSize.X, CellSize.Y);
 
-#if SFML
-            var transform = Matrix.Identity;
-            transform.Translate(worldLocation.X, worldLocation.Y);
-
-            return transform;
-#elif MONOGAME
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
-#endif
         }
     }
 }

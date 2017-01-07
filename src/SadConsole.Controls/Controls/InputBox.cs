@@ -1,10 +1,5 @@
-﻿#if SFML
-using SFML.Graphics;
-using Keys = SFML.Window.Keyboard.Key;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#endif
 
 using SadConsole.Input;
 using SadConsole.Themes;
@@ -336,11 +331,7 @@ namespace SadConsole.Controls
                 {
                     for (int i = 0; i < info.KeysPressed.Count; i++)
                     {
-#if SFML
-                        if (info.KeysPressed[i].XnaKey == Keys.Return)
-#elif MONOGAME
                         if (info.KeysPressed[i].XnaKey == Keys.Enter)
-#endif
                         {
                             this.IsDirty = true;
                             DisableKeyboard = false;
@@ -359,17 +350,10 @@ namespace SadConsole.Controls
 					{
 						if (_isNumeric)
 						{
-#if SFML
-                            if (info.KeysPressed[i].XnaKey == Keys.BackSpace && newText.Length != 0)
-                                newText.Remove(newText.Length - 1, 1);
-
-                            else if (info.KeysPressed[i].XnaKey == Keys.Return)
-#elif MONOGAME
                             if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
 								newText.Remove(newText.Length - 1, 1);
 
 							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
-#endif
                             {
 								DisableKeyboard = true;
 
@@ -393,11 +377,7 @@ namespace SadConsole.Controls
 
 						else
 						{
-#if SFML
-                            if (info.KeysPressed[i].XnaKey == Keys.BackSpace && newText.Length != 0 && _carrotPos != 0)
-#elif MONOGAME
                             if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0 && _carrotPos != 0)
-#endif
                             {
                                 if (_carrotPos == newText.Length)
 									newText.Remove(newText.Length - 1, 1);
@@ -426,11 +406,7 @@ namespace SadConsole.Controls
 									_carrotPos = newText.Length;
 							}
 
-#if SFML
-							else if (info.KeysPressed[i].XnaKey == Keys.Return)
-#elif MONOGAME
 							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
-#endif
                             {
                                 Text = _editingText;
 								DisableKeyboard = true;
