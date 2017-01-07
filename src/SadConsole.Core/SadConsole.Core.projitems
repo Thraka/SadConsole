@@ -83,9 +83,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDraw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NonMonoGame\GameTime.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NonMonoGame\SFML.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NonMonoGame\SpriteEffects.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionedCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint\Color.cs" />
