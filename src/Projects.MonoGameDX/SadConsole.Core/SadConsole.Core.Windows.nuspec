@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core</id>
-    <version>5.2.0</version>
+    <version>5.2.1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,10 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame DirectX) $description$</description>
     <releaseNotes>
-Cursor can now be created with just a text surface alone. Allows for better standalone (no console) scenarios.
-MonoGame supports init with just a standalone graphics device object.
-Fixed bug in [c:u] (the undo command) removing in the wrong order.
-Updated code for fullscreen support. Use Engine.ToggleFullscreen().
+Finished changes to full screen display modes. Supports stretch, center, and scale (ratio kept).
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
