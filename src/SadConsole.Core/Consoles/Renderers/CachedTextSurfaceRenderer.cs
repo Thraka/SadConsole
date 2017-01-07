@@ -88,7 +88,7 @@ namespace SadConsole.Consoles
             Engine.Device.Clear(Color.Transparent);
             TextSurfaceRenderer renderer = new TextSurfaceRenderer();
             renderer.Render(source, new Point(0, 0));
-            Engine.Device.SetRenderTarget(null);
+            Engine.RestoreRenderTarget();
 #endif
         }
 
