@@ -12,6 +12,8 @@ namespace SadConsole
 {
     public static partial class Engine
     {
+        internal static string FontPathHint;
+
         #region Fields
         /// <summary>
         /// Called after each frame of update logic has happened.
@@ -202,6 +204,8 @@ namespace SadConsole
         {
             if (!System.IO.File.Exists(font))
                 throw new Exception($"Font does not exist: {font}");
+
+            FontPathHint = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(font));
 
             var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
 
