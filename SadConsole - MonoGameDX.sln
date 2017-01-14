@@ -63,13 +63,19 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StarterProject", "src\Start
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Windows", "src\StarterProject\MonoGameDX\StarterProject.Windows.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Root", "src\SadConsole.Root\SadConsole.Root.shproj", "{03ACBCBA-D879-49C7-9F3D-2C1C96D58600}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltravioletTest", "src\UltravioletTest\UltravioletTest.csproj", "{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SadConsole.GameHelpers\SadConsole.GameHelpers.projitems*{00cc441c-44bb-4b15-babd-6831b65c31d8}*SharedItemsImports = 13
+		src\SadConsole.Root\SadConsole.Root.projitems*{03acbcba-d879-49c7-9f3d-2c1c96d58600}*SharedItemsImports = 13
 		src\SadConsole.Controls\SadConsole.Controls.projitems*{25c2dbd3-8ac1-4163-a29a-a7f756fa4a5f}*SharedItemsImports = 13
 		src\SadConsole.Controls\SadConsole.Controls.projitems*{46f11907-cef3-4069-b041-0a88880981e6}*SharedItemsImports = 4
 		src\SadConsole.Ansi\SadConsole.Ansi.projitems*{55695088-7d09-4704-9d0c-7c69e0de6d47}*SharedItemsImports = 4
 		src\SadConsole.Ansi\SadConsole.Ansi.projitems*{5fe599b4-4b47-46e7-931b-b01c2cae40d4}*SharedItemsImports = 13
+		src\SadConsole.Root\SadConsole.Root.projitems*{6c0f35db-3965-443c-9bc5-563ebba1dfab}*SharedItemsImports = 4
 		src\StarterProject\SharedCode\StarterProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{7a8507b4-db2c-453e-a72b-2384175bdff1}*SharedItemsImports = 13
 		SampleGames\Castle\Castle.projitems*{99eb89b5-bab6-47cb-899d-55653fc2b8dc}*SharedItemsImports = 4
@@ -389,6 +395,42 @@ Global
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|x64.Build.0 = ReleaseBuild|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|x86.ActiveCfg = ReleaseBuild|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|x86.Build.0 = ReleaseBuild|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|Linux.ActiveCfg = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|Linux.Build.0 = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|MacOS.ActiveCfg = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|MacOS.Build.0 = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|Windows.ActiveCfg = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|Windows.Build.0 = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|x64.Build.0 = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Debug|x86.Build.0 = Debug|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|Linux.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|Linux.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|MacOS.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|MacOS.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|Windows.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|Windows.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|x64.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|x64.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|x86.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.Release|x86.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|Any CPU.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|Any CPU.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|Linux.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|Linux.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|MacOS.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|MacOS.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|Windows.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|Windows.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|x64.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|x64.Build.0 = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|x86.ActiveCfg = Release|Any CPU
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB}.ReleaseBuild|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -414,5 +456,7 @@ Global
 		{D348C254-AB16-4B48-9F61-2FFEE51DFD4A} = {E37CC7AB-090B-410B-8017-3DC57780FA8E}
 		{B41A356C-4BA6-40CC-AC03-0E5D46B0B981} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
 		{74327CCC-4606-40B8-9587-60E55B1D6A80} = {B033AC07-53C2-4F0B-B6B1-812EB7D36CCC}
+		{03ACBCBA-D879-49C7-9F3D-2C1C96D58600} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
+		{6C0F35DB-3965-443C-9BC5-563EBBA1DFAB} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 	EndGlobalSection
 EndGlobal
