@@ -1,9 +1,5 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
-#elif SFML
-using SFML.Graphics;
-#endif
 
 using System;
 using SadConsole;

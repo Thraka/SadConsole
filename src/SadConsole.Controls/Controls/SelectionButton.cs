@@ -1,8 +1,4 @@
-﻿#if SFML
-using Keys = SFML.Window.Keyboard.Key;
-#elif MONOGAME
-using Microsoft.Xna.Framework.Input;
-#endif
+﻿using Microsoft.Xna.Framework.Input;
 
 using SadConsole.Themes;
 using System;

@@ -1,8 +1,4 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
-#elif SFML
-using Point = SFML.System.Vector2i;
-#endif
+﻿using Microsoft.Xna.Framework;
 
 using System;
 
@@ -70,7 +66,7 @@ namespace StarterProject.CustomConsoles
                               Print("  ").NewLine();
             }
             else if (value.ToLower() == "ver")
-                VirtualCursor.Print("  SadConsole for MonoGame and SFML").NewLine();
+                VirtualCursor.Print("  SadConsole for MonoGame").NewLine();
 
             else if (value.ToLower() == "cls")
                 ClearText();

@@ -1,8 +1,4 @@
-﻿#if SFML
-using Color = SFML.Graphics.Color;
-#elif MONOGAME
-using Color = Microsoft.Xna.Framework.Color;
-#endif
+﻿using Color = Microsoft.Xna.Framework.Color;
 
 namespace SadConsole.Game
 {
@@ -39,12 +35,7 @@ namespace SadConsole.Game
                             character = 32;
 
                         editor.SetGlyph(x, y, character);
-#if SFML
-                        byte randomValue = (byte)((float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d) * 255);
-                        editor.SetForeground(x, y, new Color(randomValue, randomValue, randomValue));
-#elif MONOGAME
                         editor.SetForeground(x, y, Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
-#endif
                     }
                 }
 

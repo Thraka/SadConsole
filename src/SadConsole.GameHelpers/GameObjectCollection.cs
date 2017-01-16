@@ -1,13 +1,5 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Vector2 = SFML.System.Vector2f;
-using SFML.System;
-using Matrix = SFML.Graphics.Transform;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 using System.Collections.Generic;
 using System.Collections;
@@ -219,39 +211,6 @@ namespace SadConsole.Game
         [DataContract]
         private class GameObjectRenderer : Consoles.TextSurfaceRenderer
         {
-#if SFML
-            public void Start()
-            {
-                Batch.Reset(Engine.Device, RenderStates.Default, Transform.Identity);
-                BeforeRenderCallback?.Invoke(Batch);
-            }
-
-            public override void Render(ITextSurfaceRendered surface, Matrix renderingMatrix)
-            {
-                if (surface.Tint.A != 255)
-                {
-                    Cell cell;
-
-                    if (surface.DefaultBackground.A != 0)
-                        Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font.FontImage);
-
-                    for (int i = 0; i < surface.RenderCells.Length; i++)
-                    {
-                        cell = surface.RenderCells[i];
-
-                        if (cell.IsVisible)
-                        {
-                            Batch.DrawCell(cell, surface.RenderRects[i], surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font);
-                        }
-                    }
-
-                }
-
-                if (surface.Tint.A != 0)
-                    Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.Tint, surface.Font.FontImage);
-            }
-
-#elif MONOGAME
             public void Start()
             {
                 Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
@@ -289,7 +248,7 @@ namespace SadConsole.Game
                     Batch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
                 }
             }
-#endif
+
             public void End()
             {
                 AfterRenderCallback?.Invoke(Batch);

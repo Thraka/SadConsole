@@ -1,9 +1,4 @@
-#if SFML
-using Vector2 = SFML.System.Vector2f;
-using SFML.System;
-#elif MONOGAME
 using Microsoft.Xna.Framework;
-#endif
 
 using System.Collections.Generic;
 using System;

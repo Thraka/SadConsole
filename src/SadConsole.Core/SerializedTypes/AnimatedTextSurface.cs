@@ -1,8 +1,4 @@
-﻿#if SFML
-using FrameworkPoint = SFML.System.Vector2i;
-#elif MONOGAME
-using FrameworkPoint = Microsoft.Xna.Framework.Point;
-#endif
+﻿using FrameworkPoint = Microsoft.Xna.Framework.Point;
 
 using SadConsole.Consoles;
 using System;

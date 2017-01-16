@@ -113,7 +113,7 @@ namespace StarterProject.CustomConsoles
 
                 if (toggle)
                 {
-                    SadConsole.Engine.Device.SetRenderTarget(null);
+                    SadConsole.Engine.RestoreRenderTarget();
                     textSurface = reader1.GetSurface(_renderTexture);
                 }
 

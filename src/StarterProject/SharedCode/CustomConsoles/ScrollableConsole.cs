@@ -1,10 +1,4 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
-#elif SFML
-using SFML.Graphics;
-using Point = SFML.System.Vector2i;
-using Rectangle = SFML.Graphics.IntRect;
-#endif
+﻿using Microsoft.Xna.Framework;
 
 using System;
 using System.Collections.Generic;

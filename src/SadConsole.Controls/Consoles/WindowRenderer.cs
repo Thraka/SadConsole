@@ -1,10 +1,5 @@
-﻿#if SFML
-using Matrix = SFML.Graphics.Transform;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 using SadConsole.Consoles;
 using System;
@@ -43,15 +38,9 @@ namespace SadConsole.Consoles
         {
             if (IsModal && ModalTint.A != 0)
             {
-#if SFML
-                Batch.Reset(Engine.Device, RenderStates.Default, Matrix.Identity);
-                Batch.DrawQuad(new IntRect(0, 0, (int)Engine.Device.Size.X, (int)Engine.Device.Size.Y), surface.Font.SolidGlyphRectangle, ModalTint, surface.Font.FontImage);
-                Batch.End();
-#elif MONOGAME
                 Batch.Begin(samplerState: SamplerState.PointClamp);
                 Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Engine.RenderRect.Width, Engine.RenderRect.Height), surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], ModalTint);
                 Batch.End();
-#endif
             }
 
             base.Render(surface, renderingMatrix);

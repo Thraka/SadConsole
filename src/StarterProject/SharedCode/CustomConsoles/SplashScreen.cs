@@ -1,12 +1,5 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#elif SFML
-using SFML.Graphics;
-using SFML.System;
-using Point = SFML.System.Vector2i;
-using Rectangle = SFML.Graphics.IntRect;
-#endif
 
 using System;
 using SadConsole;
@@ -47,13 +40,10 @@ namespace StarterProject.CustomConsoles
             Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
 
             // Load the logo
-#if MONOGAME
             System.IO.Stream imageStream = System.IO.File.OpenRead("sad.png");
             var image = Texture2D.FromStream(Engine.Device, imageStream);
             imageStream.Dispose();
-#elif SFML
-            var image = new Texture("sad.png");
-#endif
+
             // Configure the logo
             _consoleImage = image.ToSurface(Engine.DefaultFont, false);
             _consoleImagePosition = new Point(TextSurface.Width / 2 - _consoleImage.Width / 2, -1);

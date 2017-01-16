@@ -1,10 +1,5 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-#elif SFML
-using Keys = SFML.Window.Keyboard.Key;
-using SFML.Graphics;
-#endif
 
 using SadConsole.Consoles;
 using Console = SadConsole.Consoles.Console;

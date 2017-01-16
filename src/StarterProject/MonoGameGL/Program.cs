@@ -11,8 +11,11 @@ namespace StarterProject
 
         static void Main(string[] args)
         {
+            // Uncomment to enable as fast as possible render.
+            //SadConsole.Engine.UnlimitedFPS = true;
+
             // Setup the engine and creat the main window.
-            SadConsole.Engine.Initialize("IBM.font", 80, 25);
+            SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Engine.EngineStart += Engine_EngineStart;
@@ -46,6 +49,10 @@ namespace StarterProject
                 {
                     _characterWindow.Show(true);
                 }
+                else if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
+                {
+                    Engine.ToggleFullScreen();
+                }
             }
         }
 
@@ -62,6 +69,7 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
+                    new CustomConsoles.AutoTypingConsole(),
                                         //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
                                         //new CustomConsoles.CachedConsoleConsole(),
                                         new CustomConsoles.StringParsingConsole(),
@@ -70,10 +78,10 @@ namespace StarterProject
                                         //new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.ControlsTest(),
                                         new CustomConsoles.StaticConsole(),
+                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),
-                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.WorldGenerationConsole(),
                                     };
 
@@ -86,8 +94,8 @@ namespace StarterProject
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
+            // Uncomment to enable as fast as possible render.
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
-            //SadConsole.Engine.MonoGameInstance.UnlockFPS();
         }
 
         private static void MoveNextConsole()

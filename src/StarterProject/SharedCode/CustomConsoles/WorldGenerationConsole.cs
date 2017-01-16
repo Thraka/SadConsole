@@ -1,11 +1,5 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#elif SFML
-using Rectangle = SFML.Graphics.IntRect;
-using Keys = SFML.Window.Keyboard.Key;
-using SFML.Graphics;
-#endif
 
 using SadConsole;
 using SadConsole.Consoles;
@@ -47,11 +41,7 @@ namespace StarterProject.CustomConsoles
                 if (info.IsKeyDown(Keys.Down))
                     cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top + 1, 80 * 2, 25 * 2);
 
-#if MONOGAME
                 if (info.IsKeyReleased(Keys.Enter))
-#elif SFML
-                if (info.IsKeyReleased(Keys.Return))
-#endif
                 {
                     messageData.Fill(Color.White, Color.Black, 0, null);
                     messageData.Print(0, 0, "Generating map, please wait...");

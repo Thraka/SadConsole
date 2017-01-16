@@ -1,13 +1,5 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Vector2 = SFML.System.Vector2f;
-using SFML.System;
-using Matrix = SFML.Graphics.Transform;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 namespace SadConsole.Consoles
 {
@@ -26,44 +18,6 @@ namespace SadConsole.Consoles
         {
             var layers = ((LayeredTextSurface)surface).GetLayers();
 
-#if SFML
-            //Batch.Start(surface, renderingMatrix);
-            Batch.Reset(Engine.Device, RenderStates.Default, renderingMatrix);
-
-            BeforeRenderCallback?.Invoke(Batch);
-
-            if (surface.Tint.A != 255)
-            {
-                Cell cell;
-
-                if (surface.DefaultBackground.A != 0)
-                    Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font.FontImage);
-
-                for (int l = 0; l < layers.Length; l++)
-                {
-                    if (layers[l].IsVisible)
-                    {
-                        for (int i = 0; i < layers[l].RenderCells.Length; i++)
-                        {
-                            cell = layers[l].RenderCells[i];
-
-                            if (cell.IsVisible)
-                            {
-                                Batch.DrawCell(cell, surface.RenderRects[i], surface.Font.SolidGlyphRectangle, surface.DefaultBackground, surface.Font);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (surface.Tint.A != 0)
-                Batch.DrawQuad(surface.AbsoluteArea, surface.Font.SolidGlyphRectangle, surface.Tint, surface.Font.FontImage);
-
-            AfterRenderCallback?.Invoke(Batch);
-
-            if (CallBatchEnd)
-                Batch.End();
-#elif MONOGAME
             Batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, renderingMatrix);
 
             BeforeRenderCallback?.Invoke(Batch);
@@ -103,7 +57,6 @@ namespace SadConsole.Consoles
             AfterRenderCallback?.Invoke(Batch);
 
             Batch.End();
-#endif
         }
 
     }

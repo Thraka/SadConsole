@@ -1,8 +1,4 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
-#endif
+﻿using Microsoft.Xna.Framework;
 
 using System;
 using System.Collections.Generic;

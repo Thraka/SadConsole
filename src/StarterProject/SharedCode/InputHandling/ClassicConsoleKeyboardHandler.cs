@@ -1,10 +1,5 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#elif SFML
-using Point = SFML.System.Vector2i;
-using Keys = SFML.Window.Keyboard.Key;
-#endif
 
 using SadConsole.Consoles;
 using SadConsole.Input;
@@ -34,11 +29,7 @@ namespace StarterProject.InputHandling
                     console.VirtualCursor.Print(key.Character.ToString());
 
                 // Special character - BACKSPACE
-#if MONOGAME
                 else if (key.XnaKey == Keys.Back)
-#elif SFML
-                else if (key.XnaKey == Keys.BackSpace)
-#endif
                 {
                     // Get the prompt that the console has.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
@@ -56,11 +47,7 @@ namespace StarterProject.InputHandling
                 }
 
                 // Special character - ENTER
-#if MONOGAME
                 else if (key.XnaKey == Keys.Enter)
-#elif SFML
-                else if (key.XnaKey == Keys.Return)
-#endif
                 {
                     // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
                     if (console.TimesShiftedUp != 0)

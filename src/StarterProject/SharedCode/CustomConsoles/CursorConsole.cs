@@ -1,8 +1,4 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
-#elif SFML
-using Point = SFML.System.Vector2i;
-#endif
+﻿using Microsoft.Xna.Framework;
 
 using Console = SadConsole.Consoles.Console;
 

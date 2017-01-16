@@ -1,13 +1,6 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-#elif SFML
-using Keys = SFML.Window.Keyboard.Key;
-using Rectangle = SFML.Graphics.IntRect;
-using SFML.Graphics;
-using Point = SFML.System.Vector2i;
-#endif
 
 using SadConsole.Consoles;
 using System;

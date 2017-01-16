@@ -1,10 +1,5 @@
-﻿#if SFML
-using Rectangle = SFML.Graphics.IntRect;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-#endif
 
 using System.Runtime.Serialization;
 using System;

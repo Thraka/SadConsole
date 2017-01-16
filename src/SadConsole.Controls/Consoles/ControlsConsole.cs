@@ -1,13 +1,6 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Keys = SFML.Window.Keyboard.Key;
-using Rectangle = SFML.Graphics.IntRect;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
-#endif
 
 using SadConsole.Controls;
 using System.Collections.Generic;
@@ -416,19 +409,12 @@ namespace SadConsole.Consoles
 
                 if (canTab)
                     if (
-#if SFML
-                        ((info.IsKeyDown(Keys.LShift) ||
-                        info.IsKeyDown(Keys.RShift)) ||
-
-                        info.IsKeyReleased(Keys.LShift) ||
-                        info.IsKeyReleased(Keys.RShift))
-#elif MONOGAME
                         ((info.IsKeyDown(Keys.LeftShift)  ||
                         info.IsKeyDown(Keys.RightShift)) || 
                         
                         info.IsKeyReleased(Keys.LeftShift)  ||
                         info.IsKeyReleased(Keys.RightShift)) 
-#endif
+
                         &&
                         info.IsKeyReleased(Keys.Tab))
                     {

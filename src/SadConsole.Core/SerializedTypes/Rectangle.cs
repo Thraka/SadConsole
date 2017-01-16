@@ -1,8 +1,4 @@
-﻿#if SFML
-using FrameworkRect = SFML.Graphics.IntRect;
-#elif MONOGAME
-using FrameworkRect = Microsoft.Xna.Framework.Rectangle;
-#endif
+﻿using FrameworkRect = Microsoft.Xna.Framework.Rectangle;
 
 using System;
 using System.Collections.Generic;

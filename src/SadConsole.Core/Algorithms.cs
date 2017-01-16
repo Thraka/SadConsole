@@ -1,14 +1,6 @@
-﻿#if SFML
-using Point = SFML.System.Vector2i;
-using Vector2 = SFML.System.Vector2f;
-using Rectangle = SFML.Graphics.IntRect;
-using MyMathHelper = SadConsole.MathHelper;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 using MyMathHelper = Microsoft.Xna.Framework.MathHelper;
-#endif
 
 using System;
 using System.Collections.Generic;

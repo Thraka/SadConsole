@@ -1,13 +1,5 @@
-﻿
-#if SFML
-using Point = SFML.System.Vector2i;
-using Rectangle = SFML.Graphics.IntRect;
-using Texture2D = SFML.Graphics.Texture;
-using SFML.Graphics;
-#elif MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
 
 using System;
 using System.Runtime.Serialization;
@@ -166,24 +158,6 @@ namespace SadConsole
         /// <param name="height">The height glyphs.</param>
         /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
-#if SFML
-        public void ResizeGraphicsDeviceManager(RenderWindow manager, int width, int height, int additionalWidth, int additionalHeight)
-        {
-            int oldWidth = (int)manager.Size.X;
-            int oldHeight = (int)manager.Size.Y;
-
-            manager.Size = new SFML.System.Vector2u((uint)((Size.X * width) + additionalWidth), (uint)((Size.Y * height) + additionalHeight));
-            manager.SetView(new View(new FloatRect(0, 0, manager.Size.X, manager.Size.Y)));
-            Engine.WindowWidth = (int)manager.Size.X;
-            Engine.WindowHeight = (int)manager.Size.Y;
-
-            int diffWidth = (Engine.WindowWidth - oldWidth) / 2;
-            int diffHeight = (Engine.WindowHeight - oldHeight) / 2;
-
-            manager.Position = new Point(manager.Position.X - diffWidth, manager.Position.Y - diffHeight);
-        }
-
-#elif MONOGAME
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
             int oldWidth = manager.PreferredBackBufferWidth;
@@ -205,17 +179,10 @@ namespace SadConsole
             manager.ApplyChanges();
 
         }
-#endif
 
         public Rectangle GetRenderRect(int x, int y)
         {
-            Rectangle rect = new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
-#if SFML
-            // SFML handles rects for rendering differnetly
-            rect.Width = rect.Left + rect.Width;
-            rect.Height = rect.Top + rect.Height;
-#endif
-            return rect;
+            return new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
         }
 
         [OnDeserialized]
@@ -284,11 +251,7 @@ namespace SadConsole
         /// <summary>
         /// The total rows in the font.
         /// </summary>
-#if SFML
-        public int Rows { get { return (int)Image.Size.Y / (GlyphHeight + GlyphPadding); } }
-#elif MONOGAME
         public int Rows { get { return Image.Height / (GlyphHeight + GlyphPadding); } }
-#endif
         /// <summary>
         /// The texture used by the font.
         /// </summary>
@@ -324,12 +287,23 @@ namespace SadConsole
         /// </summary>
         public void Generate()
         {
-#if SFML
-            Image = new Texture2D(FilePath);
-#elif MONOGAME
-            using (System.IO.Stream fontStream = System.IO.File.OpenRead(FilePath))
+            string file = FilePath;
+
+            if (!System.IO.File.Exists(file))
+            {
+                file = System.IO.Path.Combine(Engine.FontPathHint, file);
+
+                if (!System.IO.File.Exists(file))
+                {
+                    file = System.IO.Path.Combine("fonts", FilePath);
+
+                    if (!System.IO.File.Exists(file))
+                        throw new Exception("Unable to find font: " + FilePath);
+                }
+            }
+
+            using (System.IO.Stream fontStream = System.IO.File.OpenRead(file))
                 Image = Texture2D.FromStream(Engine.Device, fontStream);
-#endif
             ConfigureRects();
         }
 
@@ -350,12 +324,6 @@ namespace SadConsole
                                                            (cy * GlyphHeight) + ((cy + 1) * GlyphPadding), GlyphWidth, GlyphHeight);
                 else
                     GlyphIndexRects[i] = new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
-
-#if SFML
-                // rects are used differently with SFML
-                GlyphIndexRects[i].Width = GlyphIndexRects[i].Left + GlyphIndexRects[i].Width;
-                GlyphIndexRects[i].Height = GlyphIndexRects[i].Top + GlyphIndexRects[i].Height;
-#endif
             }
         }
 
