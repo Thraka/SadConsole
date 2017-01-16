@@ -16,7 +16,7 @@ namespace StarterProject
             SadConsole.Engine.UnlimitedFPS = true;
 
             // Setup the engine and creat the main window.
-            SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
+            SadConsole.Engine.Initialize("IBM.font", 80, 25);//, (g) => { g.Window.AllowUserResizing = true; });
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Engine.EngineStart += Engine_EngineStart;
@@ -74,17 +74,18 @@ namespace StarterProject
             SadConsole.Engine.ConsoleRenderStack
                 = new ConsoleList() {
                     //new CustomConsoles.CachedConsoleConsole(),
-                                        //new CustomConsoles.RandomScrollingConsole(),
+                                        
                                         new CustomConsoles.AutoTypingConsole(),
                                         //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
-                                        new CustomConsoles.StretchedConsole(),
                                         new CustomConsoles.StringParsingConsole(),
                                         new CustomConsoles.ControlsTest(),
-                                        //new CustomConsoles.FadingExample(),
                                         new CustomConsoles.DOSConsole(),
+                                        new CustomConsoles.FadingExample(),
                                         new CustomConsoles.AnsiConsole(),
                                         new CustomConsoles.ViewsAndSubViews(),
                                         new CustomConsoles.StaticConsole(),
+                                        new CustomConsoles.StretchedConsole(),
+                                        new CustomConsoles.RandomScrollingConsole(),
                                         new CustomConsoles.SceneProjectionConsole(),
                                         new CustomConsoles.BorderedConsole(),
                                         new CustomConsoles.GameObjectConsole(),

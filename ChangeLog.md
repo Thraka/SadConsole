@@ -1,4 +1,18 @@
-﻿## 01/06/2016
+﻿## 01/16/2016
+
+- SFML code removed and archived in the [SFML branch](https://github.com/Thraka/SadConsole/tree/SFML).
+
+### Core
+
+- Fixed a bug with restoring the window after minimize.
+
+### Controls
+
+- Fix for window.center in full screen mode
+
+## 01/03/2016
+
+## 01/06/2016
 
 ### Core
 
