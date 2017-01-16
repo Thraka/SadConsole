@@ -41,7 +41,7 @@ namespace SadConsole
 
         private void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!resizeBusy)
+            if (!resizeBusy && (Window.ClientBounds.Width != 0 && Window.ClientBounds.Height != 0))
             {
                 if (DisplayOptions != WindowResizeOptions.Stretch)
                 {
@@ -52,9 +52,9 @@ namespace SadConsole
                     GraphicsDeviceManager.ApplyChanges();
                     resizeBusy = false;
                 }
-            }
 
-            Engine.ResetRendering();
+                Engine.ResetRendering();
+            }
         }
 
 
