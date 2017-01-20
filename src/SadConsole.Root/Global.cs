@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace SadConsole
 {
@@ -21,10 +22,14 @@ namespace SadConsole
         /// <returns>A master font that you can generate a usable font from.</returns>
         public static FontMaster LoadFont(string font)
         {
-            if (!System.IO.File.Exists(font))
-                throw new Exception($"Font does not exist: {font}");
+            if (!File.Exists(font))
+            {
+                font = Path.Combine(Path.Combine(Path.GetDirectoryName(Path.GetFullPath(font)), "fonts"), Path.GetFileName(font));
+                if (!File.Exists(font))
+                    throw new Exception($"Font does not exist: {font}");
+            }                    
 
-            FontPathHint = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(font));
+            FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
 
             var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
 
