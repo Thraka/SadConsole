@@ -8,7 +8,7 @@ using System.Text;
 using Color = Microsoft.Xna.Framework.Color;
 #endif
 
-namespace SadConsole.Text
+namespace SadConsole
 {
     /// <summary>
     /// Represents an individual glyph on the screen with a foreground, background, and effect.

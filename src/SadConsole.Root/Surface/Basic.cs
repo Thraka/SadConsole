@@ -5,30 +5,105 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System;
 
-namespace SadConsole.Text
+namespace SadConsole.Surface
 {
     /// <summary>
     /// The base class for a text surface. Provides code for the view port and basic cell access.
     /// </summary>
     [DataContract]
-    public class TextSurface : TextSurfaceBasic, IEnumerable<Cell>, ITextSurfaceRendered
+    public class Basic : IEnumerable<Cell>, ISurface
     {
         [DataMember(Name = "Font")]
         protected Font font;
 
         [DataMember(Name = "Area")]
         protected Rectangle area;
+
+        /// <summary>
+        /// An array of all cells in this surface.
+        /// </summary>
+        /// <remarks>This array is calculated internally and its size shouldn't be modified. Use the <see cref="width"/> and <see cref="height"/> properties instead. The cell data can be changed.</remarks>
+        [DataMember(Name = "Cells")]
+        protected Cell[] cells;
+
+        /// <summary>
+        /// The width of the surface.
+        /// </summary>
+        [DataMember(Name = "Width")]
+        protected int width = 1;
+
+        /// <summary>
+        /// The height of the surface.
+        /// </summary>
+        [DataMember(Name = "Height")]
+        protected int height = 1;
         
+        /// <summary>
+        /// The default foreground for glyphs on this surface.
+        /// </summary>
+        [DataMember]
+        public Color DefaultForeground { get; set; } = Color.White;
+
+        /// <summary>
+        /// The default background for glyphs on this surface.
+        /// </summary>
+        [DataMember]
+        public Color DefaultBackground { get; set; } = Color.Transparent;
+
+        /// <summary>
+        /// How many cells wide the surface is.
+        /// </summary>
+        public int Width
+        {
+            get { return width; }
+        }
+
+        /// <summary>
+        /// How many cells high the surface is.
+        /// </summary>
+        public int Height
+        {
+            get { return height; }
+        }
+
+        /// <summary>
+        /// All cells of the surface.
+        /// </summary>
+        public Cell[] Cells { get { return cells; } }
+
+        /// <summary>
+        /// Gets a cell based on its coordinates on the surface.
+        /// </summary>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate.</param>
+        /// <returns>The indicated cell.</returns>
+        public Cell this[int x, int y]
+        {
+            get { return cells[y * width + x]; }
+            protected set { cells[y * width + x] = value; }
+        }
+
+        /// <summary>
+        /// Gets a cell by index.
+        /// </summary>
+        /// <param name="index">The index of the cell.</param>
+        /// <returns>The indicated cell.</returns>
+        public Cell this[int index]
+        {
+            get { return cells[index]; }
+            protected set { cells[index] = value; }
+        }
+
         /// <summary>
         /// The total cells for this surface.
         /// </summary>
         public int CellCount { get { return cells.Length; } }
-        
+
         /// <summary>
         /// Font used with rendering.
         /// </summary>
         public Font Font { get { return font; } set { font = value; OnFontChanged(); } }
-
+        
         #region ITextSurfaceView
         /// <summary>
         /// Pixel area of the render cells.
@@ -88,12 +163,13 @@ namespace SadConsole.Text
         #endregion
 
         /// <summary>
-        /// Creates a new text surface with the specified width and height and <see cref="Engine.DefaultFont"/>.
+        /// Creates a new text surface with the specified width and height.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
-        public TextSurface(int width, int height) : this(width, height, Global.FontDefault)
+        /// <param name="height">THe height of the surface.</param>
+        public Basic(int width, int height) : this(width, height, null, Global.FontDefault)
         {
+
         }
 
         /// <summary>
@@ -102,21 +178,9 @@ namespace SadConsole.Text
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        public TextSurface(int width, int height, Font font): base(width, height)
+        public Basic(int width, int height, Font font) : this(width, height, null, font)
         {
-            area = new Rectangle(0, 0, width, height);
-            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, width * font.Size.X, height * font.Size.Y);
-            Font = font;
-        }
 
-        /// <summary>
-        /// Creates a new text surface with the specified width, height, and initial set of cell data. Uses <see cref="Engine.DefaultFont"/>.
-        /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
-        /// <param name="initialCells"></param>
-        public TextSurface(int width, int height, Cell[] initialCells) : this(width, height, initialCells, Global.FontDefault)
-        {
         }
 
         /// <summary>
@@ -126,19 +190,33 @@ namespace SadConsole.Text
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells"></param>
-        public TextSurface(int width, int height, Cell[] initialCells, Font font) : base(width, height, initialCells)
+        public Basic(int width, int height, Cell[] initialCells, Font font)
         {
-            area = new Rectangle(0, 0, width, height);
+            this.area = new Rectangle(0, 0, width, height);
+            this.width = width;
+            this.height = height;
+
             LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, width * font.Size.X, height * font.Size.Y);
+
+            if (initialCells == null)
+                InitializeCells();
+            else if (initialCells.Length != width * height)
+                throw new ArgumentOutOfRangeException("initialCells", "initialCells length must equal width * height");
+            else
+                cells = RenderCells = initialCells;
+            
             Font = font;
         }
 
         /// <summary>
         /// Sets <see cref="RenderCells"/> to <see cref="TextSurfaceBasic.cells"/>.
         /// </summary>
-        protected override void InitializeCells()
+        protected virtual void InitializeCells()
         {
-            base.InitializeCells();
+            cells = new Cell[width * height];
+
+            for (int i = 0; i < cells.Length; i++)
+                cells[i] = new Cell(this.DefaultForeground, this.DefaultBackground, 0);
 
             RenderCells = cells;
         }
@@ -215,7 +293,7 @@ namespace SadConsole.Text
         }
 
         /// <summary>
-        /// Saves the <see cref="TextSurface"/> to a file.
+        /// Saves the <see cref="Basic"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
         public void Save(string file)
@@ -224,55 +302,13 @@ namespace SadConsole.Text
         }
 
         /// <summary>
-        /// Loads a <see cref="TextSurface"/> from a file.
+        /// Loads a <see cref="Basic"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static TextSurface Load(string file)
+        public static Basic Load(string file)
         {
-            return Serializer.Load<TextSurface>(file);
+            return Serializer.Load<Basic>(file);
         }
-
-        //#region Serialization
-        //        /// <summary>
-        //        /// Saves the <see cref="TextSurface"/> to a file.
-        //        /// </summary>
-        //        /// <param name="file">The destination file.</param>
-        //        public void Save(string file)
-        //        {
-        //            Serializer.Save(this, file);
-        //        }
-
-        //        /// <summary>
-        //        /// Loads a <see cref="TextSurface"/> from a file.
-        //        /// </summary>
-        //        /// <param name="file">The source file.</param>
-        //        /// <returns></returns>
-        //        public static TextSurface Load(string file)
-        //        {
-        //            return Serializer.Load<TextSurface>(file);
-        //        }
-
-        //        [OnSerializing]
-        //        private void BeforeSerializing(StreamingContext context)
-        //        {
-        //            fontName = Font.Name;
-        //            fontSize = Font.SizeMultiple;
-        //        }
-
-        //        [OnDeserialized]
-        //        private void AfterDeserialized(StreamingContext context)
-        //        {
-        //            Font font;
-
-        //            // Try to find font
-        //            if (Engine.Fonts.ContainsKey(fontName))
-        //                font = Engine.Fonts[fontName].GetFont(fontSize);
-        //            else
-        //                font = Engine.DefaultFont;
-
-        //            Font = font;
-        //        }
-        //#endregion
     }
 }

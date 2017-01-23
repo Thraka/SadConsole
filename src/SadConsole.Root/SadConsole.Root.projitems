@@ -9,18 +9,16 @@
     <Import_RootNamespace>SadConsole</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ITextSurfaceRendered.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\RenderTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ITextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\TextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Text\Cell.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Text\Font.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Text\ITextSurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Text\ITextSurfaceRendered.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Text\TextSurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Text\TextSurfaceBasic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surface\ITextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surface\Basic.cs" />
   </ItemGroup>
 </Project>

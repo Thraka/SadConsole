@@ -27,7 +27,7 @@ namespace SadConsole.Renderers
         /// </summary>
         /// <param name="surface">Used only for tinting.</param>
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
-        public virtual void Render(SadConsole.Text.ITextSurfaceRendered surface)
+        public virtual void Render(Surface.ISurface surface)
         {
             if (surface.IsDirty)
             {
@@ -40,7 +40,7 @@ namespace SadConsole.Renderers
 
                 if (surface.Tint.A != 255)
                 {
-                    Text.Cell cell;
+                    Cell cell;
 
                     if (surface.DefaultBackground.A != 0)
                         Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);

@@ -4,7 +4,6 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using SadConsole.Text;
 
 namespace SadConsole
 {
@@ -45,7 +44,7 @@ namespace SadConsole
         /// <summary>
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
-        public static List<Tuple<Text.ITextSurfaceRendered, Microsoft.Xna.Framework.Point>> DrawCalls = new List<Tuple<Text.ITextSurfaceRendered, Microsoft.Xna.Framework.Point>>(5);
+        public static List<Tuple<Surface.ISurface, Microsoft.Xna.Framework.Point>> DrawCalls = new List<Tuple<Surface.ISurface, Microsoft.Xna.Framework.Point>>(5);
         #endregion
 
         /// <summary>

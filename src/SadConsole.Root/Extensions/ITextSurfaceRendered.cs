@@ -8,7 +8,7 @@ namespace SadConsole
 {
     public static class TextSurfaceExtensions
     {
-        public static Matrix GetPositionTransform(this Text.ITextSurfaceRendered surface, Point position, bool usePixelPositioning = false)
+        public static Matrix GetPositionTransform(this Surface.ISurface surface, Point position, bool usePixelPositioning = false)
         {
             Point worldLocation;
 

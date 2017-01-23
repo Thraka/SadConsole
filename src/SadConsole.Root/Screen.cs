@@ -43,7 +43,7 @@ namespace SadConsole
     public class Console : IScreen
     {
         private Point position;
-        public Text.ITextSurfaceRendered TextSurface;
+        public Surface.ISurface TextSurface;
         public Renderers.ITextSurfaceRenderer Renderer;
 
         public List<IScreen> Children { get; set; } = new List<IScreen>();
@@ -54,7 +54,7 @@ namespace SadConsole
 
         public Console(int width, int height)
         {
-            TextSurface = new Text.TextSurface(width, height);
+            TextSurface = new Surface.Basic(width, height);
             Renderer = new Renderers.TextSurfaceRenderer();
 
             FillWithRandomGarbage();
@@ -63,7 +63,7 @@ namespace SadConsole
         public void Draw(TimeSpan timeElapsed)
         {
             Renderer.Render(TextSurface);
-            Global.DrawCalls.Add(new Tuple<Text.ITextSurfaceRendered, Point>(TextSurface, TextSurface.Font.GetWorldPosition(Offset)));
+            Global.DrawCalls.Add(new Tuple<Surface.ISurface, Point>(TextSurface, TextSurface.Font.GetWorldPosition(Offset)));
         }
 
         public void Update(TimeSpan timeElapsed)

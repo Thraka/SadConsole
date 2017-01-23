@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
-namespace SadConsole.Text
+namespace SadConsole
 {
     /// <summary>
     /// Represents a specific font size from a <see cref="FontMaster"/>.
