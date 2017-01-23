@@ -6,14 +6,21 @@
     <SharedGUID>03acbcba-d879-49c7-9f3d-2c1c96d58600</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>SadConsole.Root</Import_RootNamespace>
+    <Import_RootNamespace>SadConsole</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ITextSurfaceRendered.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\RenderTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\ITextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\TextSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\ITextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\ITextSurfaceRendered.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\TextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\TextSurfaceBasic.cs" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
-namespace SadConsole
+namespace SadConsole.Text
 {
     /// <summary>
     /// Represents a specific font size from a <see cref="FontMaster"/>.
@@ -160,28 +160,38 @@ namespace SadConsole
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
-            //int oldWidth = manager.PreferredBackBufferWidth;
-            //int oldHeight = manager.PreferredBackBufferHeight;
+            int oldWidth = manager.PreferredBackBufferWidth;
+            int oldHeight = manager.PreferredBackBufferHeight;
 
-            //manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
-            //manager.PreferredBackBufferHeight = (Size.Y * height) + additionalHeight;
-            
-            //Engine.WindowWidth = manager.PreferredBackBufferWidth;
-            //Engine.WindowHeight = manager.PreferredBackBufferHeight;
+            manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
+            manager.PreferredBackBufferHeight = (Size.Y * height) + additionalHeight;
 
-            //int diffWidth = (Engine.WindowWidth - oldWidth) / 2;
-            //int diffHeight = (Engine.WindowHeight - oldHeight) / 2;
+            Global.WindowWidth = manager.PreferredBackBufferWidth;
+            Global.WindowHeight = manager.PreferredBackBufferHeight;
 
+            int diffWidth = (Global.WindowWidth - oldWidth) / 2;
+            int diffHeight = (Global.WindowHeight - oldHeight) / 2;
 
-            //if (Engine.MonoGameInstance != null)
-            //    Engine.MonoGameInstance.Window.Position = new Point(Engine.MonoGameInstance.Window.Position.X - diffWidth, Engine.MonoGameInstance.Window.Position.Y - diffHeight);
+            // Center screen
+            if (Game.Instance != null)
+                Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
 
-            //manager.ApplyChanges();
+            manager.ApplyChanges();
         }
 
         public Rectangle GetRenderRect(int x, int y)
         {
             return new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
+        }
+
+        public Point GetWorldPosition(int x, int y)
+        {
+            return GetWorldPosition(new Point(x, y));
+        }
+
+        public Point GetWorldPosition(Point position)
+        {
+            return new Point(position.X * Size.X, position.Y * Size.Y);
         }
 
         [OnDeserialized]
@@ -302,7 +312,7 @@ namespace SadConsole
             }
 
             using (System.IO.Stream fontStream = System.IO.File.OpenRead(file))
-                Image = Texture2D.FromStream(Global.Device, fontStream);
+                Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
             ConfigureRects();
         }
 

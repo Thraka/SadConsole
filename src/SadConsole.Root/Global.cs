@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using SadConsole.Text;
 
 namespace SadConsole
 {
@@ -11,9 +14,39 @@ namespace SadConsole
 
         public static Dictionary<string, FontMaster> Fonts { get; } = new Dictionary<string, FontMaster>();
         public static Font FontDefault;
-        public static Microsoft.Xna.Framework.Graphics.GraphicsDevice Device;
-
+        public static GraphicsDevice GraphicsDevice;
+        public static GraphicsDeviceManager GraphicsDeviceManager;
+        public static SpriteBatch SpriteBatch;
         public static Screen ActiveScreen;
+
+        #region Rendering
+        public static RenderTarget2D RenderOutput;
+
+        /// <summary>
+        /// The width of the game window.
+        /// </summary>
+        public static int WindowWidth { get; set; }
+
+        /// <summary>
+        /// The height of the game window.
+        /// </summary>
+        public static int WindowHeight { get; set; }
+
+        /// <summary>
+        /// Where on the screen the engine will be rendered.
+        /// </summary>
+        public static Rectangle RenderRect { get; set; }
+
+        /// <summary>
+        /// If the <see cref="RenderRect"/> is stretched, this is the ratio difference between unstretched.
+        /// </summary>
+        public static Vector2 RenderScale { get; set; }
+
+        /// <summary>
+        /// Draw calls to render to <see cref="RenderOutput"/>.
+        /// </summary>
+        public static List<Tuple<Text.ITextSurfaceRendered, Microsoft.Xna.Framework.Point>> DrawCalls = new List<Tuple<Text.ITextSurfaceRendered, Microsoft.Xna.Framework.Point>>(5);
+        #endregion
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
@@ -39,6 +72,41 @@ namespace SadConsole
             Fonts.Add(masterFont.Name, masterFont);
             return masterFont;
         }
+
+        public static void ResetRendering()
+        {
+            RenderOutput = new RenderTarget2D(GraphicsDevice, WindowWidth, WindowHeight);
+
+            if (Game.Settings.ResizeMode == Game.WindowResizeOptions.Center)
+            {
+                RenderRect = new Rectangle((GraphicsDeviceManager.PreferredBackBufferWidth - WindowWidth) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - WindowHeight) / 2, WindowWidth, WindowHeight);
+                RenderScale = new Vector2(1);
+            }
+            else if (Game.Settings.ResizeMode == Game.WindowResizeOptions.Scale)
+            {
+                int multiple = 2;
+
+                // Find the bounds
+                while (true)
+                {
+                    if (WindowWidth * multiple > GraphicsDeviceManager.PreferredBackBufferWidth || WindowHeight * multiple > GraphicsDeviceManager.PreferredBackBufferHeight)
+                    {
+                        multiple--;
+                        break;
+                    }
+
+                    multiple++;
+                }
+
+                RenderRect = new Rectangle((GraphicsDeviceManager.PreferredBackBufferWidth - (WindowWidth * multiple)) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - (WindowHeight * multiple)) / 2, WindowWidth * multiple, WindowHeight * multiple);
+                RenderScale = new Vector2(WindowWidth / ((float)WindowWidth * multiple), WindowHeight / (float)(WindowHeight * multiple));
+            }
+            else
+            {
+                RenderRect = new Rectangle(0, 0, WindowWidth, WindowHeight);
+                RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Game.Instance.Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Game.Instance.Window.ClientBounds.Height);
+            }
+        }
     }
 }
 
@@ -57,11 +125,35 @@ namespace SadConsole
 
         public override void Draw(GameTime gameTime)
         {
-            
-            //if (SadConsole.Game.Settings.DoDraw)
-            // Do all the render things.
+            if (SadConsole.Game.Settings.DoDraw)
+            {
+                // Make sure all items in the screen are drawn. (Build a list of draw calls)
+                SadConsole.Global.ActiveScreen.Draw(gameTime.ElapsedGameTime);
 
-            Global.ActiveScreen?.Renderer.Render(Global.ActiveScreen.Surfaces[0], new Point());
+                // Render to the global output texture
+                GraphicsDevice.SetRenderTarget(Global.RenderOutput);
+
+                // Render each draw call
+                Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                foreach (var call in SadConsole.Global.DrawCalls)
+                {
+                    Global.SpriteBatch.Draw(call.Item1.LastRenderResult, call.Item2.ToVector2(), Color.White);
+
+                }
+                Global.SpriteBatch.End();
+                GraphicsDevice.SetRenderTarget(null);
+
+                // Clear draw calls for next run
+                SadConsole.Global.DrawCalls.Clear();
+
+                // If we're going to draw to the screen, do it.
+                if (SadConsole.Game.Settings.DoFinalDraw)
+                {
+                    Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                    Global.SpriteBatch.Draw(Global.RenderOutput, Global.RenderRect, Color.White);
+                    Global.SpriteBatch.End();
+                }
+            }
 
             SadConsole.Game.OnDraw?.Invoke(gameTime);
         }
@@ -95,7 +187,7 @@ namespace SadConsole
     {
         #region Static
         public static GameSettings Settings { get; } = new GameSettings();
-        public static Game GameInstance { get; private set; }
+        public static Game Instance { get; private set; }
 
         /// <summary>
         /// Called after each frame of update logic has happened.
@@ -114,7 +206,7 @@ namespace SadConsole
 
         public static void Create(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null)
         {
-            GameInstance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
+            Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
         }
         #endregion
         
@@ -155,7 +247,7 @@ namespace SadConsole
                 }
             }
 
-            //Engine.ResetRendering();
+            Global.ResetRendering();
         }
 
 
@@ -183,8 +275,12 @@ namespace SadConsole
 
             // Tell the main engine we're ready
             //Engine.InitializeCompleted();
-            Global.Device = GraphicsDevice;
+            Global.GraphicsDevice = GraphicsDevice;
+            Global.GraphicsDeviceManager = GraphicsDeviceManager;
+            Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
             Global.FontDefault = Global.LoadFont(font).GetFont(Font.FontSizes.One);
+            Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
+            Global.ResetRendering();
             OnInitialize?.Invoke();
         }
 
@@ -211,13 +307,14 @@ namespace SadConsole
             /// Allow the user to resize the window. Must be set before the game is created.
             /// </summary>
             public bool AllowWindowResize = false;
-
+            
             /// <summary>
             /// Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
             /// </summary>
             public bool UnlimitedFPS = false;
 
             public bool DoDraw = true;
+            public bool DoFinalDraw = true;
 
             public bool DoUpdate = true;
 

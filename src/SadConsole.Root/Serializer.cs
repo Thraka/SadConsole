@@ -15,6 +15,7 @@ namespace SadConsole
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
+    using Text;
 
     /// <summary>
     /// Common serialization tasks for SadConsole.
