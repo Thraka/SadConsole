@@ -16,7 +16,12 @@ namespace SadConsole
         public static GraphicsDevice GraphicsDevice;
         public static GraphicsDeviceManager GraphicsDeviceManager;
         public static SpriteBatch SpriteBatch;
-        public static Screen ActiveScreen;
+        public static IScreen ActiveScreen;
+
+        #region Input
+        public static Input.MouseInfo MouseState = new Input.MouseInfo();
+        public static Input.KeyboardInfo KeyboardState = new Input.KeyboardInfo();
+        #endregion
 
         #region Rendering
         public static RenderTarget2D RenderOutput;
@@ -76,12 +81,12 @@ namespace SadConsole
         {
             RenderOutput = new RenderTarget2D(GraphicsDevice, WindowWidth, WindowHeight);
 
-            if (Game.Settings.ResizeMode == Game.WindowResizeOptions.Center)
+            if (Settings.ResizeMode == Settings.WindowResizeOptions.Center)
             {
                 RenderRect = new Rectangle((GraphicsDeviceManager.PreferredBackBufferWidth - WindowWidth) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - WindowHeight) / 2, WindowWidth, WindowHeight);
                 RenderScale = new Vector2(1);
             }
-            else if (Game.Settings.ResizeMode == Game.WindowResizeOptions.Scale)
+            else if (Settings.ResizeMode == Settings.WindowResizeOptions.Scale)
             {
                 int multiple = 2;
 
@@ -107,6 +112,49 @@ namespace SadConsole
             }
         }
     }
+
+    public static class Settings
+    {
+        /// <summary>
+        /// The color to automatically clear the device with.
+        /// </summary>
+        public static Color ClearColor = Color.Black;
+
+        /// <summary>
+        /// The type of resizing options for the window.
+        /// </summary>
+        public static WindowResizeOptions ResizeMode = WindowResizeOptions.Scale;
+
+        /// <summary>
+        /// Allow the user to resize the window. Must be set before the game is created.
+        /// </summary>
+        public static bool AllowWindowResize = false;
+
+        /// <summary>
+        /// Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
+        /// </summary>
+        public static bool UnlimitedFPS = false;
+
+        public static bool DoDraw = true;
+        public static bool DoFinalDraw = true;
+        public static bool DoUpdate = true;
+
+        public static class Input
+        {
+            public static bool ProcessMouseOffscreen = false;
+
+            public static bool DoMouse = true;
+
+            public static bool DoKeyboard = true;
+        }
+
+        public enum WindowResizeOptions
+        {
+            Stretch,
+            Center,
+            Scale,
+        }
+    }
 }
 
 
@@ -124,17 +172,17 @@ namespace SadConsole
 
         public override void Draw(GameTime gameTime)
         {
-            if (SadConsole.Game.Settings.DoDraw)
+            if (Settings.DoDraw)
             {
                 // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                SadConsole.Global.ActiveScreen.Draw(gameTime.ElapsedGameTime);
+                Global.ActiveScreen?.Draw(gameTime.ElapsedGameTime);
 
                 // Render to the global output texture
                 GraphicsDevice.SetRenderTarget(Global.RenderOutput);
 
                 // Render each draw call
                 Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-                foreach (var call in SadConsole.Global.DrawCalls)
+                foreach (var call in Global.DrawCalls)
                 {
                     Global.SpriteBatch.Draw(call.Item1.LastRenderResult, call.Item2.ToVector2(), Color.White);
 
@@ -143,10 +191,10 @@ namespace SadConsole
                 GraphicsDevice.SetRenderTarget(null);
 
                 // Clear draw calls for next run
-                SadConsole.Global.DrawCalls.Clear();
+                Global.DrawCalls.Clear();
 
                 // If we're going to draw to the screen, do it.
-                if (SadConsole.Game.Settings.DoFinalDraw)
+                if (Settings.DoFinalDraw)
                 {
                     Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
                     Global.SpriteBatch.Draw(Global.RenderOutput, Global.RenderRect, Color.White);
@@ -159,10 +207,26 @@ namespace SadConsole
 
         public override void Update(GameTime gameTime)
         {
-            //if (SadConsole.Game.Settings.DoUpdate)
-                // Do all the update things.
+            if (Settings.DoUpdate)
+            {
+                if (Settings.Input.DoKeyboard)
+                    Global.KeyboardState.ProcessKeys(gameTime);
 
-            SadConsole.Game.OnUpdate?.Invoke(gameTime);
+                if (Settings.Input.DoMouse)
+                {
+                    Global.MouseState.ProcessMouse(gameTime);
+
+                    //if (Settings.Input.ProcessMouseOffscreen ||
+                    //    Global.RenderRect.Contains(Global.MouseState.ScreenLocation))
+                    //{
+                    //    Global.ActiveScreen.
+                    //}
+                }
+                
+                Global.ActiveScreen?.Update(gameTime.ElapsedGameTime);
+
+                SadConsole.Game.OnUpdate?.Invoke(gameTime);
+            }
         }
     }
 
@@ -175,7 +239,7 @@ namespace SadConsole
 
         public override void Draw(GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(SadConsole.Game.Settings.ClearColor);
+            Game.GraphicsDevice.Clear(Settings.ClearColor);
         }
     }
 
@@ -185,7 +249,6 @@ namespace SadConsole
     public class Game : Microsoft.Xna.Framework.Game
     {
         #region Static
-        public static GameSettings Settings { get; } = new GameSettings();
         public static Game Instance { get; private set; }
 
         /// <summary>
@@ -235,7 +298,7 @@ namespace SadConsole
         {
             if (!resizeBusy)
             {
-                if (Settings.ResizeMode != WindowResizeOptions.Stretch)
+                if (Settings.ResizeMode != Settings.WindowResizeOptions.Stretch)
                 {
                     GraphicsDeviceManager.PreferredBackBufferWidth = Window.ClientBounds.Width;
                     GraphicsDeviceManager.PreferredBackBufferHeight = Window.ClientBounds.Height;
@@ -270,7 +333,7 @@ namespace SadConsole
 
             // Hook window change for resolution fixes
             Window.ClientSizeChanged += Window_ClientSizeChanged;
-            Window.AllowUserResizing = Game.Settings.AllowWindowResize;
+            Window.AllowUserResizing = SadConsole.Settings.AllowWindowResize;
 
             // Tell the main engine we're ready
             //Engine.InitializeCompleted();
@@ -283,44 +346,6 @@ namespace SadConsole
             OnInitialize?.Invoke();
         }
 
-        public enum WindowResizeOptions
-        {
-            Stretch,
-            Center,
-            Scale,
-        }
-
-        public class GameSettings
-        {
-            /// <summary>
-            /// The color to automatically clear the device with.
-            /// </summary>
-            public Color ClearColor = Color.Black;
-
-            /// <summary>
-            /// The type of resizing options for the window.
-            /// </summary>
-            public WindowResizeOptions ResizeMode = WindowResizeOptions.Scale;
-
-            /// <summary>
-            /// Allow the user to resize the window. Must be set before the game is created.
-            /// </summary>
-            public bool AllowWindowResize = false;
-            
-            /// <summary>
-            /// Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
-            /// </summary>
-            public bool UnlimitedFPS = false;
-
-            public bool DoDraw = true;
-            public bool DoFinalDraw = true;
-
-            public bool DoUpdate = true;
-
-            internal GameSettings()
-            {
-
-            }
-        }
+        
     }
 }

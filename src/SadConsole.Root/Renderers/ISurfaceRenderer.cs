@@ -7,7 +7,7 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Represents the ability to render cell data to the screen.
     /// </summary>
-    public interface ITextSurfaceRenderer
+    public interface ISurfaceRenderer
     {
         /// <summary>
         /// A method called when the <see cref="SpriteBatch"/> has been created and transformed, but before any text characters are drawn.

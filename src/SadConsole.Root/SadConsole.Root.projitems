@@ -10,15 +10,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IScreenList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ITextSurfaceRendered.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\RenderTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Renderers\ITextSurfaceRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Renderers\TextSurfaceRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\ISurfaceRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\SurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surface\ITextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surface\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surface\SurfaceEditor.cs" />
   </ItemGroup>
 </Project>

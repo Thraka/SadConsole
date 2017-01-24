@@ -21,7 +21,7 @@ namespace SadConsoleTest
             {
                 SadConsole.Global.ActiveScreen = new SadConsole.Screen();
                 SadConsole.Global.ActiveScreen.Children.Add(new SadConsole.Console(20, 20));
-                con = new SadConsole.Console(20, 20) { Offset = new Microsoft.Xna.Framework.Point(30, 1) };
+                con = new SadConsole.Console(20, 20) { Position = new Microsoft.Xna.Framework.Point(30, 1) };
                 SadConsole.Global.ActiveScreen.Children.Add(con);
             };
             float r = 0;
@@ -31,7 +31,7 @@ namespace SadConsoleTest
                 if (r < 0.0f)
                     r += MathHelper.TwoPi;
 
-                Matrix transform = Matrix.CreateRotationZ(r) * Matrix.CreateScale(0.5f, 2.0f, 1f) * Matrix.CreateTranslation(200f, 0f, 0f);
+                Matrix transform = Matrix.CreateScale(0.5f, 2.0f, 1f) * Matrix.CreateTranslation(200f, 0f, 0f) * Matrix.CreateRotationZ(r);
 
                 SadConsole.Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone, null, transform);
                 SadConsole.Global.SpriteBatch.Draw(con.TextSurface.LastRenderResult, new Vector2(0,0));

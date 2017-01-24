@@ -10,7 +10,7 @@ namespace SadConsole.Renderers
     /// Caches a text surface by rendering to a texture. That texture is then rendered at draw time. Reduces draw calls for a non-changing console.
     /// </summary>
     [DataContract]
-    public class TextSurfaceRenderer : ITextSurfaceRenderer
+    public class SurfaceRenderer : ISurfaceRenderer
     {
         /// <summary>
         /// A method called when the <see cref="SpriteBatch"/> has been created and transformed, but before any text is drawn.
