@@ -66,7 +66,7 @@ namespace SadConsole
                                         break;
                                     case "mirror":
                                     case "m":
-                                        commandObject = new ParseCommandSpriteEffect(commandParams);
+                                        commandObject = new ParseCommandMirror(commandParams);
                                         break;
                                     case "undo":
                                     case "u":
@@ -134,8 +134,8 @@ namespace SadConsole
                     commandStacks.Glyph.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
 
                 // SpriteEffect
-                if (commandStacks.SpriteEffect.Count != 0)
-                    commandStacks.SpriteEffect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
+                if (commandStacks.Mirror.Count != 0)
+                    commandStacks.Mirror.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
 
                 // Effect
                 if (commandStacks.Effect.Count != 0)

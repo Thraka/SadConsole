@@ -77,9 +77,9 @@ namespace System
         /// <param name="value">The current string.</param>
         /// <param name="foreground">The foreground color. If null, <see cref="ColoredString.IgnoreForeground"/> will be set.</param>
         /// <param name="background">The background color. If null, <see cref="ColoredString.IgnoreBackground"/> will be set.</param>
-        /// <param name="spriteEffect">The background color. If null, <see cref="ColoredString.IgnoreEffect"/> will be set.</param>
+        /// <param name="mirror">The mirror setting. If null, <see cref="ColoredString.IgnoreMirror"/> will be set.</param>
         /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, SpriteEffects? spriteEffect = null)
+        public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, SpriteEffects? mirror = null)
         {
             var stacks = new ParseCommandStacks();
 
@@ -89,8 +89,8 @@ namespace System
             if (background.HasValue)
                 stacks.AddSafe(new ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = CommandTypes.Background });
 
-            if (spriteEffect.HasValue)
-                stacks.AddSafe(new ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = CommandTypes.SpriteEffect });
+            if (mirror.HasValue)
+                stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror.Value, CommandType = CommandTypes.Mirror });
 
             ColoredString newString = ColoredString.Parse(value, initialBehaviors: stacks);
 
@@ -100,8 +100,8 @@ namespace System
             if (!background.HasValue)
                 newString.IgnoreBackground = true;
 
-            if (!spriteEffect.HasValue)
-                newString.IgnoreSpriteEffect = true;
+            if (!mirror.HasValue)
+                newString.IgnoreMirror = true;
             
             return newString;
         }
@@ -123,7 +123,7 @@ namespace System
             }
 
             newString.IgnoreBackground = true;
-            newString.IgnoreSpriteEffect = true;
+            newString.IgnoreMirror = true;
 
             return newString;
         }
@@ -147,7 +147,7 @@ namespace System
                 newString[i].Background = ColorHelper.Lerp(startingBackground, endingBackground, (float)i / (float)value.Length);
             }
 
-            newString.IgnoreSpriteEffect = true;
+            newString.IgnoreMirror = true;
 
             return newString;
         }

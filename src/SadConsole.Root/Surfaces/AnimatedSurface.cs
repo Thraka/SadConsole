@@ -10,7 +10,7 @@ namespace SadConsole.Surfaces
     /// Animates a list of frames.
     /// </summary>
     [DataContract]
-    public class AnimatedTextSurface: Basic
+    public class AnimatedSurface: BasicSurface
     {
         /// <summary>
         /// Raised when the <see cref="AnimationState"/> changes.
@@ -51,7 +51,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// All frames of the animation
         /// </summary>
-        public List<Basic> Frames = new List<Basic>();
+        public List<BasicSurface> Frames = new List<BasicSurface>();
 
         /// <summary>
         /// The state of the animation.
@@ -116,7 +116,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public Basic CurrentFrame
+        public BasicSurface CurrentFrame
         {
             get { return Frames[_currentFrameIndex]; }
         }
@@ -148,7 +148,7 @@ namespace SadConsole.Surfaces
         /// <param name="name">The name of the animation.</param>
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
-        public AnimatedTextSurface(string name, int width, int height) : this(name, width, height, Global.FontDefault)
+        public AnimatedSurface(string name, int width, int height) : this(name, width, height, Global.FontDefault)
         {
         }
 
@@ -159,7 +159,7 @@ namespace SadConsole.Surfaces
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
         /// <param name="font">The font used with this animation.</param>
-        public AnimatedTextSurface(string name, int width, int height, Font font): base(width, height, font)
+        public AnimatedSurface(string name, int width, int height, Font font): base(width, height, font)
         {
             Name = name;
         }
@@ -189,18 +189,19 @@ namespace SadConsole.Surfaces
             RenderCells = frame.Cells;
             DefaultBackground = frame.DefaultBackground;
             DefaultForeground = frame.DefaultForeground;
+            IsDirty = true;
         }
 
         /// <summary>
         /// Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
         /// </summary>
         /// <returns>The created frame.</returns>
-        public Basic CreateFrame()
+        public BasicSurface CreateFrame()
         {
             if (Frames == null)
-                Frames = new List<Basic>();
+                Frames = new List<BasicSurface>();
 
-            var frame = new Basic(Width, Height);
+            var frame = new BasicSurface(Width, Height);
             new SurfaceEditor(frame).Clear();
             Frames.Add(frame);
             UpdateFrameReferences();
@@ -311,9 +312,9 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static AnimatedTextSurface Load(string file)
+        public static AnimatedSurface Load(string file)
         {
-            return Serializer.Load<AnimatedTextSurface>(file);
+            return Serializer.Load<AnimatedSurface>(file);
         }
 
 

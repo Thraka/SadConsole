@@ -10,7 +10,7 @@ namespace SadConsole.Surfaces
     /// Text surface with multiple layers.
     /// </summary>
     [DataContract]
-    public class LayeredTextSurface: Basic
+    public class LayeredSurface: BasicSurface
     {
         /// <summary>
         /// A layer.
@@ -53,9 +53,9 @@ namespace SadConsole.Surfaces
             /// <param name="height">Target height of the <see cref="TextSurface"/>.</param>
             /// <param name="font">Target font of the <see cref="TextSurface"/>.</param>
             /// <returns>A new <see cref="TextSurface"/> seeded by this layer data.</returns>
-            public Basic ToTextSurface(int width, int height, Font font)
+            public BasicSurface ToTextSurface(int width, int height, Font font)
             {
-                return new Basic(width, height, Cells, font);
+                return new BasicSurface(width, height, Cells, font);
             }
         }
 
@@ -89,7 +89,7 @@ namespace SadConsole.Surfaces
         /// <param name="width">Width of the layers.</param>
         /// <param name="height">Height of the layers.</param>
         /// <param name="layers">The count of layers.</param>
-        public LayeredTextSurface(int width, int height, int layers) : this(width, height, Global.FontDefault, layers) { }
+        public LayeredSurface(int width, int height, int layers) : this(width, height, Global.FontDefault, layers) { }
 
         /// <summary>
         /// Creates a new layer text surface with the specified font.
@@ -98,7 +98,7 @@ namespace SadConsole.Surfaces
         /// <param name="height">Height of the layers.</param>
         /// <param name="layers">The count of layers.</param>
         /// <param name="font">The font.</param>
-        public LayeredTextSurface(int width, int height, Font font, int layers): base(width, height, font)
+        public LayeredSurface(int width, int height, Font font, int layers): base(width, height, font)
         {
             initDone = true;
 
@@ -362,7 +362,7 @@ namespace SadConsole.Surfaces
         
         #region Serialization
         /// <summary>
-        /// Saves the <see cref="LayeredTextSurface"/> to a file.
+        /// Saves the <see cref="LayeredSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
         /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
@@ -375,17 +375,17 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Loads a <see cref="LayeredTextSurface"/> from a file.
+        /// Loads a <see cref="LayeredSurface"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
-        /// <returns>The <see cref="LayeredTextSurface"/>.</returns>
-        public static LayeredTextSurface Load(string file, params Type[] knownTypes)
+        /// <returns>The <see cref="LayeredSurface"/>.</returns>
+        public static LayeredSurface Load(string file, params Type[] knownTypes)
         {
             if (knownTypes.Length != 0)
-                return Serializer.Load<LayeredTextSurface>(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+                return Serializer.Load<LayeredSurface>(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
             else
-                return Serializer.Load<LayeredTextSurface>(file);
+                return Serializer.Load<LayeredSurface>(file);
         }
 
         /// <summary>

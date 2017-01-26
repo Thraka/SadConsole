@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Algorithms.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ColoredGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
@@ -44,6 +45,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\ClearScreenGameComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\Game.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\SadConsoleGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
@@ -59,6 +63,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Layer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Readers\TextureToSurfaceReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ISurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\SurfaceRenderer.cs" />
@@ -74,14 +83,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandRecolor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandSpriteEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandMirror.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandStacks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandUndo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\AnimatedTextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\AnimatedSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\ISurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\Basic.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\LayeredTextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\BasicSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\LayeredSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceEditor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SubView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Readers\REXPaint\" />
   </ItemGroup>
 </Project>

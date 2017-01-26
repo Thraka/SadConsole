@@ -14,7 +14,7 @@ namespace SadConsole.StringParser
         public Stack<ParseCommandBase> Foreground;
         public Stack<ParseCommandBase> Background;
         public Stack<ParseCommandBase> Glyph;
-        public Stack<ParseCommandBase> SpriteEffect;
+        public Stack<ParseCommandBase> Mirror;
         public Stack<ParseCommandBase> Effect;
         public Stack<ParseCommandBase> All;
 
@@ -23,7 +23,7 @@ namespace SadConsole.StringParser
             Foreground = new Stack<ParseCommandBase>(4);
             Background = new Stack<ParseCommandBase>(4);
             Glyph = new Stack<ParseCommandBase>(4);
-            SpriteEffect = new Stack<ParseCommandBase>(4);
+            Mirror = new Stack<ParseCommandBase>(4);
             Effect = new Stack<ParseCommandBase>(4);
             All = new Stack<ParseCommandBase>(10);
         }
@@ -44,8 +44,8 @@ namespace SadConsole.StringParser
                     Background.Push(command);
                     All.Push(command);
                     break;
-                case CommandTypes.SpriteEffect:
-                    SpriteEffect.Push(command);
+                case CommandTypes.Mirror:
+                    Mirror.Push(command);
                     All.Push(command);
                     break;
                 case CommandTypes.Effect:
@@ -80,9 +80,9 @@ namespace SadConsole.StringParser
                     if (Background.Count != 0)
                         commands = new List<ParseCommandBase>(Background);
                     break;
-                case CommandTypes.SpriteEffect:
-                    if (SpriteEffect.Count != 0)
-                        commands = new List<ParseCommandBase>(SpriteEffect);
+                case CommandTypes.Mirror:
+                    if (Mirror.Count != 0)
+                        commands = new List<ParseCommandBase>(Mirror);
                     break;
                 case CommandTypes.Effect:
                     if (Effect.Count != 0)
@@ -110,8 +110,8 @@ namespace SadConsole.StringParser
                     case CommandTypes.Background:
                         Background = new Stack<ParseCommandBase>(commands);
                         break;
-                    case CommandTypes.SpriteEffect:
-                        SpriteEffect = new Stack<ParseCommandBase>(commands);
+                    case CommandTypes.Mirror:
+                        Mirror = new Stack<ParseCommandBase>(commands);
                         break;
                     case CommandTypes.Effect:
                         Effect = new Stack<ParseCommandBase>(commands);

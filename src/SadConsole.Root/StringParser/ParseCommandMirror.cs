@@ -7,16 +7,16 @@ namespace SadConsole.StringParser
 {
 
     /// <summary>
-    /// Sets the <see cref="SpriteEffects"/> of a glyph.
+    /// Sets the mirror of a glyph.
     /// </summary>
-    public sealed class ParseCommandSpriteEffect : ParseCommandBase
+    public sealed class ParseCommandMirror : ParseCommandBase
     {
-        public SpriteEffects Effect;
+        public SpriteEffects Mirror;
         public int Counter;
 
-        public ParseCommandSpriteEffect(string parameters)
+        public ParseCommandMirror(string parameters)
         {
-            var badCommandException = new ArgumentException("command is invalid for SpriteEffect: " + parameters);
+            var badCommandException = new ArgumentException("command is invalid for mirror: " + parameters);
 
             string[] paramArray = parameters.Split(':');
 
@@ -25,20 +25,20 @@ namespace SadConsole.StringParser
             else
                 Counter = -1;
 
-            if (Enum.TryParse(paramArray[0], out Effect))
-                CommandType = CommandTypes.SpriteEffect;
+            if (Enum.TryParse(paramArray[0], out Mirror))
+                CommandType = CommandTypes.Mirror;
             else
                 throw badCommandException;
         }
 
-        public ParseCommandSpriteEffect()
+        public ParseCommandMirror()
         {
 
         }
 
         public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ISurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
-            glyphState.Mirror = Effect;
+            glyphState.Mirror = Mirror;
 
             if (Counter != -1)
             {

@@ -23,9 +23,9 @@ namespace SadConsole.StringParser
         /// </summary>
         Glyph,
         /// <summary>
-        /// Command should be added to the <see cref="ParseCommandStacks.SpriteEffect"/> stack.
+        /// Command should be added to the <see cref="ParseCommandStacks.Mirror"/> stack.
         /// </summary>
-        SpriteEffect,
+        Mirror,
         /// <summary>
         /// Command should be added to the <see cref="ParseCommandStacks.Effect"/> stack.
         /// </summary>

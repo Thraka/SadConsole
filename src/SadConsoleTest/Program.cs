@@ -15,12 +15,48 @@ namespace SadConsoleTest
 {
     class Program
     {
+        public static AnimatedSurface CreateStatic(int width, int height, int frames, double blankChance)
+        {
+            var animation = new AnimatedSurface("default", width, height);
+            var editor = new SurfaceEditor(new BasicSurface(1, 1));
+
+            for (int f = 0; f < frames; f++)
+            {
+                var frame = animation.CreateFrame();
+                editor.TextSurface = frame;
+
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        int character = Global.Random.Next(48, 168);
+
+                        if (Global.Random.NextDouble() <= blankChance)
+                            character = 32;
+
+                        editor.SetGlyph(x, y, character);
+                        editor.SetForeground(x, y, Color.White * (float)(Global.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
+                    }
+                }
+
+            }
+
+            animation.AnimationDuration = 1;
+            animation.Repeat = true;
+
+            animation.Start();
+
+            return animation;
+        }
+
         static void Main(string[] args)
         {
             SadConsole.Console con = null;
             SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Scale;
             Settings.AllowWindowResize = true;
+            
             SadConsole.Game.Create("IBM.font", 80, 25);
+            AnimatedSurface animation = null;
 
             SadConsole.Game.OnInitialize = () =>
             {
@@ -30,18 +66,19 @@ namespace SadConsoleTest
                 con.FillWithRandomGarbage();
 
                 var con2 = new SadConsole.Console(5, 5);
-                con2.TextSurface = new SubView(con.TextSurface, new Rectangle(5, 5, 5, 5));
+                con2.TextSurface = new SurfaceView(con.TextSurface, new Rectangle(5, 5, 5, 5));
                 con2.Fill(new Rectangle(0, 0, 5, 5), null, Color.Yellow, 0, SpriteEffects.None);
                 con.Position = new Point(30, 1);
                 Global.ActiveScreen = new Screen();
                 Global.ActiveScreen.Children.Add(con);
                 Global.ActiveScreen.Children.Add(con2);
-
+                con2.TextSurface = animation = CreateStatic(20, 20, 20, 0.5d);
                 //var blink = new SadConsole.Effects.Blink();
                 //con.SetEffect(2, 8, blink);
                 //Global.ActiveScreen = new StringParsingConsole();
             };
             float r = 0;
+            SadConsole.Game.OnUpdate = (time) => animation.Update();
             SadConsole.Game.OnDraw = (time) =>
             {
                 r -= MathHelper.ToRadians(0.5f);

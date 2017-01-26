@@ -384,10 +384,10 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <param name="spriteEffect">The sprite effect of the cell.</param>
-        public void SetMirror(int x, int y, SpriteEffects spriteEffect)
+        /// <param name="mirror">The mirror of the cell.</param>
+        public void SetMirror(int x, int y, SpriteEffects mirror)
         {
-            textSurface.Cells[y * textSurface.Width + x].Mirror = spriteEffect;
+            textSurface.Cells[y * textSurface.Width + x].Mirror = mirror;
             textSurface.IsDirty = true;
         }
 
@@ -537,8 +537,8 @@ namespace SadConsole.Surfaces
         /// <param name="text">The string to display.</param>
         /// <param name="foreground">Sets the foreground of all characters in the text.</param>
         /// <param name="background">Sets the background of all characters in the text.</param>
-        /// <param name="spriteEffect">The sprite effect to set on the cell.</param>
-        public void Print(int x, int y, string text, Color? foreground = null, Color? background = null, SpriteEffects? spriteEffect = null)
+        /// <param name="mirror">The mirror to set on all characters in the text.</param>
+        public void Print(int x, int y, string text, Color? foreground = null, Color? background = null, SpriteEffects? mirror = null)
         {
             if (String.IsNullOrEmpty(text))
                 return;
@@ -560,8 +560,8 @@ namespace SadConsole.Surfaces
                         textSurface.Cells[index].Background = background.Value;
                     if (foreground.HasValue)
                         textSurface.Cells[index].Foreground = foreground.Value;
-                    if (spriteEffect.HasValue)
-                        textSurface.Cells[index].Mirror = spriteEffect.Value;
+                    if (mirror.HasValue)
+                        textSurface.Cells[index].Mirror = mirror.Value;
 
                     charIndex++;
                 }
@@ -576,8 +576,8 @@ namespace SadConsole.Surfaces
                 if (background.HasValue)
                     stacks.AddSafe(new ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = CommandTypes.Background });
 
-                if (spriteEffect.HasValue)
-                    stacks.AddSafe(new ParseCommandSpriteEffect() { Effect = spriteEffect.Value, CommandType = CommandTypes.SpriteEffect });
+                if (mirror.HasValue)
+                    stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror.Value, CommandType = CommandTypes.Mirror });
 
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this, stacks));
             }
@@ -645,7 +645,7 @@ namespace SadConsole.Surfaces
                     textSurface.Cells[index].Background = text[charIndex].Background;
                 if (!text.IgnoreForeground)
                     textSurface.Cells[index].Foreground = text[charIndex].Foreground;
-                if (!text.IgnoreSpriteEffect)
+                if (!text.IgnoreMirror)
                     textSurface.Cells[index].Mirror = text[charIndex].Mirror;
                 if (!text.IgnoreEffect)
                     SetEffect(index, text[charIndex].Effect);
@@ -735,7 +735,7 @@ namespace SadConsole.Surfaces
         }
 #endregion
 
-#region Clear
+        #region Clear
         /// <summary>
         /// Clears the console data. Characters are reset to 0, the forground and background are set to default, and effect set to none.
         /// </summary>
@@ -1161,8 +1161,8 @@ namespace SadConsole.Surfaces
         }
 #endregion
 
-#endregion
-#endregion
+        #endregion
+        #endregion
 
 
         ///// <summary>

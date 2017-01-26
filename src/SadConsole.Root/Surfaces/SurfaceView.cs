@@ -11,7 +11,7 @@ namespace SadConsole.Surfaces
     /// A sub-view of an existing surface. Treated as it's own surface though, it shares the cell data with the original surface.
     /// </summary>
     [DataContract]
-    public class SubView : ISurface
+    public class SurfaceView : ISurface
     {
         protected Cell[] cells;
 
@@ -187,7 +187,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="surface">The source cell data.</param>
         /// <param name="area">The area of the text surface.</param>
-        public SubView(ISurface surface, Rectangle area)
+        public SurfaceView(ISurface surface, Rectangle area)
         {
             data = surface;
             DefaultBackground = surface.DefaultBackground;
@@ -266,9 +266,9 @@ namespace SadConsole.Surfaces
         /// <param name="file">The source file.</param>
         /// <param name="surfaceHydrate">The surface this view was originally from.</param>
         /// <returns>A surface view.</returns>
-        public static SubView Load(string file, ISurface surfaceHydrate)
+        public static SurfaceView Load(string file, ISurface surfaceHydrate)
         {
-            SubView surface = Serializer.Load<SubView>(file);
+            SurfaceView surface = Serializer.Load<SurfaceView>(file);
             surface.Hydrate(surfaceHydrate);
             return surface;
         }

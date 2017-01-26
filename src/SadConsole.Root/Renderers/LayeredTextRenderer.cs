@@ -5,21 +5,21 @@ using SadConsole.Surfaces;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Renders a <see cref="LayeredTextSurface"/>.
+    /// Renders a <see cref="LayeredSurface"/>.
     /// </summary>
     [System.Runtime.Serialization.DataContract]
     public class LayeredTextRenderer : SurfaceRenderer
     {
         /// <summary>
-        /// Only renders a <see cref="LayeredTextSurface"/>.
+        /// Only renders a <see cref="LayeredSurface"/>.
         /// </summary>
-        /// <param name="surface">The <see cref="LayeredTextSurface"/> to render.</param>
+        /// <param name="surface">The <see cref="LayeredSurface"/> to render.</param>
         /// <param name="renderingMatrix">Rendering matrix used with the sprite batch.</param>
         public override void Render(ISurface surface)
         {
             if (surface.IsDirty)
             {
-                var layers = ((LayeredTextSurface)surface).GetLayers();
+                var layers = ((LayeredSurface)surface).GetLayers();
 
                 Global.GraphicsDevice.SetRenderTarget(surface.LastRenderResult);
                 Global.GraphicsDevice.Clear(Color.Transparent);

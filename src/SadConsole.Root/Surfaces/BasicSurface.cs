@@ -11,7 +11,7 @@ namespace SadConsole.Surfaces
     /// The base class for a text surface. Provides code for the view port and basic cell access.
     /// </summary>
     [DataContract]
-    public class Basic : IEnumerable<Cell>, ISurface
+    public class BasicSurface : IEnumerable<Cell>, ISurface
     {
         [DataMember(Name = "Font")]
         protected Font font;
@@ -173,7 +173,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">THe height of the surface.</param>
-        public Basic(int width, int height) : this(width, height, null, Global.FontDefault)
+        public BasicSurface(int width, int height) : this(width, height, null, Global.FontDefault)
         {
 
         }
@@ -184,7 +184,7 @@ namespace SadConsole.Surfaces
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        public Basic(int width, int height, Font font) : this(width, height, null, font)
+        public BasicSurface(int width, int height, Font font) : this(width, height, null, font)
         {
 
         }
@@ -196,7 +196,7 @@ namespace SadConsole.Surfaces
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells"></param>
-        public Basic(int width, int height, Cell[] initialCells, Font font)
+        public BasicSurface(int width, int height, Cell[] initialCells, Font font)
         {
             this.area = new Rectangle(0, 0, width, height);
             this.width = width;
@@ -299,7 +299,7 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Saves the <see cref="Basic"/> to a file.
+        /// Saves the <see cref="BasicSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
         public void Save(string file)
@@ -308,13 +308,13 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Loads a <see cref="Basic"/> from a file.
+        /// Loads a <see cref="BasicSurface"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static Basic Load(string file)
+        public static BasicSurface Load(string file)
         {
-            return Serializer.Load<Basic>(file);
+            return Serializer.Load<BasicSurface>(file);
         }
     }
 }

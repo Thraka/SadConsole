@@ -37,7 +37,7 @@ namespace SadConsole.StringParser
                         stackType = CommandTypes.Effect;
                         break;
                     case "m":
-                        stackType = CommandTypes.SpriteEffect;
+                        stackType = CommandTypes.Mirror;
                         break;
                     case "a":
                         isSpecificStack = false;
@@ -72,8 +72,8 @@ namespace SadConsole.StringParser
                             case CommandTypes.Glyph:
                                 stacks.Glyph.Pop();
                                 break;
-                            case CommandTypes.SpriteEffect:
-                                stacks.SpriteEffect.Pop();
+                            case CommandTypes.Mirror:
+                                stacks.Mirror.Pop();
                                 break;
                             case CommandTypes.Effect:
                                 stacks.Effect.Pop();
@@ -101,9 +101,9 @@ namespace SadConsole.StringParser
                             if (stacks.Glyph.Count != 0)
                                 behavior = stacks.Glyph.Pop();
                             break;
-                        case CommandTypes.SpriteEffect:
-                            if (stacks.SpriteEffect.Count != 0)
-                                behavior = stacks.SpriteEffect.Pop();
+                        case CommandTypes.Mirror:
+                            if (stacks.Mirror.Count != 0)
+                                behavior = stacks.Mirror.Pop();
                             break;
                         case CommandTypes.Effect:
                             if (stacks.Effect.Count != 0)

@@ -189,7 +189,7 @@ namespace SadConsole
                     cell.Foreground = glyph.Foreground;
                 //if (!settings.IgnoreEffect)
                 //    cell.Effect = glyph.Effect;
-                if (!settings.IgnoreSpriteEffect)
+                if (!settings.IgnoreMirror)
                     cell.Mirror = glyph.Mirror;
             }
 

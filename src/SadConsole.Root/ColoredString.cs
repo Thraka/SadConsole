@@ -56,13 +56,13 @@ namespace SadConsole
         public bool IgnoreGlyph;
 
         /// <summary>
-        /// When true, instructs a caller to not render the <see cref="Foreground"/>.
+        /// When true, instructs a caller to not render the foreground color.
         /// </summary>
         [DataMember]
         public bool IgnoreForeground;
 
         /// <summary>
-        /// When true, instructs a caller to not render the <see cref="Background"/>.
+        /// When true, instructs a caller to not render the background color.
         /// </summary>
         [DataMember]
         public bool IgnoreBackground;
@@ -74,10 +74,10 @@ namespace SadConsole
         public bool IgnoreEffect = true;
 
         /// <summary>
-        /// When true, instructs a caller to not render the <see cref="SpriteEffects"/>.
+        /// When true, instructs a caller to not render the mirror state.
         /// </summary>
         [DataMember]
-        public bool IgnoreSpriteEffect;
+        public bool IgnoreMirror;
 
         /// <summary>
         /// Default contructor.
@@ -109,13 +109,13 @@ namespace SadConsole
         /// <param name="value">The backing string.</param>
         /// <param name="foreground">The foreground color for each character.</param>
         /// <param name="background">The background color for each character.</param>
-        /// <param name="spriteEffect">The sprite effects for each character.</param>
-        public ColoredString(string value, Color foreground, Color background, SpriteEffects spriteEffect = SpriteEffects.None)
+        /// <param name="mirror">The mirror for each character.</param>
+        public ColoredString(string value, Color foreground, Color background, SpriteEffects mirror = SpriteEffects.None)
         {
             var stacks = new ParseCommandStacks();
             stacks.AddSafe(new ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground });
             stacks.AddSafe(new ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
-            stacks.AddSafe(new ParseCommandSpriteEffect() { Effect = spriteEffect, CommandType = CommandTypes.SpriteEffect });
+            stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror, CommandType = CommandTypes.Mirror });
             _characters = ColoredString.Parse(value, initialBehaviors: stacks)._characters;
         }
 
@@ -238,66 +238,5 @@ namespace SadConsole
             return returnString;
         }
         
-    }
-
-    /// <summary>
-    /// Represents a single character that has a foreground and background color.
-    /// </summary>
-    [DataContract]
-    public class ColoredGlyph: Cell
-    {
-        [DataMember(Name = "Glyph")]
-        private char _character;
-
-        /// <summary>
-        /// The glyph.
-        /// </summary>
-        public char GlyphCharacter
-        {
-            get { return _character; }
-            set
-            {
-                _character = value;
-                base.Glyph = _character;
-            }
-        }
-
-        /// <summary>
-        /// Sets the glyph by index.
-        /// </summary>
-        public new int Glyph
-        {
-            get { return base.Glyph; }
-            set { GlyphCharacter = (char)value; }
-        }
-
-        /// <summary>
-        /// The effect for the glyph.
-        /// </summary>
-        [DataMember]
-        public ICellEffect Effect;
-
-        /// <summary>
-        /// Creates a new colored glyph with a white foreground, transparent background, and a glyph index of 0.
-        /// </summary>
-        public ColoredGlyph(): base(Color.White, Color.Black, 0) { } 
-
-        /// <summary>
-        /// Creates a new colored glyph based on the provided cell.
-        /// </summary>
-        /// <param name="cell">The cell.</param>
-        public ColoredGlyph(Cell cell): base(cell.Foreground, cell.Background, cell.Glyph)
-        {
-            GlyphCharacter = (char)cell.Glyph;
-        }
-
-        /// <summary>
-        /// Creates a new copy of this cell appearance.
-        /// </summary>
-        /// <returns>The cloned cell appearance.</returns>
-        public new ColoredGlyph Clone()
-        {
-            return new ColoredGlyph() { Foreground = this.Foreground, Background = this.Background, Effect = this.Effect != null ? this.Effect.Clone() : null, GlyphCharacter = this.GlyphCharacter , Mirror = this.Mirror };
-        }
     }
 }

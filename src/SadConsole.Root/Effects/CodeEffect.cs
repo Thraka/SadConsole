@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace SadConsole.Core.Effects
+namespace SadConsole.Effects
 {
     // Not sure if I should make this serailizable... 
     class CodeEffect : CellEffectBase

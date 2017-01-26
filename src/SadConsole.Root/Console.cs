@@ -304,7 +304,7 @@ namespace SadConsole
         /// <param name="width">The width of the <see cref="SadConsole.Surface.TextSurface"/> that will back this console.</param>
         /// <param name="height">The height of the <see cref="SadConsole.Surface.TextSurface"/> that will back this console.</param>
         /// <param name="font">The font to use.</param>
-        public Console(int width, int height, Font font) : this(new Basic(width, height, font)) { }
+        public Console(int width, int height, Font font) : this(new BasicSurface(width, height, font)) { }
 
         /// <summary>
         /// Wraps an existing text surface using a <see cref="TextSurfaceRenderer"/> to render.
@@ -526,7 +526,7 @@ namespace SadConsole
         {
             if (VirtualCursor.IsVisible)
             {
-                int virtualCursorLocationIndex = Basic.GetIndexFromPoint(
+                int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
                     new Point(VirtualCursor.Position.X - TextSurface.RenderArea.Left,
                               VirtualCursor.Position.Y - TextSurface.RenderArea.Top), TextSurface.RenderArea.Width);
 
@@ -617,7 +617,7 @@ namespace SadConsole
         private void AfterDeserialized(StreamingContext context)
         {
             if (!serializeTextSurface)
-                textSurface = new Basic(serializedWidth, serializedHeight, Global.FontDefault);
+                textSurface = new BasicSurface(serializedWidth, serializedHeight, Global.FontDefault);
 
             base.textSurface = textSurface;
 
