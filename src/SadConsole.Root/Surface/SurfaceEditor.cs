@@ -124,6 +124,8 @@ namespace SadConsole.Surface
 
             for (int i = 0; i < pixels.Length; i++)
                 textSurface.Cells[i].Background = pixels[i];
+
+            textSurface.IsDirty = true;
         }
 
 #region IsValidCell
@@ -183,6 +185,7 @@ namespace SadConsole.Surface
         public void SetGlyph(int x, int y, int glyph)
         {
             textSurface.Cells[y * textSurface.Width + x].Glyph = glyph;
+            textSurface.IsDirty = true;
         }
         /// <summary>
         /// Changes the glyph, foreground, and background of a cell.
@@ -197,6 +200,7 @@ namespace SadConsole.Surface
 
             textSurface.Cells[index].Foreground = foreground;
             textSurface.Cells[index].Glyph = glyph;
+            textSurface.IsDirty = true;
         }
         /// <summary>
         /// Changes the glyph, foreground, and background of a cell.
@@ -213,6 +217,7 @@ namespace SadConsole.Surface
             textSurface.Cells[index].Background = background;
             textSurface.Cells[index].Foreground = foreground;
             textSurface.Cells[index].Glyph = glyph;
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -224,15 +229,16 @@ namespace SadConsole.Surface
         /// <param name="foreground">The desired foreground.</param>
         /// <param name="background">The desired background.</param>
         /// <param name="effect">Sets the effect of the cell</param>
-        public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, ICellEffect effect)
+        public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror)
         {
             int index = y * textSurface.Width + x;
 
             textSurface.Cells[index].Background = background;
             textSurface.Cells[index].Foreground = foreground;
             textSurface.Cells[index].Glyph = glyph;
+            textSurface.Cells[index].Mirror = mirror;
 
-            Effects.SetEffect(textSurface.Cells[index], effect);
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -255,6 +261,7 @@ namespace SadConsole.Surface
         public void SetForeground(int x, int y, Color color)
         {
             textSurface.Cells[y * textSurface.Width + x].Foreground = color;
+            textSurface.IsDirty = true;
         }
         /// <summary>
         /// Gets the foreground of a specified cell.
@@ -276,6 +283,7 @@ namespace SadConsole.Surface
         public void SetBackground(int x, int y, Color color)
         {
             textSurface.Cells[y * textSurface.Width + x].Background = color;
+            textSurface.IsDirty = true;
         }
         /// <summary>
         /// Gets the background of a specified cell.
@@ -297,6 +305,7 @@ namespace SadConsole.Surface
         public void SetEffect(int x, int y, Effects.ICellEffect effect)
         {
             Effects.SetEffect(textSurface[y * textSurface.Width + x], effect);
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -307,6 +316,7 @@ namespace SadConsole.Surface
         public void SetEffect(int index, ICellEffect effect)
         {
             Effects.SetEffect(textSurface[index], effect);
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -317,6 +327,7 @@ namespace SadConsole.Surface
         public void SetEffect(IEnumerable<Cell> cells, Effects.ICellEffect effect)
         {
             Effects.SetEffect(cells, effect);
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -342,6 +353,7 @@ namespace SadConsole.Surface
                 throw new NullReferenceException("Appearance may not be null.");
 
             appearance.CopyAppearanceTo(ref textSurface.Cells[y * textSurface.Width + x]);
+            textSurface.IsDirty = true;
         }
         /// <summary>
         /// Gets the appearance of a cell.
@@ -376,6 +388,7 @@ namespace SadConsole.Surface
         public void SetMirror(int x, int y, SpriteEffects spriteEffect)
         {
             textSurface.Cells[y * textSurface.Width + x].Mirror = spriteEffect;
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -399,10 +412,11 @@ namespace SadConsole.Surface
                         charCounter = 0;
                 }
             }
+            textSurface.IsDirty = true;
         }
-#endregion
+        #endregion
 
-#region Print
+        #region Print
         /// <summary>
         /// Draws the string on the console at the specified location, wrapping if needed.
         /// </summary>
@@ -432,8 +446,9 @@ namespace SadConsole.Surface
             else
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this));
 
+            textSurface.IsDirty = true;
         }
-        
+
         /// <summary>
         /// Draws the string on the console at the specified location and color, wrapping if needed.
         /// </summary>
@@ -469,6 +484,7 @@ namespace SadConsole.Surface
                 stacks.AddSafe(behavior);
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this, stacks));
             }
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -510,6 +526,7 @@ namespace SadConsole.Surface
                 stacks.AddSafe(behaviorBack);
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this, stacks));
             }
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -564,6 +581,7 @@ namespace SadConsole.Surface
 
                 PrintNoCheck(index, ColoredString.Parse(text, index, textSurface, this, stacks));
             }
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -594,6 +612,7 @@ namespace SadConsole.Surface
                 Effects.SetEffect(cell, effect);
                 charIndex++;
             }
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -609,8 +628,9 @@ namespace SadConsole.Surface
 
             int index = y * textSurface.Width + x;
             PrintNoCheck(index, text);
+            textSurface.IsDirty = true;
         }
-        
+
 
         private void PrintNoCheck(int index, ColoredString text)
         {
@@ -631,11 +651,12 @@ namespace SadConsole.Surface
                     SetEffect(index, text[charIndex].Effect);
                 charIndex++;
             }
+            textSurface.IsDirty = true;
         }
 
-#endregion
+        #endregion
 
-#region Get String
+        #region Get String
         /// <summary>
         /// Builds a string from the text surface from the specified coordinates.
         /// </summary>
@@ -735,10 +756,11 @@ namespace SadConsole.Surface
             cell.Foreground = textSurface.DefaultForeground;
             cell.Background = textSurface.DefaultBackground;
             cell.Mirror = SpriteEffects.None;
+            textSurface.IsDirty = true;
         }
-#endregion
+        #endregion
 
-#region Shifting Rows
+        #region Shifting Rows
 
         public void ClearShiftValues()
         {
@@ -824,6 +846,7 @@ namespace SadConsole.Surface
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
                     destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -902,6 +925,7 @@ namespace SadConsole.Surface
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
                     destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -981,6 +1005,7 @@ namespace SadConsole.Surface
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
                     destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
+            textSurface.IsDirty = true;
         }
 
         /// <summary>
@@ -1058,11 +1083,12 @@ namespace SadConsole.Surface
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
                     destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
+            textSurface.IsDirty = true;
         }
 
-#endregion
+        #endregion
 
-#region Fill
+        #region Fill
 
         /// <summary>
         /// Fills the console.
@@ -1085,6 +1111,7 @@ namespace SadConsole.Surface
                     textSurface.Cells[i].Mirror = spriteEffect.Value;
             }
 
+            textSurface.IsDirty = true;
             return textSurface.Cells;
         }
 
@@ -1126,6 +1153,7 @@ namespace SadConsole.Surface
                     }
                 }
 
+                textSurface.IsDirty = true;
                 return cells;
             }
 
