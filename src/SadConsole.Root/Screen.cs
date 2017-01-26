@@ -61,7 +61,7 @@ namespace SadConsole
     //public class Console : IScreen
     //{
     //    private Point position;
-    //    public Surface.ISurface TextSurface;
+    //    public Surfaces.ISurface TextSurface;
     //    public Renderers.ISurfaceRenderer Renderer;
 
     //    public List<IScreen> Children { get; set; } = new List<IScreen>();
@@ -81,7 +81,7 @@ namespace SadConsole
     //    public void Draw(TimeSpan timeElapsed)
     //    {
     //        Renderer.Render(TextSurface);
-    //        Global.DrawCalls.Add(new Tuple<Surface.ISurface, Point>(TextSurface, TextSurface.Font.GetWorldPosition(Position)));
+    //        Global.DrawCalls.Add(new Tuple<Surfaces.ISurface, Point>(TextSurface, TextSurface.Font.GetWorldPosition(Position)));
     //    }
 
     //    public void Update(TimeSpan timeElapsed)

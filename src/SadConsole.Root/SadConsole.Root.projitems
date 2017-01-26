@@ -15,6 +15,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DoubleAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Bounce.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Circle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\EasingBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Expo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Linear.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Quad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Sine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Blink.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\BlinkCharacter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\CellEffectBase.cs" />
@@ -43,6 +51,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\CodeInstruction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\ConcurrentInstruction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\DoubleInstruction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\DrawString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\FadeTextSurfaceTint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ISurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\SurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screen.cs" />
@@ -60,8 +76,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandSpriteEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandStacks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandUndo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Surface\ITextSurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Surface\Basic.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Surface\SurfaceEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\AnimatedTextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\ISurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\LayeredTextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SubView.cs" />
   </ItemGroup>
 </Project>

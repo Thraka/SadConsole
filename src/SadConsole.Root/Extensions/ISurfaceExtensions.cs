@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole.Renderers;
-using SadConsole.Surface;
+using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;

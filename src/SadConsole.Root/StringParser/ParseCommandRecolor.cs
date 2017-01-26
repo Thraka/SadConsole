@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SadConsole.Surface;
+using SadConsole.Surfaces;
 using System;
 
 namespace SadConsole.StringParser

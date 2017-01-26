@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System;
 
-namespace SadConsole.Surface
+namespace SadConsole.Surfaces
 {
     /// <summary>
     /// The base class for a text surface. Provides code for the view port and basic cell access.
@@ -157,8 +157,14 @@ namespace SadConsole.Surface
             }
         }
 
+        /// <summary>
+        /// Indicates the surface has changed and needs to be rendered.
+        /// </summary>
         public bool IsDirty { get; set; } = true;
 
+        /// <summary>
+        /// The last texture render pass for this surface.
+        /// </summary>
         public RenderTarget2D LastRenderResult { get; set; }
         #endregion
 

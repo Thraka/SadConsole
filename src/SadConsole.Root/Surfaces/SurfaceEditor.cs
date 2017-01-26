@@ -9,7 +9,7 @@ using SadConsole.Effects;
 using System.Runtime.Serialization;
 using SadConsole.StringParser;
 
-namespace SadConsole.Surface
+namespace SadConsole.Surfaces
 {
     /// <summary>
     /// Provides methods to manipulate a <see cref="ISurfaceRendered"/>.

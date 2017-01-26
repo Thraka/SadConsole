@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SadConsole.Surface
+namespace SadConsole.Surfaces
 {
     /// <summary>
     /// Basic information about a text surface.

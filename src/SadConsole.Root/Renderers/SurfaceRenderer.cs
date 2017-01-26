@@ -27,7 +27,7 @@ namespace SadConsole.Renderers
         /// </summary>
         /// <param name="surface">Used only for tinting.</param>
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
-        public virtual void Render(Surface.ISurface surface)
+        public virtual void Render(Surfaces.ISurface surface)
         {
             if (surface.IsDirty)
             {

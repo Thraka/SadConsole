@@ -18,6 +18,11 @@ namespace SadConsole
         public static SpriteBatch SpriteBatch;
         public static IScreen ActiveScreen;
         public static Random Random = new Random();
+        public static double GameTimeElapsedUpdate;
+        public static double GameTimeElapsedRender;
+
+        public static GameTime GameTimeUpdate;
+        public static GameTime GameTimeRender;
 
         #region Input
         public static Input.MouseInfo MouseState = new Input.MouseInfo();
@@ -50,7 +55,7 @@ namespace SadConsole
         /// <summary>
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
-        public static List<Tuple<Surface.ISurface, Microsoft.Xna.Framework.Point>> DrawCalls = new List<Tuple<Surface.ISurface, Microsoft.Xna.Framework.Point>>(5);
+        public static List<Tuple<Surfaces.ISurface, Microsoft.Xna.Framework.Point>> DrawCalls = new List<Tuple<Surfaces.ISurface, Microsoft.Xna.Framework.Point>>(5);
         #endregion
 
         /// <summary>
@@ -175,6 +180,9 @@ namespace SadConsole
         {
             if (Settings.DoDraw)
             {
+                Global.GameTimeRender = gameTime;
+                Global.GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
+
                 // Make sure all items in the screen are drawn. (Build a list of draw calls)
                 Global.ActiveScreen?.Draw(gameTime.ElapsedGameTime);
 
@@ -210,6 +218,9 @@ namespace SadConsole
         {
             if (Settings.DoUpdate)
             {
+                Global.GameTimeUpdate = gameTime;
+                Global.GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
+
                 if (Settings.Input.DoKeyboard)
                     Global.KeyboardState.ProcessKeys(gameTime);
 

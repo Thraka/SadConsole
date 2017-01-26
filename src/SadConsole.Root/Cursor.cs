@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 using System;
 using System.Runtime.Serialization;
-using SadConsole.Surface;
+using SadConsole.Surfaces;
 using SadConsole.Effects;
 using SadConsole;
 //using SadConsole.Effects;
@@ -14,7 +14,7 @@ namespace SadConsole
     [DataContract]
     public class Cursor
     {
-        private Surface.SurfaceEditor editor;
+        private SurfaceEditor editor;
         private Point _position = new Point();
 
         private int _cursorCharacter = 95;

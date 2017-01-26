@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-using SadConsole.Surface;
+using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +24,7 @@ namespace SadConsole
         /// <param name="editor">A surface editor associated with the text surface.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
         /// <returns></returns>
-        public static ColoredString Parse(string value, int surfaceIndex = -1, Surface.ISurface surface = null, SurfaceEditor editor = null, ParseCommandStacks initialBehaviors = null)
+        public static ColoredString Parse(string value, int surfaceIndex = -1, Surfaces.ISurface surface = null, SurfaceEditor editor = null, ParseCommandStacks initialBehaviors = null)
         {
             var commandStacks = initialBehaviors != null ? initialBehaviors : new ParseCommandStacks();
             List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);

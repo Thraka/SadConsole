@@ -12,7 +12,7 @@ namespace SadConsole
         /// <summary>
         /// The surface of the console.
         /// </summary>
-        Surface.ISurface TextSurface { get; set; }
+        Surfaces.ISurface TextSurface { get; set; }
 
         /// <summary>
         /// A controllable cursor for the console.

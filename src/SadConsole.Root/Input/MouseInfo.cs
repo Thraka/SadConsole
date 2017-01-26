@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SadConsole.Surface;
+using SadConsole.Surfaces;
 
 namespace SadConsole.Input
 {

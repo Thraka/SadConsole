@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surface;
+using SadConsole.Surfaces;
 using SadConsole.Renderers;
 using SadConsole.Input;
 using System;

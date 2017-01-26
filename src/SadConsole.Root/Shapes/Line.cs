@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using SadConsole.Surface;
+using SadConsole.Surfaces;
 using System.Collections.Generic;
 
 namespace SadConsole.Shapes
