@@ -25,25 +25,21 @@ namespace SadConsoleTest
             SadConsole.Game.OnInitialize = () =>
             {
 
-                con = new SadConsole.Console(20, 20) { Position = new Microsoft.Xna.Framework.Point(30, 1) };
+                con = new SadConsole.Console(20, 20);
                 SadConsole.Global.ActiveScreen = con;
-                var box = SadConsole.Shapes.Box.GetDefaultBox();
-                box.Position = new Point(0, 0);
-                box.Width = con.Width;
-                box.Height = con.Height;
-                box.Draw(con);
-                con.Print(2, 2, "Hello World!");
-                con.Print(2, 4, "Hello World!", Color.Purple);
-                con.Print(2, 6, "Hello World!", Color.Purple, Color.Gray);
-                con.Print(2, 8, "Hello World!", Color.Purple, Color.Gray, SpriteEffects.FlipVertically);
+                con.FillWithRandomGarbage();
 
-                
+                var con2 = new SadConsole.Console(5, 5);
+                con2.TextSurface = new SubView(con.TextSurface, new Rectangle(5, 5, 5, 5));
+                con2.Fill(new Rectangle(0, 0, 5, 5), null, Color.Yellow, 0, SpriteEffects.None);
+                con.Position = new Point(30, 1);
+                Global.ActiveScreen = new Screen();
+                Global.ActiveScreen.Children.Add(con);
+                Global.ActiveScreen.Children.Add(con2);
 
-                var blink = new SadConsole.Effects.Blink();
-
-                con.SetEffect(2, 8, blink);
-
-                Global.ActiveScreen = new StringParsingConsole();
+                //var blink = new SadConsole.Effects.Blink();
+                //con.SetEffect(2, 8, blink);
+                //Global.ActiveScreen = new StringParsingConsole();
             };
             float r = 0;
             SadConsole.Game.OnDraw = (time) =>

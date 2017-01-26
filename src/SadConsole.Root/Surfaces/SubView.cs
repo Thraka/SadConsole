@@ -195,6 +195,7 @@ namespace SadConsole.Surfaces
             font = surface.Font;
 
             ViewArea = area;
+            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, area.Width * font.Size.X, area.Height * font.Size.Y);
         }
 
         /// <summary>

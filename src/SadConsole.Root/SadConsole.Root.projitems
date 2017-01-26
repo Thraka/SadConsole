@@ -60,6 +60,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ISurfaceRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\SurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
