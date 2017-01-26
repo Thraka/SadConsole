@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Consoles;
+using SadConsole.Surface;
 
 namespace SadConsole.Input
 {
@@ -60,7 +60,7 @@ namespace SadConsole.Input
 
         public bool HandlerMouse(IConsole console, MouseInfo info)
         {
-            if (console.IsVisible && console.CanUseMouse)
+            if (console.IsVisible && console.UseMouse)
             {
                 info.Fill(console);
 
@@ -109,7 +109,7 @@ namespace SadConsole.Input
         {
             //TODO: This is dependent on how fast update is working... Make independent
             bool handled = false;
-            if (console.CanUseKeyboard && CanMoveWithKeyboard)
+            if (console.UseKeyboard && CanMoveWithKeyboard)
             {
                 var view = console.TextSurface.RenderArea;
 

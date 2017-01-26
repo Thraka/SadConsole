@@ -53,7 +53,7 @@ namespace SadConsole
         static Serializer()
         {
             ConsoleTypes = new Type[] { typeof(Font), typeof(FontMaster) };
-            //ConsoleTypes = new Type[] { typeof(Consoles.AnimatedTextSurface), typeof(Consoles.ConsoleList), typeof(Consoles.LayeredTextSurface), typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceBasic), typeof(Consoles.TextSurfaceView), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.TextSurfaceRenderer), typeof(CellAppearance) };
+            //ConsoleTypes = new Type[] { typeof(Consoles.AnimatedTextSurface), typeof(Consoles.ConsoleList), typeof(Consoles.LayeredTextSurface), typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceBasic), typeof(Consoles.TextSurfaceView), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.TextSurfaceRenderer), typeof(Cell) };
         }
 
         ///// <summary>

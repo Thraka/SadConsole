@@ -327,7 +327,7 @@ namespace SadConsole.Surface
         /// <returns>The effect.</returns>
         public Effects.ICellEffect GetEffect(int x, int y)
         {
-            return textSurface.Cells[y * textSurface.Width + x].Effect;
+            return Effects.GetEffect(textSurface[x, y]);
         }
 
         /// <summary>
@@ -336,12 +336,12 @@ namespace SadConsole.Surface
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
-        public void SetCellAppearance(int x, int y, ICellAppearance appearance)
+        public void SetCellAppearance(int x, int y, Cell appearance)
         {
             if (appearance == null)
                 throw new NullReferenceException("Appearance may not be null.");
 
-            appearance.CopyAppearanceTo(textSurface.Cells[y * textSurface.Width + x]);
+            appearance.CopyAppearanceTo(ref textSurface.Cells[y * textSurface.Width + x]);
         }
         /// <summary>
         /// Gets the appearance of a cell.
@@ -349,10 +349,10 @@ namespace SadConsole.Surface
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The appearance.</returns>
-        public ICellAppearance GetCellAppearance(int x, int y)
+        public Cell GetCellAppearance(int x, int y)
         {
-            CellAppearance appearance = new CellAppearance();
-            textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(appearance);
+            Cell appearance = new Cell();
+            textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref appearance);
             return appearance;
         }
 
@@ -362,9 +362,9 @@ namespace SadConsole.Surface
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
-        public SpriteEffects GetSpriteEffect(int x, int y)
+        public SpriteEffects GetMirror(int x, int y)
         {
-            return textSurface.Cells[y * textSurface.Width + x].SpriteEffect;
+            return textSurface.Cells[y * textSurface.Width + x].Mirror;
         }
 
         /// <summary>
@@ -373,9 +373,9 @@ namespace SadConsole.Surface
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <param name="spriteEffect">The sprite effect of the cell.</param>
-        public void SetSpriteEffect(int x, int y, SpriteEffects spriteEffect)
+        public void SetMirror(int x, int y, SpriteEffects spriteEffect)
         {
-            textSurface.Cells[y * textSurface.Width + x].SpriteEffect = spriteEffect;
+            textSurface.Cells[y * textSurface.Width + x].Mirror = spriteEffect;
         }
 
         /// <summary>
@@ -390,10 +390,10 @@ namespace SadConsole.Surface
                 for (int x = 0; x < textSurface.Width; x++)
                 {
                     SetGlyph(x, y, charCounter);
-                    SetForeground(x, y, new Color((byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), 255));
+                    SetForeground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), 255));
                     SetBackground(x, y, textSurface.DefaultBackground);
-                    SetBackground(x, y, new Color((byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), (byte)Engine.Random.Next(0, 256), 255));
-                    SetSpriteEffect(x, y, (SpriteEffects)Engine.Random.Next(0, 4));
+                    SetBackground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), 255));
+                    SetMirror(x, y, (SpriteEffects)Global.Random.Next(0, 4));
                     charCounter++;
                     if (charCounter > 255)
                         charCounter = 0;
@@ -544,7 +544,7 @@ namespace SadConsole.Surface
                     if (foreground.HasValue)
                         textSurface.Cells[index].Foreground = foreground.Value;
                     if (spriteEffect.HasValue)
-                        textSurface.Cells[index].SpriteEffect = spriteEffect.Value;
+                        textSurface.Cells[index].Mirror = spriteEffect.Value;
 
                     charIndex++;
                 }
@@ -574,7 +574,7 @@ namespace SadConsole.Surface
         /// <param name="text">The string to display.</param>
         /// <param name="appearance">The appearance of the cell</param>
         /// <param name="effect">An optional effect to apply to the printed cells.</param>
-        public void Print(int x, int y, string text, ICellAppearance appearance, ICellEffect effect = null)
+        public void Print(int x, int y, string text, Cell appearance, ICellEffect effect = null)
         {
             if (String.IsNullOrEmpty(text))
                 return;
@@ -589,7 +589,7 @@ namespace SadConsole.Surface
             for (; index < total; index++)
             {
                 Cell cell = textSurface.Cells[index];
-                appearance.CopyAppearanceTo(cell);
+                appearance.CopyAppearanceTo(ref cell);
                 cell.Glyph = text[charIndex];
                 Effects.SetEffect(cell, effect);
                 charIndex++;
@@ -620,13 +620,13 @@ namespace SadConsole.Surface
             for (; index < total; index++)
             {
                 if (!text.IgnoreGlyph)
-                    textSurface.Cells[index].Glyph = text[charIndex].Glyph;
+                    textSurface.Cells[index].Glyph = text[charIndex].GlyphCharacter;
                 if (!text.IgnoreBackground)
                     textSurface.Cells[index].Background = text[charIndex].Background;
                 if (!text.IgnoreForeground)
                     textSurface.Cells[index].Foreground = text[charIndex].Foreground;
                 if (!text.IgnoreSpriteEffect)
-                    textSurface.Cells[index].SpriteEffect = text[charIndex].SpriteEffect;
+                    textSurface.Cells[index].Mirror = text[charIndex].Mirror;
                 if (!text.IgnoreEffect)
                     SetEffect(index, text[charIndex].Effect);
                 charIndex++;
@@ -702,9 +702,9 @@ namespace SadConsole.Surface
                 for (int i = 0; i < length; i++)
                 {
                     tempIndex = i + index;
-
+                    var cell = (Cell)sb[i];
                     if (tempIndex < textSurface.Cells.Length)
-                        textSurface.Cells[tempIndex].CopyAppearanceTo(sb[i]);
+                        textSurface.Cells[tempIndex].CopyAppearanceTo(ref cell);
                 }
 
                 return sb;
@@ -731,10 +731,10 @@ namespace SadConsole.Surface
         public void Clear(int x, int y)
         {
             var cell = textSurface.Cells[y * textSurface.Width + x];
-            cell.Reset();
+            cell.Clear();
             cell.Foreground = textSurface.DefaultForeground;
             cell.Background = textSurface.DefaultBackground;
-            cell.SpriteEffect = SpriteEffects.None;
+            cell.Mirror = SpriteEffects.None;
         }
 #endregion
 
@@ -784,7 +784,7 @@ namespace SadConsole.Surface
                     for (int x = 0; x < textSurface.Width; x++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].Copy(tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, (textSurface.Height - amount + y) * textSurface.Width + x));
                     }
@@ -801,7 +801,7 @@ namespace SadConsole.Surface
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
-                    destination.Effect = source.Effect;
+                    destination.Mirror = source.Mirror;
                 }
             }
 
@@ -822,7 +822,7 @@ namespace SadConsole.Surface
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
-                    destination.Effect = wrappedCells[i].Item1.Effect;
+                    destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
         }
 
@@ -862,7 +862,7 @@ namespace SadConsole.Surface
                     for (int x = 0; x < textSurface.Width; x++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].Copy(tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, (amount - (textSurface.Height - y)) * textSurface.Width + x));
                     }
@@ -879,7 +879,7 @@ namespace SadConsole.Surface
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
-                    destination.Effect = source.Effect;
+                    destination.Mirror = source.Mirror;
                 }
             }
 
@@ -889,7 +889,7 @@ namespace SadConsole.Surface
                     for (int x = 0; x < textSurface.Width; x++)
                     {
                         Cell source = textSurface.Cells[y * textSurface.Width + x];
-                        source.Reset();
+                        source.Clear();
                     }
                 }
             else
@@ -900,7 +900,7 @@ namespace SadConsole.Surface
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
-                    destination.Effect = wrappedCells[i].Item1.Effect;
+                    destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
         }
 
@@ -940,7 +940,7 @@ namespace SadConsole.Surface
                     for (int y = 0; y < textSurface.Height; y++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].Copy(tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * textSurface.Width + amount - (textSurface.Width - x)));
                     }
@@ -958,7 +958,7 @@ namespace SadConsole.Surface
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
-                    destination.Effect = source.Effect;
+                    destination.Mirror = source.Mirror;
                 }
             }
 
@@ -979,7 +979,7 @@ namespace SadConsole.Surface
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
-                    destination.Effect = wrappedCells[i].Item1.Effect;
+                    destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
         }
 
@@ -1019,7 +1019,7 @@ namespace SadConsole.Surface
                     for (int y = 0; y < textSurface.Height; y++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].Copy(tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * textSurface.Width + (textSurface.Width - amount + x)));
                     }
@@ -1036,7 +1036,7 @@ namespace SadConsole.Surface
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
-                    destination.Effect = source.Effect;
+                    destination.Mirror = source.Mirror;
                 }
             }
 
@@ -1056,7 +1056,7 @@ namespace SadConsole.Surface
                     destination.Background = wrappedCells[i].Item1.Background;
                     destination.Foreground = wrappedCells[i].Item1.Foreground;
                     destination.Glyph = wrappedCells[i].Item1.Glyph;
-                    destination.Effect = wrappedCells[i].Item1.Effect;
+                    destination.Mirror = wrappedCells[i].Item1.Mirror;
                 }
         }
 
@@ -1082,7 +1082,7 @@ namespace SadConsole.Surface
                 if (foreground.HasValue)
                     textSurface.Cells[i].Foreground = foreground.Value;
                 if (spriteEffect.HasValue)
-                    textSurface.Cells[i].SpriteEffect = spriteEffect.Value;
+                    textSurface.Cells[i].Mirror = spriteEffect.Value;
             }
 
             return textSurface.Cells;
@@ -1119,7 +1119,7 @@ namespace SadConsole.Surface
                         if (foreground.HasValue)
                             cell.Foreground = foreground.Value;
                         if (spriteEffect.HasValue)
-                            cell.SpriteEffect = spriteEffect.Value;
+                            cell.Mirror = spriteEffect.Value;
 
                         cells[cellIndex] = cell;
                         cellIndex++;

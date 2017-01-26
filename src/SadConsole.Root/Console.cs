@@ -8,6 +8,7 @@ using SadConsole.Input;
 using System;
 using System.Runtime.Serialization;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SadConsole
 {
@@ -99,6 +100,10 @@ namespace SadConsole
             //        throw new Exception("VirtualCursor cannot be null");
             //}
         }
+
+        public List<IScreen> Children { get; set; } = new List<IScreen>();
+
+
 
         /// <summary>
         /// Indicates that the mouse is currently over this console.
@@ -200,14 +205,14 @@ namespace SadConsole
             }
         }
         [DataMember]
-        protected ISurface textSurface;
+        protected ISurface textSurfaceConsole;
 
         /// <summary>
         /// The text surface to be rendered or changed.
         /// </summary>
         public new ISurface TextSurface
         {
-            get { return textSurface; }
+            get { return base.textSurface; }
             set { textSurface = value; base.TextSurface = value; }
         }
 
@@ -284,22 +289,20 @@ namespace SadConsole
         [DataMember]
         public bool UsePixelPositioning { get; set; } = false;
 
-        internal protected bool SkipMouseDataFill = false;
-
         #region Constructors
 
         /// <summary>
         /// Creates a new console with the specified width and height, using the <see cref="Engine.DefaultFont"/>.
         /// </summary>
-        /// <param name="width">The width of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
-        /// <param name="height">The height of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
+        /// <param name="width">The width of the <see cref="SadConsole.Surface.TextSurface"/> that will back this console.</param>
+        /// <param name="height">The height of the <see cref="SadConsole.Surface.TextSurface"/> that will back this console.</param>
         public Console(int width, int height) : this(width, height, Global.FontDefault) { }
 
         /// <summary>
         /// Creates a new console with the specified width and height, using the specified font.
         /// </summary>
-        /// <param name="width">The width of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
-        /// <param name="height">The height of the <see cref="SadConsole.Consoles.TextSurface"/> that will back this console.</param>
+        /// <param name="width">The width of the <see cref="SadConsole.Surface.TextSurface"/> that will back this console.</param>
+        /// <param name="height">The height of the <see cref="SadConsole.Surface.TextSurface"/> that will back this console.</param>
         /// <param name="font">The font to use.</param>
         public Console(int width, int height, Font font) : this(new Basic(width, height, font)) { }
 
@@ -362,9 +365,6 @@ namespace SadConsole
             {
                 if (this.IsVisible && this.UseMouse)
                 {
-                    if (!SkipMouseDataFill)
-                        info.Fill(this);
-
                     if (info.Console == this)
                     {
                         if (this.CanFocus && this.MouseCanFocus && info.LeftClicked)
@@ -550,14 +550,14 @@ namespace SadConsole
         {
             if (DoUpdate)
             {
-                Effects.UpdateEffects(elapsed.TotalMilliseconds);
+                Effects.UpdateEffects(elapsed.TotalSeconds);
 
                 if (VirtualCursor.IsVisible)
-                    VirtualCursor.CursorRenderCell.UpdateAndApplyEffect(elapsed.TotalMilliseconds);
+                    VirtualCursor.Update(elapsed);
             }
         }
 
-        public virtual void Render(TimeSpan elapsed)
+        public virtual void Draw(TimeSpan elapsed)
         {
             if (_isVisible)
             {
@@ -583,7 +583,7 @@ namespace SadConsole
             {
                 _isMouseOver = false;
                 
-                MouseInfo info = Engine.Mouse.Clone();
+                MouseInfo info = Global.MouseState.Clone();
                 info.ConsoleLocation = new Point(-1, -1);
 
                 OnMouseExit(info);
@@ -637,7 +637,7 @@ namespace SadConsole
         public void Save(string file, bool saveTextSurface, params Type[] knownTypes)
         {
             //new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
-            //Serializer.Save(this, file, new Type[] { typeof(CellAppearance) });
+            //Serializer.Save(this, file, new Type[] { typeof(Cell) });
             serializeTextSurface = saveTextSurface;
             Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes));
         }
@@ -650,7 +650,7 @@ namespace SadConsole
         /// <returns>The <see cref="Console"/>.</returns>
         public static Console Load(string file, params Type[] knownTypes)
         {
-            //return Serializer.Load<Console>(file, new Type[] { typeof(CellAppearance) });
+            //return Serializer.Load<Console>(file, new Type[] { typeof(Cell) });
             //return Serialized.Load(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
             return Serializer.Load<Console>(file, knownTypes.Union(Serializer.ConsoleTypes));
         }

@@ -49,7 +49,7 @@ namespace SadConsole.Surface
         Rectangle AbsoluteArea { get; set; }
 
         /// <summary>
-        /// Each screen rectangle for <see cref="ITextSurfaceData.Cells"/> used in rendering.
+        /// Each screen rectangle for <see cref="ISurfaceData.Cells"/> used in rendering.
         /// </summary>
         Rectangle[] RenderRects { get; }
 
@@ -69,7 +69,7 @@ namespace SadConsole.Surface
         Color Tint { get; set; }
 
         /// <summary>
-        /// A view of the <see cref="ITextSurfaceData.Cells"/> which changes which cells will be drawn.
+        /// A view of the <see cref="ISurfaceData.Cells"/> which changes which cells will be drawn.
         /// </summary>
         Rectangle RenderArea { get; set; }
 

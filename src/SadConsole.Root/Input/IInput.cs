@@ -1,4 +1,4 @@
-﻿using SadConsole.Consoles;
+﻿using SadConsole.Surface;
 using System;
 
 namespace SadConsole.Input

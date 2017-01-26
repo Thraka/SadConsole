@@ -104,7 +104,7 @@ namespace SadConsole.Surface
         /// </summary>
         public Font Font { get { return font; } set { font = value; OnFontChanged(); } }
         
-        #region ITextSurfaceView
+        #region ISurfaceView
         /// <summary>
         /// Pixel area of the render cells.
         /// </summary>

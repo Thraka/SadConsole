@@ -15,14 +15,28 @@ namespace SadConsoleTest
         static void Main(string[] args)
         {
             SadConsole.Console con = null;
+            SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Scale;
+            Settings.AllowWindowResize = true;
             SadConsole.Game.Create("IBM.font", 80, 25);
 
             SadConsole.Game.OnInitialize = () =>
             {
-                SadConsole.Global.ActiveScreen = new SadConsole.Screen();
-                SadConsole.Global.ActiveScreen.Children.Add(new SadConsole.Console(20, 20));
+
                 con = new SadConsole.Console(20, 20) { Position = new Microsoft.Xna.Framework.Point(30, 1) };
-                SadConsole.Global.ActiveScreen.Children.Add(con);
+                SadConsole.Global.ActiveScreen = con;
+                var box = SadConsole.Shapes.Box.GetDefaultBox();
+                box.Position = new Point(0, 0);
+                box.Width = con.Width;
+                box.Height = con.Height;
+                box.Draw(con);
+                con.Print(2, 2, "Hello World!");
+                con.Print(2, 4, "Hello World!", Color.Purple);
+                con.Print(2, 6, "Hello World!", Color.Purple, Color.Gray);
+                con.Print(2, 8, "Hello World!", Color.Purple, Color.Gray, SpriteEffects.FlipVertically);
+
+                var blink = new SadConsole.Effects.Blink();
+
+                con.SetEffect(2, 8, blink);
             };
             float r = 0;
             SadConsole.Game.OnDraw = (time) =>

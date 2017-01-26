@@ -3,16 +3,18 @@ using Microsoft.Xna.Framework;
 
 using System;
 using System.Runtime.Serialization;
+using SadConsole.Surface;
 using SadConsole.Effects;
+using SadConsole;
+//using SadConsole.Effects;
 
-namespace SadConsole.Consoles
+namespace SadConsole
 {
     //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
     [DataContract]
     public class Cursor
     {
-        private SurfaceEditor privateEditor;
-        private WeakReference _console;
+        private Surface.SurfaceEditor editor;
         private Point _position = new Point();
 
         private int _cursorCharacter = 95;
@@ -27,7 +29,7 @@ namespace SadConsole.Consoles
         /// Appearance used when printing text.
         /// </summary>
         [DataMember]
-        public ICellAppearance PrintAppearance { get; set; }
+        public Cell PrintAppearance { get; set; }
 
         /// <summary>
         /// This effect is applied to each cell printed by the cursor.
@@ -56,13 +58,11 @@ namespace SadConsole.Consoles
             get { return _position; }
             set
             {
-                if (_console != null)
+                if (editor != null)
                 {
-                    SurfaceEditor console = (SurfaceEditor)_console.Target;
-
-                    if (!(value.X < 0 || value.X >= console.TextSurface.Width))
+                    if (!(value.X < 0 || value.X >= editor.TextSurface.Width))
                         _position.X = value.X;
-                    if (!(value.Y < 0 || value.Y >= console.TextSurface.Height))
+                    if (!(value.Y < 0 || value.Y >= editor.TextSurface.Height))
                         _position.Y = value.Y;
                 }
             }
@@ -113,15 +113,14 @@ namespace SadConsole.Consoles
         /// <param name="console">The console this cursor will print on.</param>
         public Cursor(SurfaceEditor console)
         {
-            _console = new WeakReference(console);
+            editor = console;
 
             Constructor();
         }
 
-        public Cursor(ITextSurface surface)
+        public Cursor(ISurface surface)
         {
-            privateEditor = new SurfaceEditor(surface);
-            _console = new WeakReference(privateEditor);
+            editor = new SurfaceEditor(surface);
 
             Constructor();
         }
@@ -131,12 +130,9 @@ namespace SadConsole.Consoles
             IsVisible = false;
             AutomaticallyShiftRowsUp = true;
 
-            PrintAppearance = new CellAppearance(Color.White, Color.Black);
+            PrintAppearance = new Cell(Color.White, Color.Black, 0);
 
-            CursorRenderCell = new Cell();
-            CursorRenderCell.GlyphIndex = _cursorCharacter;
-            CursorRenderCell.Foreground = Color.White;
-            CursorRenderCell.Background = Color.Transparent;
+            CursorRenderCell = new Cell(Color.White, Color.Transparent, _cursorCharacter);
 
             ResetCursorEffect();
         }
@@ -150,12 +146,9 @@ namespace SadConsole.Consoles
         /// Sets the console this cursor is targetting.
         /// </summary>
         /// <param name="console">The console the cursor works with.</param>
-        public void AttachConsole(SurfaceEditor console)
+        internal void AttachConsole(SurfaceEditor console)
         {
-            if (privateEditor != null)
-                privateEditor = null;
-
-            _console = new WeakReference(console);
+            editor = console;
         }
 
         /// <summary>
@@ -163,9 +156,9 @@ namespace SadConsole.Consoles
         /// </summary>
         public void ResetCursorEffect()
         {
-            SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
-            blinkEffect.BlinkSpeed = 0.35f;
-            CursorRenderCell.Effect = blinkEffect;
+            //SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
+            //blinkEffect.BlinkSpeed = 0.35f;
+            //CursorRenderCell.Effect = blinkEffect;
         }
 
         /// <summary>
@@ -175,10 +168,8 @@ namespace SadConsole.Consoles
         /// <exception cref="Exception">Thrown when the backing console's CellData is null.</exception>
         public Cursor ResetAppearanceToConsole()
         {
-            var console = ((SurfaceEditor)_console.Target);
-
-            if (console.TextSurface != null)
-                PrintAppearance = new CellAppearance(console.TextSurface.DefaultForeground, console.TextSurface.DefaultBackground);
+            if (editor.TextSurface != null)
+                PrintAppearance = new Cell(editor.TextSurface.DefaultForeground, editor.TextSurface.DefaultBackground, 0);
             else
                 throw new Exception("CellData of the attached console is null. Cannot reset appearance.");
 
@@ -188,8 +179,7 @@ namespace SadConsole.Consoles
 
         private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
         {
-            var console = (SurfaceEditor)_console.Target;
-            var cell = console.TextSurface.Cells[_position.Y * console.TextSurface.Width + _position.X];
+            var cell = editor.TextSurface.Cells[_position.Y * editor.TextSurface.Width + _position.X];
 
             if (!PrintOnlyCharacterData)
             {
@@ -197,28 +187,28 @@ namespace SadConsole.Consoles
                     cell.Background = glyph.Background;
                 if (!settings.IgnoreForeground)
                     cell.Foreground = glyph.Foreground;
-                if (!settings.IgnoreEffect)
-                    cell.Effect = glyph.Effect;
+                //if (!settings.IgnoreEffect)
+                //    cell.Effect = glyph.Effect;
                 if (!settings.IgnoreSpriteEffect)
-                    cell.SpriteEffect = glyph.SpriteEffect;
+                    cell.Mirror = glyph.Mirror;
             }
 
             if (!settings.IgnoreGlyph)
-                cell.GlyphIndex = glyph.Glyph;
+                cell.Glyph = glyph.GlyphCharacter;
 
             _position.X += 1;
-            if (_position.X >= console.TextSurface.Width)
+            if (_position.X >= editor.TextSurface.Width)
             {
                 _position.X = 0;
                 _position.Y += 1;
 
-                if (_position.Y >= console.TextSurface.Height)
+                if (_position.Y >= editor.TextSurface.Height)
                 {
                     _position.Y -= 1;
 
                     if (AutomaticallyShiftRowsUp)
                     {
-                        console.ShiftUp();
+                        editor.ShiftUp();
                     }
                 }
             }
@@ -242,18 +232,17 @@ namespace SadConsole.Consoles
         /// <param name="template">The way the text will look when it is printed.</param>
         /// <param name="templateEffect">Effect to apply to the text as its printed.</param>
         /// <returns>Returns this cursor object.</returns>
-        public Cursor Print(string text, ICellAppearance template, ICellEffect templateEffect)
+        public Cursor Print(string text, Cell template, Effects.ICellEffect templateEffect)
         {
             ColoredString coloredString;
 
             if (UseStringParser)
             {
-                var console = (SurfaceEditor)_console.Target;
-                coloredString = ColoredString.Parse(text, _position.Y * console.TextSurface.Width + _position.X, console.TextSurface, console, new StringParser.ParseCommandStacks());
+                coloredString = ColoredString.Parse(text, _position.Y * editor.TextSurface.Width + _position.X, editor.TextSurface, editor, new StringParser.ParseCommandStacks());
             }
             else
             {
-                coloredString = text.CreateColored(template.Foreground, template.Background, template.SpriteEffect);
+                coloredString = text.CreateColored(template.Foreground, template.Background, template.Mirror);
                 coloredString.SetEffect(templateEffect);
             }
 
@@ -272,10 +261,9 @@ namespace SadConsole.Consoles
             if (!DisableWordBreak && text.String.Length != 1)
             {
                 // Prep
-                var console = (SurfaceEditor)_console.Target;
                 ColoredGlyph glyph;
                 ColoredGlyph spaceGlyph = text[0].Clone();
-                spaceGlyph.Glyph = ' ';
+                spaceGlyph.GlyphCharacter = ' ';
                 string stringText = text.String.TrimEnd(' ');
 
                 // Pull any starting spaces off
@@ -314,9 +302,9 @@ namespace SadConsole.Consoles
                                 for (int indexR = 0; indexR < returnParts.Length; indexR++)
                                 {
                                     // If the text we'll print will move off the edge, fill with spaces to get a fresh line
-                                    if (returnParts[indexR].Length > console.Width - _position.X && _position.X != 0)
+                                    if (returnParts[indexR].Length > editor.Width - _position.X && _position.X != 0)
                                     {
-                                        var spaces = console.Width - _position.X;
+                                        var spaces = editor.Width - _position.X;
 
                                         // Fill rest of line with spaces
                                         for (int i = 0; i < spaces; i++)
@@ -378,7 +366,7 @@ namespace SadConsole.Consoles
                     // Check if the previous print moved us down a line (from print at end of the line) and move use back for the \r
                     if (movedLines)
                     {
-                        if (_position.X == 0 && glyph.Glyph == '\r')
+                        if (_position.X == 0 && glyph.GlyphCharacter == '\r')
                         {
                             _position.Y -= 1;
                             continue;
@@ -387,10 +375,10 @@ namespace SadConsole.Consoles
                             movedLines = false;
                     }
 
-                    if (glyph.Glyph == '\r')
+                    if (glyph.GlyphCharacter == '\r')
                         CarriageReturn();
 
-                    else if (glyph.Glyph == '\n')
+                    else if (glyph.GlyphCharacter == '\n')
                     {
                         if (!UseLinuxLineEndings)
                             LineFeed();
@@ -425,9 +413,9 @@ namespace SadConsole.Consoles
         /// <returns>The current cursor object.</returns>
         public Cursor LineFeed()
         {
-            if (_position.Y == ((SurfaceEditor)_console.Target).TextSurface.Height - 1)
+            if (_position.Y == editor.TextSurface.Height - 1)
             {
-                ((SurfaceEditor)_console.Target).ShiftUp();
+                editor.ShiftUp();
                 //if (((CustomConsole)_console.Target).Data.ResizeOnShift)
                 //    _position.Y++;
             }
@@ -471,8 +459,8 @@ namespace SadConsole.Consoles
         {
             int newY = _position.Y + amount;
 
-            if (newY >= ((SurfaceEditor)_console.Target).TextSurface.Height)
-                newY = ((SurfaceEditor)_console.Target).TextSurface.Height - 1;
+            if (newY >= editor.TextSurface.Height)
+                newY = editor.TextSurface.Height - 1;
 
             Position = new Point(_position.X, newY);
             return this;
@@ -501,14 +489,12 @@ namespace SadConsole.Consoles
         /// <returns>This cursor object.</returns>
         public Cursor LeftWrap(int amount)
         {
-            var console = ((SurfaceEditor)_console.Target);
-
-            int index = TextSurface.GetIndexFromPoint(this._position, console.TextSurface.Width) - amount;
+            int index = editor.TextSurface.GetIndexFromPoint(this._position) - amount;
 
             if (index < 0)
                 index = 0;
 
-            this._position = TextSurface.GetPointFromIndex(index, console.TextSurface.Width);
+            this._position = editor.TextSurface.GetPointFromIndex(index);
 
             return this;
         }
@@ -522,8 +508,8 @@ namespace SadConsole.Consoles
         {
             int newX = _position.X + amount;
 
-            if (newX >= ((SurfaceEditor)_console.Target).TextSurface.Width)
-                newX = ((SurfaceEditor)_console.Target).TextSurface.Width - 1;
+            if (newX >= editor.TextSurface.Width)
+                newX = editor.TextSurface.Width - 1;
 
             Position = new Point(newX, _position.Y);
             return this;
@@ -536,23 +522,26 @@ namespace SadConsole.Consoles
         /// <returns>This cursor object.</returns>
         public Cursor RightWrap(int amount)
         {
-            var console = ((SurfaceEditor)_console.Target);
+            int index = editor.TextSurface.GetIndexFromPoint(this._position) + amount;
 
-            
-            int index = TextSurface.GetIndexFromPoint(this._position, console.TextSurface.Width) + amount;
+            if (index > editor.TextSurface.Cells.Length)
+                index = editor.TextSurface.Cells.Length - 1;
 
-            if (index > console.TextSurface.Cells.Length)
-                index = console.TextSurface.Cells.Length - 1;
-
-            this._position = TextSurface.GetPointFromIndex(index, console.TextSurface.Width);
+            this._position = editor.TextSurface.GetPointFromIndex(index);
 
             return this;
         }
         
         public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
         {
-            batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[font.SolidGlyphIndex], CursorRenderCell.ActualBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
-            batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[CursorRenderCell.ActualGlyphIndex], CursorRenderCell.ActualForeground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
+            batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[font.SolidGlyphIndex], CursorRenderCell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
+            batch.Draw(font.FontImage, renderArea, font.GlyphIndexRects[CursorRenderCell.Glyph], CursorRenderCell.Foreground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
+        }
+
+        internal void Update(TimeSpan elapsed)
+        {
+            PrintEffect?.Update(elapsed.TotalSeconds);
+            PrintEffect?.Apply(CursorRenderCell);
         }
     }
 }

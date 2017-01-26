@@ -11,7 +11,7 @@ namespace SadConsole.Input
         /// <summary>
         /// The current console under the mouse.
         /// </summary>
-        public SadConsole.Consoles.IConsole Console { get; private set; }
+        public IConsole Console { get; private set; }
         /// <summary>
         /// The cell of the current console under the mouse.
         /// </summary>

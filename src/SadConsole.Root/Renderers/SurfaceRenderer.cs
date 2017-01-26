@@ -23,7 +23,7 @@ namespace SadConsole.Renderers
         public Action<SpriteBatch> AfterRenderCallback { get; set; }
 
         /// <summary>
-        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ITextSurfaceRendered)"/> method.
+        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ISurfaceRendered)"/> method.
         /// </summary>
         /// <param name="surface">Used only for tinting.</param>
         /// <param name="renderingMatrix">Display matrix for the rendered console.</param>
@@ -55,7 +55,7 @@ namespace SadConsole.Renderers
                             Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphIndexRects[surface.Font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                             //if (cell.ActualForeground != Color.Transparent)
-                            Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphIndexRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.SpriteEffect, 0.4f);
+                            Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphIndexRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
                         }
                     }
 

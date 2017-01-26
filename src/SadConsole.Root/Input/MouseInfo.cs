@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SadConsole.Consoles;
+using SadConsole.Surface;
 
 namespace SadConsole.Input
 {
@@ -73,8 +73,15 @@ namespace SadConsole.Input
         /// </summary>
         public int ScrollWheelValueChange { get; set; }
 
+        /// <summary>
+        /// Prevents the <see cref="Fill(IConsole)"/> from operating.
+        /// </summary>
+        public bool DisableFill { get; set; }
+
         private System.TimeSpan _leftLastClickedTime;
         private System.TimeSpan _rightLastClickedTime;
+
+        public IConsole LastConsole { get; set; }
 
         //public static bool operator == (MouseInfo left, MouseInfo right)
         //{
@@ -100,7 +107,7 @@ namespace SadConsole.Input
             ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
             ScrollWheelValue = currentState.ScrollWheelValue;
 
-            ScreenLocation = new Point((int)(currentState.X * Engine.RenderScale.X), (int)(currentState.Y * Engine.RenderScale.Y)) - new Point((int)(Engine.RenderRect.X * Engine.RenderScale.X), (int)(Engine.RenderRect.Y * Engine.RenderScale.Y));
+            ScreenLocation = new Point((int)(currentState.X * Global.RenderScale.X), (int)(currentState.Y * Global.RenderScale.Y)) - new Point((int)(Global.RenderRect.X * Global.RenderScale.X), (int)(Global.RenderRect.Y * Global.RenderScale.Y));
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
 
@@ -109,9 +116,9 @@ namespace SadConsole.Input
             if (!newRightClicked)
                 RightDoubleClicked = false;
 
-            if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
+            if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
                 LeftDoubleClicked = true;
-            if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalMilliseconds < 1000)
+            if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
                 RightDoubleClicked = true;
 
             LeftClicked = newLeftClicked;
@@ -129,6 +136,9 @@ namespace SadConsole.Input
         /// <remarks>This method alters the data of the mouse information based on the provided console. It </remarks>
         public void Fill(IConsole data)
         {
+            if (DisableFill)
+                return;
+
             if (data.UsePixelPositioning)
             {
                 WorldLocation.X = ScreenLocation.X - data.Position.X;
@@ -157,25 +167,19 @@ namespace SadConsole.Input
                 Console = data;
 
                 // Other console previously had mouse, we'll properly tell it that it has loss it.
-                if (Engine.LastMouseConsole != data)
+                if (LastConsole != data)
                 {
-                    if (Engine.LastMouseConsole != null)
+                    if (LastConsole != null)
                     {
                         var info = this.Clone();
-                        var oldConsole = Engine.LastMouseConsole;
-                        Engine.LastMouseConsole = data;
+                        var oldConsole = LastConsole;
+                        LastConsole = data;
 
-                        if (oldConsole is Console)
-                        {
-                            ((Console)oldConsole).SkipMouseDataFill = true;
-                            oldConsole.ProcessMouse(info);
-                            ((Console)oldConsole).SkipMouseDataFill = false;
-                        }
-                        else
-                            oldConsole.ProcessMouse(info);
+                        info.DisableFill = true;
+                        oldConsole.ProcessMouse(info);
                     }
                     else
-                        Engine.LastMouseConsole = data;
+                        LastConsole = data;
                 }
             }
         }

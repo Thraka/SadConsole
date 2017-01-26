@@ -13,6 +13,8 @@ namespace SadConsole
 
         public IScreen Parent { get; set; }
 
+        public bool IsVisible { get; set; }
+
         public virtual void Draw(TimeSpan timeElapsed)
         {
             foreach (var child in Children)

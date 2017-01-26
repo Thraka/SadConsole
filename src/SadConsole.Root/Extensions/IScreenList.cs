@@ -88,35 +88,9 @@ namespace SadConsole
             return false;
         }
 
-        public static void method(this List<IScreen> _consoles, IScreen console)
+        public static void RemoveParent(this IScreen console)
         {
-            if (console.Parent == this)
-            {
-                console.Parent = null;
-                return true;
-            }
-
-            return false;
-        }
-
-        public static void method(this List<IScreen> _consoles, IScreen console)
-        {
-
-        }
-
-        public static void method(this List<IScreen> _consoles, IScreen console)
-        {
-
-        }
-
-        public static void method(this List<IScreen> _consoles, IScreen console)
-        {
-
-        }
-
-        public static void method(this List<IScreen> _consoles, IScreen console)
-        {
-
+            console.Parent = null;
         }
     }
 }

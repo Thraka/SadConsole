@@ -17,6 +17,7 @@ namespace SadConsole
         public static GraphicsDeviceManager GraphicsDeviceManager;
         public static SpriteBatch SpriteBatch;
         public static IScreen ActiveScreen;
+        public static Random Random = new Random();
 
         #region Input
         public static Input.MouseInfo MouseState = new Input.MouseInfo();
@@ -185,8 +186,8 @@ namespace SadConsole
                 foreach (var call in Global.DrawCalls)
                 {
                     Global.SpriteBatch.Draw(call.Item1.LastRenderResult, call.Item2.ToVector2(), Color.White);
-
                 }
+
                 Global.SpriteBatch.End();
                 GraphicsDevice.SetRenderTarget(null);
 
