@@ -24,6 +24,7 @@ namespace SadConsole.Surfaces
 
         private ISurface data;
 
+        private bool isDirty = true;
 
         /// <summary>
         /// Gets a cell by index.
@@ -175,7 +176,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Indicates the surface has changed and needs to be rendered.
         /// </summary>
-        public bool IsDirty { get; set; } = true;
+        public bool IsDirty { get { return isDirty; } set { isDirty = value; if (value && data != null) data.IsDirty = true; } }
 
         /// <summary>
         /// The last texture render pass for this surface.

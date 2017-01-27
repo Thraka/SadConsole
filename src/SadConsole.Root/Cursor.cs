@@ -212,6 +212,8 @@ namespace SadConsole
                     }
                 }
             }
+
+            editor.TextSurface.IsDirty = true;
         }
 
         /// <summary>
