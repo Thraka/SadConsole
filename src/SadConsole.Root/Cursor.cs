@@ -38,6 +38,12 @@ namespace SadConsole
         public ICellEffect PrintEffect { get; set; }
 
         /// <summary>
+        /// This is the cursor visible effect, like blinking.
+        /// </summary>
+        [DataMember]
+        public ICellEffect CursorEffect { get; set; }
+
+        /// <summary>
         /// When true, indicates that the cursor, when printing, should not use the <see cref="PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
         /// </summary>
         [DataMember]
@@ -156,9 +162,9 @@ namespace SadConsole
         /// </summary>
         public void ResetCursorEffect()
         {
-            //SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
-            //blinkEffect.BlinkSpeed = 0.35f;
-            //CursorRenderCell.Effect = blinkEffect;
+            SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
+            blinkEffect.BlinkSpeed = 0.35f;
+            CursorEffect = blinkEffect;
         }
 
         /// <summary>
@@ -542,8 +548,8 @@ namespace SadConsole
 
         internal void Update(TimeSpan elapsed)
         {
-            PrintEffect?.Update(elapsed.TotalSeconds);
-            PrintEffect?.Apply(CursorRenderCell);
+            CursorEffect?.Update(elapsed.TotalSeconds);
+            CursorEffect?.Apply(CursorRenderCell);
         }
     }
 }

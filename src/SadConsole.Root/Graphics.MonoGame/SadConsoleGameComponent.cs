@@ -24,7 +24,7 @@ namespace SadConsole
                     Global.GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
 
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    Global.ActiveScreen?.Draw(gameTime.ElapsedGameTime);
+                    Global.CurrentScreen?.Draw(gameTime.ElapsedGameTime);
 
                     // Render to the global output texture
                     GraphicsDevice.SetRenderTarget(Global.RenderOutput);
@@ -68,14 +68,14 @@ namespace SadConsole
                     {
                         Global.MouseState.ProcessMouse(gameTime);
 
-                        //if (Settings.Input.ProcessMouseOffscreen ||
-                        //    Global.RenderRect.Contains(Global.MouseState.ScreenLocation))
-                        //{
-                        //    Global.ActiveScreen.
-                        //}
+                        Global.MouseState.IsOnScreen = Settings.Input.ProcessMouseOffscreen || Global.RenderRect.Contains(Global.MouseState.ScreenLocation);
+                        Global.MouseState.IsBusy = Console.ActiveConsole != null && Console.ActiveConsole.ExclusiveFocus;
+
+                        //if (Global.MouseState.IsBusy)
+                        //    Console.ActiveConsole.ProcessMouse(Global.MouseState);
                     }
 
-                    Global.ActiveScreen?.Update(gameTime.ElapsedGameTime);
+                    Global.CurrentScreen?.Update(gameTime.ElapsedGameTime);
 
                     SadConsole.Game.OnUpdate?.Invoke(gameTime);
                 }

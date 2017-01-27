@@ -128,7 +128,7 @@ namespace SadConsole
             _border = Shapes.Box.GetDefaultBox();
             _border.Width = width;
             _border.Height = height;
-            _isVisible = false;
+            isVisible = false;
 
             ProcessMouseWithoutFocus = true;
             CanFocus = true;
@@ -146,7 +146,7 @@ namespace SadConsole
         {
             base.OnVisibleChanged();
 
-            if (_isVisible)
+            if (isVisible)
                 Show(ModalIsDefault);
             else
                 Hide();
@@ -168,7 +168,7 @@ namespace SadConsole
         /// <returns></returns>
         public override bool ProcessMouse(Input.MouseInfo info)
         {
-            if (_titleWidth != 0 && _isVisible)
+            if (_titleWidth != 0 && isVisible)
             {
                 info.Fill(this);
 
@@ -253,19 +253,19 @@ namespace SadConsole
         /// <param name="modal">When true, the window will be displayed as modal; otherwise false.</param>
         public virtual void Show(bool modal)
         {
-            if (Parent != null && _isVisible == true)
+            if (Parent != null && isVisible == true)
             {
                 Parent.Children.MoveToTop(this);
                 return;
             }
 
             _isModal = modal;
-            _isVisible = true;
+            isVisible = true;
             _addedToParent = false;
 
             if (Parent == null)
             {
-                Global.ActiveScreen.Children.Add(this);
+                Global.CurrentScreen.Children.Add(this);
                 _addedToParent = true;
             }
 
@@ -285,7 +285,7 @@ namespace SadConsole
         /// </summary>
         public virtual void Hide()
         {
-            _isVisible = false;
+            isVisible = false;
 
             if (Console.ActiveConsole == this)
             {

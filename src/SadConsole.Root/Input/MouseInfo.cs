@@ -78,6 +78,16 @@ namespace SadConsole.Input
         /// </summary>
         public bool DisableFill { get; set; }
 
+        /// <summary>
+        /// When true, someone is requesting that they be the only thing to use the mouse.
+        /// </summary>
+        public bool IsBusy { get; set; }
+
+        /// <summary>
+        /// Indicates that the mouse is currently within the bounds of the rendering area.
+        /// </summary>
+        public bool IsOnScreen { get; set; }
+
         private System.TimeSpan _leftLastClickedTime;
         private System.TimeSpan _rightLastClickedTime;
 

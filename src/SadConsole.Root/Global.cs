@@ -39,7 +39,7 @@ namespace SadConsole
         /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public static IScreen ActiveScreen = new Screen();
+        public static IScreen CurrentScreen = new Screen();
 
         /// <summary>
         /// A global random number generator.

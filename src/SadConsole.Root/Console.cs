@@ -64,23 +64,23 @@ namespace SadConsole
         /// <summary>
         /// Indicates the console is visible.
         /// </summary>
-        protected bool _isVisible = true;
+        protected bool isVisible = true;
 
         /// <summary>
         /// The parent console.
         /// </summary>
-        protected IScreen _parentConsole;
+        protected IScreen parentConsole;
 
         /// <summary>
         /// Indicates that the mouse is currently over this console.
         /// </summary>
-        protected bool _isMouseOver = false;
+        protected bool isMouseOver = false;
 
         /// <summary>
         /// The private virtual curser reference.
         /// </summary>
         [DataMember]
-        protected Cursor _virtualCursor;
+        protected Cursor virtualCursor;
 
         /// <summary>
         /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
@@ -93,7 +93,7 @@ namespace SadConsole
         /// </summary>
         public Cursor VirtualCursor
         {
-            get { return _virtualCursor; }
+            get { return virtualCursor; }
             //set
             //{
             //    if (value != null)
@@ -111,35 +111,35 @@ namespace SadConsole
         /// <summary>
         /// Indicates that the mouse is currently over this console.
         /// </summary>
-        public bool IsMouseOver { get { return _isMouseOver; } }
+        public bool IsMouseOver { get { return isMouseOver; } }
 
         /// <summary>
         /// Gets or sets the Parent console.
         /// </summary>
         public IScreen Parent
         {
-            get { return _parentConsole; }
+            get { return parentConsole; }
             set
             {
-                if (_parentConsole != value)
+                if (parentConsole != value)
                 {
-                    if (_parentConsole == null)
+                    if (parentConsole == null)
                     {
-                        _parentConsole = value;
-                        _parentConsole.Children.Add(this);
-                        OnParentConsoleChanged(null, _parentConsole);
+                        parentConsole = value;
+                        parentConsole.Children.Add(this);
+                        OnParentConsoleChanged(null, parentConsole);
                     }
                     else
                     {
-                        var oldParent = _parentConsole;
-                        _parentConsole = value;
+                        var oldParent = parentConsole;
+                        parentConsole = value;
 
                         oldParent.Children.Remove(this);
 
-                        if (_parentConsole != null)
-                            _parentConsole.Children.Add(this);
+                        if (parentConsole != null)
+                            parentConsole.Children.Add(this);
 
-                        OnParentConsoleChanged(oldParent, _parentConsole);
+                        OnParentConsoleChanged(oldParent, parentConsole);
                     }
                 }
 
@@ -180,13 +180,19 @@ namespace SadConsole
         /// Indicates whether or not this console is visible.
         /// </summary>
         [DataMember]
-        public bool IsVisible { get { return _isVisible; } set { _isVisible = value; OnVisibleChanged(); } }
+        public bool IsVisible { get { return isVisible; } set { isVisible = value; OnVisibleChanged(); } }
 
         /// <summary>
-        /// When false, does not perform the code within the <see cref="Update"/> method. Defaults to true.
+        /// When false, does not perform the code within the <see cref="Update(TimeSpan)"/> method. Defaults to true.
         /// </summary>
         [DataMember]
         public bool DoUpdate { get; set; } = true;
+
+        /// <summary>
+        /// When false, does not perform the code within the <see cref="Draw(TimeSpan)"/> method. Defaults to true.
+        /// </summary>
+        [DataMember]
+        public bool DoDraw { get; set; } = true;
 
         /// <summary>
         /// The renderer used to draw <see cref="TextSurface"/>.
@@ -229,30 +235,30 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets or sets this console as the <see cref="Global.ActiveScreen"/> value.
+        /// Gets or sets this console as the <see cref="Global.CurrentScreen"/> value.
         /// </summary>
-        /// <remarks>If the <see cref="Global.ActiveScreen"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
+        /// <remarks>If the <see cref="Global.CurrentScreen"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
         [DataMember]
         public bool IsFocused
         {
-            get { return Global.ActiveScreen == this; }
+            get { return Global.CurrentScreen == this; }
             set
             {
-                if (Global.ActiveScreen != null)
+                if (Global.CurrentScreen != null)
                 {
-                    if (value && Global.ActiveScreen != this && Global.ActiveScreen is IConsole && !((IConsole)Global.ActiveScreen).ExclusiveFocus)
+                    if (value && Global.CurrentScreen != this && Global.CurrentScreen is IConsole && !((IConsole)Global.CurrentScreen).ExclusiveFocus)
                     {
-                        Global.ActiveScreen = this;
+                        Global.CurrentScreen = this;
                         OnFocused();
                     }
 
-                    else if (value && Global.ActiveScreen == this)
+                    else if (value && Global.CurrentScreen == this)
                         OnFocused();
 
                     else if (!value)
                     {
-                        if (Global.ActiveScreen == this)
-                            Global.ActiveScreen = null;
+                        if (Global.CurrentScreen == this)
+                            Global.CurrentScreen = null;
 
                         OnFocusLost();
                     }
@@ -261,7 +267,7 @@ namespace SadConsole
                 {
                     if (value)
                     {
-                        Global.ActiveScreen = this;
+                        Global.CurrentScreen = this;
                         OnFocused();
                     }
                     else
@@ -315,7 +321,7 @@ namespace SadConsole
         /// <param name="textData">The backing text surface.</param>
         public Console(ISurface textData) : base(textData)
         {
-            _virtualCursor = new Cursor(this);
+            virtualCursor = new Cursor(this);
             Renderer = new SurfaceRenderer();
             textSurface = textData;
         }
@@ -330,7 +336,7 @@ namespace SadConsole
         protected virtual void OnMouseExit(MouseInfo info)
         {
             // Force mouse off just incase
-            _isMouseOver = false;
+            isMouseOver = false;
 
             if (MouseExit != null)
                 MouseExit(this, new MouseEventArgs(info));
@@ -364,8 +370,11 @@ namespace SadConsole
         {
             var handlerResult = MouseHandler == null ? false : MouseHandler(this, info);
 
-            if (!handlerResult)
+            if (!handlerResult && (!info.IsBusy || info.IsBusy && Console.ActiveConsole == this))
             {
+                if (!info.DisableFill)
+                    info.Fill(this);
+
                 if (this.IsVisible && this.UseMouse)
                 {
                     if (info.Console == this)
@@ -378,9 +387,9 @@ namespace SadConsole
                                 this.Parent.Children.MoveToTop(this);
                         }
 
-                        if (_isMouseOver != true)
+                        if (isMouseOver != true)
                         {
-                            _isMouseOver = true;
+                            isMouseOver = true;
                             OnMouseEnter(info);
                         }
 
@@ -396,9 +405,9 @@ namespace SadConsole
                     }
                     else
                     {
-                        if (_isMouseOver)
+                        if (isMouseOver)
                         {
-                            _isMouseOver = false;
+                            isMouseOver = false;
                             OnMouseExit(info);
                         }
                     }
@@ -427,11 +436,11 @@ namespace SadConsole
                         switch (key.Key)
                         {
                             case Keys.Space:
-                                this._virtualCursor.Print(key.Character.ToString());
+                                this.virtualCursor.Print(key.Character.ToString());
                                 didSomething = true;
                                 break;
                             case Keys.Enter:
-                                this._virtualCursor.CarriageReturn().LineFeed();
+                                this.virtualCursor.CarriageReturn().LineFeed();
                                 didSomething = true;
                                 break;
 
@@ -450,36 +459,36 @@ namespace SadConsole
                                 //this._virtualCursor.Print(key.Character.ToString());
                                 break;
                             case Keys.Up:
-                                this._virtualCursor.Up(1);
+                                this.virtualCursor.Up(1);
                                 didSomething = true;
                                 break;
                             case Keys.Left:
-                                this._virtualCursor.Left(1);
+                                this.virtualCursor.Left(1);
                                 didSomething = true;
                                 break;
                             case Keys.Right:
-                                this._virtualCursor.Right(1);
+                                this.virtualCursor.Right(1);
                                 didSomething = true;
                                 break;
                             case Keys.Down:
-                                this._virtualCursor.Down(1);
+                                this.virtualCursor.Down(1);
                                 didSomething = true;
                                 break;
                             case Keys.None:
                                 break;
                             case Keys.Back:
-                                this._virtualCursor.Left(1).Print(" ").Left(1);
+                                this.virtualCursor.Left(1).Print(" ").Left(1);
                                 didSomething = true;
                                 break;
                             default:
-                                this._virtualCursor.Print(key.Character.ToString());
+                                this.virtualCursor.Print(key.Character.ToString());
                                 didSomething = true;
                                 break;
                         }
                     }
                     else
                     {
-                        this._virtualCursor.Print(key.Character.ToString());
+                        this.virtualCursor.Print(key.Character.ToString());
                         didSomething = true;
                     }
                 }
@@ -503,7 +512,7 @@ namespace SadConsole
         protected virtual void OnFocusLost()
         {
             if (AutoCursorOnFocus == true)
-                _virtualCursor.IsVisible = false;
+                virtualCursor.IsVisible = false;
         }
 
         /// <summary>
@@ -512,7 +521,7 @@ namespace SadConsole
         protected virtual void OnFocused()
         {
             if (AutoCursorOnFocus == true)
-                _virtualCursor.IsVisible = true;
+                virtualCursor.IsVisible = true;
         }
 
         /// <summary>
@@ -527,17 +536,17 @@ namespace SadConsole
         /// <param name="batch">The batch used in renderering.</param>
         protected virtual void OnAfterRender(SpriteBatch batch)
         {
-            if (VirtualCursor.IsVisible)
-            {
-                int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
-                    new Point(VirtualCursor.Position.X - TextSurface.RenderArea.Left,
-                              VirtualCursor.Position.Y - TextSurface.RenderArea.Top), TextSurface.RenderArea.Width);
+            //if (VirtualCursor.IsVisible)
+            //{
+            //    int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
+            //        new Point(VirtualCursor.Position.X - TextSurface.RenderArea.Left,
+            //                  VirtualCursor.Position.Y - TextSurface.RenderArea.Top), TextSurface.RenderArea.Width);
 
-                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
-                {
-                    VirtualCursor.Render(batch, textSurface.Font, textSurface.RenderRects[virtualCursorLocationIndex]);
-                }
-            }
+            //    if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
+            //    {
+            //        VirtualCursor.Render(batch, textSurface.Font, textSurface.RenderRects[virtualCursorLocationIndex]);
+            //    }
+            //}
         }
 
         /// <summary>
@@ -553,20 +562,39 @@ namespace SadConsole
         {
             if (DoUpdate)
             {
+                if (isVisible)
+                {
+                    ProcessMouse(Global.MouseState);
+
+                    if (Console.ActiveConsole == this)
+                        ProcessKeyboard(Global.KeyboardState);
+                }
+
                 Effects.UpdateEffects(elapsed.TotalSeconds);
 
                 if (VirtualCursor.IsVisible)
                     VirtualCursor.Update(elapsed);
+
+                foreach (var child in Children)
+                    child.Update(elapsed);
             }
         }
 
         public virtual void Draw(TimeSpan elapsed)
         {
-            if (_isVisible)
+            if (DoDraw)
             {
-                Renderer.Render(textSurface);
+                if (isVisible)
+                {
+                    Renderer.Render(textSurface);
+                    Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(Position).ToVector2()));
 
-                Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(Position).ToVector2()));
+                    if (virtualCursor.IsVisible)
+                        Global.DrawCalls.Add(new DrawCallCursor(this));
+                }
+
+                foreach (var child in Children)
+                    child.Draw(elapsed);
             }
         }
 
@@ -582,9 +610,9 @@ namespace SadConsole
         /// </summary>
         private void ExitMouse()
         {
-            if (_isMouseOver)
+            if (isMouseOver)
             {
-                _isMouseOver = false;
+                isMouseOver = false;
                 
                 MouseInfo info = Global.MouseState.Clone();
                 info.ConsoleLocation = new Point(-1, -1);
@@ -624,7 +652,7 @@ namespace SadConsole
 
             base.textSurface = textSurface;
 
-            _virtualCursor.AttachConsole(this);
+            virtualCursor.AttachConsole(this);
             //_virtualCursor.ResetCursorEffect();
 
             textSurface.IsDirty = true;

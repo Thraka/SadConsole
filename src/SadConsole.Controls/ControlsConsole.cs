@@ -552,7 +552,7 @@ namespace SadConsole
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            _virtualCursor.IsVisible = false;
+            virtualCursor.IsVisible = false;
 
             foreach (var control in _controls)
             {
