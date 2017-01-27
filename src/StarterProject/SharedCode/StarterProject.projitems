@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AutoTypingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SubConsoleCursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Theme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\CharacterViewer.cs" />

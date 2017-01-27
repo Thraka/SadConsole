@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
@@ -12,7 +12,7 @@ namespace StarterProject.CustomConsoles
             // This console demonstrates the virtual cursor.
             VirtualCursor.IsVisible = true;
             VirtualCursor.Position = new Point(0, 2);
-            CanUseKeyboard = true;
+            UseKeyboard = true;
 
             // Print some intro text
             Print(0, 0, "This console can be typed on. Use the arrow keys to move the cursor.");

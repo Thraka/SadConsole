@@ -2,7 +2,7 @@
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using SadConsole;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
@@ -31,7 +31,7 @@ namespace StarterProject.CustomConsoles
 
             // Get a circle
             SadConsole.Shapes.Circle circle = new SadConsole.Shapes.Circle();
-            circle.BorderAppearance = new CellAppearance(ColorHelper.YellowGreen, Color.White, 57);
+            circle.BorderAppearance = new Cell(ColorHelper.YellowGreen, Color.White, 57);
             circle.Center = new Point(60, 13);
             circle.Radius = 10;
 
@@ -43,7 +43,7 @@ namespace StarterProject.CustomConsoles
             line.EndingLocation = new Point(45, 18);
             line.UseEndingCell = false;
             line.UseStartingCell = false;
-            line.CellAppearance = new Cell { Foreground = ColorHelper.Purple, Background = Color.White, GlyphIndex = 88 };
+            line.Cell = new Cell { Foreground = ColorHelper.Purple, Background = Color.White, Glyph = 88 };
 
             line.Draw(this);
 
