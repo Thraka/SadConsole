@@ -17,7 +17,7 @@
         /// The style of the selected part of the control.
         /// </summary>
         [DataMember]
-        public CellAppearance Selected;
+        public Cell Selected;
 
         /// <summary>
         /// Clones this object.

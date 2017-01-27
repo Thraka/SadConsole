@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace SadConsole.Game
+namespace SadConsole.GameHelpers
 {
     /// <summary>
     /// Serialized instance of a <see cref="GameObject"/>.
@@ -16,7 +16,7 @@ namespace SadConsole.Game
         [DataMember]
         public string AnimationName;
         [DataMember]
-        public List<Consoles.AnimatedTextSurface> Animations;
+        public List<Surfaces.AnimatedSurface> Animations;
         [DataMember]
         public Font Font;
         [DataMember]
@@ -37,7 +37,7 @@ namespace SadConsole.Game
             var serializedObject = new GameObjectSerialized()
             {
                 AnimationName = gameObject.Animation != null ? gameObject.Animation.Name : "",
-                Animations = new List<Consoles.AnimatedTextSurface>(gameObject.Animations.Values),
+                Animations = new List<Surfaces.AnimatedSurface>(gameObject.Animations.Values),
                 Font = gameObject.Font,
                 IsVisible = gameObject.IsVisible,
                 Position = gameObject.Position,

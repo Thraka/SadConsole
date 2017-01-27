@@ -21,7 +21,7 @@ namespace SadRogueSharp.Consoles
 		protected RogueSharp.Random.IRandom random = new RogueSharp.Random.DotNetRandom();
 
 		Recolor explored;
-		SadConsole.CellAppearance[,] mapData;
+		SadConsole.Cell[,] mapData;
 
 		public MapConsole(int width, int height) : base(width, height)
 		{
@@ -29,7 +29,7 @@ namespace SadRogueSharp.Consoles
 			IMapCreationStrategy<Map> mapCreationStrategy = new RandomRoomsMapCreationStrategy<Map>(width, height, 100, 15, 4);
 			map = Map.Create(mapCreationStrategy);
 
-			mapData = new SadConsole.CellAppearance[width, height];
+			mapData = new SadConsole.Cell[width, height];
 
             
 

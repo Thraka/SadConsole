@@ -1,7 +1,6 @@
 ﻿namespace SadConsole.Controls
 {
     using System.Linq;
-    using SadConsole.Consoles;
     using System.Collections.Generic;
 
     /// <summary>
@@ -16,7 +15,7 @@
         {
             get
             {
-                return (new System.Type[] { typeof(Consoles.ControlsConsole), typeof(Consoles.Window), 
+                return (new System.Type[] { typeof(ControlsConsole), typeof(Window), 
                     typeof(Controls.Button), 
                     typeof(Controls.ControlBase), 
                     typeof(Controls.DrawingSurface), 

@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace SadConsole.Game
+namespace SadConsole.GameHelpers
 {
     /// <summary>
     /// A group of positions with a set of settings.
@@ -22,7 +22,7 @@ namespace SadConsole.Game
         /// <summary>
         /// A visual for the hotspot to help debug.
         /// </summary>
-        public CellAppearance DebugAppearance = new CellAppearance(Color.White, Color.Black, 0);
+        public Cell DebugAppearance = new Cell(Color.White, Color.Black, 0);
 
         /// <summary>
         /// Key-value pairs for the hotspot.

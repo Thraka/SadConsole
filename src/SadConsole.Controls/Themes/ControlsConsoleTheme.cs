@@ -12,7 +12,7 @@ namespace SadConsole.Themes
         /// The style of of the console surface.
         /// </summary>
         [DataMember]
-        public CellAppearance FillStyle;
+        public Cell FillStyle;
 
         /// <summary>
         /// Returns a clone of this object.

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SadConsole.Game
+namespace SadConsole.GameHelpers
 {
     /// <summary>
     /// Defines an area for a scene.
@@ -24,7 +24,7 @@ namespace SadConsole.Game
         /// <summary>
         /// A visual for the area to help debug.
         /// </summary>
-        public CellAppearance DebugAppearance = new CellAppearance(Color.White, Color.Black, 0);
+        public Cell DebugAppearance = new Cell(Color.White, Color.Black, 0);
 
         /// <summary>
         /// Key-value pairs for the zone.

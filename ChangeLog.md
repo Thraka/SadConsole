@@ -279,7 +279,7 @@ Versions are no longer the same across all libraries.
     * Added the PrintOnlyCharacterData property, defaults to false.
         * This allows you to override this method in a derived class to control how the cursor appears on the screen.
     * Removed CursorCharacter, use CursorRenderCell.CharacterIndex instead.
-* When a CellAppearance copies itself to something else, if the CharacterIndex is -1, it will skip copying the CharacterIndex.
+* When a Cell copies itself to something else, if the CharacterIndex is -1, it will skip copying the CharacterIndex.
 * Added SadConsole.Algorithms.GradientFill. (Thanks StackOverflow.GameDeveloper [micklh and anko])
 * CellSurface now implements IEnumerable<Cell>.
 * CellSurface respects ICellEffect.CloneOnApply when an effect is added to a cell.
@@ -357,10 +357,10 @@ Versions are no longer the same across all libraries.
 * During the CellsRenderer.Update method, all known effects from the CellData property will run their Update method.
     * Then, the Effect.Apply(Cell) method will be called on each cell associated with the effect.
     * This keeps all cells synched with the effect they are using.
-* ICellappearance no longer has the Effect property. Instead the CharacterIndex property has been added
+* ICell no longer has the Effect property. Instead the CharacterIndex property has been added
     * This is a better description of the interface, which describes what the cell looks like for rendering.
     * The effect was not part of rendering, only part of changing what the cell looked like.
-    * The Cellappearance class have been updated with this change.
+    * The Cell class have been updated with this change.
 * Input - Mouse data and event now have the following new properties:
     * ScrollWheelValue
     * ScrollWheelValueChange
@@ -418,7 +418,7 @@ Versions are no longer the same across all libraries.
     * These have been replaced with Engine.WindowWidth, Engine.WindowHeight, Engine.GetScreenSizeInCells(Font), and GetScreenSizeInCells(CellSurface surface)
 * CellSurface did not set new cells that are created during resize to the default foreground/background of the surface
 * Added Console.OnLocationChanged protected method which is called when the location property value changes
-* Added ICellAppearance. CellAppearance is no longer the base class for Cell, but standalone
+* Added ICell. Cell is no longer the base class for Cell, but standalone
 * Added Console.MoveToFrontOnMouseFocus property
 * Added the Shapes.Line shape to draw a line on a console. The line can have a starting/middle/ending characters and appearance
 * Added ConsoleList.Clear() method
@@ -431,7 +431,7 @@ Versions are no longer the same across all libraries.
 * CellSurface has two new methods to help get information when you have reference to a cell: GetCellIndex and GetCellPosition
 * CellSurface.IsValidCell was not calculating correctly
 * Console.VirtualCursor can no longer be null. Use Console.VirtualCursor.IsVisible true to hide the cursor
-* Print(int x, int y, string text, CellAppearance appearance) has changed to use ICellAppearance
+* Print(int x, int y, string text, Cell appearance) has changed to use ICell
 * Perf improvements for ViewPortConsole and Console rendering
 
 #### Controls
@@ -500,7 +500,7 @@ Versions are no longer the same across all libraries.
 #### Core
 * When cloning an EffectsChain, the active effect on the clone referenced the clone source instead of the new cloned chain
 * Added Delay effect.
-* Fixed bug where CellAppearance's effect property didn't behave like Cell.
+* Fixed bug where Cell's effect property didn't behave like Cell.
 * CellEffects are all using double for time counting instead of float.
 * Moved cell.effect update to the Update method. Was calling it in the Render method for ViewPortConsole.
 * CreateColored string extension did not set the backing string information.

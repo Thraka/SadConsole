@@ -42,6 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\RenderTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Color.cs" />

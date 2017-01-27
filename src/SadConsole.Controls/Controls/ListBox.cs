@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using SadConsole.Themes;
 using System;
 using System.Collections.Generic;
@@ -598,8 +598,8 @@ namespace SadConsole.Controls
 
                     for (int ycell = 0; ycell < _slider.TextSurface.Height; ycell++)
                     {
-                        this.SetGlyph(_sliderRenderLocation.X, y, _slider[0, ycell].GlyphIndex);
-                        this.SetCellAppearance(_sliderRenderLocation.X, y, _slider[0, ycell]);
+                        this.SetGlyph(_sliderRenderLocation.X, y, _slider[0, ycell].Glyph);
+                        this.SetCell(_sliderRenderLocation.X, y, _slider[0, ycell]);
                         y++;
                     }
                 }
@@ -675,7 +675,7 @@ namespace SadConsole.Controls
             Theme = (ThemePartSelected)Library.Default.ListBoxTheme.Item.Clone();
         }
 
-        protected CellAppearance _currentAppearance = new CellAppearance(Color.White, Color.Black, 0);
+        protected Cell _currentAppearance = new Cell(Color.White, Color.Black, 0);
 
         /// <summary>
         /// When set to true, a listbox will not override the theme with its own.
@@ -702,7 +702,7 @@ namespace SadConsole.Controls
 
         protected virtual void DetermineAppearance()
         {
-            CellAppearance currentappearance = _currentAppearance;
+            Cell currentappearance = _currentAppearance;
 
             if (_isSelected)
                 _currentAppearance = Theme.Selected;
@@ -729,7 +729,7 @@ namespace SadConsole.Controls
             set { _isDirty = value; OnPropertyChanged("IsDirty"); }
         }
 
-        public virtual void Draw(ITextSurface surface, Rectangle area)
+        public virtual void Draw(ISurface surface, Rectangle area)
         {
             string value = Item.ToString();
             if (value.Length < area.Width)
@@ -758,14 +758,15 @@ namespace SadConsole.Controls
     [DataContract]
     public class ListBoxItemColor : ListBoxItem
     {
-        public override void Draw(ITextSurface surface, Rectangle area)
+        public override void Draw(ISurface surface, Rectangle area)
         {
             if (Item is Color || Item is Tuple<Color, Color, string>)
             {
                 var editor = new SurfaceEditor(surface);
                 string value = new string(' ', area.Width - 2);
 
-                CellAppearance cellLook = _currentAppearance.Clone();
+                Cell cellLook = new Cell();
+                _currentAppearance.CopyAppearanceTo(ref cellLook);
 
                 if (Item is Color)
                 {

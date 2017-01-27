@@ -18,9 +18,9 @@ namespace SadConsole.Controls
 
         [DataMember(Name = "Theme")]
         protected ScrollBarTheme _theme;
-        protected CellAppearance _currentAppearanceEnds;
-        protected CellAppearance _currentAppearanceBar;
-        protected CellAppearance _currentAppearanceSlider;
+        protected Cell _currentAppearanceEnds;
+        protected Cell _currentAppearanceBar;
+        protected Cell _currentAppearanceSlider;
 
         protected int _topOrLeftCharacter;
         protected int _bottomOrRightCharacter;
@@ -216,9 +216,9 @@ namespace SadConsole.Controls
 
         public override void DetermineAppearance()
         {
-            CellAppearance currentappearanceEnds = _currentAppearanceEnds;
-            CellAppearance currentappearanceBar = _currentAppearanceBar;
-            CellAppearance currentappearanceSlider = _currentAppearanceSlider;
+            Cell currentappearanceEnds = _currentAppearanceEnds;
+            Cell currentappearanceBar = _currentAppearanceBar;
+            Cell currentappearanceSlider = _currentAppearanceSlider;
 
             if (!isEnabled)
             {
@@ -251,15 +251,15 @@ namespace SadConsole.Controls
         {
             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
             {
-                this.SetCellAppearance(0, 0, Theme.Ends.Normal);
+                this.SetCell(0, 0, Theme.Ends.Normal);
                 this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                this.SetCellAppearance(textSurface.Width - 1, 0, Theme.Ends.Normal);
+                this.SetCell(textSurface.Width - 1, 0, Theme.Ends.Normal);
                 this.SetGlyph(textSurface.Width - 1, 0, _bottomOrRightCharacter);
 
                 for (int i = 1; i <= _sliderBarSize; i++)
                 {
-                    this.SetCellAppearance(i, 0, Theme.Bar.Normal);
+                    this.SetCell(i, 0, Theme.Bar.Normal);
                     this.SetGlyph(i, 0, _sliderBarCharacter);
                 }
 
@@ -267,22 +267,22 @@ namespace SadConsole.Controls
                 {
                     if (IsEnabled)
                     {
-                        this.SetCellAppearance(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
+                        this.SetCell(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
                         this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
                     }
                 }
             }
             else
             {
-                this.SetCellAppearance(0, 0, Theme.Ends.Normal);
+                this.SetCell(0, 0, Theme.Ends.Normal);
                 this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                this.SetCellAppearance(0, textSurface.Height - 1, Theme.Ends.Normal);
+                this.SetCell(0, textSurface.Height - 1, Theme.Ends.Normal);
                 this.SetGlyph(0, textSurface.Height - 1, _bottomOrRightCharacter);
 
                 for (int i = 0; i < _sliderBarSize; i++)
                 {
-                    this.SetCellAppearance(0, i + 1, Theme.Bar.Normal);
+                    this.SetCell(0, i + 1, Theme.Bar.Normal);
                     this.SetGlyph(0, i + 1, _sliderBarCharacter);
                 }
 
@@ -290,7 +290,7 @@ namespace SadConsole.Controls
                 {
                     if (IsEnabled)
                     {
-                        this.SetCellAppearance(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
+                        this.SetCell(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
                         this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
                     }
                 }

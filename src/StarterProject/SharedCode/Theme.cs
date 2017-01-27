@@ -48,18 +48,18 @@ namespace StarterProject
         public static Color Color_ControlBackDim = CyanDark;
         public static Color Color_ControlBackSelected = GreenDark;
 
-        public static SadConsole.CellAppearance Appearance_ListBoxItem_Normal = new SadConsole.CellAppearance(Color_Text, Color_ControlBack);
-        public static SadConsole.CellAppearance Appearance_ListBoxItem_SelectedItem = new SadConsole.CellAppearance(Yellow, Color_ControlBack);
+        public static SadConsole.Cell Appearance_ListBoxItem_Normal = new SadConsole.Cell(Color_Text, Color_ControlBack);
+        public static SadConsole.Cell Appearance_ListBoxItem_SelectedItem = new SadConsole.Cell(Yellow, Color_ControlBack);
 
 
-        public static SadConsole.CellAppearance Appearance_ControlNormal = new SadConsole.CellAppearance(Color_Text, Color_ControlBack);
-        public static SadConsole.CellAppearance Appearance_ControlDisabled = new SadConsole.CellAppearance(Color_TextDim, Color_ControlBack);
-        public static SadConsole.CellAppearance Appearance_ControlOver = new SadConsole.CellAppearance(Color_TextSelectedDark, Color_ControlBackSelected);
-        public static SadConsole.CellAppearance Appearance_ControlSelected = new SadConsole.CellAppearance(Color_TextSelected, Color_ControlBackSelected);
-        public static SadConsole.CellAppearance Appearance_ControlMouseDown = new SadConsole.CellAppearance(Color_ControlBackSelected, Color_TextSelectedDark);
-        public static SadConsole.CellAppearance Appearance_ControlFocused = new SadConsole.CellAppearance(Cyan, Color_ControlBackDim);
+        public static SadConsole.Cell Appearance_ControlNormal = new SadConsole.Cell(Color_Text, Color_ControlBack);
+        public static SadConsole.Cell Appearance_ControlDisabled = new SadConsole.Cell(Color_TextDim, Color_ControlBack);
+        public static SadConsole.Cell Appearance_ControlOver = new SadConsole.Cell(Color_TextSelectedDark, Color_ControlBackSelected);
+        public static SadConsole.Cell Appearance_ControlSelected = new SadConsole.Cell(Color_TextSelected, Color_ControlBackSelected);
+        public static SadConsole.Cell Appearance_ControlMouseDown = new SadConsole.Cell(Color_ControlBackSelected, Color_TextSelectedDark);
+        public static SadConsole.Cell Appearance_ControlFocused = new SadConsole.Cell(Cyan, Color_ControlBackDim);
 
-        public static SadConsole.CellAppearance Appearance_ControlTextBoxNormal = new SadConsole.CellAppearance(Color_Text, ClearAlpha(new Color((byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), 255)));
+        public static SadConsole.Cell Appearance_ControlTextBoxNormal = new SadConsole.Cell(Color_Text, ClearAlpha(new Color((byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), 255)));
 
         public static SadConsole.Themes.RadioButtonTheme NoCheckRadioButtonTheme;
         #endregion

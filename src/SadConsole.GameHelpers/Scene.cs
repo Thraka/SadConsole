@@ -3,15 +3,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SadConsole.Consoles;
-using Console = SadConsole.Consoles.Console;
+using SadConsole.Surfaces;
+using Console = SadConsole.Console;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 
-namespace SadConsole.Game
+namespace SadConsole.GameHelpers
 {
     /// <summary>
-    /// Groups a <see cref="LayeredTextSurface"/> and a list of <see cref="GameObject"/> types together.
+    /// Groups a <see cref="LayeredSurface"/> and a list of <see cref="GameObject"/> types together.
     /// </summary>
     [DataContract]
     public class Scene: IConsole
@@ -19,19 +19,22 @@ namespace SadConsole.Game
         protected bool isVisible;
         protected Console baseConsole;
         [DataMember( Name = "BackgroundSurface")]
-        protected LayeredTextSurface backgroundSurface;
+        protected LayeredSurface backgroundSurface;
 
 
         /// <summary>
         /// The objects for the scene.
         /// </summary>
         [DataMember]
-        public GameObjectCollection Objects;
+        public List<GameObject> Objects;
+
+        [DataMember]
+        public List<IScreen> Children { get; set; } = new List<IScreen>();
 
         /// <summary>
         /// The background of the scene.
         /// </summary>
-        public LayeredTextSurface BackgroundSurface { get { return backgroundSurface; } set { backgroundSurface = value; baseConsole.TextSurface = value; } }
+        public LayeredSurface BackgroundSurface { get { return backgroundSurface; } set { backgroundSurface = value; baseConsole.TextSurface = value; } }
 
         /// <summary>
         /// Regions defined for the scene.
@@ -46,12 +49,12 @@ namespace SadConsole.Game
         public List<Hotspot> Hotspots;
 
         /// <summary>
-        /// Width of the backing <see cref="LayeredTextSurface"/>.
+        /// Width of the backing <see cref="LayeredSurface"/>.
         /// </summary>
         public int Width { get { return BackgroundSurface.Width; } }
 
         /// <summary>
-        /// Height of the backing <see cref="LayeredTextSurface"/>.
+        /// Height of the backing <see cref="LayeredSurface"/>.
         /// </summary>
         public int Height { get { return BackgroundSurface.Height; } }
 
@@ -74,7 +77,7 @@ namespace SadConsole.Game
             }
         }
 
-        public ITextSurfaceRendered TextSurface
+        public ISurface TextSurface
         {
             get
             {
@@ -94,7 +97,7 @@ namespace SadConsole.Game
             }
         }
 
-        public IConsoleList Parent
+        public IScreen Parent
         {
             get
             {
@@ -133,29 +136,29 @@ namespace SadConsole.Game
             }
         }
 
-        public bool CanUseKeyboard
+        public bool UseKeyboard
         {
             get
             {
-                return ((IConsole)baseConsole).CanUseKeyboard;
+                return ((IConsole)baseConsole).UseKeyboard;
             }
 
             set
             {
-                ((IConsole)baseConsole).CanUseKeyboard = value;
+                ((IConsole)baseConsole).UseKeyboard = value;
             }
         }
 
-        public bool CanUseMouse
+        public bool UseMouse
         {
             get
             {
-                return ((IConsole)baseConsole).CanUseMouse;
+                return ((IConsole)baseConsole).UseMouse;
             }
 
             set
             {
-                ((IConsole)baseConsole).CanUseMouse = value;
+                ((IConsole)baseConsole).UseMouse = value;
             }
         }
 
@@ -211,18 +214,18 @@ namespace SadConsole.Game
             }
         }
 
-        public bool DoUpdate
-        {
-            get
-            {
-                return ((IConsole)baseConsole).DoUpdate;
-            }
+        //public bool DoUpdate
+        //{
+        //    get
+        //    {
+        //        return ((IConsole)baseConsole).DoUpdate;
+        //    }
 
-            set
-            {
-                ((IConsole)baseConsole).DoUpdate = value;
-            }
-        }
+        //    set
+        //    {
+        //        ((IConsole)baseConsole).DoUpdate = value;
+        //    }
+        //}
 
         public bool ProcessMouse(MouseInfo info)
         {
@@ -234,26 +237,26 @@ namespace SadConsole.Game
             return ((IConsole)baseConsole).ProcessKeyboard(info);
         }
 
-        public void Update()
+        public void Update(TimeSpan updateTime)
         {
-            ((IConsole)baseConsole).Update();
+            ((IConsole)baseConsole).Update(updateTime);
         }
 
-        public void Render()
+        public void Draw(TimeSpan renderTime)
         {
-            ((IConsole)baseConsole).Render();
+            ((IConsole)baseConsole).Draw(renderTime);
         }
         #endregion
 
         /// <summary>
-        /// Creates a new Scene from an existing <see cref="LayeredTextSurface"/>.
+        /// Creates a new Scene from an existing <see cref="LayeredSurface"/>.
         /// </summary>
         /// <param name="surface">The surface for the scene.</param>
-        public Scene(LayeredTextSurface surface)
+        public Scene(LayeredSurface surface)
         {
             baseConsole = new Console(surface);
             backgroundSurface = surface;
-            Objects = new GameObjectCollection();
+            Objects = new List<GameObject>();
             Zones = new List<Zone>();
             Hotspots = new List<Hotspot>();
         }
@@ -263,7 +266,7 @@ namespace SadConsole.Game
             var scene = SadConsole.Serializer.Load<Scene>(file, types);
 
             if (baseConsole == null)
-                scene.baseConsole = new Console(scene.backgroundSurface) { Renderer = new LayeredTextRenderer() };
+                scene.baseConsole = new Console(scene.backgroundSurface) { Renderer = new Renderers.LayeredTextRenderer() };
             else
                 scene.baseConsole = baseConsole;
 

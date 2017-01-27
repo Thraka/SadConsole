@@ -69,7 +69,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// The current appearance of the control.
         /// </summary>
-        protected CellAppearance _currentAppearance;
+        protected Cell _currentAppearance;
 
         /// <summary>
         /// Raised when the text has changed and the preview has accepted it.
@@ -210,7 +210,7 @@ namespace SadConsole.Controls
         {
             if (this.IsDirty)
             {
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.GlyphIndex, null);
+                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.Glyph, null);
 
                 effects.RemoveAll();
 
@@ -233,12 +233,12 @@ namespace SadConsole.Controls
         /// </summary>
         public override void DetermineAppearance()
         {
-            CellAppearance currentappearance = _currentAppearance;
+            Cell currentappearance = _currentAppearance;
 
             if (isMouseOver)
                 _currentAppearance = Theme.MouseOver;
 
-            else if (base.IsFocused && Engine.ActiveConsole == parent)
+            else if (base.IsFocused && Console.ActiveConsole == parent)
                 _currentAppearance = Theme.Focused;
             else
                 _currentAppearance = Theme.Normal;
@@ -331,7 +331,7 @@ namespace SadConsole.Controls
                 {
                     for (int i = 0; i < info.KeysPressed.Count; i++)
                     {
-                        if (info.KeysPressed[i].XnaKey == Keys.Enter)
+                        if (info.KeysPressed[i].Key == Keys.Enter)
                         {
                             this.IsDirty = true;
                             DisableKeyboard = false;
@@ -350,10 +350,10 @@ namespace SadConsole.Controls
 					{
 						if (_isNumeric)
 						{
-                            if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0)
+                            if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
 								newText.Remove(newText.Length - 1, 1);
 
-							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
+							else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
 								DisableKeyboard = true;
 
@@ -361,7 +361,7 @@ namespace SadConsole.Controls
 
 								return true;
 							}
-							else if (info.KeysPressed[i].XnaKey == Keys.Escape)
+							else if (info.KeysPressed[i].Key == Keys.Escape)
 							{
 								DisableKeyboard = true;
 								return true;
@@ -377,7 +377,7 @@ namespace SadConsole.Controls
 
 						else
 						{
-                            if (info.KeysPressed[i].XnaKey == Keys.Back && newText.Length != 0 && _carrotPos != 0)
+                            if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _carrotPos != 0)
                             {
                                 if (_carrotPos == newText.Length)
 									newText.Remove(newText.Length - 1, 1);
@@ -389,7 +389,7 @@ namespace SadConsole.Controls
 								if (_carrotPos == -1)
 									_carrotPos = 0;
 							}
-							else if (info.KeysPressed[i].XnaKey == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+							else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
 							{
 								newText.Insert(_carrotPos, ' ');
 								_carrotPos++;
@@ -398,7 +398,7 @@ namespace SadConsole.Controls
 									_carrotPos = newText.Length;
 							}
 
-							else if (info.KeysPressed[i].XnaKey == Keys.Delete && _carrotPos != newText.Length)
+							else if (info.KeysPressed[i].Key == Keys.Delete && _carrotPos != newText.Length)
 							{
 								newText.Remove(_carrotPos, 1);
 
@@ -406,25 +406,25 @@ namespace SadConsole.Controls
 									_carrotPos = newText.Length;
 							}
 
-							else if (info.KeysPressed[i].XnaKey == Keys.Enter)
+							else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
                                 Text = _editingText;
 								DisableKeyboard = true;
 								return true;
 							}
-							else if (info.KeysPressed[i].XnaKey == Keys.Escape)
+							else if (info.KeysPressed[i].Key == Keys.Escape)
 							{
 								DisableKeyboard = true;
 								return true;
 							}
-							else if (info.KeysPressed[i].XnaKey == Keys.Left)
+							else if (info.KeysPressed[i].Key == Keys.Left)
 							{
 								_carrotPos -= 1;
 
 								if (_carrotPos == -1)
 									_carrotPos = 0;
 							}
-							else if (info.KeysPressed[i].XnaKey == Keys.Right)
+							else if (info.KeysPressed[i].Key == Keys.Right)
 							{
 								_carrotPos += 1;
 
@@ -432,12 +432,12 @@ namespace SadConsole.Controls
 									_carrotPos = newText.Length;
 							}
 
-							else if (info.KeysPressed[i].XnaKey == Keys.Home)
+							else if (info.KeysPressed[i].Key == Keys.Home)
 							{
 								_carrotPos = 0;
 							}
 
-							else if (info.KeysPressed[i].XnaKey == Keys.End)
+							else if (info.KeysPressed[i].Key == Keys.End)
 							{
 									_carrotPos = newText.Length;
 							}
@@ -521,7 +521,7 @@ namespace SadConsole.Controls
 
         public override void Update()
         {
-            effects.UpdateEffects(Engine.GameTimeElapsedUpdate);
+            effects.UpdateEffects(Global.GameTimeElapsedUpdate);
 
             base.Update();
         }

@@ -11,7 +11,7 @@ using Color = Microsoft.Xna.Framework.Color;
 namespace SadConsole
 {
     /// <summary>
-    /// Represents an individual glyph on the screen with a foreground, background, and effect.
+    /// Represents an individual glyph on the screen with a foreground, background, and mirror effect.
     /// </summary>
     public class Cell
     {
@@ -78,6 +78,11 @@ namespace SadConsole
 
                 State = null;
             }
+        }
+
+        public Cell Clone()
+        {
+            return new Cell(Foreground, Background, Glyph, Mirror);
         }
     }
 

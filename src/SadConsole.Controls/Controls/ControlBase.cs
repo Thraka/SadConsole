@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using SadConsole.Input;
 using System.Runtime.Serialization;
 
@@ -16,13 +16,13 @@ namespace SadConsole.Controls
         protected Rectangle bounds;
         protected bool isMouseOver = false;
         protected bool isEnabled = true;
-        protected Consoles.ControlsConsole parent;
+        protected ControlsConsole parent;
 
         [DataMember]
-        public bool CanUseKeyboard { get; set; }
+        public bool UseKeyboard { get; set; }
 
         [DataMember]
-        public bool CanUseMouse { get; set; }
+        public bool UseMouse { get; set; }
 
         [DataMember]
         public bool CanFocus { get; set; }
@@ -141,7 +141,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// Gets or sets the parent console of this control.
         /// </summary>
-        public Consoles.ControlsConsole Parent
+        public ControlsConsole Parent
         {
             get { return parent; }
             set { parent = value; OnParentChanged(); }
@@ -172,7 +172,7 @@ namespace SadConsole.Controls
         /// Default constructor of the control.
         /// </summary>
         public ControlBase(int width, int height)
-            : base(new TextSurface(width, height, Engine.DefaultFont))
+            : base(new BasicSurface(width, height))
         {
             IsDirty = true;
             TabStop = true;
@@ -180,8 +180,8 @@ namespace SadConsole.Controls
             FocusOnClick = true;
             CanFocus = false;
             position = new Point();
-            CanUseMouse = true;
-            CanUseKeyboard = true;
+            UseMouse = true;
+            UseKeyboard = true;
             bounds = new Rectangle(0, 0, width, height);
         }
         #endregion
@@ -210,7 +210,7 @@ namespace SadConsole.Controls
         /// <returns>Always returns false.</returns>
         public virtual bool ProcessMouse(Input.MouseInfo info)
         {
-            if (IsEnabled && CanUseMouse)
+            if (IsEnabled && UseMouse)
             {
                 if (info.ConsoleLocation.X >= Position.X && info.ConsoleLocation.X < Position.X + Width &&
                     info.ConsoleLocation.Y >= Position.Y && info.ConsoleLocation.Y < Position.Y + Height)

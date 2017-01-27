@@ -12,25 +12,25 @@
         /// The normal appearance of the control.
         /// </summary>
         [DataMember]
-        public CellAppearance Normal;
+        public Cell Normal;
 
         /// <summary>
         /// The appearance of the control when it is focused.
         /// </summary>
         [DataMember]
-        public CellAppearance Focused;
+        public Cell Focused;
 
         /// <summary>
         /// The appearance of the control when the mouse is over it.
         /// </summary>
         [DataMember]
-        public CellAppearance MouseOver;
+        public Cell MouseOver;
 
         /// <summary>
         /// The appearance of the control when it is disabled.
         /// </summary>
         [DataMember]
-        public CellAppearance Disabled;
+        public Cell Disabled;
 
         /// <summary>
         /// Clones this object.

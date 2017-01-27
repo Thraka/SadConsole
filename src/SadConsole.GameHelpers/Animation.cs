@@ -1,9 +1,10 @@
-﻿using Color = Microsoft.Xna.Framework.Color;
+﻿using SadConsole.Surfaces;
+using Color = Microsoft.Xna.Framework.Color;
 
-namespace SadConsole.Game
+namespace SadConsole.GameHelpers
 {
     /// <summary>
-    /// Helpers related to <see cref="Consoles.AnimatedTextSurface"/> animations.
+    /// Helpers related to <see cref="Surfaces.AnimatedSurface"/> animations.
     /// </summary>
     public static class Animations
     {
@@ -15,10 +16,10 @@ namespace SadConsole.Game
         /// <param name="frames">How many frames the animation should have.</param>
         /// <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="System.Random.NextDouble"/>.</param>
         /// <returns>An animation.</returns>
-        public static Consoles.AnimatedTextSurface CreateStatic(int width, int height, int frames, double blankChance)
+        public static AnimatedSurface CreateStatic(int width, int height, int frames, double blankChance)
         {
-            var animation = new Consoles.AnimatedTextSurface("default", width, height, Engine.DefaultFont);
-            var editor = new Consoles.SurfaceEditor(new Consoles.TextSurface(1, 1, Engine.DefaultFont));
+            var animation = new AnimatedSurface("default", width, height, Global.FontDefault);
+            var editor = new SurfaceEditor(new BasicSurface(1, 1, Global.FontDefault));
 
             for (int f = 0; f < frames; f++)
             {
@@ -29,13 +30,13 @@ namespace SadConsole.Game
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        int character = Engine.Random.Next(48, 168);
+                        int character = Global.Random.Next(48, 168);
 
-                        if (Engine.Random.NextDouble() <= blankChance)
+                        if (Global.Random.NextDouble() <= blankChance)
                             character = 32;
 
                         editor.SetGlyph(x, y, character);
-                        editor.SetForeground(x, y, Color.White * (float)(Engine.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
+                        editor.SetForeground(x, y, Color.White * (float)(Global.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
                     }
                 }
 

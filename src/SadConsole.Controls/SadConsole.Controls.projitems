@@ -9,11 +9,7 @@
     <Import_RootNamespace>SadConsole.Controls</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ControlsConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ControlsConsoleRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Window.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\Window.Static.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Consoles\WindowRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlBase.cs" />
@@ -23,6 +19,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ScrollBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SelectionButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\ControlsConsoleRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ButtonTheme.cs" />
@@ -36,5 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartClickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartSelected.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\WindowTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Window.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Window.Static.cs" />
   </ItemGroup>
 </Project>

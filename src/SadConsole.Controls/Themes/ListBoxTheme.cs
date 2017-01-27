@@ -14,7 +14,7 @@ namespace SadConsole.Themes
         /// The appearance of the border.
         /// </summary>
         [DataMember]
-        public CellAppearance Border;
+        public Cell Border;
 
         /// <summary>
         /// The appearance of an item.

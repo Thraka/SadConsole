@@ -15,19 +15,19 @@ namespace SadConsole.Themes
         /// The style of the title.
         /// </summary>
         [DataMember]
-        public CellAppearance TitleStyle;
+        public Cell TitleStyle;
 
         /// <summary>
         /// The style of the border
         /// </summary>
         [DataMember]
-        public CellAppearance BorderStyle;
+        public Cell BorderStyle;
 
         /// <summary>
         /// The style of window space inside the border.
         /// </summary>
         [DataMember]
-        public CellAppearance FillStyle;
+        public Cell FillStyle;
 
         /// <summary>
         /// The color to tint the background when the window is shown as modal.

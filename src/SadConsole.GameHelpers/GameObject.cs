@@ -4,30 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Linq;
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace SadConsole.Game
+namespace SadConsole.GameHelpers
 {
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
     [DataContract]
-    public partial class GameObject: Consoles.ITextSurfaceRendered
+    public partial class GameObject: ISurface
     {
-        /// <summary>
-        /// A translation matrix of 0, 0, 0.
-        /// </summary>
-        public static Matrix NoMatrix = Matrix.CreateTranslation(0f, 0f, 0f);
-
         /// <summary>
         /// Automatically forwards the <see cref="AnimatedTextSurface.AnimationStateChanged"/> event.
         /// </summary>
-        public event System.EventHandler<AnimatedTextSurface.AnimationStateChangedEventArgs> AnimationStateChanged;
+        public event System.EventHandler<AnimatedSurface.AnimationStateChangedEventArgs> AnimationStateChanged;
 
         /// <summary>
         /// Renderer used for drawing the game object.
         /// </summary>
-        protected Consoles.ITextSurfaceRenderer renderer;
+        protected Renderers.ISurfaceRenderer renderer;
 
         /// <summary>
         /// Reposition the rects of the animation.
@@ -47,7 +43,7 @@ namespace SadConsole.Game
         /// <summary>
         /// Animation for the game object.
         /// </summary>
-        protected Consoles.AnimatedTextSurface animation;
+        protected AnimatedSurface animation;
 
         /// <summary>
         /// Font for the game object.
@@ -76,7 +72,7 @@ namespace SadConsole.Game
         /// <summary>
         /// Renderer used to draw the animation of the game object to the screen.
         /// </summary>
-        public Consoles.ITextSurfaceRenderer Renderer { get { return renderer; } set { renderer = value; } }
+        public Renderers.ISurfaceRenderer Renderer { get { return renderer; } set { renderer = value; } }
 
         /// <summary>
         /// Offset applied to drawing the game object.
@@ -102,16 +98,26 @@ namespace SadConsole.Game
         public bool UsePixelPositioning { get { return usePixelPositioning; } set { usePixelPositioning = value; UpdateRects(position); } }
 
         /// <summary>
+        /// Indicates the surface has changed and needs to be rendered.
+        /// </summary>
+        public bool IsDirty { get; set; } = true;
+
+        /// <summary>
+        /// The last texture render pass for this surface.
+        /// </summary>
+        public RenderTarget2D LastRenderResult { get; set; }
+
+        /// <summary>
         /// The current animation.
         /// </summary>
-        public Consoles.AnimatedTextSurface Animation
+        public AnimatedSurface Animation
         {
             get { return animation; }
             set
             {
                 if (animation != null)
                 {
-                    animation.State = AnimatedTextSurface.AnimationState.Deactivated;
+                    animation.State = AnimatedSurface.AnimationState.Deactivated;
                     animation.AnimationStateChanged -= ForwardAnimationStateChanged;
                 }
 
@@ -120,7 +126,7 @@ namespace SadConsole.Game
                 UpdateRects(position, true);
 
                 animation.AnimationStateChanged += ForwardAnimationStateChanged;
-                animation.State = AnimatedTextSurface.AnimationState.Activated;
+                animation.State = AnimatedSurface.AnimationState.Activated;
 
             }
         }
@@ -128,7 +134,7 @@ namespace SadConsole.Game
         /// <summary>
         /// Collection of animations associated with this game object.
         /// </summary>
-        public Dictionary<string, Consoles.AnimatedTextSurface> Animations { get; protected set; } = new Dictionary<string, Consoles.AnimatedTextSurface>();
+        public Dictionary<string, AnimatedSurface> Animations { get; protected set; } = new Dictionary<string, AnimatedSurface>();
 
         /// <summary>
         /// When false, this <see cref="GameObject"/> won't be rendered.
@@ -159,14 +165,14 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation).RenderCells;
+                return ((ISurface)animation).RenderCells;
             }
         }
 
         public Color Tint
         {
-            get { return ((ITextSurfaceRendered)animation).Tint; }
-            set { ((ITextSurfaceRendered)animation).Tint = value; }
+            get { return ((ISurface)animation).Tint; }
+            set { ((ISurface)animation).Tint = value; }
         }
 
         public Rectangle RenderArea { get; set; }
@@ -175,7 +181,7 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation).Width;
+                return ((ISurface)animation).Width;
             }
         }
 
@@ -183,7 +189,7 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation).Height;
+                return ((ISurface)animation).Height;
             }
         }
 
@@ -191,12 +197,12 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation).DefaultBackground;
+                return ((ISurface)animation).DefaultBackground;
             }
 
             set
             {
-                ((ITextSurfaceRendered)animation).DefaultBackground = value;
+                ((ISurface)animation).DefaultBackground = value;
             }
         }
 
@@ -204,12 +210,12 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation).DefaultForeground;
+                return ((ISurface)animation).DefaultForeground;
             }
 
             set
             {
-                ((ITextSurfaceRendered)animation).DefaultForeground = value;
+                ((ISurface)animation).DefaultForeground = value;
             }
         }
 
@@ -217,7 +223,7 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation).Cells;
+                return ((ISurface)animation).Cells;
             }
         }
 
@@ -225,7 +231,7 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation)[x, y];
+                return ((ISurface)animation)[x, y];
             }
         }
 
@@ -233,7 +239,7 @@ namespace SadConsole.Game
         {
             get
             {
-                return ((ITextSurfaceRendered)animation)[index];
+                return ((ISurface)animation)[index];
             }
         }
 
@@ -241,21 +247,21 @@ namespace SadConsole.Game
         /// <summary>
         /// Creates a new GameObject with the default font.
         /// </summary>
-        public GameObject() : this(Engine.DefaultFont) { }
+        public GameObject() : this(Global.FontDefault) { }
 
         /// <summary>
         /// Creates a new GameObject.
         /// </summary>
         public GameObject(Font font)
         {
-            renderer = new Consoles.TextSurfaceRenderer();
-            animation = new Consoles.AnimatedTextSurface("default", 1, 1, Engine.DefaultFont);
+            renderer = new Renderers.SurfaceRenderer();
+            animation = new AnimatedSurface("default", 1, 1, Global.FontDefault);
             var frame = animation.CreateFrame();
-            frame[0].GlyphIndex = 1;
+            frame[0].Glyph = 1;
             this.font = animation.Font = font;
         }
 
-        private void ForwardAnimationStateChanged(object sender, AnimatedTextSurface.AnimationStateChangedEventArgs e)
+        private void ForwardAnimationStateChanged(object sender, AnimatedSurface.AnimationStateChangedEventArgs e)
         {
             AnimationStateChanged?.Invoke(sender, e);
         }
@@ -320,18 +326,22 @@ namespace SadConsole.Game
         {
             UpdateRects(position, true);
         }
-        
+
         /// <summary>
         /// Draws the game object.
         /// </summary>
-        public virtual void Render()
+        public virtual void Draw(TimeSpan elapsed)
         {
             if (IsVisible)
             {
                 if (repositionRects)
-                    renderer.Render(this, NoMatrix);   
+                    Global.DrawCalls.Add(new Tuple<ISurface, Point>(this, Point.Zero));
+
+                //renderer.Render(this, NoMatrix);   
                 else
-                    renderer.Render(this, position + renderOffset - animation.Center, usePixelPositioning);
+                    Global.DrawCalls.Add(new Tuple<ISurface, Point>(this, Font.GetWorldPosition(position + renderOffset - animation.Center)));
+                //renderer.Render(this, position + renderOffset - animation.Center, usePixelPositioning);
+
             }
         }
 
@@ -350,7 +360,7 @@ namespace SadConsole.Game
         /// <param name="knownTypes">The type of <see cref="GameObject.Renderer"/>.</param>
         public void Save(string file, params Type[] knownTypes)
         {
-            Serializer.Save(this, file, Serializer.ConsoleTypes.Union(knownTypes).Union(new Type[] { typeof(GameObjectSerialized), typeof(Consoles.AnimatedTextSurface), typeof(Consoles.AnimatedTextSurface[]) }));
+            Serializer.Save(this, file, Serializer.ConsoleTypes.Union(knownTypes).Union(new Type[] { typeof(GameObjectSerialized), typeof(AnimatedSurface), typeof(AnimatedSurface[]) }));
         }
 
         /// <summary>
@@ -366,8 +376,8 @@ namespace SadConsole.Game
 
         internal static void EnsureMapping()
         {
-            if (!Serializer.HasMapping(typeof(GameObject), typeof(GameObjectSerialized)))
-                Serializer.AddMapping(typeof(GameObject), typeof(GameObjectSerialized), (obj) => { return (object)GameObjectSerialized.FromFramework((GameObject)obj); }, (obj) => { return (object)GameObjectSerialized.ToFramework((GameObjectSerialized)obj); });
+            //if (!Serializer.HasMapping(typeof(GameObject), typeof(GameObjectSerialized)))
+            //    Serializer.AddMapping(typeof(GameObject), typeof(GameObjectSerialized), (obj) => { return (object)GameObjectSerialized.FromFramework((GameObject)obj); }, (obj) => { return (object)GameObjectSerialized.ToFramework((GameObjectSerialized)obj); });
         }
     }
 }

@@ -50,7 +50,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// Selected part of the theme based on the state of the control.
         /// </summary>
-        protected CellAppearance currentAppearance;
+        protected Cell currentAppearance;
 
         /// <summary>
         /// The text displayed on the control.
@@ -109,7 +109,7 @@ namespace SadConsole.Controls
         /// </summary>
         public override void DetermineAppearance()
         {
-            CellAppearance currentappearance = currentAppearance;
+            Cell currentappearance = currentAppearance;
 
             if (!isEnabled)
                 currentAppearance = Theme.Disabled;
@@ -117,7 +117,7 @@ namespace SadConsole.Controls
             else if (!isMouseDown && isMouseOver)
                 currentAppearance = Theme.MouseOver;
 
-            else if (!isMouseDown && !isMouseOver && IsFocused && Engine.ActiveConsole == parent)
+            else if (!isMouseDown && !isMouseOver && IsFocused && Console.ActiveConsole == parent)
                 currentAppearance = Theme.Focused;
 
             else if (isMouseDown && isMouseOver)
@@ -222,7 +222,7 @@ namespace SadConsole.Controls
             if (this.IsDirty)
             {
                 // Redraw the control
-                this.Fill(currentAppearance.Foreground, currentAppearance.Background, currentAppearance.GlyphIndex, null);
+                this.Fill(currentAppearance.Foreground, currentAppearance.Background, currentAppearance.Glyph, null);
 
                 if (ShowEnds)
                 {

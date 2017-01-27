@@ -29,8 +29,8 @@ namespace SadConsole.Controls
         [DataMember(Name = "IsSelected")]
         protected bool _isSelected;
         protected bool _isMouseDown;
-        protected CellAppearance _currentAppearanceButton;
-        protected CellAppearance _currentAppearanceText;
+        protected Cell _currentAppearanceButton;
+        protected Cell _currentAppearanceText;
         
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -140,8 +140,8 @@ namespace SadConsole.Controls
         /// </summary>
         public override void DetermineAppearance()
         {
-            CellAppearance currentappearanceButton = _currentAppearanceButton;
-            CellAppearance currentappearanceText = _currentAppearanceText;
+            Cell currentappearanceButton = _currentAppearanceButton;
+            Cell currentappearanceText = _currentAppearanceText;
 
             if (!isEnabled)
             {
@@ -155,7 +155,7 @@ namespace SadConsole.Controls
                 _currentAppearanceText = Theme.MouseOver;
             }
 
-            else if (!_isMouseDown && !isMouseOver && IsFocused && Engine.ActiveConsole == parent)
+            else if (!_isMouseDown && !isMouseOver && IsFocused && Console.ActiveConsole == parent)
             {
                 _currentAppearanceButton = Theme.Button.Focused;
                 _currentAppearanceText = Theme.Focused;
@@ -245,9 +245,9 @@ namespace SadConsole.Controls
                 {
                     for (int x = 0; x < 4; x++)
 			        {
-			            this.SetCellAppearance(x, 0, _currentAppearanceButton);
+			            this.SetCell(x, 0, _currentAppearanceButton);
 			        }
-                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.GlyphIndex, null);
+                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.Glyph, null);
                     this.Print(4, 0, Text.Align(TextAlignment, textSurface.Width - 4));
                     this.SetGlyph(0, 0, 40);
                     this.SetGlyph(2, 0, 41);

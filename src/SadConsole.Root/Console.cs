@@ -18,6 +18,8 @@ namespace SadConsole
     [DataContract]
     public partial class Console : SurfaceEditor, IConsole
     {
+        public static IConsole ActiveConsole;
+
         [DataMember(Name = "WidthNTS")]
         private int serializedWidth;
         [DataMember(Name = "HeightNTS")]
@@ -101,6 +103,7 @@ namespace SadConsole
             //}
         }
 
+        [DataMember]
         public List<IScreen> Children { get; set; } = new List<IScreen>();
 
 

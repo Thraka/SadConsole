@@ -16,7 +16,7 @@ namespace SadConsole
         public static GraphicsDevice GraphicsDevice;
         public static GraphicsDeviceManager GraphicsDeviceManager;
         public static SpriteBatch SpriteBatch;
-        public static IScreen ActiveScreen;
+        public static IScreen ActiveScreen = new Screen();
         public static Random Random = new Random();
         public static double GameTimeElapsedUpdate;
         public static double GameTimeElapsedRender;
@@ -144,6 +144,18 @@ namespace SadConsole
         public static bool DoDraw = true;
         public static bool DoFinalDraw = true;
         public static bool DoUpdate = true;
+
+        public static void ToggleFullScreen()
+        {
+            // Coming back from fullscreen
+            if (Global.GraphicsDeviceManager.IsFullScreen)
+            {
+                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
+                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
+            }
+
+            Global.GraphicsDeviceManager.ToggleFullScreen();
+        }
 
         public static class Input
         {

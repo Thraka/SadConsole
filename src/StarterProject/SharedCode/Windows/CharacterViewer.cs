@@ -4,13 +4,13 @@ using ColorHelper = Microsoft.Xna.Framework.Color;
 using System;
 using SadConsole;
 using SadConsole.Controls;
-using SadConsole.Consoles;
 using SadConsole.Effects;
 
 namespace StarterProject.Windows
 {
     class CharacterViewer : Window
     {
+
 #region Control Declares
         private SadConsole.Controls.ScrollBar _charScrollBar;
         private Button _closeButton;
@@ -107,7 +107,7 @@ namespace StarterProject.Windows
         {
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
-                SelectedCharacterIndex = data.Cell.GlyphIndex;
+                SelectedCharacterIndex = data.Cell.Glyph;
             }
             else if (data.ConsoleLocation.X == textSurface.Width - 1 && data.ConsoleLocation.Y == 0)
                 Hide();
@@ -120,7 +120,7 @@ namespace StarterProject.Windows
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
                 // Draw the character index and value in the status area
-                string[] items = new string[] { "Index: ", data.Cell.GlyphIndex.ToString() + " ", ((char)data.Cell.GlyphIndex).ToString() };
+                string[] items = new string[] { "Index: ", data.Cell.Glyph.ToString() + " ", ((char)data.Cell.Glyph).ToString() };
 
                 items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
 
@@ -198,7 +198,7 @@ namespace StarterProject.Windows
         {
             if (_lastInfo != null)
             {
-                _lastInfo.Cell.Effect = null;
+//                _lastInfo.Cell.Effect = null;
             }
 
             DrawSelectedItemString();
@@ -210,7 +210,7 @@ namespace StarterProject.Windows
         {
             if (_lastInfo != null)
             {
-                _lastInfo.Cell.Effect = null;
+//                _lastInfo.Cell.Effect = null;
             }
 
             base.OnMouseEnter(info);
@@ -251,12 +251,6 @@ namespace StarterProject.Windows
             Center();
 
             base.Show(modal);
-        }
-
-        public override void Update()
-        {
-            effects.UpdateEffects(Engine.GameTimeElapsedUpdate);
-            base.Update();
         }
 
     }

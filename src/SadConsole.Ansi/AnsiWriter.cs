@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using SadConsole.Effects;
 using System;
 using System.Linq;
 using System.Text;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 
 namespace SadConsole.Ansi
 {
@@ -113,7 +113,7 @@ namespace SadConsole.Ansi
                             }
                             else
                             {
-                                _cursor.PrintAppearance = new CellAppearance(_ansiState.Foreground, _ansiState.Background);
+                                _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
                                 _cursor.Print(character.ToString());
                             }
                         }
@@ -336,7 +336,7 @@ namespace SadConsole.Ansi
                 {
                     if (stringValue.Length != 0)
                     {
-                        _cursor.PrintAppearance = new CellAppearance(_ansiState.Foreground, _ansiState.Background);
+                        _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
                         _cursor.Print(stringValue.ToString());
                         stringValue.Clear();
                     }
@@ -354,7 +354,7 @@ namespace SadConsole.Ansi
 
             if (stringValue.Length != 0)
             {
-                _cursor.PrintAppearance = new CellAppearance(_ansiState.Foreground, _ansiState.Background);
+                _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
                 _cursor.Print(stringValue.ToString());
             }
 

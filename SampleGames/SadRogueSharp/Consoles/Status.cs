@@ -26,7 +26,7 @@ namespace SadRogueSharp.Consoles
             SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
             line.StartingLocation = new Point(0, 0);
             line.EndingLocation = new Point(0, 29);
-            new CellAppearance(Color.LightGray, Color.Black, 186, Microsoft.Xna.Framework.Graphics.SpriteEffects.None).CopyAppearanceTo(line.CellAppearance);
+            new Cell(Color.LightGray, Color.Black, 186, Microsoft.Xna.Framework.Graphics.SpriteEffects.None).CopyAppearanceTo(line.Cell);
             line.UseEndingCell = false;
             line.UseStartingCell = false;
             line.Draw(this);

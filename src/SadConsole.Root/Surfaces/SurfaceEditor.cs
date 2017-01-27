@@ -347,7 +347,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
-        public void SetCellAppearance(int x, int y, Cell appearance)
+        public void SetCell(int x, int y, Cell appearance)
         {
             if (appearance == null)
                 throw new NullReferenceException("Appearance may not be null.");
@@ -361,7 +361,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The appearance.</returns>
-        public Cell GetCellAppearance(int x, int y)
+        public Cell GetCell(int x, int y)
         {
             Cell appearance = new Cell();
             textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref appearance);

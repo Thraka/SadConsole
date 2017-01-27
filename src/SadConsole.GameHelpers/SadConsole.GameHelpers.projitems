@@ -55,7 +55,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameObject.Serialized.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameObjectCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hotspot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Range.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scene.cs" />
@@ -64,7 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Generator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\MapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\River.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\CellSurfaceMapConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\SurfaceMapConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\Tile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\TileGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorldGeneration\WorldGenerator.cs" />

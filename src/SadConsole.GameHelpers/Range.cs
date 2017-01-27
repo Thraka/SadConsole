@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SadConsole.Game
+namespace SadConsole.GameHelpers
 {
     /// <summary>
     /// Produces values based on a minimum and maximum range.
@@ -25,7 +25,7 @@ namespace SadConsole.Game
         /// <returns>A random number.</returns>
         public int Get()
         {
-            return Maximum == Minimum ? Maximum : SadConsole.Engine.Random.Next(Maximum, Minimum);
+            return Maximum == Minimum ? Maximum : Global.Random.Next(Maximum, Minimum);
         }
 
         public static implicit operator int(RangeInt i)
@@ -59,7 +59,7 @@ namespace SadConsole.Game
         /// <returns>A random number.</returns>
         public double Get()
         {
-            return Maximum == Minimum ? Maximum : SadConsole.Engine.Random.NextDouble() * Maximum - Minimum;
+            return Maximum == Minimum ? Maximum : Global.Random.NextDouble() * Maximum - Minimum;
         }
 
         public static implicit operator double(RangeDouble d)

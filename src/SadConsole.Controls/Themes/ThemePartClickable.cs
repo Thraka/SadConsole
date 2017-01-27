@@ -12,7 +12,7 @@
         /// The appearance of the control when the mouse button is held down over it.
         /// </summary>
         [DataMember]
-        public CellAppearance MouseClicking;
+        public Cell MouseClicking;
 
         /// <summary>
         /// Clones the object.

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SadRogueSharp.MapObjects
 {
-	class Floor : CellAppearance
+	class Floor : Cell
 	{
 		public Floor() : base(Color.DarkGray, Color.Transparent, 46)
 		{

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using System;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
@@ -39,7 +39,7 @@ namespace StarterProject.CustomConsoles
             // We want this to print on a sub region of the main console, so we'll create a sub view and use that
             typingInstruction = new SadConsole.Instructions.DrawString(
                                                                        new SurfaceEditor(
-                                                                            new TextSurfaceView(this.TextSurface, new Rectangle(2, 1, 76, 21))
+                                                                            new SurfaceView(this.TextSurface, new Rectangle(2, 1, 76, 21))
                                                                        ));
 
             typingInstruction.Text = SadConsole.ColoredString.Parse(string.Join("\r\n", text));
@@ -49,14 +49,14 @@ namespace StarterProject.CustomConsoles
             IsVisible = false;
         }
 
-        public override void Update()
+        public override void Update(TimeSpan elapsed)
         {
             if (IsVisible)
             {
                 if (!typingInstruction.IsFinished)
                     typingInstruction.Run();
 
-                base.Update();
+                base.Update(elapsed);
             }
         }
 
@@ -67,16 +67,16 @@ namespace StarterProject.CustomConsoles
 
         public override bool ProcessMouse(MouseInfo info)
         {
-            Print(0, 0, "                                                                    ");
-            Print(0, 1, "                                                                    ");
-            Print(0, 2, "                                                                    ");
+            //Print(0, 0, "                                                                    ");
+            //Print(0, 1, "                                                                    ");
+            //Print(0, 2, "                                                                    ");
             //SadConsole.Engine.DeviceManager.PreferredBackBufferWidth = 320;
             //SadConsole.Engine.DeviceManager.ApplyChanges();
             //SadConsole.Engine.Device.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport(0, 0, 1280, 400);
 
-            Print(0, 0, $"mouse:{info.ScreenLocation} adapter:{SadConsole.Engine.Device.Adapter.CurrentDisplayMode.Width},{SadConsole.Engine.Device.Adapter.CurrentDisplayMode.Height} window:{SadConsole.Engine.MonoGameInstance.Window.ClientBounds}", Color.White, Color.Black);
-            Print(0, 1, $"pref:{SadConsole.Engine.DeviceManager.PreferredBackBufferWidth},{SadConsole.Engine.DeviceManager.PreferredBackBufferHeight} view:{SadConsole.Engine.Device.Viewport}", Color.White, Color.Black);
-            Print(0, 2, $"bounds:{SadConsole.Engine.Device.Viewport.Bounds} scale:{SadConsole.Engine.RenderScale} renderrect:{SadConsole.Engine.RenderRect}", Color.White, Color.Black);
+            //Print(0, 0, $"mouse:{info.ScreenLocation} adapter:{SadConsole.Engine.Device.Adapter.CurrentDisplayMode.Width},{SadConsole.Engine.Device.Adapter.CurrentDisplayMode.Height} window:{SadConsole.Engine.MonoGameInstance.Window.ClientBounds}", Color.White, Color.Black);
+            //Print(0, 1, $"pref:{SadConsole.Engine.DeviceManager.PreferredBackBufferWidth},{SadConsole.Engine.DeviceManager.PreferredBackBufferHeight} view:{SadConsole.Engine.Device.Viewport}", Color.White, Color.Black);
+            //Print(0, 2, $"bounds:{SadConsole.Engine.Device.Viewport.Bounds} scale:{SadConsole.Engine.RenderScale} renderrect:{SadConsole.Engine.RenderRect}", Color.White, Color.Black);
 
             return base.ProcessMouse(info);
         }

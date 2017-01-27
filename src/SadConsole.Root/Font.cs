@@ -69,7 +69,7 @@ namespace SadConsole
         /// <summary>
         /// Which glyph index is considered completely solid. Used for shading.
         /// </summary>
-        public int SolidGlyphIndex { get { return solidGlyphIndex; } set { solidGlyphIndex = value; solidGlyphRect = GlyphIndexRects[value]; } }
+        public int SolidGlyphIndex { get { return solidGlyphIndex; } set { solidGlyphIndex = value; solidGlyphRect = GlyphRects[value]; } }
 
         /// <summary>
         /// The rectangle associated with the <see cref="SolidGlyphIndex"/>.
@@ -79,7 +79,7 @@ namespace SadConsole
         /// <summary>
         /// A cached array of rectangles of individual glyphs.
         /// </summary>
-        public Rectangle[] GlyphIndexRects { get; private set; }
+        public Rectangle[] GlyphRects { get; private set; }
 
         /// <summary>
         /// How many columns are in the this font.
@@ -144,7 +144,7 @@ namespace SadConsole
             
             SizeMultiple = fontMultiple;
             Name = masterFont.Name;
-            GlyphIndexRects = masterFont.GlyphIndexRects;
+            GlyphRects = masterFont.GlyphIndexRects;
             SolidGlyphIndex = masterFont.SolidGlyphIndex;
             Rows = masterFont.Rows;
             Columns = masterFont.Columns;

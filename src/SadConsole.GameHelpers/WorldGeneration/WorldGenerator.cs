@@ -1,7 +1,7 @@
 ﻿using System;
 using TinkerWorX.AccidentalNoiseLibrary;
 
-namespace SadConsole.Game.WorldGeneration
+namespace SadConsole.GameHelpers.WorldGeneration
 {
     public class WorldGenerator<TMapConverter, TMapConverterOutput> : Generator<TMapConverter, TMapConverterOutput>
         where TMapConverter : IMapConverter<TMapConverterOutput>, new()

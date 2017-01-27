@@ -67,12 +67,6 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Projects.MonoGameDX\SadConsole.Core\SadConsole.Core.Windows.csproj">
-      <Project>{9a7432d8-0c8b-4c46-b405-b6d1080e6811}</Project>
-      <Name>SadConsole.Core.Windows</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="..\..\Snake.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
