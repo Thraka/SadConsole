@@ -11,25 +11,78 @@ namespace SadConsole
     {
         internal static string FontPathHint;
 
+        /// <summary>
+        /// Collection of fonts. Used mainly by the deserialization system.
+        /// </summary>
         public static Dictionary<string, FontMaster> Fonts { get; } = new Dictionary<string, FontMaster>();
+
+        /// <summary>
+        /// The default font for any type that does not provide a font.
+        /// </summary>
         public static Font FontDefault;
+
+        /// <summary>
+        /// The MonoGame graphics device.
+        /// </summary>
         public static GraphicsDevice GraphicsDevice;
+
+        /// <summary>
+        /// The MonoGame graphics device manager.
+        /// </summary>
         public static GraphicsDeviceManager GraphicsDeviceManager;
+
+        /// <summary>
+        /// A global reusable sprite batch.
+        /// </summary>
         public static SpriteBatch SpriteBatch;
+        
+        /// <summary>
+        /// The active screen processed by the game.
+        /// </summary>
         public static IScreen ActiveScreen = new Screen();
+
+        /// <summary>
+        /// A global random number generator.
+        /// </summary>
         public static Random Random = new Random();
+
+        /// <summary>
+        /// The elapsed time from the update call. The value is from <see cref="GameTimeUpdate"/>.
+        /// </summary>
         public static double GameTimeElapsedUpdate;
+
+        /// <summary>
+        /// The elapsed time from the render call. The value is from <see cref="GameTimeRender"/>.
+        /// </summary>
         public static double GameTimeElapsedRender;
 
+
+        /// <summary>
+        /// The <see cref="GameTime"/> object from the update pass.
+        /// </summary>
         public static GameTime GameTimeUpdate;
+
+        /// <summary>
+        /// The <see cref="GameTime"/> object from the render pass.
+        /// </summary>
         public static GameTime GameTimeRender;
 
         #region Input
+        /// <summary>
+        /// Mouse state which is usually updated in the update pass.
+        /// </summary>
         public static Input.MouseInfo MouseState = new Input.MouseInfo();
+
+        /// <summary>
+        /// Keyboard state which is usually updated in the update pass.
+        /// </summary>
         public static Input.KeyboardInfo KeyboardState = new Input.KeyboardInfo();
         #endregion
 
         #region Rendering
+        /// <summary>
+        /// The render target of SadConsole. This is generally rendered to the screen as the final step of drawing.
+        /// </summary>
         public static RenderTarget2D RenderOutput;
 
         /// <summary>
@@ -83,6 +136,9 @@ namespace SadConsole
             return masterFont;
         }
 
+        /// <summary>
+        /// Resets the <see cref="RenderOutput"/> target and determines the appropriate <see cref="RenderRect"/> and <see cref="RenderScale"/> based on the window or fullscreen state.
+        /// </summary>
         public static void ResetRendering()
         {
             RenderOutput = new RenderTarget2D(GraphicsDevice, WindowWidth, WindowHeight);
@@ -118,71 +174,4 @@ namespace SadConsole
             }
         }
     }
-
-    public static class Settings
-    {
-        /// <summary>
-        /// The color to automatically clear the device with.
-        /// </summary>
-        public static Color ClearColor = Color.Black;
-
-        /// <summary>
-        /// The type of resizing options for the window.
-        /// </summary>
-        public static WindowResizeOptions ResizeMode = WindowResizeOptions.Scale;
-
-        /// <summary>
-        /// Allow the user to resize the window. Must be set before the game is created.
-        /// </summary>
-        public static bool AllowWindowResize = false;
-
-        /// <summary>
-        /// Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
-        /// </summary>
-        public static bool UnlimitedFPS = false;
-
-        public static bool DoDraw = true;
-        public static bool DoFinalDraw = true;
-        public static bool DoUpdate = true;
-
-        public static void ToggleFullScreen()
-        {
-            // Coming back from fullscreen
-            if (Global.GraphicsDeviceManager.IsFullScreen)
-            {
-                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
-                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
-            }
-
-            Global.GraphicsDeviceManager.ToggleFullScreen();
-        }
-
-        public static class Input
-        {
-            public static bool ProcessMouseOffscreen = false;
-
-            public static bool DoMouse = true;
-
-            public static bool DoKeyboard = true;
-        }
-
-        public enum WindowResizeOptions
-        {
-            Stretch,
-            Center,
-            Scale,
-        }
-    }
-}
-
-
-namespace SadConsole
-{
-    using Microsoft.Xna.Framework;
-
-
-
-    
-
-
 }

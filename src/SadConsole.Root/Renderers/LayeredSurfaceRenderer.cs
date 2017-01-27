@@ -8,7 +8,7 @@ namespace SadConsole.Renderers
     /// Renders a <see cref="LayeredSurface"/>.
     /// </summary>
     [System.Runtime.Serialization.DataContract]
-    public class LayeredTextRenderer : SurfaceRenderer
+    public class LayeredSurfaceRenderer : SurfaceRenderer
     {
         /// <summary>
         /// Only renders a <see cref="LayeredSurface"/>.

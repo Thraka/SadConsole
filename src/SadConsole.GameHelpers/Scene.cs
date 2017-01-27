@@ -266,7 +266,7 @@ namespace SadConsole.GameHelpers
             var scene = SadConsole.Serializer.Load<Scene>(file, types);
 
             if (baseConsole == null)
-                scene.baseConsole = new Console(scene.backgroundSurface) { Renderer = new Renderers.LayeredTextRenderer() };
+                scene.baseConsole = new Console(scene.backgroundSurface) { Renderer = new Renderers.LayeredSurfaceRenderer() };
             else
                 scene.baseConsole = baseConsole;
 

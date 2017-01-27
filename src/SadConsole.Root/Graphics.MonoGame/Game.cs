@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using SadConsole.MonoGame;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +8,7 @@ namespace SadConsole
     /// <summary>
     /// A MonoGame <see cref="Game"/> instance that runs SadConsole. This is used when you don't provide one and call <see cref="Engine.Initialize(string, int, int)"/>.
     /// </summary>
-    public class Game : Microsoft.Xna.Framework.Game
+    public partial class Game : Microsoft.Xna.Framework.Game
     {
         #region Static
         public static Game Instance { get; private set; }
