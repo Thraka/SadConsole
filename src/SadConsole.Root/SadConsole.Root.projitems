@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DoubleAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DrawCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Bounce.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Circle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\EasingBase.cs" />

@@ -108,7 +108,7 @@ namespace SadConsole
         /// <summary>
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
-        public static List<Tuple<Surfaces.ISurface, Microsoft.Xna.Framework.Point>> DrawCalls = new List<Tuple<Surfaces.ISurface, Microsoft.Xna.Framework.Point>>(5);
+        public static List<DrawCall> DrawCalls = new List<DrawCall>(5);
         #endregion
 
         /// <summary>

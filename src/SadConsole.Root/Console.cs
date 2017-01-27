@@ -566,7 +566,7 @@ namespace SadConsole
             {
                 Renderer.Render(textSurface);
 
-                Global.DrawCalls.Add(new Tuple<ISurface, Point>(textSurface, TextSurface.Font.GetWorldPosition(Position)));
+                Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(Position).ToVector2()));
             }
         }
 

@@ -33,7 +33,7 @@ namespace SadConsole
                     Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
                     foreach (var call in Global.DrawCalls)
                     {
-                        Global.SpriteBatch.Draw(call.Item1.LastRenderResult, call.Item2.ToVector2(), Color.White);
+                        call.Draw();
                     }
 
                     Global.SpriteBatch.End();
