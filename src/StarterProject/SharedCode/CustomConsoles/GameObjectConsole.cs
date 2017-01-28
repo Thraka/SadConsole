@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
-using Console = SadConsole.Consoles.Console;
-using SadConsole.Consoles;
-
+using Console = SadConsole.Console;
+using SadConsole;
+using SadConsole.Surfaces;
 
 namespace StarterProject.CustomConsoles
 {
@@ -13,41 +13,41 @@ namespace StarterProject.CustomConsoles
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
-        private SadConsole.Game.GameObject player;
+        private SadConsole.GameHelpers.GameObject player;
         private Point playerPreviousPosition;
 
         public GameObjectConsole()
             : base(80, 25)
         {
-            var animation = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
+            var animation = new AnimatedSurface("default", 1, 1);
             var frame = animation.CreateFrame();
-            frame.Cells[0].GlyphIndex = 1;
+            frame.Cells[0].Glyph = 1;
 
-            player = new SadConsole.Game.GameObject(SadConsole.Engine.DefaultFont);
+            player = new SadConsole.GameHelpers.GameObject();
             player.Animation = animation;
-            player.RepositionRects = true;
+            //player.RepositionRects = true;
             player.Position = new Point(textSurface.Width / 2, textSurface.Height / 2);
             playerPreviousPosition = player.Position;
 
             // Setup this console to accept keyboard input.
-            CanUseKeyboard = true;
+            UseKeyboard = true;
             IsVisible = false;
         }
 
-        public override void Update()
+        public override void Update(System.TimeSpan time)
         {
-            base.Update();
+            base.Update(time);
 
             // Normally you call update on game objects to have them animate, we dont have an animation.
             //player.Update();
         }
 
-        public override void Render()
+        public override void Draw(System.TimeSpan time)
         {
             if (IsVisible)
             {
-                base.Render();
-                player.Render();
+                base.Draw(time);
+                player.Draw(time);
             }
         }
 

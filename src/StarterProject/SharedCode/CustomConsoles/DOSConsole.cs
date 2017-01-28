@@ -4,7 +4,7 @@ using System;
 
 namespace StarterProject.CustomConsoles
 {
-    class DOSConsole: SadConsole.Consoles.Console
+    class DOSConsole: SadConsole.Console
     {
         public string Prompt { get; set; }
 
@@ -29,8 +29,8 @@ namespace StarterProject.CustomConsoles
             _keyboardHandlerObject.EnterPressedAction = EnterPressedActionHandler;
 
             // Enable the keyboard and setup the prompt.
-            CanUseKeyboard = true;
-            VirtualCursor.IsVisible = true;
+            UseKeyboard = true;
+            virtualCursor.IsVisible = true;
             Prompt = "Prompt> ";
 
 
@@ -41,7 +41,9 @@ namespace StarterProject.CustomConsoles
             _keyboardHandlerObject.VirtualCursorLastY = 24;
             TimesShiftedUp = 0;
 
-            VirtualCursor.Print(Prompt);
+            virtualCursor.DisableWordBreak = true;
+            virtualCursor.Print(Prompt);
+            virtualCursor.DisableWordBreak = false;
         }
 
         public void ClearText()
@@ -72,7 +74,7 @@ namespace StarterProject.CustomConsoles
                 ClearText();
 
             else if (value.ToLower() == "look")
-                VirtualCursor.Print("  Looking around you discover that you are in a dark and empty room. There is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
+                VirtualCursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
 
             else if (value.ToLower() == "exit" || value.ToLower() == "quit")
                 Environment.Exit(0);

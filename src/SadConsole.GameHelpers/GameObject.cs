@@ -316,7 +316,10 @@ namespace SadConsole.GameHelpers
                 }
 
                 RenderRects = rects;
+                LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                IsDirty = true;
             }
+
         }
 
         /// <summary>
@@ -334,10 +337,12 @@ namespace SadConsole.GameHelpers
         {
             if (IsVisible)
             {
-                if (repositionRects)
-                    Global.DrawCalls.Add(new DrawCallSurface(this, Vector2.Zero));
-                    //renderer.Render(this, NoMatrix);   
-                else
+                Renderer.Render(this);
+
+                //if (repositionRects)
+                //    Global.DrawCalls.Add(new DrawCallSurface(this, Vector2.Zero));
+                //    //renderer.Render(this, NoMatrix);   
+                //else
                     Global.DrawCalls.Add(new DrawCallSurface(this, Font.GetWorldPosition(position + renderOffset - animation.Center).ToVector2()));
                     //renderer.Render(this, position + renderOffset - animation.Center, usePixelPositioning);
 
