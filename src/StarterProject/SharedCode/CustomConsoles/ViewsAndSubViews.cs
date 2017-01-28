@@ -1,22 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using System;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class ViewsAndSubViews: SadConsole.Consoles.ConsoleList
+    class ViewsAndSubViews: Console
     {
         Console mainView;
         Console subView;
         Console titleAndLine;
 
-        public ViewsAndSubViews()
+        public ViewsAndSubViews():base(1,1)
         {
             titleAndLine = new Console(80, 25);
             mainView = new Console(59, 24);
@@ -29,7 +29,7 @@ namespace StarterProject.CustomConsoles
             SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
             line.UseStartingCell = false;
             line.UseEndingCell = false;
-            line.CellAppearance.GlyphIndex = 179;
+            line.Cell.Glyph = 179;
             line.StartingLocation = new Point(59, 1);
             line.EndingLocation = new Point(59, 24);
             line.Draw(titleAndLine);
@@ -37,17 +37,18 @@ namespace StarterProject.CustomConsoles
             // Setup main view
             mainView.Position = new Point(0, 1);
             mainView.Print(1, 1, "Click on a cell to draw");
-            mainView.MouseMove += (s, e) => { if (e.LeftButtonDown) e.Cell.Background = Color.Blue; };
+            mainView.MouseMove += (s, e) => { if (e.LeftButtonDown) e.Cell.Background = Color.Blue; mainView.TextSurface.IsDirty = true; };
+            ((BasicSurface)mainView.TextSurface).OnIsDirty = (t) => subView.TextSurface.IsDirty = true;
 
             // Setup sub view
             subView.Position = new Point(60, 1);
-            subView.TextSurface = new TextSurfaceView(mainView.TextSurface, new Rectangle(0, 0, 20, 24));
-            subView.MouseMove += (s, e) => { if (e.LeftButtonDown) e.Cell.Background = Color.Red; };
+            subView.TextSurface = new SurfaceView(mainView.TextSurface, new Rectangle(0, 0, 20, 24));
+            subView.MouseMove += (s, e) => { if (e.LeftButtonDown) e.Cell.Background = Color.Red; subView.TextSurface.IsDirty = true; };
 
             // Ad the consoles to the list.
-            Add(titleAndLine);
-            Add(mainView);
-            Add(subView);
+            Children.Add(titleAndLine);
+            Children.Add(mainView);
+            Children.Add(subView);
         }
     }
 }

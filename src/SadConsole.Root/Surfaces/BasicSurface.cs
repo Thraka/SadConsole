@@ -19,6 +19,8 @@ namespace SadConsole.Surfaces
         [DataMember(Name = "Area")]
         protected Rectangle area;
 
+        protected bool isDirty = true;
+
         /// <summary>
         /// An array of all cells in this surface.
         /// </summary>
@@ -160,13 +162,28 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Indicates the surface has changed and needs to be rendered.
         /// </summary>
-        public bool IsDirty { get; set; } = true;
+        public bool IsDirty
+        {
+            get { return isDirty; }
+            set
+            {
+                bool old = isDirty;
+                isDirty = value;
+                if (value && !old)
+                    OnIsDirty?.Invoke(this);
+            }
+        }
 
         /// <summary>
         /// The last texture render pass for this surface.
         /// </summary>
         public RenderTarget2D LastRenderResult { get; set; }
         #endregion
+
+        /// <summary>
+        /// A callback that happens when <see cref="IsDirty"/> is set to true.
+        /// </summary>
+        public Action<ISurface> OnIsDirty { get; set; }
 
         /// <summary>
         /// Creates a new text surface with the specified width and height.

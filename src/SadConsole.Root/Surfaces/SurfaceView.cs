@@ -21,10 +21,10 @@ namespace SadConsole.Surfaces
         [DataMember(Name = "ViewArea")]
         protected Rectangle viewArea;
         protected Rectangle[] renderRects;
+        
+        protected ISurface data;
 
-        private ISurface data;
-
-        private bool isDirty = true;
+        protected bool isDirty = true;
 
         /// <summary>
         /// Gets a cell by index.
@@ -176,12 +176,33 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Indicates the surface has changed and needs to be rendered.
         /// </summary>
-        public bool IsDirty { get { return isDirty; } set { isDirty = value; if (value && data != null) data.IsDirty = true; } }
+        public bool IsDirty
+        {
+            get { return isDirty; }
+            set
+            {
+                bool old = isDirty;
+                isDirty = value;
+
+                if (value && !old)
+                {
+                    OnIsDirty?.Invoke(this);
+
+                    if (data != null)
+                        data.IsDirty = true;
+                }
+            }
+        }
 
         /// <summary>
         /// The last texture render pass for this surface.
         /// </summary>
         public RenderTarget2D LastRenderResult { get; set; }
+
+        /// <summary>
+        /// A callback that happens when <see cref="IsDirty"/> is set to true.
+        /// </summary>
+        public Action<ISurface> OnIsDirty { get; set; }
 
         /// <summary>
         /// Creates a new surface view from an existing surface.
