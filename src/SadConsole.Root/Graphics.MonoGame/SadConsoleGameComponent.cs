@@ -28,6 +28,7 @@ namespace SadConsole
 
                     // Render to the global output texture
                     GraphicsDevice.SetRenderTarget(Global.RenderOutput);
+                    GraphicsDevice.Clear(Settings.ClearColor);
 
                     // Render each draw call
                     Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);

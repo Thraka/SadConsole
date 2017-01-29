@@ -31,6 +31,11 @@ namespace SadConsole
         public static bool DoFinalDraw = true;
         public static bool DoUpdate = true;
 
+        /// <summary>
+        /// Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
+        /// </summary>
+        public static bool UseHardwareFullScreen { get; set; } = false;
+
         public static void ToggleFullScreen()
         {
             // Coming back from fullscreen

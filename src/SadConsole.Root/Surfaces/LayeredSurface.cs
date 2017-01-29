@@ -55,7 +55,7 @@ namespace SadConsole.Surfaces
             /// <returns>A new <see cref="TextSurface"/> seeded by this layer data.</returns>
             public BasicSurface ToTextSurface(int width, int height, Font font)
             {
-                return new BasicSurface(width, height, Cells, font);
+                return new BasicSurface(width, height, Cells, font, new Rectangle(0, 0, width, height));
             }
         }
 

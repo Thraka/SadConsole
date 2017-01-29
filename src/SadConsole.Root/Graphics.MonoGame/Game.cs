@@ -50,7 +50,7 @@ namespace SadConsole
             this.font = font;
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
-            GraphicsDeviceManager.HardwareModeSwitch = false;
+            GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
 
             ctorCallback?.Invoke(this);
         }
@@ -77,11 +77,11 @@ namespace SadConsole
 
         protected override void Initialize()
         {
-            //if (Engine.UnlimitedFPS)
-            //{
-            //    GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            //    IsFixedTimeStep = false;
-            //}
+            if (Settings.UnlimitedFPS)
+            {
+                GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+                IsFixedTimeStep = false;
+            }
 
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
@@ -97,14 +97,14 @@ namespace SadConsole
             Window.ClientSizeChanged += Window_ClientSizeChanged;
             Window.AllowUserResizing = SadConsole.Settings.AllowWindowResize;
 
-            // Tell the main engine we're ready
-            //Engine.InitializeCompleted();
             Global.GraphicsDevice = GraphicsDevice;
             Global.GraphicsDeviceManager = GraphicsDeviceManager;
             Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
             Global.FontDefault = Global.LoadFont(font).GetFont(Font.FontSizes.One);
             Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
             Global.ResetRendering();
+
+            // Tell the main engine we're ready
             OnInitialize?.Invoke();
         }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 using SadConsole;
 using System;
 using System.Linq;
@@ -18,16 +18,16 @@ namespace StarterProject.CustomConsoles
             // 40x12 cells instead of the 80x25 cells other consoles have, we're going to
             // stretch the size of the cells based on the font * 2. This will fill our 
             // area.
-            textSurface.Font = Engine.Fonts.Values.First().GetFont(SadConsole.Font.FontSizes.Two);
+            textSurface.Font = Global.Fonts.Values.First().GetFont(SadConsole.Font.FontSizes.Two);
 
             ColoredString colorString = "Text using a colored string gradient".CreateGradient(ColorHelper.DarkGreen, ColorHelper.LightGreen);
             Print(2, 1, colorString);
 
             Print(2, 3, "Same font as others, just doubled");
 
-            _virtualCursor.UseStringParser = true;
-            _virtualCursor.Position = new Point(0, 5);
-            _virtualCursor.Print("This is an [c:r f:blue]example[c:u] of how the [c:r f:green]system[c:u] is aware of how to line wrap by word and make this print pretty-like.");
+            virtualCursor.UseStringParser = true;
+            virtualCursor.Position = new Point(0, 5);
+            virtualCursor.Print("This is an [c:r f:blue]example[c:u] of how the [c:r f:green]system[c:u] is aware of how to line wrap by word and make this print pretty-like.");
 
             IsVisible = false;
         }

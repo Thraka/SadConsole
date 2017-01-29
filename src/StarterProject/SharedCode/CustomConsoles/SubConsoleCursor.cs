@@ -5,18 +5,19 @@ using SadConsole.Surfaces;
 using System;
 using Console = SadConsole.Console;
 using SadConsole.Input;
+using SadConsole;
 
 namespace StarterProject.CustomConsoles
 {
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class SubConsoleCursor : SadConsole.Console
+    class SubConsoleCursor : SadConsole.ConsoleContainer
     {
         Console mainView;
         Console subView;
 
-        public SubConsoleCursor(): base(1,1)
+        public SubConsoleCursor()
         {
             mainView = new Console(80, 25);
             subView = new Console(25, 10);
@@ -38,19 +39,24 @@ namespace StarterProject.CustomConsoles
             Children.Add(mainView);
             Children.Add(subView);
         }
-        
-        public override void Draw(TimeSpan elapsed)
-        {
-            if (isVisible)
-            {
-                mainView.Draw(elapsed);
-                SadConsole.Global.DrawCalls.Add(new SadConsole.DrawCallCursor(subView));
-            }
-        }
 
         public override bool ProcessKeyboard(KeyboardInfo info)
         {
             return subView.ProcessKeyboard(info);
+        }
+
+        public override void Update(TimeSpan delta)
+        {
+            if (DoUpdate && isVisible)
+            {
+                ProcessMouse(Global.MouseState);
+
+                if (Console.ActiveConsole == this)
+                    ProcessKeyboard(Global.KeyboardState);
+
+                foreach (var child in Children)
+                    child.Update(delta);
+            }
         }
     }
 }

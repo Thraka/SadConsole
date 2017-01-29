@@ -216,8 +216,8 @@ namespace SadConsole.Surfaces
             DefaultForeground = surface.DefaultForeground;
             font = surface.Font;
 
-            ViewArea = area;
             LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, area.Width * font.Size.X, area.Height * font.Size.Y);
+            ViewArea = area;
         }
 
         /// <summary>

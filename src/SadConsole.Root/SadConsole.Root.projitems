@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DoubleAnimation.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\ClearScreenGameComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\FPSCounterComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\Game.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\SadConsoleGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IConsole.cs" />

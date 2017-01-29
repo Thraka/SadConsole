@@ -155,6 +155,7 @@ namespace SadConsole.Surfaces
                 if (area.Y + area.Height > height)
                     area.Y = height - area.Height;
 
+                isDirty = true;
                 ResetArea();
             }
         }
@@ -190,7 +191,18 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">THe height of the surface.</param>
-        public BasicSurface(int width, int height) : this(width, height, null, Global.FontDefault)
+        public BasicSurface(int width, int height) : this(width, height, null, Global.FontDefault, new Rectangle(0, 0, width, height))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new text surface with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="renderArea">Initial value for the <see cref="RenderArea"/> view.</param>
+        public BasicSurface(int width, int height, Rectangle renderArea) : this(width, height, null, Global.FontDefault, renderArea)
         {
 
         }
@@ -201,7 +213,19 @@ namespace SadConsole.Surfaces
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        public BasicSurface(int width, int height, Font font) : this(width, height, null, font)
+        public BasicSurface(int width, int height, Font font) : this(width, height, null, font, new Rectangle(0, 0, width, height))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new text surface with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="font">The font used with rendering.</param>
+        /// <param name="renderArea">Initial value for the <see cref="RenderArea"/> view.</param>
+        public BasicSurface(int width, int height, Font font, Rectangle renderArea) : this(width, height, null, font, renderArea)
         {
 
         }
@@ -212,14 +236,15 @@ namespace SadConsole.Surfaces
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        /// <param name="initialCells"></param>
-        public BasicSurface(int width, int height, Cell[] initialCells, Font font)
+        /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        /// <param name="renderArea">Initial value for the <see cref="RenderArea"/> view.</param>
+        public BasicSurface(int width, int height, Cell[] initialCells, Font font, Rectangle renderArea)
         {
-            this.area = new Rectangle(0, 0, width, height);
+            this.area = renderArea;
             this.width = width;
             this.height = height;
 
-            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, width * font.Size.X, height * font.Size.Y);
+            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, renderArea.Width * font.Size.X, renderArea.Height * font.Size.Y);
 
             if (initialCells == null)
                 InitializeCells();
@@ -230,7 +255,7 @@ namespace SadConsole.Surfaces
             
             Font = font;
         }
-
+        
         /// <summary>
         /// Sets <see cref="RenderCells"/> to <see cref="TextSurfaceBasic.cells"/>.
         /// </summary>

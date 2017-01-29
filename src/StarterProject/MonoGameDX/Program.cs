@@ -13,7 +13,8 @@ namespace StarterProject
 
         static void Main(string[] args)
         {
-            SadConsole.Settings.UnlimitedFPS = true;
+            //SadConsole.Settings.UnlimitedFPS = true;
+            //SadConsole.Settings.UseHardwareFullScreen = true;
 
             // Setup the engine and creat the main window.
             SadConsole.Game.Create("IBM.font", 80, 25);
@@ -70,6 +71,9 @@ namespace StarterProject
         private static void Init()
         {
             // Any setup
+            if (Settings.UnlimitedFPS)
+                SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
+
 
             // Setup our custom theme.
             Theme.SetupThemes();
@@ -78,8 +82,12 @@ namespace StarterProject
             // We don't want to use that for the sample project so we'll remove it.
 
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
-
+            
             // We'll instead use our demo consoles that show various features of SadConsole.
+            Global.CurrentScreen.Children.Add(new CustomConsoles.StringParsingConsole());
+            Global.CurrentScreen.Children.Add(new CustomConsoles.StretchedConsole());
+            Global.CurrentScreen.Children.Add(new CustomConsoles.RandomScrollingConsole());
+            Global.CurrentScreen.Children.Add(new CustomConsoles.SceneProjectionConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.ViewsAndSubViews());
             Global.CurrentScreen.Children.Add(new CustomConsoles.GameObjectConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.DOSConsole());

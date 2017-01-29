@@ -556,9 +556,10 @@ namespace SadConsole
         protected virtual void OnBeforeRender(SpriteBatch batch) { }
 
         /// <summary>
-        /// Updates the cell effects and cursor.
+        /// Updates the cell effects and cursor. Calls Update on <see cref="Children"/>.
         /// </summary>
-        public virtual void Update(TimeSpan elapsed)
+        /// <param name="delta">Time difference for this frame (if update was called last frame).</param>
+        public virtual void Update(TimeSpan delta)
         {
             if (DoUpdate)
             {
@@ -570,17 +571,21 @@ namespace SadConsole
                         ProcessKeyboard(Global.KeyboardState);
                 }
 
-                Effects.UpdateEffects(elapsed.TotalSeconds);
+                Effects.UpdateEffects(delta.TotalSeconds);
 
                 if (VirtualCursor.IsVisible)
-                    VirtualCursor.Update(elapsed);
+                    VirtualCursor.Update(delta);
 
                 foreach (var child in Children)
-                    child.Update(elapsed);
+                    child.Update(delta);
             }
         }
 
-        public virtual void Draw(TimeSpan elapsed)
+        /// <summary>
+        /// The <see cref="Renderer"/> will draw the <see cref="TextSurface"/> and then Add a draw call to <see cref="Global.DrawCalls"/>. Calls Draw on <see cref="Children"/>.
+        /// </summary>
+        /// <param name="delta">Time difference for this frame (if draw was called last frame).</param>
+        public virtual void Draw(TimeSpan delta)
         {
             if (DoDraw)
             {
@@ -594,7 +599,7 @@ namespace SadConsole
                 }
 
                 foreach (var child in Children)
-                    child.Draw(elapsed);
+                    child.Draw(delta);
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 using SadConsole;
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using SadConsole.StringParser;
 
 namespace StarterProject.CustomConsoles
@@ -45,7 +45,7 @@ namespace StarterProject.CustomConsoles
             line.EndingLocation = new Point(c, r + 5);
             line.UseEndingCell = false;
             line.UseStartingCell = false;
-            line.CellAppearance.GlyphIndex = 179;
+            line.Cell.Glyph = 179;
             line.Draw(this);
 
             Print(1, r, "Some `[c:r f:red]text`[c:u] to print                       ");
@@ -65,7 +65,7 @@ namespace StarterProject.CustomConsoles
         }
 
         ParseCommandBase CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
-                                                          ITextSurface surface, SurfaceEditor editor, ParseCommandStacks commandStacks)
+                                                          ISurface surface, SurfaceEditor editor, ParseCommandStacks commandStacks)
         {
             switch (command)
             {
@@ -98,7 +98,7 @@ namespace StarterProject.CustomConsoles
                 CommandType = CommandTypes.Glyph;
             }
 
-            public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ITextSurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ISurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
             {
                 glyphState.Glyph = Glyph;
 

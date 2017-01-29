@@ -1,11 +1,11 @@
 ﻿#if MONOGAME
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
@@ -27,8 +27,8 @@ namespace StarterProject.CustomConsoles
 
         public SceneProjectionConsole() : base(80, 25)
         {
-            PresentationParameters pp = SadConsole.Engine.Device.PresentationParameters;
-            _renderTexture = new RenderTarget2D(SadConsole.Engine.Device, pp.BackBufferWidth, pp.BackBufferHeight, false, SadConsole.Engine.Device.DisplayMode.Format, DepthFormat.Depth24);
+            PresentationParameters pp = SadConsole.Global.GraphicsDevice.PresentationParameters;
+            _renderTexture = new RenderTarget2D(SadConsole.Global.GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SadConsole.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
 
             _vertices = CreateBox();
             _triangle = CreateTriangle();
@@ -36,7 +36,7 @@ namespace StarterProject.CustomConsoles
             _boxPosition = new Vector3(1.5f, 0.0f, -0.0f);
             _trianglePosition = new Vector3(-1.5f, 0.0f, -0.0f);
 
-            _effect = new BasicEffect(SadConsole.Engine.Device);
+            _effect = new BasicEffect(SadConsole.Global.GraphicsDevice);
             _effect.FogEnabled = false;
             _effect.TextureEnabled = false;
             _effect.LightingEnabled = false;
@@ -46,43 +46,43 @@ namespace StarterProject.CustomConsoles
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 
-            reader1 = new SadConsole.Readers.TextureToSurfaceReader(_renderTexture.Width, _renderTexture.Height, SadConsole.Engine.DefaultFont);
+            reader1 = new SadConsole.Readers.TextureToSurfaceReader(_renderTexture.Width, _renderTexture.Height, SadConsole.Global.FontDefault);
 
-            CanUseMouse = true;
+            UseMouse = true;
             IsVisible = false;
         }
         
-        public override void Update()
+        public override void Update(TimeSpan time)
         {
 
-            base.Update();
+            base.Update(time);
 
             _angle -= MathHelper.ToRadians(0.5f);
             if (_angle < 0.0f)
                 _angle += MathHelper.TwoPi;
 
-            if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.T))
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.T))
             {
                 toggle = !toggle;
                 Clear();
             }
 
-            if (SadConsole.Engine.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.B))
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.B))
             {
                 reader1.UseBlockMode = !reader1.UseBlockMode;
             }
         }
         
 
-        public override void Render()
+        public override void Draw(TimeSpan time)
         {
-            if (IsVisible)
+            if (isVisible)
             {
                 // Grab rendering
                 if (toggle)
-                    SadConsole.Engine.Device.SetRenderTarget(_renderTexture);
+                    SadConsole.Global.GraphicsDevice.SetRenderTarget(_renderTexture);
 
-                SadConsole.Engine.Device.RasterizerState = rasterizerState;
+                SadConsole.Global.GraphicsDevice.RasterizerState = rasterizerState;
 
                 var worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateRotationX(-_angle) * Matrix.CreateTranslation(_boxPosition);
 
@@ -97,7 +97,7 @@ namespace StarterProject.CustomConsoles
                     pass.Apply();
 
                     // Render to texture
-                    SadConsole.Engine.Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, 12, VertexPositionColorNormal.VertexDeclaration);
+                    SadConsole.Global.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, 12, VertexPositionColorNormal.VertexDeclaration);
                 }
 
                 worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateTranslation(_trianglePosition);
@@ -108,16 +108,15 @@ namespace StarterProject.CustomConsoles
                     pass.Apply();
 
                     // Render to texture
-                    SadConsole.Engine.Device.DrawUserPrimitives(PrimitiveType.TriangleList, _triangle, 0, 2, VertexPositionColorNormal.VertexDeclaration);
+                    SadConsole.Global.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _triangle, 0, 2, VertexPositionColorNormal.VertexDeclaration);
                 }
 
                 if (toggle)
                 {
-                    SadConsole.Engine.RestoreRenderTarget();
                     textSurface = reader1.GetSurface(_renderTexture);
                 }
 
-                base.Render();
+                base.Draw(time);
             }
         }
 
