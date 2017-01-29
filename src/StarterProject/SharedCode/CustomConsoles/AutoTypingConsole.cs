@@ -39,7 +39,7 @@ namespace StarterProject.CustomConsoles
             // We want this to print on a sub region of the main console, so we'll create a sub view and use that
             typingInstruction = new SadConsole.Instructions.DrawString(
                                                                        new SurfaceEditor(
-                                                                            new SurfaceView(this.TextSurface, new Rectangle(2, 1, 76, 21))
+                                                                            new SurfaceView(this.TextSurface, new Rectangle(2, 1, 76, 21)) { IsDirty = false }
                                                                        ));
 
             typingInstruction.Text = SadConsole.ColoredString.Parse(string.Join("\r\n", text));

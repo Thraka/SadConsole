@@ -84,6 +84,7 @@ namespace StarterProject
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
             
             // We'll instead use our demo consoles that show various features of SadConsole.
+            Global.CurrentScreen.Children.Add(new CustomConsoles.AutoTypingConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.StringParsingConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.StretchedConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.RandomScrollingConsole());
@@ -93,7 +94,6 @@ namespace StarterProject
             Global.CurrentScreen.Children.Add(new CustomConsoles.DOSConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.SubConsoleCursor());
             Global.CurrentScreen.Children.Add(new CustomConsoles.CursorConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.AutoTypingConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.BorderedConsole());
 
             //= new ConsoleList() {

@@ -181,10 +181,9 @@ namespace SadConsole.Surfaces
             get { return isDirty; }
             set
             {
-                bool old = isDirty;
                 isDirty = value;
 
-                if (value && !old)
+                if (value)
                 {
                     OnIsDirty?.Invoke(this);
 
