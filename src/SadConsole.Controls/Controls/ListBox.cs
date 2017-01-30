@@ -604,6 +604,8 @@ namespace SadConsole.Controls
                     }
                 }
 
+                OnComposed?.Invoke(this);
+
                 IsDirty = false;
             }
         }

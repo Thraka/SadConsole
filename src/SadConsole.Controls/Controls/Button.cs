@@ -233,7 +233,7 @@ namespace SadConsole.Controls
                 else
                     this.Print(0, 0, (Text).Align(TextAlignment, this.TextSurface.Width));
 
-
+                OnComposed?.Invoke(this);
                 this.IsDirty = false;
             }
         }

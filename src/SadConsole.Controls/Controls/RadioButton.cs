@@ -260,7 +260,8 @@ namespace SadConsole.Controls
                 else
                 {
                 }
-                
+
+                OnComposed?.Invoke(this);
 
                 this.IsDirty = false;
             }

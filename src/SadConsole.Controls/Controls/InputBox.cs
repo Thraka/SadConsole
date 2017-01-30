@@ -224,6 +224,7 @@ namespace SadConsole.Controls
                     this.Print(0, 0, _text.Align(TextAlignment, this.Width));
                 }
 
+                OnComposed?.Invoke(this);
                 this.IsDirty = false;
             }
         }

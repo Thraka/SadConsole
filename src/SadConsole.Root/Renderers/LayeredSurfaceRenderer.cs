@@ -15,7 +15,7 @@ namespace SadConsole.Renderers
         /// </summary>
         /// <param name="surface">The <see cref="LayeredSurface"/> to render.</param>
         /// <param name="renderingMatrix">Rendering matrix used with the sprite batch.</param>
-        public override void Render(ISurface surface)
+        public override void Render(ISurface surface, bool force = false)
         {
             if (surface.IsDirty)
             {
@@ -51,6 +51,7 @@ namespace SadConsole.Renderers
                     }
                 }
 
+                BeforeRenderTintCallback?.Invoke(Global.SpriteBatch);
 
                 if (surface.Tint.A != 0)
                     Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);

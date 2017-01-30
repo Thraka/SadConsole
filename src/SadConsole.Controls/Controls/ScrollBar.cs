@@ -249,55 +249,59 @@ namespace SadConsole.Controls
 
         public override void Compose()
         {
-            if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
+            if (IsDirty)
             {
-                this.SetCell(0, 0, Theme.Ends.Normal);
-                this.SetGlyph(0, 0, _topOrLeftCharacter);
-
-                this.SetCell(textSurface.Width - 1, 0, Theme.Ends.Normal);
-                this.SetGlyph(textSurface.Width - 1, 0, _bottomOrRightCharacter);
-
-                for (int i = 1; i <= _sliderBarSize; i++)
+                if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
                 {
-                    this.SetCell(i, 0, Theme.Bar.Normal);
-                    this.SetGlyph(i, 0, _sliderBarCharacter);
-                }
+                    this.SetCell(0, 0, Theme.Ends.Normal);
+                    this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
-                {
-                    if (IsEnabled)
+                    this.SetCell(textSurface.Width - 1, 0, Theme.Ends.Normal);
+                    this.SetGlyph(textSurface.Width - 1, 0, _bottomOrRightCharacter);
+
+                    for (int i = 1; i <= _sliderBarSize; i++)
                     {
-                        this.SetCell(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
-                        this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
+                        this.SetCell(i, 0, Theme.Bar.Normal);
+                        this.SetGlyph(i, 0, _sliderBarCharacter);
+                    }
+
+                    if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
+                    {
+                        if (IsEnabled)
+                        {
+                            this.SetCell(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
+                            this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
+                        }
                     }
                 }
-            }
-            else
-            {
-                this.SetCell(0, 0, Theme.Ends.Normal);
-                this.SetGlyph(0, 0, _topOrLeftCharacter);
-
-                this.SetCell(0, textSurface.Height - 1, Theme.Ends.Normal);
-                this.SetGlyph(0, textSurface.Height - 1, _bottomOrRightCharacter);
-
-                for (int i = 0; i < _sliderBarSize; i++)
+                else
                 {
-                    this.SetCell(0, i + 1, Theme.Bar.Normal);
-                    this.SetGlyph(0, i + 1, _sliderBarCharacter);
-                }
+                    this.SetCell(0, 0, Theme.Ends.Normal);
+                    this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
-                {
-                    if (IsEnabled)
+                    this.SetCell(0, textSurface.Height - 1, Theme.Ends.Normal);
+                    this.SetGlyph(0, textSurface.Height - 1, _bottomOrRightCharacter);
+
+                    for (int i = 0; i < _sliderBarSize; i++)
                     {
-                        this.SetCell(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
-                        this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
+                        this.SetCell(0, i + 1, Theme.Bar.Normal);
+                        this.SetGlyph(0, i + 1, _sliderBarCharacter);
                     }
+
+                    if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
+                    {
+                        if (IsEnabled)
+                        {
+                            this.SetCell(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
+                            this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
+                        }
+                    }
+
                 }
+                OnComposed?.Invoke(this);
 
+                this.IsDirty = false;
             }
-
-            this.IsDirty = false;
         }
 
         // Locking the mouse to this control is actually locking the parent console to the engine, and then

@@ -34,16 +34,12 @@ namespace SadConsole.Renderers
         /// <param name="surface"></param>
         /// <param name="renderingMatrix"></param>
 
-        public override void Render(ISurface surface, Matrix renderingMatrix)
+        public override void Render(ISurface surface, bool force = false)
         {
             if (IsModal && ModalTint.A != 0)
-            {
-                Batch.Begin(samplerState: SamplerState.PointClamp);
-                Batch.Draw(surface.Font.FontImage, new Rectangle(0, 0, Global.RenderRect.Width, Global.RenderRect.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], ModalTint);
-                Batch.End();
-            }
+                Global.DrawCalls.Add(new DrawCallColoredRect(Global.RenderRect, ModalTint));
 
-            base.Render(surface, renderingMatrix);
+            base.Render(surface);
         }
     }
 }

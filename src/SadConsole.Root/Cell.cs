@@ -80,12 +80,36 @@ namespace SadConsole
             }
         }
 
+        public void ClearState()
+        {
+            State = null;
+        }
+
         public Cell Clone()
         {
             return new Cell(Foreground, Background, Glyph, Mirror);
         }
+
+        public static bool operator ==(Cell left, CellState right)
+        {
+            return left.Background == right.Background &&
+                   left.Foreground == right.Foreground &&
+                   left.Glyph == right.Glyph &&
+                   left.Mirror == right.Mirror;
+        }
+
+        public static bool operator !=(Cell left, CellState right)
+        {
+            return left.Background != right.Background ||
+                   left.Foreground != right.Foreground ||
+                   left.Glyph != right.Glyph ||
+                   left.Mirror != right.Mirror;
+        }
     }
 
+    /// <summary>
+    /// A cell in structure format for temporary storage.
+    /// </summary>
     public struct CellState
     {
         public readonly Color Foreground;
@@ -99,6 +123,38 @@ namespace SadConsole
             Background = background;
             Glyph = glyph;
             Mirror = mirror;
+        }
+
+        public static bool operator ==(CellState left, CellState right)
+        {
+            return left.Background == right.Background &&
+                   left.Foreground == right.Foreground &&
+                   left.Glyph == right.Glyph &&
+                   left.Mirror == right.Mirror;
+        }
+
+        public static bool operator !=(CellState left, CellState right)
+        {
+            return left.Background != right.Background ||
+                   left.Foreground != right.Foreground ||
+                   left.Glyph != right.Glyph ||
+                   left.Mirror != right.Mirror;
+        }
+
+        public static bool operator ==(CellState left, Cell right)
+        {
+            return left.Background == right.Background &&
+                   left.Foreground == right.Foreground &&
+                   left.Glyph == right.Glyph &&
+                   left.Mirror == right.Mirror;
+        }
+
+        public static bool operator !=(CellState left, Cell right)
+        {
+            return left.Background != right.Background ||
+                   left.Foreground != right.Foreground ||
+                   left.Glyph != right.Glyph ||
+                   left.Mirror != right.Mirror;
         }
     }
 }

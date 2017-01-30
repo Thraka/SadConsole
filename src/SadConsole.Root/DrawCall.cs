@@ -29,6 +29,23 @@ namespace SadConsole
         }
     }
 
+    public class DrawCallColoredRect : DrawCall
+    {
+        public Rectangle Rectangle;
+        public Color Shade;
+
+        public DrawCallColoredRect(Rectangle rectangle, Color shade)
+        {
+            Rectangle = rectangle;
+            Shade = shade;
+        }
+
+        public override void Draw()
+        {
+            Global.SpriteBatch.Draw(Global.FontDefault.FontImage, Rectangle, Global.FontDefault.SolidGlyphRectangle, Shade);
+        }
+    }
+
     public class DrawCallCursor : DrawCall
     {
         public Console Console;

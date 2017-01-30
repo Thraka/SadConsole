@@ -205,11 +205,13 @@ namespace SadConsole
                 if (_renderer != null)
                 {
                     _renderer.BeforeRenderCallback = null;
+                    _renderer.BeforeRenderTintCallback = null;
                     _renderer.AfterRenderCallback = null;
                 }
 
                 _renderer = value;
                 _renderer.BeforeRenderCallback = this.OnBeforeRender;
+                _renderer.BeforeRenderTintCallback = this.OnBeforeRenderTint;
                 _renderer.AfterRenderCallback = this.OnAfterRender;
             }
         }
@@ -531,6 +533,25 @@ namespace SadConsole
         protected virtual void OnPositionChanged(Point oldLocation) { }
 
         /// <summary>
+        /// Called before the renderer applies a tint color.
+        /// </summary>
+        /// <param name="batch">The batch used in renderering.</param>
+        protected virtual void OnBeforeRenderTint(SpriteBatch batch)
+        {
+            if (VirtualCursor.IsVisible)
+            {
+                int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
+                    new Point(VirtualCursor.Position.X - TextSurface.RenderArea.Left,
+                              VirtualCursor.Position.Y - TextSurface.RenderArea.Top), TextSurface.RenderArea.Width);
+
+                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
+                {
+                    VirtualCursor.Render(batch, textSurface.Font, textSurface.RenderRects[virtualCursorLocationIndex]);
+                }
+            }
+        }
+
+        /// <summary>
         /// Called when the renderer renders the text view.
         /// </summary>
         /// <param name="batch">The batch used in renderering.</param>
@@ -548,6 +569,8 @@ namespace SadConsole
             //    }
             //}
         }
+
+        
 
         /// <summary>
         /// Called when the renderer renders the text view.
@@ -595,9 +618,6 @@ namespace SadConsole
                 {
                     Renderer.Render(textSurface);
                     Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(Position).ToVector2()));
-
-                    if (virtualCursor.IsVisible)
-                        Global.DrawCalls.Add(new DrawCallCursor(this));
                 }
 
                 var copyList = new List<IScreen>(Children);

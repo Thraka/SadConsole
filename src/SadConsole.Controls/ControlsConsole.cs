@@ -141,6 +141,13 @@ namespace SadConsole
         #endregion
 
         /// <summary>
+        /// Marks the text surface as dirty when a control changes appearance.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        protected void ControlChanged(ControlBase control) => textSurface.IsDirty = true;
+
+
+        /// <summary>
         /// Adds an existing control to this console.
         /// </summary>
         /// <param name="control">The control to add.</param>
@@ -155,8 +162,11 @@ namespace SadConsole
             if (_controls.Count == 1)
                 FocusedControl = control;
 
+            control.OnComposed = ControlChanged;
+
             ReOrderControls();
         }
+
 
         /// <summary>
         /// Removes a control from this console.
@@ -183,6 +193,8 @@ namespace SadConsole
                 }
                 else
                     _controls.Remove(control);
+
+                control.OnComposed = null;
 
                 ReOrderControls();
             }

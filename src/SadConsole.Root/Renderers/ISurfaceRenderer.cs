@@ -15,6 +15,11 @@ namespace SadConsole.Renderers
         Action<SpriteBatch> BeforeRenderCallback { get; set; }
 
         /// <summary>
+        /// A method called when all text characters have been drawn but before any tinting has been applied.
+        /// </summary>
+        Action<SpriteBatch> BeforeRenderTintCallback { get; set; }
+
+        /// <summary>
         /// A method called when all text characters have been drawn and any tinting has been applied.
         /// </summary>
         Action<SpriteBatch> AfterRenderCallback { get; set; }
@@ -22,6 +27,6 @@ namespace SadConsole.Renderers
         /// <summary>
         /// Renders the cell data to the screen.
         /// </summary>
-        void Render(Surfaces.ISurface cells);
+        void Render(Surfaces.ISurface cells, bool force = false);
     }
 }

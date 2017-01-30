@@ -3,6 +3,7 @@
 using SadConsole.Surfaces;
 using SadConsole.Input;
 using System.Runtime.Serialization;
+using System;
 
 namespace SadConsole.Controls
 {
@@ -17,6 +18,8 @@ namespace SadConsole.Controls
         protected bool isMouseOver = false;
         protected bool isEnabled = true;
         protected ControlsConsole parent;
+
+        public Action<ControlBase> OnComposed;
 
         [DataMember]
         public bool UseKeyboard { get; set; }

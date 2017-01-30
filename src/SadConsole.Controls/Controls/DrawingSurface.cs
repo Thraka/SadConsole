@@ -35,6 +35,7 @@
         /// </summary>
         public override void Compose()
         {
+            OnComposed?.Invoke(this);
         }
 
         [OnDeserializedAttribute]
