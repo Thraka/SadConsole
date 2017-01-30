@@ -576,7 +576,9 @@ namespace SadConsole
                 if (VirtualCursor.IsVisible)
                     VirtualCursor.Update(delta);
 
-                foreach (var child in Children)
+                var copyList = new List<IScreen>(Children);
+
+                foreach (var child in copyList)
                     child.Update(delta);
             }
         }
@@ -598,7 +600,9 @@ namespace SadConsole
                         Global.DrawCalls.Add(new DrawCallCursor(this));
                 }
 
-                foreach (var child in Children)
+                var copyList = new List<IScreen>(Children);
+
+                foreach (var child in copyList)
                     child.Draw(delta);
             }
         }

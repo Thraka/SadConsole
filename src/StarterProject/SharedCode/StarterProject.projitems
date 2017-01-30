@@ -9,13 +9,16 @@
     <Import_RootNamespace>StarterProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AnsiConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AutoTypingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ControlsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\GameObjectConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ScrollableConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StringParsingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SubConsoleCursor.cs" />

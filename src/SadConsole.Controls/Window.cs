@@ -265,7 +265,7 @@ namespace SadConsole
 
             if (Parent == null)
             {
-                Global.CurrentScreen.Children.Add(this);
+                Parent = Global.CurrentScreen;
                 _addedToParent = true;
             }
 

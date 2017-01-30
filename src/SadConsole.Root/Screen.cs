@@ -17,13 +17,17 @@ namespace SadConsole
 
         public virtual void Draw(TimeSpan timeElapsed)
         {
-            foreach (var child in Children)
+            var copyList = new List<IScreen>(Children);
+
+            foreach (var child in copyList)
                 child.Draw(timeElapsed);
         }
 
         public virtual void Update(TimeSpan timeElapsed)
         {
-            foreach (var child in Children)
+            var copyList = new List<IScreen>(Children);
+
+            foreach (var child in copyList)
                 child.Update(timeElapsed);
         }
     }

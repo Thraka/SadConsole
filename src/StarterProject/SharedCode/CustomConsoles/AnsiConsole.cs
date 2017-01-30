@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Consoles;
-using Console = SadConsole.Consoles.Console;
+using SadConsole.Surfaces;
+using Console = SadConsole.Console;
 using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
@@ -15,7 +15,7 @@ namespace StarterProject.CustomConsoles
         public AnsiConsole(): base(80, 25)
         {
             IsVisible = false;
-            CanUseKeyboard = true;
+            UseKeyboard = true;
             //files = SadConsole.Serializer.Load<string[]>("./ansi/files.json");
             files = System.IO.Directory.GetFiles("./ansi");
 
@@ -86,7 +86,7 @@ namespace StarterProject.CustomConsoles
             Clear();
             writer = new SadConsole.Ansi.AnsiWriter(doc, this);
             writer.ReadEntireDocument();
-            TextSurface = new TextSurface(80, 25 + TimesShiftedUp);
+            TextSurface = new BasicSurface(80, 25 + TimesShiftedUp);
             writer = new SadConsole.Ansi.AnsiWriter(doc, this);
             writer.ReadEntireDocument();
             textSurface.RenderArea = new Rectangle(0, 0, 80, 25);

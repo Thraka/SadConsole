@@ -3,21 +3,21 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    class ScrollableConsole : SadConsole.Consoles.Console
+    class ScrollableConsole : SadConsole.Console
     {
-        SadConsole.Consoles.ControlsConsole controlsContainer;
+        SadConsole.ControlsConsole controlsContainer;
         SadConsole.Controls.ScrollBar scrollBar;
 
         int scrollingCounter;
 
         public ScrollableConsole(int width, int height, int bufferHeight) : base(width - 1, bufferHeight)
         {
-            controlsContainer = new ControlsConsole(1, height);
+            controlsContainer = new SadConsole.ControlsConsole(1, height);
 
             textSurface.RenderArea = new Rectangle(0, 0, width, height);
 
@@ -54,23 +54,23 @@ namespace StarterProject.CustomConsoles
             controlsContainer.IsVisible = this.IsVisible;
         }
 
-        public override void Render()
+        public override void Draw(TimeSpan delta)
         {
             // Draw our console and then draw the scroll bar.
-            base.Render();
-            controlsContainer.Render();
+            base.Draw(delta);
+            controlsContainer.Draw(delta);
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             // Update our console and then update the scroll bar
-            base.Update();
-            controlsContainer.Update();
+            base.Update(delta);
+            controlsContainer.Update(delta);
 
             // If we detect that this console has shifted the data up for any reason (like the virtual cursor reached the
             // bottom of the entire text surface, OR we reached the bottom of the render area, we need to adjust the 
             // scroll bar and follow the cursor
-            if (TimesShiftedUp != 0 | _virtualCursor.Position.Y == textSurface.RenderArea.Height + scrollingCounter)
+            if (TimesShiftedUp != 0 | virtualCursor.Position.Y == textSurface.RenderArea.Height + scrollingCounter)
             {
                 // Once the buffer has finally been filled enough to need scrolling, turn on the scroll bar
                 scrollBar.IsEnabled = true;

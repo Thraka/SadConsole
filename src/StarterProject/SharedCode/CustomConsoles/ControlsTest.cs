@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Consoles;
+using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
 using SadConsole;
@@ -197,7 +197,7 @@ namespace StarterProject.CustomConsoles
             Print(50, 2, "CLICK BTN - USE UP/DOWN KEYS", StarterProject.Theme.YellowDark);
 
             Print(1, 1, "CONTROL LIBRARY TEST", StarterProject.Theme.YellowDark);
-            Print(1, 2, "____________________", spriteEffect: SpriteEffects.FlipVertically);
+            Print(1, 2, "____________________", mirror: SpriteEffects.FlipVertically);
 
             Print(2, 15, "RED ".CreateColored(StarterProject.Theme.Red, null) +
                                       "PURPLE ".CreateColored(StarterProject.Theme.Purple, null) +
