@@ -88,6 +88,11 @@ namespace SadConsole.Input
         /// </summary>
         public bool IsOnScreen { get; set; }
 
+        /// <summary>
+        /// Indicates that the mouse is on a console this frame.
+        /// </summary>
+        public bool IsOnConsole { get; set; }
+
         private System.TimeSpan _leftLastClickedTime;
         private System.TimeSpan _rightLastClickedTime;
 
@@ -137,6 +142,9 @@ namespace SadConsole.Input
             _rightLastClickedTime = gameTime.ElapsedGameTime;
             LeftButtonDown = leftDown;
             RightButtonDown = rightDown;
+
+            // Reset state
+            IsOnConsole = false;
         }
 
         /// <summary>
@@ -175,6 +183,7 @@ namespace SadConsole.Input
                 ConsoleLocation = new Point(ConsoleLocation.X + data.TextSurface.RenderArea.Left, ConsoleLocation.Y + data.TextSurface.RenderArea.Top);
                 Cell = data.TextSurface.Cells[ConsoleLocation.Y * data.TextSurface.RenderArea.Width + ConsoleLocation.X];
                 Console = data;
+                IsOnConsole = true;
 
                 // Other console previously had mouse, we'll properly tell it that it has loss it.
                 if (LastConsole != data)
@@ -191,6 +200,22 @@ namespace SadConsole.Input
                     else
                         LastConsole = data;
                 }
+            }
+        }
+
+        /// <summary>
+        /// <see cref="LastConsole"/> is still assigned but we need to clear it.
+        /// </summary>
+        public void FlushLastConsole()
+        {
+            if (LastConsole != null)
+            {
+                var info = this.Clone();
+                var oldConsole = LastConsole;
+                LastConsole = null;
+
+                info.DisableFill = true;
+                oldConsole.ProcessMouse(info);
             }
         }
 

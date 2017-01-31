@@ -31,6 +31,7 @@ namespace StarterProject.CustomConsoles
             controlsContainer.MouseCanFocus = false;
             controlsContainer.ProcessMouseWithoutFocus = true;
 
+            virtualCursor.IsVisible = true;
             IsVisible = false;
 
             scrollingCounter = 0;

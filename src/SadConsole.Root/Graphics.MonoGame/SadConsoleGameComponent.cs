@@ -78,6 +78,13 @@ namespace SadConsole
 
                     Global.CurrentScreen?.Update(gameTime.ElapsedGameTime);
 
+
+                    if (Settings.Input.DoMouse)
+                    {
+                        if (!Global.MouseState.IsOnConsole && Global.MouseState.LastConsole != null)
+                            Global.MouseState.FlushLastConsole();
+                    }
+
                     SadConsole.Game.OnUpdate?.Invoke(gameTime);
                 }
             }
