@@ -114,8 +114,10 @@ namespace SadConsole.Input
         /// <param name="gameTime"></param>
         public void ProcessMouse(GameTime gameTime)
         {
+            // Get state from monogame
             MouseState currentState = Mouse.GetState();
 
+            // Update local state
             bool leftDown = currentState.LeftButton == ButtonState.Pressed;
             bool rightDown = currentState.RightButton == ButtonState.Pressed;
             
@@ -143,8 +145,17 @@ namespace SadConsole.Input
             LeftButtonDown = leftDown;
             RightButtonDown = rightDown;
 
-            // Reset state
-            IsOnConsole = false;
+            
+            // Scan consoles for mouse hits
+
+            // If exclusive holding, process exclusive
+            //if (IsBusy && SadConsole.Console.ActiveConsole != null)
+            //    SadConsole.Console.ActiveConsole.ProcessMouse(this);
+            //else
+            //{
+                
+            //}
+
         }
 
         /// <summary>
