@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F44A9E76-B19D-4219-AFAE-561089354280}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SadConsole</RootNamespace>
+    <AssemblyName>SadConsole</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MonoGame.Framework.WindowsDX.3.5.1.1679\lib\net40\MonoGame.Framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algorithms.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="ColoredGlyph.cs" />
+    <Compile Include="ColoredString.Commands.cs" />
+    <Compile Include="ColoredString.cs" />
+    <Compile Include="Console.cs" />
+    <Compile Include="ConsoleContainer.cs" />
+    <Compile Include="Cursor.cs" />
+    <Compile Include="DoubleAnimation.cs" />
+    <Compile Include="DrawCall.cs" />
+    <Compile Include="EasingFunctions\Bounce.cs" />
+    <Compile Include="EasingFunctions\Circle.cs" />
+    <Compile Include="EasingFunctions\EasingBase.cs" />
+    <Compile Include="EasingFunctions\Expo.cs" />
+    <Compile Include="EasingFunctions\Linear.cs" />
+    <Compile Include="EasingFunctions\Quad.cs" />
+    <Compile Include="EasingFunctions\Sine.cs" />
+    <Compile Include="Effects\Blink.cs" />
+    <Compile Include="Effects\BlinkCharacter.cs" />
+    <Compile Include="Effects\CellEffectBase.cs" />
+    <Compile Include="Effects\CodeEffect.cs" />
+    <Compile Include="Effects\ConcurrentEffect.cs" />
+    <Compile Include="Effects\Delay.cs" />
+    <Compile Include="Effects\EffectsChain.cs" />
+    <Compile Include="Effects\EffectsManager.cs" />
+    <Compile Include="Effects\Fade.cs" />
+    <Compile Include="Effects\ICellEffect.cs" />
+    <Compile Include="Effects\Recolor.cs" />
+    <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\ColorGradient.cs" />
+    <Compile Include="Extensions\IScreenList.cs" />
+    <Compile Include="Extensions\ISurfaceExtensions.cs" />
+    <Compile Include="Extensions\PointExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TextureExtensions.cs" />
+    <Compile Include="Extensions\XamlExtensions.cs" />
+    <Compile Include="Font.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Graphics.MonoGame\ClearScreenGameComponent.cs" />
+    <Compile Include="Graphics.MonoGame\FPSCounterComponent.cs" />
+    <Compile Include="Graphics.MonoGame\Game.cs" />
+    <Compile Include="Graphics.MonoGame\SadConsoleGameComponent.cs" />
+    <Compile Include="IConsole.cs" />
+    <Compile Include="Input\AsciiKey.cs" />
+    <Compile Include="Input\ConsoleViewInputHandler.cs" />
+    <Compile Include="Input\IInput.cs" />
+    <Compile Include="Input\KeyboardInfo.cs" />
+    <Compile Include="Input\MouseEventArgs.cs" />
+    <Compile Include="Input\MouseInfo.cs" />
+    <Compile Include="Instructions\CodeInstruction.cs" />
+    <Compile Include="Instructions\ConcurrentInstruction.cs" />
+    <Compile Include="Instructions\DoubleInstruction.cs" />
+    <Compile Include="Instructions\DrawString.cs" />
+    <Compile Include="Instructions\FadeTextSurfaceTint.cs" />
+    <Compile Include="Instructions\InstructionBase.cs" />
+    <Compile Include="Instructions\InstructionSet.cs" />
+    <Compile Include="Instructions\Wait.cs" />
+    <Compile Include="IScreen.cs" />
+    <Compile Include="MathHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Readers\REXPaint.Image.Cell.cs" />
+    <Compile Include="Readers\REXPaint.Image.Color.cs" />
+    <Compile Include="Readers\REXPaint.Image.cs" />
+    <Compile Include="Readers\REXPaint.Image.Layer.cs" />
+    <Compile Include="Readers\TextureToSurfaceReader.cs" />
+    <Compile Include="Renderers\ISurfaceRenderer.cs" />
+    <Compile Include="Renderers\LayeredSurfaceRenderer.cs" />
+    <Compile Include="Renderers\SurfaceRenderer.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="Serializer.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Shapes\Box.cs" />
+    <Compile Include="Shapes\Circle.cs" />
+    <Compile Include="Shapes\Ellipse.cs" />
+    <Compile Include="Shapes\IShape.cs" />
+    <Compile Include="Shapes\Line.cs" />
+    <Compile Include="StringParser\ParseCommandBase.cs" />
+    <Compile Include="StringParser\ParseCommandBlink.cs" />
+    <Compile Include="StringParser\ParseCommandGlyph.cs" />
+    <Compile Include="StringParser\ParseCommandGradient.cs" />
+    <Compile Include="StringParser\ParseCommandMirror.cs" />
+    <Compile Include="StringParser\ParseCommandRecolor.cs" />
+    <Compile Include="StringParser\ParseCommandStacks.cs" />
+    <Compile Include="StringParser\ParseCommandUndo.cs" />
+    <Compile Include="Surfaces\AnimatedSurface.cs" />
+    <Compile Include="Surfaces\BasicSurface.cs" />
+    <Compile Include="Surfaces\ISurface.cs" />
+    <Compile Include="Surfaces\LayeredSurface.cs" />
+    <Compile Include="Surfaces\SurfaceEditor.cs" />
+    <Compile Include="Surfaces\SurfaceView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'ReleaseBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'DebugBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=DebugBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+  </PropertyGroup>
+</Project>

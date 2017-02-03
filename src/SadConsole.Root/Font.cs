@@ -173,8 +173,8 @@ namespace SadConsole
             int diffHeight = (Global.WindowHeight - oldHeight) / 2;
 
             // Center screen
-            if (Game.Instance != null)
-                Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
+            //if (Game.Instance != null)
+            //    Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
 
             manager.ApplyChanges();
         }
