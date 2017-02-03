@@ -9,7 +9,7 @@ namespace SadConsole
 {
     public static class Global
     {
-        internal static string FontPathHint;
+        internal static string SerializerPathHint;
 
         /// <summary>
         /// Collection of fonts. Used mainly by the deserialization system.
@@ -118,14 +118,14 @@ namespace SadConsole
         /// <returns>A master font that you can generate a usable font from.</returns>
         public static FontMaster LoadFont(string font)
         {
-            if (!File.Exists(font))
-            {
-                font = Path.Combine(Path.Combine(Path.GetDirectoryName(Path.GetFullPath(font)), "fonts"), Path.GetFileName(font));
-                if (!File.Exists(font))
-                    throw new Exception($"Font does not exist: {font}");
-            }                    
+            //if (!File.Exists(font))
+            //{
+            //    font = Path.Combine(Path.Combine(Path.GetDirectoryName(Path.GetFullPath(font)), "fonts"), Path.GetFileName(font));
+            //    if (!File.Exists(font))
+            //        throw new Exception($"Font does not exist: {font}");
+            //}                    
 
-            FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
+            //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
 
             var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
 

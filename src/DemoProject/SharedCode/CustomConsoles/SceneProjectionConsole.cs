@@ -1,5 +1,4 @@
-﻿#if MONOGAME
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Surfaces;
 using System;
@@ -227,4 +226,3 @@ namespace StarterProject.CustomConsoles
         }
     }
 }
-#endif

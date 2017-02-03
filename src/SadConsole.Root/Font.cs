@@ -296,23 +296,12 @@ namespace SadConsole
         /// </summary>
         public void Generate()
         {
-            string file = FilePath;
+            string file = System.IO.Path.Combine(Global.SerializerPathHint, FilePath);
 
-            if (!System.IO.File.Exists(file))
-            {
-                file = System.IO.Path.Combine(Global.FontPathHint, file);
 
-                if (!System.IO.File.Exists(file))
-                {
-                    file = System.IO.Path.Combine("fonts", FilePath);
-
-                    if (!System.IO.File.Exists(file))
-                        throw new Exception("Unable to find font: " + FilePath);
-                }
-            }
-
-            using (System.IO.Stream fontStream = System.IO.File.OpenRead(file))
+            using (System.IO.Stream fontStream = TitleContainer.OpenStream(file))
                 Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+
             ConfigureRects();
         }
 

@@ -1,18 +1,30 @@
-﻿using System;
-using SadConsole;
+using Android.App;
+using Android.Content.PM;
+using Android.OS;
+using Android.Views;
 using Microsoft.Xna.Framework;
-using SadConsole.Input;
-using Console = SadConsole.Console;
+using SadConsole;
 
 namespace StarterProject
 {
-    class Program
+    [Activity(Label = "StarterProject.Android"
+        , MainLauncher = true
+        , Icon = "@drawable/icon"
+        , Theme = "@style/Theme.Splash"
+        , AlwaysRetainTaskState = true
+        , LaunchMode = LaunchMode.SingleInstance
+        , ScreenOrientation = ScreenOrientation.SensorLandscape
+        , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize)]
+    public class Activity1 : Microsoft.Xna.Framework.AndroidGameActivity
     {
         private static Windows.CharacterViewer _characterWindow;
         private static int currentConsoleIndex;
 
-        static void Main(string[] args)
+
+        protected override void OnCreate(Bundle bundle)
         {
+            base.OnCreate(bundle);
+
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
 
@@ -28,13 +40,12 @@ namespace StarterProject
 
             // Hook the "after render" even though we're not using it.
             SadConsole.Game.OnDraw = DrawFrame;
-            
-            // Start the game.
-            SadConsole.Game.Instance.Run();
 
-            //
-            // Code here will not run until the game has shut down.
-            //
+            // Setup the android view
+            SetContentView((View)SadConsole.Game.Instance.Services.GetService(typeof(View)));
+            
+            // Run the game
+            SadConsole.Game.Instance.Run();
         }
 
         private static void DrawFrame(GameTime time)
@@ -50,7 +61,7 @@ namespace StarterProject
                 // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
                 // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
                 // in the Initialize method above.
-                if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F1))
+                if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.A))
                 {
                     MoveNextConsole();
                 }
@@ -66,6 +77,7 @@ namespace StarterProject
                     SadConsole.Settings.ToggleFullScreen();
                 }
             }
+
         }
 
         private static void Init()
@@ -76,23 +88,23 @@ namespace StarterProject
 
 
             // Setup our custom theme.
-            Theme.SetupThemes();
+            StarterProject.Theme.SetupThemes();
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
 
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
-            
+
             // We'll instead use our demo consoles that show various features of SadConsole.
+            Global.CurrentScreen.Children.Add(new CustomConsoles.RandomScrollingConsole());
+            Global.CurrentScreen.Children.Add(new CustomConsoles.AutoTypingConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.ScrollableConsole(25, 6, 70));
             Global.CurrentScreen.Children.Add(new CustomConsoles.CursorConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.ControlsTest());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.AnsiConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.AutoTypingConsole());
+            //Global.CurrentScreen.Children.Add(new CustomConsoles.AnsiConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.StringParsingConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.StretchedConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.RandomScrollingConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.SceneProjectionConsole());
+            Global.CurrentScreen.Children.Add(new CustomConsoles.StretchedConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.ViewsAndSubViews());
             Global.CurrentScreen.Children.Add(new CustomConsoles.GameObjectConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.DOSConsole());
@@ -130,7 +142,8 @@ namespace StarterProject
             //SadConsole.Effects.Fade a = new SadConsole.Effects.Fade();
             //a.DestinationForeground = Microsoft.Xna.Framework.Color.Turquoise;
             //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
-            
+
+
         }
 
         private static void MoveNextConsole()
@@ -144,6 +157,8 @@ namespace StarterProject
                 Global.CurrentScreen.Children[i].IsVisible = currentConsoleIndex == i;
 
             Console.ActiveConsole = (IConsole)Global.CurrentScreen.Children[currentConsoleIndex];
+
         }
     }
 }
+

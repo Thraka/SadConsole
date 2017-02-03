@@ -122,18 +122,19 @@ namespace SadConsole
         /// <returns>A new object instance.</returns>
         public static T Load<T>(string file, IEnumerable<Type> knownTypes = null)
         {
-            if (System.IO.File.Exists(file))
-            {
-                using (var fileObject = System.IO.File.OpenRead(file))
+            //if (System.IO.File.Exists(file))
+            //{
+            Global.SerializerPathHint = System.IO.Path.GetDirectoryName(file);
+                using (var fileObject = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
                 {
                     //var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
                     var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
 
                     return (T)serializer.ReadObject(fileObject);
                 }
-            }
+            //}
 
-            throw new System.IO.FileNotFoundException("File not found.", file);
+            //throw new System.IO.FileNotFoundException("File not found.", file);
         }
     }
 
