@@ -11,7 +11,7 @@ namespace SadConsole
     public partial class Game : Microsoft.Xna.Framework.Game
     {
         #region Static
-        public static Game Instance { get; private set; }
+        public static Microsoft.Xna.Framework.Game Instance { get; set; }
 
         /// <summary>
         /// Called after each frame of update logic has happened.
@@ -42,7 +42,7 @@ namespace SadConsole
 
         // public stuff from Engine (like defaultfont)
 
-        private Game(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback)
+        protected Game(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback)
         {
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";

@@ -31,7 +31,7 @@ namespace SadConsole
                     GraphicsDevice.Clear(Settings.ClearColor);
 
                     // Render each draw call
-                    Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                    Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
                     foreach (var call in Global.DrawCalls)
                     {
                         call.Draw();
@@ -46,7 +46,7 @@ namespace SadConsole
                     // If we're going to draw to the screen, do it.
                     if (Settings.DoFinalDraw)
                     {
-                        Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                        Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
                         Global.SpriteBatch.Draw(Global.RenderOutput, Global.RenderRect, Color.White);
                         Global.SpriteBatch.End();
                     }

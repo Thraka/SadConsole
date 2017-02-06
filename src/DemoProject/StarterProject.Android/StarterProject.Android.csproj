@@ -66,6 +66,7 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\Fonts\IBM.font" />
     <AndroidAsset Include="Assets\IBM.font" />
+    <AndroidAsset Include="Assets\Fonts\Cheepicus12.font" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
@@ -110,6 +111,9 @@
       <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
       <Name>SadConsole</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Fonts\Cheepicus_12x12.png" />
   </ItemGroup>
   <Import Project="..\SharedCode\StarterProject.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />

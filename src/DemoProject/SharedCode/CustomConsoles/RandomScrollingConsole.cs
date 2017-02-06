@@ -20,6 +20,8 @@ namespace StarterProject.CustomConsoles
 
         public RandomScrollingConsole() : base(80, 25)
         {
+            
+
             messageData = new SurfaceEditor(new BasicSurface(10, 1));
             IsVisible = false;
 
@@ -76,8 +78,8 @@ namespace StarterProject.CustomConsoles
                     TextSurface = new BasicSurface(2000, 2000, new Rectangle(0, 0, 80, 25)); //500mb ?? why?
                     //Data = new TextSurface(2000, 2000);
                     //DataViewport = new Rectangle(0, 0, 80, 25);
-                    TextSurface.RenderArea = new Rectangle(0, 0, 80, 25);
-
+                    //TextSurface.RenderArea = new Rectangle(0, 0, 80, 25);
+                    TextSurface.Font = SadConsole.Global.LoadFont("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.One);
                     // Clear message data and make it transparent so that it acts as a layer
                     messageData.Fill(Color.White, Color.Transparent, 0, null);
 

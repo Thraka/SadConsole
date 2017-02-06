@@ -32,6 +32,7 @@ namespace StarterProject.CustomConsoles
             controlsContainer.ProcessMouseWithoutFocus = true;
 
             virtualCursor.IsVisible = true;
+            virtualCursor.Print("Just start typing!");
             IsVisible = false;
 
             scrollingCounter = 0;

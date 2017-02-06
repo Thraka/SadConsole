@@ -47,7 +47,6 @@ namespace StarterProject.Android
 
             // TODO: use this.Content to load your game content here
             SadConsole.Global.GraphicsDevice = GraphicsDevice;
-            var font = SadConsole.Serializer.Load<SadConsole.FontMaster>("Fonts/IBM.font");
         }
 
         /// <summary>

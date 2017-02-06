@@ -59,7 +59,7 @@ namespace StarterProject
         public static SadConsole.Cell Appearance_ControlMouseDown = new SadConsole.Cell(Color_ControlBackSelected, Color_TextSelectedDark);
         public static SadConsole.Cell Appearance_ControlFocused = new SadConsole.Cell(Cyan, Color_ControlBackDim);
 
-        public static SadConsole.Cell Appearance_ControlTextBoxNormal = new SadConsole.Cell(Color_Text, ClearAlpha(new Color((byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), 255)));
+        //public static SadConsole.Cell Appearance_ControlTextBoxNormal = new SadConsole.Cell(Color_Text, ClearAlpha(new Color((byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), 255)));
 
         public static SadConsole.Themes.RadioButtonTheme NoCheckRadioButtonTheme;
         #endregion
@@ -102,7 +102,7 @@ namespace StarterProject
             SadConsole.Themes.Library.Default.ButtonTheme.MouseClicking = Appearance_ControlMouseDown;
             SadConsole.Themes.Library.Default.ButtonTheme.Focused = Appearance_ControlFocused;
 
-            SadConsole.Themes.Library.Default.InputBoxTheme.Normal = Appearance_ControlTextBoxNormal;
+            //SadConsole.Themes.Library.Default.InputBoxTheme.Normal = Appearance_ControlTextBoxNormal;
             SadConsole.Themes.Library.Default.InputBoxTheme.Focused = Appearance_ControlFocused;
             SadConsole.Themes.Library.Default.InputBoxTheme.MouseOver = Appearance_ControlOver;
 

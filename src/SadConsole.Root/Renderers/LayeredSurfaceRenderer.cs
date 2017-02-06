@@ -24,7 +24,7 @@ namespace SadConsole.Renderers
                 Global.GraphicsDevice.SetRenderTarget(surface.LastRenderResult);
                 Global.GraphicsDevice.Clear(Color.Transparent);
 
-                Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
                 BeforeRenderCallback?.Invoke(Global.SpriteBatch);
 

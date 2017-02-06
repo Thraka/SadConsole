@@ -49,8 +49,9 @@ namespace StarterProject.CustomConsoles
 
             UseMouse = true;
             IsVisible = false;
+            toggle = !toggle;
         }
-        
+
         public override void Update(TimeSpan time)
         {
 

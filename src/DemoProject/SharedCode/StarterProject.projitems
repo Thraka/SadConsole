@@ -40,7 +40,7 @@
     <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-DGZN.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="$(MSBuildThisFileDirectory)Cheepicus12.font">
+    <None Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus12.font">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
@@ -51,7 +51,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Ansi\files.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Cheepicus_12x12.png">
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus_12x12.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png">
