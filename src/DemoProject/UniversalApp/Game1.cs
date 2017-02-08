@@ -6,14 +6,12 @@ namespace Game1
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class Game1 : SadConsole.Game
     {
-        GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        public Game1(): base("Fonts/IBM.font", 80, 25, null)
         {
-            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 

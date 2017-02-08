@@ -31,6 +31,7 @@ namespace Game1
 			// Create the game.
 			var launchArguments = string.Empty;
             _game = MonoGame.Framework.XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, swapChainPanel);
+            SadConsole.Global.CurrentScreen = new StarterProject.CustomConsoles.StringParsingConsole();
         }
     }
 }

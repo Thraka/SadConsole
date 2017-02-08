@@ -99,8 +99,11 @@
     </Compile>
     <Compile Include="Game1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringParsingConsole.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Fonts\Cheepicus12.font" />
+    <Content Include="Fonts\IBM.font" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +113,8 @@
     <None Include="Game1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Fonts\Cheepicus_12x12.png" />
+    <Content Include="Fonts\IBM8x16.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
