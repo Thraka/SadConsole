@@ -12,9 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Initial release. All versions of other SadConsole libraries also set to 6.0.0.
+Initial release. The other libraries (SadConsole.Ansi, SadConsle.Controls, SadConsole.GameHelpers) have merged into a single library, SadConsole.Core
 Rewrite and refactor of code.
-Single NuGet package for all MonoGame libraries.
+Single NuGet package for all MonoGame libraries (besides Universal apps).
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

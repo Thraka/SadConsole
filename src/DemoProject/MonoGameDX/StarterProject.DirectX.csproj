@@ -84,18 +84,6 @@
     <None Include="Rendering.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole.Ansi\SadConsole.Ansi.csproj">
-      <Project>{55695088-7d09-4704-9d0c-7c69e0de6d47}</Project>
-      <Name>SadConsole.Ansi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SadConsole.Controls\SadConsole.Controls.csproj">
-      <Project>{46f11907-cef3-4069-b041-0a88880981e6}</Project>
-      <Name>SadConsole.Controls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SadConsole.GameHelpers\SadConsole.GameHelpers.csproj">
-      <Project>{d348c254-ab16-4b48-9f61-2ffee51dfd4a}</Project>
-      <Name>SadConsole.GameHelpers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SadConsole.Root\SadConsole.csproj">
       <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
       <Name>SadConsole</Name>

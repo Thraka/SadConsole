@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Reflection;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
 namespace Microsoft.Xna.Framework
@@ -307,35 +307,21 @@ namespace Microsoft.Xna.Framework
                 else
                 {
                     // Lookup color in framework
-                    Type colorType = typeof(ColorHelper);
 
-                    global::System.Reflection.PropertyInfo[] propInfoList =
-                        colorType.GetProperties(global::System.Reflection.BindingFlags.Static | global::System.Reflection.BindingFlags.DeclaredOnly | global::System.Reflection.BindingFlags.Public);
+                    TypeInfo colorType = typeof(ColorHelper).GetTypeInfo();
 
-
-                    if (propInfoList.Length != 0)
+                    foreach (var item in colorType.DeclaredProperties)
                     {
-                        for (int i = 0; i < propInfoList.Length; i++)
-                        {
-                            if (propInfoList[i].Name.ToLower() == value)
-                            {
-                                return (Color)propInfoList[i].GetValue(null, null);
-                            }
-                        }
+                        if (item.Name.ToLower() == value)
+                            return (Color)item.GetValue(null);
                     }
-                    else
-                    {
-                        var fieldInfoList =
-                        colorType.GetFields(global::System.Reflection.BindingFlags.Static | global::System.Reflection.BindingFlags.DeclaredOnly | global::System.Reflection.BindingFlags.Public);
 
-                        for (int i = 0; i < fieldInfoList.Length; i++)
-                        {
-                            if (fieldInfoList[i].Name.ToLower() == value)
-                            {
-                                return (Color)fieldInfoList[i].GetValue(null);
-                            }
-                        }
+                    foreach (var item in colorType.DeclaredFields)
+                    {
+                        if (item.Name.ToLower() == value)
+                            return (Color)item.GetValue(null);
                     }
+
 
                     throw exception;
                 }
