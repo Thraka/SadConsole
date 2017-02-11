@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace SadConsole
 {
     /// <summary>
-    /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
+    /// An <see cref="IConsole" implementation that only processes the <see cref="IScreen.Children"/>.
     /// </summary>
     [DataContract]
     public partial class ConsoleContainer : IConsole
@@ -106,7 +106,7 @@ namespace SadConsole
                 {
                     ProcessMouse(Global.MouseState);
 
-                    if (Console.ActiveConsole == this)
+                    if (Console.ActiveConsoles == this)
                         ProcessKeyboard(Global.KeyboardState);
                 }
 

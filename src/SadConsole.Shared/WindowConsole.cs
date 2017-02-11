@@ -34,7 +34,6 @@ namespace SadConsole
         //private bool __isVisible;
         private bool _prevousMouseExclusiveDrag;
         private bool _addedToParent;
-        private IConsole _previousActiveConsole;
         private SadConsole.Shapes.Box _border;
 
         /// <summary>
@@ -204,8 +203,7 @@ namespace SadConsole
 
                         if (this.MouseCanFocus)
                         {
-                            if (Console.ActiveConsole != this)
-                                Console.ActiveConsole = this;
+                            Console.ActiveConsoles.Set(this);
 
                             if (this.Parent != null && this.Parent.Children.IndexOf(this) != this.Parent.Children.Count - 1)
                                 this.Parent.Children.MoveToTop(this);
@@ -273,8 +271,7 @@ namespace SadConsole
 
             if (modal)
             {
-                _previousActiveConsole = Console.ActiveConsole;
-                Console.ActiveConsole = this;
+                Console.ActiveConsoles.Push(this);
             }
 
             this.ExclusiveFocus = modal;
@@ -287,14 +284,11 @@ namespace SadConsole
         {
             isVisible = false;
 
-            if (Console.ActiveConsole == this)
-            {
-                if (_isModal)
-                    Console.ActiveConsole = _previousActiveConsole;
-            }
+            if (_isModal)
+                Console.ActiveConsoles.Pop(this);
 
             if (_addedToParent && Parent != null)
-                Parent.Children.Remove(this);
+                Parent = null;
 
             if (Closed != null)
                 Closed(this, new EventArgs());

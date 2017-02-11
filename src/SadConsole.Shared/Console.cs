@@ -18,8 +18,6 @@ namespace SadConsole
     [DataContract]
     public partial class Console : SurfaceEditor, IConsole
     {
-        public static IConsole ActiveConsole;
-
         [DataMember(Name = "WidthNTS")]
         private int serializedWidth;
         [DataMember(Name = "HeightNTS")]
@@ -372,7 +370,7 @@ namespace SadConsole
         {
             var handlerResult = MouseHandler == null ? false : MouseHandler(this, info);
 
-            if (!handlerResult && (!info.IsBusy || info.IsBusy && Console.ActiveConsole == this))
+            if (!handlerResult && (!info.IsBusy || info.IsBusy && Console.ActiveConsoles.Console == this))
             {
                 if (!info.DisableFill)
                     info.Fill(this);
@@ -590,7 +588,7 @@ namespace SadConsole
                 {
                     ProcessMouse(Global.MouseState);
 
-                    if (Console.ActiveConsole == this)
+                    if (Console.ActiveConsoles.Console == this)
                         ProcessKeyboard(Global.KeyboardState);
                 }
 

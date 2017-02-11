@@ -70,7 +70,7 @@ namespace SadConsole
                         Global.MouseState.ProcessMouse(gameTime);
 
                         Global.MouseState.IsOnScreen = Settings.Input.ProcessMouseOffscreen || Global.RenderRect.Contains(Global.MouseState.ScreenLocation);
-                        Global.MouseState.IsBusy = Console.ActiveConsole != null && Console.ActiveConsole.ExclusiveFocus;
+                        Global.MouseState.IsBusy = Console.ActiveConsoles.Console != null && Console.ActiveConsoles.Console.ExclusiveFocus;
 
                         //if (Global.MouseState.IsBusy)
                         //    Console.ActiveConsole.ProcessMouse(Global.MouseState);

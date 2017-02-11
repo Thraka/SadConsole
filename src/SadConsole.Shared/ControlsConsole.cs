@@ -25,7 +25,6 @@ namespace SadConsole
         [DataMember]
         private ControlBase _capturedControl;
         private bool _exlusiveBeforeCapture;
-        private IConsole _activeBeforeCapture;
 
         private SadConsole.Themes.ControlsConsoleTheme _theme;
 
@@ -243,7 +242,7 @@ namespace SadConsole
                         if (newConsole is ControlsConsole)
                         {
                             // Set focus to this new console
-                            Console.ActiveConsole = newConsole;
+                            Console.ActiveConsoles.Set(newConsole);
 
                             var controlConsole = (ControlsConsole)newConsole;
                             if (controlConsole.Controls.Count > 0)
@@ -305,7 +304,7 @@ namespace SadConsole
                         if (newConsole is ControlsConsole)
                         {
                             // Set focus to this new console
-                            Console.ActiveConsole = newConsole;
+                            Console.ActiveConsoles.Set(newConsole);
 
                             var controlConsole = (ControlsConsole)newConsole;
                             if (controlConsole.Controls.Count > 0)
@@ -459,7 +458,7 @@ namespace SadConsole
         /// <returns>True when the mouse is over this console and it is the active console; otherwise false.</returns>
         public override bool ProcessMouse(Input.MouseInfo info)
         {
-            if (base.ProcessMouse(info) && info.Console == this && (Console.ActiveConsole == this || ProcessMouseWithoutFocus))
+            if (base.ProcessMouse(info) && info.Console == this && (Console.ActiveConsoles.Console == this || ProcessMouseWithoutFocus))
             {
                 if (_capturedControl != null)
                     _capturedControl.ProcessMouse(info);
@@ -499,8 +498,7 @@ namespace SadConsole
         /// <param name="control">The control to capture</param>
         public void CaptureControl(ControlBase control)
         {
-            _activeBeforeCapture = Console.ActiveConsole;
-            Console.ActiveConsole = this;
+            Console.ActiveConsoles.Push(this);
             _exlusiveBeforeCapture = ExclusiveFocus;
             ExclusiveFocus = true;
             _capturedControl = control;
@@ -511,7 +509,7 @@ namespace SadConsole
         /// </summary>
         public void ReleaseControl()
         {
-            Console.ActiveConsole = _activeBeforeCapture;
+            Console.ActiveConsoles.Pop(this);
             ExclusiveFocus = _exlusiveBeforeCapture;
             _capturedControl = null;
         }

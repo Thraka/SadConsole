@@ -155,7 +155,7 @@ namespace SadConsole.Controls
                 _currentAppearanceText = Theme.MouseOver;
             }
 
-            else if (!_isMouseDown && !isMouseOver && IsFocused && Console.ActiveConsole == parent)
+            else if (!_isMouseDown && !isMouseOver && IsFocused && Console.ActiveConsoles == parent)
             {
                 _currentAppearanceButton = Theme.Button.Focused;
                 _currentAppearanceText = Theme.Focused;

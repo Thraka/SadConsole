@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console.Active.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ControlsConsole.cs" />

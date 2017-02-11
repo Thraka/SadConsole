@@ -239,7 +239,7 @@ namespace SadConsole.Controls
             if (isMouseOver)
                 _currentAppearance = Theme.MouseOver;
 
-            else if (base.IsFocused && Console.ActiveConsole == parent)
+            else if (base.IsFocused && Console.ActiveConsoles == parent)
                 _currentAppearance = Theme.Focused;
             else
                 _currentAppearance = Theme.Normal;
