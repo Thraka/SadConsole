@@ -12,7 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Player.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SnakeConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SnakeGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Cheepicus_12x12.png">

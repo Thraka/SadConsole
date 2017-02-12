@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Console = SadConsole.Consoles.Console;
-using SadConsole.Consoles;
+using Console = SadConsole.Console;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using SadConsole.Surfaces;
 
 namespace Castle
 {
-    internal class Monster : SadConsole.Game.GameObject
+    internal class Monster : SadConsole.GameHelpers.GameObject
     {
         public int RoomId { get; private set; }
         public bool IsAlive { get; private set; }
@@ -23,7 +23,7 @@ namespace Castle
         public int Value { get; protected set; }
         public bool IsGuard { get; protected set; }
 
-        public Monster(String name, String inventoryName, int roomId, int x, int y, int character, int health, string description, string deadDescription): base(SadConsole.Engine.DefaultFont)
+        public Monster(String name, String inventoryName, int roomId, int x, int y, int character, int health, string description, string deadDescription): base()
         {
             this.IsAlive = true;
             this.Name = inventoryName;
@@ -39,9 +39,9 @@ namespace Castle
             this.IsGuard = false;
 
 
-            Animation = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
+            Animation = new AnimatedSurface("default", 1, 1);
             var frame = Animation.CreateFrame();
-            frame[0].GlyphIndex = character;
+            frame[0].Glyph = character;
             
         }
 
