@@ -98,7 +98,7 @@ namespace SadConsole.Effects
             if (FadeForeground)
             {
                 if (UseCellForeground)
-                    DestinationForeground.Stops[0].Color = cell.Foreground;
+                    DestinationForeground.Stops[0].Color = cell.State.Value.Foreground;
 
                 cell.Foreground = DestinationForeground.Lerp((float)_calculatedValue);
             }
@@ -106,7 +106,7 @@ namespace SadConsole.Effects
             if (FadeBackground)
             {
                 if (UseCellBackground)
-                    DestinationBackground.Stops[0].Color = cell.Background;
+                    DestinationBackground.Stops[0].Color = cell.State.Value.Background;
 
                 cell.Background = DestinationBackground.Lerp((float)_calculatedValue);
             }

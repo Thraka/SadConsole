@@ -63,7 +63,7 @@ namespace SadConsole.Effects
             if (!_isOn)
             {
                 if (UseCellBackgroundColor)
-                    cell.Foreground = cell.Background;
+                    cell.Foreground = cell.State.Value.Background;
                 else
                     cell.Foreground = BlinkOutColor;
             }
