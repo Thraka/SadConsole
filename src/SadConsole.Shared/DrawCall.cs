@@ -7,12 +7,12 @@ using System.Text;
 
 namespace SadConsole
 {
-    public abstract class DrawCall
+    public interface IDrawCall
     {
-        public abstract void Draw();
+        void Draw();
     }
 
-    public class DrawCallSurface : DrawCall
+    public class DrawCallSurface : IDrawCall
     {
         public ISurface Surface;
         public Vector2 Position;
@@ -23,13 +23,42 @@ namespace SadConsole
             Position = position;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             Global.SpriteBatch.Draw(Surface.LastRenderResult, Position, Color.White);
         }
     }
 
-    public class DrawCallColoredRect : DrawCall
+    public class DrawCallTexture : IDrawCall
+    {
+        public Texture2D Texture;
+        public Vector2 Position;
+
+        public DrawCallTexture(Texture2D texture, Vector2 position)
+        {
+            Texture = texture;
+            Position = position;
+        }
+
+        public void Draw()
+        {
+            Global.SpriteBatch.Draw(Texture, Position, Color.White);
+        }
+    }
+
+    public class DrawCallCustom : IDrawCall
+    {
+        public Action DrawCallback;
+
+        public DrawCallCustom(Action draw) { DrawCallback = draw; }
+
+        public void Draw()
+        {
+            DrawCallback();
+        }
+    }
+
+    public class DrawCallColoredRect : IDrawCall
     {
         public Rectangle Rectangle;
         public Color Shade;
@@ -40,13 +69,13 @@ namespace SadConsole
             Shade = shade;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             Global.SpriteBatch.Draw(Global.FontDefault.FontImage, Rectangle, Global.FontDefault.SolidGlyphRectangle, Shade);
         }
     }
 
-    public class DrawCallCursor : DrawCall
+    public class DrawCallCursor : IDrawCall
     {
         public Console Console;
         public Vector2 Position;
@@ -56,7 +85,7 @@ namespace SadConsole
             Console = console;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
                 new Point(Console.VirtualCursor.Position.X - Console.TextSurface.RenderArea.Left,

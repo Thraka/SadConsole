@@ -62,28 +62,27 @@ namespace SadConsole
                     Global.GameTimeUpdate = gameTime;
                     Global.GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
 
-                    if (Settings.Input.DoKeyboard)
-                        Global.KeyboardState.ProcessKeys(gameTime);
-
-                    if (Settings.Input.DoMouse)
+                    if (Game.IsActive)
                     {
-                        Global.MouseState.ProcessMouse(gameTime);
+                        if (Settings.Input.DoKeyboard)
+                            Global.KeyboardState.ProcessKeys(gameTime);
 
-                        Global.MouseState.IsOnScreen = Settings.Input.ProcessMouseOffscreen || Global.RenderRect.Contains(Global.MouseState.ScreenLocation);
-                        Global.MouseState.IsBusy = Console.ActiveConsoles.Console != null && Console.ActiveConsoles.Console.ExclusiveFocus;
+                        if (Settings.Input.DoMouse)
+                        {
+                            Global.MouseState.ProcessMouse(gameTime);
 
-                        //if (Global.MouseState.IsBusy)
-                        //    Console.ActiveConsole.ProcessMouse(Global.MouseState);
+                            Global.MouseState.IsOnScreen = Settings.Input.ProcessMouseOffscreen || Global.RenderRect.Contains(Global.MouseState.ScreenLocation);
+                            Global.MouseState.IsBusy = Console.ActiveConsoles.Console != null && Console.ActiveConsoles.Console.ExclusiveFocus;
+
+                            //if (Global.MouseState.IsBusy)
+                            //    Console.ActiveConsole.ProcessMouse(Global.MouseState);
+
+                            if (!Global.MouseState.IsOnConsole && Global.MouseState.LastConsole != null)
+                                Global.MouseState.FlushLastConsole();
+                        }
                     }
 
                     Global.CurrentScreen?.Update(gameTime.ElapsedGameTime);
-
-
-                    if (Settings.Input.DoMouse)
-                    {
-                        if (!Global.MouseState.IsOnConsole && Global.MouseState.LastConsole != null)
-                            Global.MouseState.FlushLastConsole();
-                    }
 
                     SadConsole.Game.OnUpdate?.Invoke(gameTime);
                 }

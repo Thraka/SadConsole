@@ -84,6 +84,7 @@ namespace StarterProject
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
             
             // We'll instead use our demo consoles that show various features of SadConsole.
+            Global.CurrentScreen.Children.Add(new CustomConsoles.SubConsoleCursor());
             Global.CurrentScreen.Children.Add(new CustomConsoles.SceneProjectionConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.StringParsingConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.AutoTypingConsole());
@@ -91,7 +92,6 @@ namespace StarterProject
             Global.CurrentScreen.Children.Add(new CustomConsoles.AnsiConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.StretchedConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.RandomScrollingConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.SubConsoleCursor());
             Global.CurrentScreen.Children.Add(new CustomConsoles.CursorConsole());
             Global.CurrentScreen.Children.Add(new CustomConsoles.ViewsAndSubViews());
             Global.CurrentScreen.Children.Add(new CustomConsoles.GameObjectConsole());
@@ -124,15 +124,10 @@ namespace StarterProject
             Global.CurrentScreen.Children[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
-            Console.ActiveConsole = (IConsole)Global.CurrentScreen.Children[0];
+            Console.ActiveConsoles.Set((IConsole)Global.CurrentScreen.Children[0]);
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
-
-            //SadConsole.Effects.Fade a = new SadConsole.Effects.Fade();
-            //a.DestinationForeground = Microsoft.Xna.Framework.Color.Turquoise;
-            //SadConsole.Engine.MonoGameInstance.Components.Add(new FPSCounterComponent(SadConsole.Engine.MonoGameInstance));
-            
         }
 
         private static void MoveNextConsole()
@@ -145,7 +140,7 @@ namespace StarterProject
             for (int i = 0; i < Global.CurrentScreen.Children.Count; i++)
                 Global.CurrentScreen.Children[i].IsVisible = currentConsoleIndex == i;
 
-            Console.ActiveConsole = (IConsole)Global.CurrentScreen.Children[currentConsoleIndex];
+            Console.ActiveConsoles.Set((IConsole)Global.CurrentScreen.Children[currentConsoleIndex]);
         }
     }
 }

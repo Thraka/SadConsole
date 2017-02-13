@@ -42,7 +42,6 @@ namespace StarterProject.CustomConsoles
             _effect.VertexColorEnabled = true;
             //_effect.EnableDefaultLighting();
             pixels = new Color[_renderTexture.Width * _renderTexture.Height];
-            RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
 
             reader1 = new SadConsole.Readers.TextureToSurfaceReader(_renderTexture.Width, _renderTexture.Height, SadConsole.Global.FontDefault);
@@ -79,8 +78,7 @@ namespace StarterProject.CustomConsoles
             if (isVisible)
             {
                 // Grab rendering
-                if (toggle)
-                    SadConsole.Global.GraphicsDevice.SetRenderTarget(_renderTexture);
+                SadConsole.Global.GraphicsDevice.SetRenderTarget(_renderTexture);
 
                 SadConsole.Global.GraphicsDevice.RasterizerState = rasterizerState;
 
@@ -114,9 +112,11 @@ namespace StarterProject.CustomConsoles
                 if (toggle)
                 {
                     textSurface = reader1.GetSurface(_renderTexture);
+                    base.Draw(time);
                 }
+                else
+                    SadConsole.Global.DrawCalls.Add(new SadConsole.DrawCallTexture(_renderTexture, _position.ToVector2()));
 
-                base.Draw(time);
             }
         }
 

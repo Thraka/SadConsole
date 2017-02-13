@@ -51,7 +51,7 @@ namespace StarterProject.CustomConsoles
             {
                 ProcessMouse(Global.MouseState);
 
-                if (Console.ActiveConsole == this)
+                if (Console.ActiveConsoles == this)
                     ProcessKeyboard(Global.KeyboardState);
 
                 foreach (var child in Children)

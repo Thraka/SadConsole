@@ -108,7 +108,7 @@ namespace SadConsole
         /// <summary>
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
-        public static List<DrawCall> DrawCalls = new List<DrawCall>(5);
+        public static List<IDrawCall> DrawCalls = new List<IDrawCall>(5);
         #endregion
 
         /// <summary>

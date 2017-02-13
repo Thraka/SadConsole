@@ -124,7 +124,7 @@ namespace StarterProject
             Global.CurrentScreen.Children[0].IsVisible = true;
 
             // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
-            Console.ActiveConsole = (IConsole)Global.CurrentScreen.Children[0];
+            Console.ActiveConsoles.Set((IConsole)Global.CurrentScreen.Children[0]);
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
@@ -145,7 +145,7 @@ namespace StarterProject
             for (int i = 0; i < Global.CurrentScreen.Children.Count; i++)
                 Global.CurrentScreen.Children[i].IsVisible = currentConsoleIndex == i;
 
-            Console.ActiveConsole = (IConsole)Global.CurrentScreen.Children[currentConsoleIndex];
+            Console.ActiveConsoles.Set((IConsole)Global.CurrentScreen.Children[currentConsoleIndex]);
         }
     }
 }
