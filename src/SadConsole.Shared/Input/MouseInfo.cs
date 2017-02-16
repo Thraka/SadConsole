@@ -202,6 +202,7 @@ namespace SadConsole.Input
                     if (LastConsole != null)
                     {
                         var info = this.Clone();
+                        info.ProcessMouse(Global.GameTimeUpdate);
                         var oldConsole = LastConsole;
                         LastConsole = data;
 

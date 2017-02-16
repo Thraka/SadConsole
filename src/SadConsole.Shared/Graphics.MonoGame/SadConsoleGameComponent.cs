@@ -23,6 +23,9 @@ namespace SadConsole
                     Global.GameTimeRender = gameTime;
                     Global.GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
 
+                    // Clear draw calls for next run
+                    Global.DrawCalls.Clear();
+
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
                     Global.CurrentScreen?.Draw(gameTime.ElapsedGameTime);
 
@@ -39,10 +42,7 @@ namespace SadConsole
 
                     Global.SpriteBatch.End();
                     GraphicsDevice.SetRenderTarget(null);
-
-                    // Clear draw calls for next run
-                    Global.DrawCalls.Clear();
-
+                    
                     // If we're going to draw to the screen, do it.
                     if (Settings.DoFinalDraw)
                     {

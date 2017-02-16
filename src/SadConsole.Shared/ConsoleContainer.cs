@@ -19,7 +19,7 @@ namespace SadConsole
     public partial class ConsoleContainer : IConsole
     {
         protected IScreen parentConsole;
-        protected bool isVisible;
+        protected bool isVisible = true;
 
 
         public bool AutoCursorOnFocus { get; set; }
@@ -110,7 +110,9 @@ namespace SadConsole
                         ProcessKeyboard(Global.KeyboardState);
                 }
 
-                foreach (var child in Children)
+                var copyList = new List<IScreen>(Children);
+
+                foreach (var child in copyList)
                     child.Update(delta);
             }
         }
@@ -123,7 +125,9 @@ namespace SadConsole
         {
             if (DoDraw && IsVisible)
             {
-                foreach (var child in Children)
+                var copyList = new List<IScreen>(Children);
+
+                foreach (var child in copyList)
                     child.Draw(delta);
             }
         }

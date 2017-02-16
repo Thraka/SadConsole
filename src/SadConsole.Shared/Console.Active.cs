@@ -65,6 +65,9 @@ namespace SadConsole
             {
                 if (console != activeConsole && console != null)
                 {
+                    if (consoles.Contains(console))
+                        consoles.Remove(console);
+
                     activeConsole = console;
                     consoles.Add(console);
                 }

@@ -235,30 +235,30 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets or sets this console as the <see cref="Global.CurrentScreen"/> value.
+        /// Gets or sets this console as the <see cref="Console.ActiveConsoles.Console"/> value.
         /// </summary>
-        /// <remarks>If the <see cref="Global.CurrentScreen"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
+        /// <remarks>If the <see cref="Console.ActiveConsoles.Console"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
         [DataMember]
         public bool IsFocused
         {
-            get { return Global.CurrentScreen == this; }
+            get { return Console.ActiveConsoles.Console == this; }
             set
             {
-                if (Global.CurrentScreen != null)
+                if (Console.ActiveConsoles.Console != null)
                 {
-                    if (value && Global.CurrentScreen != this && Global.CurrentScreen is IConsole && !((IConsole)Global.CurrentScreen).ExclusiveFocus)
+                    if (value && Console.ActiveConsoles.Console != this && Console.ActiveConsoles.Console is IConsole && !((IConsole)Console.ActiveConsoles.Console).ExclusiveFocus)
                     {
-                        Global.CurrentScreen = this;
+                        Console.ActiveConsoles.Push(this);
                         OnFocused();
                     }
 
-                    else if (value && Global.CurrentScreen == this)
+                    else if (value && Console.ActiveConsoles.Console == this)
                         OnFocused();
 
                     else if (!value)
                     {
-                        if (Global.CurrentScreen == this)
-                            Global.CurrentScreen = null;
+                        if (Console.ActiveConsoles.Console == this)
+                            Console.ActiveConsoles.Pop(this);
 
                         OnFocusLost();
                     }
@@ -267,7 +267,7 @@ namespace SadConsole
                 {
                     if (value)
                     {
-                        Global.CurrentScreen = this;
+                        Console.ActiveConsoles.Push(this);
                         OnFocused();
                     }
                     else
