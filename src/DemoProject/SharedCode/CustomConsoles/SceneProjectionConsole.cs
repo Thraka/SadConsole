@@ -9,7 +9,7 @@ using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    public class SceneProjectionConsole : Console
+    class SceneProjectionConsole : Console, IConsoleMetadata
     {
         private RenderTarget2D _renderTexture;
         private Vector3 _boxPosition;
@@ -23,6 +23,15 @@ namespace StarterProject.CustomConsoles
         private bool blockMode = false;
         Color[] pixels;
         SadConsole.Readers.TextureToSurfaceReader reader1;
+
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Scene Projection", Summary = "Translating a 3D scene to a TextSurface T=Toggle B=Block Mode" };
+            }
+        }
+
 
         public SceneProjectionConsole() : base(80, 25)
         {

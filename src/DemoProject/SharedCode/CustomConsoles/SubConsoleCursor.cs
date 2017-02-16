@@ -12,14 +12,22 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class SubConsoleCursor : SadConsole.ConsoleContainer
+    class SubConsoleCursor : SadConsole.ConsoleContainer, IConsoleMetadata
     {
         Console mainView;
         Console subView;
 
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Subconsole Cursor", Summary = "Two consoles with a single backing TextSurface" };
+            }
+        }
+
         public SubConsoleCursor()
         {
-            mainView = new Console(80, 25);
+            mainView = new Console(80, 23);
             subView = new Console(25, 10);
 
             IsVisible = false;
@@ -39,7 +47,7 @@ namespace StarterProject.CustomConsoles
             Children.Add(mainView);
             Children.Add(subView);
         }
-
+        
         public override bool ProcessKeyboard(KeyboardInfo info)
         {
             return subView.ProcessKeyboard(info);
@@ -49,6 +57,9 @@ namespace StarterProject.CustomConsoles
         {
             if (DoUpdate && isVisible)
             {
+                if (mainView.Position != Position)
+                    mainView.Position = Position;
+
                 ProcessMouse(Global.MouseState);
 
                 if (Console.ActiveConsoles == this)
@@ -58,5 +69,6 @@ namespace StarterProject.CustomConsoles
                     child.Update(delta);
             }
         }
+
     }
 }

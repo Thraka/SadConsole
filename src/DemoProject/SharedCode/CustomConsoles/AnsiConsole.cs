@@ -4,20 +4,29 @@ using Microsoft.Xna.Framework.Input;
 using SadConsole.Surfaces;
 using Console = SadConsole.Console;
 using SadConsole.Input;
+using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class AnsiConsole: Console
+    class AnsiConsole: Console, IConsoleMetadata
     {
         int fileIndex = -1;
         string[] files;
 
-        public AnsiConsole(): base(80, 25)
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Ansi", Summary = "Parses ANSI and text files" };
+            }
+        }
+
+        public AnsiConsole(): base(80, 23)
         {
             IsVisible = false;
             UseKeyboard = true;
             //files = SadConsole.Serializer.Load<string[]>("./ansi/files.json");
-            files = System.IO.Directory.GetFiles("./ansi");
+            files = System.IO.Directory.GetFiles("./ansi").Where(f => !f.EndsWith("json")).ToArray();
 
             NextAnsi();
             LoadAnsi();

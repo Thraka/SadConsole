@@ -11,16 +11,21 @@ using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class ControlsTest: ControlsConsole
+    class ControlsTest: ControlsConsole, IConsoleMetadata
     {
         Color[] backgroundcycle;
         int backIndex = 0;
 
-        public ControlsTest():base(80, 25)
+        public ConsoleMetadata Metadata
         {
-            IsVisible = false;
-            
-            
+            get
+            {
+                return new ConsoleMetadata() { Title = "Controls Test", Summary = "Interact with SadConsole controls" };
+            }
+        }
+
+        public ControlsTest():base(80, 23)
+        {
             var button1 = new SadConsole.Controls.Button(11);
             button1.Text = "Click";
             button1.Position = new Point(1, 3);
@@ -119,7 +124,7 @@ namespace StarterProject.CustomConsoles
 
             FocusedControl = null;
             //DisableControlFocusing = true;
-
+            
             List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>();
             colors.Add(new Tuple<Color, string>(StarterProject.Theme.Red, "Red"));
             colors.Add(new Tuple<Color, string>(StarterProject.Theme.RedDark, "DRed"));
@@ -222,10 +227,9 @@ namespace StarterProject.CustomConsoles
                                       "GRAY ".CreateColored(StarterProject.Theme.GrayDark, null) +
                                       "BLACK ".CreateColored(StarterProject.Theme.Black, null)
                                       );
-
-            Print(2, 18, CreateGradientExample("RED", StarterProject.Theme.Red, StarterProject.Theme.RedDark));
-            Print(2, 19, CreateGradientExample("PURPLE", StarterProject.Theme.Purple, StarterProject.Theme.PurpleDark));
-            Print(2, 20, CreateGradientExample("BLUE", StarterProject.Theme.Blue, StarterProject.Theme.BlueDark));
+            Print(50, 9, CreateGradientExample("RED", StarterProject.Theme.Red, StarterProject.Theme.RedDark));
+            Print(50, 10, CreateGradientExample("PURPLE", StarterProject.Theme.Purple, StarterProject.Theme.PurpleDark));
+            Print(50, 10, CreateGradientExample("BLUE", StarterProject.Theme.Blue, StarterProject.Theme.BlueDark));
             Print(2, 21, CreateGradientExample("CYAN", StarterProject.Theme.Cyan, StarterProject.Theme.CyanDark));
             Print(2, 22, CreateGradientExample("GREEN", StarterProject.Theme.Green, StarterProject.Theme.GreenDark));
             Print(34, 18, CreateGradientExample("YELLOW", StarterProject.Theme.Yellow, StarterProject.Theme.YellowDark));
@@ -234,7 +238,7 @@ namespace StarterProject.CustomConsoles
             Print(34, 21, CreateGradientExample("GRAY", StarterProject.Theme.Gray, StarterProject.Theme.GrayDark));
             Print(34, 22, CreateGradientExample("WHITE", StarterProject.Theme.White, StarterProject.Theme.Black));
 
-            Print(2, 23, CreateGradientExample("GOLD", StarterProject.Theme.Gold, StarterProject.Theme.GoldDark));
+            //Print(2, 23, CreateGradientExample("GOLD", StarterProject.Theme.Gold, StarterProject.Theme.GoldDark));
         }
 
         private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7)

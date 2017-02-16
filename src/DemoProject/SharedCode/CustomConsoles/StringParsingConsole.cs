@@ -6,9 +6,17 @@ using SadConsole.StringParser;
 
 namespace StarterProject.CustomConsoles
 {
-    class StringParsingConsole: Console
+    class StringParsingConsole: Console, IConsoleMetadata
     {
-        public StringParsingConsole():base(80, 25)
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Sring Parser", Summary = "Examples of using the string parser" };
+            }
+        }
+
+        public StringParsingConsole():base(80, 23)
         {
             IsVisible = false;
             textSurface.DefaultForeground = ColorAnsi.White;

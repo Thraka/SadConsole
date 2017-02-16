@@ -9,15 +9,23 @@ using SadConsole.Surfaces;
 
 namespace StarterProject.CustomConsoles
 {
-    class GameObjectConsole: Console
+    class GameObjectConsole: Console, IConsoleMetadata
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
         private SadConsole.GameHelpers.GameObject player;
         private Point playerPreviousPosition;
 
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Game object", Summary = "Use the cursor keys to move the little character" };
+            }
+        }
+
         public GameObjectConsole()
-            : base(80, 25)
+            : base(80, 23)
         {
             var animation = new AnimatedSurface("default", 1, 1);
             var frame = animation.CreateFrame();
@@ -61,6 +69,7 @@ namespace StarterProject.CustomConsoles
 
             // Process logic for moving the entity.
             bool keyHit = false;
+            var oldPosition = player.Position;
 
             if (info.IsKeyReleased(Keys.Up))
             {
@@ -87,19 +96,27 @@ namespace StarterProject.CustomConsoles
 
             if (keyHit)
             {
-                // Entity moved. Let's draw a trail of where they moved from.
+                // Check if the new position is valid
+                if (textSurface.RenderArea.Contains(player.Position))
+                {
+                    // Entity moved. Let's draw a trail of where they moved from.
+                    SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
+                    playerPreviousPosition = player.Position;
 
-                // We are not detecting when the player tries to move off the console area.
-                // We could detected that though and then move the player back to where they were.
-                SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
-                playerPreviousPosition = player.Position;
-
-                return true;
+                    return true;
+                }
+                else  // New position was not in the area of the console, move back
+                    player.Position = oldPosition;
             }
 
             // You could have multiple entities in the game for example, and change
             // which entity gets keyboard commands.
             return false;
+        }
+
+        protected override void OnPositionChanged(Point oldLocation)
+        {
+            player.RenderOffset = this.Position;
         }
     }
 }

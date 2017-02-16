@@ -9,7 +9,7 @@ namespace StarterProject
     class Program
     {
         private static Windows.CharacterViewer _characterWindow;
-        private static int currentConsoleIndex;
+        private static Container MainConsole;
 
         static void Main(string[] args)
         {
@@ -52,7 +52,7 @@ namespace StarterProject
                 // in the Initialize method above.
                 if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F1))
                 {
-                    MoveNextConsole();
+                    MainConsole.MoveNextConsole();
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F2))
                 {
@@ -74,7 +74,6 @@ namespace StarterProject
             if (Settings.UnlimitedFPS)
                 SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
 
-
             // Setup our custom theme.
             Theme.SetupThemes();
 
@@ -82,65 +81,14 @@ namespace StarterProject
             // We don't want to use that for the sample project so we'll remove it.
 
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
-            
+
+            MainConsole = new Container();
+
             // We'll instead use our demo consoles that show various features of SadConsole.
-            Global.CurrentScreen.Children.Add(new CustomConsoles.SubConsoleCursor());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.SceneProjectionConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.StringParsingConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.AutoTypingConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.ControlsTest());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.AnsiConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.StretchedConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.RandomScrollingConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.CursorConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.ViewsAndSubViews());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.GameObjectConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.DOSConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.BorderedConsole());
-            Global.CurrentScreen.Children.Add(new CustomConsoles.ScrollableConsole(25, 6, 70));
-
-            // Not working... it was...
-
-            //= new ConsoleList() {
-            //    //new CustomConsoles.CachedConsoleConsole(),
-            //                        //new CustomConsoles.RandomScrollingConsole(),
-            //                        new CustomConsoles.AutoTypingConsole(),
-            //                        //new CustomConsoles.SplashScreen() { SplashCompleted = () => { MoveNextConsole(); } },
-            //                        new CustomConsoles.StretchedConsole(),
-            //                        new CustomConsoles.StringParsingConsole(),
-            //                        new CustomConsoles.ControlsTest(),
-            //                        //new CustomConsoles.FadingExample(),
-            //                        new CustomConsoles.DOSConsole(),
-            //                        new CustomConsoles.AnsiConsole(),
-            //                        new CustomConsoles.ViewsAndSubViews(),
-            //                        new CustomConsoles.StaticConsole(),
-            //                        new CustomConsoles.SceneProjectionConsole(),
-            //                        new CustomConsoles.BorderedConsole(),
-            //                        new CustomConsoles.GameObjectConsole(),
-            //                        new CustomConsoles.WorldGenerationConsole(),
-            //                    };
-
-            // Show the first console (by default all of our demo consoles are hidden)
-            Global.CurrentScreen.Children[0].IsVisible = true;
-
-            // Set the first console in the console list as the "active" console. This allows the keyboard to be processed on the console.
-            Console.ActiveConsoles.Set((IConsole)Global.CurrentScreen.Children[0]);
+            Global.CurrentScreen = MainConsole;
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
-        }
-
-        private static void MoveNextConsole()
-        {
-            currentConsoleIndex++;
-
-            if (currentConsoleIndex >= Global.CurrentScreen.Children.Count)
-                currentConsoleIndex = 0;
-
-            for (int i = 0; i < Global.CurrentScreen.Children.Count; i++)
-                Global.CurrentScreen.Children[i].IsVisible = currentConsoleIndex == i;
-
-            Console.ActiveConsoles.Set((IConsole)Global.CurrentScreen.Children[currentConsoleIndex]);
         }
     }
 }

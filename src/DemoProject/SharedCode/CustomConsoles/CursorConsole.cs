@@ -4,10 +4,18 @@ using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
-    class CursorConsole: Console
+    class CursorConsole: Console, IConsoleMetadata
     {
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Virtual Cursor 1", Summary = "" };
+            }
+        }
+
         public CursorConsole()
-            : base(80, 25)
+            : base(80, 23)
         {
             // This console demonstrates the virtual cursor.
             VirtualCursor.IsVisible = true;

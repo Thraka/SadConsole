@@ -8,12 +8,20 @@ using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    class ScrollableConsole : SadConsole.Console
+    class ScrollableConsole : SadConsole.Console, IConsoleMetadata
     {
         SadConsole.ControlsConsole controlsContainer;
         SadConsole.Controls.ScrollBar scrollBar;
 
         int scrollingCounter;
+
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Text scrolling", Summary = "Renders a tiny console with a cursor along with a scroll bar" };
+            }
+        }
 
         public ScrollableConsole(int width, int height, int bufferHeight) : base(width - 1, bufferHeight)
         {

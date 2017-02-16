@@ -4,15 +4,23 @@ using System;
 
 namespace StarterProject.CustomConsoles
 {
-    class DOSConsole: SadConsole.Console
+    class DOSConsole: SadConsole.Console, IConsoleMetadata
     {
         public string Prompt { get; set; }
 
         private InputHandling.ClassicConsoleKeyboardHandler _keyboardHandlerObject;
 
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Prompt Console", Summary = "Emulates a command prompt" };
+            }
+        }
+
         // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
         public DOSConsole()
-            : base(80, 25)
+            : base(80, 23)
         {
             this.IsVisible = false;
 

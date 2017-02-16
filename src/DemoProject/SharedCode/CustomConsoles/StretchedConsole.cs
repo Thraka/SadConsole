@@ -8,10 +8,18 @@ using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class StretchedConsole: Console
+    class StretchedConsole: Console, IConsoleMetadata
     {
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Font Zoom", Summary = "Console where font has been zoomed x2" };
+            }
+        }
+
         public StretchedConsole()
-            : base(40, 12)
+            : base(40, 11)
         {
             // The cell size of a console is usually the size of the font.
             // Since we're going to create a stretched console at the expense of total cells

@@ -11,11 +11,19 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class AutoTypingConsole : Console
+    class AutoTypingConsole : Console, IConsoleMetadata
     {
         SadConsole.Instructions.DrawString typingInstruction;
 
-        public AutoTypingConsole(): base(80, 24)
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "SadConsole.Instructions", Summary = "Automatic typing to a console." };
+            }
+        }
+
+        public AutoTypingConsole(): base(80, 23)
         {
 
             string[] text = new string[] { 
