@@ -30,11 +30,10 @@ namespace StarterProject.CustomConsoles
             mainView = new Console(80, 23);
             subView = new Console(25, 10);
 
-            IsVisible = false;
-            
             // Setup main view
             mainView.FillWithRandomGarbage();
             mainView.MouseMove += (s, e) => { if (e.LeftButtonDown) e.Cell.Background = Color.Blue; };
+            mainView.UseKeyboard = false;
 
             // Setup sub view
             subView.Position = new Point(4, 4);
@@ -58,7 +57,10 @@ namespace StarterProject.CustomConsoles
             if (DoUpdate && isVisible)
             {
                 if (mainView.Position != Position)
+                {
                     mainView.Position = Position;
+                    subView.Position = mainView.Position + ((SurfaceView)subView.TextSurface).ViewArea.Location;
+                }
 
                 ProcessMouse(Global.MouseState);
 

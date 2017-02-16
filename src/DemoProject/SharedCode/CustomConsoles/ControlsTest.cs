@@ -28,39 +28,39 @@ namespace StarterProject.CustomConsoles
         {
             var button1 = new SadConsole.Controls.Button(11);
             button1.Text = "Click";
-            button1.Position = new Point(1, 3);
+            button1.Position = new Point(1, 1);
             button1.Click += (s, e) => Window.Message("Clicked!", "OK");
             Add(button1);
 
             var radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 1 Option 1";
-            radioButton.Position = new Point(1, 5);
+            radioButton.Position = new Point(1, 3);
             Add(radioButton);
 
             radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 1 Option 2";
-            radioButton.Position = new Point(1, 7);
+            radioButton.Position = new Point(1, 4);
             Add(radioButton);
 
             radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 2 Option 1";
-            radioButton.Position = new Point(1, 9);
+            radioButton.Position = new Point(1, 6);
             radioButton.GroupName = "group2";
             Add(radioButton);
 
             radioButton = new SadConsole.Controls.RadioButton(20, 1);
             radioButton.Text = "Group 2 Option 2";
-            radioButton.Position = new Point(1, 11);
+            radioButton.Position = new Point(1, 7);
             radioButton.GroupName = "group2";
             Add(radioButton);
 
             var checkbox = new SadConsole.Controls.CheckBox(13, 1);
             checkbox.Text = "Check box";
-            checkbox.Position = new Point(1, 13);
+            checkbox.Position = new Point(1, 9);
             Add(checkbox);
 
             var listbox = new SadConsole.Controls.ListBox(20, 6);
-            listbox.Position = new Point(25, 3);
+            listbox.Position = new Point(25, 1);
             listbox.HideBorder = false;
             listbox.Items.Add("item 1");
             listbox.Items.Add("item 2");
@@ -73,17 +73,17 @@ namespace StarterProject.CustomConsoles
             Add(listbox);
 
             var slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Horizontal, 20);
-            slider.Position = new Point(25, 10);
+            slider.Position = new Point(25, 7);
             slider.Maximum = 18;
             Add(slider);
 
             slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 8);
-            slider.Position = new Point(47, 3);
+            slider.Position = new Point(47, 1);
             slider.Maximum = 6;
             Add(slider);
 
             var input = new SadConsole.Controls.InputBox(20);
-            input.Position = new Point(25, 12);
+            input.Position = new Point(25, 9);
             Add(input);
 
             var selButton = new SadConsole.Controls.SelectionButton(20);
@@ -200,9 +200,6 @@ namespace StarterProject.CustomConsoles
             base.Invalidate();
 
             Print(50, 2, "CLICK BTN - USE UP/DOWN KEYS", StarterProject.Theme.YellowDark);
-
-            Print(1, 1, "CONTROL LIBRARY TEST", StarterProject.Theme.YellowDark);
-            Print(1, 2, "____________________", mirror: SpriteEffects.FlipVertically);
 
             Print(2, 15, "RED ".CreateColored(StarterProject.Theme.Red, null) +
                                       "PURPLE ".CreateColored(StarterProject.Theme.Purple, null) +
