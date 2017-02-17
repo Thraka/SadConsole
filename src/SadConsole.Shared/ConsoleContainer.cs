@@ -89,7 +89,7 @@ namespace SadConsole
             return false;
         }
 
-        public virtual bool ProcessMouse(MouseInfo info)
+        public virtual bool ProcessMouse(Input.Mouse info)
         {
             return false;
         }

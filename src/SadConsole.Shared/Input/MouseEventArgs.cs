@@ -42,9 +42,9 @@ namespace SadConsole.Input
         public int ScrollWheelValue { get; private set; }
         public int ScrollWheelValueChange { get; private set; }
 
-        public MouseInfo OriginalMouseInfo { get; private set; }
+        public Mouse OriginalMouseInfo { get; private set; }
 
-        public MouseEventArgs(MouseInfo info)
+        public MouseEventArgs(Mouse info)
         {
             this.Console = info.Console;
             this.Cell = info.Cell;

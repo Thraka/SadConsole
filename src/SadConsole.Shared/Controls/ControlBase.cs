@@ -211,7 +211,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="info">Mouse information.</param>
         /// <returns>Always returns false.</returns>
-        public virtual bool ProcessMouse(Input.MouseInfo info)
+        public virtual bool ProcessMouse(Input.Mouse info)
         {
             if (IsEnabled && UseMouse)
             {
@@ -266,7 +266,7 @@ namespace SadConsole.Controls
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
         /// <param name="info">The current mouse data</param>
-        protected virtual void OnMouseEnter(Input.MouseInfo info)
+        protected virtual void OnMouseEnter(Input.Mouse info)
         {
             if (MouseEnter != null)
                 MouseEnter(this, new MouseEventArgs(info));
@@ -278,7 +278,7 @@ namespace SadConsole.Controls
         /// Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
         /// <param name="info">The current mouse data</param>
-        protected virtual void OnMouseExit(Input.MouseInfo info)
+        protected virtual void OnMouseExit(Input.Mouse info)
         {
             if (MouseExit != null)
                 MouseExit(this, new MouseEventArgs(info));
@@ -290,7 +290,7 @@ namespace SadConsole.Controls
         /// Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
         /// <param name="info">The current mouse data</param>
-        protected virtual void OnMouseIn(Input.MouseInfo info)
+        protected virtual void OnMouseIn(Input.Mouse info)
         {
             if (MouseMove != null)
                 MouseMove(this, new MouseEventArgs(info));
@@ -302,7 +302,7 @@ namespace SadConsole.Controls
         /// Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
         /// <param name="info">The current mouse data</param>
-        protected virtual void OnLeftMouseClicked(Input.MouseInfo info)
+        protected virtual void OnLeftMouseClicked(Input.Mouse info)
         {
             if (MouseButtonClicked != null)
                 MouseButtonClicked(this, new MouseEventArgs(info));
@@ -317,7 +317,7 @@ namespace SadConsole.Controls
         /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
         /// <param name="info">The current mouse data</param>
-        protected virtual void OnRightMouseClicked(Input.MouseInfo info)
+        protected virtual void OnRightMouseClicked(Input.Mouse info)
         {
             if (MouseButtonClicked != null)
                 MouseButtonClicked(this, new MouseEventArgs(info));
@@ -330,7 +330,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="info">The mouse information as used by a mouse event.</param>
         /// <returns>The x,y position of the mouse over the control.</returns>
-        protected Point TransformConsolePositionByControlPosition(Input.MouseInfo info)
+        protected Point TransformConsolePositionByControlPosition(Input.Mouse info)
         {
             return new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
         }

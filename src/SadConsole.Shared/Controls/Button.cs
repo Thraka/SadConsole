@@ -149,7 +149,7 @@ namespace SadConsole.Controls
         /// Called when the mouse is in the control area.
         /// </summary>
         /// <param name="info">The mouse state.</param>
-        protected override void OnMouseIn(Input.MouseInfo info)
+        protected override void OnMouseIn(Input.Mouse info)
         {
             isMouseDown = info.LeftButtonDown;
 
@@ -160,7 +160,7 @@ namespace SadConsole.Controls
         /// Called when the mouse leaves the control area.
         /// </summary>
         /// <param name="info">The mouse state.</param>
-        protected override void OnMouseExit(Input.MouseInfo info)
+        protected override void OnMouseExit(Input.Mouse info)
         {
             isMouseDown = false;
 
@@ -171,7 +171,7 @@ namespace SadConsole.Controls
         /// Called when the left-mouse button is clicked.
         /// </summary>
         /// <param name="info">The mouse state.</param>
-        protected override void OnLeftMouseClicked(Input.MouseInfo info)
+        protected override void OnLeftMouseClicked(Input.Mouse info)
         {
             base.OnLeftMouseClicked(info);
 

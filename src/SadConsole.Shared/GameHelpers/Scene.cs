@@ -227,7 +227,7 @@ namespace SadConsole.GameHelpers
         //    }
         //}
 
-        public bool ProcessMouse(MouseInfo info)
+        public bool ProcessMouse(Mouse info)
         {
             return ((IConsole)baseConsole).ProcessMouse(info);
         }

@@ -100,7 +100,7 @@ namespace StarterProject.CustomConsoles
             }
         }
 
-        public override bool ProcessMouse(MouseInfo info)
+        public override bool ProcessMouse(Mouse info)
         {
             // Check the scroll bar for mouse info first. If mouse not handled by scroll bar, then..
             if (!controlsContainer.ProcessMouse(info))

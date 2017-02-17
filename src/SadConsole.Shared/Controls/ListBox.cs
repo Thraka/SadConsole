@@ -445,7 +445,7 @@ namespace SadConsole.Controls
             return false;
         }
 
-        protected override void OnMouseExit(Input.MouseInfo info)
+        protected override void OnMouseExit(Input.Mouse info)
         {
             base.OnMouseExit(info);
 
@@ -456,14 +456,14 @@ namespace SadConsole.Controls
                 item.IsMouseOver = false;
         }
 
-        protected override void OnMouseEnter(Input.MouseInfo info)
+        protected override void OnMouseEnter(Input.Mouse info)
         {
             base.OnMouseEnter(info);
 
             _mouseIn = true;
         }
 
-        protected override void OnMouseIn(Input.MouseInfo info)
+        protected override void OnMouseIn(Input.Mouse info)
         {
             base.OnMouseIn(info);
 
@@ -491,7 +491,7 @@ namespace SadConsole.Controls
             }
         }
 
-        protected override void OnLeftMouseClicked(Input.MouseInfo info)
+        protected override void OnLeftMouseClicked(Input.Mouse info)
         {
             base.OnLeftMouseClicked(info);
 
@@ -532,7 +532,7 @@ namespace SadConsole.Controls
             }
         }
 
-        public override bool ProcessMouse(Input.MouseInfo info)
+        public override bool ProcessMouse(Input.Mouse info)
         {
             if (isEnabled)
             {

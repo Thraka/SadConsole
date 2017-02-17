@@ -456,7 +456,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="info">Mouse information sent by the engine.</param>
         /// <returns>True when the mouse is over this console and it is the active console; otherwise false.</returns>
-        public override bool ProcessMouse(Input.MouseInfo info)
+        public override bool ProcessMouse(Input.Mouse info)
         {
             if (base.ProcessMouse(info) && info.Console == this && (Console.ActiveConsoles.Console == this || ProcessMouseWithoutFocus))
             {
@@ -478,7 +478,7 @@ namespace SadConsole
             return false;
         }
 
-        protected override void OnMouseExit(Input.MouseInfo info)
+        protected override void OnMouseExit(Input.Mouse info)
         {
             base.OnMouseExit(info);
 

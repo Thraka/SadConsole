@@ -504,7 +504,7 @@ namespace SadConsole.Controls
             PositionCursor();
         }
 
-        protected override void OnLeftMouseClicked(MouseInfo info)
+        protected override void OnLeftMouseClicked(Input.Mouse info)
         {
             if (!DisableMouse)
             {

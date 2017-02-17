@@ -185,21 +185,21 @@ namespace SadConsole.Controls
                 this.IsDirty = true;
         }
 
-        protected override void OnMouseIn(Input.MouseInfo info)
+        protected override void OnMouseIn(Input.Mouse info)
         {
             isMouseOver = true;
 
             base.OnMouseIn(info);
         }
 
-        protected override void OnMouseExit(Input.MouseInfo info)
+        protected override void OnMouseExit(Input.Mouse info)
         {
             isMouseOver = false;
 
             base.OnMouseExit(info);
         }
 
-        protected override void OnLeftMouseClicked(Input.MouseInfo info)
+        protected override void OnLeftMouseClicked(Input.Mouse info)
         {
             base.OnLeftMouseClicked(info);
 

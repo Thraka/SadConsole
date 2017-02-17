@@ -58,7 +58,7 @@ namespace SadConsole.Input
             _mouseLastLocation = new Point();
         }
 
-        public bool HandlerMouse(IConsole console, MouseInfo info)
+        public bool HandlerMouse(IConsole console, Mouse info)
         {
             if (console.IsVisible && console.UseMouse)
             {

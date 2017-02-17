@@ -73,7 +73,7 @@ namespace StarterProject.CustomConsoles
             return true;
         }
 
-        public override bool ProcessMouse(MouseInfo info)
+        public override bool ProcessMouse(SadConsole.Input.Mouse info)
         {
             //Print(0, 0, "                                                                    ");
             //Print(0, 1, "                                                                    ");

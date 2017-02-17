@@ -17,7 +17,7 @@ namespace StarterProject.Windows
 #endregion
 
         private Rectangle TrackedRegion = new Rectangle(1, 1, 16, 16);
-        private SadConsole.Input.MouseInfo _lastInfo = null;
+        private SadConsole.Input.Mouse _lastInfo = null;
         private SadConsole.Effects.Recolor _highlightedCellEffect = new SadConsole.Effects.Recolor();
         private int _fontRowOffset = 0;
         private EffectsManager effects;
@@ -103,7 +103,7 @@ namespace StarterProject.Windows
             }
         }
 
-        protected override void OnMouseLeftClicked(SadConsole.Input.MouseInfo data)
+        protected override void OnMouseLeftClicked(SadConsole.Input.Mouse data)
         {
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
@@ -115,7 +115,7 @@ namespace StarterProject.Windows
             base.OnMouseLeftClicked(data);
         }
 
-        protected override void OnMouseIn(SadConsole.Input.MouseInfo data)
+        protected override void OnMouseIn(SadConsole.Input.Mouse data)
         {
             if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
             {
@@ -194,7 +194,7 @@ namespace StarterProject.Windows
             Print(1, textSurface.Height - 2, text);
         }
 
-        protected override void OnMouseExit(SadConsole.Input.MouseInfo info)
+        protected override void OnMouseExit(SadConsole.Input.Mouse info)
         {
             if (_lastInfo != null)
             {
@@ -206,7 +206,7 @@ namespace StarterProject.Windows
             base.OnMouseExit(info);
         }
 
-        protected override void OnMouseEnter(SadConsole.Input.MouseInfo info)
+        protected override void OnMouseEnter(SadConsole.Input.Mouse info)
         {
             if (_lastInfo != null)
             {

@@ -7,7 +7,7 @@ namespace SadConsole.Input
     /// <summary>
     /// Processes mouse input data.
     /// </summary>
-    public class MouseInfo
+    public class Mouse
     {
         /// <summary>
         /// The current console under the mouse.
@@ -115,7 +115,7 @@ namespace SadConsole.Input
         public void ProcessMouse(GameTime gameTime)
         {
             // Get state from monogame
-            MouseState currentState = Mouse.GetState();
+            MouseState currentState = Microsoft.Xna.Framework.Input.Mouse.GetState();
 
             // Update local state
             bool leftDown = currentState.LeftButton == ButtonState.Pressed;
@@ -235,9 +235,9 @@ namespace SadConsole.Input
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>The clone.</returns>
-        public virtual MouseInfo Clone()
+        public virtual Mouse Clone()
         {
-            var returnValue = new MouseInfo();
+            var returnValue = new Mouse();
 
             returnValue.Cell = this.Cell;
             returnValue.Console = this.Console;

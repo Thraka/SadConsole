@@ -285,7 +285,7 @@ namespace SadConsole
         /// <summary>
         /// An alternative method handler for handling the mouse logic.
         /// </summary>
-        public Func<IConsole, MouseInfo, bool> MouseHandler { get; set; }
+        public Func<IConsole, Input.Mouse, bool> MouseHandler { get; set; }
 
         /// <summary>
         /// An alternative method handler for handling the keyboard logic.
@@ -327,13 +327,13 @@ namespace SadConsole
         }
         #endregion
 
-        protected virtual void OnMouseEnter(MouseInfo info)
+        protected virtual void OnMouseEnter(Input.Mouse info)
         {
             if (MouseEnter != null)
                 MouseEnter(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnMouseExit(MouseInfo info)
+        protected virtual void OnMouseExit(Input.Mouse info)
         {
             // Force mouse off just incase
             isMouseOver = false;
@@ -342,19 +342,19 @@ namespace SadConsole
                 MouseExit(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnMouseIn(MouseInfo info)
+        protected virtual void OnMouseIn(Input.Mouse info)
         {
             if (MouseMove != null)
                 MouseMove(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnMouseLeftClicked(MouseInfo info)
+        protected virtual void OnMouseLeftClicked(Input.Mouse info)
         {
             if (MouseButtonClicked != null)
                 MouseButtonClicked(this, new MouseEventArgs(info));
         }
 
-        protected virtual void OnRightMouseClicked(MouseInfo info)
+        protected virtual void OnRightMouseClicked(Input.Mouse info)
         {
             if (MouseButtonClicked != null)
                 MouseButtonClicked(this, new MouseEventArgs(info));
@@ -366,7 +366,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="info"></param>
         /// <returns>True when the mouse is over this console.</returns>
-        public virtual bool ProcessMouse(MouseInfo info)
+        public virtual bool ProcessMouse(Input.Mouse info)
         {
             var handlerResult = MouseHandler == null ? false : MouseHandler(this, info);
 
@@ -640,8 +640,8 @@ namespace SadConsole
             if (isMouseOver)
             {
                 isMouseOver = false;
-                
-                MouseInfo info = Global.MouseState.Clone();
+
+                Input.Mouse info = Global.MouseState.Clone();
                 info.ConsoleLocation = new Point(-1, -1);
 
                 OnMouseExit(info);

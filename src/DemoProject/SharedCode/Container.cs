@@ -66,7 +66,7 @@ namespace StarterProject
             return selectedConsole.ProcessKeyboard(info);
         }
 
-        public override bool ProcessMouse(MouseInfo info)
+        public override bool ProcessMouse(Mouse info)
         {
             return selectedConsole.ProcessMouse(info);
         }

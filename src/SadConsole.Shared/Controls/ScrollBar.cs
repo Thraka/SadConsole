@@ -307,7 +307,7 @@ namespace SadConsole.Controls
         // Locking the mouse to this control is actually locking the parent console to the engine, and then
         // letting the controls console know that this control wants exclusive focus until mouse is unclicked.
 
-        public override bool ProcessMouse(Input.MouseInfo info)
+        public override bool ProcessMouse(Input.Mouse info)
         {
             if (IsEnabled)
             {

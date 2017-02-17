@@ -38,7 +38,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="info"></param>
         /// <returns>True when the mouse is over this console.</returns>
-        bool ProcessMouse(MouseInfo info);
+        bool ProcessMouse(Mouse info);
         
         /// <summary>
         /// Called by the engine to process the keyboard. If the <see cref="KeyboardHandler"/> has been set, that will be called instead of this method.

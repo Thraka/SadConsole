@@ -132,9 +132,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInput.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\Keyboard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\Mouse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\CodeInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\ConcurrentInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\DoubleInstruction.cs" />

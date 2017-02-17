@@ -71,7 +71,7 @@ namespace SadConsole
         /// <summary>
         /// Mouse state which is usually updated in the update pass.
         /// </summary>
-        public static Input.MouseInfo MouseState = new Input.MouseInfo();
+        public static Input.Mouse MouseState = new Input.Mouse();
 
         /// <summary>
         /// Keyboard state which is usually updated in the update pass.

@@ -29,7 +29,7 @@ namespace SadConsole
         private int _titleWidth;
         [DataMember(Name="TitleAlignment")]
         private HorizontalAlignment _titleAlignment;
-        private SadConsole.Input.MouseInfo _previousMouseInfo = new Input.MouseInfo();
+        private SadConsole.Input.Mouse _previousMouseInfo = new Input.Mouse();
         private Point _consoleAtDragAbsPos;
         //private bool __isVisible;
         private bool _prevousMouseExclusiveDrag;
@@ -165,7 +165,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="info">The mouse state.</param>
         /// <returns></returns>
-        public override bool ProcessMouse(Input.MouseInfo info)
+        public override bool ProcessMouse(Input.Mouse info)
         {
             if (_titleWidth != 0 && isVisible)
             {
@@ -378,7 +378,7 @@ namespace SadConsole
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            _previousMouseInfo = new Input.MouseInfo();
+            _previousMouseInfo = new Input.Mouse();
             //Redraw();
         }
 #endregion
