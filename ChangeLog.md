@@ -1,4 +1,4 @@
-﻿## 02/01/2016
+﻿## 02/25/2016
 
 Major update to all of SadConsole. 
 
@@ -64,6 +64,8 @@ Here is a list of types that have changed and what replaced them. The root `SadC
 | Consoles.LayeredTextRenderer        | Renderers.LayeredSurfaceRenderer |
 | Consoles.ITextSurfaceRendererUpdate | Removed - All surfaces support cached rendering. |
 | Consoles.CachedTextSurfaceRenderer  | Removed - All surfaces support cached rendering. |
+| Input.MouseInfo                     | Renamed to Input.Mouse |
+| Input.KeyboardInfo                  | Renamed to Input.Keyboard |
 
 Besides the **Consoles** namespace, startup, and **Engine** -> **Global** changes, not much else has changed.
  
