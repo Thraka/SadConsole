@@ -221,7 +221,7 @@ namespace SadConsole
         /// Processes the keyboard looking for the ESC key press to close the console, if required. Otherwise the base ControlsConsole will process the keyboard.
         /// </summary>
         /// <param name="info">Keyboard state.</param>
-        public override bool ProcessKeyboard(Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(Input.Keyboard info)
         {
             info = KeyboardState;
             info.ProcessKeys(Global.GameTimeUpdate);

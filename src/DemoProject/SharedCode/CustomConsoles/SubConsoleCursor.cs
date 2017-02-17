@@ -47,7 +47,7 @@ namespace StarterProject.CustomConsoles
             Children.Add(subView);
         }
         
-        public override bool ProcessKeyboard(KeyboardInfo info)
+        public override bool ProcessKeyboard(Keyboard info)
         {
             return subView.ProcessKeyboard(info);
         }

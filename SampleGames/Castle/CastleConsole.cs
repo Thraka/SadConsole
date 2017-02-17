@@ -89,7 +89,7 @@ namespace Castle
         }
 
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if (gameOver == false)
             {

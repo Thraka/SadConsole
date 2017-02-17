@@ -18,7 +18,7 @@ namespace Castle
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public Action<string> EnterPressedAction = (s) => { int i = s.Length; };
 
-        public bool HandleKeyboard(IConsole console, KeyboardInfo info)
+        public bool HandleKeyboard(IConsole console, SadConsole.Input.Keyboard info)
         {
             var realConsole = (SadConsole.Console)console;
             // Check each key pressed.

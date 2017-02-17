@@ -397,7 +397,7 @@ namespace SadConsole.Controls
                     this.IsDirty = true;
         }
 
-        public override bool ProcessKeyboard(Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(Input.Keyboard info)
         {
             //if (_hasFocus)
             if (info.IsKeyReleased(Keys.Up))

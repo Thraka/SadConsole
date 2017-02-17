@@ -290,7 +290,7 @@ namespace SadConsole
         /// <summary>
         /// An alternative method handler for handling the keyboard logic.
         /// </summary>
-        public Func<IConsole, KeyboardInfo, bool> KeyboardHandler { get; set; }
+        public Func<IConsole, Input.Keyboard, bool> KeyboardHandler { get; set; }
 
         /// <summary>
         /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
@@ -422,7 +422,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="info">Keyboard information.</param>
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        public virtual bool ProcessKeyboard(KeyboardInfo info)
+        public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
             var handlerResult = KeyboardHandler == null ? false : KeyboardHandler(this, info);
 

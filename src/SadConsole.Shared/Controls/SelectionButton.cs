@@ -49,7 +49,7 @@ namespace SadConsole.Controls
         /// Focuses the previous or next selection button depending on if the UP or DOWN arrow keys were pressed.
         /// </summary>
         /// <param name="info">The keyboard state.</param>
-        public override bool ProcessKeyboard(Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(Input.Keyboard info)
         {
             base.ProcessKeyboard(info);
 

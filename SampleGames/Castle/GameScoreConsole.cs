@@ -140,7 +140,7 @@ namespace Castle
             Print(11, 21, "(1550 is perfect)", Color.White);
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if(info.KeysReleased.Count > 0)
             {

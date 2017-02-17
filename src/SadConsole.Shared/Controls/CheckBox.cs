@@ -181,7 +181,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="info">The keyboard information.</param>
         /// <returns>True if the keyboard was handled by this control.</returns>
-        public override bool ProcessKeyboard(Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(Input.Keyboard info)
         {
             if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
             {

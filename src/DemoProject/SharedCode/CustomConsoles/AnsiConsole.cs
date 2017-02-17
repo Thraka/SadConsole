@@ -102,7 +102,7 @@ namespace StarterProject.CustomConsoles
             writer = null;
         }
 
-        public override bool ProcessKeyboard(KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             return base.ProcessKeyboard(info);
         }

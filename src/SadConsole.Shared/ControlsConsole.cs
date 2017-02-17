@@ -16,7 +16,7 @@ namespace SadConsole
     [DataContract]
     public class ControlsConsole: Console, IEnumerable<ControlBase>
     {
-        public static Input.KeyboardInfo KeyboardState = new Input.KeyboardInfo();
+        public static Input.Keyboard KeyboardState = new Input.Keyboard();
 
         [DataMember]
         private List<ControlBase> _controls;
@@ -29,7 +29,7 @@ namespace SadConsole
         private SadConsole.Themes.ControlsConsoleTheme _theme;
 
         /// <summary>
-        /// When set to false, when the ControlsConsole has <see cref="ProcessKeyboard(Input.KeyboardInfo)"/> called, <see cref="KeyboardState"/> will not be updated.
+        /// When set to false, when the ControlsConsole has <see cref="ProcessKeyboard(Input.Keyboard)"/> called, <see cref="KeyboardState"/> will not be updated.
         /// </summary>
         protected bool updateKeyboardState = true;
 
@@ -406,7 +406,7 @@ namespace SadConsole
         /// Processes the keyboard for the console.
         /// </summary>
         /// <param name="info">Keyboard information sent by the engine.</param>
-        public override bool ProcessKeyboard(Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(Input.Keyboard info)
         {
             info = KeyboardState;
 

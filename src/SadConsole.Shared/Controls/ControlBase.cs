@@ -204,7 +204,7 @@ namespace SadConsole.Controls
         /// Called when the keyboard is used on this control.
         /// </summary>
         /// <param name="info">The state of the keyboard.</param>
-        public virtual bool ProcessKeyboard(KeyboardInfo info) { return false; }
+        public virtual bool ProcessKeyboard(Keyboard info) { return false; }
 
         /// <summary>
         /// Checks if the mouse is the control and calls the appropriate mouse methods.

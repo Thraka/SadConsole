@@ -294,7 +294,7 @@ namespace Snake
             Print(23, 21, "Start", Color.Black, Color.DarkSeaGreen);
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             switch(gameState)
             {
@@ -309,7 +309,7 @@ namespace Snake
             }
         }
 
-        private bool ProcessKeyboardMenu(SadConsole.Input.KeyboardInfo info)
+        private bool ProcessKeyboardMenu(SadConsole.Input.Keyboard info)
         {
             bool processedKeyboard = false;
             if (info.IsKeyReleased(Keys.Multiply))
@@ -321,7 +321,7 @@ namespace Snake
             return processedKeyboard;
         }
 
-        private bool ProcessKeyboardRunning(SadConsole.Input.KeyboardInfo info)
+        private bool ProcessKeyboardRunning(SadConsole.Input.Keyboard info)
         {
             bool processedKeyboard = false;
             
@@ -348,7 +348,7 @@ namespace Snake
             
             return processedKeyboard;
         }
-        private bool ProcessKeyboardGameOver(SadConsole.Input.KeyboardInfo info)
+        private bool ProcessKeyboardGameOver(SadConsole.Input.Keyboard info)
         {
             bool processedKeyboard = false;
             if (info.IsKeyReleased(Keys.Multiply))

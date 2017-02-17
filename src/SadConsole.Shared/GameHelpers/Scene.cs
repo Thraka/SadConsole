@@ -232,7 +232,7 @@ namespace SadConsole.GameHelpers
             return ((IConsole)baseConsole).ProcessMouse(info);
         }
 
-        public bool ProcessKeyboard(KeyboardInfo info)
+        public bool ProcessKeyboard(Keyboard info)
         {
             return ((IConsole)baseConsole).ProcessKeyboard(info);
         }

@@ -24,7 +24,7 @@ namespace SadConsole.Input
         public float TimeHeld;
 
         /// <summary>
-        /// Tracks if the key was previously held when calcualting the <see cref="KeyboardInfo.InitialRepeatDelay"/>.
+        /// Tracks if the key was previously held when calcualting the <see cref="Keyboard.InitialRepeatDelay"/>.
         /// </summary>
         public bool PreviouslyPressed;
 

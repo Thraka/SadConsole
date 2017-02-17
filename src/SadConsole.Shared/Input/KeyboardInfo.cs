@@ -9,7 +9,7 @@ namespace SadConsole.Input
     /// <summary>
     /// Represents the state of the keyboard.
     /// </summary>
-    public class KeyboardInfo
+    public class Keyboard
     {
         /// <summary>
         /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. Uses the <see cref="RepeatDelay"/> and <see cref="InitialRepeatDelay"/> settings.
@@ -36,7 +36,7 @@ namespace SadConsole.Input
         /// </summary>
         public float InitialRepeatDelay = 0.8f;
 
-        public KeyboardInfo()
+        public Keyboard()
         {
             KeysPressed = new List<AsciiKey>();
             KeysReleased = new List<AsciiKey>();
@@ -63,7 +63,7 @@ namespace SadConsole.Input
             this.KeysReleased.Clear();
 
             // Cycle all the keys down known if any are up currently, remove
-            KeyboardState state = Keyboard.GetState();
+            KeyboardState state = Microsoft.Xna.Framework.Input.Keyboard.GetState();
             bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
             var keys = state.GetPressedKeys();
             for (int i = 0; i < this.KeysDown.Count;)

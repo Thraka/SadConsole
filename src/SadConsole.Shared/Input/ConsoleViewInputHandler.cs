@@ -105,7 +105,7 @@ namespace SadConsole.Input
             return false;
         }
 
-        public bool HandlerKeyboard(IConsole console, KeyboardInfo info)
+        public bool HandlerKeyboard(IConsole console, Keyboard info)
         {
             //TODO: This is dependent on how fast update is working... Make independent
             bool handled = false;

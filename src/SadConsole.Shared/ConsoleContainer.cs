@@ -84,7 +84,7 @@ namespace SadConsole
         [DataMember]
         public bool DoDraw { get; set; } = true;
 
-        public virtual bool ProcessKeyboard(KeyboardInfo info)
+        public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
             return false;
         }

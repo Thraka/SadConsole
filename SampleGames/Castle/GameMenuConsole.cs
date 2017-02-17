@@ -122,7 +122,7 @@ namespace Castle
             Print(17, 24, "I - for instructions", Color.White);
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if(info.IsKeyReleased(Keys.P))
             {

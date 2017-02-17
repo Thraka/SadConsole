@@ -171,7 +171,7 @@ namespace StarterProject.CustomConsoles
 
         
 
-        public override bool ProcessKeyboard(KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if (info.IsKeyReleased(Keys.C))
             {

@@ -134,7 +134,7 @@ namespace SadConsole.Controls
         /// Detects if the SPACE and ENTER keys are pressed and calls the <see cref="Click"/> method.
         /// </summary>
         /// <param name="info"></param>
-        public override bool ProcessKeyboard(Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(Input.Keyboard info)
         {
             if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
             {

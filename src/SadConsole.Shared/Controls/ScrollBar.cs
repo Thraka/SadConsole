@@ -445,7 +445,7 @@ namespace SadConsole.Controls
         /// Not Used.
         /// </summary>
         /// <param name="info"></param>
-        public override bool ProcessKeyboard(Input.KeyboardInfo data)
+        public override bool ProcessKeyboard(Input.Keyboard data)
         {
             return false;
         }

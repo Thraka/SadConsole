@@ -61,7 +61,7 @@ namespace StarterProject
             headerConsole.SetConsole(selectedConsole);
         }
 
-        public override bool ProcessKeyboard(KeyboardInfo info)
+        public override bool ProcessKeyboard(Keyboard info)
         {
             return selectedConsole.ProcessKeyboard(info);
         }

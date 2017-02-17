@@ -59,7 +59,7 @@ namespace StarterProject.CustomConsoles
             }
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             // Forward the keyboard data to the entity to handle the movement code.
             // We could detect if the users hit ESC and popup a menu or something.

@@ -76,7 +76,7 @@ namespace SadConsole
         /// <summary>
         /// Keyboard state which is usually updated in the update pass.
         /// </summary>
-        public static Input.KeyboardInfo KeyboardState = new Input.KeyboardInfo();
+        public static Input.Keyboard KeyboardState = new Input.Keyboard();
         #endregion
 
         #region Rendering

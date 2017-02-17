@@ -27,7 +27,7 @@ namespace Castle
 
         }
 
-        public bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             // Process logic for moving the entity.
             bool keyHit = false;

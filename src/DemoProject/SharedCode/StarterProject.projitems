@@ -9,11 +9,11 @@
     <Import_RootNamespace>StarterProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Container.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AnsiConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AutoTypingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ConsoleMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ControlsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />

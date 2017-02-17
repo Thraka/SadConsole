@@ -45,6 +45,6 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="info">Keyboard information.</param>
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        bool ProcessKeyboard(KeyboardInfo info);
+        bool ProcessKeyboard(Keyboard info);
     }
 }
