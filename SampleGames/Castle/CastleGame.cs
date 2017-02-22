@@ -37,6 +37,7 @@ namespace Castle
             IsFixedTimeStep = true;
 
             // Initialize the SadConsole engine and the first effects library (provided by the SadConsole.Effects.dll binary)
+            SadConsole.Engine.MonoGameInstance = this;
             SadConsole.Engine.Initialize(graphics, "Cheepicus12.font", 40, 25);
 
             // Tell SadConsole to track the mouse.

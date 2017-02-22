@@ -8,6 +8,8 @@ namespace SadConsole
 {
     public static partial class Engine
     {
+        internal static SadConsoleGame.WindowResizeOptions DisplayOptions;
+
         private static RenderTarget2D renderTarget;
         private static SpriteBatch renderBatch;
 
@@ -25,7 +27,7 @@ namespace SadConsole
         /// <summary>
         /// A game instance for SadConsole used when calling <see cref="Initialize(string, int, int)"/>.
         /// </summary>
-        public static SadConsoleGame MonoGameInstance;
+        public static Game MonoGameInstance;
 
         /// <summary>
         /// When true, does not lock at 60fps. Must be set before <see cref="Initialize(string, int, int)"/> is called.
@@ -70,7 +72,7 @@ namespace SadConsole
             ConsoleRenderStack.Add(ActiveConsole);
 
             renderBatch = new SpriteBatch(Device);
-
+            
             ResetRendering();
 
             return (Consoles.Console)ActiveConsole;
@@ -84,12 +86,12 @@ namespace SadConsole
             renderTarget = new RenderTarget2D(Device, WindowWidth, WindowHeight);
             
 
-            if (MonoGameInstance.DisplayOptions == SadConsoleGame.WindowResizeOptions.Center)
+            if (DisplayOptions == SadConsoleGame.WindowResizeOptions.Center)
             {
                 RenderRect = new Rectangle((DeviceManager.PreferredBackBufferWidth - Engine.WindowWidth) / 2, (DeviceManager.PreferredBackBufferHeight - Engine.WindowHeight) / 2, Engine.WindowWidth, Engine.WindowHeight);
                 RenderScale = new Vector2(1);
             }
-            else if (MonoGameInstance.DisplayOptions == SadConsoleGame.WindowResizeOptions.Scale)
+            else if (DisplayOptions == SadConsoleGame.WindowResizeOptions.Scale)
             {
                 int multiple = 2;
 
