@@ -18,9 +18,7 @@ namespace SadConsole
         /// <summary>
         /// The type of resizing options for the window.
         /// </summary>
-        public WindowResizeOptions DisplayOptions;
-
-        
+        public WindowResizeOptions DisplayOptions { get { return Engine.DisplayOptions; } set { Engine.DisplayOptions = value; } }
 
         internal SadConsoleGame(string font, int consoleWidth, int consoleHeight, Action<SadConsoleGame> ctorCallback = null)
         {
