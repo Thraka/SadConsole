@@ -50,11 +50,11 @@ namespace SadConsole
             set { _theme = value; Invalidate(); }
         }
 
-        /// <summary>
-        /// When true, mouse events over this console will be processed even if this console is not active.
-        /// </summary>
-        [DataMember]
-        public bool ProcessMouseWithoutFocus { get; set; }
+        ///// <summary>
+        ///// When true, mouse events over this console will be processed even if this console is not active.
+        ///// </summary>
+        //[DataMember]
+        //public bool ProcessMouseWithoutFocus { get; set; }
 
         /// <summary>
         /// Gets a read-only collection of the controls this console contains.
@@ -131,7 +131,6 @@ namespace SadConsole
             AutoCursorOnFocus = false;
             UseKeyboard = true;
             UseMouse = true;
-            MouseCanFocus = true;
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
             Renderer = new ControlsConsoleRenderer();
@@ -239,10 +238,10 @@ namespace SadConsole
                             newConsole = NextTabConsole;
 
                         // If it's a controls console, set the focused control to the first control (if available)
-                        if (newConsole is ControlsConsole)
+                        if (newConsole is ControlsConsole && Global.FocusedConsoles.Console == this)
                         {
                             // Set focus to this new console
-                            Console.ActiveConsoles.Set(newConsole);
+                            Global.FocusedConsoles.Set(newConsole);
 
                             var controlConsole = (ControlsConsole)newConsole;
                             if (controlConsole.Controls.Count > 0)
@@ -304,7 +303,7 @@ namespace SadConsole
                         if (newConsole is ControlsConsole)
                         {
                             // Set focus to this new console
-                            Console.ActiveConsoles.Set(newConsole);
+                            Global.FocusedConsoles.Set(newConsole);
 
                             var controlConsole = (ControlsConsole)newConsole;
                             if (controlConsole.Controls.Count > 0)
@@ -410,9 +409,6 @@ namespace SadConsole
         {
             info = KeyboardState;
 
-            if (updateKeyboardState)
-                info.ProcessKeys(Global.GameTimeUpdate);
-
             var handlerResult = KeyboardHandler == null ? false : KeyboardHandler(this, info);
 
             if (!handlerResult && this.UseKeyboard)
@@ -454,20 +450,20 @@ namespace SadConsole
         /// <summary>
         /// Processes the mouse for the console.
         /// </summary>
-        /// <param name="info">Mouse information sent by the engine.</param>
+        /// <param name="state">Mouse information sent by the engine.</param>
         /// <returns>True when the mouse is over this console and it is the active console; otherwise false.</returns>
-        public override bool ProcessMouse(Input.Mouse info)
+        public override bool ProcessMouse(Input.MouseConsoleState state)
         {
-            if (base.ProcessMouse(info) && info.Console == this && (Console.ActiveConsoles.Console == this || ProcessMouseWithoutFocus))
+            if (base.ProcessMouse(state))
             {
                 if (_capturedControl != null)
-                    _capturedControl.ProcessMouse(info);
+                    _capturedControl.ProcessMouse(state);
 
                 else
                 {
                     for (int i = 0; i < _controls.Count; i++)
                     {
-                        if (_controls[i].IsVisible && _controls[i].ProcessMouse(info))
+                        if (_controls[i].IsVisible && _controls[i].ProcessMouse(state))
                             break;
                     }
                 }
@@ -478,14 +474,13 @@ namespace SadConsole
             return false;
         }
 
-        protected override void OnMouseExit(Input.Mouse info)
+        protected override void OnMouseExit(Input.MouseConsoleState state)
         {
-            base.OnMouseExit(info);
+            base.OnMouseExit(state);
 
             for (int i = 0; i < _controls.Count; i++)
             {
-                if (_controls[i].IsVisible && _controls[i].ProcessMouse(info))
-                    break;
+                _controls[i].LostMouse(state);
             }
 
             //if (_focusedControl != null)
@@ -498,9 +493,9 @@ namespace SadConsole
         /// <param name="control">The control to capture</param>
         public void CaptureControl(ControlBase control)
         {
-            Console.ActiveConsoles.Push(this);
-            _exlusiveBeforeCapture = ExclusiveFocus;
-            ExclusiveFocus = true;
+            Global.FocusedConsoles.Push(this);
+            _exlusiveBeforeCapture = IsExclusiveMouse;
+            IsExclusiveMouse = true;
             _capturedControl = control;
         }
 
@@ -509,8 +504,8 @@ namespace SadConsole
         /// </summary>
         public void ReleaseControl()
         {
-            Console.ActiveConsoles.Pop(this);
-            ExclusiveFocus = _exlusiveBeforeCapture;
+            Global.FocusedConsoles.Pop(this);
+            IsExclusiveMouse = _exlusiveBeforeCapture;
             _capturedControl = null;
         }
 

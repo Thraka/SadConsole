@@ -73,7 +73,7 @@ namespace StarterProject.CustomConsoles
             return true;
         }
 
-        public override bool ProcessMouse(SadConsole.Input.Mouse info)
+        public override bool ProcessMouse(SadConsole.Input.MouseConsoleState state)
         {
             //Print(0, 0, "                                                                    ");
             //Print(0, 1, "                                                                    ");
@@ -86,7 +86,7 @@ namespace StarterProject.CustomConsoles
             //Print(0, 1, $"pref:{SadConsole.Engine.DeviceManager.PreferredBackBufferWidth},{SadConsole.Engine.DeviceManager.PreferredBackBufferHeight} view:{SadConsole.Engine.Device.Viewport}", Color.White, Color.Black);
             //Print(0, 2, $"bounds:{SadConsole.Engine.Device.Viewport.Bounds} scale:{SadConsole.Engine.RenderScale} renderrect:{SadConsole.Engine.RenderRect}", Color.White, Color.Black);
 
-            return base.ProcessMouse(info);
+            return base.ProcessMouse(state);
         }
     }
 }

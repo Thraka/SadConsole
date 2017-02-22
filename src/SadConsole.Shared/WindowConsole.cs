@@ -5,6 +5,7 @@ using System;
 using System.Windows;
 using System.Runtime.Serialization;
 using SadConsole.Renderers;
+using SadConsole.Input;
 
 namespace SadConsole
 {
@@ -29,7 +30,7 @@ namespace SadConsole
         private int _titleWidth;
         [DataMember(Name="TitleAlignment")]
         private HorizontalAlignment _titleAlignment;
-        private SadConsole.Input.Mouse _previousMouseInfo = new Input.Mouse();
+        private SadConsole.Input.MouseConsoleState _previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
         private Point _consoleAtDragAbsPos;
         //private bool __isVisible;
         private bool _prevousMouseExclusiveDrag;
@@ -129,10 +130,6 @@ namespace SadConsole
             _border.Height = height;
             isVisible = false;
 
-            ProcessMouseWithoutFocus = true;
-            CanFocus = true;
-            MouseCanFocus = true;
-
             Renderer = new WindowRenderer();
 
             IsDirty = true;
@@ -163,58 +160,54 @@ namespace SadConsole
         /// <summary>
         /// Processes the mouse. If allowed, will move the console around with the mouse.
         /// </summary>
-        /// <param name="info">The mouse state.</param>
+        /// <param name="state">The mouse state.</param>
         /// <returns></returns>
-        public override bool ProcessMouse(Input.Mouse info)
-        {
+        public override bool ProcessMouse(Input.MouseConsoleState state)
+        { 
             if (_titleWidth != 0 && isVisible)
             {
-                info.Fill(this);
-
-                if (_isDragging && info.LeftButtonDown)
+                if (_isDragging && state.Mouse.LeftButtonDown)
                 {
                     if (base.UsePixelPositioning)
-                        Position = new Point(info.ScreenLocation.X - (_previousMouseInfo.ScreenLocation.X - _consoleAtDragAbsPos.X), info.ScreenLocation.Y - (_previousMouseInfo.ScreenLocation.Y - _consoleAtDragAbsPos.Y));
+                        Position = new Point(state.Mouse.ScreenPosition.X - (_previousMouseInfo.Mouse.ScreenPosition.X - _consoleAtDragAbsPos.X), state.Mouse.ScreenPosition.Y - (_previousMouseInfo.Mouse.ScreenPosition.Y - _consoleAtDragAbsPos.Y));
                     else
-                        Position = new Point(info.WorldLocation.X - _previousMouseInfo.ConsoleLocation.X, info.WorldLocation.Y - _previousMouseInfo.ConsoleLocation.Y);
-
+                    {
+                        Position = state.WorldPosition - _previousMouseInfo.WorldPosition;
+                    }
                     return true;
                 }
 
                 // Stopped dragging
-                if (_isDragging && !info.LeftButtonDown)
+                if (_isDragging && !state.Mouse.LeftButtonDown)
                 {
                     _isDragging = false;
-                    ExclusiveFocus = _prevousMouseExclusiveDrag;
+                    IsExclusiveMouse = _prevousMouseExclusiveDrag;
                     return true;
                 }
 
                 // Left button freshly down and we're not already dragging, check to see if in title
-                if (!_isDragging && !_previousMouseInfo.LeftButtonDown && info.LeftButtonDown)
+                if (state.IsOnConsole && !_isDragging && !_previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
                 {
-                    if (info.ConsoleLocation.Y == 0 && info.ConsoleLocation.X >= _titleLocationX && info.ConsoleLocation.X < _titleLocationX + _titleWidth)
+                    if (state.CellPosition.Y == 0 && state.CellPosition.X >= _titleLocationX && state.CellPosition.X < _titleLocationX + _titleWidth)
                     {
-                        _prevousMouseExclusiveDrag = ExclusiveFocus;
+                        _prevousMouseExclusiveDrag = IsExclusiveMouse;
 
                         // Mouse is in the title bar
-                        ExclusiveFocus = true;
+                        IsExclusiveMouse = true;
                         _isDragging = true;
                         _consoleAtDragAbsPos = base.Position;
 
-                        if (this.MouseCanFocus)
+                        if (this.MoveToFrontOnMouseClick)
                         {
-                            Console.ActiveConsoles.Set(this);
-
-                            if (this.Parent != null && this.Parent.Children.IndexOf(this) != this.Parent.Children.Count - 1)
-                                this.Parent.Children.MoveToTop(this);
+                            IsFocused = true;
                         }
                     }
                 }
 
-                _previousMouseInfo = info.Clone();
+                _previousMouseInfo = state.Clone();
             }
 
-            return base.ProcessMouse(info);
+            return base.ProcessMouse(state);
         }
 
         /// <summary>
@@ -223,9 +216,8 @@ namespace SadConsole
         /// <param name="info">Keyboard state.</param>
         public override bool ProcessKeyboard(Input.Keyboard info)
         {
-            info = KeyboardState;
-            info.ProcessKeys(Global.GameTimeUpdate);
-
+            //info = KeyboardState;
+            
             if (CloseOnESC && info.IsKeyReleased(Keys.Escape))
             {
                 this.Hide();
@@ -271,10 +263,10 @@ namespace SadConsole
 
             if (modal)
             {
-                Console.ActiveConsoles.Push(this);
+                Global.FocusedConsoles.Push(this);
             }
 
-            this.ExclusiveFocus = modal;
+            this.IsExclusiveMouse = modal;
         }
 
         /// <summary>
@@ -285,7 +277,7 @@ namespace SadConsole
             isVisible = false;
 
             if (_isModal)
-                Console.ActiveConsoles.Pop(this);
+                Global.FocusedConsoles.Pop(this);
 
             if (_addedToParent && Parent != null)
                 Parent = null;
@@ -378,7 +370,7 @@ namespace SadConsole
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            _previousMouseInfo = new Input.Mouse();
+            _previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
             //Redraw();
         }
 #endregion

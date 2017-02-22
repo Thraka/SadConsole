@@ -94,7 +94,7 @@ namespace SadConsole
             if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < Console.TextSurface.RenderRects.Length)
             {
                 var rect = Console.TextSurface.RenderRects[virtualCursorLocationIndex];
-                rect.Offset(Console.Position.ConsoleLocationToWorld(Console.TextSurface.Font.Size.X, Console.TextSurface.Font.Size.Y));
+                rect.Offset(Console.Position.ConsoleLocationToPixel(Console.TextSurface.Font.Size.X, Console.TextSurface.Font.Size.Y));
                 Console.VirtualCursor.Render(Global.SpriteBatch, Console.TextSurface.Font, rect);
             }
         }

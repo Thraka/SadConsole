@@ -32,13 +32,13 @@ namespace StarterProject.CustomConsoles
 
             // Setup main view
             mainView.FillWithRandomGarbage();
-            mainView.MouseMove += (s, e) => { if (e.LeftButtonDown) e.Cell.Background = Color.Blue; };
+            mainView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) e.MouseState.Cell.Background = Color.Blue; };
             mainView.UseKeyboard = false;
 
             // Setup sub view
             subView.Position = new Point(4, 4);
             subView.TextSurface = new SurfaceView(mainView.TextSurface, new Rectangle(4, 4, 25, 10));
-            subView.MouseMove += (s, e) => { if (e.LeftButtonDown) e.Cell.Background = Color.Red; };
+            subView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) e.MouseState.Cell.Background = Color.Red; };
             subView.Clear();
             subView.VirtualCursor.IsVisible = true;
 
@@ -61,11 +61,6 @@ namespace StarterProject.CustomConsoles
                     mainView.Position = Position;
                     subView.Position = mainView.Position + ((SurfaceView)subView.TextSurface).ViewArea.Location;
                 }
-
-                ProcessMouse(Global.MouseState);
-
-                if (Console.ActiveConsoles == this)
-                    ProcessKeyboard(Global.KeyboardState);
 
                 foreach (var child in Children)
                     child.Update(delta);

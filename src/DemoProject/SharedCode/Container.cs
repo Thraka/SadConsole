@@ -57,18 +57,18 @@ namespace StarterProject
             selectedConsole.IsFocused = true;
             selectedConsole.Position = new Point(0, 2);
 
-            Console.ActiveConsoles.Set(selectedConsole);
+            Global.FocusedConsoles.Set(selectedConsole);
             headerConsole.SetConsole(selectedConsole);
         }
 
-        public override bool ProcessKeyboard(Keyboard info)
+        public override bool ProcessKeyboard(Keyboard state)
         {
-            return selectedConsole.ProcessKeyboard(info);
+            return selectedConsole.ProcessKeyboard(state);
         }
 
-        public override bool ProcessMouse(Mouse info)
+        public override bool ProcessMouse(MouseConsoleState state)
         {
-            return selectedConsole.ProcessMouse(info);
+            return selectedConsole.ProcessMouse(state);
         }
     }
 }

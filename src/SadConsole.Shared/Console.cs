@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Mouse = SadConsole.Input.Mouse;
+
 using SadConsole.Surfaces;
 using SadConsole.Renderers;
 using SadConsole.Input;
@@ -18,10 +20,29 @@ namespace SadConsole
     [DataContract]
     public partial class Console : SurfaceEditor, IConsole
     {
+        /// <summary>
+        /// How the console handles becoming <see cref="Global.InputTargets.Console"/>.
+        /// </summary>
+        [DataContract]
+        public enum ActiveBehavior
+        {
+            /// <summary>
+            /// Becomes the only active input object when focused.
+            /// </summary>
+            Set,
+
+            /// <summary>
+            /// Pushes to the top of the stack when it becomes the active input object.
+            /// </summary>
+            Push
+        }
+
         [DataMember(Name = "WidthNTS")]
         private int serializedWidth;
+
         [DataMember(Name = "HeightNTS")]
         private int serializedHeight;
+
         [DataMember]
         private bool serializeTextSurface;
 
@@ -148,14 +169,8 @@ namespace SadConsole
         /// When true, this console will move to the front of its parent console when focused.
         /// </summary>
         [DataMember]
-        public bool MoveToFrontOnMouseFocus { get; set; }
-
-        /// <summary>
-        /// Allows the mouse (with a click) to focus this console.
-        /// </summary>
-        [DataMember]
-        public bool MouseCanFocus { get; set; }
-
+        public bool MoveToFrontOnMouseClick { get; set; }
+        
         /// <summary>
         /// Allows this console to accept keyboard input.
         /// </summary>
@@ -167,13 +182,7 @@ namespace SadConsole
         /// </summary>
         [DataMember]
         public bool UseMouse { get; set; } = true;
-
-        /// <summary>
-        /// Allows this console to be focusable.
-        /// </summary>
-        [DataMember]
-        public bool CanFocus { get; set; }
-
+        
         /// <summary>
         /// Indicates whether or not this console is visible.
         /// </summary>
@@ -235,30 +244,39 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets or sets this console as the <see cref="Console.ActiveConsoles.Console"/> value.
+        /// How the console should handle becoming active.
+        /// </summary>
+        public ActiveBehavior FocusedMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets this console as the <see cref="Global.InputTargets.Console"/> value.
         /// </summary>
         /// <remarks>If the <see cref="Console.ActiveConsoles.Console"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
         [DataMember]
         public bool IsFocused
         {
-            get { return Console.ActiveConsoles.Console == this; }
+            get { return Global.FocusedConsoles.Console == this; }
             set
             {
-                if (Console.ActiveConsoles.Console != null)
+                if (Global.FocusedConsoles.Console != null)
                 {
-                    if (value && Console.ActiveConsoles.Console != this && Console.ActiveConsoles.Console is IConsole && !((IConsole)Console.ActiveConsoles.Console).ExclusiveFocus)
+                    if (value && Global.FocusedConsoles.Console != this)
                     {
-                        Console.ActiveConsoles.Push(this);
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedConsoles.Push(this);
+                        else
+                            Global.FocusedConsoles.Set(this);
+
                         OnFocused();
                     }
 
-                    else if (value && Console.ActiveConsoles.Console == this)
+                    else if (value && Global.FocusedConsoles.Console == this)
                         OnFocused();
 
                     else if (!value)
                     {
-                        if (Console.ActiveConsoles.Console == this)
-                            Console.ActiveConsoles.Pop(this);
+                        if (Global.FocusedConsoles.Console == this)
+                            Global.FocusedConsoles.Pop(this);
 
                         OnFocusLost();
                     }
@@ -267,7 +285,11 @@ namespace SadConsole
                 {
                     if (value)
                     {
-                        Console.ActiveConsoles.Push(this);
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedConsoles.Push(this);
+                        else
+                            Global.FocusedConsoles.Set(this);
+
                         OnFocused();
                     }
                     else
@@ -280,12 +302,12 @@ namespace SadConsole
         /// Gets or sets whether or not this console has exclusive access to the mouse events.
         /// </summary>
         [DataMember]
-        public bool ExclusiveFocus { get; set; }
+        public bool IsExclusiveMouse { get; set; }
 
         /// <summary>
         /// An alternative method handler for handling the mouse logic.
         /// </summary>
-        public Func<IConsole, Input.Mouse, bool> MouseHandler { get; set; }
+        public Func<IConsole, SadConsole.Input.MouseConsoleState, bool> MouseHandler { get; set; }
 
         /// <summary>
         /// An alternative method handler for handling the keyboard logic.
@@ -327,79 +349,71 @@ namespace SadConsole
         }
         #endregion
 
-        protected virtual void OnMouseEnter(Input.Mouse info)
+        protected virtual void OnMouseEnter(MouseConsoleState state)
         {
-            if (MouseEnter != null)
-                MouseEnter(this, new MouseEventArgs(info));
+            MouseEnter?.Invoke(this, new MouseEventArgs(state));
         }
 
-        protected virtual void OnMouseExit(Input.Mouse info)
+        protected virtual void OnMouseExit(MouseConsoleState state)
         {
             // Force mouse off just incase
             isMouseOver = false;
 
-            if (MouseExit != null)
-                MouseExit(this, new MouseEventArgs(info));
+            MouseExit?.Invoke(this, new MouseEventArgs(state));
         }
 
-        protected virtual void OnMouseIn(Input.Mouse info)
+        protected virtual void OnMouseMove(MouseConsoleState state)
         {
-            if (MouseMove != null)
-                MouseMove(this, new MouseEventArgs(info));
+            MouseMove?.Invoke(this, new MouseEventArgs(state));
         }
 
-        protected virtual void OnMouseLeftClicked(Input.Mouse info)
+        protected virtual void OnMouseLeftClicked(MouseConsoleState state)
         {
-            if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(info));
+            if (MoveToFrontOnMouseClick && Parent != null && Parent.Children.IndexOf(this) != Parent.Children.Count - 1)
+                Parent.Children.MoveToTop(this);
+
+            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
         }
 
-        protected virtual void OnRightMouseClicked(Input.Mouse info)
+        protected virtual void OnRightMouseClicked(MouseConsoleState state)
         {
-            if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(info));
+            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
         }
 
+        public void LostMouse(MouseConsoleState state)
+        {
+            if (isMouseOver)
+                OnMouseExit(state);
+        }
 
         /// <summary>
         /// Processes the mouse.
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="state"></param>
         /// <returns>True when the mouse is over this console.</returns>
-        public virtual bool ProcessMouse(Input.Mouse info)
+        public virtual bool ProcessMouse(MouseConsoleState state)
         {
-            var handlerResult = MouseHandler == null ? false : MouseHandler(this, info);
+            var handlerResult = MouseHandler?.Invoke(this, state) ?? false;
 
-            if (!handlerResult && (!info.IsBusy || info.IsBusy && Console.ActiveConsoles.Console == this))
+            if (!handlerResult)
             {
-                if (!info.DisableFill)
-                    info.Fill(this);
-
                 if (this.IsVisible && this.UseMouse)
                 {
-                    if (info.Console == this)
+                    if (state.IsOnConsole)
                     {
-                        if (this.CanFocus && this.MouseCanFocus && info.LeftClicked)
-                        {
-                            IsFocused = true;
-
-                            if (IsFocused && this.MoveToFrontOnMouseFocus && this.Parent != null && this.Parent.Children.IndexOf(this) != this.Parent.Children.Count - 1)
-                                this.Parent.Children.MoveToTop(this);
-                        }
-
                         if (isMouseOver != true)
                         {
                             isMouseOver = true;
-                            OnMouseEnter(info);
+                            OnMouseEnter(state);
                         }
 
-                        OnMouseIn(info);
+                        OnMouseMove(state);
 
-                        if (info.LeftClicked)
-                            OnMouseLeftClicked(info);
+                        if (state.Mouse.LeftClicked)
+                            OnMouseLeftClicked(state);
 
-                        if (info.RightClicked)
-                            OnRightMouseClicked(info);
+                        if (state.Mouse.RightClicked)
+                            OnRightMouseClicked(state);
 
                         return true;
                     }
@@ -408,7 +422,7 @@ namespace SadConsole
                         if (isMouseOver)
                         {
                             isMouseOver = false;
-                            OnMouseExit(info);
+                            OnMouseExit(state);
                         }
                     }
                 }
@@ -584,14 +598,6 @@ namespace SadConsole
         {
             if (DoUpdate)
             {
-                if (isVisible)
-                {
-                    ProcessMouse(Global.MouseState);
-
-                    if (Console.ActiveConsoles.Console == this)
-                        ProcessKeyboard(Global.KeyboardState);
-                }
-
                 Effects.UpdateEffects(delta.TotalSeconds);
 
                 if (VirtualCursor.IsVisible)
@@ -632,22 +638,7 @@ namespace SadConsole
         /// <param name="newParent">The new parent.</param>
         protected virtual void OnParentConsoleChanged(IScreen oldParent, IScreen newParent) { }
 
-        /// <summary>
-        /// Used by the console engine to properly clear the mouse over flag and call OnMouseExit. Used when mouse exits window.
-        /// </summary>
-        private void ExitMouse()
-        {
-            if (isMouseOver)
-            {
-                isMouseOver = false;
-
-                Input.Mouse info = Global.MouseState.Clone();
-                info.ConsoleLocation = new Point(-1, -1);
-
-                OnMouseExit(info);
-            }
-        }
-
+        
         private object oldTextSurface;
 
         [OnSerializing]

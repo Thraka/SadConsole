@@ -28,7 +28,7 @@ namespace SadConsole
 
         public List<IScreen> Children { get; set; } = new List<IScreen>();
 
-        public bool ExclusiveFocus { get; set; }
+        public bool IsExclusiveMouse { get; set; }
 
         public bool IsFocused { get; set; }
 
@@ -84,15 +84,17 @@ namespace SadConsole
         [DataMember]
         public bool DoDraw { get; set; } = true;
 
-        public virtual bool ProcessKeyboard(Input.Keyboard info)
+        public virtual bool ProcessKeyboard(Input.Keyboard state)
         {
             return false;
         }
 
-        public virtual bool ProcessMouse(Input.Mouse info)
+        public virtual bool ProcessMouse(Input.MouseConsoleState state)
         {
             return false;
         }
+
+        public virtual void LostMouse(Input.MouseConsoleState state) { }
 
         /// <summary>
         /// Updates the cell effects and cursor. Calls Update on <see cref="Children"/>.
@@ -102,14 +104,6 @@ namespace SadConsole
         {
             if (DoUpdate)
             {
-                if (isVisible)
-                {
-                    ProcessMouse(Global.MouseState);
-
-                    if (Console.ActiveConsoles == this)
-                        ProcessKeyboard(Global.KeyboardState);
-                }
-
                 var copyList = new List<IScreen>(Children);
 
                 foreach (var child in copyList)

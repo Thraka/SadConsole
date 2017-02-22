@@ -65,20 +65,15 @@ namespace SadConsole
                     if (Game.IsActive)
                     {
                         if (Settings.Input.DoKeyboard)
-                            Global.KeyboardState.ProcessKeys(gameTime);
+                        {
+                            Global.KeyboardState.Update(gameTime);
+                            Global.KeyboardState.Process();
+                        }
 
                         if (Settings.Input.DoMouse)
                         {
-                            Global.MouseState.ProcessMouse(gameTime);
-
-                            Global.MouseState.IsOnScreen = Settings.Input.ProcessMouseOffscreen || Global.RenderRect.Contains(Global.MouseState.ScreenLocation);
-                            Global.MouseState.IsBusy = Console.ActiveConsoles.Console != null && Console.ActiveConsoles.Console.ExclusiveFocus;
-
-                            //if (Global.MouseState.IsBusy)
-                            //    Console.ActiveConsole.ProcessMouse(Global.MouseState);
-
-                            if (!Global.MouseState.IsOnConsole && Global.MouseState.LastConsole != null)
-                                Global.MouseState.FlushLastConsole();
+                            Global.MouseState.Update(gameTime);
+                            Global.MouseState.Process();
                         }
                     }
 

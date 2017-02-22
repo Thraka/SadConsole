@@ -123,19 +123,6 @@ namespace SadConsole.GameHelpers
             }
         }
 
-        public bool AutoCursorOnFocus
-        {
-            get
-            {
-                return ((IConsole)baseConsole).AutoCursorOnFocus;
-            }
-
-            set
-            {
-                ((IConsole)baseConsole).AutoCursorOnFocus = value;
-            }
-        }
-
         public bool UseKeyboard
         {
             get
@@ -162,19 +149,6 @@ namespace SadConsole.GameHelpers
             }
         }
 
-        public bool CanFocus
-        {
-            get
-            {
-                return ((IConsole)baseConsole).CanFocus;
-            }
-
-            set
-            {
-                ((IConsole)baseConsole).CanFocus = value;
-            }
-        }
-
         public bool IsFocused
         {
             get
@@ -188,16 +162,16 @@ namespace SadConsole.GameHelpers
             }
         }
 
-        public bool ExclusiveFocus
+        public bool IsExclusiveMouse
         {
             get
             {
-                return ((IConsole)baseConsole).ExclusiveFocus;
+                return ((IConsole)baseConsole).IsExclusiveMouse;
             }
 
             set
             {
-                ((IConsole)baseConsole).ExclusiveFocus = value;
+                ((IConsole)baseConsole).IsExclusiveMouse = value;
             }
         }
 
@@ -227,9 +201,9 @@ namespace SadConsole.GameHelpers
         //    }
         //}
 
-        public bool ProcessMouse(Mouse info)
+        public bool ProcessMouse(MouseConsoleState state)
         {
-            return ((IConsole)baseConsole).ProcessMouse(info);
+            return ((IConsole)baseConsole).ProcessMouse(state);
         }
 
         public bool ProcessKeyboard(Keyboard info)
@@ -245,6 +219,11 @@ namespace SadConsole.GameHelpers
         public void Draw(TimeSpan renderTime)
         {
             ((IConsole)baseConsole).Draw(renderTime);
+        }
+
+        public void LostMouse(MouseConsoleState state)
+        {
+            ((IConsole)baseConsole).LostMouse(state);
         }
         #endregion
 
@@ -277,6 +256,7 @@ namespace SadConsole.GameHelpers
         {
             SadConsole.Serializer.Save<Scene>(this, file, types);
         }
+
         
     }
 }

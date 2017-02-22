@@ -307,23 +307,23 @@ namespace SadConsole.Controls
         // Locking the mouse to this control is actually locking the parent console to the engine, and then
         // letting the controls console know that this control wants exclusive focus until mouse is unclicked.
 
-        public override bool ProcessMouse(Input.Mouse info)
+        public override bool ProcessMouse(Input.MouseConsoleState state)
         {
             if (IsEnabled)
             {
-                base.ProcessMouse(info);
+                base.ProcessMouse(state);
 
 
-                var mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+                var mouseControlPosition = new Point(state.ConsolePosition.X - this.Position.X, state.ConsolePosition.Y - this.Position.Y);
 
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.CapturedControl == null)
                 {
-                    if (info.ConsoleLocation.X >= this.Position.X && info.ConsoleLocation.X < this.Position.X + textSurface.Width &&
-                        info.ConsoleLocation.Y >= this.Position.Y && info.ConsoleLocation.Y < this.Position.Y + textSurface.Height)
+                    if (state.ConsolePosition.X >= this.Position.X && state.ConsolePosition.X < this.Position.X + textSurface.Width &&
+                        state.ConsolePosition.Y >= this.Position.Y && state.ConsolePosition.Y < this.Position.Y + textSurface.Height)
                     {
 
-                        if (info.LeftClicked)
+                        if (state.Mouse.LeftClicked)
                         {
                             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
                             {
@@ -345,7 +345,7 @@ namespace SadConsole.Controls
 
                         // Need to set a flag signalling that we've locked in a drag.
                         // When the mouse button is let go, clear the flag.
-                        if (info.LeftButtonDown)
+                        if (state.Mouse.LeftButtonDown)
                         {
                             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
                             {
@@ -372,10 +372,10 @@ namespace SadConsole.Controls
                 }
                 else if (Parent.CapturedControl == this)
                 {
-                    if (info.ConsoleLocation.X >= this.Position.X - 2 && info.ConsoleLocation.X < this.Position.X + textSurface.Width + 2 &&
-                        info.ConsoleLocation.Y >= this.Position.Y - 3 && info.ConsoleLocation.Y < this.Position.Y + textSurface.Height + 3)
+                    if (state.ConsolePosition.X >= this.Position.X - 2 && state.ConsolePosition.X < this.Position.X + textSurface.Width + 2 &&
+                        state.ConsolePosition.Y >= this.Position.Y - 3 && state.ConsolePosition.Y < this.Position.Y + textSurface.Height + 3)
                     {
-                        if (info.LeftButtonDown)
+                        if (state.Mouse.LeftButtonDown)
                         {
                             if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
                             {
@@ -444,8 +444,8 @@ namespace SadConsole.Controls
         /// <summary>
         /// Not Used.
         /// </summary>
-        /// <param name="info"></param>
-        public override bool ProcessKeyboard(Input.Keyboard data)
+        /// <param name="state"></param>
+        public override bool ProcessKeyboard(Input.Keyboard state)
         {
             return false;
         }

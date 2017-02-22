@@ -11,9 +11,20 @@ namespace Microsoft.Xna.Framework
         /// <param name="cellWidth">The width of a cell in pixels.</param>
         /// <param name="cellHeight">The height of a cell in pixels.</param>
         /// <returns>The pixel position of the top-left of the cell.</returns>
-        public static Point ConsoleLocationToWorld(this Point point, int cellWidth, int cellHeight)
+        public static Point ConsoleLocationToPixel(this Point point, int cellWidth, int cellHeight)
         {
             return new Point(point.X * cellWidth, point.Y * cellHeight);
+        }
+
+        /// <summary>
+        /// Translates a console cell position to where it appears on the screen in pixels.
+        /// </summary>
+        /// <param name="point">The current cell position.</param>
+        /// <param name="font">The font to use in calculating the position.</param>
+        /// <returns>The pixel position of the top-left of the cell.</returns>
+        public static Point ConsoleLocationToPixel(this Point point, Font font)
+        {
+            return new Point(point.X * font.Size.X, point.Y * font.Size.Y);
         }
 
         /// <summary>
@@ -23,9 +34,20 @@ namespace Microsoft.Xna.Framework
         /// <param name="cellWidth">The width of a cell in pixels.</param>
         /// <param name="cellHeight">The height of a cell in pixels.</param>
         /// <returns>The cell position on the screen.</returns>
-        public static Point WorldLocationToConsole(this Point point, int cellWidth, int cellHeight)
+        public static Point PixelLocationToConsole(this Point point, int cellWidth, int cellHeight)
         {
             return new Point(point.X / cellWidth, point.Y / cellHeight);
+        }
+
+        /// <summary>
+        /// Translates a pixel to where it appears on a console cell.
+        /// </summary>
+        /// <param name="point">The current world position.</param>
+        /// <param name="font">The font to use in calculating the position.</param>
+        /// <returns>The cell position on the screen.</returns>
+        public static Point PixelLocationToConsole(this Point point, Font font)
+        {
+            return new Point(point.X / font.Size.X, point.Y / font.Size.Y);
         }
 
         /// <summary>
@@ -48,8 +70,8 @@ namespace Microsoft.Xna.Framework
         /// <returns>The position of the cell in the <paramref name="targetFont"/>.</returns>
         public static Point TranslateFont(this Point point, Font sourceFont, Font targetFont)
         {
-            var world = point.ConsoleLocationToWorld(sourceFont.Size.X, sourceFont.Size.Y);
-            return world.WorldLocationToConsole(targetFont.Size.X, targetFont.Size.Y);
+            var world = point.ConsoleLocationToPixel(sourceFont.Size.X, sourceFont.Size.Y);
+            return world.PixelLocationToConsole(targetFont.Size.X, targetFont.Size.Y);
         }
 
         /// <summary>
@@ -66,7 +88,7 @@ namespace Microsoft.Xna.Framework
             if (absolutePositioning)
                 worldLocation = position;
             else
-                worldLocation = position.ConsoleLocationToWorld(cellSize.X, cellSize.Y);
+                worldLocation = position.ConsoleLocationToPixel(cellSize.X, cellSize.Y);
 
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
         }

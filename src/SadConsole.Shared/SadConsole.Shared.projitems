@@ -18,7 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Console.Active.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ControlsConsole.cs" />
@@ -131,10 +131,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)IConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Input\IInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\Keyboard.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\Mouse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseConsoleState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\CodeInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\ConcurrentInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\DoubleInstruction.cs" />

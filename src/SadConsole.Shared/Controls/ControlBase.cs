@@ -11,7 +11,7 @@ namespace SadConsole.Controls
     /// Base class for all controls.
     /// </summary>
     [DataContract]
-    public abstract class ControlBase: SurfaceEditor, IInput
+    public abstract class ControlBase: SurfaceEditor
     {
         protected Point position;
         protected Rectangle bounds;
@@ -72,7 +72,7 @@ namespace SadConsole.Controls
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets weather or not this control will become focused when the mosue is clicked.
+        /// Gets or sets weather or not this control will become focused when the mouse is clicked.
         /// </summary>
         [DataMember]
         public bool FocusOnClick { get; set; }
@@ -203,46 +203,54 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the keyboard is used on this control.
         /// </summary>
-        /// <param name="info">The state of the keyboard.</param>
-        public virtual bool ProcessKeyboard(Keyboard info) { return false; }
+        /// <param name="state">The state of the keyboard.</param>
+        public virtual bool ProcessKeyboard(Keyboard state) { return false; }
 
         /// <summary>
         /// Checks if the mouse is the control and calls the appropriate mouse methods.
         /// </summary>
-        /// <param name="info">Mouse information.</param>
+        /// <param name="state">Mouse information.</param>
         /// <returns>Always returns false.</returns>
-        public virtual bool ProcessMouse(Input.Mouse info)
+        public virtual bool ProcessMouse(Input.MouseConsoleState state)
         {
             if (IsEnabled && UseMouse)
             {
-                if (info.ConsoleLocation.X >= Position.X && info.ConsoleLocation.X < Position.X + Width &&
-                    info.ConsoleLocation.Y >= Position.Y && info.ConsoleLocation.Y < Position.Y + Height)
+                if (bounds.Contains(state.CellPosition))
                 {
                     if (isMouseOver != true)
                     {
                         isMouseOver = true;
-                        OnMouseEnter(info);
+                        OnMouseEnter(state);
                     }
 
-                    OnMouseIn(info);
+                    OnMouseIn(state);
 
-                    if (info.LeftClicked)
-                        OnLeftMouseClicked(info);
+                    if (state.Mouse.LeftClicked)
+                        OnLeftMouseClicked(state);
 
-                    if (info.RightClicked)
-                        OnRightMouseClicked(info);
+                    if (state.Mouse.RightClicked)
+                        OnRightMouseClicked(state);
                 }
                 else
                 {
                     if (isMouseOver)
                     {
                         isMouseOver = false;
-                        OnMouseExit(info);
+                        OnMouseExit(state);
                     }
                 }
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Called to trigger the state of losing mouse focus.
+        /// </summary>
+        /// <param name="state">The mouse state.</param>
+        public void LostMouse(MouseConsoleState state)
+        {
+            OnMouseExit(state);
         }
         #endregion
 
@@ -265,11 +273,11 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
-        /// <param name="info">The current mouse data</param>
-        protected virtual void OnMouseEnter(Input.Mouse info)
+        /// <param name="state">The current mouse data</param>
+        protected virtual void OnMouseEnter(Input.MouseConsoleState state)
         {
-            if (MouseEnter != null)
-                MouseEnter(this, new MouseEventArgs(info));
+            isMouseOver = true;
+            MouseEnter?.Invoke(this, new MouseEventArgs(state));
 
             DetermineAppearance();
         }
@@ -277,11 +285,11 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
-        /// <param name="info">The current mouse data</param>
-        protected virtual void OnMouseExit(Input.Mouse info)
+        /// <param name="state">The current mouse data</param>
+        protected virtual void OnMouseExit(Input.MouseConsoleState state)
         {
-            if (MouseExit != null)
-                MouseExit(this, new MouseEventArgs(info));
+            isMouseOver = false;
+            MouseExit?.Invoke(this, new MouseEventArgs(state));
 
             DetermineAppearance();
         }
@@ -289,11 +297,11 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
-        /// <param name="info">The current mouse data</param>
-        protected virtual void OnMouseIn(Input.Mouse info)
+        /// <param name="state">The current mouse data</param>
+        protected virtual void OnMouseIn(Input.MouseConsoleState state)
         {
             if (MouseMove != null)
-                MouseMove(this, new MouseEventArgs(info));
+                MouseMove(this, new MouseEventArgs(state));
 
             DetermineAppearance();
         }
@@ -301,11 +309,11 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
-        /// <param name="info">The current mouse data</param>
-        protected virtual void OnLeftMouseClicked(Input.Mouse info)
+        /// <param name="state">The current mouse data</param>
+        protected virtual void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
             if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(info));
+                MouseButtonClicked(this, new MouseEventArgs(state));
 
             if (FocusOnClick)
                 this.IsFocused = true;
@@ -316,11 +324,11 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
-        /// <param name="info">The current mouse data</param>
-        protected virtual void OnRightMouseClicked(Input.Mouse info)
+        /// <param name="state">The current mouse data</param>
+        protected virtual void OnRightMouseClicked(Input.MouseConsoleState state)
         {
             if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(info));
+                MouseButtonClicked(this, new MouseEventArgs(state));
 
             DetermineAppearance();
         }
@@ -328,11 +336,11 @@ namespace SadConsole.Controls
         /// <summary>
         /// Helper method that returns the mouse x,y position for the control.
         /// </summary>
-        /// <param name="info">The mouse information as used by a mouse event.</param>
+        /// <param name="consolePosition">Position onf the console to get the relative control position from.</param>
         /// <returns>The x,y position of the mouse over the control.</returns>
-        protected Point TransformConsolePositionByControlPosition(Input.Mouse info)
+        protected Point TransformConsolePositionByControlPosition(Point consolePosition)
         {
-            return new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+            return consolePosition - position;
         }
 
         /// <summary>

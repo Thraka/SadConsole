@@ -42,13 +42,13 @@ namespace StarterProject.CustomConsoles
 
             // Setup main view
             mainView.Position = new Point(0, 2);
-            mainView.MouseMove += (s, e) => { if (e.LeftButtonDown) { e.Cell.Background = Color.Blue; mainView.TextSurface.IsDirty = true; } };
+            mainView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) { e.MouseState.Cell.Background = Color.Blue; mainView.TextSurface.IsDirty = true; } };
             ((BasicSurface)mainView.TextSurface).OnIsDirty = (t) => subView.TextSurface.IsDirty = true;
 
             // Setup sub view
             subView.Position = new Point(60, 2);
             subView.TextSurface = new SurfaceView(mainView.TextSurface, new Rectangle(0, 0, 20, 23));
-            subView.MouseMove += (s, e) => { if (e.LeftButtonDown) { e.Cell.Background = Color.Red; subView.TextSurface.IsDirty = true; } };
+            subView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) { e.MouseState.Cell.Background = Color.Red; subView.TextSurface.IsDirty = true; } };
 
             // Ad the consoles to the list.
             Children.Add(mainView);

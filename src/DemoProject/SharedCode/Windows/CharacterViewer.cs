@@ -17,7 +17,7 @@ namespace StarterProject.Windows
 #endregion
 
         private Rectangle TrackedRegion = new Rectangle(1, 1, 16, 16);
-        private SadConsole.Input.Mouse _lastInfo = null;
+        private SadConsole.Input.MouseConsoleState _lastInfo = null;
         private SadConsole.Effects.Recolor _highlightedCellEffect = new SadConsole.Effects.Recolor();
         private int _fontRowOffset = 0;
         private EffectsManager effects;
@@ -103,24 +103,24 @@ namespace StarterProject.Windows
             }
         }
 
-        protected override void OnMouseLeftClicked(SadConsole.Input.Mouse data)
+        protected override void OnMouseLeftClicked(SadConsole.Input.MouseConsoleState state)
         {
-            if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
+            if (state.Cell != null && TrackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
             {
-                SelectedCharacterIndex = data.Cell.Glyph;
+                SelectedCharacterIndex = state.Cell.Glyph;
             }
-            else if (data.ConsoleLocation.X == textSurface.Width - 1 && data.ConsoleLocation.Y == 0)
+            else if (state.ConsolePosition.X == textSurface.Width - 1 && state.ConsolePosition.Y == 0)
                 Hide();
 
-            base.OnMouseLeftClicked(data);
+            base.OnMouseLeftClicked(state);
         }
 
-        protected override void OnMouseIn(SadConsole.Input.Mouse data)
+        protected override void OnMouseMove(SadConsole.Input.MouseConsoleState state)
         {
-            if (data.Cell != null && TrackedRegion.Contains(data.ConsoleLocation.X, data.ConsoleLocation.Y))
+            if (state.Cell != null && TrackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
             {
                 // Draw the character index and value in the status area
-                string[] items = new string[] { "Index: ", data.Cell.Glyph.ToString() + " ", ((char)data.Cell.Glyph).ToString() };
+                string[] items = new string[] { "Index: ", state.Cell.Glyph.ToString() + " ", ((char)state.Cell.Glyph).ToString() };
 
                 items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
 
@@ -137,7 +137,7 @@ namespace StarterProject.Windows
                 if (_lastInfo == null)
                 {
                 }
-                else if (_lastInfo.ConsoleLocation != data.ConsoleLocation)
+                else if (_lastInfo.ConsolePosition != state.ConsolePosition)
                 {
                     effects.SetEffect(_lastInfo.Cell,
                     new SadConsole.Effects.Fade()
@@ -155,8 +155,8 @@ namespace StarterProject.Windows
                     );
                 }
 
-                effects.SetEffect(data.Cell, _highlightedCellEffect);
-                _lastInfo = data.Clone();
+                effects.SetEffect(state.Cell, _highlightedCellEffect);
+                _lastInfo = state.Clone();
             }
             else
             {
@@ -170,7 +170,7 @@ namespace StarterProject.Windows
                 }
             }
 
-            base.OnMouseIn(data);
+            base.OnMouseMove(state);
         }
 
         private void DrawSelectedItemString()
@@ -194,7 +194,7 @@ namespace StarterProject.Windows
             Print(1, textSurface.Height - 2, text);
         }
 
-        protected override void OnMouseExit(SadConsole.Input.Mouse info)
+        protected override void OnMouseExit(SadConsole.Input.MouseConsoleState state)
         {
             if (_lastInfo != null)
             {
@@ -203,17 +203,17 @@ namespace StarterProject.Windows
 
             DrawSelectedItemString();
 
-            base.OnMouseExit(info);
+            base.OnMouseExit(state);
         }
 
-        protected override void OnMouseEnter(SadConsole.Input.Mouse info)
+        protected override void OnMouseEnter(SadConsole.Input.MouseConsoleState state)
         {
             if (_lastInfo != null)
             {
 //                _lastInfo.Cell.Effect = null;
             }
 
-            base.OnMouseEnter(info);
+            base.OnMouseEnter(state);
         }
 
         public void UpdateCharSheetColors()

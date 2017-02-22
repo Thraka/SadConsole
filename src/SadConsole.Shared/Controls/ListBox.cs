@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Windows;
+using SadConsole.Input;
 
 namespace SadConsole.Controls
 {
@@ -445,9 +446,9 @@ namespace SadConsole.Controls
             return false;
         }
 
-        protected override void OnMouseExit(Input.Mouse info)
+        protected override void OnMouseExit(Input.MouseConsoleState state)
         {
-            base.OnMouseExit(info);
+            base.OnMouseExit(state);
 
             _mouseIn = false;
 
@@ -456,16 +457,16 @@ namespace SadConsole.Controls
                 item.IsMouseOver = false;
         }
 
-        protected override void OnMouseEnter(Input.Mouse info)
+        protected override void OnMouseEnter(Input.MouseConsoleState state)
         {
-            base.OnMouseEnter(info);
+            base.OnMouseEnter(state);
 
             _mouseIn = true;
         }
 
-        protected override void OnMouseIn(Input.Mouse info)
+        protected override void OnMouseIn(Input.MouseConsoleState state)
         {
-            base.OnMouseIn(info);
+            base.OnMouseIn(state);
 
             // Reset all containers
             foreach (var item in _containers)
@@ -475,7 +476,7 @@ namespace SadConsole.Controls
             int rowOffsetReverse = HideBorder ? 1 : 0;
             int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+            Point mouseControlPosition = new Point(state.ConsolePosition.X - this.Position.X, state.ConsolePosition.Y - this.Position.Y);
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
@@ -491,9 +492,9 @@ namespace SadConsole.Controls
             }
         }
 
-        protected override void OnLeftMouseClicked(Input.Mouse info)
+        protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
-            base.OnLeftMouseClicked(info);
+            base.OnLeftMouseClicked(state);
 
             DateTime click = DateTime.Now;
             bool doubleClicked = (click - _leftMouseLastClick).TotalSeconds <= 0.5;
@@ -503,7 +504,7 @@ namespace SadConsole.Controls
             int rowOffsetReverse = HideBorder ? 1 : 0;
             int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+            Point mouseControlPosition = new Point(state.ConsolePosition.X - this.Position.X, state.ConsolePosition.Y - this.Position.Y);
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
@@ -531,20 +532,19 @@ namespace SadConsole.Controls
                 }
             }
         }
-
-        public override bool ProcessMouse(Input.Mouse info)
+        public override bool ProcessMouse(Input.MouseConsoleState state)
         {
             if (isEnabled)
             {
-                base.ProcessMouse(info);
+                base.ProcessMouse(state);
 
                 if (_mouseIn)
                 {
-                    var mouseControlPosition = new Point(info.ConsoleLocation.X - this.Position.X, info.ConsoleLocation.Y - this.Position.Y);
+                    var mouseControlPosition = TransformConsolePositionByControlPosition(state.ConsolePosition);
 
                     if (mouseControlPosition.X == this.textSurface.Width - 1 && _showSlider)
                     {
-                        _slider.ProcessMouse(info);
+                        _slider.ProcessMouse(state);
                     }
                 }
             }

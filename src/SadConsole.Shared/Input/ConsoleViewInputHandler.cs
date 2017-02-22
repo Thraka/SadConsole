@@ -58,27 +58,25 @@ namespace SadConsole.Input
             _mouseLastLocation = new Point();
         }
 
-        public bool HandlerMouse(IConsole console, Mouse info)
+        public bool HandlerMouse(IConsole console, MouseConsoleState state)
         {
             if (console.IsVisible && console.UseMouse)
             {
-                info.Fill(console);
+                bool doDrag = (state.Mouse.LeftButtonDown && CanMoveWithLeftButton) || (state.Mouse.RightButtonDown && CanMoveWithRightButton);
 
-                bool doDrag = (info.LeftButtonDown && CanMoveWithLeftButton) || (info.RightButtonDown && CanMoveWithRightButton);
-
-                if (info.Console == console && doDrag)
+                if (state.Console == console && doDrag)
                 {
-                    // Mouse just went down on us.
+                    // Mouse just went down.
                     if (!_mouseDown)
                     {
                         _mouseDown = true;
-                        _mouseLastLocation = new Point(info.ConsoleLocation.X, info.ConsoleLocation.Y);
-                        console.ExclusiveFocus = true;
+                        _mouseLastLocation = state.ConsolePosition;
+                        console.IsExclusiveMouse = true;
                     }
                     else
                     {
                         // Mouse has been down, still is
-                        Point currentLocation = new Point(info.ConsoleLocation.X, info.ConsoleLocation.Y);
+                        Point currentLocation = new Point(state.ConsolePosition.X, state.ConsolePosition.Y);
 
                         if (currentLocation != _mouseLastLocation)
                         {
@@ -97,7 +95,7 @@ namespace SadConsole.Input
 
                 if (!doDrag && _mouseDown)
                 {
-                    console.ExclusiveFocus = false;
+                    console.IsExclusiveMouse = false;
                     _mouseDown = false;
                 }
             }

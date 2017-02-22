@@ -54,10 +54,41 @@ namespace SadConsole.Input
         }
 
         /// <summary>
+        /// Returns true if the key is not in the <see cref="KeysDown"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key is not being pressed.</returns>
+        public bool IsKeyUp(Keys key)
+        {
+            return !KeysDown.Contains(AsciiKey.Get(key));
+        }
+
+        /// <summary>
+        /// Returns true if the key is in the <see cref="KeysDown"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key is being pressed.</returns>
+        public bool IsKeyDown(Keys key)
+        {
+            return KeysDown.Contains(AsciiKey.Get(key));
+        }
+
+        /// <summary>
+        /// Returns true when they is in the <see cref="KeysReleased"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key was released this update frame.</returns>
+        public bool IsKeyReleased(Keys key)
+        {
+            return KeysReleased.Contains(AsciiKey.Get(key));
+        }
+
+
+        /// <summary>
         /// Reads the keyboard state using the <see cref="GameTime"/> from the update frame.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void ProcessKeys(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             this.KeysPressed.Clear();
             this.KeysReleased.Clear();
@@ -75,8 +106,7 @@ namespace SadConsole.Input
                 }
                 else
                     i++;
-            }   
-
+            }
 
             // For all new keys down, if we don't know them, add them to pressed, add them to down.
             for (int i = 0; i < keys.Length; i++)
@@ -130,33 +160,12 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Returns true if the key is not in the <see cref="KeysDown"/> collection.
+        /// Send the keyboard to the active console.
         /// </summary>
-        /// <param name="key">The key to check.</param>
-        /// <returns>True when the key is not being pressed.</returns>
-        public bool IsKeyUp(Keys key)
+        public void Process()
         {
-            return !KeysDown.Contains(AsciiKey.Get(key));
-        }
-
-        /// <summary>
-        /// Returns true if the key is in the <see cref="KeysDown"/> collection.
-        /// </summary>
-        /// <param name="key">The key to check.</param>
-        /// <returns>True when the key is being pressed.</returns>
-        public bool IsKeyDown(Keys key)
-        {
-            return KeysDown.Contains(AsciiKey.Get(key));
-        }
-
-        /// <summary>
-        /// Returns true when they is in the <see cref="KeysReleased"/> collection.
-        /// </summary>
-        /// <param name="key">The key to check.</param>
-        /// <returns>True when the key was released this update frame.</returns>
-        public bool IsKeyReleased(Keys key)
-        {
-            return KeysReleased.Contains(AsciiKey.Get(key));
+            if (Global.FocusedConsoles.Console != null && Global.FocusedConsoles.Console.UseKeyboard)
+                Global.FocusedConsoles.Console.ProcessKeyboard(this);
         }
     }
 }

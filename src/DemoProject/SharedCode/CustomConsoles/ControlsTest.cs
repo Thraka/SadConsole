@@ -190,9 +190,9 @@ namespace StarterProject.CustomConsoles
             return base.ProcessKeyboard(info);
         }
 
-        public override bool ProcessMouse(SadConsole.Input.Mouse info)
+        public override bool ProcessMouse(SadConsole.Input.MouseConsoleState state)
         {
-            return base.ProcessMouse(info);
+            return base.ProcessMouse(state);
         }
 
         public override void Invalidate()

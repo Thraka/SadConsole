@@ -117,7 +117,7 @@ namespace SadConsole.Controls
             else if (!isMouseDown && isMouseOver)
                 currentAppearance = Theme.MouseOver;
 
-            else if (!isMouseDown && !isMouseOver && IsFocused && Console.ActiveConsoles == parent)
+            else if (!isMouseDown && !isMouseOver && IsFocused && Global.FocusedConsoles.Console == parent)
                 currentAppearance = Theme.Focused;
 
             else if (isMouseDown && isMouseOver)
@@ -148,32 +148,32 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the mouse is in the control area.
         /// </summary>
-        /// <param name="info">The mouse state.</param>
-        protected override void OnMouseIn(Input.Mouse info)
+        /// <param name="state">The mouse state.</param>
+        protected override void OnMouseIn(Input.MouseConsoleState state)
         {
-            isMouseDown = info.LeftButtonDown;
+            isMouseDown = state.Mouse.LeftButtonDown;
 
-            base.OnMouseIn(info);
+            base.OnMouseIn(state);
         }
 
         /// <summary>
         /// Called when the mouse leaves the control area.
         /// </summary>
-        /// <param name="info">The mouse state.</param>
-        protected override void OnMouseExit(Input.Mouse info)
+        /// <param name="state">The mouse state.</param>
+        protected override void OnMouseExit(Input.MouseConsoleState state)
         {
             isMouseDown = false;
 
-            base.OnMouseExit(info);
+            base.OnMouseExit(state);
         }
 
         /// <summary>
         /// Called when the left-mouse button is clicked.
         /// </summary>
-        /// <param name="info">The mouse state.</param>
-        protected override void OnLeftMouseClicked(Input.Mouse info)
+        /// <param name="state">The mouse state.</param>
+        protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
-            base.OnLeftMouseClicked(info);
+            base.OnLeftMouseClicked(state);
 
             if (isEnabled)
                 DoClick();

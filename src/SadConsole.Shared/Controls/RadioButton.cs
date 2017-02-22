@@ -155,7 +155,7 @@ namespace SadConsole.Controls
                 _currentAppearanceText = Theme.MouseOver;
             }
 
-            else if (!_isMouseDown && !isMouseOver && IsFocused && Console.ActiveConsoles == parent)
+            else if (!_isMouseDown && !isMouseOver && IsFocused && Global.FocusedConsoles.Console == parent)
             {
                 _currentAppearanceButton = Theme.Button.Focused;
                 _currentAppearanceText = Theme.Focused;
@@ -185,23 +185,23 @@ namespace SadConsole.Controls
                 this.IsDirty = true;
         }
 
-        protected override void OnMouseIn(Input.Mouse info)
+        protected override void OnMouseIn(Input.MouseConsoleState state)
         {
             isMouseOver = true;
 
-            base.OnMouseIn(info);
+            base.OnMouseIn(state);
         }
 
-        protected override void OnMouseExit(Input.Mouse info)
+        protected override void OnMouseExit(Input.MouseConsoleState state)
         {
             isMouseOver = false;
 
-            base.OnMouseExit(info);
+            base.OnMouseExit(state);
         }
 
-        protected override void OnLeftMouseClicked(Input.Mouse info)
+        protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
-            base.OnLeftMouseClicked(info);
+            base.OnLeftMouseClicked(state);
 
             if (isEnabled)
             {

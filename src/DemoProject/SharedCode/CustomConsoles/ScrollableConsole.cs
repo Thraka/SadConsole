@@ -36,8 +36,6 @@ namespace StarterProject.CustomConsoles
             controlsContainer.Add(scrollBar);
             controlsContainer.Position = new Point(Position.X + width - 1, Position.Y);
             controlsContainer.IsVisible = true;
-            controlsContainer.MouseCanFocus = false;
-            controlsContainer.ProcessMouseWithoutFocus = true;
 
             virtualCursor.IsVisible = true;
             virtualCursor.Print("Just start typing!");
@@ -100,13 +98,13 @@ namespace StarterProject.CustomConsoles
             }
         }
 
-        public override bool ProcessMouse(Mouse info)
+        public override bool ProcessMouse(MouseConsoleState state)
         {
             // Check the scroll bar for mouse info first. If mouse not handled by scroll bar, then..
-            if (!controlsContainer.ProcessMouse(info))
+            if (!controlsContainer.ProcessMouse(state))
             {
                 // Process this console normally.
-                return base.ProcessMouse(info);
+                return base.ProcessMouse(state);
             }
 
             // If we get here, then the mouse was over the scroll bar.

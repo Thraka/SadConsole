@@ -42,6 +42,11 @@ namespace SadConsole
         public static IScreen CurrentScreen = new Screen();
 
         /// <summary>
+        /// The stack of consoles that will receive keyboard and mouse input.
+        /// </summary>
+        public static ConsoleStack FocusedConsoles = new ConsoleStack();
+
+        /// <summary>
         /// A global random number generator.
         /// </summary>
         public static Random Random = new Random();

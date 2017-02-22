@@ -239,7 +239,7 @@ namespace SadConsole.Controls
             if (isMouseOver)
                 _currentAppearance = Theme.MouseOver;
 
-            else if (base.IsFocused && Console.ActiveConsoles == parent)
+            else if (base.IsFocused && Global.FocusedConsoles.Console == parent)
                 _currentAppearance = Theme.Focused;
             else
                 _currentAppearance = Theme.Normal;
@@ -504,11 +504,11 @@ namespace SadConsole.Controls
             PositionCursor();
         }
 
-        protected override void OnLeftMouseClicked(Input.Mouse info)
+        protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
             if (!DisableMouse)
             {
-                base.OnLeftMouseClicked(info);
+                base.OnLeftMouseClicked(state);
 
                 DisableKeyboard = false;
                 _editingText = Text;
