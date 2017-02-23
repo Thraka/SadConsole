@@ -50,7 +50,7 @@ namespace SadConsole.Input
 
                     if (IsOnConsole)
                     {
-                        CellPosition = ConsolePosition - Console.TextSurface.RenderArea.Location;
+                        CellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
                         Cell = console.TextSurface[CellPosition.X, CellPosition.Y];
                     }
                 }
