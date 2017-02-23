@@ -21,6 +21,11 @@ namespace SadConsole.Controls
     public class InputBox: ControlBase
     {
         /// <summary>
+        /// Indicates the carrot is visible.
+        /// </summary>
+        protected bool isCarrotVisible = false;
+
+        /// <summary>
         /// A list of valid number characters
         /// </summary>
         protected static char[] _validNumbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -218,9 +223,11 @@ namespace SadConsole.Controls
                 {
                     this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
                     effects.SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect);
+                    isCarrotVisible = true;
                 }
                 else
                 {
+                    isCarrotVisible = false;
                     this.Print(0, 0, _text.Align(TextAlignment, this.Width));
                 }
 
@@ -522,7 +529,11 @@ namespace SadConsole.Controls
 
         public override void Update()
         {
-            effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+            if (isCarrotVisible)
+            {
+                effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+                OnComposed?.Invoke(this);
+            }
 
             base.Update();
         }
