@@ -24,6 +24,7 @@ namespace SadConsole
         private ControlBase _focusedControl;
         [DataMember]
         private ControlBase _capturedControl;
+        private bool _wasFocusedBeforeCapture;
         private bool _exlusiveBeforeCapture;
 
         private SadConsole.Themes.ControlsConsoleTheme _theme;
@@ -493,7 +494,16 @@ namespace SadConsole
         /// <param name="control">The control to capture</param>
         public void CaptureControl(ControlBase control)
         {
-            Global.FocusedConsoles.Push(this);
+            if (Global.FocusedConsoles.Console != this)
+            {
+                Global.FocusedConsoles.Push(this);
+                _wasFocusedBeforeCapture = false;
+            }
+            else
+            {
+                _wasFocusedBeforeCapture = true;
+            }
+
             _exlusiveBeforeCapture = IsExclusiveMouse;
             IsExclusiveMouse = true;
             _capturedControl = control;
@@ -504,7 +514,9 @@ namespace SadConsole
         /// </summary>
         public void ReleaseControl()
         {
-            Global.FocusedConsoles.Pop(this);
+            if (!_wasFocusedBeforeCapture)
+                Global.FocusedConsoles.Pop(this);
+
             IsExclusiveMouse = _exlusiveBeforeCapture;
             _capturedControl = null;
         }
