@@ -102,7 +102,7 @@ namespace StarterProject
             SadConsole.Themes.Library.Default.ButtonTheme.MouseClicking = Appearance_ControlMouseDown;
             SadConsole.Themes.Library.Default.ButtonTheme.Focused = Appearance_ControlFocused;
 
-            //SadConsole.Themes.Library.Default.InputBoxTheme.Normal = Appearance_ControlTextBoxNormal;
+            SadConsole.Themes.Library.Default.InputBoxTheme.Normal = new SadConsole.Cell(Appearance_ControlNormal.Background, Appearance_ControlNormal.Foreground);
             SadConsole.Themes.Library.Default.InputBoxTheme.Focused = Appearance_ControlFocused;
             SadConsole.Themes.Library.Default.InputBoxTheme.MouseOver = Appearance_ControlOver;
 

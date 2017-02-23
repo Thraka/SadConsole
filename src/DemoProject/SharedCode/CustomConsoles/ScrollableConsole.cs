@@ -100,15 +100,18 @@ namespace StarterProject.CustomConsoles
 
         public override bool ProcessMouse(MouseConsoleState state)
         {
-            // Check the scroll bar for mouse info first. If mouse not handled by scroll bar, then..
-            if (!controlsContainer.ProcessMouse(state))
+            // Create a new temp state based on the our "behind the scenes" console that holds the scroll bar
+            var stateForScroll = new MouseConsoleState(controlsContainer, state.Mouse);
+
+            // Check if this state, based on the console holding the scroll bar
+            if (stateForScroll.IsOnConsole)
             {
-                // Process this console normally.
-                return base.ProcessMouse(state);
+                controlsContainer.ProcessMouse(stateForScroll);
+                return true;
             }
 
-            // If we get here, then the mouse was over the scroll bar.
-            return true;
+            // if we're here, process the mouse like normal.
+            return base.ProcessMouse(state);
         }
     }
 
