@@ -621,7 +621,12 @@ namespace SadConsole
                 if (isVisible)
                 {
                     Renderer.Render(textSurface);
-                    Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(Position).ToVector2()));
+
+                    if (UsePixelPositioning)
+                        Global.DrawCalls.Add(new DrawCallSurface(textSurface, Position.ToVector2()));
+                    else
+                        Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(Position).ToVector2()));
+
                 }
 
                 var copyList = new List<IScreen>(Children);
