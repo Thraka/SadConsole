@@ -36,6 +36,7 @@ namespace SadConsole
         private HorizontalAlignment _titleAlignment;
 
         private MouseConsoleState previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
+        private Point cellAtDragPosition;
         private Point consoleAtDragAbsPos;
         private bool prevousMouseExclusiveDrag;
         private bool addedToParent;
@@ -174,10 +175,7 @@ namespace SadConsole
                 {
                     if (state.Mouse.IsOnScreen)
                     {
-                        if (base.UsePixelPositioning)
-                            Position = new Point(state.Mouse.ScreenPosition.X - (previousMouseInfo.Mouse.ScreenPosition.X - consoleAtDragAbsPos.X), state.Mouse.ScreenPosition.Y - (previousMouseInfo.Mouse.ScreenPosition.Y - consoleAtDragAbsPos.Y));
-                        else
-                            Position = state.WorldPosition - previousMouseInfo.ConsolePosition;
+                        Position = state.WorldPosition - cellAtDragPosition;
 
                         return true;
                     }
@@ -203,14 +201,17 @@ namespace SadConsole
                         isDragging = true;
                         consoleAtDragAbsPos = base.Position;
 
+                        if (UsePixelPositioning)
+                            cellAtDragPosition = state.RelativePixelPosition;
+                        else
+                            cellAtDragPosition = state.ConsolePosition;
+
                         if (this.MoveToFrontOnMouseClick)
                         {
                             IsFocused = true;
                         }
                     }
                 }
-
-                previousMouseInfo = state.Clone();
             }
 
             return base.ProcessMouse(state);

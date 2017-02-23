@@ -104,22 +104,8 @@ namespace SadConsole.Input
 
         public virtual void Process()
         {
-            // Scan through each "console" in the current screen, including children.
-            // Check if mouse is over console. Check if console can process mouse while not focused
 
-
-            // NEW
-
-            // Global.InputTarget : IConsole-Stack
-            // Kill IConsole.ExclusiveFocus and Focused/LostFocus
-            // IInput.ExclusiveMouse works with Global.InputTarget.
-            // If Global.InputTarget.ExclusiveMouse, then Global.InputTarget.ProcessMouse.
-            // else loop each Global.CurrentScreen.ProcessMouse until true.
-
-            // Basically the mouse will always be processed on the CurrentScreen unless
-            // The GLobal.InputTargets top target has ExclusiveMouse = true.
-            // If False, all consoles can be used by the mouse if UseMouse is true.
-            
+            // Check if the focused input console will handle mouse or not
             if (Global.FocusedConsoles.Console != null && Global.FocusedConsoles.Console.IsExclusiveMouse)
             {
                 var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
@@ -134,39 +120,39 @@ namespace SadConsole.Input
 
                 lastMouseConsole = Global.FocusedConsoles.Console;
             }
-            else if (Global.CurrentScreen != null)
+
+            // Scan through each "console" in the current screen, including children.
+            else if (Global.CurrentScreen != null && Global.CurrentScreen is IConsole)
             {
-                if (Global.CurrentScreen is IConsole)
+                bool foundMouseTarget = false;
+
+                // Build a list of all consoles
+                var consoles = new List<IConsole>();
+                GetConsoles((IConsole)Global.CurrentScreen, ref consoles);
+
+                // Process top-most consoles first.
+                consoles.Reverse();
+
+                for (int i = 0; i < consoles.Count; i++)
                 {
-                    bool foundMouseTarget = false;
+                    var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
 
-                    // Build a list of all consoles
-                    var consoles = new List<IConsole>();
-                    GetConsoles((IConsole)Global.CurrentScreen, ref consoles);
+                    var relativePixel = ScreenPosition - consoles[i].Position.ConsoleLocationToPixel(consoles[i].TextSurface.Font);
 
-                    consoles.Reverse();
-
-                    for (int i = 0; i < consoles.Count; i++)
+                    if (consoles[i].ProcessMouse(state))
                     {
-                        var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
-
-                        var relativePixel = ScreenPosition - consoles[i].Position.ConsoleLocationToPixel(consoles[i].TextSurface.Font);
-
-                        if (consoles[i].ProcessMouse(state))
+                        if (lastMouseConsole != null && lastMouseConsole != consoles[i])
                         {
-                            if (lastMouseConsole != null && lastMouseConsole != consoles[i])
-                            {
-                                lastMouseConsole.LostMouse(state);
-                                lastMouseConsole = consoles[i];
-                            }
-
-                            foundMouseTarget = true;
+                            lastMouseConsole.LostMouse(state);
+                            lastMouseConsole = consoles[i];
                         }
-                    }
 
-                    if (!foundMouseTarget)
-                        lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
+                        foundMouseTarget = true;
+                    }
                 }
+
+                if (!foundMouseTarget)
+                    lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
             }
 
         }

@@ -39,7 +39,16 @@ namespace SadConsole.Input
             {
                 if (console.UsePixelPositioning)
                 {
-                    //TODO
+                    RelativePixelPosition = mouseData.ScreenPosition - console.Position;
+                    WorldPosition = mouseData.ScreenPosition;
+                    ConsolePosition = RelativePixelPosition.PixelLocationToConsole(console.TextSurface.Font);
+                    IsOnConsole = new Rectangle(0, 0, console.TextSurface.Width, console.TextSurface.Height).Contains(ConsolePosition);
+
+                    if (IsOnConsole)
+                    {
+                        CellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
+                        Cell = console.TextSurface[CellPosition.X, CellPosition.Y];
+                    }
                 }
                 else
                 {
