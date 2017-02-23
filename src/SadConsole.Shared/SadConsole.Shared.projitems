@@ -19,9 +19,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleStack.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ConsoleContainer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ControlsConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleTypes\Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleTypes\ConsoleContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleTypes\ControlsConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleTypes\WindowConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleTypes\WindowConsole.Static.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlBase.cs" />
@@ -194,8 +196,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartClickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartSelected.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\WindowTheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WindowConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WindowConsole.Static.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\LICENSE" />
