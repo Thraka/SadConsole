@@ -18,29 +18,34 @@ namespace SadConsole
         public event EventHandler Closed;
 
         [DataMember(Name="IsModal")]
-        private bool _isModal;
+        private bool isModal;
+
         [DataMember(Name="Title")]
-        private string _title;
+        private string title;
+
         [DataMember(Name="Theme")]
-        private SadConsole.Themes.WindowTheme _theme;
-        private bool _isDragging;
+        private SadConsole.Themes.WindowTheme theme;
+
         [DataMember(Name = "TitleLocX")]
-        private int _titleLocationX;
+        private int titleLocationX;
+
         [DataMember(Name = "TitleWidth")]
-        private int _titleWidth;
+        private int titleWidth;
+
         [DataMember(Name="TitleAlignment")]
         private HorizontalAlignment _titleAlignment;
-        private SadConsole.Input.MouseConsoleState _previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
-        private Point _consoleAtDragAbsPos;
-        //private bool __isVisible;
-        private bool _prevousMouseExclusiveDrag;
-        private bool _addedToParent;
-        private SadConsole.Shapes.Box _border;
+
+        private MouseConsoleState previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
+        private Point consoleAtDragAbsPos;
+        private bool prevousMouseExclusiveDrag;
+        private bool addedToParent;
+        private Shapes.Box _border;
+        private bool isDragging;
 
         /// <summary>
         /// Gets the whether or not the console is being shown as modal. 
         /// </summary>
-        public bool IsModal { get { return _isModal; } }
+        public bool IsModal { get { return isModal; } }
         /// <summary>
         /// The <see cref="SadConsole.Shapes.Box"/> object used to draw the window border.
         /// </summary>
@@ -86,10 +91,10 @@ namespace SadConsole
         /// </summary>
         public string Title
         {
-            get { return _title; }
+            get { return title; }
             set
             {
-                _title = value;
+                title = value;
                 Redraw();
             }
         }
@@ -101,14 +106,14 @@ namespace SadConsole
         {
             get
             {
-                if (_theme == null)
+                if (theme == null)
                     return SadConsole.Themes.Library.Default.WindowTheme;
                 else
-                    return _theme;
+                    return theme;
             }
             set
             {
-                _theme = value;
+                theme = value;
 
                 ResetBox();
             }
@@ -150,7 +155,7 @@ namespace SadConsole
         public override void Draw(TimeSpan drawTime)
         {
             //TODO: Perf - cache reference?
-            ((WindowRenderer)_renderer).IsModal = _isModal;
+            ((WindowRenderer)_renderer).IsModal = isModal;
             ((WindowRenderer)_renderer).ModalTint = Theme.ModalTint;
 
             base.Draw(drawTime);
@@ -163,38 +168,38 @@ namespace SadConsole
         /// <returns></returns>
         public override bool ProcessMouse(Input.MouseConsoleState state)
         { 
-            if (_titleWidth != 0 && isVisible)
+            if (titleWidth != 0 && isVisible)
             {
-                if (_isDragging && state.Mouse.LeftButtonDown)
+                if (isDragging && state.Mouse.LeftButtonDown)
                 {
                     if (base.UsePixelPositioning)
-                        Position = new Point(state.Mouse.ScreenPosition.X - (_previousMouseInfo.Mouse.ScreenPosition.X - _consoleAtDragAbsPos.X), state.Mouse.ScreenPosition.Y - (_previousMouseInfo.Mouse.ScreenPosition.Y - _consoleAtDragAbsPos.Y));
+                        Position = new Point(state.Mouse.ScreenPosition.X - (previousMouseInfo.Mouse.ScreenPosition.X - consoleAtDragAbsPos.X), state.Mouse.ScreenPosition.Y - (previousMouseInfo.Mouse.ScreenPosition.Y - consoleAtDragAbsPos.Y));
                     else
                     {
-                        Position = state.WorldPosition - _previousMouseInfo.WorldPosition;
+                        Position = state.WorldPosition - previousMouseInfo.WorldPosition;
                     }
                     return true;
                 }
 
                 // Stopped dragging
-                if (_isDragging && !state.Mouse.LeftButtonDown)
+                if (isDragging && !state.Mouse.LeftButtonDown)
                 {
-                    _isDragging = false;
-                    IsExclusiveMouse = _prevousMouseExclusiveDrag;
+                    isDragging = false;
+                    IsExclusiveMouse = prevousMouseExclusiveDrag;
                     return true;
                 }
 
                 // Left button freshly down and we're not already dragging, check to see if in title
-                if (state.IsOnConsole && !_isDragging && !_previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
+                if (state.IsOnConsole && !isDragging && !previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
                 {
-                    if (state.CellPosition.Y == 0 && state.CellPosition.X >= _titleLocationX && state.CellPosition.X < _titleLocationX + _titleWidth)
+                    if (state.CellPosition.Y == 0 && state.CellPosition.X >= titleLocationX && state.CellPosition.X < titleLocationX + titleWidth)
                     {
-                        _prevousMouseExclusiveDrag = IsExclusiveMouse;
+                        prevousMouseExclusiveDrag = IsExclusiveMouse;
 
                         // Mouse is in the title bar
                         IsExclusiveMouse = true;
-                        _isDragging = true;
-                        _consoleAtDragAbsPos = base.Position;
+                        isDragging = true;
+                        consoleAtDragAbsPos = base.Position;
 
                         if (this.MoveToFrontOnMouseClick)
                         {
@@ -203,7 +208,7 @@ namespace SadConsole
                     }
                 }
 
-                _previousMouseInfo = state.Clone();
+                previousMouseInfo = state.Clone();
             }
 
             return base.ProcessMouse(state);
@@ -246,14 +251,14 @@ namespace SadConsole
                 return;
             }
 
-            _isModal = modal;
+            isModal = modal;
             isVisible = true;
-            _addedToParent = false;
+            addedToParent = false;
 
             if (Parent == null)
             {
                 Parent = Global.CurrentScreen;
-                _addedToParent = true;
+                addedToParent = true;
             }
 
             Parent.Children.MoveToTop(this);
@@ -273,10 +278,10 @@ namespace SadConsole
         {
             isVisible = false;
 
-            if (_isModal)
+            if (isModal)
                 Global.FocusedConsoles.Pop(this);
 
-            if (_addedToParent && Parent != null)
+            if (addedToParent && Parent != null)
                 Parent = null;
 
             if (Closed != null)
@@ -313,35 +318,35 @@ namespace SadConsole
 
             // Draw title
             string adjustedText = "";
-            _titleWidth = 0;
-            _titleLocationX = 0;
+            titleWidth = 0;
+            titleLocationX = 0;
             int adjustedWidth = textSurface.Width - 2;
 
-            if (!string.IsNullOrEmpty(_title))
+            if (!string.IsNullOrEmpty(title))
             {
-                if (_title.Length > adjustedWidth)
-                    adjustedText = _title.Substring(0, _title.Length - (_title.Length - adjustedWidth));
+                if (title.Length > adjustedWidth)
+                    adjustedText = title.Substring(0, title.Length - (title.Length - adjustedWidth));
                 else
-                    adjustedText = _title;
+                    adjustedText = title;
             }
 
             if (!string.IsNullOrEmpty(adjustedText))
             {
-                _titleWidth = adjustedText.Length;
+                titleWidth = adjustedText.Length;
                 if (_titleAlignment == HorizontalAlignment.Left)
                 {
                     Print(1, 0, adjustedText, Theme.TitleStyle);
-                    _titleLocationX = 1;
+                    titleLocationX = 1;
                 }
                 else if (_titleAlignment == HorizontalAlignment.Center)
                 {
-                    _titleLocationX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
-                    Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
+                    titleLocationX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
+                    Print(titleLocationX, 0, adjustedText, Theme.TitleStyle);
                 }
                 else
                 {
-                    _titleLocationX = textSurface.Width - 1 - adjustedText.Length;
-                    Print(_titleLocationX, 0, adjustedText, Theme.TitleStyle);
+                    titleLocationX = textSurface.Width - 1 - adjustedText.Length;
+                    Print(titleLocationX, 0, adjustedText, Theme.TitleStyle);
                 }
             }
         }
@@ -349,7 +354,7 @@ namespace SadConsole
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
-            _previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
+            previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
             //Redraw();
         }
 #endregion
