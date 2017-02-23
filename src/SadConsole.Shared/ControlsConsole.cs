@@ -30,9 +30,9 @@ namespace SadConsole
         private SadConsole.Themes.ControlsConsoleTheme _theme;
 
         /// <summary>
-        /// When set to false, when the ControlsConsole has <see cref="ProcessKeyboard(Input.Keyboard)"/> called, <see cref="KeyboardState"/> will not be updated.
+        /// When set to false, uses the static <see cref="ControlsConsole.KeyboardState"/> keyboard instead of <see cref="Global.KeyboardState"/>
         /// </summary>
-        protected bool updateKeyboardState = true;
+        protected bool UseGlobalKeyboardInput = false;
 
         #region Properties
 
@@ -408,7 +408,11 @@ namespace SadConsole
         /// <param name="info">Keyboard information sent by the engine.</param>
         public override bool ProcessKeyboard(Input.Keyboard info)
         {
-            info = KeyboardState;
+            if (!UseGlobalKeyboardInput)
+            {
+                KeyboardState.Update(Global.GameTimeUpdate);
+                info = KeyboardState;
+            }
 
             var handlerResult = KeyboardHandler == null ? false : KeyboardHandler(this, info);
 

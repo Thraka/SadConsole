@@ -124,7 +124,6 @@ namespace SadConsole
         public Window(int width, int height)
             : base(width, height)
         {
-            updateKeyboardState = false;
             _border = Shapes.Box.GetDefaultBox();
             _border.Width = width;
             _border.Height = height;
@@ -216,8 +215,6 @@ namespace SadConsole
         /// <param name="info">Keyboard state.</param>
         public override bool ProcessKeyboard(Input.Keyboard info)
         {
-            //info = KeyboardState;
-            
             if (CloseOnESC && info.IsKeyReleased(Keys.Escape))
             {
                 this.Hide();
@@ -349,25 +346,7 @@ namespace SadConsole
             }
         }
 
-        /*
-        /// <summary>
-        /// Determines if a console can become active instead of this one.
-        /// </summary>
-        /// <param name="askingConsole">The console making the request.</param>
-        /// <returns>False when the window is currently shown as modal.</returns>
-        public override bool CanActiveBeTaken(IConsole askingConsole)
-        {
-            // Should I do a request source?? 
-            if (askingConsole != null)
-
-            if (_isModal && _isVisible)
-                return false;
-            else
-                return true;
-        }
-        */
-
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             _previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());

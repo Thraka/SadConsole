@@ -93,7 +93,7 @@ namespace SadConsole
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
 
             window.Add(closeButton);
-
+            window.CloseOnESC = true;
             window.Show(true);
             window.Center();
         }
