@@ -19,6 +19,7 @@ namespace StarterProject.CustomConsoles
         public StringParsingConsole():base(80, 23)
         {
             IsVisible = false;
+            UseKeyboard = false;
             textSurface.DefaultForeground = ColorAnsi.White;
             Clear();
             int c = 59;

@@ -30,10 +30,11 @@ namespace StarterProject.CustomConsoles
             mainView = new Console(80, 23);
             subView = new Console(25, 10);
 
+            UseKeyboard = true;
+
             // Setup main view
             mainView.FillWithRandomGarbage();
             mainView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) e.MouseState.Cell.Background = Color.Blue; };
-            mainView.UseKeyboard = false;
 
             // Setup sub view
             subView.Position = new Point(4, 4);

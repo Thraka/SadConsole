@@ -22,14 +22,14 @@ namespace StarterProject
             headerConsole = new HeaderConsole();
 
             consoles = new IConsoleMetadata[] {
+                new CustomConsoles.ViewsAndSubViews(),
                 new CustomConsoles.ControlsTest(),
-                new CustomConsoles.SubConsoleCursor(),     //Virtual cursor not working correctly yet
+                new CustomConsoles.SubConsoleCursor(),
                 new CustomConsoles.AutoTypingConsole(),
                 new CustomConsoles.DOSConsole(),
                 new CustomConsoles.ScrollableConsole(25, 6, 70),
                 new CustomConsoles.CursorConsole(),
                 new CustomConsoles.GameObjectConsole(),
-                new CustomConsoles.ViewsAndSubViews(),
                 new CustomConsoles.SceneProjectionConsole(),
                 new CustomConsoles.StringParsingConsole(),
                 new CustomConsoles.AnsiConsole(),
