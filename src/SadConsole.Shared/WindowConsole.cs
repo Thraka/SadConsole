@@ -172,13 +172,15 @@ namespace SadConsole
             {
                 if (isDragging && state.Mouse.LeftButtonDown)
                 {
-                    if (base.UsePixelPositioning)
-                        Position = new Point(state.Mouse.ScreenPosition.X - (previousMouseInfo.Mouse.ScreenPosition.X - consoleAtDragAbsPos.X), state.Mouse.ScreenPosition.Y - (previousMouseInfo.Mouse.ScreenPosition.Y - consoleAtDragAbsPos.Y));
-                    else
+                    if (state.Mouse.IsOnScreen)
                     {
-                        Position = state.WorldPosition - previousMouseInfo.WorldPosition;
+                        if (base.UsePixelPositioning)
+                            Position = new Point(state.Mouse.ScreenPosition.X - (previousMouseInfo.Mouse.ScreenPosition.X - consoleAtDragAbsPos.X), state.Mouse.ScreenPosition.Y - (previousMouseInfo.Mouse.ScreenPosition.Y - consoleAtDragAbsPos.Y));
+                        else
+                            Position = state.WorldPosition - previousMouseInfo.ConsolePosition;
+
+                        return true;
                     }
-                    return true;
                 }
 
                 // Stopped dragging
