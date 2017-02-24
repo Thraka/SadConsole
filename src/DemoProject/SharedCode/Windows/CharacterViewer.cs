@@ -37,6 +37,7 @@ namespace StarterProject.Windows
             TitleAlignment = System.Windows.HorizontalAlignment.Left;
             //SetTitle(" Characters ", System.Windows.HorizontalAlignment.Center, Color.Blue, Color.LightGray);
             CloseOnESC = true;
+            UsePixelPositioning = true;
 
             // CHARACTER SCROLL
             _charScrollBar = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 16);
