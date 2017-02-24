@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Core.MonoGameGL</id>
-    <version>5.2.2</version>
+    <version>5.2.3</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Thraka</owners>
@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>(Uses MonoGame GL) $description$</description>
     <releaseNotes>
-Fixed restoring a minimized window bug. (Thanks Vzor)
+Fixed bug where a MonoGame.Game derived class that initialized SadConsole would not work anymore.
     </releaseNotes>
     <copyright>Copyright 2016 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
