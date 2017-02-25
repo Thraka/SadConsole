@@ -137,8 +137,6 @@ namespace SadConsole.Input
                 {
                     var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
 
-                    var relativePixel = ScreenPosition - consoles[i].Position.ConsoleLocationToPixel(consoles[i].TextSurface.Font);
-
                     if (consoles[i].ProcessMouse(state))
                     {
                         if (lastMouseConsole != null && lastMouseConsole != consoles[i])
@@ -159,7 +157,7 @@ namespace SadConsole.Input
 
         private void GetConsoles(IConsole console, ref List<IConsole> list)
         {
-            if (console.UseMouse && console.TextSurface != null)
+            if (console.UseMouse)
                 list.Add(console);
 
             foreach (var child in console.Children)

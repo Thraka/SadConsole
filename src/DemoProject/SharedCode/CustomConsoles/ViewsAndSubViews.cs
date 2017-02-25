@@ -5,6 +5,7 @@ using SadConsole.Surfaces;
 using System;
 using Console = SadConsole.Console;
 using SadConsole;
+using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
@@ -30,6 +31,7 @@ namespace StarterProject.CustomConsoles
             subView = new Console(19, 23);
 
             IsVisible = false;
+            UseMouse = true;
 
             //titleAndLine.Print(0, 0, " View and Sub View".Align(System.Windows.HorizontalAlignment.Left, 80), ColorHelper.GreenYellow, ColorHelper.DarkGreen);
             SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
@@ -55,10 +57,20 @@ namespace StarterProject.CustomConsoles
             Children.Add(subView);
         }
 
-        public override void Update(TimeSpan delta)
+        public override bool ProcessMouse(MouseConsoleState state)
         {
-            if (isVisible)
-                base.Update(delta);
+            // Process mouse for each console
+            var childState = new MouseConsoleState(mainView, state.Mouse);
+
+            if (childState.IsOnConsole)
+                return mainView.ProcessMouse(childState);
+
+            childState = new MouseConsoleState(subView, state.Mouse);
+
+            if (childState.IsOnConsole)
+                return subView.ProcessMouse(childState);
+
+            return false;
         }
     }
 }

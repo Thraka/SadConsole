@@ -26,6 +26,7 @@ namespace StarterProject.CustomConsoles
             // 40x12 cells instead of the 80x25 cells other consoles have, we're going to
             // stretch the size of the cells based on the font * 2. This will fill our 
             // area.
+            UseKeyboard = false;
             textSurface.Font = Global.Fonts.Values.First().GetFont(SadConsole.Font.FontSizes.Two);
 
             ColoredString colorString = "Text using a colored string gradient".CreateGradient(ColorHelper.DarkGreen, ColorHelper.LightGreen);
