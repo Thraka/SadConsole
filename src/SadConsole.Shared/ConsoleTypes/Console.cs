@@ -552,6 +552,10 @@ namespace SadConsole
         {
             if (VirtualCursor.IsVisible)
             {
+                // Bug - Virtual cursor position index is incorrectly positioned in the render area when the render area
+                //       is smaller than width.
+                //       Render 
+
                 int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
                     new Point(VirtualCursor.Position.X - TextSurface.RenderArea.Left,
                               VirtualCursor.Position.Y - TextSurface.RenderArea.Top), TextSurface.RenderArea.Width);
