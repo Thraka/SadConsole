@@ -19,13 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Snake", "Snake", "{4A49FF3D
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Snake", "SampleGames\Snake\Snake.shproj", "{7A8507B4-DB2C-453E-A72B-2384175BDFF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake.DirectX", "SampleGames\Snake\Platforms\Windows\Snake.DirectX.csproj", "{F1046DE6-C3F6-4838-B9E1-2FF67292730E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake.DirectX", "SampleGames\Snake\Snake.DirectX.csproj", "{F1046DE6-C3F6-4838-B9E1-2FF67292730E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castle", "Castle", "{695BDDEB-51D5-486E-84F4-9031786775B7}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Castle", "SampleGames\Castle\Castle.shproj", "{BD5D2B21-2CD6-448D-ACD7-5B90DA247250}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle.DirectX", "SampleGames\Castle\Platforms\Windows\Castle.DirectX.csproj", "{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle.DirectX", "SampleGames\Castle\Castle.DirectX.csproj", "{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SadRogueSharp", "SadRogueSharp", "{DC197B17-EB75-437F-BFE2-10DD8F813B20}"
 EndProject
