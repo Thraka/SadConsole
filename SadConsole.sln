@@ -41,8 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.OpenGL", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 NuGet", "02 NuGet", "{28040764-063C-4686-9933-222C83EF71F4}"
 	ProjectSection(SolutionItems) = preProject
-		src\SadConsole.Root\SadConsole.nuspec = src\SadConsole.Root\SadConsole.nuspec
-		src\SadConsole.Universal\SadConsole.Universal.nuspec = src\SadConsole.Universal\SadConsole.Universal.nuspec
+		nuget\SadConsole.nuspec = nuget\SadConsole.nuspec
+		src\SadConsole.Universal\SadConsole.Universal-old.nuspec = src\SadConsole.Universal\SadConsole.Universal-old.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Android", "src\DemoProject\StarterProject.Android\StarterProject.Android.csproj", "{F2257BF9-B694-4E75-9D49-D386391569D9}"

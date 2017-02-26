@@ -83,12 +83,6 @@
     <None Include="packages.config" />
     <None Include="Rendering.cd" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole.Root\SadConsole.csproj">
-      <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
-      <Name>SadConsole</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="..\SharedCode\StarterProject.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

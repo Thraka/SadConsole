@@ -24,7 +24,7 @@ namespace Snake
         {
             var console = new SnakeConsole();
             Global.CurrentScreen.Children.Add(console);
-            Console.ActiveConsoles.Set(console);
+            Global.FocusedConsoles.Set(console);
         }
     }
 }

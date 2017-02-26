@@ -34,10 +34,6 @@ namespace Castle
 
         private static void Init()
         {
-            var console = new CastleConsole();
-            Global.CurrentScreen.Children.Add(console);
-            Console.ActiveConsoles.Set(console);
-
             // Setup window
             SadConsole.Game.Instance.Window.Title = "Castle Adventure - Powered by SadConsole";
 
@@ -50,7 +46,7 @@ namespace Castle
             gameMenuConsole.PlayGame += StartGame;
 
             SadConsole.Global.CurrentScreen = gameMenuConsole;
-            SadConsole.Console.ActiveConsoles.Set(gameMenuConsole);
+            SadConsole.Global.FocusedConsoles.Set(gameMenuConsole);
         }
 
         private static void Update(GameTime delta)
@@ -73,7 +69,7 @@ namespace Castle
             castleConsole.StopGamePlay += ProcessGameOver;
 
             SadConsole.Global.CurrentScreen = castleConsole;
-            SadConsole.Console.ActiveConsoles.Set(castleConsole);
+            SadConsole.Global.FocusedConsoles.Set(castleConsole);
         }
 
         private static void ProcessGameOver(object sender, EventArgs args)
@@ -83,7 +79,7 @@ namespace Castle
             gameScoreConsole.QuitGame += QuitGame;
 
             SadConsole.Global.CurrentScreen = gameScoreConsole;
-            SadConsole.Console.ActiveConsoles.Set(gameScoreConsole);
+            SadConsole.Global.FocusedConsoles.Set(gameScoreConsole);
         }
 
         private static void RestartGame(object sender, EventArgs args)
@@ -92,7 +88,7 @@ namespace Castle
             castleConsole.StopGamePlay += ProcessGameOver;
 
             SadConsole.Global.CurrentScreen = castleConsole;
-            SadConsole.Console.ActiveConsoles.Set(castleConsole);
+            SadConsole.Global.FocusedConsoles.Set(castleConsole);
 
         }
         private static void QuitGame(object sender, EventArgs args)
