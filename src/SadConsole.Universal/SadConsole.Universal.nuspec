@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>SadConsole</id>
+    <id>SadConsole.Universal</id>
     <version>6.0.0-pre1</version>
     <title>$title$</title>
     <authors>$author$</authors>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$ (OpenGL or DirectX)</description>
+    <description>$description$ (Universal App)</description>
     <releaseNotes>
 Initial release. The other libraries (SadConsole.Ansi, SadConsle.Controls, SadConsole.GameHelpers) have merged into a single library, SadConsole.Core
 Rewrite and refactor of code.

@@ -42,6 +42,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 NuGet", "02 NuGet", "{28040764-063C-4686-9933-222C83EF71F4}"
 	ProjectSection(SolutionItems) = preProject
 		src\SadConsole.Root\SadConsole.nuspec = src\SadConsole.Root\SadConsole.nuspec
+		src\SadConsole.Universal\SadConsole.Universal.nuspec = src\SadConsole.Universal\SadConsole.Universal.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Android", "src\DemoProject\StarterProject.Android\StarterProject.Android.csproj", "{F2257BF9-B694-4E75-9D49-D386391569D9}"
@@ -113,8 +114,8 @@ Global
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|x64.Build.0 = Debug|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Debug|x86.Build.0 = Debug|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.DebugBuild|Any CPU.ActiveCfg = DebugBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.DebugBuild|Any CPU.Build.0 = DebugBuild|Any CPU
+		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.DebugBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.DebugBuild|Any CPU.Build.0 = Debug|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.DebugBuild|ARM.ActiveCfg = DebugBuild|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.DebugBuild|ARM.Build.0 = DebugBuild|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.DebugBuild|Linux.ActiveCfg = DebugBuild|Any CPU
@@ -141,8 +142,8 @@ Global
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|x64.Build.0 = Release|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.Release|x86.Build.0 = Release|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
-		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
+		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Any CPU.ActiveCfg = Release|Any CPU
+		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Any CPU.Build.0 = Release|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|ARM.ActiveCfg = ReleaseBuild|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|ARM.Build.0 = ReleaseBuild|Any CPU
 		{F1046DE6-C3F6-4838-B9E1-2FF67292730E}.ReleaseBuild|Linux.ActiveCfg = ReleaseBuild|Any CPU
@@ -169,8 +170,8 @@ Global
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|x64.Build.0 = Debug|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Debug|x86.Build.0 = Debug|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.DebugBuild|Any CPU.ActiveCfg = DebugBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.DebugBuild|Any CPU.Build.0 = DebugBuild|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.DebugBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.DebugBuild|Any CPU.Build.0 = Debug|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.DebugBuild|ARM.ActiveCfg = DebugBuild|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.DebugBuild|ARM.Build.0 = DebugBuild|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.DebugBuild|Linux.ActiveCfg = DebugBuild|Any CPU
@@ -197,8 +198,8 @@ Global
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|x64.Build.0 = Release|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|x86.ActiveCfg = Release|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.Release|x86.Build.0 = Release|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
-		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Any CPU.ActiveCfg = Release|Any CPU
+		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Any CPU.Build.0 = Release|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|ARM.ActiveCfg = ReleaseBuild|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|ARM.Build.0 = ReleaseBuild|Any CPU
 		{99EB89B5-BAB6-47CB-899D-55653FC2B8DC}.ReleaseBuild|Linux.ActiveCfg = ReleaseBuild|Any CPU
@@ -225,8 +226,8 @@ Global
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|x64.Build.0 = Debug|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Debug|x86.Build.0 = Debug|Any CPU
-		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.DebugBuild|Any CPU.ActiveCfg = DebugBuild|Any CPU
-		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.DebugBuild|Any CPU.Build.0 = DebugBuild|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.DebugBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.DebugBuild|Any CPU.Build.0 = Debug|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.DebugBuild|ARM.ActiveCfg = DebugBuild|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.DebugBuild|ARM.Build.0 = DebugBuild|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.DebugBuild|Linux.ActiveCfg = DebugBuild|Any CPU
@@ -253,8 +254,8 @@ Global
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|x64.Build.0 = Release|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|x86.ActiveCfg = Release|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.Release|x86.Build.0 = Release|Any CPU
-		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
-		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.ReleaseBuild|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.ReleaseBuild|Any CPU.Build.0 = Release|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.ReleaseBuild|ARM.ActiveCfg = ReleaseBuild|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.ReleaseBuild|ARM.Build.0 = ReleaseBuild|Any CPU
 		{3B1C8085-CFD3-4C8F-8B32-891F4E921376}.ReleaseBuild|Linux.ActiveCfg = ReleaseBuild|Any CPU
@@ -281,8 +282,8 @@ Global
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|x64.Build.0 = Debug|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Debug|x86.Build.0 = Debug|Any CPU
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.DebugBuild|Any CPU.ActiveCfg = DebugBuild|Any CPU
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.DebugBuild|Any CPU.Build.0 = DebugBuild|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.DebugBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.DebugBuild|Any CPU.Build.0 = Debug|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.DebugBuild|ARM.ActiveCfg = DebugBuild|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.DebugBuild|ARM.Build.0 = DebugBuild|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.DebugBuild|Linux.ActiveCfg = DebugBuild|Any CPU
@@ -309,8 +310,8 @@ Global
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|x64.Build.0 = Release|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|x86.ActiveCfg = Release|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.Release|x86.Build.0 = Release|Any CPU
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
-		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|Any CPU.ActiveCfg = Release|Any CPU
+		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|Any CPU.Build.0 = Release|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|ARM.ActiveCfg = ReleaseBuild|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|ARM.Build.0 = ReleaseBuild|Any CPU
 		{74327CCC-4606-40B8-9587-60E55B1D6A80}.ReleaseBuild|Linux.ActiveCfg = ReleaseBuild|Any CPU
@@ -365,8 +366,8 @@ Global
 		{D6129AE5-B519-4368-B080-805A73405EDA}.Release|x64.Build.0 = Release|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.Release|x86.ActiveCfg = Release|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.Release|x86.Build.0 = Release|Any CPU
-		{D6129AE5-B519-4368-B080-805A73405EDA}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
-		{D6129AE5-B519-4368-B080-805A73405EDA}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
+		{D6129AE5-B519-4368-B080-805A73405EDA}.ReleaseBuild|Any CPU.ActiveCfg = Release|Any CPU
+		{D6129AE5-B519-4368-B080-805A73405EDA}.ReleaseBuild|Any CPU.Build.0 = Release|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.ReleaseBuild|ARM.ActiveCfg = ReleaseBuild|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.ReleaseBuild|ARM.Build.0 = ReleaseBuild|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.ReleaseBuild|Linux.ActiveCfg = ReleaseBuild|Any CPU
@@ -533,8 +534,8 @@ Global
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.Debug|x64.Build.0 = Debug|x64
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.Debug|x86.ActiveCfg = Debug|x86
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.Debug|x86.Build.0 = Debug|x86
-		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.DebugBuild|Any CPU.ActiveCfg = Debug|Any CPU
-		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.DebugBuild|Any CPU.Build.0 = Debug|Any CPU
+		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.DebugBuild|Any CPU.ActiveCfg = DebugBuild|Any CPU
+		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.DebugBuild|Any CPU.Build.0 = DebugBuild|Any CPU
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.DebugBuild|ARM.ActiveCfg = Debug|ARM
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.DebugBuild|ARM.Build.0 = Debug|ARM
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.DebugBuild|Linux.ActiveCfg = Debug|Any CPU
@@ -561,8 +562,8 @@ Global
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.Release|x64.Build.0 = Release|x64
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.Release|x86.ActiveCfg = Release|x86
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.Release|x86.Build.0 = Release|x86
-		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.ReleaseBuild|Any CPU.ActiveCfg = Release|Any CPU
-		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.ReleaseBuild|Any CPU.Build.0 = Release|Any CPU
+		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.ReleaseBuild|Any CPU.ActiveCfg = ReleaseBuild|Any CPU
+		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.ReleaseBuild|Any CPU.Build.0 = ReleaseBuild|Any CPU
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.ReleaseBuild|ARM.ActiveCfg = Release|ARM
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.ReleaseBuild|ARM.Build.0 = Release|ARM
 		{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}.ReleaseBuild|Linux.ActiveCfg = Release|Any CPU
@@ -588,9 +589,9 @@ Global
 		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.Debug|x86.ActiveCfg = Debug|x86
 		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.Debug|x86.Build.0 = Debug|x86
 		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.Debug|x86.Deploy.0 = Debug|x86
-		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|Any CPU.ActiveCfg = Release|x86
-		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|Any CPU.Build.0 = Release|x86
-		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|Any CPU.Deploy.0 = Release|x86
+		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|Any CPU.ActiveCfg = Debug|x86
+		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|Any CPU.Build.0 = Debug|x86
+		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|Any CPU.Deploy.0 = Debug|x86
 		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|ARM.ActiveCfg = Debug|ARM
 		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|ARM.Build.0 = Debug|ARM
 		{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}.DebugBuild|ARM.Deploy.0 = Debug|ARM

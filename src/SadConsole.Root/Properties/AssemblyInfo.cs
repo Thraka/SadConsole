@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SadConsole")]
+[assembly: AssemblyTitle("SadConsole for MonoGame")]
 [assembly: AssemblyDescription("A MonoGame library that emulates old-school console and command prompt style graphics.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SadLogic")]
-[assembly: AssemblyProduct("SadConsole.Core")]
+[assembly: AssemblyProduct("SadConsole")]
 [assembly: AssemblyCopyright("Copyright © 2017 Steve De George JR (Thraka)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -30,6 +30,23 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugBuild|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseBuild|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.5.1.1679\lib\net40\MonoGame.Framework.dll</HintPath>
@@ -56,7 +73,7 @@
   <Import Project="..\SadConsole.Shared\SadConsole.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(Configuration)' == 'ReleaseBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(Configuration)' == 'DebugBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=DebugBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\..\nuget\</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'ReleaseBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=ReleaseBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\nuget\</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'DebugBuild'">nuget pack $(MSBuildProjectFullPath) -Symbols -Prop Configuration=DebugBuild -OutputDirectory $(MSBuildProjectDirectory)\..\..\nuget\</PostBuildEvent>
   </PropertyGroup>
 </Project>
