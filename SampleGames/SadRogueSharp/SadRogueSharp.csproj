@@ -37,24 +37,6 @@
   <PropertyGroup>
     <StartupObject>SadRogueSharp.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseBuild|AnyCPU'">
-    <OutputPath>bin\ReleaseBuild\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugBuild|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugBuild\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="C64.font">
@@ -77,12 +59,8 @@
       <HintPath>..\..\packages\RogueSharp.3.0.0\lib\portable-net40+sl50+win+wpa81+wp80\RogueSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SadConsole.Core.Windows, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SadConsole.Core.3.1.1.0\lib\net46\SadConsole.Core.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SadConsole.GameHelpers.Windows, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SadConsole.GameHelpers.3.1.0.0\lib\net46\SadConsole.GameHelpers.Windows.dll</HintPath>
+    <Reference Include="SadConsole, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SadConsole.6.0.0-pre3\lib\net\SadConsole.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -95,6 +73,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="MapObjects\Floor.cs" />
     <Compile Include="MapObjects\Wall.cs" />
+    <Compile Include="program-example.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -20,16 +20,24 @@ Single NuGet package that will contain all platform targets.</releaseNotes>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
   </metadata>
   <files>
+
     <file src="content-files\*.font" target="content" /> 
     <file src="content-files\*.png" target="content" /> 
+    <file src="content-files\program-example.cs" target="content" />
     <file src="content-files\install.ps1" target="tools" /> 
 
     <!-- Cross-platform reference assemblies -->
     <file src="..\src\SadConsole.Root\bin\Release\SadConsole.dll" target="lib\net" />
+    <file src="..\src\SadConsole.Root\bin\Release\SadConsole.pdb" target="lib\net" />
     <file src="..\src\SadConsole.Root\bin\Release\SadConsole.xml" target="lib\net" />
 
     <!-- UWP reference assemblies -->
     <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.dll" target="lib\UAP10" />
+    <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.pdb" target="lib\UAP10" />
     <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.xml" target="lib\UAP10" />
+
+    <!-- Source code -->
+    <file src="..\src\SadConsole.Shared\**\*.cs" target="src" />
+
   </files>
 </package>
