@@ -27,9 +27,9 @@ Single NuGet package that will contain all platform targets.</releaseNotes>
     <file src="content-files\install.ps1" target="tools" /> 
 
     <!-- Cross-platform reference assemblies -->
-    <file src="..\src\SadConsole.Root\bin\Release\SadConsole.dll" target="lib\net" />
-    <file src="..\src\SadConsole.Root\bin\Release\SadConsole.pdb" target="lib\net" />
-    <file src="..\src\SadConsole.Root\bin\Release\SadConsole.xml" target="lib\net" />
+    <file src="..\src\SadConsole\bin\Release\SadConsole.dll" target="lib\net" />
+    <file src="..\src\SadConsole\bin\Release\SadConsole.pdb" target="lib\net" />
+    <file src="..\src\SadConsole\bin\Release\SadConsole.xml" target="lib\net" />
 
     <!-- UWP reference assemblies -->
     <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.dll" target="lib\UAP10" />
