@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 Misc", "00 Misc", "{6431
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 Starter Project", "03 Starter Project", "{8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 Demo Project", "03 Demo Project", "{8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Snake", "Snake", "{4A49FF3D-25BC-49EF-AC19-970B4C95C5D2}"
 EndProject
@@ -33,11 +33,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadRogueSharp", "SampleGame
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 Example Games", "04 Example Games", "{9F727CD0-158B-495C-B11F-3883D61BB68F}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StarterProject", "src\DemoProject\SharedCode\StarterProject.shproj", "{B41A356C-4BA6-40CC-AC03-0E5D46B0B981}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DemoProject", "src\DemoProject\SharedCode\DemoProject.shproj", "{B41A356C-4BA6-40CC-AC03-0E5D46B0B981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.DirectX", "src\DemoProject\MonoGameDX\StarterProject.DirectX.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.DirectX", "src\DemoProject\Desktop\DemoProject.DirectX.csproj", "{74327CCC-4606-40B8-9587-60E55B1D6A80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.OpenGL", "src\DemoProject\MonoGameGL\StarterProject.OpenGL.csproj", "{D6129AE5-B519-4368-B080-805A73405EDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.OpenGL", "src\DemoProject\Desktop\DemoProject.OpenGL.csproj", "{D6129AE5-B519-4368-B080-805A73405EDA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 NuGet", "02 NuGet", "{28040764-063C-4686-9933-222C83EF71F4}"
 	ProjectSection(SolutionItems) = preProject
@@ -45,28 +45,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 NuGet", "02 NuGet", "{28
 		src\SadConsole.Universal\SadConsole.Universal-old.nuspec = src\SadConsole.Universal\SadConsole.Universal-old.nuspec
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Android", "src\DemoProject\StarterProject.Android\StarterProject.Android.csproj", "{F2257BF9-B694-4E75-9D49-D386391569D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.Android", "src\DemoProject\Android\DemoProject.Android.csproj", "{F2257BF9-B694-4E75-9D49-D386391569D9}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Shared", "src\SadConsole.Shared\SadConsole.Shared.shproj", "{111F8273-2EAD-47D3-88EC-CB0CD6122BE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole", "src\SadConsole.Root\SadConsole.csproj", "{F44A9E76-B19D-4219-AFAE-561089354280}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole", "src\SadConsole\SadConsole.csproj", "{F44A9E76-B19D-4219-AFAE-561089354280}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Universal", "src\SadConsole.Universal\SadConsole.Universal.csproj", "{653EBCBD-AF0E-48AD-89E1-E38BB0DB130B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterProject.Universal", "src\DemoProject\UniversalApp\StarterProject.Universal.csproj", "{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.Universal", "src\DemoProject\UniversalApp\DemoProject.Universal.csproj", "{7B1F1DBF-F16C-4402-9CB0-6E035BA76C6D}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{111f8273-2ead-47d3-88ec-cb0cd6122be8}*SharedItemsImports = 13
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{653ebcbd-af0e-48ad-89e1-e38bb0db130b}*SharedItemsImports = 4
-		src\DemoProject\SharedCode\StarterProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
+		src\DemoProject\SharedCode\DemoProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{7a8507b4-db2c-453e-a72b-2384175bdff1}*SharedItemsImports = 13
 		SampleGames\Castle\Castle.projitems*{99eb89b5-bab6-47cb-899d-55653fc2b8dc}*SharedItemsImports = 4
-		src\DemoProject\SharedCode\StarterProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
+		src\DemoProject\SharedCode\DemoProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
 		SampleGames\Castle\Castle.projitems*{bd5d2b21-2cd6-448d-acd7-5b90da247250}*SharedItemsImports = 13
-		src\DemoProject\SharedCode\StarterProject.projitems*{d6129ae5-b519-4368-b080-805a73405eda}*SharedItemsImports = 4
+		src\DemoProject\SharedCode\DemoProject.projitems*{d6129ae5-b519-4368-b080-805a73405eda}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{f1046de6-c3f6-4838-b9e1-2ff67292730e}*SharedItemsImports = 4
-		src\DemoProject\SharedCode\StarterProject.projitems*{f2257bf9-b694-4e75-9d49-d386391569d9}*SharedItemsImports = 4
+		src\DemoProject\SharedCode\DemoProject.projitems*{f2257bf9-b694-4e75-9d49-d386391569d9}*SharedItemsImports = 4
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{f44a9e76-b19d-4219-afae-561089354280}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
