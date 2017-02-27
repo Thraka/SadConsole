@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SadConsole.Consoles;
+using SadConsole;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace SadRogueSharp.Entities
 {
-	class Player : SadConsole.Game.GameObject
+	class Player : SadConsole.GameHelpers.GameObject
     {
-		public Player(): base(SadConsole.Engine.DefaultFont)
+		public Player(): base(SadConsole.Global.FontDefault)
 		{
-			AnimatedTextSurface anim = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
+			var anim = new SadConsole.Surfaces.AnimatedSurface("default", 1, 1);
 			var frame = anim.CreateFrame();
 			frame[0].Foreground = Color.Yellow;
 			frame[0].Background = Color.Black;
-			frame[0].GlyphIndex = 1;
+			frame[0].Glyph = 1;
 
             Animation = anim;
             anim.Start();

@@ -60,7 +60,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SadConsole, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SadConsole.6.0.0-pre3\lib\net\SadConsole.dll</HintPath>
+      <HintPath>..\..\packages\SadConsole.6.0.0-pre6\lib\net\SadConsole.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

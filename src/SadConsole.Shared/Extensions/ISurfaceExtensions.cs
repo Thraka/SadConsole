@@ -129,7 +129,7 @@ namespace SadConsole
                     {
                         var sourceCell = source.Cells[sourceIndex];
                         var desCell = destination.Cells[destIndex];
-                        sourceCell.CopyAppearanceTo(ref desCell);
+                        sourceCell.CopyAppearanceTo(desCell);
                     }
                 }
             }
@@ -155,7 +155,7 @@ namespace SadConsole
                     {
                         var sourceCell = source.Cells[sourceIndex];
                         var desCell = destination.Cells[destIndex];
-                        sourceCell.CopyAppearanceTo(ref desCell);
+                        sourceCell.CopyAppearanceTo(desCell);
                     }
                 }
             }
@@ -188,7 +188,7 @@ namespace SadConsole
                     {
                         var sourceCell = source.Cells[sourceIndex];
                         var desCell = destination.Cells[destIndex];
-                        sourceCell.CopyAppearanceTo(ref desCell);
+                        sourceCell.CopyAppearanceTo(desCell);
                     }
                     destY++;
                 }

@@ -768,7 +768,7 @@ namespace SadConsole.Controls
                 string value = new string(' ', area.Width - 2);
 
                 Cell cellLook = new Cell();
-                _currentAppearance.CopyAppearanceTo(ref cellLook);
+                _currentAppearance.CopyAppearanceTo(cellLook);
 
                 if (Item is Color)
                 {

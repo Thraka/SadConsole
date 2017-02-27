@@ -56,23 +56,23 @@ namespace SadConsole.Renderers
                         {
                             cell = control[cellIndex];
 
-                            //if (cell.IsVisible)
-                            //{
-                            point = BasicSurface.GetPointFromIndex(cellIndex, control.TextSurface.Width);
-                            point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
-
-                            if (surface.RenderArea.Contains(point.X, point.Y))
+                            if (cell.IsVisible)
                             {
-                                point = new Point(point.X - surface.RenderArea.Left, point.Y - surface.RenderArea.Top);
-                                rect = surface.RenderRects[surface.GetIndexFromPoint(point)];
+                                point = BasicSurface.GetPointFromIndex(cellIndex, control.TextSurface.Width);
+                                point = new Point(point.X + control.Position.X, point.Y + control.Position.Y);
 
-                                if (cell.Background != Color.Transparent)
-                                    Global.SpriteBatch.Draw(font.FontImage, rect, font.GlyphRects[font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.23f);
+                                if (surface.RenderArea.Contains(point.X, point.Y))
+                                {
+                                    point = new Point(point.X - surface.RenderArea.Left, point.Y - surface.RenderArea.Top);
+                                    rect = surface.RenderRects[surface.GetIndexFromPoint(point)];
 
-                                if (cell.Foreground != Color.Transparent)
-                                    Global.SpriteBatch.Draw(font.FontImage, rect, font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.26f);
+                                    if (cell.Background != Color.Transparent)
+                                        Global.SpriteBatch.Draw(font.FontImage, rect, font.GlyphRects[font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.23f);
+
+                                    if (cell.Foreground != Color.Transparent)
+                                        Global.SpriteBatch.Draw(font.FontImage, rect, font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.26f);
+                                }
                             }
-                            //}
                         }
                     }
                 }

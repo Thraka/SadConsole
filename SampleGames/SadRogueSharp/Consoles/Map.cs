@@ -9,14 +9,14 @@ using Microsoft.Xna.Framework.Input;
 using SadConsole.Effects;
 using Microsoft.Xna.Framework;
 using RogueSharp.MapCreation;
-using SadConsole.Consoles;
+using SadConsole;
 
 namespace SadRogueSharp.Consoles
 {
-	class MapConsole : SadConsole.Consoles.Console
+	class MapConsole : SadConsole.Console
 	{
 		protected IMap map;
-		protected List<SadConsole.Game.GameObject> entities;
+		protected List<SadConsole.GameHelpers.GameObject> entities;
         protected Entities.Player player;
 		protected RogueSharp.Random.IRandom random = new RogueSharp.Random.DotNetRandom();
 
@@ -39,24 +39,28 @@ namespace SadRogueSharp.Consoles
 				{
 					// Our local information about each map square
 					mapData[cell.X, cell.Y] = new MapObjects.Floor();
-					// Copy the appearance we've defined for Floor or Wall or whatever, to the actual console data that is rendered
-					mapData[cell.X, cell.Y].CopyAppearanceTo(this[cell.X, cell.Y]);
 				}
 				else
 				{
 					mapData[cell.X, cell.Y] = new MapObjects.Wall();
-					mapData[cell.X, cell.Y].CopyAppearanceTo(this[cell.X, cell.Y]);
 				}
-			}
+
+                // Copy the appearance we've defined for Floor or Wall or whatever, to the actual console data that is rendered
+                mapData[cell.X, cell.Y].CopyAppearanceTo(this[cell.X, cell.Y]);
+            }
 
 			// Create map effects
 			explored = new SadConsole.Effects.Recolor();
 			explored.Background = Color.White * 0.3f;
 			explored.Foreground = Color.White * 0.3f;
 			explored.Update(10d); // Trickery to force the fade to complete to the destination color.
+            explored.RemoveOnFinished = true;
+            explored.CloneOnApply = true;
+            explored.Permanent = true;
+            explored.KeepStateOnFinished = true;
 
 			// Entities
-			entities = new List<SadConsole.Game.GameObject>();
+			entities = new List<SadConsole.GameHelpers.GameObject>();
 			
 			// Create the player
 			player = new Entities.Player();
@@ -74,8 +78,8 @@ namespace SadRogueSharp.Consoles
 			UpdatePlayerView();
 
 			// Keyboard setup
-			SadConsole.Engine.Keyboard.RepeatDelay = 0.07f;
-			SadConsole.Engine.Keyboard.InitialRepeatDelay = 0.1f;
+			SadConsole.Global.KeyboardState.RepeatDelay = 0.07f;
+            SadConsole.Global.KeyboardState.InitialRepeatDelay = 0.1f;
 		}
 
 		private void GenerateHound()
@@ -87,29 +91,29 @@ namespace SadRogueSharp.Consoles
 			entities.Add(hound);
 		}
 
-		public override void Update()
+		public override void Update(TimeSpan delta)
 		{
 			// Normally just the console data for this console is "updated" each frame, 
 			// but we want to also update all entities.
 			foreach (var entity in entities)
 				entity.Update();
 
-			base.Update();
+			base.Update(delta);
 		}
 
 
-		public override void Render()
+		public override void Draw(TimeSpan delta)
 		{
 			
-			base.Render();
+			base.Draw(delta);
 
 			// Normally only the console data is rendered through this call, but after
 			// that has finished, we want to render our entities on top of that.
 			foreach (var entity in entities)
-				entity.Render();
+				entity.Draw(delta);
 		}
 
-		public override bool ProcessKeyboard(KeyboardInfo info)
+		public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
 		{
 			bool keyHit = false;
 
@@ -155,39 +159,41 @@ namespace SadRogueSharp.Consoles
 			// Find out what the player can see
 			map.ComputeFov(player.Position.X, player.Position.Y, 20, true);
 
-			// Mark all render points as visible or not
-			for (int i = 0; i < this.textSurface.Cells.Length; i++)
-			{
-				var point = SadConsole.Consoles.TextSurface.GetPointFromIndex(i, Width);
-				var currentCell = map.GetCell(point.X, point.Y);
-
-				if (currentCell.IsInFov)
-				{
-					if (this[i].Effect != null)
-					{
-						explored.Clear(this[i]);
-                        this[i].Effect = null;
-					}
-
-                    this[i].IsVisible = true;
-					map.SetCellProperties(point.X, point.Y, currentCell.IsTransparent, currentCell.IsWalkable, true);
-				}
-				else if (currentCell.IsExplored)
-				{
-					this[i].IsVisible = true;
-                    this[i].Effect = explored;
-					explored.Apply(this[i]);
-				}
-				else
-				{
-                    this[i].IsVisible = false;
-				}
-			}
-
             // Calculate the view area and sync it with our player location
             textSurface.RenderArea = new Microsoft.Xna.Framework.Rectangle(player.Position.X - 15, player.Position.Y - 15, 30, 30);
             player.RenderOffset = this.Position - textSurface.RenderArea.Location;
 
+            // Mark all render points as visible or not
+            for (int x = 0; x < textSurface.RenderArea.Width; x++)
+            {
+                for (int y = 0; y < textSurface.RenderArea.Height; y++)
+                {
+                    var point = new Microsoft.Xna.Framework.Point(x + textSurface.RenderArea.Left, y + textSurface.RenderArea.Top);
+                    var i = textSurface.GetIndexFromPoint(point);
+                    var currentCell = map.GetCell(point.X, point.Y);
+
+                    if (currentCell.IsInFov)
+                    {
+                        if (this[i].State != null)
+                        {
+                            explored.Clear(this[i]);
+                            this[i].RestoreState();
+                        }
+
+                        this[i].IsVisible = true;
+                        map.SetCellProperties(point.X, point.Y, currentCell.IsTransparent, currentCell.IsWalkable, true);
+                    }
+                    else if (currentCell.IsExplored)
+                    {
+                        this[i].IsVisible = true;
+                        explored.Apply(this[i]);
+                    }
+                    else
+                    {
+                        this[i].IsVisible = false;
+                    }
+                }
+            }
             
             // Check for entities.
             foreach (var entity in entities)
@@ -209,9 +215,10 @@ namespace SadRogueSharp.Consoles
                 }
 			}
 
+            textSurface.IsDirty = true;
 		}
 
-		private Cell GetRandomEmptyCell()
+		private RogueSharp.Cell GetRandomEmptyCell()
 		{
 
 			while (true)

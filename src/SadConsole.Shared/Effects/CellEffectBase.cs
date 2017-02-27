@@ -28,6 +28,12 @@
         [DataMember]
         public bool RemoveOnFinished { get; set; }
 
+        /// <summary>
+        /// When true, the effect should not call <see cref="Cell.RestoreState"/> when it has finished processing.
+        /// </summary>
+        [DataMember]
+        public bool KeepStateOnFinished { get; set; }
+
         [DataMember]
         public bool Permanent { get; set; }
 
@@ -37,7 +43,8 @@
 
         public virtual void Clear(Cell cell)
         {
-            cell.RestoreState();
+            if (!KeepStateOnFinished)
+                cell.RestoreState();
         }
 
         public virtual void Restart()

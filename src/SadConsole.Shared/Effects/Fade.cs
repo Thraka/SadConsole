@@ -190,7 +190,7 @@ namespace SadConsole.Effects
 
         public override void Clear(Cell cell)
         {
-            cell.RestoreState();
+            base.Clear(cell);
 
             if (IsFinished && Permanent)
             {

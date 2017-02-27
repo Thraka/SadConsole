@@ -44,6 +44,9 @@ namespace SadConsole
 
         protected Game(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback)
         {
+            if (Instance == null)
+                Instance = this;
+
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 

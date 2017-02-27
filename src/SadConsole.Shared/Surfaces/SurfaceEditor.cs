@@ -352,7 +352,7 @@ namespace SadConsole.Surfaces
             if (appearance == null)
                 throw new NullReferenceException("Appearance may not be null.");
 
-            appearance.CopyAppearanceTo(ref textSurface.Cells[y * textSurface.Width + x]);
+            appearance.CopyAppearanceTo(textSurface.Cells[y * textSurface.Width + x]);
             textSurface.IsDirty = true;
         }
         /// <summary>
@@ -364,7 +364,7 @@ namespace SadConsole.Surfaces
         public Cell GetCell(int x, int y)
         {
             Cell appearance = new Cell();
-            textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref appearance);
+            textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(appearance);
             return appearance;
         }
 
@@ -607,7 +607,7 @@ namespace SadConsole.Surfaces
             for (; index < total; index++)
             {
                 Cell cell = textSurface.Cells[index];
-                appearance.CopyAppearanceTo(ref cell);
+                appearance.CopyAppearanceTo(cell);
                 cell.Glyph = text[charIndex];
                 Effects.SetEffect(cell, effect);
                 charIndex++;
@@ -725,7 +725,7 @@ namespace SadConsole.Surfaces
                     tempIndex = i + index;
                     var cell = (Cell)sb[i];
                     if (tempIndex < textSurface.Cells.Length)
-                        textSurface.Cells[tempIndex].CopyAppearanceTo(ref cell);
+                        textSurface.Cells[tempIndex].CopyAppearanceTo(cell);
                 }
 
                 return sb;
@@ -806,7 +806,7 @@ namespace SadConsole.Surfaces
                     for (int x = 0; x < textSurface.Width; x++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, (textSurface.Height - amount + y) * textSurface.Width + x));
                     }
@@ -885,7 +885,7 @@ namespace SadConsole.Surfaces
                     for (int x = 0; x < textSurface.Width; x++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, (amount - (textSurface.Height - y)) * textSurface.Width + x));
                     }
@@ -964,7 +964,7 @@ namespace SadConsole.Surfaces
                     for (int y = 0; y < textSurface.Height; y++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * textSurface.Width + amount - (textSurface.Width - x)));
                     }
@@ -1044,7 +1044,7 @@ namespace SadConsole.Surfaces
                     for (int y = 0; y < textSurface.Height; y++)
                     {
                         var tempCell = new Cell();
-                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(ref tempCell);
+                        textSurface.Cells[y * textSurface.Width + x].CopyAppearanceTo(tempCell);
 
                         wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * textSurface.Width + (textSurface.Width - amount + x)));
                     }
@@ -1162,6 +1162,7 @@ namespace SadConsole.Surfaces
 #endregion
 
         #endregion
+
         #endregion
 
 

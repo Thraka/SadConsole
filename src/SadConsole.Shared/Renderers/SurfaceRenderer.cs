@@ -80,7 +80,7 @@ namespace SadConsole.Renderers
                     {
                         cell = surface.RenderCells[i];
 
-                        //if (cell.IsVisible)
+                        if (cell.IsVisible)
                         {
                             if (cell.Background != Color.Transparent && cell.Background != surface.DefaultBackground)
                                 Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
