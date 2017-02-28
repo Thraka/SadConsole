@@ -19,12 +19,12 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public int Height;
 
-        public static Rectangle FromFramework(FrameworkRect rect)
+        public static implicit operator Rectangle(FrameworkRect rect)
         {
             return new Rectangle() { X = rect.Left, Y = rect.Top, Width = rect.Width, Height = rect.Height };
         }
 
-        public static FrameworkRect ToFramework(Rectangle rect)
+        public static implicit operator FrameworkRect(Rectangle rect)
         {
             return new FrameworkRect(rect.X, rect.Y, rect.Width, rect.Height);
         }

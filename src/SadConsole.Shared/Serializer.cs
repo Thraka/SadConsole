@@ -21,6 +21,8 @@ namespace SadConsole
     /// </summary>
     public static partial class Serializer
     {
+        public static Dictionary<Type, Type> TypeMappings = new Dictionary<Type, Type>();
+
         //internal static Dictionary<Type, TypeMapping> TypeMappingsToTarget = new Dictionary<Type, TypeMapping>();
         //internal static Dictionary<Type, TypeMapping> TypeMappingsToSource = new Dictionary<Type, TypeMapping>();
 
@@ -53,6 +55,12 @@ namespace SadConsole
         static Serializer()
         {
             ConsoleTypes = new Type[] { typeof(Font), typeof(FontMaster) };
+            TypeMappings.Add(typeof(FrameworkColor), typeof(SerializedTypes.Color));
+            TypeMappings.Add(typeof(FrameworkPoint), typeof(SerializedTypes.Point));
+            TypeMappings.Add(typeof(FrameworkRect), typeof(SerializedTypes.Rectangle));
+            TypeMappings.Add(typeof(Surfaces.AnimatedSurface), typeof(SerializedTypes.AnimatedSurface));
+            TypeMappings.Add(typeof(Font), typeof(SerializedTypes.Font));
+
             //ConsoleTypes = new Type[] { typeof(Consoles.AnimatedTextSurface), typeof(Consoles.ConsoleList), typeof(Consoles.LayeredTextSurface), typeof(Consoles.TextSurface), typeof(Consoles.TextSurfaceBasic), typeof(Consoles.TextSurfaceView), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.CachedTextSurfaceRenderer), typeof(Consoles.TextSurfaceRenderer), typeof(Cell) };
         }
 

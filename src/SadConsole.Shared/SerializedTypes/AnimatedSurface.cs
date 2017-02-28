@@ -1,10 +1,10 @@
 ﻿using FrameworkPoint = Microsoft.Xna.Framework.Point;
 
-using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Linq;
 
 namespace SadConsole.SerializedTypes
 {
@@ -20,7 +20,7 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public float AnimationDuration;
         [DataMember]
-        public SadConsole.Font Font;
+        public Font Font;
         [DataMember]
         public string Name;
         [DataMember]
@@ -28,11 +28,11 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public FrameworkPoint Center;
 
-        public static AnimatedSurface FromFramework(Surfaces.AnimatedSurface surface)
+        public static implicit operator AnimatedSurface(Surfaces.AnimatedSurface surface)
         {
             return new AnimatedSurface()
             {
-                Frames = surface.Frames.ToArray(),
+                Frames = surface.Frames.Select(s => (BasicSurface)s).ToArray(),
                 Width = surface.Width,
                 Height = surface.Height,
                 AnimationDuration = surface.AnimationDuration,
@@ -42,11 +42,11 @@ namespace SadConsole.SerializedTypes
                 Center = surface.Center
             };
         }
-        
-        public static Surfaces.AnimatedSurface ToFramework(AnimatedSurface serializedObject)
+
+        public static implicit operator Surfaces.AnimatedSurface(AnimatedSurface serializedObject)
         {
             var animationSurface = new Surfaces.AnimatedSurface(serializedObject.Name, serializedObject.Width, serializedObject.Height, serializedObject.Font);
-            animationSurface.Frames = new List<BasicSurface>(serializedObject.Frames);
+            animationSurface.Frames = new List<Surfaces.BasicSurface>(serializedObject.Frames.Select(s => (Surfaces.BasicSurface)s));
             animationSurface.CurrentFrameIndex = 0;
             animationSurface.AnimationDuration = serializedObject.AnimationDuration;
             animationSurface.Repeat = serializedObject.Repeat;

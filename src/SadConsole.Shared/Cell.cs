@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 #if MONOGAME
@@ -13,36 +14,43 @@ namespace SadConsole
     /// <summary>
     /// Represents an individual glyph on the screen with a foreground, background, and mirror effect.
     /// </summary>
+    [DataContract]
     public class Cell
     {
         /// <summary>
         /// The foreground color of this cell.
         /// </summary>
+        [DataMember]
         public Color Foreground;
 
         /// <summary>
         /// The background color of this cell.
         /// </summary>
+        [DataMember]
         public Color Background;
 
         /// <summary>
         /// The glyph index from a font for this cell.
         /// </summary>
+        [DataMember]
         public int Glyph;
 
         /// <summary>
         /// The mirror effect for this cell.
         /// </summary>
+        [DataMember]
         public SpriteEffects Mirror;
 
         /// <summary>
         /// When true, indicates this cell should be drawn.
         /// </summary>
+        [DataMember]
         public bool IsVisible = true;
 
         /// <summary>
         /// A temporary state to backup and restore a cell.
         /// </summary>
+        [DataMember]
         public CellState? State { get; private set; }
 
         /// <summary>
@@ -197,12 +205,18 @@ namespace SadConsole
     /// <summary>
     /// A cell in structure format for temporary storage.
     /// </summary>
+    [DataContract]
     public struct CellState
     {
+        [DataMember]
         public readonly Color Foreground;
+        [DataMember]
         public readonly Color Background;
+        [DataMember]
         public readonly int Glyph;
+        [DataMember]
         public readonly SpriteEffects Mirror;
+        [DataMember]
         public readonly bool IsVisible;
 
         public CellState(Color foreground, Color background, int glyph, SpriteEffects mirror, bool isVisible)

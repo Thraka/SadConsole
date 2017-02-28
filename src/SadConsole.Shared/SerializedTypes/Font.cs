@@ -14,12 +14,12 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public SadConsole.Font.FontSizes Size;
 
-        public static Font FromFramework(SadConsole.Font font)
+        public static implicit operator Font(SadConsole.Font font)
         {
             return new Font() { Name = font.Name, Size = font.SizeMultiple };
         }
 
-        public static SadConsole.Font ToFramework(Font font)
+        public static implicit operator SadConsole.Font(Font font)
         {
             SadConsole.Font newFont;
 

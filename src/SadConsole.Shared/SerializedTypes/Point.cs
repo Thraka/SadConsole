@@ -15,12 +15,12 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public int Y;
 
-        public static Point FromFramework(FrameworkPoint point)
+        public static implicit operator Point(FrameworkPoint point)
         {
             return new Point() { X = point.X, Y = point.Y };
         }
 
-        public static FrameworkPoint ToFramework(Point point)
+        public static implicit operator FrameworkPoint(Point point)
         {
             return new FrameworkPoint(point.X, point.Y);
         }

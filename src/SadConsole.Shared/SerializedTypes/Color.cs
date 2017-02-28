@@ -19,12 +19,12 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public byte A;
 
-        public static Color FromFramework(FrameworkColor color)
+        public static implicit operator Color(FrameworkColor color)
         {
             return new Color() { R = color.R, G = color.G, B = color.B, A = color.A };
         }
 
-        public static FrameworkColor ToFramework(Color color)
+        public static implicit operator FrameworkColor(Color color)
         {
             return new FrameworkColor(color.R, color.G, color.B, color.A);
         }
