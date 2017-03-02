@@ -77,6 +77,8 @@ namespace StarterProject
             // Setup our custom theme.
             Theme.SetupThemes();
 
+            SadConsole.Game.Instance.Window.Title = "DemoProject DirectX";
+
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
 

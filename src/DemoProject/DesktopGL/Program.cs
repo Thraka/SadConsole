@@ -28,7 +28,7 @@ namespace StarterProject
 
             // Hook the "after render" even though we're not using it.
             SadConsole.Game.OnDraw = DrawFrame;
-            
+
             // Start the game.
             SadConsole.Game.Instance.Run();
 
@@ -76,6 +76,8 @@ namespace StarterProject
 
             // Setup our custom theme.
             Theme.SetupThemes();
+
+            SadConsole.Game.Instance.Window.Title = "DemoProject OpenGL";
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
