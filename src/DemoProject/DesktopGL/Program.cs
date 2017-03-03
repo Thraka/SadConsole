@@ -91,6 +91,7 @@ namespace StarterProject
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
+
         }
     }
 }
