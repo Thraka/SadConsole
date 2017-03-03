@@ -296,8 +296,8 @@ namespace SadConsole
         /// </summary>
         public void Center()
         {
-            int screenWidth = Global.WindowWidth;
-            int screenHeight = Global.WindowHeight;
+            int screenWidth = Global.RenderWidth;
+            int screenHeight = Global.RenderHeight;
 
             if (UsePixelPositioning)
                 this.Position = new Point((screenWidth / 2) - ((textSurface.Width * textSurface.Font.Size.X) / 2), (screenHeight / 2) - ((textSurface.Height * textSurface.Font.Size.Y) / 2));

@@ -166,11 +166,11 @@ namespace SadConsole
             manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
             manager.PreferredBackBufferHeight = (Size.Y * height) + additionalHeight;
 
-            Global.WindowWidth = manager.PreferredBackBufferWidth;
-            Global.WindowHeight = manager.PreferredBackBufferHeight;
+            Global.WindowWidth = Global.RenderWidth = manager.PreferredBackBufferWidth;
+            Global.WindowHeight = Global.RenderHeight = manager.PreferredBackBufferHeight;
 
-            int diffWidth = (Global.WindowWidth - oldWidth) / 2;
-            int diffHeight = (Global.WindowHeight - oldHeight) / 2;
+            int diffWidth = (Global.RenderWidth - oldWidth) / 2;
+            int diffHeight = (Global.RenderHeight - oldHeight) / 2;
 
             // Center screen
             //if (Game.Instance != null)

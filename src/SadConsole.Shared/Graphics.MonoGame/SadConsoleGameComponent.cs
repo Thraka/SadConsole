@@ -20,6 +20,7 @@ namespace SadConsole
             {
                 if (Settings.DoDraw)
                 {
+                    var oldViewPort = GraphicsDevice.Viewport;
                     Global.GameTimeRender = gameTime;
                     Global.GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -42,7 +43,9 @@ namespace SadConsole
 
                     Global.SpriteBatch.End();
                     GraphicsDevice.SetRenderTarget(null);
-                    
+
+                    GraphicsDevice.Viewport = oldViewPort;
+
                     // If we're going to draw to the screen, do it.
                     if (Settings.DoFinalDraw)
                     {

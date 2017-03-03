@@ -63,18 +63,18 @@ namespace SadConsole
         {
             if (!resizeBusy)
             {
-                if (Settings.ResizeMode != Settings.WindowResizeOptions.Stretch)
-                {
-                    GraphicsDeviceManager.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                    GraphicsDeviceManager.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                Global.WindowWidth = Window.ClientBounds.Width;
+                Global.WindowHeight = Window.ClientBounds.Height;
 
-                    resizeBusy = true;
-                    GraphicsDeviceManager.ApplyChanges();
-                    resizeBusy = false;
-                }
+                GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
+                GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
+
+                resizeBusy = true;
+                GraphicsDeviceManager.ApplyChanges();
+                resizeBusy = false;
+
+                Global.ResetRendering();
             }
-
-            Global.ResetRendering();
         }
 
 
@@ -107,10 +107,15 @@ namespace SadConsole
             Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
             Global.ResetRendering();
 
+            GraphicsDevice.DeviceReset += GraphicsDevice_DeviceReset;
+
             // Tell the main engine we're ready
             OnInitialize?.Invoke();
         }
 
-
+        private void GraphicsDevice_DeviceReset(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

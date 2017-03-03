@@ -91,12 +91,22 @@ namespace SadConsole
         public static RenderTarget2D RenderOutput;
 
         /// <summary>
-        /// The width of the game window.
+        /// The width of the area to render on the game window.
+        /// </summary>
+        public static int RenderWidth { get; set; }
+
+        /// <summary>
+        /// The height of the area to render on the game window.
+        /// </summary>
+        public static int RenderHeight { get; set; }
+
+        /// <summary>
+        /// The current game window width.
         /// </summary>
         public static int WindowWidth { get; set; }
 
         /// <summary>
-        /// The height of the game window.
+        /// The current game window height.
         /// </summary>
         public static int WindowHeight { get; set; }
 
@@ -146,11 +156,11 @@ namespace SadConsole
         /// </summary>
         public static void ResetRendering()
         {
-            RenderOutput = new RenderTarget2D(GraphicsDevice, WindowWidth, WindowHeight);
+            RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
 
             if (Settings.ResizeMode == Settings.WindowResizeOptions.Center)
             {
-                RenderRect = new Rectangle((GraphicsDeviceManager.PreferredBackBufferWidth - WindowWidth) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - WindowHeight) / 2, WindowWidth, WindowHeight);
+                RenderRect = new Rectangle((GraphicsDevice.PresentationParameters.BackBufferWidth - RenderWidth) / 2, (GraphicsDevice.PresentationParameters.BackBufferHeight - RenderHeight) / 2, RenderWidth, RenderHeight);
                 RenderScale = new Vector2(1);
             }
             else if (Settings.ResizeMode == Settings.WindowResizeOptions.Scale)
@@ -160,7 +170,7 @@ namespace SadConsole
                 // Find the bounds
                 while (true)
                 {
-                    if (WindowWidth * multiple > GraphicsDeviceManager.PreferredBackBufferWidth || WindowHeight * multiple > GraphicsDeviceManager.PreferredBackBufferHeight)
+                    if (RenderWidth * multiple > GraphicsDevice.PresentationParameters.BackBufferWidth || RenderHeight * multiple > GraphicsDevice.PresentationParameters.BackBufferHeight)
                     {
                         multiple--;
                         break;
@@ -169,13 +179,13 @@ namespace SadConsole
                     multiple++;
                 }
 
-                RenderRect = new Rectangle((GraphicsDeviceManager.PreferredBackBufferWidth - (WindowWidth * multiple)) / 2, (GraphicsDeviceManager.PreferredBackBufferHeight - (WindowHeight * multiple)) / 2, WindowWidth * multiple, WindowHeight * multiple);
-                RenderScale = new Vector2(WindowWidth / ((float)WindowWidth * multiple), WindowHeight / (float)(WindowHeight * multiple));
+                RenderRect = new Rectangle((GraphicsDevice.PresentationParameters.BackBufferWidth - (RenderWidth * multiple)) / 2, (GraphicsDevice.PresentationParameters.BackBufferHeight - (RenderHeight * multiple)) / 2, RenderWidth * multiple, RenderHeight * multiple);
+                RenderScale = new Vector2(RenderWidth / ((float)RenderWidth * multiple), RenderHeight / (float)(RenderHeight * multiple));
             }
             else
             {
-                RenderRect = new Rectangle(0, 0, WindowWidth, WindowHeight);
-                RenderScale = new Vector2((float)GraphicsDeviceManager.PreferredBackBufferWidth / Game.Instance.Window.ClientBounds.Width, (float)GraphicsDeviceManager.PreferredBackBufferHeight / Game.Instance.Window.ClientBounds.Height);
+                RenderRect = GraphicsDevice.Viewport.Bounds;
+                RenderScale = new Vector2(RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             }
         }
     }
