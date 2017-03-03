@@ -73,20 +73,5 @@ namespace StarterProject.CustomConsoles
             return true;
         }
 
-        public override bool ProcessMouse(SadConsole.Input.MouseConsoleState state)
-        {
-            //Print(0, 0, "                                                                    ");
-            //Print(0, 1, "                                                                    ");
-            //Print(0, 2, "                                                                    ");
-            //SadConsole.Engine.DeviceManager.PreferredBackBufferWidth = 320;
-            //SadConsole.Engine.DeviceManager.ApplyChanges();
-            //SadConsole.Engine.Device.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport(0, 0, 1280, 400);
-
-            //Print(0, 0, $"mouse:{info.ScreenLocation} adapter:{SadConsole.Engine.Device.Adapter.CurrentDisplayMode.Width},{SadConsole.Engine.Device.Adapter.CurrentDisplayMode.Height} window:{SadConsole.Engine.MonoGameInstance.Window.ClientBounds}", Color.White, Color.Black);
-            //Print(0, 1, $"pref:{SadConsole.Engine.DeviceManager.PreferredBackBufferWidth},{SadConsole.Engine.DeviceManager.PreferredBackBufferHeight} view:{SadConsole.Engine.Device.Viewport}", Color.White, Color.Black);
-            //Print(0, 2, $"bounds:{SadConsole.Engine.Device.Viewport.Bounds} scale:{SadConsole.Engine.RenderScale} renderrect:{SadConsole.Engine.RenderRect}", Color.White, Color.Black);
-
-            return base.ProcessMouse(state);
-        }
     }
 }

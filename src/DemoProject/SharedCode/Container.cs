@@ -21,7 +21,14 @@ namespace StarterProject
         {
             headerConsole = new HeaderConsole();
 
+            //var console1 = new Console(10, 10, Serializer.Load<FontMaster>("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.Two));
+            //console1.Fill(Color.BlueViolet, Color.Yellow, 7);
+            //var consoleReal = new StretchedConsole();
+            //consoleReal.TextSurface = console1.TextSurface;
+
             consoles = new IConsoleMetadata[] {
+                //consoleReal,
+                new CustomConsoles.MouseRenderingDebug(),
                 new CustomConsoles.ViewsAndSubViews(),
                 new CustomConsoles.ControlsTest(),
                 new CustomConsoles.SubConsoleCursor(),
