@@ -8,6 +8,17 @@
         Loaded="Window_Loaded"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <local:Game x:Name="game" Margin="50"  />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="New..." />
+            </MenuItem>
+        </Menu>
+        
+        <local:Game Grid.Row="1" x:Name="game" Margin="50"  />
     </Grid>
 </Window>
