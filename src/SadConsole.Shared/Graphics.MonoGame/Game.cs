@@ -107,15 +107,8 @@ namespace SadConsole
             Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
             Global.ResetRendering();
 
-            GraphicsDevice.DeviceReset += GraphicsDevice_DeviceReset;
-
             // Tell the main engine we're ready
             OnInitialize?.Invoke();
-        }
-
-        private void GraphicsDevice_DeviceReset(object sender, EventArgs e)
-        {
-            
         }
     }
 }
