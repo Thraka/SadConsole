@@ -109,6 +109,7 @@ namespace SadConsole.Surfaces
 
             InitializeCells();
             ResetArea();
+            SyncLayerIndex();
 
             SetActiveLayer(0);
         }
@@ -366,12 +367,9 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="file">The destination file.</param>
         /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
-        public void Save(string file, params Type[] knownTypes)
+        public void Save(string file)
         {
-            if (knownTypes.Length != 0)
-                Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
-            else
-                Serializer.Save(this, file);
+            Serializer.Save((SerializedTypes.LayeredSurface)this, file);
         }
 
         /// <summary>
@@ -380,12 +378,9 @@ namespace SadConsole.Surfaces
         /// <param name="file">The source file.</param>
         /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
         /// <returns>The <see cref="LayeredSurface"/>.</returns>
-        public static LayeredSurface Load(string file, params Type[] knownTypes)
+        public static LayeredSurface Load(string file)
         {
-            if (knownTypes.Length != 0)
-                return Serializer.Load<LayeredSurface>(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
-            else
-                return Serializer.Load<LayeredSurface>(file);
+            return Serializer.Load<SerializedTypes.LayeredSurface>(file);
         }
 
         /// <summary>

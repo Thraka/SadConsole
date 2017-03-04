@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ScrollableConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SerializationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StringParsingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SubConsoleCursor.cs" />

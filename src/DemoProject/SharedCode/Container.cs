@@ -28,6 +28,7 @@ namespace StarterProject
 
             consoles = new IConsoleMetadata[] {
                 //consoleReal,
+                new CustomConsoles.SerializationTests(),
                 new CustomConsoles.MouseRenderingDebug(),
                 new CustomConsoles.ViewsAndSubViews(),
                 new CustomConsoles.ControlsTest(),

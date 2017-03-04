@@ -224,9 +224,9 @@ namespace StarterProject.CustomConsoles
                                       "GRAY ".CreateColored(StarterProject.Theme.GrayDark, null) +
                                       "BLACK ".CreateColored(StarterProject.Theme.Black, null)
                                       );
-            Print(50, 9, CreateGradientExample("RED", StarterProject.Theme.Red, StarterProject.Theme.RedDark));
-            Print(50, 10, CreateGradientExample("PURPLE", StarterProject.Theme.Purple, StarterProject.Theme.PurpleDark));
-            Print(50, 10, CreateGradientExample("BLUE", StarterProject.Theme.Blue, StarterProject.Theme.BlueDark));
+            Print(2, 18, CreateGradientExample("RED", StarterProject.Theme.Red, StarterProject.Theme.RedDark));
+            Print(2, 19, CreateGradientExample("PURPLE", StarterProject.Theme.Purple, StarterProject.Theme.PurpleDark));
+            Print(2, 20, CreateGradientExample("BLUE", StarterProject.Theme.Blue, StarterProject.Theme.BlueDark));
             Print(2, 21, CreateGradientExample("CYAN", StarterProject.Theme.Cyan, StarterProject.Theme.CyanDark));
             Print(2, 22, CreateGradientExample("GREEN", StarterProject.Theme.Green, StarterProject.Theme.GreenDark));
             Print(34, 18, CreateGradientExample("YELLOW", StarterProject.Theme.Yellow, StarterProject.Theme.YellowDark));
