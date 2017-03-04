@@ -27,14 +27,14 @@ Single NuGet package that will contain all platform targets.</releaseNotes>
     <file src="content-files\install.ps1" target="tools" /> 
 
     <!-- Cross-platform reference assemblies -->
-    <file src="..\src\SadConsole\bin\Release\SadConsole.dll" target="lib\net" />
-    <file src="..\src\SadConsole\bin\Release\SadConsole.pdb" target="lib\net" />
-    <file src="..\src\SadConsole\bin\Release\SadConsole.xml" target="lib\net" />
+    <file src="..\src\SadConsole\bin\Debug\SadConsole.dll" target="lib\net" />
+    <file src="..\src\SadConsole\bin\Debug\SadConsole.pdb" target="lib\net" />
+    <file src="..\src\SadConsole\bin\Debug\SadConsole.xml" target="lib\net" />
 
     <!-- UWP reference assemblies -->
-    <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.dll" target="lib\UAP10" />
-    <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.pdb" target="lib\UAP10" />
-    <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.xml" target="lib\UAP10" />
+    <file src="..\src\SadConsole.Universal\bin\Debug\SadConsole.dll" target="lib\UAP10" />
+    <file src="..\src\SadConsole.Universal\bin\Debug\SadConsole.pdb" target="lib\UAP10" />
+    <file src="..\src\SadConsole.Universal\bin\Debug\SadConsole.xml" target="lib\UAP10" />
 
     <!-- Source code -->
     <file src="..\src\SadConsole.Shared\**\*.cs" target="src" />
