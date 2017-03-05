@@ -11,7 +11,7 @@ namespace StarterProject.CustomConsoles
 {
     class TextCursorConsole : Console, IConsoleMetadata
     {
-        SadConsole.GameHelpers.GameObject mouseCurosr;
+        SadConsole.GameHelpers.GameObject mouseCursor;
 
         public ConsoleMetadata Metadata
         {
@@ -24,10 +24,10 @@ namespace StarterProject.CustomConsoles
         public TextCursorConsole()
             : base(80, 23)
         {
-            mouseCurosr = new SadConsole.GameHelpers.GameObject();
-            mouseCurosr.Animation = new SadConsole.Surfaces.AnimatedSurface("default", 1, 1);
-            mouseCurosr.Animation.CreateFrame();
-            mouseCurosr.Animation.CurrentFrame.Cells[0].Glyph = 178;
+            mouseCursor = new SadConsole.GameHelpers.GameObject();
+            mouseCursor.Animation = new SadConsole.Surfaces.AnimatedSurface("default", 1, 1);
+            mouseCursor.Animation.CreateFrame();
+            mouseCursor.Animation.CurrentFrame.Cells[0].Glyph = 178;
         }
 
         public override void Draw(TimeSpan delta)
@@ -35,12 +35,12 @@ namespace StarterProject.CustomConsoles
             // First draw the console
             base.Draw(delta);
 
-            mouseCurosr.Draw(delta);
+            mouseCursor.Draw(delta);
         }
 
         public override bool ProcessMouse(MouseConsoleState state)
         {
-            mouseCurosr.Position = state.WorldPosition;
+            mouseCursor.Position = state.WorldPosition;
 
             return base.ProcessMouse(state);
         }
