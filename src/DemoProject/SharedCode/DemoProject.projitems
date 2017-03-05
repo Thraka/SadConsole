@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StringParsingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SubConsoleCursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\TextCursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ViewsAndSubViews.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
