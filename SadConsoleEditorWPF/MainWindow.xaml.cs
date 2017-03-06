@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace SadConsoleEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        Windows.NewDocumentWindow newDocumentWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,7 +30,13 @@ namespace SadConsoleEditor
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            newDocumentWindow = new Windows.NewDocumentWindow();
+        }
+
+        private void MenuNewDocument_Click(object sender, RoutedEventArgs e)
+        {
+            newDocumentWindow.DataContext = new ViewModel.NewDocumentViewModel();
+            newDocumentWindow.ShowDialog();
         }
     }
 }

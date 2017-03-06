@@ -7,22 +7,24 @@ using SadConsole;
 
 namespace SadConsoleEditor.Documents
 {
-    class Console : IDocument
+    class Surface : IDocument
     {
         public string File { get; set; }
 
         public IScreen PresentationScreen { get; set; }
 
-        public string DocumentType { get; set; } = "Console";
+        public FileLoaders.IFileType[] FileTypes { get; set; } = new FileLoaders.IFileType[] { new FileLoaders.BasicSurface() };
 
-        public void Load()
+        public DocumentTypes DocumentType { get; } = DocumentTypes.Console;
+
+        public void Load(FileLoaders.IFileType fileType, string file)
         {
-            
+            fileType.Load(file);
         }
 
-        public void Save()
+        public FileLoaders.IFileType Save()
         {
-
+            return null;
         }
 
         public void OnClosed()
@@ -49,7 +51,15 @@ namespace SadConsoleEditor.Documents
         {
             
         }
+        public override string ToString()
+        {
 
-        
+            if (string.IsNullOrEmpty(File))
+                return "Unsaved.Surface";
+            else
+                return System.IO.Path.GetFileName(File);
+
+        }
+
     }
 }

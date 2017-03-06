@@ -1,10 +1,9 @@
 ﻿using System;
-using SadConsole.Consoles;
 using System.Linq;
 
 namespace SadConsoleEditor.FileLoaders
 {
-    class TextSurface : IFileLoader
+    class BasicSurface : IFileType
     {
         public bool SupportsLoad { get { return true; } }
 
@@ -28,12 +27,12 @@ namespace SadConsoleEditor.FileLoaders
 
         public object Load(string file)
         {
-            return SadConsole.Consoles.TextSurface.Load(file);
+            return SadConsole.Surfaces.BasicSurface.Load(file);
         }
 
         public void Save(object surface, string file)
         {
-            ((SadConsole.Consoles.TextSurface)surface).Save(file);
+            ((SadConsole.Surfaces.BasicSurface)surface).Save(file);
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using SadConsole.Consoles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SadConsoleEditor.FileLoaders
 {
-    public interface IFileLoader
+    public interface IFileType
     {
         bool SupportsLoad { get; }
         bool SupportsSave { get; }

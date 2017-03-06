@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace SadConsoleEditor.Documents
 {
-    interface IDocument
+    public interface IDocument
     {
-        string DocumentType { get; set; }
-
         string File { get; set; }
+
+        DocumentTypes DocumentType { get; }
 
         IScreen PresentationScreen { get; set; }
 
-        void Load();
+        FileLoaders.IFileType[] FileTypes { get; set; }
 
-        void Save();
+        void Load(FileLoaders.IFileType fileType, string file);
+
+        FileLoaders.IFileType Save();
 
         void Resize(int width, int height);
 

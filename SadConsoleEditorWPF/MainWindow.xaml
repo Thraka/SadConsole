@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SadConsoleEditor"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
+        DataContext="{Binding Main, Source={StaticResource Locator}}"
         Title="MainWindow" Height="550" Width="825">
     <Grid>
         <Grid.RowDefinitions>
@@ -20,7 +21,9 @@
 
         <Menu Grid.ColumnSpan="3">
             <MenuItem Header="File">
-                <MenuItem Header="New..." />
+                <MenuItem Header="New..." Click="MenuNewDocument_Click" />
+                <MenuItem Header="Open..." />
+                <MenuItem Header="Close" />
             </MenuItem>
         </Menu>
         
@@ -28,7 +31,7 @@
 
         <StackPanel Grid.Row="1" Margin="4">
             <Label>Documents</Label>
-            <ListBox Height="150"></ListBox>
+            <ListBox Height="150" ItemsSource="{Binding Documents}"/>
             <Label>Tools</Label>
             <ListBox Height="150"></ListBox>
         </StackPanel>
