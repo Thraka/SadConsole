@@ -111,9 +111,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.Serialized.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Hotspot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Range.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Setting.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Setup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Side.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\SimpleLayerMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\WorldGeneration\Generator.cs" />
@@ -158,6 +156,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\SurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ScreenCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\AnimatedSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\BasicSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Color.cs" />

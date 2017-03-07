@@ -153,6 +153,11 @@ namespace SadConsole
                 Hide();
         }
 
+        public override void OnCalculateRenderPosition()
+        {
+            relativePosition = position;
+        }
+
         public override void Draw(TimeSpan drawTime)
         {
             //TODO: Perf - cache reference?

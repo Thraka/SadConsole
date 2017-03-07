@@ -17,7 +17,6 @@ namespace SadConsole
     /// <summary>
     /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
     /// </summary>
-    [DataContract]
     public partial class Console : SurfaceEditor, IConsole
     {
         /// <summary>
@@ -37,15 +36,11 @@ namespace SadConsole
             Push
         }
 
-        [DataMember(Name = "WidthNTS")]
-        private int serializedWidth;
-
-        [DataMember(Name = "HeightNTS")]
-        private int serializedHeight;
-
-        [DataMember]
-        private bool serializeTextSurface;
-
+        /// <summary>
+        /// The position the console will draw the text surface.
+        /// </summary>
+        protected Point relativePosition;
+        
         #region Events
         /// <summary>
         /// Raised when the a mosue button is clicked on this console.
@@ -71,14 +66,12 @@ namespace SadConsole
         /// <summary>
         /// The renderer used to draw the <see cref="TextSurface"/>.
         /// </summary>
-        [DataMember(Name = "Renderer")]
         protected ISurfaceRenderer _renderer;
 
         /// <summary>
         /// Where the console should be located on the screen.
         /// </summary>
-        [DataMember(Name = "Position")]
-        protected Point _position;
+        protected Point position;
 
         /// <summary>
         /// Indicates the console is visible.
@@ -98,13 +91,11 @@ namespace SadConsole
         /// <summary>
         /// The private virtual curser reference.
         /// </summary>
-        [DataMember]
         protected Cursor virtualCursor;
 
         /// <summary>
         /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
         /// </summary>
-        [DataMember]
         public bool AutoCursorOnFocus { get; set; }
 
         /// <summary>
@@ -122,11 +113,11 @@ namespace SadConsole
             //}
         }
 
-        [DataMember]
-        public List<IScreen> Children { get; set; } = new List<IScreen>();
-
-
-
+        /// <summary>
+        /// Children objects related to this one.
+        /// </summary>
+        public ScreenCollection Children { get; }
+        
         /// <summary>
         /// Indicates that the mouse is currently over this console.
         /// </summary>
@@ -147,6 +138,7 @@ namespace SadConsole
                         parentConsole = value;
                         parentConsole.Children.Add(this);
                         OnParentConsoleChanged(null, parentConsole);
+                        OnCalculateRenderPosition();
                     }
                     else
                     {
@@ -159,47 +151,37 @@ namespace SadConsole
                             parentConsole.Children.Add(this);
 
                         OnParentConsoleChanged(oldParent, parentConsole);
+                        OnCalculateRenderPosition();
                     }
                 }
-
             }
         }
 
         /// <summary>
         /// When true, this console will move to the front of its parent console when focused.
         /// </summary>
-        [DataMember]
         public bool MoveToFrontOnMouseClick { get; set; }
         
         /// <summary>
         /// Allows this console to accept keyboard input.
         /// </summary>
-        [DataMember]
         public bool UseKeyboard { get; set; } = true;
 
         /// <summary>
         /// Allows this console to accept mouse input.
         /// </summary>
-        [DataMember]
         public bool UseMouse { get; set; } = true;
         
         /// <summary>
         /// Indicates whether or not this console is visible.
         /// </summary>
-        [DataMember]
         public bool IsVisible { get { return isVisible; } set { isVisible = value; OnVisibleChanged(); } }
 
         /// <summary>
-        /// When false, does not perform the code within the <see cref="Update(TimeSpan)"/> method. Defaults to true.
+        /// Indicates the screen object should not process <see cref="Update(TimeSpan)"/>.
         /// </summary>
-        [DataMember]
-        public bool DoUpdate { get; set; } = true;
+        public bool IsPaused { get; set; }
 
-        /// <summary>
-        /// When false, does not perform the code within the <see cref="Draw(TimeSpan)"/> method. Defaults to true.
-        /// </summary>
-        [DataMember]
-        public bool DoDraw { get; set; } = true;
 
         /// <summary>
         /// The renderer used to draw <see cref="TextSurface"/>.
@@ -239,9 +221,20 @@ namespace SadConsole
         /// </summary>
         public Point Position
         {
-            get { return _position; }
-            set { Point previousPosition = _position; _position = value; OnPositionChanged(previousPosition); }
+            get { return position; }
+            set
+            {
+                Point previousPosition = position;
+                position = value;
+                OnPositionChanged(previousPosition);
+                OnCalculateRenderPosition();
+            }
         }
+
+        /// <summary>
+        /// The position of this screen relative to the parents.
+        /// </summary>
+        public Point RelativePosition { get { return relativePosition; } }
 
         /// <summary>
         /// How the console should handle becoming active.
@@ -343,6 +336,7 @@ namespace SadConsole
         /// <param name="textData">The backing text surface.</param>
         public Console(ISurface textData) : base(textData)
         {
+            Children = new ScreenCollection(this);
             virtualCursor = new Cursor(this);
             Renderer = new SurfaceRenderer();
             textSurface = textData;
@@ -600,7 +594,7 @@ namespace SadConsole
         /// <param name="delta">Time difference for this frame (if update was called last frame).</param>
         public virtual void Update(TimeSpan delta)
         {
-            if (DoUpdate)
+            if (!IsPaused)
             {
                 Effects.UpdateEffects(delta.TotalSeconds);
 
@@ -620,18 +614,14 @@ namespace SadConsole
         /// <param name="delta">Time difference for this frame (if draw was called last frame).</param>
         public virtual void Draw(TimeSpan delta)
         {
-            if (DoDraw)
+            if (isVisible)
             {
-                if (isVisible)
-                {
-                    Renderer.Render(textSurface);
+                Renderer.Render(textSurface);
 
-                    if (UsePixelPositioning)
-                        Global.DrawCalls.Add(new DrawCallSurface(textSurface, Position.ToVector2()));
-                    else
-                        Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(Position).ToVector2()));
-
-                }
+                if (UsePixelPositioning)
+                    Global.DrawCalls.Add(new DrawCallSurface(textSurface, relativePosition.ToVector2()));
+                else
+                    Global.DrawCalls.Add(new DrawCallSurface(textSurface, TextSurface.Font.GetWorldPosition(relativePosition).ToVector2()));
 
                 var copyList = new List<IScreen>(Children);
 
@@ -647,73 +637,54 @@ namespace SadConsole
         /// <param name="newParent">The new parent.</param>
         protected virtual void OnParentConsoleChanged(IScreen oldParent, IScreen newParent) { }
 
-        
-        private object oldTextSurface;
-
-        [OnSerializing]
-        private void BeforeSerializing(StreamingContext context)
+        /// <summary>
+        /// Called when the parent position changes.
+        /// </summary>
+        public virtual void OnCalculateRenderPosition()
         {
-            if (!serializeTextSurface)
+            relativePosition = position;
+            IScreen parent = parentConsole;
+
+            while (parent != null)
             {
-                oldTextSurface = textSurface;
-                serializedWidth = textSurface.Width;
-                serializedHeight = textSurface.Height;
-                textSurface = null;
+                relativePosition += parent.Position;
+                parent = parent.Parent;
+            }
+            
+            foreach (var child in Children)
+            {
+                child.OnCalculateRenderPosition();
             }
         }
 
-        [OnSerialized]
-        private void AfterSerializing(StreamingContext context)
-        {
-            if (!serializeTextSurface)
-                textSurface = (ISurface)oldTextSurface;
+        //#region Serialization
+        ///// <summary>
+        ///// Saves the <see cref="Console"/> to a file.
+        ///// </summary>
+        ///// <param name="file">The destination file.</param>
+        ///// <param name="saveTextSurface">When false the <see cref="IConsole.TextSurface"/> property will not be serialized.</param>
+        ///// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
+        //public void Save(string file, bool saveTextSurface, params Type[] knownTypes)
+        //{
+        //    //new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+        //    //Serializer.Save(this, file, new Type[] { typeof(Cell) });
+        //    serializeTextSurface = saveTextSurface;
+        //    Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes));
+        //}
 
-            oldTextSurface = null;
-        }
-
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            if (!serializeTextSurface)
-                textSurface = new BasicSurface(serializedWidth, serializedHeight, Global.FontDefault);
-
-            base.textSurface = textSurface;
-
-            virtualCursor.AttachConsole(this);
-            //_virtualCursor.ResetCursorEffect();
-
-            textSurface.IsDirty = true;
-        }
-
-        #region Serialization
-        /// <summary>
-        /// Saves the <see cref="Console"/> to a file.
-        /// </summary>
-        /// <param name="file">The destination file.</param>
-        /// <param name="saveTextSurface">When false the <see cref="IConsole.TextSurface"/> property will not be serialized.</param>
-        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
-        public void Save(string file, bool saveTextSurface, params Type[] knownTypes)
-        {
-            //new Serialized(this, saveTextSurface).Save(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
-            //Serializer.Save(this, file, new Type[] { typeof(Cell) });
-            serializeTextSurface = saveTextSurface;
-            Serializer.Save(this, file, knownTypes.Union(Serializer.ConsoleTypes));
-        }
-
-        /// <summary>
-        /// Loads a <see cref="Console"/> from a file.
-        /// </summary>
-        /// <param name="file">The source file.</param>
-        /// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
-        /// <returns>The <see cref="Console"/>.</returns>
-        public static Console Load(string file, params Type[] knownTypes)
-        {
-            //return Serializer.Load<Console>(file, new Type[] { typeof(Cell) });
-            //return Serialized.Load(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
-            return Serializer.Load<Console>(file, knownTypes.Union(Serializer.ConsoleTypes));
-        }
-        
-#endregion
+        ///// <summary>
+        ///// Loads a <see cref="Console"/> from a file.
+        ///// </summary>
+        ///// <param name="file">The source file.</param>
+        ///// <param name="knownTypes">Types to provide if the <see cref="SurfaceEditor.TextSurface"/> and <see cref="Renderer" /> types are custom and unknown to the serializer.</param>
+        ///// <returns>The <see cref="Console"/>.</returns>
+        //public static Console Load(string file, params Type[] knownTypes)
+        //{
+        //    //return Serializer.Load<Console>(file, new Type[] { typeof(Cell) });
+        //    //return Serialized.Load(file, knownTypes.Union(Serializer.ConsoleTypes).ToArray());
+        //    return Serializer.Load<Console>(file, knownTypes.Union(Serializer.ConsoleTypes));
+        //}
+        //#endregion
 
     }
 }

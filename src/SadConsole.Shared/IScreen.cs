@@ -16,9 +16,14 @@ namespace SadConsole
         Point Position { get; set; }
 
         /// <summary>
+        /// The position of this screen relative to the parents.
+        /// </summary>
+        Point RelativePosition { get; }
+
+        /// <summary>
         /// Child screen objects related to this one.
         /// </summary>
-        List<IScreen> Children { get; set; }
+        ScreenCollection Children { get; }
 
         /// <summary>
         /// A parented screen object.
@@ -26,12 +31,30 @@ namespace SadConsole
         IScreen Parent { get; set; }
 
         /// <summary>
-        /// Indicates this screen object is visible.
+        /// Indicates this screen object is visible and should process <see cref="Draw(TimeSpan)"/>.
         /// </summary>
         bool IsVisible { get; set; }
 
+        /// <summary>
+        /// Indicates the screen object should not process <see cref="Update(TimeSpan)"/>.
+        /// </summary>
+        bool IsPaused { get; set; }
+
+        /// <summary>
+        /// Called for the draw loop.
+        /// </summary>
+        /// <param name="timeElapsed">Time since last draw.</param>
         void Draw(TimeSpan timeElapsed);
 
+        /// <summary>
+        /// Called for the update loop.
+        /// </summary>
+        /// <param name="timeElapsed">Time since last draw.</param>
         void Update(TimeSpan timeElapsed);
+
+        /// <summary>
+        /// Called when the parent position changes.
+        /// </summary>
+        void OnCalculateRenderPosition();
     }
 }

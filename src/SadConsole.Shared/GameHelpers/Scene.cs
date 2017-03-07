@@ -14,27 +14,13 @@ namespace SadConsole.GameHelpers
     /// Groups a <see cref="LayeredSurface"/> and a list of <see cref="GameObject"/> types together.
     /// </summary>
     [DataContract]
-    public class Scene: IConsole
+    public class Scene: LayeredSurface
     {
-        protected bool isVisible;
-        protected Console baseConsole;
-        [DataMember( Name = "BackgroundSurface")]
-        protected LayeredSurface backgroundSurface;
-
-
         /// <summary>
         /// The objects for the scene.
         /// </summary>
         [DataMember]
         public List<GameObject> Objects;
-
-        [DataMember]
-        public List<IScreen> Children { get; set; } = new List<IScreen>();
-
-        /// <summary>
-        /// The background of the scene.
-        /// </summary>
-        public LayeredSurface BackgroundSurface { get { return backgroundSurface; } set { backgroundSurface = value; baseConsole.TextSurface = value; } }
 
         /// <summary>
         /// Regions defined for the scene.
@@ -74,6 +60,7 @@ namespace SadConsole.GameHelpers
             set
             {
                 ((IConsole)baseConsole).Position = value;
+                OnCalculateRenderPosition();
             }
         }
 
@@ -226,6 +213,26 @@ namespace SadConsole.GameHelpers
             ((IConsole)baseConsole).LostMouse(state);
         }
         #endregion
+
+        /// <summary>
+        /// Called when the parent position changes.
+        /// </summary>
+        public virtual void OnCalculateRenderPosition()
+        {
+            relativePosition = Position;
+            IScreen parent = Parent;
+
+            while (parent != null)
+            {
+                relativePosition += parent.Position;
+                parent = parent.Parent;
+            }
+
+            foreach (var child in Children)
+            {
+                child.OnCalculateRenderPosition();
+            }
+        }
 
         /// <summary>
         /// Creates a new Scene from an existing <see cref="LayeredSurface"/>.

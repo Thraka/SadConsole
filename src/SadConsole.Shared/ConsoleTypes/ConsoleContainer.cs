@@ -6,7 +6,6 @@ using SadConsole.Surfaces;
 using SadConsole.Renderers;
 using SadConsole.Input;
 using System;
-using System.Runtime.Serialization;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -15,52 +14,78 @@ namespace SadConsole
     /// <summary>
     /// An <see cref="IConsole" implementation that only processes the <see cref="IScreen.Children"/>.
     /// </summary>
-    [DataContract]
     public partial class ConsoleContainer : IConsole
     {
-        protected IScreen parentConsole;
-        protected bool isVisible = true;
-
+        protected IScreen parentScreen;
+        protected Point relativePosition;
+        protected Point position;
 
         public bool AutoCursorOnFocus { get; set; }
 
         public bool CanFocus { get; set; }
-
-        public List<IScreen> Children { get; set; } = new List<IScreen>();
+        
 
         public bool IsExclusiveMouse { get; set; }
 
         public bool IsFocused { get; set; }
 
-        public bool IsVisible { get { return isVisible; } set { isVisible = value; } }
+        /// <summary>
+        /// Indicates this screen object is visible and should process <see cref="Draw(TimeSpan)"/>.
+        /// </summary>
+        public bool IsVisible { get; set; } = true;
 
+        /// <summary>
+        /// Indicates the screen object should not process <see cref="Update(TimeSpan)"/>.
+        /// </summary>
+        public bool IsPaused { get; set; }
+
+        /// <summary>
+        /// Child screen objects.
+        /// </summary>
+        public ScreenCollection Children { get; }
+
+        /// <summary>
+        /// Gets or sets the Parent screen.
+        /// </summary>
         public IScreen Parent
         {
-            get { return parentConsole; }
+            get { return parentScreen; }
             set
             {
-                if (parentConsole != value)
+                if (parentScreen != value)
                 {
-                    if (parentConsole == null)
+                    if (parentScreen == null)
                     {
-                        parentConsole = value;
-                        parentConsole.Children.Add(this);
+                        parentScreen = value;
+                        parentScreen.Children.Add(this);
+                        OnCalculateRenderPosition();
                     }
                     else
                     {
-                        var oldParent = parentConsole;
-                        parentConsole = value;
+                        var oldParent = parentScreen;
+                        parentScreen = value;
 
                         oldParent.Children.Remove(this);
 
-                        if (parentConsole != null)
-                            parentConsole.Children.Add(this);
+                        if (parentScreen != null)
+                            parentScreen.Children.Add(this);
+
+                        OnCalculateRenderPosition();
                     }
                 }
             }
         }
 
-        public Point Position { get; set; }
+        public Point Position
+        {
+            get { return position; }
+            set { position = value; OnCalculateRenderPosition(); }
+        }
+
+        /// <summary>
+        /// The position of this screen relative to the parents.
+        /// </summary>
+        public Point RelativePosition { get { return relativePosition; } }
 
         public ISurface TextSurface { get; set; }
 
@@ -72,17 +97,10 @@ namespace SadConsole
 
         public Cursor VirtualCursor { get; }
 
-        /// <summary>
-        /// When false, does not perform the code within the <see cref="Update(TimeSpan)"/> method. Defaults to true.
-        /// </summary>
-        [DataMember]
-        public bool DoUpdate { get; set; } = true;
-
-        /// <summary>
-        /// When false, does not perform the code within the <see cref="Draw(TimeSpan)"/> method. Defaults to true.
-        /// </summary>
-        [DataMember]
-        public bool DoDraw { get; set; } = true;
+        public ConsoleContainer()
+        {
+            Children = new ScreenCollection(this);
+        }
 
         public virtual bool ProcessKeyboard(Input.Keyboard state)
         {
@@ -102,7 +120,7 @@ namespace SadConsole
         /// <param name="delta">Time difference for this frame (if update was called last frame).</param>
         public virtual void Update(TimeSpan delta)
         {
-            if (DoUpdate)
+            if (!IsPaused)
             {
                 var copyList = new List<IScreen>(Children);
 
@@ -117,12 +135,32 @@ namespace SadConsole
         /// <param name="delta">Time difference for this frame (if draw was called last frame).</param>
         public virtual void Draw(TimeSpan delta)
         {
-            if (DoDraw && IsVisible)
+            if (IsVisible)
             {
                 var copyList = new List<IScreen>(Children);
 
                 foreach (var child in copyList)
                     child.Draw(delta);
+            }
+        }
+
+        /// <summary>
+        /// Called when the parent position changes.
+        /// </summary>
+        public virtual void OnCalculateRenderPosition()
+        {
+            relativePosition = Position;
+            IScreen parent = parentScreen;
+
+            while (parent != null)
+            {
+                relativePosition += parent.Position;
+                parent = parent.Parent;
+            }
+
+            foreach (var child in Children)
+            {
+                child.OnCalculateRenderPosition();
             }
         }
     }

@@ -377,11 +377,5 @@ namespace SadConsole.GameHelpers
         {
             return Serializer.Load<GameObject>(file, Serializer.ConsoleTypes.Union(knownTypes));
         }
-
-        internal static void EnsureMapping()
-        {
-            //if (!Serializer.HasMapping(typeof(GameObject), typeof(GameObjectSerialized)))
-            //    Serializer.AddMapping(typeof(GameObject), typeof(GameObjectSerialized), (obj) => { return (object)GameObjectSerialized.FromFramework((GameObject)obj); }, (obj) => { return (object)GameObjectSerialized.ToFramework((GameObjectSerialized)obj); });
-        }
     }
 }
