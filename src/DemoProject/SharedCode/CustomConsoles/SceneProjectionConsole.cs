@@ -124,7 +124,7 @@ namespace StarterProject.CustomConsoles
                     base.Draw(time);
                 }
                 else
-                    SadConsole.Global.DrawCalls.Add(new SadConsole.DrawCallTexture(_renderTexture, _position.ToVector2()));
+                    SadConsole.Global.DrawCalls.Add(new SadConsole.DrawCallTexture(_renderTexture, position.ToVector2()));
 
             }
         }

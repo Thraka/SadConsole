@@ -53,14 +53,14 @@ namespace StarterProject.CustomConsoles
             Children.Add(loadedView);
 
             // Setup main view
-            masterView.Position = new Point(3, 8);
+            masterView.Position = new Point(3, 6);
 
             // Setup sub view
-            loadedView.Position = new Point(80 - 37, 8);
+            loadedView.Position = new Point(80 - 37, 6);
 
 
             // Setup controls
-            controlsConsole.Position = new Point(0, 2);
+            controlsConsole.Position = new Point(0, 0);
 
             optionButtonSurface = new SadConsole.Controls.RadioButton(18, 1)
             {

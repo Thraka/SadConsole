@@ -28,7 +28,7 @@ namespace StarterProject.CustomConsoles
         public SubConsoleCursor()
         {
             mainView = new Console(80, 23);
-            subView = new Console(25, 10);
+            subView = new Console(new SurfaceView(mainView.TextSurface, new Rectangle(4, 4, 25, 10)));
 
             UseKeyboard = true;
 
@@ -38,7 +38,6 @@ namespace StarterProject.CustomConsoles
 
             // Setup sub view
             subView.Position = new Point(4, 4);
-            subView.TextSurface = new SurfaceView(mainView.TextSurface, new Rectangle(4, 4, 25, 10));
             subView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) e.MouseState.Cell.Background = Color.Red; };
             subView.Clear();
             subView.VirtualCursor.IsVisible = true;
@@ -53,20 +52,20 @@ namespace StarterProject.CustomConsoles
             return subView.ProcessKeyboard(info);
         }
 
-        public override void Update(TimeSpan delta)
-        {
-            if (DoUpdate && isVisible)
-            {
-                if (mainView.Position != Position)
-                {
-                    mainView.Position = Position;
-                    subView.Position = mainView.Position + ((SurfaceView)subView.TextSurface).ViewArea.Location;
-                }
+        //public override void Update(TimeSpan delta)
+        //{
+        //    if (IsVisible)
+        //    {
+        //        if (mainView.Position != Position)
+        //        {
+        //            mainView.Position = Position;
+        //            subView.Position = mainView.Position + ((SurfaceView)subView.TextSurface).ViewArea.Location;
+        //        }
 
-                foreach (var child in Children)
-                    child.Update(delta);
-            }
-        }
+        //        foreach (var child in Children)
+        //            child.Update(delta);
+        //    }
+        //}
 
     }
 }
