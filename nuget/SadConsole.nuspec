@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.0.0-pre8</version>
+    <version>6.0.0</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics.</description>
-    <releaseNotes>Initial release. The other libraries (SadConsole.Ansi, SadConsle.Controls, SadConsole.GameHelpers) have merged into a single library, SadConsole.dll
+    <releaseNotes>Initial release of 6.0.0. The other libraries (SadConsole.Ansi, SadConsle.Controls, SadConsole.GameHelpers) have merged into a single library, SadConsole.dll
     
 Rewrite and refactor of code.
 
