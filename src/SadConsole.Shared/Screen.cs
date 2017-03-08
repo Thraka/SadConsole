@@ -87,6 +87,14 @@ namespace SadConsole
         public bool IsPaused { get; set; }
 
         /// <summary>
+        /// Creates a new screen.
+        /// </summary>
+        public Screen()
+        {
+            Children = new ScreenCollection(this);
+        }
+
+        /// <summary>
         /// Draws all children.
         /// </summary>
         /// <param name="timeElapsed">Time since the last call.</param>
