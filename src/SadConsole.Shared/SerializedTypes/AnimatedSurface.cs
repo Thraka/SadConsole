@@ -9,10 +9,10 @@ using System.Linq;
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
-    public class AnimatedSurface
+    public class AnimatedSurfaceSerialized
     {
         [DataMember]
-        public BasicSurface[] Frames;
+        public BasicSurfaceSerialized[] Frames;
         [DataMember]
         public int Width;
         [DataMember]
@@ -20,7 +20,7 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public float AnimationDuration;
         [DataMember]
-        public Font Font;
+        public FontSerialized Font;
         [DataMember]
         public string Name;
         [DataMember]
@@ -28,11 +28,11 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public FrameworkPoint Center;
 
-        public static implicit operator AnimatedSurface(Surfaces.AnimatedSurface surface)
+        public static implicit operator AnimatedSurfaceSerialized(Surfaces.AnimatedSurface surface)
         {
-            return new AnimatedSurface()
+            return new AnimatedSurfaceSerialized()
             {
-                Frames = surface.Frames.Select(s => (BasicSurface)s).ToArray(),
+                Frames = surface.Frames.Select(s => (BasicSurfaceSerialized)s).ToArray(),
                 Width = surface.Width,
                 Height = surface.Height,
                 AnimationDuration = surface.AnimationDuration,
@@ -43,10 +43,10 @@ namespace SadConsole.SerializedTypes
             };
         }
 
-        public static implicit operator Surfaces.AnimatedSurface(AnimatedSurface serializedObject)
+        public static implicit operator Surfaces.AnimatedSurface(AnimatedSurfaceSerialized serializedObject)
         {
             var animationSurface = new Surfaces.AnimatedSurface(serializedObject.Name, serializedObject.Width, serializedObject.Height, serializedObject.Font);
-            animationSurface.Frames = new List<Surfaces.BasicSurface>(serializedObject.Frames.Select(s => (Surfaces.BasicSurface)s));
+            animationSurface.Frames = new List<Surfaces.BasicSurface>(serializedObject.Frames.Select(s => (Surfaces.BasicSurface)s).ToArray());
             animationSurface.CurrentFrameIndex = 0;
             animationSurface.AnimationDuration = serializedObject.AnimationDuration;
             animationSurface.Repeat = serializedObject.Repeat;

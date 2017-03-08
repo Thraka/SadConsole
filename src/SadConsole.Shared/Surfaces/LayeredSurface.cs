@@ -369,7 +369,7 @@ namespace SadConsole.Surfaces
         /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
         public void Save(string file)
         {
-            Serializer.Save((SerializedTypes.LayeredSurface)this, file);
+            Serializer.Save((SerializedTypes.LayeredSurfaceSerialized)this, file);
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace SadConsole.Surfaces
         /// <returns>The <see cref="LayeredSurface"/>.</returns>
         public static LayeredSurface Load(string file)
         {
-            return Serializer.Load<SerializedTypes.LayeredSurface>(file);
+            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file);
         }
 
         /// <summary>

@@ -51,7 +51,7 @@ namespace SadConsole
         /// A temporary state to backup and restore a cell.
         /// </summary>
         [DataMember]
-        public CellState? State { get; private set; }
+        public CellState? State { get; internal set; }
 
         /// <summary>
         /// Creates a cell with a white foreground, black background, glyph 0, and no mirror effect.

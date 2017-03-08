@@ -12,10 +12,8 @@ namespace SadConsole
     /// <summary>
     /// Represents a string that has foreground and background colors for each character in the string.
     /// </summary>
-    [DataContract]
     public partial class ColoredString : IEnumerable<ColoredGlyph>
     {
-        [DataMember(Name = "Characters")]
         private List<ColoredGlyph> _characters;
 
         public ColoredGlyph this[int index]

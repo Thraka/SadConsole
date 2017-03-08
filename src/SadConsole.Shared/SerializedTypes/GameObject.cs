@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Linq;
 
-namespace SadConsole.GameHelpers
+namespace SadConsole.SerializedTypes
 {
     /// <summary>
     /// Serialized instance of a <see cref="GameObject"/>.
@@ -16,13 +17,13 @@ namespace SadConsole.GameHelpers
         [DataMember]
         public string AnimationName;
         [DataMember]
-        public List<Surfaces.AnimatedSurface> Animations;
+        public List<AnimatedSurfaceSerialized> Animations;
         [DataMember]
-        public Font Font;
+        public FontSerialized Font;
         [DataMember]
         public bool IsVisible;
         [DataMember]
-        public Point Position;
+        public PointSerialized Position;
         [DataMember]
         public bool RepositionRects;
         [DataMember]
@@ -30,14 +31,16 @@ namespace SadConsole.GameHelpers
         [DataMember]
         public string Name;
         [DataMember]
-        public Point RenderOffset;
+        public PointSerialized RenderOffset;
 
-        public static GameObjectSerialized FromFramework(GameObject gameObject)
+
+        
+        public static implicit operator GameObjectSerialized(GameHelpers.GameObject gameObject)
         {
             var serializedObject = new GameObjectSerialized()
             {
                 AnimationName = gameObject.Animation != null ? gameObject.Animation.Name : "",
-                Animations = new List<Surfaces.AnimatedSurface>(gameObject.Animations.Values),
+                Animations = gameObject.Animations.Values.Select(a => (AnimatedSurfaceSerialized)a).ToList(),
                 Font = gameObject.Font,
                 IsVisible = gameObject.IsVisible,
                 Position = gameObject.Position,
@@ -53,9 +56,9 @@ namespace SadConsole.GameHelpers
             return serializedObject;
         }
 
-        public static GameObject ToFramework(GameObjectSerialized serializedObject)
+        public static implicit operator GameHelpers.GameObject(GameObjectSerialized serializedObject)
         {
-            var gameObject = new GameObject(serializedObject.Font);
+            var gameObject = new GameHelpers.GameObject(serializedObject.Font);
 
             foreach (var item in serializedObject.Animations)
                 gameObject.Animations.Add(item.Name, item);

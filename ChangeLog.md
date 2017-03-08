@@ -1,4 +1,4 @@
-﻿## 02/25/2016
+﻿## 03/XX/2016
 
 Major update to all of SadConsole. 
 
@@ -83,7 +83,7 @@ Input has been overhauled a bit. Keyboard is mostly the same except for some min
 
 <!-- 
 --- PLACE HOLDER FOR GAMEPAD NOTES
---/>
+-->
 
 ### Startup code
 

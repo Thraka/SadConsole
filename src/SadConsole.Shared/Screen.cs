@@ -10,10 +10,24 @@ namespace SadConsole
     /// </summary>
     public class Screen: IScreen
     {
+        /// <summary>
+        /// Position to render the screen at based on <see cref="Position"/> all parents.
+        /// </summary>
         protected Point relativePosition;
+
+        /// <summary>
+        /// The parent screen.
+        /// </summary>
         protected IScreen parentScreen;
+
+        /// <summary>
+        /// The position of the console.
+        /// </summary>
         protected Point position;
 
+        /// <summary>
+        /// The position of the console.
+        /// </summary>
         public Point Position
         {
             get { return position; }
@@ -72,6 +86,10 @@ namespace SadConsole
         /// </summary>
         public bool IsPaused { get; set; }
 
+        /// <summary>
+        /// Draws all children.
+        /// </summary>
+        /// <param name="timeElapsed">Time since the last call.</param>
         public virtual void Draw(TimeSpan timeElapsed)
         {
             if (IsVisible)
@@ -83,6 +101,10 @@ namespace SadConsole
             }
         }
 
+        /// <summary>
+        /// Updates all children.
+        /// </summary>
+        /// <param name="timeElapsed">Time since the last call.</param>
         public virtual void Update(TimeSpan timeElapsed)
         {
             if (!IsPaused)

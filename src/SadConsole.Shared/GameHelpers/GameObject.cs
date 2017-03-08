@@ -12,7 +12,6 @@ namespace SadConsole.GameHelpers
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
-    [DataContract]
     public partial class GameObject: ISurface
     {
         /// <summary>
@@ -364,7 +363,7 @@ namespace SadConsole.GameHelpers
         /// <param name="knownTypes">The type of <see cref="GameObject.Renderer"/>.</param>
         public void Save(string file, params Type[] knownTypes)
         {
-            Serializer.Save(this, file, Serializer.ConsoleTypes.Union(knownTypes).Union(new Type[] { typeof(GameObjectSerialized), typeof(AnimatedSurface), typeof(AnimatedSurface[]) }));
+            Serializer.Save(this, file, Serializer.KnownTypes.Union(knownTypes).Union(new Type[] { typeof(SerializedTypes.GameObjectSerialized), typeof(AnimatedSurface), typeof(AnimatedSurface[]) }));
         }
 
         /// <summary>
@@ -375,7 +374,7 @@ namespace SadConsole.GameHelpers
         /// <returns>A new GameObject.</returns>
         public static GameObject Load(string file, params Type[] knownTypes)
         {
-            return Serializer.Load<GameObject>(file, Serializer.ConsoleTypes.Union(knownTypes));
+            return Serializer.Load<GameObject>(file, Serializer.KnownTypes.Union(knownTypes));
         }
     }
 }

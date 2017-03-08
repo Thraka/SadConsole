@@ -8,7 +8,7 @@ using System.Text;
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
-    public struct Color
+    public struct ColorSerialized
     {
         [DataMember]
         public byte R;
@@ -19,12 +19,12 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public byte A;
 
-        public static implicit operator Color(FrameworkColor color)
+        public static implicit operator ColorSerialized(FrameworkColor color)
         {
-            return new Color() { R = color.R, G = color.G, B = color.B, A = color.A };
+            return new ColorSerialized() { R = color.R, G = color.G, B = color.B, A = color.A };
         }
 
-        public static implicit operator FrameworkColor(Color color)
+        public static implicit operator FrameworkColor(ColorSerialized color)
         {
             return new FrameworkColor(color.R, color.G, color.B, color.A);
         }

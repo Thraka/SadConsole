@@ -35,7 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SelectionButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DoubleAnimation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DrawCall.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DrawCalls.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Bounce.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\Circle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EasingFunctions\EasingBase.cs" />
@@ -106,9 +106,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\Noise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\NoiseLookupTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\Utilities.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Animation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Animations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.Serialized.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Hotspot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Range.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Setting.cs" />
@@ -160,11 +161,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\AnimatedSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\BasicSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Hotspot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\LayeredSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Point.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Range.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Rectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\SurfaceView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Zone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shapes\Box.cs" />

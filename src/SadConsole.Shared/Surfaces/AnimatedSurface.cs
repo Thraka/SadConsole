@@ -9,7 +9,6 @@ namespace SadConsole.Surfaces
     /// <summary>
     /// Animates a list of frames.
     /// </summary>
-    [DataContract]
     public class AnimatedSurface: BasicSurface
     {
         /// <summary>
@@ -304,7 +303,7 @@ namespace SadConsole.Surfaces
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serializer.Save((SerializedTypes.AnimatedSurface)this, file);
+            Serializer.Save((SerializedTypes.AnimatedSurfaceSerialized)this, file);
         }
 
         /// <summary>
@@ -314,7 +313,7 @@ namespace SadConsole.Surfaces
         /// <returns></returns>
         public static AnimatedSurface Load(string file)
         {
-            return Serializer.Load<SerializedTypes.AnimatedSurface>(file);
+            return Serializer.Load<SerializedTypes.AnimatedSurfaceSerialized>(file);
         }
 
 

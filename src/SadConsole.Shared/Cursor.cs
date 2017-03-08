@@ -11,7 +11,6 @@ using SadConsole;
 namespace SadConsole
 {
     //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
-    [DataContract]
     public class Cursor
     {
         private SurfaceEditor editor;
@@ -22,43 +21,36 @@ namespace SadConsole
         /// <summary>
         /// Cell used to render the cursor on the screen.
         /// </summary>
-        [DataMember]
         public Cell CursorRenderCell { get; set; }
 
         /// <summary>
         /// Appearance used when printing text.
         /// </summary>
-        [DataMember]
         public Cell PrintAppearance { get; set; }
 
         /// <summary>
         /// This effect is applied to each cell printed by the cursor.
         /// </summary>
-        [DataMember]
         public ICellEffect PrintEffect { get; set; }
 
         /// <summary>
         /// This is the cursor visible effect, like blinking.
         /// </summary>
-        [DataMember]
         public ICellEffect CursorEffect { get; set; }
 
         /// <summary>
         /// When true, indicates that the cursor, when printing, should not use the <see cref="PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
         /// </summary>
-        [DataMember]
         public bool PrintOnlyCharacterData { get; set; }
 
         /// <summary>
         /// Shows or hides the cursor. This does not affect how the cursor operates.
         /// </summary>
-        [DataMember]
         public bool IsVisible { get; set; }
 
         /// <summary>
         /// Gets or sets the location of the cursor on the console.
         /// </summary>
-        [DataMember]
         public Point Position
         {
             get { return position; }
@@ -82,16 +74,13 @@ namespace SadConsole
         /// <summary>
         /// When true, prevents the <see cref="Print"/> method from breaking words up by spaces when wrapping lines.
         /// </summary>
-        [DataMember]
         public bool DisableWordBreak = false;
 
         /// <summary>
         /// Enables linux-like string parsing where a \n behaves like a \r\n.
         /// </summary>
-        [DataMember]
         public bool UseLinuxLineEndings = false;
 
-        [DataMember]
         public bool UseStringParser = false;
 
         /// <summary>
@@ -115,7 +104,6 @@ namespace SadConsole
         /// <summary>
         /// Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
         /// </summary>
-        [DataMember]
         public bool AutomaticallyShiftRowsUp { get; set; }
 
         /// <summary>

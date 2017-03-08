@@ -9,13 +9,13 @@ using System.Linq;
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
-    public class LayeredSurface
+    public class LayeredSurfaceSerialized
     {
         [DataContract]
         public class Layer
         {
             [DataMember]
-            public Cell[] Cells;
+            public CellSerialized[] Cells;
 
             [DataMember]
             public bool IsVisible;
@@ -28,27 +28,27 @@ namespace SadConsole.SerializedTypes
         }
 
         [DataMember]
-        public Font Font;
+        public FontSerialized Font;
         [DataMember]
-        public Rectangle RenderArea;
+        public RectangleSerialized RenderArea;
         [DataMember]
         public int Width;
         [DataMember]
         public int Height;
         [DataMember]
-        public Color DefaultForeground;
+        public ColorSerialized DefaultForeground;
         [DataMember]
-        public Color DefaultBackground;
+        public ColorSerialized DefaultBackground;
         [DataMember]
-        public Color Tint;
+        public ColorSerialized Tint;
         [DataMember]
         public Layer[] Layers;
         [DataMember]
         public int ActiveLayer;
 
-        public static implicit operator LayeredSurface(Surfaces.LayeredSurface surface)
+        public static implicit operator LayeredSurfaceSerialized(Surfaces.LayeredSurface surface)
         {
-            return new LayeredSurface()
+            return new LayeredSurfaceSerialized()
             {
                 Font = surface.Font,
                 RenderArea = surface.RenderArea,
@@ -57,12 +57,12 @@ namespace SadConsole.SerializedTypes
                 DefaultForeground = surface.DefaultForeground,
                 DefaultBackground = surface.DefaultBackground,
                 Tint = surface.Tint,
-                Layers = surface.GetLayers().Select(l => new LayeredSurface.Layer() { Cells = l.Cells, Index = l.Index, IsVisible = l.IsVisible, Metadata = l.Metadata }).ToArray(),
+                Layers = surface.GetLayers().Select(l => new LayeredSurfaceSerialized.Layer() { Cells = l.Cells.Select(c => (CellSerialized)c).ToArray(), Index = l.Index, IsVisible = l.IsVisible, Metadata = l.Metadata }).ToArray(),
                 ActiveLayer = surface.ActiveLayerIndex
             };
         }
 
-        public static implicit operator Surfaces.LayeredSurface(LayeredSurface surface)
+        public static implicit operator Surfaces.LayeredSurface(LayeredSurfaceSerialized surface)
         {
             var returnSurface = new Surfaces.LayeredSurface(surface.Width, surface.Height, surface.Font, surface.Layers.Length)
             {
@@ -74,7 +74,7 @@ namespace SadConsole.SerializedTypes
             foreach (var layer in surface.Layers)
             {
                 var orgLayer = returnSurface.GetLayer(layer.Index);
-                orgLayer.Cells = orgLayer.RenderCells = layer.Cells;
+                orgLayer.Cells = orgLayer.RenderCells = layer.Cells.Select(c => (Cell)c).ToArray();
                 orgLayer.IsVisible = layer.IsVisible;
                 orgLayer.Metadata = layer.Metadata;
             }

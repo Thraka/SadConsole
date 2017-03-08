@@ -8,7 +8,7 @@ using System.Text;
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
-    public struct Rectangle
+    public struct RectangleSerialized
     {
         [DataMember]
         public int X;
@@ -19,12 +19,12 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public int Height;
 
-        public static implicit operator Rectangle(FrameworkRect rect)
+        public static implicit operator RectangleSerialized(FrameworkRect rect)
         {
-            return new Rectangle() { X = rect.Left, Y = rect.Top, Width = rect.Width, Height = rect.Height };
+            return new RectangleSerialized() { X = rect.Left, Y = rect.Top, Width = rect.Width, Height = rect.Height };
         }
 
-        public static implicit operator FrameworkRect(Rectangle rect)
+        public static implicit operator FrameworkRect(RectangleSerialized rect)
         {
             return new FrameworkRect(rect.X, rect.Y, rect.Width, rect.Height);
         }

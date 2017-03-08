@@ -346,7 +346,7 @@ namespace SadConsole.Surfaces
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serializer.Save((SerializedTypes.BasicSurface)this, file);
+            Serializer.Save((SerializedTypes.BasicSurfaceSerialized)this, file);
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace SadConsole.Surfaces
         /// <returns></returns>
         public static BasicSurface Load(string file)
         {
-            return Serializer.Load<SerializedTypes.BasicSurface>(file);
+            return Serializer.Load<SerializedTypes.BasicSurfaceSerialized>(file);
         }
     }
 }

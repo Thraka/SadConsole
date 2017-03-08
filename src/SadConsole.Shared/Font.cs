@@ -9,7 +9,6 @@ namespace SadConsole
     /// <summary>
     /// Represents a specific font size from a <see cref="FontMaster"/>.
     /// </summary>
-    [DataContract]
     public sealed class Font
     {
         private int solidGlyphIndex;
@@ -94,13 +93,11 @@ namespace SadConsole
         /// <summary>
         /// The size originally used to create the font from a <see cref="FontMaster"/>.
         /// </summary>
-        [DataMember]
         public FontSizes SizeMultiple { get; private set; }
 
         /// <summary>
         /// The name of the font used when it is registered with the <see cref="Engine.Fonts"/> collection.
         /// </summary>
-        [DataMember]
         public string Name { get; private set; }
 
         internal Font() { }
@@ -194,19 +191,7 @@ namespace SadConsole
             return new Point(position.X * Size.X, position.Y * Size.Y);
         }
 
-        [OnDeserialized]
-        private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
-        {
-            if (Global.Fonts.ContainsKey(Name))
-            {
-                var master = Global.Fonts[Name];
-                Initialize(master, SizeMultiple);
-            }
-            else
-            {
-                throw new Exception($"A font is being used that has not been added to the engine. Name: {Name}");
-            }
-        }
+        
     }
 
     /// <summary>

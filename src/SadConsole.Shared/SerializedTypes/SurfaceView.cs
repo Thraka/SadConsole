@@ -6,22 +6,22 @@ using System.Text;
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
-    class SurfaceView
+    class SurfaceViewSerialized
     {
         [DataMember]
-        public Font Font;
+        public FontSerialized Font;
         [DataMember]
-        public Rectangle ViewArea;
+        public RectangleSerialized ViewArea;
         [DataMember]
-        public Color DefaultForeground;
+        public ColorSerialized DefaultForeground;
         [DataMember]
-        public Color DefaultBackground;
+        public ColorSerialized DefaultBackground;
         [DataMember]
-        public Color Tint;
+        public ColorSerialized Tint;
 
-        public static implicit operator SurfaceView(Surfaces.SurfaceView surface)
+        public static implicit operator SurfaceViewSerialized(Surfaces.SurfaceView surface)
         {
-            return new SurfaceView()
+            return new SurfaceViewSerialized()
             {
                 Font = surface.Font,
                 ViewArea = surface.ViewArea,

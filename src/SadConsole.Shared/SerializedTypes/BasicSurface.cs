@@ -5,36 +5,37 @@ using System.Text;
 using FrameworkPoint = Microsoft.Xna.Framework.Point;
 using FrameworkRect = Microsoft.Xna.Framework.Rectangle;
 using FrameworkColor = Microsoft.Xna.Framework.Color;
+using System.Linq;
 
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
-    public class BasicSurface
+    public class BasicSurfaceSerialized
     {
         [DataMember]
-        public Font Font;
+        public FontSerialized Font;
         [DataMember]
-        public Rectangle RenderArea;
+        public RectangleSerialized RenderArea;
         [DataMember]
-        public Cell[] Cells;
+        public CellSerialized[] Cells;
         [DataMember]
         public int Width;
         [DataMember]
         public int Height;
         [DataMember]
-        public Color DefaultForeground;
+        public ColorSerialized DefaultForeground;
         [DataMember]
-        public Color DefaultBackground;
+        public ColorSerialized DefaultBackground;
         [DataMember]
-        public Color Tint;
+        public ColorSerialized Tint;
 
-        public static implicit operator BasicSurface(Surfaces.BasicSurface surface)
+        public static implicit operator BasicSurfaceSerialized(Surfaces.BasicSurface surface)
         {
-            return new BasicSurface()
+            return new BasicSurfaceSerialized()
             {
                 Font = surface.Font,
                 RenderArea = surface.RenderArea,
-                Cells = surface.Cells,
+                Cells = surface.Cells.Select(c => (CellSerialized)c).ToArray(),
                 Width = surface.Width,
                 Height = surface.Height,
                 DefaultForeground = surface.DefaultForeground,
@@ -43,9 +44,9 @@ namespace SadConsole.SerializedTypes
             };
         }
 
-        public static implicit operator Surfaces.BasicSurface(BasicSurface surface)
+        public static implicit operator Surfaces.BasicSurface(BasicSurfaceSerialized surface)
         {
-            return new Surfaces.BasicSurface(surface.Width, surface.Height, surface.Cells, surface.Font, surface.RenderArea)
+            return new Surfaces.BasicSurface(surface.Width, surface.Height, surface.Cells.Select(c => (Cell)c).ToArray(), surface.Font, surface.RenderArea)
             {
                 Tint = surface.Tint,
                 DefaultForeground = surface.DefaultForeground,
