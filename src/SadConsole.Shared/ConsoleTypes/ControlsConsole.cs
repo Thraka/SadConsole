@@ -161,6 +161,7 @@ namespace SadConsole
                 FocusedControl = control;
 
             control.OnComposed = ControlChanged;
+            textSurface.IsDirty = true;
 
             ReOrderControls();
         }
@@ -193,6 +194,8 @@ namespace SadConsole
                     controls.Remove(control);
 
                 control.OnComposed = null;
+
+                textSurface.IsDirty = true;
 
                 ReOrderControls();
             }

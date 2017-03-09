@@ -158,9 +158,14 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// When true, this console will move to the front of its parent console when focused.
+        /// When true, this console will move to the front of its parent console when the mouse is clicked.
         /// </summary>
         public bool MoveToFrontOnMouseClick { get; set; }
+
+        /// <summary>
+        /// When true, this console will set <see cref="IsFocused"/> to true when the mouse is clicked.
+        /// </summary>
+        public bool FocusOnMouseClick { get; set; }
         
         /// <summary>
         /// Allows this console to accept keyboard input.
@@ -365,6 +370,9 @@ namespace SadConsole
         {
             if (MoveToFrontOnMouseClick && Parent != null && Parent.Children.IndexOf(this) != Parent.Children.Count - 1)
                 Parent.Children.MoveToTop(this);
+
+            if (FocusOnMouseClick && !IsFocused)
+                IsFocused = true;
 
             MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
         }

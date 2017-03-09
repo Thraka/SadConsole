@@ -89,9 +89,9 @@ namespace SadConsole
 
         public ISurface TextSurface { get; set; }
 
-        public bool UseKeyboard { get; set; }
+        public bool UseKeyboard { get; set; } = true;
 
-        public bool UseMouse { get; set; }
+        public bool UseMouse { get; set; } = true;
 
         public bool UsePixelPositioning { get; set; }
 
