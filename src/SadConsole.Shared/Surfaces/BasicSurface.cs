@@ -10,14 +10,13 @@ namespace SadConsole.Surfaces
     /// <summary>
     /// The base class for a text surface. Provides code for the view port and basic cell access.
     /// </summary>
-    [DataContract]
     public class BasicSurface : IEnumerable<Cell>, ISurface
     {
-        [DataMember(Name = "Font")]
         protected Font font;
 
-        [DataMember(Name = "Area")]
         protected Rectangle area;
+
+        protected Color tint = Color.Transparent;
 
         protected bool isDirty = true;
 
@@ -106,7 +105,6 @@ namespace SadConsole.Surfaces
         /// </summary>
         public Font Font { get { return font; } set { font = value; OnFontChanged(); } }
         
-        #region ISurfaceView
         /// <summary>
         /// Pixel area of the render cells.
         /// </summary>
@@ -125,8 +123,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// A tint used in rendering.
         /// </summary>
-        [DataMember]
-        public Color Tint { get; set; } = Color.Transparent;
+        public Color Tint { get { return tint; } set { tint = value; IsDirty = true; } }
 
         /// <summary>
         /// Sets the area of the text surface that should be rendered.
@@ -155,7 +152,7 @@ namespace SadConsole.Surfaces
                 if (area.Y + area.Height > height)
                     area.Y = height - area.Height;
 
-                isDirty = true;
+                IsDirty = true;
                 ResetArea();
             }
         }
@@ -179,7 +176,6 @@ namespace SadConsole.Surfaces
         /// The last texture render pass for this surface.
         /// </summary>
         public RenderTarget2D LastRenderResult { get; set; }
-        #endregion
 
         /// <summary>
         /// A callback that happens when <see cref="IsDirty"/> is set to true.

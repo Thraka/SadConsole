@@ -55,13 +55,7 @@ namespace SadConsole
             }
             set { _theme = value; Invalidate(); }
         }
-
-        ///// <summary>
-        ///// When true, mouse events over this console will be processed even if this console is not active.
-        ///// </summary>
-        //[DataMember]
-        //public bool ProcessMouseWithoutFocus { get; set; }
-
+        
         /// <summary>
         /// Gets a read-only collection of the controls this console contains.
         /// </summary>

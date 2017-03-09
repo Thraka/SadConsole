@@ -17,10 +17,14 @@ namespace SadConsole
         public ISurface Surface;
         public Vector2 Position;
 
-        public DrawCallSurface(ISurface surface, Vector2 position)
+        public DrawCallSurface(ISurface surface, Point position, bool pixelPositioned)
         {
+            if (pixelPositioned)
+                Position = position.ToVector2();
+            else
+                Position = surface.Font.GetWorldPosition(position).ToVector2();
+
             Surface = surface;
-            Position = position;
         }
 
         public void Draw()

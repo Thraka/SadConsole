@@ -336,13 +336,13 @@ namespace SadConsole.GameHelpers
         {
             if (IsVisible)
             {
-                Renderer.Render(this);
+                Renderer.Render(this, true);
 
                 //if (repositionRects)
                 //    Global.DrawCalls.Add(new DrawCallSurface(this, Vector2.Zero));
                 //    //renderer.Render(this, NoMatrix);   
                 //else
-                    Global.DrawCalls.Add(new DrawCallSurface(this, Font.GetWorldPosition(position + renderOffset - animation.Center).ToVector2()));
+                    Global.DrawCalls.Add(new DrawCallSurface(this, position + renderOffset - animation.Center, false));
                     //renderer.Render(this, position + renderOffset - animation.Center, usePixelPositioning);
 
             }
