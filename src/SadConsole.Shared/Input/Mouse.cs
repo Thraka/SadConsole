@@ -122,20 +122,20 @@ namespace SadConsole.Input
             }
 
             // Scan through each "console" in the current screen, including children.
-            else if (Global.CurrentScreen != null && Global.CurrentScreen is IConsole)
+            else if (Global.CurrentScreen != null)
             {
                 bool foundMouseTarget = false;
 
                 // Build a list of all consoles
                 var consoles = new List<IConsole>();
-                GetConsoles((IConsole)Global.CurrentScreen, ref consoles);
+                GetConsoles(Global.CurrentScreen, ref consoles);
 
                 // Process top-most consoles first.
                 consoles.Reverse();
 
                 for (int i = 0; i < consoles.Count; i++)
                 {
-                    var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
+                    var state = new MouseConsoleState(consoles[i], this);
 
                     if (consoles[i].ProcessMouse(state))
                     {
@@ -155,15 +155,19 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(IConsole console, ref List<IConsole> list)
+        private void GetConsoles(IScreen screen, ref List<IConsole> list)
         {
-            if (console.UseMouse)
-                list.Add(console);
-
-            foreach (var child in console.Children)
+            if (screen is IConsole)
             {
-                if (child is IConsole)
-                    GetConsoles((IConsole)child, ref list);
+                var console = screen as IConsole;
+
+                if (console.UseMouse)
+                    list.Add(console);
+            }
+
+            foreach (var child in screen.Children)
+            {
+                GetConsoles(child, ref list);
             }
         }
         
