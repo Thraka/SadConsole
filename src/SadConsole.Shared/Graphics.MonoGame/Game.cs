@@ -109,6 +109,9 @@ namespace SadConsole
 
             // Tell the main engine we're ready
             OnInitialize?.Invoke();
+
+            // After we've init, clear the graphics device so everything is ready to start
+            Global.GraphicsDevice.SetRenderTarget(null);
         }
     }
 }

@@ -30,6 +30,8 @@ namespace SadConsole
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
                     Global.CurrentScreen?.Draw(gameTime.ElapsedGameTime);
 
+                    SadConsole.Game.OnDraw?.Invoke(gameTime);
+
                     // Render to the global output texture
                     GraphicsDevice.SetRenderTarget(Global.RenderOutput);
                     GraphicsDevice.Clear(Settings.ClearColor);
@@ -54,8 +56,6 @@ namespace SadConsole
                         Global.SpriteBatch.End();
                     }
                 }
-
-                SadConsole.Game.OnDraw?.Invoke(gameTime);
             }
 
             public override void Update(GameTime gameTime)
