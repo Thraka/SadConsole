@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.0.0-pre10</version>
+    <version>6.0.0-rc1</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -18,7 +18,7 @@ Rewrite and refactor of code.
 
 Single NuGet package that will contain all platform targets.
 
-** pre10 Notes **
+** rc1 Notes **
 - Fixed a big with the screen type not initializing Children to a new instance.
 
 ** pre9 Notes **
