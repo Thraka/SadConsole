@@ -24,9 +24,7 @@ namespace StarterProject.CustomConsoles
         public TextCursorConsole()
             : base(80, 23)
         {
-            mouseCursor = new SadConsole.GameHelpers.GameObject();
-            mouseCursor.Animation = new SadConsole.Surfaces.AnimatedSurface("default", 1, 1);
-            mouseCursor.Animation.CreateFrame();
+            mouseCursor = new SadConsole.GameHelpers.GameObject(1, 1);
             mouseCursor.Animation.CurrentFrame.Cells[0].Glyph = 178;
         }
 

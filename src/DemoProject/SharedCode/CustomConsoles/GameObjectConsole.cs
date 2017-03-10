@@ -31,8 +31,7 @@ namespace StarterProject.CustomConsoles
             var frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
 
-            player = new SadConsole.GameHelpers.GameObject();
-            player.Animation = animation;
+            player = new SadConsole.GameHelpers.GameObject(animation);
             //player.RepositionRects = true;
             player.Position = new Point(textSurface.Width / 2, textSurface.Height / 2);
             playerPreviousPosition = player.Position;
@@ -116,7 +115,7 @@ namespace StarterProject.CustomConsoles
 
         protected override void OnPositionChanged(Point oldLocation)
         {
-            player.RenderOffset = this.Position;
+            //player.RenderOffset = this.Position;
         }
     }
 }
