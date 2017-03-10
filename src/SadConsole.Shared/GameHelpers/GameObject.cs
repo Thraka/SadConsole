@@ -12,10 +12,10 @@ namespace SadConsole.GameHelpers
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
-    public partial class GameObject: ISurface
+    public class GameObject : Screen
     {
         /// <summary>
-        /// Automatically forwards the <see cref="AnimatedTextSurface.AnimationStateChanged"/> event.
+        /// Automatically forwards the <see cref="AnimatedSurface.AnimationStateChanged"/> event.
         /// </summary>
         public event System.EventHandler<AnimatedSurface.AnimationStateChangedEventArgs> AnimationStateChanged;
 
@@ -25,19 +25,9 @@ namespace SadConsole.GameHelpers
         protected Renderers.ISurfaceRenderer renderer;
 
         /// <summary>
-        /// Reposition the rects of the animation.
-        /// </summary>
-        protected bool repositionRects;
-
-        /// <summary>
         /// Pixel positioning flag for position.
         /// </summary>
         protected bool usePixelPositioning;
-
-        /// <summary>
-        /// Where the console should be located on the screen.
-        /// </summary>
-        protected Point position;
 
         /// <summary>
         /// Animation for the game object.
@@ -50,61 +40,14 @@ namespace SadConsole.GameHelpers
         protected Font font;
 
         /// <summary>
-        /// Gets the name of this animation.
+        /// Treats the <see cref="IScreen.Position"/> of the console as if it is pixels and not cells.
         /// </summary>
-        public string Name { get; set; } = "";
+        public bool UsePixelPositioning { get { return usePixelPositioning; } set { usePixelPositioning = value; } }
 
         /// <summary>
-        /// Font for the game object.
+        /// A friendly name of the game object.
         /// </summary>
-        public Font Font
-        {
-            get { return font; }
-            set { font = value; UpdateRects(position, true); }
-        }
-
-        /// <summary>
-        /// An offset of where the object is rendered.
-        /// </summary>
-        protected Point renderOffset;
-
-        /// <summary>
-        /// Renderer used to draw the animation of the game object to the screen.
-        /// </summary>
-        public Renderers.ISurfaceRenderer Renderer { get { return renderer; } set { renderer = value; } }
-
-        /// <summary>
-        /// Offset applied to drawing the game object.
-        /// </summary>
-        public Point RenderOffset
-        {
-            get { return renderOffset; }
-            set { renderOffset = value; UpdateRects(position); }
-        }
-
-        /// <summary>
-        /// Gets or sets the position to render the cells.
-        /// </summary>
-        public Point Position
-        {
-            get { return position; }
-            set { Point previousPosition = position; position = value; UpdateRects(value); OnPositionChanged(previousPosition); }
-        }
-
-        /// <summary>
-        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
-        /// </summary>
-        public bool UsePixelPositioning { get { return usePixelPositioning; } set { usePixelPositioning = value; UpdateRects(position); } }
-
-        /// <summary>
-        /// Indicates the surface has changed and needs to be rendered.
-        /// </summary>
-        public bool IsDirty { get; set; } = true;
-
-        /// <summary>
-        /// The last texture render pass for this surface.
-        /// </summary>
-        public RenderTarget2D LastRenderResult { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// The current animation.
@@ -122,7 +65,6 @@ namespace SadConsole.GameHelpers
 
                 animation = value;
                 animation.Font = font;
-                UpdateRects(position, true);
 
                 animation.AnimationStateChanged += ForwardAnimationStateChanged;
                 animation.State = AnimatedSurface.AnimationState.Activated;
@@ -136,129 +78,34 @@ namespace SadConsole.GameHelpers
         public Dictionary<string, AnimatedSurface> Animations { get; protected set; } = new Dictionary<string, AnimatedSurface>();
 
         /// <summary>
-        /// When false, this <see cref="GameObject"/> won't be rendered.
-        /// </summary>
-        public bool IsVisible { get; set; } = true;
-
-        /// <summary>
-        /// When true, the position of the game object will offset all of the surface rects instead of using a positioning matrix for rendering.
-        /// </summary>
-        public bool RepositionRects
-        {
-            get { return repositionRects; }
-            set
-            {
-                if (repositionRects != value)
-                {
-                    repositionRects = value;
-                    UpdateRects(position, true);
-                }
-            }
-        }
-
-        public Rectangle AbsoluteArea { get; set; }
-
-        public Rectangle[] RenderRects { get; set; }
-
-        public Cell[] RenderCells
-        {
-            get
-            {
-                return ((ISurface)animation).RenderCells;
-            }
-        }
-
-        public Color Tint
-        {
-            get { return ((ISurface)animation).Tint; }
-            set { ((ISurface)animation).Tint = value; }
-        }
-
-        public Rectangle RenderArea { get; set; }
-
-        public int Width
-        {
-            get
-            {
-                return ((ISurface)animation).Width;
-            }
-        }
-
-        public int Height
-        {
-            get
-            {
-                return ((ISurface)animation).Height;
-            }
-        }
-
-        public Color DefaultBackground
-        {
-            get
-            {
-                return ((ISurface)animation).DefaultBackground;
-            }
-
-            set
-            {
-                ((ISurface)animation).DefaultBackground = value;
-            }
-        }
-
-        public Color DefaultForeground
-        {
-            get
-            {
-                return ((ISurface)animation).DefaultForeground;
-            }
-
-            set
-            {
-                ((ISurface)animation).DefaultForeground = value;
-            }
-        }
-
-        public Cell[] Cells
-        {
-            get
-            {
-                return ((ISurface)animation).Cells;
-            }
-        }
-
-        public Cell this[int x, int y]
-        {
-            get
-            {
-                return ((ISurface)animation)[x, y];
-            }
-        }
-
-        public Cell this[int index]
-        {
-            get
-            {
-                return ((ISurface)animation)[index];
-            }
-        }
-
-
-        /// <summary>
         /// Creates a new GameObject with the default font.
         /// </summary>
-        public GameObject() : this(Global.FontDefault) { }
+        public GameObject(int width, int height) : this(width, height, Global.FontDefault) { }
 
         /// <summary>
         /// Creates a new GameObject.
         /// </summary>
-        public GameObject(Font font)
+        public GameObject(int width, int height, Font font)
         {
             renderer = new Renderers.SurfaceRenderer();
-            animation = new AnimatedSurface("default", 1, 1, Global.FontDefault);
-            var frame = animation.CreateFrame();
-            frame[0].Glyph = 1;
-            this.font = animation.Font = font;
+            this.font = font;
+            Animation = new AnimatedSurface("default", width, height, Global.FontDefault);
+            animation.CreateFrame();
+            Animations.Add("default", animation);
         }
+
+        /// <summary>
+        /// Creates a new GameObject with a default animation/
+        /// </summary>
+        /// <param name="animation">The default animation. The animation will have its <see cref="Surfaces.AnimatedSurface.Name"/> property changesd to "default".</param>
+        public GameObject(AnimatedSurface animation)
+        {
+            animation.Name = "default";
+            Animation = animation;
+            Animations.Add("default", animation);
+            font = animation.Font;
+        }
+
 
         private void ForwardAnimationStateChanged(object sender, AnimatedSurface.AnimationStateChangedEventArgs e)
         {
@@ -266,115 +113,53 @@ namespace SadConsole.GameHelpers
         }
 
         /// <summary>
-        /// Called when the <see cref="Position" /> property changes.
+        /// Renders the game object and any attached children.
         /// </summary>
-        /// <param name="oldLocation">The location before the change.</param>
-        protected virtual void OnPositionChanged(Point oldLocation) { }
-
-        /// <summary>
-        /// Resets all of the rects of the animation based on <see cref="UsePixelPositioning"/> and if <see cref="RepositionRects"/> is true.
-        /// </summary>
-        /// <param name="position">The position of the game object.</param>
-        /// <param name="force">When true, always repositions rects.</param>
-        protected void UpdateRects(Point position, bool force = false)
-        {
-            if (repositionRects || force)
-            {
-                var width = Animation.Width;
-                var height = Animation.Height;
-                var font = Animation.Font;
-                Point offset;
-
-                var rects = new Rectangle[width * height];
-
-                if (repositionRects && usePixelPositioning)
-                {
-                    offset = position + renderOffset - new Point(animation.Center.X * font.Size.X, animation.Center.Y * font.Size.Y);
-                }
-                else if (repositionRects)
-                {
-                    offset = position + renderOffset - animation.Center;
-                    offset = new Point(offset.X * font.Size.X, offset.Y * font.Size.Y);
-                }
-                else
-                {
-                    offset = new Point();
-                }
-
-                AbsoluteArea = new Rectangle(offset.X, offset.Y, width * font.Size.X, height * font.Size.Y);
-
-                int index = 0;
-                
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        rects[index] = new Rectangle(x * font.Size.X + offset.X, y * font.Size.Y + offset.Y, font.Size.X, font.Size.Y);
-                        index++;
-                    }
-                }
-
-                RenderRects = rects;
-                LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
-                IsDirty = true;
-            }
-
-        }
-
-        /// <summary>
-        /// Forces the rendering rectangles to update with positioning information.
-        /// </summary>
-        public void UpdateAnimationRectangles()
-        {
-            UpdateRects(position, true);
-        }
-
-        /// <summary>
-        /// Draws the game object.
-        /// </summary>
-        public virtual void Draw(TimeSpan elapsed)
+        /// <param name="timeElapsed">The time since the last call.</param>
+        public override void Draw(TimeSpan timeElapsed)
         {
             if (IsVisible)
             {
-                Renderer.Render(this, true);
+                renderer.Render(animation);
+                
+                Global.DrawCalls.Add(new DrawCallSurface(animation, relativePosition - animation.Center, usePixelPositioning));
 
-                //if (repositionRects)
-                //    Global.DrawCalls.Add(new DrawCallSurface(this, Vector2.Zero));
-                //    //renderer.Render(this, NoMatrix);   
-                //else
-                    Global.DrawCalls.Add(new DrawCallSurface(this, position + renderOffset - animation.Center, false));
-                    //renderer.Render(this, position + renderOffset - animation.Center, usePixelPositioning);
-
+                base.Draw(timeElapsed);
             }
         }
 
         /// <summary>
-        /// Updates the animation.
+        /// Updates the game object animation.
         /// </summary>
-        public virtual void Update()
+        /// <param name="timeElapsed">The time since the last call.</param>
+        public override void Update(TimeSpan timeElapsed)
         {
-            Animation.Update();
+            if (!IsPaused)
+            {
+                animation.Update();
+
+                base.Update(timeElapsed);
+            }
         }
 
         /// <summary>
-        /// Saves this <see cref="GameObject"/> to a file.
+        /// Saves the <see cref="GameObject"/> to a file.
         /// </summary>
-        /// <param name="file">The file to save.</param>
-        /// <param name="knownTypes">The type of <see cref="GameObject.Renderer"/>.</param>
-        public void Save(string file, params Type[] knownTypes)
+        /// <param name="file">The destination file.</param>
+        public void Save(string file)
         {
-            Serializer.Save(this, file, Serializer.KnownTypes.Union(knownTypes).Union(new Type[] { typeof(SerializedTypes.GameObjectSerialized), typeof(AnimatedSurface), typeof(AnimatedSurface[]) }));
+            Serializer.Save((SerializedTypes.GameObjectSerialized)this, file);
         }
 
         /// <summary>
         /// Loads a <see cref="GameObject"/> from a file.
         /// </summary>
-        /// <param name="file">The file to load.</param>
-        /// <param name="knownTypes">The type of <see cref="GameObject.Renderer"/>.</param>
-        /// <returns>A new GameObject.</returns>
-        public static GameObject Load(string file, params Type[] knownTypes)
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static GameObject Load(string file)
         {
-            return Serializer.Load<GameObject>(file, Serializer.KnownTypes.Union(knownTypes));
+            return Serializer.Load<SerializedTypes.GameObjectSerialized>(file);
         }
     }
+
 }

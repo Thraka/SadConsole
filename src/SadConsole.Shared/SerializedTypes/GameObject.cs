@@ -19,20 +19,13 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public List<AnimatedSurfaceSerialized> Animations;
         [DataMember]
-        public FontSerialized Font;
-        [DataMember]
         public bool IsVisible;
         [DataMember]
         public PointSerialized Position;
         [DataMember]
-        public bool RepositionRects;
-        [DataMember]
         public bool UsePixelPositioning;
         [DataMember]
         public string Name;
-        [DataMember]
-        public PointSerialized RenderOffset;
-
 
         
         public static implicit operator GameObjectSerialized(GameHelpers.GameObject gameObject)
@@ -41,13 +34,10 @@ namespace SadConsole.SerializedTypes
             {
                 AnimationName = gameObject.Animation != null ? gameObject.Animation.Name : "",
                 Animations = gameObject.Animations.Values.Select(a => (AnimatedSurfaceSerialized)a).ToList(),
-                Font = gameObject.Font,
                 IsVisible = gameObject.IsVisible,
                 Position = gameObject.Position,
-                RepositionRects = gameObject.RepositionRects,
                 UsePixelPositioning = gameObject.UsePixelPositioning,
                 Name = gameObject.Name,
-                RenderOffset = gameObject.RenderOffset
             };
 
             if (!gameObject.Animations.ContainsKey(serializedObject.AnimationName))
@@ -58,7 +48,7 @@ namespace SadConsole.SerializedTypes
 
         public static implicit operator GameHelpers.GameObject(GameObjectSerialized serializedObject)
         {
-            var gameObject = new GameHelpers.GameObject(serializedObject.Font);
+            var gameObject = new GameHelpers.GameObject(1, 1);
 
             foreach (var item in serializedObject.Animations)
                 gameObject.Animations.Add(item.Name, item);
@@ -72,8 +62,6 @@ namespace SadConsole.SerializedTypes
             gameObject.Position = serializedObject.Position;
             gameObject.UsePixelPositioning = serializedObject.UsePixelPositioning;
             gameObject.Name = serializedObject.Name;
-            gameObject.RenderOffset = serializedObject.RenderOffset;
-            gameObject.RepositionRects = serializedObject.RepositionRects;
 
             return gameObject;
         }

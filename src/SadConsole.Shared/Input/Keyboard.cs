@@ -74,13 +74,23 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Returns true when they is in the <see cref="KeysReleased"/> collection.
+        /// Returns true when the key is in the <see cref="KeysReleased"/> collection.
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key was released this update frame.</returns>
         public bool IsKeyReleased(Keys key)
         {
             return KeysReleased.Contains(AsciiKey.Get(key));
+        }
+
+        /// <summary>
+        /// Returns true when the key is in the <see cref="KeysPressed"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key was considered first pressed.</returns>
+        public bool IsKeyPressed(Keys key)
+        {
+            return KeysPressed.Contains(AsciiKey.Get(key));
         }
 
 
