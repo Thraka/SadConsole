@@ -12,11 +12,9 @@ namespace SadRogueSharp
     /// </summary>
     public class Game1 : SadConsole.Game
     {
-        GraphicsDeviceManager graphics;
-
         public Game1() : base("Cheepicus12.font", 60, 30, null)
         {
-
+            
         }
 
         /// <summary>
@@ -31,16 +29,21 @@ namespace SadRogueSharp
 
             base.Initialize();
 
-            SadConsole.Settings.Input.DoMouse = true;
-            SadConsole.Settings.Input.DoKeyboard = true;
+            //var mapConsole = new Consoles.MapConsole(100, 100);
+            //var statusConsole = new Consoles.Status();
 
-            var mapConsole = new Consoles.MapConsole(100, 100);
-            var statusConsole = new Consoles.Status();
+            //SadConsole.Global.CurrentScreen.Children.Add(mapConsole);
+            //SadConsole.Global.CurrentScreen.Children.Add(statusConsole);
 
-            SadConsole.Global.CurrentScreen.Children.Add(mapConsole);
-            SadConsole.Global.CurrentScreen.Children.Add(statusConsole);
+            //SadConsole.Global.FocusedConsoles.Set(mapConsole);
 
-            SadConsole.Global.FocusedConsoles.Set(mapConsole);
+            var firstConsole = new SadConsole.Console(60, 30);
+
+            firstConsole.FillWithRandomGarbage();
+            firstConsole.Fill(new Rectangle(2, 2, 20, 3), Color.Aqua, Color.Black, 0);
+            firstConsole.Print(3, 3, "Hello World!");
+
+            SadConsole.Global.CurrentScreen.Children.Add(firstConsole);
         }
 
         /// <summary>
@@ -59,25 +62,5 @@ namespace SadRogueSharp
         {
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.Black);
-
-            base.Draw(gameTime);
-        }
     }
 }
