@@ -26,7 +26,7 @@ namespace SadConsole.Renderers
         /// <summary>
         /// The color of the modal background.
         /// </summary>
-        public Color ModalTint { get; set; } = new Color(0, 0, 0, (byte)(255f * 0.25f));
+        public Color ModalTint { get; set; } = new Color((byte)0, (byte)0, (byte)0, (byte)(255f * 0.25f));
 
         /// <summary>
         /// Renders a 

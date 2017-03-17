@@ -403,9 +403,9 @@ namespace SadConsole.Surfaces
                 for (int x = 0; x < textSurface.Width; x++)
                 {
                     SetGlyph(x, y, charCounter);
-                    SetForeground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), 255));
+                    SetForeground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)255));
                     SetBackground(x, y, textSurface.DefaultBackground);
-                    SetBackground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), 255));
+                    SetBackground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)255));
                     SetMirror(x, y, (SpriteEffects)Global.Random.Next(0, 4));
                     charCounter++;
                     if (charCounter > 255)

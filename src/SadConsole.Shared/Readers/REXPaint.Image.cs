@@ -127,8 +127,8 @@ namespace SadConsole.Readers
                         if (!rexCell.IsTransparent())
                         {
                             var newCell = surface[x, y];
-                            newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, 255);
-                            newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, 255);
+                            newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
+                            newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
                             newCell.Glyph = rexCell.Character;
                         }
                     }
