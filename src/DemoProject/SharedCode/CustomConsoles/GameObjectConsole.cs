@@ -39,23 +39,8 @@ namespace StarterProject.CustomConsoles
             // Setup this console to accept keyboard input.
             UseKeyboard = true;
             IsVisible = false;
-        }
 
-        public override void Update(System.TimeSpan time)
-        {
-            base.Update(time);
-
-            // Normally you call update on game objects to have them animate, we dont have an animation.
-            //player.Update();
-        }
-
-        public override void Draw(System.TimeSpan time)
-        {
-            if (IsVisible)
-            {
-                base.Draw(time);
-                player.Draw(time);
-            }
+            Children.Add(player);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
@@ -111,11 +96,6 @@ namespace StarterProject.CustomConsoles
             // You could have multiple entities in the game for example, and change
             // which entity gets keyboard commands.
             return false;
-        }
-
-        protected override void OnPositionChanged(Point oldLocation)
-        {
-            //player.RenderOffset = this.Position;
         }
     }
 }

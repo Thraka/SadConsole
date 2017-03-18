@@ -26,6 +26,8 @@ namespace StarterProject.CustomConsoles
         {
             mouseCursor = new SadConsole.GameHelpers.GameObject(1, 1);
             mouseCursor.Animation.CurrentFrame.Cells[0].Glyph = 178;
+
+            Children.Add(mouseCursor);
         }
 
         public override void Draw(TimeSpan delta)
@@ -33,12 +35,12 @@ namespace StarterProject.CustomConsoles
             // First draw the console
             base.Draw(delta);
 
-            mouseCursor.Draw(delta);
+            //mouseCursor.Draw(delta);
         }
 
         public override bool ProcessMouse(MouseConsoleState state)
         {
-            mouseCursor.Position = state.WorldPosition;
+            mouseCursor.Position = state.ConsolePosition;
 
             return base.ProcessMouse(state);
         }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using System;
 using SadConsole;
@@ -16,14 +15,15 @@ namespace StarterProject.Windows
         private Button _closeButton;
 #endregion
 
-        private Rectangle TrackedRegion = new Rectangle(1, 1, 16, 16);
-        private SadConsole.Input.MouseConsoleState _lastInfo = null;
-        private SadConsole.Effects.Recolor _highlightedCellEffect = new SadConsole.Effects.Recolor();
-        private int _fontRowOffset = 0;
-        private EffectsManager effects;
+        private Rectangle trackedRegion = new Rectangle(1, 1, 16, 16);
+        private SadConsole.Input.MouseConsoleState lastMouseState = null;
+        private SadConsole.Effects.Recolor highlightedEffect;
+        private SadConsole.Effects.Fade unhighlightEffect;
+        private int fontRowOffset = 0;
 
         public event EventHandler ColorsChanged;
         public int SelectedCharacterIndex = 0;
+
         public Color Foreground = Color.White;
         public Color Background = Color.Black;
 
@@ -48,16 +48,29 @@ namespace StarterProject.Windows
             _charScrollBar.ValueChanged += new EventHandler(_charScrollBar_ValueChanged);
             _charScrollBar.IsEnabled = textSurface.Font.Rows > 16;
 
-            // Effects
-            effects = new EffectsManager(textSurface);
-
             // Add all controls
             this.Add(_charScrollBar);
 
             _closeButton = new Button(6) { Text = "Ok", Position = new Point(19, 1) }; Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
 
-            _highlightedCellEffect.Foreground = Color.Blue;
-            _highlightedCellEffect.Background = ColorHelper.DarkGray;
+            // Effects
+            highlightedEffect = new Recolor();
+            highlightedEffect.Foreground = Color.Blue;
+            highlightedEffect.Background = Color.DarkGray;
+
+            unhighlightEffect = new SadConsole.Effects.Fade()
+            {
+                FadeBackground = true,
+                FadeForeground = true,
+                DestinationForeground = new ColorGradient(highlightedEffect.Foreground, Color.White),
+                DestinationBackground = new ColorGradient(highlightedEffect.Background, Color.Black),
+                FadeDuration = 0.3d,
+                RemoveOnFinished = true,
+                UseCellBackground = false,
+                UseCellForeground = false,
+                CloneOnApply = true,
+                Permanent = true
+            };
 
             // The frame will have been drawn by the base class, so redraw and our close button will be put on top of it
             Redraw();
@@ -68,9 +81,9 @@ namespace StarterProject.Windows
 
         void _charScrollBar_ValueChanged(object sender, EventArgs e)
         {
-            _fontRowOffset = ((SadConsole.Controls.ScrollBar)sender).Value;
+            fontRowOffset = ((SadConsole.Controls.ScrollBar)sender).Value;
 
-            int charIndex = _fontRowOffset * 16;
+            int charIndex = fontRowOffset * 16;
             for (int y = 1; y < 17; y++)
             {
                 for (int x = 1; x < 17; x++)
@@ -106,7 +119,7 @@ namespace StarterProject.Windows
 
         protected override void OnMouseLeftClicked(SadConsole.Input.MouseConsoleState state)
         {
-            if (state.Cell != null && TrackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
+            if (state.Cell != null && trackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
             {
                 SelectedCharacterIndex = state.Cell.Glyph;
             }
@@ -118,16 +131,16 @@ namespace StarterProject.Windows
 
         protected override void OnMouseMove(SadConsole.Input.MouseConsoleState state)
         {
-            if (state.Cell != null && TrackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
+            if (state.Cell != null && trackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
             {
                 // Draw the character index and value in the status area
                 string[] items = new string[] { "Index: ", state.Cell.Glyph.ToString() + " ", ((char)state.Cell.Glyph).ToString() };
 
                 items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
 
-                var text = items[0].CreateColored(ColorHelper.LightBlue, Theme.BorderStyle.Background, null) +
-                           items[1].CreateColored(ColorHelper.LightCoral, Color.Black, null) +
-                           items[2].CreateColored(ColorHelper.LightCyan, Color.Black, null);
+                var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
+                           items[1].CreateColored(Color.LightCoral, Color.Black, null) +
+                           items[2].CreateColored(Color.LightCyan, Color.Black, null);
 
                 text.IgnoreBackground = true;
                 text.IgnoreEffect = true;
@@ -135,39 +148,28 @@ namespace StarterProject.Windows
                 Print(1, textSurface.Height - 2, text);
 
                 // Set the special effect on the current known character and clear it on the last known
-                if (_lastInfo == null)
+                if (lastMouseState == null)
                 {
                 }
-                else if (_lastInfo.ConsolePosition != state.ConsolePosition)
+                else if (lastMouseState.ConsolePosition != state.ConsolePosition)
                 {
-                    effects.SetEffect(_lastInfo.Cell,
-                    new SadConsole.Effects.Fade()
-                    {
-                        FadeBackground = true,
-                        FadeForeground = true,
-                        DestinationForeground = new ColorGradient(_highlightedCellEffect.Foreground, _lastInfo.Cell.Foreground),
-                        DestinationBackground = new ColorGradient(_highlightedCellEffect.Background, _lastInfo.Cell.Background),
-                        FadeDuration = 0.3d,
-                        RemoveOnFinished = true,
-                        UseCellBackground = false,
-                        UseCellForeground = false,
-                        CloneOnApply = true
-                    }
+                    SetEffect(lastMouseState.ConsolePosition.X, lastMouseState.ConsolePosition.Y,
+                    unhighlightEffect
                     );
                 }
 
-                effects.SetEffect(state.Cell, _highlightedCellEffect);
-                _lastInfo = state.Clone();
+                SetEffect(state.ConsolePosition.X, state.ConsolePosition.Y, highlightedEffect);
+                lastMouseState = state.Clone();
             }
             else
             {
                 DrawSelectedItemString();
 
                 // Clear the special effect on the last known character
-                if (_lastInfo != null)
+                if (lastMouseState != null)
                 {
-                    effects.SetEffect(_lastInfo.Cell, null);
-                    _lastInfo = null;
+                    SetEffect(lastMouseState.ConsolePosition.X, lastMouseState.ConsolePosition.Y, unhighlightEffect);
+                    lastMouseState = null;
                 }
             }
 
@@ -183,11 +185,11 @@ namespace StarterProject.Windows
             string[] items = new string[] { "Selected: ", ((char)SelectedCharacterIndex).ToString(), " (", SelectedCharacterIndex.ToString(), ")" };
             items[4] = items[4].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
 
-            var text = items[0].CreateColored(ColorHelper.LightBlue, Theme.BorderStyle.Background, null) +
-                       items[1].CreateColored(ColorHelper.LightCoral, Theme.BorderStyle.Background, null) +
-                       items[2].CreateColored(ColorHelper.LightCyan, Theme.BorderStyle.Background, null) +
-                       items[3].CreateColored(ColorHelper.LightCoral, Theme.BorderStyle.Background, null) +
-                       items[4].CreateColored(ColorHelper.LightCyan, Theme.BorderStyle.Background, null);
+            var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
+                       items[1].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
+                       items[2].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null) +
+                       items[3].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
+                       items[4].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null);
 
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;
@@ -197,7 +199,7 @@ namespace StarterProject.Windows
 
         protected override void OnMouseExit(SadConsole.Input.MouseConsoleState state)
         {
-            if (_lastInfo != null)
+            if (lastMouseState != null)
             {
 //                _lastInfo.Cell.Effect = null;
             }
@@ -209,7 +211,7 @@ namespace StarterProject.Windows
 
         protected override void OnMouseEnter(SadConsole.Input.MouseConsoleState state)
         {
-            if (_lastInfo != null)
+            if (lastMouseState != null)
             {
 //                _lastInfo.Cell.Effect = null;
             }
@@ -240,9 +242,9 @@ namespace StarterProject.Windows
 
             items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
 
-            var text = items[0].CreateColored(ColorHelper.LightBlue, Color.Black, null) +
-                       items[1].CreateColored(ColorHelper.LightCoral, Color.Black, null) +
-                       items[2].CreateColored(ColorHelper.LightCyan, Color.Black, null);
+            var text = items[0].CreateColored(Color.LightBlue, Color.Black, null) +
+                       items[1].CreateColored(Color.LightCoral, Color.Black, null) +
+                       items[2].CreateColored(Color.LightCyan, Color.Black, null);
 
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;

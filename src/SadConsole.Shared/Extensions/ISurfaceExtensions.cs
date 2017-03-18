@@ -133,6 +133,8 @@ namespace SadConsole
                     }
                 }
             }
+
+            destination.IsDirty = true;
         }
 
         /// <summary>
@@ -159,6 +161,8 @@ namespace SadConsole
                     }
                 }
             }
+
+            destination.IsDirty = true;
         }
 
         /// <summary>
@@ -195,6 +199,8 @@ namespace SadConsole
                 destY = destinationY;
                 destX++;
             }
+
+            destination.IsDirty = true;
         }
         #endregion
 

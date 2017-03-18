@@ -185,7 +185,7 @@ namespace SadConsole.Surfaces
         protected void UpdateFrameReferences()
         {
             var frame = Frames[_currentFrameIndex];
-            RenderCells = frame.Cells;
+            cells = RenderCells = frame.Cells;
             DefaultBackground = frame.DefaultBackground;
             DefaultForeground = frame.DefaultForeground;
             IsDirty = true;

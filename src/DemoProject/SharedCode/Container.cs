@@ -28,22 +28,22 @@ namespace StarterProject
 
             consoles = new IConsoleMetadata[] {
                 //consoleReal,
+                new CustomConsoles.AutoTypingConsole(),
+                new CustomConsoles.SplashScreen() { SplashCompleted = () => MoveNextConsole() },
+                new CustomConsoles.StringParsingConsole(),
                 new CustomConsoles.TextCursorConsole(),
-                new CustomConsoles.SerializationTests(),
                 new CustomConsoles.MouseRenderingDebug(),
                 new CustomConsoles.ViewsAndSubViews(),
                 new CustomConsoles.ControlsTest(),
                 new CustomConsoles.SubConsoleCursor(),
-                new CustomConsoles.AutoTypingConsole(),
                 new CustomConsoles.DOSConsole(),
-                new CustomConsoles.ScrollableConsole(25, 6, 70),
-                new CustomConsoles.CursorConsole(),
                 new CustomConsoles.GameObjectConsole(),
                 new CustomConsoles.SceneProjectionConsole(),
-                new CustomConsoles.StringParsingConsole(),
                 new CustomConsoles.AnsiConsole(),
                 new CustomConsoles.StretchedConsole(),
+                new CustomConsoles.WorldGenerationConsole(),
                 new CustomConsoles.RandomScrollingConsole(),
+                new CustomConsoles.SerializationTests(),
             };
 
             MoveNextConsole();
@@ -70,14 +70,14 @@ namespace StarterProject
             headerConsole.SetConsole(selectedConsole);
         }
 
-        public override bool ProcessKeyboard(Keyboard state)
-        {
-            return selectedConsole.ProcessKeyboard(state);
-        }
+        //public override bool ProcessKeyboard(Keyboard state)
+        //{
+        //    return selectedConsole.ProcessKeyboard(state);
+        //}
 
-        public override bool ProcessMouse(MouseConsoleState state)
-        {
-            return selectedConsole.ProcessMouse(state);
-        }
+        //public override bool ProcessMouse(MouseConsoleState state)
+        //{
+        //    return selectedConsole.ProcessMouse(state);
+        //}
     }
 }

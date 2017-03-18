@@ -3,21 +3,28 @@ using Microsoft.Xna.Framework.Graphics;
 
 using System;
 using SadConsole;
-using SadConsole.Consoles;
-using Console = SadConsole.Consoles.Console;
+using SadConsole.Surfaces;
+using Console = SadConsole.Console;
 using System.Collections.Generic;
 using SadConsole.Instructions;
 using SadConsole.Effects;
 
 namespace StarterProject.CustomConsoles
 {
-    class SplashScreen : Console
+    class SplashScreen : Console, IConsoleMetadata
     {
+        public ConsoleMetadata Metadata
+        {
+            get
+            {
+                return new ConsoleMetadata() { Title = "Text Mouse Cursor", Summary = "Draws a game object where ever the mouse cursor is." };
+            }
+        }
 
         public Action SplashCompleted { get; set; }
 
         private InstructionSet _animation;
-        private TextSurface _consoleImage;
+        private BasicSurface _consoleImage;
         private Point _consoleImagePosition;
         private EffectsManager effectsManager;
         int _x = -50;
@@ -25,7 +32,7 @@ namespace StarterProject.CustomConsoles
         List<int> cellindexes = new List<int>();
 
         public SplashScreen()
-            : base(80, 25)
+            : base(80, 23)
         {
             IsVisible = false;
             effectsManager = new EffectsManager(this.TextSurface);
@@ -40,12 +47,12 @@ namespace StarterProject.CustomConsoles
             Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
 
             // Load the logo
-            System.IO.Stream imageStream = System.IO.File.OpenRead("sad.png");
-            var image = Texture2D.FromStream(Engine.Device, imageStream);
+            System.IO.Stream imageStream = Microsoft.Xna.Framework.TitleContainer.OpenStream("sad.png");
+            var image = Texture2D.FromStream(Global.GraphicsDevice, imageStream);
             imageStream.Dispose();
 
             // Configure the logo
-            _consoleImage = image.ToSurface(Engine.DefaultFont, false);
+            _consoleImage = image.ToSurface(Global.FontDefault, false);
             _consoleImagePosition = new Point(TextSurface.Width / 2 - _consoleImage.Width / 2, -1);
             _consoleImage.Tint = Color.Black;
 
@@ -123,25 +130,26 @@ namespace StarterProject.CustomConsoles
             });
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             if (!IsVisible)
                 return;
 
-            base.Update();
-            effectsManager.UpdateEffects(Engine.GameTimeElapsedUpdate);
+            base.Update(delta);
+            effectsManager.UpdateEffects(Global.GameTimeElapsedUpdate);
 
             _animation.Run();
         }
 
-        public override void Render()
+        public override void Draw(TimeSpan delta)
         {
             // Draw the logo console...
             if (IsVisible)
             {
-                Renderer.Render(_consoleImage, _consoleImagePosition);
+                Renderer.Render(_consoleImage);
+                Global.DrawCalls.Add(new DrawCallSurface(_consoleImage, _consoleImagePosition, false));
 
-                base.Render();
+                base.Draw(delta);
             }
         }
     }

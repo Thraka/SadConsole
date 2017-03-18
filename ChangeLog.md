@@ -1,4 +1,4 @@
-﻿## 03/XX/2016
+﻿## 03/16/2016
 
 Major update to all of SadConsole. 
 
@@ -80,10 +80,6 @@ Some methods and/or properties have been renamed. Here are some of them.
 ### Input
 
 Input has been overhauled a bit. Keyboard is mostly the same except for some minor method refactoring. Mouse has change a lot. Previously each console evaulated mouse state for itself. This is no longer how mouse input works. Instead mouse input is driven by the `SadConsole.Input.Mouse.Update` method which cycles through the `SadConsole.Global.Screen` gathering all console types. Then, each console has the `ProcessMouse` method called. If `true` is returned, mouse processing stops. This happens unless the `Global.InputTargets.Console` has the `IsExclusiveMouse` property set to `true`. If `true`, mouse is always sent to this console and never to anything else.
-
-<!-- 
---- PLACE HOLDER FOR GAMEPAD NOTES
--->
 
 ### Startup code
 

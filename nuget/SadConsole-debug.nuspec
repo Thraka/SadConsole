@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.0.0-rc2</version>
+    <version>6.0.1-rc1</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,24 +12,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics.</description>
     <releaseNotes>
-      Initial release. The other libraries (SadConsole.Ansi, SadConsle.Controls, SadConsole.GameHelpers) have merged into a single library, SadConsole.dll
-
-      Rewrite and refactor of code.
-
-      Single NuGet package that will contain all platform targets.
-
-      ** rc2 Notes **
-      - Fixed bug with mouse processing.
-      - Fixed bug when you draw something before the first screen clear call.
-      - Fixed bug with gameobject animations.
-      - Rewrote gameobject -- simplified and is IScreen object now.
-
-      ** rc1 Notes **
-      - Fixed a big with the screen type not initializing Children to a new instance.
-
-      ** pre9 Notes **
-      - IScreen (and all classes that implement it) now have a IsPaused property which can stop the Update method.
-      - Parent position now affects the rendering position of the child except for Window types.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

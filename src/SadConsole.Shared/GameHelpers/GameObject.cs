@@ -100,10 +100,11 @@ namespace SadConsole.GameHelpers
         /// <param name="animation">The default animation. The animation will have its <see cref="Surfaces.AnimatedSurface.Name"/> property changesd to "default".</param>
         public GameObject(AnimatedSurface animation)
         {
+            renderer = new Renderers.SurfaceRenderer();
+            font = animation.Font;
             animation.Name = "default";
             Animation = animation;
             Animations.Add("default", animation);
-            font = animation.Font;
         }
 
 
