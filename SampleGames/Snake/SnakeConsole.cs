@@ -1,8 +1,7 @@
 ﻿using System;
 using SadConsole;
 using System.Collections.Generic;
-using SadConsole.Consoles;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole.Instructions;
@@ -50,7 +49,6 @@ namespace Snake
             lastUpdate = DateTime.Now;
 
             random = new Random();
-            this.IsVisible = false;
             gameState = GameState.MenuScreen;
 
             // Draw outline of phone
@@ -194,6 +192,7 @@ namespace Snake
             fadeEffect.FadeForeground = true;
             fadeEffect.Repeat = false;
             fadeEffect.FadeDuration = 0.1f;
+            fadeEffect.RemoveOnFinished = true;
             return fadeEffect;
         }
         private void AstrickKeyAnimationCb(CodeInstruction codeInstruction)
@@ -295,7 +294,7 @@ namespace Snake
             Print(23, 21, "Start", Color.Black, Color.DarkSeaGreen);
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             switch(gameState)
             {
@@ -310,7 +309,7 @@ namespace Snake
             }
         }
 
-        private bool ProcessKeyboardMenu(SadConsole.Input.KeyboardInfo info)
+        private bool ProcessKeyboardMenu(SadConsole.Input.Keyboard info)
         {
             bool processedKeyboard = false;
             if (info.IsKeyReleased(Keys.Multiply))
@@ -322,7 +321,7 @@ namespace Snake
             return processedKeyboard;
         }
 
-        private bool ProcessKeyboardRunning(SadConsole.Input.KeyboardInfo info)
+        private bool ProcessKeyboardRunning(SadConsole.Input.Keyboard info)
         {
             bool processedKeyboard = false;
             
@@ -349,7 +348,7 @@ namespace Snake
             
             return processedKeyboard;
         }
-        private bool ProcessKeyboardGameOver(SadConsole.Input.KeyboardInfo info)
+        private bool ProcessKeyboardGameOver(SadConsole.Input.Keyboard info)
         {
             bool processedKeyboard = false;
             if (info.IsKeyReleased(Keys.Multiply))
@@ -490,7 +489,7 @@ namespace Snake
             return false;
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             
             switch(gameState)
@@ -500,7 +499,7 @@ namespace Snake
                     break;
             }
 
-            base.Update();
+            base.Update(delta);
         }
 
 

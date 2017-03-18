@@ -3,8 +3,7 @@ using System.Text;
 using SadConsole;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using SadConsole.Consoles;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole.Instructions;
@@ -141,7 +140,7 @@ namespace Castle
             Print(11, 21, "(1550 is perfect)", Color.White);
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if(info.KeysReleased.Count > 0)
             {

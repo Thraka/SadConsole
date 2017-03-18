@@ -1,16 +1,128 @@
-﻿## 01/16/2016
+﻿## 03/16/2016
 
-- SFML code removed and archived in the [SFML branch](https://github.com/Thraka/SadConsole/tree/SFML).
+Major update to all of SadConsole. 
 
-### Core
+A lot of refactoring has happened. Many of the types in SadConsole have been moved around to a more logical position and a lot of redundancy has been removed. 
 
-- Fixed a bug with restoring the window after minimize.
+For example, the **Console** type used to be located at the `SadConsole.Consoles.Console` which felt very obtuse. **Console** is a core type that doesn't need its own namespace, much like **Cell**. This type is now located in the root namespace `SadConsole`.
 
-### Controls
+Other things have simplified naming too, like `Console.CanUseKeyboard` is just `Console.UseKeyboard` now.
 
-- Fix for window.center in full screen mode
+### Core engine
 
-## 01/03/2016
+`SadConsole.Engine` has been removed. Its role was to coordinate all the parts of SadConsole. Instead this has been split into three parts, `SadConsole.Global` which represents state (time passed, keyboard/mouse, current thing to render), `SadConsole.Game` which is the `MonoGame.Game` instance, and `SadConsole.Settings` which provides full screen, toggle drawing on/off etc.
+
+| Class |     |
+| ----- | --- |
+| SadConsole.Global   | Global state, like time elapsed, keyboard/mouse input state, the active thing to render. |
+| SadConsole.Game     | `Microsoft.Xna.Framework.Game` game instance that you can run instead of providing your own. |
+| SadConsole.Settings | Various settings like fullscreen, device clear color, enable/disable keyboard or mouse, other settings. | 
+
+
+### Core types
+
+The `SadConsole.Consoles` namespace does not exist anymore and is instead broken up into two different namespaces that better represents the types contained in it:
+
+| Namespace |     |
+| --------- | --- |
+| SadConsole.Surfaces  | All types of surfaces that are attached to a Console. |
+| SadConsole.Renderers | All renderers that render surfaces and are attached to a Console. |
+
+The **TextSurface** naming convention has been simplified to **Surface**. And some of the interface and base class complexity of the **TextSurface** stuff has been simplified into fewer types. 
+
+### Rendering
+
+The rendering system in SadConsole has had some improvements. Instead of each ** Renderer**  having its own ** SpriteBatch** , there is a single `SadConosle.Global.SpriteBatch` which is reused by all renderers. This reduces memory and reduces CPU cycles that were wasted everytime a renderer was created.
+
+Each **Surface** now provides a **RenderTarget2D** type which is a texture. Whenever a surface is rendered, it is drawn onto this texture. At the end of the global Draw call, all surfaces that are in the drawing pipeline are rendered to a single **RenderTarget2D** texture at `SadConsole.Global.RenderOutput`. This final texture (which contains all drawing from SadConsole) is then drawn to the screen. This simplifies fullscreen and stretch modes. This new system also allows anyone to bypass any part of SadConsole rendering and use the rendered textures to draw on any sort of 3D model or scene of their game. For example, you could build up a 3D scene of an old computer terminal and then use SadConsole on the screen of the computer.
+
+The rendering system is now completely cached. Each **ISurface** type has a **IsDirty** flag which causes the backing **RenderTarget2D** to be updated.
+
+### Notable types
+
+Here is a list of types that have changed and what replaced them. The root `SadConsole` namespace is implied in all of these.
+
+| Old Class        | New Class     |
+| ---------------- | --- |
+| Engine           | Replaced by **Global**, **Game**, and **Settings**. | 
+| ICellAppearance  | Removed - Use **Cell**. |
+| CellAppearance   | Removed - Use **Cell**. |
+| Consoles.IConsole     | IConsole. Still exists, implements **IScreen** now. |
+| Consoles.IConsoleList | Removed. |
+| Consoles.Console      | Console |
+| Consoles.ConsoleList  | Removed. All **IScreen** types have both **Parent** and **Children** properties. |
+| Consoles.ITextSurface        | Surfaces.ISurface |
+| Consoles.TextSurfaceBasic    | Removed. Merged into **Surfaces.Surface** |
+| Consoles.TextSurface         | Surfaces.BasicSurface |
+| Consoles.TextSurfaceView     | Surfaces.SurfaceView  |
+| Consoles.AnimatedTextSurface | Surfaces.AnimatedSurface  |
+| Consoles.LayeredTextSurface  | Surfaces.LayeredSurface  |
+| Consoles.Cursor              | Cursor  |
+| Consoles.SurfaceEditor       | Surfaces.SurfaceEditor  |
+| Consoles.ITextSurfaceRenderer       | Renderers.ISurfaceRenderer |
+| Consoles.TextSurfaceRenderer        | Renderers.SurfaceRenderer |
+| Consoles.LayeredTextRenderer        | Renderers.LayeredSurfaceRenderer |
+| Consoles.ITextSurfaceRendererUpdate | Removed - All surfaces support cached rendering. |
+| Consoles.CachedTextSurfaceRenderer  | Removed - All surfaces support cached rendering. |
+| Input.MouseInfo       | Renamed to Input.Mouse |
+| Input.KeyboardInfo    | Renamed to Input.Keyboard | 
+
+Besides the **Consoles** namespace, startup, and **Engine** -> **Global** changes, not much else has changed.
+
+Some methods and/or properties have been renamed. Here are some of them.
+
+| Old name              | New name |
+| --------------------- | -------- |
+| Input.Keyboard.ProcessKeys | Input.Keyboard.Process |
+| Input.Mouse.ProcessMouse   | Input.Mouse.Process |
+| Engine.ActiveConsole       | Global.InputTargets -- This is a new type that allows a Push/Pop/Set system for who gets keyboard/exclusive mouse input |
+
+### Input
+
+Input has been overhauled a bit. Keyboard is mostly the same except for some minor method refactoring. Mouse has change a lot. Previously each console evaulated mouse state for itself. This is no longer how mouse input works. Instead mouse input is driven by the `SadConsole.Input.Mouse.Update` method which cycles through the `SadConsole.Global.Screen` gathering all console types. Then, each console has the `ProcessMouse` method called. If `true` is returned, mouse processing stops. This happens unless the `Global.InputTargets.Console` has the `IsExclusiveMouse` property set to `true`. If `true`, mouse is always sent to this console and never to anything else.
+
+### Startup code
+
+The code to start SadConsole from a dedicated SadConsole project is pretty much the same. But now that `Engine` is gone, `Global` is used and the names of the draw/update events are simplier. They also are direct delegates instead of event.
+
+```csharp
+static void Main(string[] args)
+{
+    // Setup the engine and creat the main window.
+    SadConsole.Game.Create("IBM.font", 80, 25);
+
+    // Hook the start event so we can add consoles to the system.
+    SadConsole.Game.OnInitialize = Init;
+
+    // Hook the update event that happens each frame so we can trap keys and respond.
+    SadConsole.Game.OnUpdate = Update;
+
+    // Hook the "after render" even though we're not using it.
+    SadConsole.Game.OnDraw = DrawFrame;
+            
+    // Start the game.
+    SadConsole.Game.Instance.Run();
+
+    //
+    // Code here will not run until the game has shut down.
+    //
+}
+
+private static void DrawFrame(GameTime time)
+{
+    // Custom drawing. You don't usually have to do this.
+}
+
+private static void Update(GameTime time)
+{
+    // Called each logic update.
+}
+
+private static void Init()
+{
+    // Any setup
+}
+```
 
 ## 01/06/2016
 
@@ -132,19 +244,19 @@ Versions are no longer the same across all libraries.
 ## Version 3.0.0 (06/07/2016)
 * Rewrote how the Console interacts with backing data and rendering.
 * CellSurface is gone and is replaced by TextSurface.
-	* TextSurfaces have viewports and the interface to read/write to the cell data.
-	* TextSurfaceView is an additional type that surfaces part of a TextSurface as a new type. Cells are shared between the two but the view uses a separate set of x,y coordinates.
-	* Cannot be resized anymore. Create a newly sized surface and copy the data to it.
+    * TextSurfaces have viewports and the interface to read/write to the cell data.
+    * TextSurfaceView is an additional type that surfaces part of a TextSurface as a new type. Cells are shared between the two but the view uses a separate set of x,y coordinates.
+    * Cannot be resized anymore. Create a newly sized surface and copy the data to it.
 * CellsRenderer is gone and is replaced by TextSurfaceRenderer
-	* This now is a very trimmed down class that *only* handles drawing to the screen.
-	* ViewPort systems were moved to the TextSurface.
+    * This now is a very trimmed down class that *only* handles drawing to the screen.
+    * ViewPort systems were moved to the TextSurface.
 * Engine initialization was simplified with a lot of helper code. Starting game construction should be quicker and easier.
-	* Startup code reduced from around 13 lines to 1 line.
+    * Startup code reduced from around 13 lines to 1 line.
 * Decoupled Console.Cursor from Console. It's now its own class and uses IConsole.
 * Controls library updated.
-	* Now that resize on a surface isn't supported, many controls are built differently. Some constructors changed.
-	* Fixed a bug that stopped processing mouse on any control added after a scroll bar.
-	* Windows now use a WindowRenderer instead of the standard renderer.
+    * Now that resize on a surface isn't supported, many controls are built differently. Some constructors changed.
+    * Fixed a bug that stopped processing mouse on any control added after a scroll bar.
+    * Windows now use a WindowRenderer instead of the standard renderer.
 * Added a new Print overload for a text surface that allows you to opt into which things you want to update (foreground, background, spriteeffect).
 * Entity system removed. Replaced with Consoles.AnimatedTextSurface and in the GameHelpers library, SadConsole.Game.GameObject
 * Tons more... https://github.com/Thraka/SadConsole/pull/26
@@ -293,7 +405,7 @@ Versions are no longer the same across all libraries.
     * Added the PrintOnlyCharacterData property, defaults to false.
         * This allows you to override this method in a derived class to control how the cursor appears on the screen.
     * Removed CursorCharacter, use CursorRenderCell.CharacterIndex instead.
-* When a CellAppearance copies itself to something else, if the CharacterIndex is -1, it will skip copying the CharacterIndex.
+* When a Cell copies itself to something else, if the CharacterIndex is -1, it will skip copying the CharacterIndex.
 * Added SadConsole.Algorithms.GradientFill. (Thanks StackOverflow.GameDeveloper [micklh and anko])
 * CellSurface now implements IEnumerable<Cell>.
 * CellSurface respects ICellEffect.CloneOnApply when an effect is added to a cell.
@@ -371,10 +483,10 @@ Versions are no longer the same across all libraries.
 * During the CellsRenderer.Update method, all known effects from the CellData property will run their Update method.
     * Then, the Effect.Apply(Cell) method will be called on each cell associated with the effect.
     * This keeps all cells synched with the effect they are using.
-* ICellappearance no longer has the Effect property. Instead the CharacterIndex property has been added
+* ICell no longer has the Effect property. Instead the CharacterIndex property has been added
     * This is a better description of the interface, which describes what the cell looks like for rendering.
     * The effect was not part of rendering, only part of changing what the cell looked like.
-    * The Cellappearance class have been updated with this change.
+    * The Cell class have been updated with this change.
 * Input - Mouse data and event now have the following new properties:
     * ScrollWheelValue
     * ScrollWheelValueChange
@@ -432,7 +544,7 @@ Versions are no longer the same across all libraries.
     * These have been replaced with Engine.WindowWidth, Engine.WindowHeight, Engine.GetScreenSizeInCells(Font), and GetScreenSizeInCells(CellSurface surface)
 * CellSurface did not set new cells that are created during resize to the default foreground/background of the surface
 * Added Console.OnLocationChanged protected method which is called when the location property value changes
-* Added ICellAppearance. CellAppearance is no longer the base class for Cell, but standalone
+* Added ICell. Cell is no longer the base class for Cell, but standalone
 * Added Console.MoveToFrontOnMouseFocus property
 * Added the Shapes.Line shape to draw a line on a console. The line can have a starting/middle/ending characters and appearance
 * Added ConsoleList.Clear() method
@@ -445,7 +557,7 @@ Versions are no longer the same across all libraries.
 * CellSurface has two new methods to help get information when you have reference to a cell: GetCellIndex and GetCellPosition
 * CellSurface.IsValidCell was not calculating correctly
 * Console.VirtualCursor can no longer be null. Use Console.VirtualCursor.IsVisible true to hide the cursor
-* Print(int x, int y, string text, CellAppearance appearance) has changed to use ICellAppearance
+* Print(int x, int y, string text, Cell appearance) has changed to use ICell
 * Perf improvements for ViewPortConsole and Console rendering
 
 #### Controls
@@ -514,7 +626,7 @@ Versions are no longer the same across all libraries.
 #### Core
 * When cloning an EffectsChain, the active effect on the clone referenced the clone source instead of the new cloned chain
 * Added Delay effect.
-* Fixed bug where CellAppearance's effect property didn't behave like Cell.
+* Fixed bug where Cell's effect property didn't behave like Cell.
 * CellEffects are all using double for time counting instead of float.
 * Moved cell.effect update to the Update method. Was calling it in the Render method for ViewPortConsole.
 * CreateColored string extension did not set the backing string information.

@@ -3,8 +3,7 @@ using System.Text;
 using SadConsole;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using SadConsole.Consoles;
-using Console = SadConsole.Consoles.Console;
+using Console = SadConsole.Console;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole.Instructions;
@@ -58,7 +57,6 @@ namespace Castle
             GameResult = GameResult.Quit;
             ItemManager = new ItemManager(UpdateMap);
             this.gameOver = false;
-            this.IsVisible = false;
             this.firstRelease = true;
             RunTick = false;
             keyboardHandlerObject = new ClassicConsoleKeyboardHandler();
@@ -68,7 +66,7 @@ namespace Castle
             keyboardHandlerObject.EnterPressedAction = EnterPressedActionHandler;
 
             // Enable the keyboard and setup the prompt.
-            CanUseKeyboard = true;
+            UseKeyboard = true;
             VirtualCursor.IsVisible = true;
             String Prompt = "?";
 
@@ -91,7 +89,7 @@ namespace Castle
         }
 
 
-        public override bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if (gameOver == false)
             {
@@ -132,7 +130,7 @@ namespace Castle
             }
             
         }
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             if (RunTick && player.Health > 0)
             {
@@ -159,7 +157,7 @@ namespace Castle
 
 
             }
-            base.Update();
+            base.Update(delta);
 
             if (animation != null)
             {
@@ -167,14 +165,14 @@ namespace Castle
             }
         }
 
-        public override void Render()
+        public override void Draw(TimeSpan delta)
         {
-            base.Render();
+            base.Draw(delta);
 
-            player.Render();
+            player.Draw(delta);
 
             foreach (Monster monster in ItemManager.CurrentRoomMonsters)
-                monster.Render();
+                monster.Draw(delta);
         }
         
 

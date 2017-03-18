@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SadConsole</id>
+    <version>6.0.0-pre1</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>Thraka</owners>
+    <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$ (OpenGL or DirectX)</description>
+    <releaseNotes>
+Initial release. The other libraries (SadConsole.Ansi, SadConsle.Controls, SadConsole.GameHelpers) have merged into a single library, SadConsole.Core
+Rewrite and refactor of code.
+Single NuGet package for all MonoGame libraries.
+Different NuGet package for MonoGame Universal Apps.
+    </releaseNotes>
+    <copyright>Copyright 2017 Steve De George JR</copyright>
+    <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+  </metadata>
+  <files>
+    <file src="nuget\*.font" target="content" /> 
+    <file src="nuget\*.png" target="content" /> 
+    <file src="nuget\install.ps1" target="tools" /> 
+  </files>
+</package>

@@ -1,42 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SadConsole;
+using Microsoft.Xna.Framework;
+using SadConsole.Input;
+using Console = SadConsole.Console;
 
 namespace Snake
 {
     class Program
     {
-        public static SnakeGame Game;
         static void Main(string[] args)
         {
-#if !MACOS
-            Game = new SnakeGame();
-            Game.Run();
-#else
-				NSApplication.Init ();
-				using (var p = new NSAutoreleasePool ()) {
-					NSApplication.SharedApplication.Delegate = new AppDelegate ();
-					NSApplication.Main (args);
-				}
-#endif
+            // Setup the engine and creat the main window.
+            SadConsole.Game.Create("Cheepicus12.font", 50, 60);
+
+            // Hook the start event so we can add consoles to the system.
+            SadConsole.Game.OnInitialize = Init;
+
+            // Start the game.
+            SadConsole.Game.Instance.Run();
+        }
+
+        private static void Init()
+        {
+            var console = new SnakeConsole();
+            Global.CurrentScreen.Children.Add(console);
+            Global.FocusedConsoles.Set(console);
         }
     }
-
-#if MACOS
-	class AppDelegate : NSApplicationDelegate
-	{
-		public override void FinishedLaunching (MonoMac.Foundation.NSObject notification)
-		{
-			Program.Game = new SnakeGame();
-			Program.Game.Run();
-		}
-
-		public override bool ApplicationShouldTerminateAfterLastWindowClosed (NSApplication sender)
-		{
-			return true;
-		}
-	}
-#endif
 }

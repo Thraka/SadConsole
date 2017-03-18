@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Console = SadConsole.Consoles.Console;
-using SadConsole.Consoles;
+using Console = SadConsole.Console;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-using SadConsole.Game;
+using SadConsole.GameHelpers;
+using SadConsole.Surfaces;
 
 namespace Castle
 {
@@ -17,17 +17,17 @@ namespace Castle
         public Direction CurrentDirection { get; private set; }
         public Direction Facing { get; private set; }
         public int Health { get; private set; }
-        public Player() : base(SadConsole.Engine.DefaultFont)
+        public Player() : base()
         {
-            Animation = new AnimatedTextSurface("default", 1, 1, SadConsole.Engine.DefaultFont);
+            Animation = new AnimatedSurface("default", 1, 1);
             var frame = Animation.CreateFrame();
-            frame[0].GlyphIndex = 5;
+            frame[0].Glyph = 5;
             this.CurrentDirection = Direction.None;
             Health = 70;
 
         }
 
-        public bool ProcessKeyboard(SadConsole.Input.KeyboardInfo info)
+        public bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             // Process logic for moving the entity.
             bool keyHit = false;

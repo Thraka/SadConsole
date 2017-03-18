@@ -1,0 +1,40 @@
+﻿<Window x:Class="SadConsoleEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SadConsoleEditor"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        DataContext="{Binding Main, Source={StaticResource Locator}}"
+        Title="MainWindow" Height="550" Width="825">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="75" />
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.ColumnSpan="3">
+            <MenuItem Header="File">
+                <MenuItem Header="New..." Click="MenuNewDocument_Click" />
+                <MenuItem Header="Open..." />
+                <MenuItem Header="Close" />
+            </MenuItem>
+        </Menu>
+        
+        <local:Game Grid.Row="1" x:Name="game" Grid.Column="1"  />
+
+        <StackPanel Grid.Row="1" Margin="4">
+            <Label>Documents</Label>
+            <ListBox Height="150" ItemsSource="{Binding Documents}"/>
+            <Label>Tools</Label>
+            <ListBox Height="150"></ListBox>
+        </StackPanel>
+        
+    </Grid>
+</Window>

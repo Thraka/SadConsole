@@ -1,1 +1,0 @@
-This folder contains old projects from the 2.0 version. They will migrate out as they convert and compile for the appropriate platforms.

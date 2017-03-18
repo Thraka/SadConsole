@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CastleConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CastleGame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Direction.cs" />

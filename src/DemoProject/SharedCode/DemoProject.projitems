@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>f394dd93-db0a-42b0-85d6-835683f0c14d</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>StarterProject</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleMetadata.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Container.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AnsiConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\MouseRenderingDebug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AutoTypingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ControlsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\CursorConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\GameObjectConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ScrollableConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SerializationTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StringParsingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SubConsoleCursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\TextCursorConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ViewsAndSubViews.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\WorldGenerationConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HeaderConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Theme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\CharacterViewer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\QS-SIERR.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-BTC1.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-CCU3.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-DGZN.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus12.font">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Ansi\files.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus_12x12.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Game.ico" />
+    <Content Include="$(MSBuildThisFileDirectory)GameThumbnail.png" />
+    <Content Include="$(MSBuildThisFileDirectory)sad.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
