@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.0.0</version>
+    <version>6.0.1</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -15,7 +15,11 @@
     
 Rewrite and refactor of code.
 
-Single NuGet package that will contain all platform targets.</releaseNotes>
+Single NuGet package that will contain all platform targets.
+
+**Quick bug fix**
+program-example.cs was looking for Fonts/ibm.font instead of just ibm.font.
+    </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
   </metadata>
