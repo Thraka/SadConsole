@@ -10,7 +10,7 @@ namespace MyProject
         static void Main(string[] args)
         {
             // Setup the engine and creat the main window.
-            SadConsole.Game.Create("Fonts/IBM.font", 80, 25);
+            SadConsole.Game.Create("IBM.font", 80, 25);
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Game.OnInitialize = Init;
