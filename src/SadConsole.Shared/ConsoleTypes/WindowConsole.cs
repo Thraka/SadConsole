@@ -155,7 +155,7 @@ namespace SadConsole
 
         public override void OnCalculateRenderPosition()
         {
-            relativePosition = position;
+            calculatedPosition = position;
         }
 
         public override void Draw(TimeSpan drawTime)

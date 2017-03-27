@@ -18,7 +18,7 @@ namespace SadConsole
         /// <summary>
         /// The position of this screen relative to the parents.
         /// </summary>
-        Point RelativePosition { get; }
+        Point CalculatedPosition { get; }
 
         /// <summary>
         /// Child screen objects related to this one.

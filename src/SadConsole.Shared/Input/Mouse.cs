@@ -176,7 +176,7 @@ namespace SadConsole.Input
         {
             if (console.UsePixelPositioning)
             {
-                var worldPos = ScreenPosition - console.RelativePosition;
+                var worldPos = ScreenPosition - console.CalculatedPosition;
                 //var consolePos = worldPos.WorldLocationToConsole(console.TextSurface.Font);
 
                 return console.TextSurface.AbsoluteArea.Contains(worldPos);
@@ -184,9 +184,9 @@ namespace SadConsole.Input
             else
             {
                 var worldPos = ScreenPosition.PixelLocationToConsole(console.TextSurface.Font);
-                var consolePos = worldPos - console.RelativePosition + console.TextSurface.RenderArea.Location;
+                var consolePos = worldPos - console.CalculatedPosition + console.TextSurface.RenderArea.Location;
 
-                return console.TextSurface.RenderArea.Contains(console.RelativePosition);
+                return console.TextSurface.RenderArea.Contains(console.CalculatedPosition);
             }
         }
 

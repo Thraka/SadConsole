@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SadConsoleEditor.Messages;
 
 namespace SadConsoleEditor
 {
@@ -31,12 +32,19 @@ namespace SadConsoleEditor
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             newDocumentWindow = new Windows.NewDocumentWindow();
-        }
 
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Register<Messages.DocumentChangedMessage>(this, CreateNewDocument);
+        }
+        
         private void MenuNewDocument_Click(object sender, RoutedEventArgs e)
         {
             newDocumentWindow.DataContext = new ViewModel.NewDocumentViewModel();
             newDocumentWindow.ShowDialog();
+        }
+
+        private void CreateNewDocument(DocumentChangedMessage obj)
+        {
+            
         }
     }
 }

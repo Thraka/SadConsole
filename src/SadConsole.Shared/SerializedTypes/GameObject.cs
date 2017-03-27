@@ -23,6 +23,8 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public PointSerialized Position;
         [DataMember]
+        public PointSerialized PositionOffset;
+        [DataMember]
         public bool UsePixelPositioning;
         [DataMember]
         public string Name;
@@ -36,6 +38,7 @@ namespace SadConsole.SerializedTypes
                 Animations = gameObject.Animations.Values.Select(a => (AnimatedSurfaceSerialized)a).ToList(),
                 IsVisible = gameObject.IsVisible,
                 Position = gameObject.Position,
+                PositionOffset = gameObject.PositionOffset,
                 UsePixelPositioning = gameObject.UsePixelPositioning,
                 Name = gameObject.Name,
             };
@@ -60,6 +63,7 @@ namespace SadConsole.SerializedTypes
 
             gameObject.IsVisible = serializedObject.IsVisible;
             gameObject.Position = serializedObject.Position;
+            gameObject.PositionOffset = serializedObject.PositionOffset;
             gameObject.UsePixelPositioning = serializedObject.UsePixelPositioning;
             gameObject.Name = serializedObject.Name;
 

@@ -7,10 +7,14 @@ namespace MyProject
 {
     class Program
     {
+
+        public const int Width = 80;
+        public const int Height = 25;
+
         static void Main(string[] args)
         {
             // Setup the engine and creat the main window.
-            SadConsole.Game.Create("IBM.font", 80, 25);
+            SadConsole.Game.Create("IBM.font", Width, Height);
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Game.OnInitialize = Init;
@@ -41,7 +45,7 @@ namespace MyProject
         {
             // Any custom loading and prep. We will use a sample console for now
 
-            SadConsole.Console startingConsole = new Console(80, 25);
+            Console startingConsole = new Console(Width, Height);
             startingConsole.FillWithRandomGarbage();
             startingConsole.Fill(new Rectangle(3, 3, 27, 5), null, Color.Black, 0);
             startingConsole.Print(6, 5, "Hello from SadConsole", ColorAnsi.CyanBright);

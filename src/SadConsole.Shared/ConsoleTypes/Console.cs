@@ -39,7 +39,7 @@ namespace SadConsole
         /// <summary>
         /// The position the console will draw the text surface.
         /// </summary>
-        protected Point relativePosition;
+        protected Point calculatedPosition;
         
         #region Events
         /// <summary>
@@ -209,8 +209,6 @@ namespace SadConsole
                 _renderer.AfterRenderCallback = this.OnAfterRender;
             }
         }
-        [DataMember]
-        protected ISurface textSurfaceConsole;
 
         /// <summary>
         /// The text surface to be rendered or changed.
@@ -239,7 +237,7 @@ namespace SadConsole
         /// <summary>
         /// The position of this screen relative to the parents.
         /// </summary>
-        public Point RelativePosition { get { return relativePosition; } }
+        public Point CalculatedPosition { get { return calculatedPosition; } }
 
         /// <summary>
         /// How the console should handle becoming active.
@@ -626,7 +624,7 @@ namespace SadConsole
             {
                 Renderer.Render(textSurface);
 
-                Global.DrawCalls.Add(new DrawCallSurface(textSurface, relativePosition, UsePixelPositioning));
+                Global.DrawCalls.Add(new DrawCallSurface(textSurface, calculatedPosition, UsePixelPositioning));
 
                 var copyList = new List<IScreen>(Children);
 
@@ -647,12 +645,12 @@ namespace SadConsole
         /// </summary>
         public virtual void OnCalculateRenderPosition()
         {
-            relativePosition = position;
+            calculatedPosition = position;
             IScreen parent = parentConsole;
 
             while (parent != null)
             {
-                relativePosition += parent.Position;
+                calculatedPosition += parent.Position;
                 parent = parent.Parent;
             }
             

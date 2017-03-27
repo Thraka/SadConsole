@@ -108,6 +108,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Animations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Hotspot.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Point.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Range.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\SurfaceView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Zone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer.cs" />

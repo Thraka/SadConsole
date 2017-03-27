@@ -39,7 +39,7 @@ namespace SadConsole.Input
             {
                 if (console.UsePixelPositioning)
                 {
-                    RelativePixelPosition = mouseData.ScreenPosition - console.RelativePosition;
+                    RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
                     WorldPosition = mouseData.ScreenPosition;
                     ConsolePosition = RelativePixelPosition.PixelLocationToConsole(console.TextSurface.Font);
                     IsOnConsole = new Rectangle(0, 0, console.TextSurface.Width, console.TextSurface.Height).Contains(ConsolePosition);
@@ -52,9 +52,9 @@ namespace SadConsole.Input
                 }
                 else
                 {
-                    RelativePixelPosition = mouseData.ScreenPosition - console.RelativePosition.ConsoleLocationToPixel(console.TextSurface.Font);
+                    RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition.ConsoleLocationToPixel(console.TextSurface.Font);
                     WorldPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.TextSurface.Font);
-                    ConsolePosition = WorldPosition - console.RelativePosition;
+                    ConsolePosition = WorldPosition - console.CalculatedPosition;
                     IsOnConsole = new Rectangle(0, 0, console.TextSurface.Width, console.TextSurface.Height).Contains(ConsolePosition);
 
                     if (IsOnConsole)

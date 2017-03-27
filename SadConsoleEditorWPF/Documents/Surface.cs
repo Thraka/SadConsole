@@ -17,6 +17,8 @@ namespace SadConsoleEditor.Documents
 
         public DocumentTypes DocumentType { get; } = DocumentTypes.Console;
 
+        public Surface() { Reset(); }
+
         public void Load(FileLoaders.IFileType fileType, string file)
         {
             fileType.Load(file);
@@ -44,7 +46,8 @@ namespace SadConsoleEditor.Documents
 
         public void Reset()
         {
-            
+            PresentationScreen = new SadConsole.Console(50, 50);
+            ((SadConsole.Console)PresentationScreen).FillWithRandomGarbage();
         }
 
         public void Resize(int width, int height)

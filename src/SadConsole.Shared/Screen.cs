@@ -13,7 +13,7 @@ namespace SadConsole
         /// <summary>
         /// Position to render the screen at based on <see cref="Position"/> all parents.
         /// </summary>
-        protected Point relativePosition;
+        protected Point calculatedPosition;
 
         /// <summary>
         /// The parent screen.
@@ -37,7 +37,7 @@ namespace SadConsole
         /// <summary>
         /// The position of this screen relative to the parents.
         /// </summary>
-        public Point RelativePosition { get { return relativePosition; } }
+        public Point CalculatedPosition { get { return calculatedPosition; } }
 
         /// <summary>
         /// Child screen objects.
@@ -129,12 +129,12 @@ namespace SadConsole
         /// </summary>
         public virtual void OnCalculateRenderPosition()
         {
-            relativePosition = Position;
+            calculatedPosition = Position;
             IScreen parent = Parent;
 
             while (parent != null)
             {
-                relativePosition += parent.Position;
+                calculatedPosition += parent.Position;
                 parent = parent.Parent;
             }
 

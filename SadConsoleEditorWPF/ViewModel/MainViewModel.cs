@@ -17,7 +17,22 @@ namespace SadConsoleEditor.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        private Documents.IDocument selectedDocument;
+
         public ObservableCollection<Documents.IDocument> Documents { get; set; }
+
+        public Documents.IDocument SelectedDocument { get
+            {
+                return selectedDocument;
+            }
+            set
+            {
+                RaisePropertyChanged(() => SelectedDocument);
+                selectedDocument = value;
+                ChangeDocument();
+            }
+        }
+
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -47,6 +62,15 @@ namespace SadConsoleEditor.ViewModel
                 default:
                     break;
             }
+        }
+
+        private void ChangeDocument()
+        {
+            //MessengerInstance.Send(new Messages.DocumentChangedMessage(this));
+            if (selectedDocument == null)
+                SadConsole.Global.CurrentScreen = new SadConsole.Screen();
+            else
+                SadConsole.Global.CurrentScreen = selectedDocument.PresentationScreen;
         }
     }
 }

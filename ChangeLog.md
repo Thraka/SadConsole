@@ -1,4 +1,10 @@
-﻿## 03/16/2016
+﻿## 03/26/2016
+
+- `IScreen.RelativePosition` is now `IScreen.CalculatedPosition`.
+- `GameObject.PositionOffset` is back.
+- `GameHelpers.Scene` is back.
+
+## 03/16/2016
 
 Major update to all of SadConsole. 
 
