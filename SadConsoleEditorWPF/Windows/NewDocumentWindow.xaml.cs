@@ -31,7 +31,7 @@ namespace SadConsoleEditor.Windows
             //if (button.Command != null && button.Command.CanExecute(button.CommandParameter))
             //    button.Command.Execute(button.CommandParameter);
 
-            Close();
+            Hide();
 
         }
     }

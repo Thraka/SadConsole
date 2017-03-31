@@ -85,7 +85,7 @@ namespace SadConsole
         /// <summary>
         /// The position of this screen relative to the parents.
         /// </summary>
-        public Point RelativePosition { get { return relativePosition; } }
+        public Point CalculatedPosition { get { return relativePosition; } }
 
         public ISurface TextSurface { get; set; }
 

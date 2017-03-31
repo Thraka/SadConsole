@@ -40,7 +40,7 @@ namespace SadConsole.GameHelpers
         protected Font font;
 
         /// <summary>
-        /// Treats the <see cref="IScreen.Position"/> of the console as if it is pixels and not cells.
+        /// Treats the <see cref="IScreen.Position"/> of the game object as if it is pixels and not cells.
         /// </summary>
         public bool UsePixelPositioning { get { return usePixelPositioning; } set { usePixelPositioning = value; } }
 
@@ -78,6 +78,11 @@ namespace SadConsole.GameHelpers
         public Dictionary<string, AnimatedSurface> Animations { get; protected set; } = new Dictionary<string, AnimatedSurface>();
 
         /// <summary>
+        /// Offsets the position by this amount.
+        /// </summary>
+        public Point PositionOffset { get; set; }
+
+        /// <summary>
         /// Creates a new GameObject with the default font.
         /// </summary>
         public GameObject(int width, int height) : this(width, height, Global.FontDefault) { }
@@ -113,6 +118,24 @@ namespace SadConsole.GameHelpers
             AnimationStateChanged?.Invoke(sender, e);
         }
 
+        public override void OnCalculateRenderPosition()
+        {
+            calculatedPosition = Position + PositionOffset;
+            IScreen parent = Parent;
+
+            while (parent != null)
+            {
+                calculatedPosition += parent.Position;
+
+                parent = parent.Parent;
+            }
+
+            foreach (var child in Children)
+            {
+                child.OnCalculateRenderPosition();
+            }
+        }
+
         /// <summary>
         /// Renders the game object and any attached children.
         /// </summary>
@@ -123,7 +146,7 @@ namespace SadConsole.GameHelpers
             {
                 renderer.Render(animation);
                 
-                Global.DrawCalls.Add(new DrawCallSurface(animation, relativePosition - animation.Center, usePixelPositioning));
+                Global.DrawCalls.Add(new DrawCallSurface(animation, calculatedPosition - animation.Center, usePixelPositioning));
 
                 base.Draw(timeElapsed);
             }

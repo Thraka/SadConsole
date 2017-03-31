@@ -31,7 +31,7 @@
 
         <StackPanel Grid.Row="1" Margin="4">
             <Label>Documents</Label>
-            <ListBox Height="150" ItemsSource="{Binding Documents}"/>
+            <ListBox Height="150" ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedDocument}" />
             <Label>Tools</Label>
             <ListBox Height="150"></ListBox>
         </StackPanel>

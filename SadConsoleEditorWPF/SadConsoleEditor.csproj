@@ -85,6 +85,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Documents\DocumentTypes.cs" />
+    <Compile Include="Messages\DocumentChangedMessage.cs" />
     <Compile Include="Messages\NewDocumentMessage.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NewDocumentViewModel.cs" />

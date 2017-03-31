@@ -61,20 +61,20 @@ namespace SadConsole
 
         private void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!resizeBusy)
+            if (!resizeBusy && Settings.IsExitingFullscreen)
             {
-                Global.WindowWidth = Window.ClientBounds.Width;
-                Global.WindowHeight = Window.ClientBounds.Height;
-
                 GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
                 GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
 
                 resizeBusy = true;
                 GraphicsDeviceManager.ApplyChanges();
                 resizeBusy = false;
-
-                Global.ResetRendering();
+                Settings.IsExitingFullscreen = false;
             }
+
+            
+
+            Global.ResetRendering();
         }
 
 

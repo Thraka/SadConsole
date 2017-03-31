@@ -27,9 +27,22 @@ namespace SadConsole
         /// </summary>
         public static bool UnlimitedFPS = false;
 
+        /// <summary>
+        /// When true, indicates that <see cref="SadConsole.Game.SadConsoleGameComponent.Draw(GameTime)"/> will run.
+        /// </summary>
         public static bool DoDraw = true;
+
+        /// <summary>
+        /// When true, indicates that <see cref="SadConsole.Game.SadConsoleGameComponent.Draw(GameTime)"/> will render to the screen at the end.
+        /// </summary>
         public static bool DoFinalDraw = true;
+
+        /// <summary>
+        /// When true, indicates that <see cref="SadConsole.Game.SadConsoleGameComponent.Update(GameTime)"/> will run.
+        /// </summary>
         public static bool DoUpdate = true;
+
+        internal static bool IsExitingFullscreen = false;
 
         /// <summary>
         /// Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
@@ -41,16 +54,14 @@ namespace SadConsole
             // Coming back from fullscreen
             if (Global.GraphicsDeviceManager.IsFullScreen)
             {
-                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.RenderWidth;
-                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.RenderHeight;
-
-                
+                IsExitingFullscreen = true;
             }
 
             // Going full screen
             else
             {
-
+                Global.WindowWidth = Global.GraphicsDeviceManager.PreferredBackBufferWidth;
+                Global.WindowHeight = Global.GraphicsDeviceManager.PreferredBackBufferHeight;
             }
 
             Global.GraphicsDeviceManager.ToggleFullScreen();
