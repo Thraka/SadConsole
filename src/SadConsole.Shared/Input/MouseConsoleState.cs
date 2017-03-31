@@ -42,11 +42,13 @@ namespace SadConsole.Input
                     RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
                     WorldPosition = mouseData.ScreenPosition;
                     ConsolePosition = RelativePixelPosition.PixelLocationToConsole(console.TextSurface.Font);
-                    IsOnConsole = new Rectangle(0, 0, console.TextSurface.Width, console.TextSurface.Height).Contains(ConsolePosition);
+
+                    var tempCellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
+                    IsOnConsole = Console.TextSurface.RenderArea.Contains(tempCellPosition);
 
                     if (IsOnConsole)
                     {
-                        CellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
+                        CellPosition = tempCellPosition;
                         Cell = console.TextSurface[CellPosition.X, CellPosition.Y];
                     }
                 }
@@ -55,11 +57,13 @@ namespace SadConsole.Input
                     RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition.ConsoleLocationToPixel(console.TextSurface.Font);
                     WorldPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.TextSurface.Font);
                     ConsolePosition = WorldPosition - console.CalculatedPosition;
-                    IsOnConsole = new Rectangle(0, 0, console.TextSurface.Width, console.TextSurface.Height).Contains(ConsolePosition);
+
+                    var tempCellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
+                    IsOnConsole = Console.TextSurface.RenderArea.Contains(tempCellPosition);
 
                     if (IsOnConsole)
                     {
-                        CellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
+                        CellPosition = tempCellPosition;
                         Cell = console.TextSurface[CellPosition.X, CellPosition.Y];
                     }
                 }
