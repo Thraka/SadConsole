@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.0.1</version>
+    <version>6.1.0</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -11,14 +11,12 @@
     <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics.</description>
-    <releaseNotes>Initial release of 6.0.0. The other libraries (SadConsole.Ansi, SadConsle.Controls, SadConsole.GameHelpers) have merged into a single library, SadConsole.dll
-    
-Rewrite and refactor of code.
-
-Single NuGet package that will contain all platform targets.
-
-**Quick bug fix**
-program-example.cs was looking for Fonts/ibm.font instead of just ibm.font.
+    <releaseNotes>
+      - `IScreen.RelativePosition` is now `IScreen.CalculatedPosition`.
+      - `GameObject.PositionOffset` is back.
+      - `GameHelpers.Scene` is back.
+      - Fixed a bug calculating the mouse cell on a scrolled console.
+      - Resized window back to original size when existing fullscreen to handle monogame bug.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

@@ -1,8 +1,10 @@
-﻿## 03/26/2016
+﻿## 03/31/2016
 
 - `IScreen.RelativePosition` is now `IScreen.CalculatedPosition`.
 - `GameObject.PositionOffset` is back.
 - `GameHelpers.Scene` is back.
+- Fixed a bug calculating the mouse cell on a scrolled console.
+- Resized window back to original size when existing fullscreen to handle monogame bug.
 
 ## 03/16/2016
 

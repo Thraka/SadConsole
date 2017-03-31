@@ -215,6 +215,17 @@ namespace SadConsole.Controls
         }
 
         /// <summary>
+        /// Creates an instance of the button control with the specified width.
+        /// </summary>
+        /// <param name="width">Width of the control.</param>
+        /// <param name="height">Height of the control.</param>
+        public Button(int width, int height)
+            :base(width, height, Themes.Library.Default.ButtonTheme)
+        {
+            DetermineAppearance();
+        }
+
+        /// <summary>
         /// Draws the control.
         /// </summary>
         public override void Compose()
