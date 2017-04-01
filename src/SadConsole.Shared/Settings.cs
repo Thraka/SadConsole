@@ -15,12 +15,12 @@ namespace SadConsole
         /// <summary>
         /// The type of resizing options for the window.
         /// </summary>
-        public static WindowResizeOptions ResizeMode = WindowResizeOptions.Scale;
+        public static WindowResizeOptions ResizeMode = WindowResizeOptions.Center;
 
         /// <summary>
         /// Allow the user to resize the window. Must be set before the game is created.
         /// </summary>
-        public static bool AllowWindowResize = false;
+        public static bool AllowWindowResize = true;
 
         /// <summary>
         /// Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
@@ -51,10 +51,20 @@ namespace SadConsole
 
         public static void ToggleFullScreen()
         {
+            Global.GraphicsDeviceManager.ApplyChanges();
+
             // Coming back from fullscreen
             if (Global.GraphicsDeviceManager.IsFullScreen)
             {
-                IsExitingFullscreen = true;
+                Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
+
+                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
+                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
+                Global.GraphicsDeviceManager.ApplyChanges();
+
+                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
+                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
+                Global.GraphicsDeviceManager.ApplyChanges();
             }
 
             // Going full screen
@@ -62,9 +72,13 @@ namespace SadConsole
             {
                 Global.WindowWidth = Global.GraphicsDeviceManager.PreferredBackBufferWidth;
                 Global.WindowHeight = Global.GraphicsDeviceManager.PreferredBackBufferHeight;
-            }
 
-            Global.GraphicsDeviceManager.ToggleFullScreen();
+                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+
+                Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
+                Global.GraphicsDeviceManager.ApplyChanges();
+            }
         }
 
         public static class Input

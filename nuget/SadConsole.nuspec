@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.1.0</version>
+    <version>6.1.2</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -16,7 +16,8 @@
       - `GameObject.PositionOffset` is back.
       - `GameHelpers.Scene` is back.
       - Fixed a bug calculating the mouse cell on a scrolled console.
-      - Resized window back to original size when existing fullscreen to handle monogame bug.
+      - Fixed box fore/back not working.
+      - More fullscreen fixes.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

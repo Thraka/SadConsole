@@ -84,7 +84,7 @@ namespace SadConsole.Shapes
         {
             List<Cell> cells = new List<Cell>();
 
-            Algorithms.Line(StartingLocation.X, StartingLocation.Y, EndingLocation.X, EndingLocation.Y, (x, y) => { cells.Add(surface[x, y]); return true; });
+            Algorithms.Line(StartingLocation.X, StartingLocation.Y, EndingLocation.X, EndingLocation.Y, (x, y) => { if (surface.IsValidCell(x, y)) cells.Add(surface[x, y]); return true; });
 
             if (cells.Count > 1)
             {
