@@ -126,8 +126,8 @@ namespace SadConsole.Shapes
             TopSideCharacter = topBottomCharacter;
             BottomSideCharacter = topBottomCharacter;
 
-            Foreground = Color.White;
-            BorderBackground = Color.Transparent;
+            Foreground = foreground;
+            BorderBackground = background;
 
             Width = width;
             Height = height;

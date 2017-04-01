@@ -54,25 +54,23 @@ namespace SadConsole
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
             GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
+            
 
             ctorCallback?.Invoke(this);
         }
-
-
+        
         private void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!resizeBusy && Settings.IsExitingFullscreen)
-            {
-                GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
-                GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
+            //if (!resizeBusy && Settings.IsExitingFullscreen)
+            //{
+            //    GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
+            //    GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
 
-                resizeBusy = true;
-                GraphicsDeviceManager.ApplyChanges();
-                resizeBusy = false;
-                Settings.IsExitingFullscreen = false;
-            }
-
-            
+            //    resizeBusy = true;
+            //    GraphicsDeviceManager.ApplyChanges();
+            //    resizeBusy = false;
+            //    Settings.IsExitingFullscreen = false;
+            //}
 
             Global.ResetRendering();
         }
