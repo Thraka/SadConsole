@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Libraries", "01 Libraries", "{4EACED7C-3BF4-488D-813F-7D481122A21C}"
 EndProject
@@ -35,6 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 NuGet", "02 NuGet", "{28
 	ProjectSection(SolutionItems) = preProject
 		nuget\SadConsole-debug.nuspec = nuget\SadConsole-debug.nuspec
 		nuget\SadConsole.nuspec = nuget\SadConsole.nuspec
+		nuget\SadConsole.Starter.nuspec = nuget\SadConsole.Starter.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.Android", "src\DemoProject\Android\DemoProject.Android.csproj", "{F2257BF9-B694-4E75-9D49-D386391569D9}"
