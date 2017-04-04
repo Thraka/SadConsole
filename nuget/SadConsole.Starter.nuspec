@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SadConsole.Starter</id>
+    <version>1.0.0</version>
+    <title>Starter kit for SadConsole. Use with a new project.</title>
+    <authors>SadLogic</authors>
+    <owners>Thraka</owners>
+    <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Adds an example startup file and fonts for a SadConsole project.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017 Steve De George JR</copyright>
+    <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+    <dependencies>
+      <dependency id="SadConsole" version="6.1.3" />
+    </dependencies>
+  </metadata>
+  <files>
+
+    <file src="content-files\*.font" target="content" /> 
+    <file src="content-files\*.png" target="content" /> 
+    <file src="content-files\program-example.cs" target="content" />
+    <file src="content-files\install.ps1" target="tools" /> 
+
+  </files>
+</package>

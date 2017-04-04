@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.1.2</version>
+    <version>6.1.3</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -23,11 +23,6 @@
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
   </metadata>
   <files>
-
-    <file src="content-files\*.font" target="content" /> 
-    <file src="content-files\*.png" target="content" /> 
-    <file src="content-files\program-example.cs" target="content" />
-    <file src="content-files\install.ps1" target="tools" /> 
 
     <!-- Cross-platform reference assemblies -->
     <file src="..\src\SadConsole\bin\Release\SadConsole.dll" target="lib\net" />
