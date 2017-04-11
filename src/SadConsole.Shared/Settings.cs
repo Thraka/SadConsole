@@ -15,7 +15,7 @@ namespace SadConsole
         /// <summary>
         /// The type of resizing options for the window.
         /// </summary>
-        public static WindowResizeOptions ResizeMode = WindowResizeOptions.Center;
+        public static WindowResizeOptions ResizeMode = WindowResizeOptions.Scale;
 
         /// <summary>
         /// Allow the user to resize the window. Must be set before the game is created.
