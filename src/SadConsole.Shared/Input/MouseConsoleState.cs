@@ -7,25 +7,51 @@ namespace SadConsole.Input
 {
     public class MouseConsoleState
     {
+        /// <summary>
+        /// The console used to create this object.
+        /// </summary>
         public readonly IConsole Console;
 
+        /// <summary>
+        /// The mouse state.
+        /// </summary>
         public readonly Mouse Mouse;
 
+        /// <summary>
+        /// The cell the mouse is over, from <see cref="Console"/>.
+        /// </summary>
         public readonly Cell Cell;
 
+        /// <summary>
+        /// The position of the mouse on the <see cref="Console"/>, based on the <see cref="WorldPosition"/>.
+        /// </summary>
         public readonly Point ConsolePosition;
 
+        /// <summary>
+        /// The position of the <see cref="Cell"/>.  
+        /// </summary>
         public readonly Point CellPosition;
 
+        /// <summary>
+        /// A screen-based location based on the <see cref="ConsolePosition"/>.
+        /// </summary>
         public readonly Point WorldPosition;
 
+        /// <summary>
+        /// The <see cref="ConsolePosition"/> translated to pixels.
+        /// </summary>
         public readonly Point RelativePixelPosition;
 
         /// <summary>
-        /// Indicates that the mouse is on a console this frame.
+        /// Indicates that the mouse is within the bounds of <see cref="Console"/>.
         /// </summary>
         public readonly bool IsOnConsole;
 
+        /// <summary>
+        /// Calculates a new <see cref="MouseConsoleState"/> based on an <see cref="IConsole"/> and <see cref="Mouse"/> state.
+        /// </summary>
+        /// <param name="console">The console to process with the mouse state.</param>
+        /// <param name="mouseData">The current mouse state.</param>
         public MouseConsoleState(IConsole console, Mouse mouseData)
         {
             this.Mouse = mouseData.Clone();
@@ -79,6 +105,7 @@ namespace SadConsole.Input
             CellPosition = clonedCopy.CellPosition;
             WorldPosition = clonedCopy.WorldPosition;
             RelativePixelPosition = clonedCopy.RelativePixelPosition;
+            IsOnConsole = clonedCopy.IsOnConsole;
         }
 
         /// <summary>
