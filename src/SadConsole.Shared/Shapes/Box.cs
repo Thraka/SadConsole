@@ -67,6 +67,7 @@ namespace SadConsole.Shapes
                 }
             }
 
+            surface.TextSurface.IsDirty = true;
         }
 
         /// <summary>

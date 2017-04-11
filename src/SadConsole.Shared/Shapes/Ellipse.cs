@@ -16,6 +16,8 @@ namespace SadConsole.Shapes
         public void Draw(SurfaceEditor surface)
         {
             Algorithms.Ellipse(StartingPoint.X, StartingPoint.Y, EndingPoint.X, EndingPoint.Y, (x, y) => { if (surface.IsValidCell(x, y)) surface.SetCell(x, y, BorderAppearance); });
+
+            surface.TextSurface.IsDirty = true;
         }
     }
 }

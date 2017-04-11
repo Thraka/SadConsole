@@ -115,6 +115,8 @@ namespace SadConsole.Shapes
             {
                 cells[0].CopyAppearanceFrom(Cell);
             }
+
+            surface.TextSurface.IsDirty = true;
         }
 
         /// <summary>
