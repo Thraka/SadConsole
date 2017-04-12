@@ -476,7 +476,7 @@ namespace SadConsole.Controls
             int rowOffsetReverse = HideBorder ? 1 : 0;
             int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(state.ConsolePosition.X - this.Position.X, state.ConsolePosition.Y - this.Position.Y);
+            Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
@@ -504,7 +504,7 @@ namespace SadConsole.Controls
             int rowOffsetReverse = HideBorder ? 1 : 0;
             int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(state.ConsolePosition.X - this.Position.X, state.ConsolePosition.Y - this.Position.Y);
+            Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
@@ -540,7 +540,7 @@ namespace SadConsole.Controls
 
                 if (_mouseIn)
                 {
-                    var mouseControlPosition = TransformConsolePositionByControlPosition(state.ConsolePosition);
+                    var mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
 
                     if (mouseControlPosition.X == this.textSurface.Width - 1 && _showSlider)
                     {

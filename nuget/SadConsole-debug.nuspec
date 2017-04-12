@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.1.4-pre1</version>
+    <version>6.1.4-pre5</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -13,6 +13,8 @@
     <description>A MonoGame library that emulates old-school console and command prompt style graphics.</description>
     <releaseNotes>
       - Shapes were not marking the surface as dirty.
+      - Fixed bug in listbox when parent console used a render view.
+      - A window did not calculate positioning of children.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

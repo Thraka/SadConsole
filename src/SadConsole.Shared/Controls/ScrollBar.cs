@@ -314,13 +314,13 @@ namespace SadConsole.Controls
                 base.ProcessMouse(state);
 
 
-                var mouseControlPosition = new Point(state.ConsolePosition.X - this.Position.X, state.ConsolePosition.Y - this.Position.Y);
+                var mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.CapturedControl == null)
                 {
-                    if (state.ConsolePosition.X >= this.Position.X && state.ConsolePosition.X < this.Position.X + textSurface.Width &&
-                        state.ConsolePosition.Y >= this.Position.Y && state.ConsolePosition.Y < this.Position.Y + textSurface.Height)
+                    if (state.CellPosition.X >= this.Position.X && state.CellPosition.X < this.Position.X + textSurface.Width &&
+                        state.CellPosition.Y >= this.Position.Y && state.CellPosition.Y < this.Position.Y + textSurface.Height)
                     {
 
                         if (state.Mouse.LeftClicked)
@@ -372,8 +372,8 @@ namespace SadConsole.Controls
                 }
                 else if (Parent.CapturedControl == this)
                 {
-                    if (state.ConsolePosition.X >= this.Position.X - 2 && state.ConsolePosition.X < this.Position.X + textSurface.Width + 2 &&
-                        state.ConsolePosition.Y >= this.Position.Y - 3 && state.ConsolePosition.Y < this.Position.Y + textSurface.Height + 3)
+                    if (state.CellPosition.X >= this.Position.X - 2 && state.CellPosition.X < this.Position.X + textSurface.Width + 2 &&
+                        state.CellPosition.Y >= this.Position.Y - 3 && state.CellPosition.Y < this.Position.Y + textSurface.Height + 3)
                     {
                         if (state.Mouse.LeftButtonDown)
                         {
