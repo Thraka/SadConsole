@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.1.3</version>
+    <version>6.1.4</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,12 +12,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
-      - `IScreen.RelativePosition` is now `IScreen.CalculatedPosition`.
-      - `GameObject.PositionOffset` is back.
-      - `GameHelpers.Scene` is back.
-      - Fixed a bug calculating the mouse cell on a scrolled console.
-      - Fixed box fore/back not working.
-      - More fullscreen fixes.
+      - Shapes were not marking the surface as dirty.
+      - Fixed bug in listbox when parent console used a render view.
+      - A window did not calculate positioning of children.
+      - Layered surface has RenderArea parameter for constructor now.
+      - GameObject had a bug that prevented deserialization.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
