@@ -54,7 +54,7 @@ namespace SadConsole.SerializedTypes
             var gameObject = new GameHelpers.GameObject(1, 1);
 
             foreach (var item in serializedObject.Animations)
-                gameObject.Animations.Add(item.Name, item);
+                gameObject.Animations[item.Name] = item;
 
             if (gameObject.Animations.ContainsKey(serializedObject.AnimationName))
                 gameObject.Animation = gameObject.Animations[serializedObject.AnimationName];

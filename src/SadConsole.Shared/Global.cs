@@ -141,14 +141,22 @@ namespace SadConsole
             //}                    
 
             //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
+            try
+            {
+                var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
 
-            var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
+                if (Fonts.ContainsKey(masterFont.Name))
+                    Fonts.Remove(masterFont.Name);
 
-            if (Fonts.ContainsKey(masterFont.Name))
-                Fonts.Remove(masterFont.Name);
-
-            Fonts.Add(masterFont.Name, masterFont);
-            return masterFont;
+                Fonts.Add(masterFont.Name, masterFont);
+                return masterFont;
+            }
+            catch (System.Runtime.Serialization.SerializationException e)
+            {
+                
+                throw;
+            }
+            
         }
 
         /// <summary>

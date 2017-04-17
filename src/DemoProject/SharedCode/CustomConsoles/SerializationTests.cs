@@ -126,8 +126,8 @@ namespace StarterProject.CustomConsoles
             }
             else if (optionButtonLayered.IsSelected)
             {
-                layeredSurface.Save("layeredsurface.layers");
-                loadedView.TextSurface = SadConsole.Surfaces.LayeredSurface.Load("layeredsurface.layers");
+                layeredSurface.Save("layeredsurface.layers", typeof(SadConsole.Surfaces.LayerMetadata));
+                loadedView.TextSurface = SadConsole.Surfaces.LayeredSurface.Load("layeredsurface.layers", typeof(SadConsole.Surfaces.LayerMetadata));
             }
             else if (optionButtonAnimated.IsSelected)
             {
@@ -157,6 +157,7 @@ namespace StarterProject.CustomConsoles
             {
                 masterView.TextSurface = layeredSurface;
                 masterView.Renderer = new SadConsole.Renderers.LayeredSurfaceRenderer();
+                loadedView.TextSurface = new SadConsole.Surfaces.LayeredSurface(34, 15, 1);
                 loadedView.Renderer = new SadConsole.Renderers.LayeredSurfaceRenderer();
             }
             else if (optionButtonAnimated.IsSelected)

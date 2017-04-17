@@ -92,13 +92,36 @@ namespace SadConsole.Surfaces
         public LayeredSurface(int width, int height, int layers) : this(width, height, Global.FontDefault, layers) { }
 
         /// <summary>
+        /// Creates a new layer text surface with the default <see cref="Font"/>.
+        /// </summary>
+        /// <param name="width">Width of the layers.</param>
+        /// <param name="height">Height of the layers.</param>
+        /// <param name="renderArea">Viewable part of the surface.</param>
+        /// <param name="layers">The count of layers.</param>
+        public LayeredSurface(int width, int height, Rectangle renderArea, int layers) : this(width, height, Global.FontDefault, renderArea, layers) { }
+
+
+        /// <summary>
         /// Creates a new layer text surface with the specified font.
         /// </summary>
         /// <param name="width">Width of the layers.</param>
         /// <param name="height">Height of the layers.</param>
         /// <param name="layers">The count of layers.</param>
         /// <param name="font">The font.</param>
-        public LayeredSurface(int width, int height, Font font, int layers): base(width, height, font)
+        public LayeredSurface(int width, int height, Font font, int layers): this(width, height, font, new Rectangle(0, 0, width, height), layers)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new layer text surface with the specified font.
+        /// </summary>
+        /// <param name="width">Width of the layers.</param>
+        /// <param name="height">Height of the layers.</param>
+        /// <param name="layers">The count of layers.</param>
+        /// <param name="renderArea">Viewable part of the surface.</param>
+        /// <param name="font">The font.</param>
+        public LayeredSurface(int width, int height, Font font, Rectangle renderArea, int layers) : base(width, height, font, renderArea)
         {
             initDone = true;
 
@@ -360,27 +383,27 @@ namespace SadConsole.Surfaces
         {
             return layers[index];
         }
-        
+
         #region Serialization
         /// <summary>
         /// Saves the <see cref="LayeredSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
-        /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
-        public void Save(string file)
+        /// <param name="layerMetadataType">Type of <see cref="Layer.Metadata"/>.</param>
+        public void Save(string file, Type layerMetadataType)
         {
-            Serializer.Save((SerializedTypes.LayeredSurfaceSerialized)this, file);
+            Serializer.Save((SerializedTypes.LayeredSurfaceSerialized)this, file, new Type[] { layerMetadataType });
         }
 
         /// <summary>
         /// Loads a <see cref="LayeredSurface"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
-        /// <param name="knownTypes">Types to provide to support the <see cref="Layer.Metadata"/> type.</param>
-        /// <returns>The <see cref="LayeredSurface"/>.</returns>
-        public static LayeredSurface Load(string file)
+        /// <param name="layerMetadataType">Type of <see cref="Layer.Metadata"/>.</param>
+        /// <returns>The <see cref="LayeredSurface"/>The deserialized service.</returns>
+        public static LayeredSurface Load(string file, Type layerMetadataType)
         {
-            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file);
+            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, new Type[] { layerMetadataType });
         }
 
         /// <summary>

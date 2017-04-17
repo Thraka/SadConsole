@@ -28,6 +28,7 @@ namespace StarterProject
 
             consoles = new IConsoleMetadata[] {
                 //consoleReal,
+                new CustomConsoles.SerializationTests(),
                 new CustomConsoles.AutoTypingConsole(),
                 new CustomConsoles.SplashScreen() { SplashCompleted = () => MoveNextConsole() },
                 new CustomConsoles.StringParsingConsole(),
@@ -43,7 +44,6 @@ namespace StarterProject
                 new CustomConsoles.StretchedConsole(),
                 new CustomConsoles.WorldGenerationConsole(),
                 new CustomConsoles.RandomScrollingConsole(),
-                new CustomConsoles.SerializationTests(),
             };
 
             MoveNextConsole();
