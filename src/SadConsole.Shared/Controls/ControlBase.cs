@@ -336,7 +336,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// Helper method that returns the mouse x,y position for the control.
         /// </summary>
-        /// <param name="consolePosition">Position onf the console to get the relative control position from.</param>
+        /// <param name="consolePosition">Position of the console to get the relative control position from.</param>
         /// <returns>The x,y position of the mouse over the control.</returns>
         protected Point TransformConsolePositionByControlPosition(Point consolePosition)
         {

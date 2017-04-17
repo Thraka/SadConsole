@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A MonoGame library that emulates old-school console and command prompt style graphics.</description>
+    <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
       - `IScreen.RelativePosition` is now `IScreen.CalculatedPosition`.
       - `GameObject.PositionOffset` is back.

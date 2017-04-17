@@ -10,6 +10,8 @@ namespace SadConsole.Renderers
     [System.Runtime.Serialization.DataContract]
     public class LayeredSurfaceRenderer : SurfaceRenderer
     {
+        LayeredSurface.Layer[] layers;
+
         /// <summary>
         /// Only renders a <see cref="LayeredSurface"/>.
         /// </summary>
@@ -17,17 +19,20 @@ namespace SadConsole.Renderers
         /// <param name="renderingMatrix">Rendering matrix used with the sprite batch.</param>
         public override void Render(ISurface surface, bool force = false)
         {
-            if (surface.IsDirty)
+            layers = ((LayeredSurface)surface).GetLayers();
+
+            RenderBegin(surface, force);
+            RenderCells(surface, force);
+            RenderTint(surface, force);
+            RenderEnd(surface, force);
+
+            layers = null;
+        }
+
+        public override void RenderCells(ISurface surface, bool force = false)
+        {
+            if (surface.IsDirty || force)
             {
-                var layers = ((LayeredSurface)surface).GetLayers();
-
-                Global.GraphicsDevice.SetRenderTarget(surface.LastRenderResult);
-                Global.GraphicsDevice.Clear(Color.Transparent);
-
-                Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-
-                BeforeRenderCallback?.Invoke(Global.SpriteBatch);
-
                 if (surface.Tint.A != 255)
                 {
                     Cell cell;
@@ -53,17 +58,6 @@ namespace SadConsole.Renderers
                         }
                     }
                 }
-
-                BeforeRenderTintCallback?.Invoke(Global.SpriteBatch);
-
-                if (surface.Tint.A != 0)
-                    Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
-
-                AfterRenderCallback?.Invoke(Global.SpriteBatch);
-
-                Global.SpriteBatch.End();
-
-                surface.IsDirty = false;
             }
         }
     }

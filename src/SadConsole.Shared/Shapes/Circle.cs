@@ -24,6 +24,8 @@ namespace SadConsole.Shapes
                 BorderAppearance = new Cell(Color.Blue, Color.Black, 4);
 
             Algorithms.Circle(Center.X, Center.Y, Radius, (x, y) => { if (surface.IsValidCell(x, y)) surface.SetCell(x, y, BorderAppearance); });
+
+            surface.TextSurface.IsDirty = true;
         }
     }
 }

@@ -156,6 +156,9 @@ namespace SadConsole
         public override void OnCalculateRenderPosition()
         {
             calculatedPosition = position;
+
+            foreach (var child in Children)
+                child.OnCalculateRenderPosition();
         }
 
         public override void Draw(TimeSpan drawTime)
