@@ -248,6 +248,9 @@ namespace SadConsole.Surfaces
 
             cells = RenderCells;
             AbsoluteArea = new Rectangle(0, 0, viewArea.Width * font.Size.X, viewArea.Height * font.Size.Y);
+
+            if (LastRenderResult.Bounds.Size != AbsoluteArea.Size)
+                LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
 
         /// <summary>

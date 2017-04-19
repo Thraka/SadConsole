@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.1.4</version>
+    <version>6.1.5</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,11 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
-      - Shapes were not marking the surface as dirty.
-      - Fixed bug in listbox when parent console used a render view.
-      - A window did not calculate positioning of children.
-      - Layered surface has RenderArea parameter for constructor now.
-      - GameObject had a bug that prevented deserialization.
+      - LayeredSurface and SurfaceView did not reset the RenderTexture when font changed.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
