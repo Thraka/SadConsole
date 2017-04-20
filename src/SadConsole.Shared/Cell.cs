@@ -138,7 +138,7 @@ namespace SadConsole
         /// <param name="font">Font used to draw the cell.</param>
         public void Draw(SpriteBatch batch, Point position, Point size, Font font)
         {
-            Render(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
+            Draw(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
         }
 
         /// <summary>
