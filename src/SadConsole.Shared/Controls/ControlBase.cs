@@ -175,7 +175,7 @@ namespace SadConsole.Controls
         /// Default constructor of the control.
         /// </summary>
         public ControlBase(int width, int height)
-            : base(new BasicSurface(width, height))
+            : base(new NoDrawSurface(width, height))
         {
             IsDirty = true;
             TabStop = true;

@@ -130,6 +130,33 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Draws a single cell using the specified SpriteBatch.
+        /// </summary>
+        /// <param name="batch">Rendering batch.</param>
+        /// <param name="position">Pixel position on the screen to render.</param>
+        /// <param name="size">Rendering size of the cell.</param>
+        /// <param name="font">Font used to draw the cell.</param>
+        public void Draw(SpriteBatch batch, Point position, Point size, Font font)
+        {
+            Draw(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
+        }
+
+        /// <summary>
+        /// Draws a single cell using the specified SpriteBatch.
+        /// </summary>
+        /// <param name="batch">Rendering batch.</param>
+        /// <param name="drawingRectangle">Where on the sreen to draw the cell, in pixels.</param>
+        /// <param name="font">Font used to draw the cell.</param>
+        public void Draw(SpriteBatch batch, Rectangle drawingRectangle, Font font)
+        {
+            if (Background != Color.Transparent)
+                batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[font.SolidGlyphIndex], Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+
+            if (Foreground != Color.Transparent)
+                batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[Glyph], Foreground, 0f, Vector2.Zero, Mirror, 0.4f);
+        }
+
+        /// <summary>
         /// Saves the current state of this cell to the <see cref="State"/> property.
         /// </summary>
         public void SaveState()

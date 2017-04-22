@@ -53,5 +53,15 @@ namespace SadConsole.SerializedTypes
                 DefaultBackground = surface.DefaultBackground,
             };
         }
+
+        public static implicit operator Surfaces.NoDrawSurface(BasicSurfaceSerialized surface)
+        {
+            return new Surfaces.NoDrawSurface(surface.Width, surface.Height, surface.Font, surface.RenderArea, surface.Cells.Select(c => (Cell)c).ToArray())
+            {
+                Tint = surface.Tint,
+                DefaultForeground = surface.DefaultForeground,
+                DefaultBackground = surface.DefaultBackground,
+            };
+        }
     }
 }

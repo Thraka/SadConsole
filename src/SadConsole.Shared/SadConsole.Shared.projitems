@@ -191,6 +191,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\BasicSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\ISurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\LayeredSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\NoDrawSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceEditor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ButtonTheme.cs" />

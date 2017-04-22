@@ -7,9 +7,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
 using SadConsole.GameHelpers;
+using System.Linq;
 
 namespace SadConsole.SerializedTypes
 {
+    /// <summary>
+    /// Serialized instance of a <see cref="Scene"/> object.
+    /// </summary>
     [DataContract]
     public class SceneSerialized
     {
@@ -20,11 +24,11 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public bool IsPaused;
         [DataMember]
-        public List<GameObject> Objects;
+        public List<GameObjectSerialized> Objects;
         [DataMember]
-        public List<Zone> Zones;
+        public List<ZoneSerialized> Zones;
         [DataMember]
-        public List<Hotspot> Hotspots;
+        public List<HotspotSerialized> Hotspots;
         [DataMember]
         public bool UsePixelPositioning;
 
@@ -32,9 +36,9 @@ namespace SadConsole.SerializedTypes
         {
             return new SceneSerialized()
             {
-                Objects = scene.Objects,
-                Zones = scene.Zones,
-                Hotspots = scene.Hotspots,
+                Objects = scene.Objects.Select(t => (GameObjectSerialized)t).ToList(),
+                Zones = scene.Zones.Select(z => (ZoneSerialized)z).ToList(),
+                Hotspots = scene.Hotspots.Select(h => (HotspotSerialized)h).ToList(),
                 Position = scene.Position,
                 IsVisible = scene.IsVisible,
                 IsPaused = scene.IsPaused,
@@ -46,9 +50,9 @@ namespace SadConsole.SerializedTypes
         {
             return new SadConsole.GameHelpers.Scene(1, 1)
             {
-                Objects = scene.Objects,
-                Zones = scene.Zones,
-                Hotspots = scene.Hotspots,
+                Objects = scene.Objects.Select(t => (GameObject)t).ToList(),
+                Zones = scene.Zones.Select(z => (Zone)z).ToList(),
+                Hotspots = scene.Hotspots.Select(h => (Hotspot)h).ToList(),
                 Position = scene.Position,
                 IsVisible = scene.IsVisible,
                 IsPaused = scene.IsPaused,

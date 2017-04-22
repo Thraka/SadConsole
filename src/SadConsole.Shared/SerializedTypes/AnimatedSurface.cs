@@ -46,7 +46,7 @@ namespace SadConsole.SerializedTypes
         public static implicit operator Surfaces.AnimatedSurface(AnimatedSurfaceSerialized serializedObject)
         {
             var animationSurface = new Surfaces.AnimatedSurface(serializedObject.Name, serializedObject.Width, serializedObject.Height, serializedObject.Font);
-            animationSurface.Frames = new List<Surfaces.BasicSurface>(serializedObject.Frames.Select(s => (Surfaces.BasicSurface)s).ToArray());
+            animationSurface.Frames = new List<Surfaces.NoDrawSurface>(serializedObject.Frames.Select(s => (Surfaces.NoDrawSurface)s).ToArray());
             animationSurface.CurrentFrameIndex = 0;
             animationSurface.AnimationDuration = serializedObject.AnimationDuration;
             animationSurface.Repeat = serializedObject.Repeat;

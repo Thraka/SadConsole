@@ -50,7 +50,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// All frames of the animation
         /// </summary>
-        public List<BasicSurface> Frames = new List<BasicSurface>();
+        public List<NoDrawSurface> Frames = new List<NoDrawSurface>();
 
         /// <summary>
         /// The state of the animation.
@@ -115,7 +115,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public BasicSurface CurrentFrame
+        public NoDrawSurface CurrentFrame
         {
             get { return Frames[_currentFrameIndex]; }
         }
@@ -195,12 +195,12 @@ namespace SadConsole.Surfaces
         /// Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
         /// </summary>
         /// <returns>The created frame.</returns>
-        public BasicSurface CreateFrame()
+        public NoDrawSurface CreateFrame()
         {
             if (Frames == null)
-                Frames = new List<BasicSurface>();
+                Frames = new List<NoDrawSurface>();
 
-            var frame = new BasicSurface(Width, Height);
+            var frame = new NoDrawSurface(Width, Height);
             new SurfaceEditor(frame).Clear();
             Frames.Add(frame);
             UpdateFrameReferences();

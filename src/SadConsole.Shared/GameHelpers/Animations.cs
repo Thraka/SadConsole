@@ -19,7 +19,7 @@ namespace SadConsole.GameHelpers
         public static AnimatedSurface CreateStatic(int width, int height, int frames, double blankChance)
         {
             var animation = new AnimatedSurface("default", width, height, Global.FontDefault);
-            var editor = new SurfaceEditor(new BasicSurface(1, 1, Global.FontDefault));
+            var editor = new SurfaceEditor(new NoDrawSurface(1, 1));
 
             for (int f = 0; f < frames; f++)
             {

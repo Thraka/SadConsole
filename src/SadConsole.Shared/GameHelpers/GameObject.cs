@@ -40,6 +40,11 @@ namespace SadConsole.GameHelpers
         protected Font font;
 
         /// <summary>
+        /// The offset to render this object at.
+        /// </summary>
+        protected Point positionOffset;
+
+        /// <summary>
         /// Treats the <see cref="IScreen.Position"/> of the game object as if it is pixels and not cells.
         /// </summary>
         public bool UsePixelPositioning { get { return usePixelPositioning; } set { usePixelPositioning = value; } }
@@ -80,7 +85,7 @@ namespace SadConsole.GameHelpers
         /// <summary>
         /// Offsets the position by this amount.
         /// </summary>
-        public Point PositionOffset { get; set; }
+        public Point PositionOffset { get { return positionOffset; } set { positionOffset = value; OnCalculateRenderPosition(); } }
 
         /// <summary>
         /// Creates a new GameObject with the default font.
