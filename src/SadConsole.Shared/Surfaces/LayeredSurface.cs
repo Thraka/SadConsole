@@ -223,7 +223,10 @@ namespace SadConsole.Surfaces
             AbsoluteArea = new Rectangle(0, 0, area.Width * Font.Size.X, area.Height * Font.Size.Y);
 
             if (LastRenderResult.Bounds.Size != AbsoluteArea.Size)
+            {
+                LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+            }
         }
 
         /// <summary>

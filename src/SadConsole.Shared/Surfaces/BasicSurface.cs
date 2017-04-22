@@ -193,6 +193,16 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
+        /// Disposes <see cref="LastRenderResult"/>.
+        /// </summary>
+        ~BasicSurface()
+        {
+            //System.Diagnostics.Debugger.Break();
+            if (LastRenderResult != null)
+                LastRenderResult.Dispose();
+        }
+
+        /// <summary>
         /// Creates a new text surface with the specified width and height.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
@@ -247,10 +257,20 @@ namespace SadConsole.Surfaces
             else if (initialCells.Length != width * height)
                 throw new ArgumentOutOfRangeException("initialCells", "initialCells length must equal width * height");
             else
-                cells = RenderCells = initialCells;
-            
+            {
+                cells = new Cell[initialCells.Length];
+                RenderCells = new Cell[initialCells.Length];
+                initialCells.CopyTo(cells, 0);
+                initialCells.CopyTo(RenderCells, 0);
+            }
+
             Font = font;
         }
+
+        /// <summary>
+        /// Initialization is left to the derived class.
+        /// </summary>
+        protected BasicSurface() { }
         
         /// <summary>
         /// Sets <see cref="RenderCells"/> to <see cref="TextSurfaceBasic.cells"/>.
@@ -289,7 +309,10 @@ namespace SadConsole.Surfaces
             AbsoluteArea = new Rectangle(0, 0, area.Width * font.Size.X, area.Height * font.Size.Y);
 
             if (LastRenderResult.Bounds.Size != AbsoluteArea.Size)
+            {
+                LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+            }
         }
 
         protected virtual void OnFontChanged()
@@ -328,12 +351,6 @@ namespace SadConsole.Surfaces
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return cells.GetEnumerator();
-        }
-
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            ResetArea();
         }
 
         /// <summary>

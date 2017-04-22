@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.1.5</version>
+    <version>6.2.0</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,9 +12,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
-      - LayeredSurface and SurfaceView did not reset the RenderTexture when font changed.
-      - Scene did not serialize correctly.
-      - GameObject did not recalculate position when PositionOffset was changed.
+- LayeredSurface and SurfaceView did not reset the RenderTexture when font changed.
+- Scene did not serialize correctly.
+- GameObject did not recalculate position when PositionOffset was changed.
+- New NoDrawSurface added. Does not use LastRenderResult.
+- Normal surfaces dispose of LastRenderResult in the destructor.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
