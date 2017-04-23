@@ -64,7 +64,7 @@ namespace SadConsole.SerializedTypes
 
         public static implicit operator Surfaces.LayeredSurface(LayeredSurfaceSerialized surface)
         {
-            var returnSurface = new Surfaces.LayeredSurface(surface.Width, surface.Height, surface.Font, surface.Layers.Length)
+            var returnSurface = new Surfaces.LayeredSurface(surface.Width, surface.Height, surface.Font, surface.RenderArea, surface.Layers.Length)
             {
                 Tint = surface.Tint,
                 DefaultForeground = surface.DefaultForeground,
@@ -80,7 +80,6 @@ namespace SadConsole.SerializedTypes
             }
 
             returnSurface.SetActiveLayer(surface.ActiveLayer);
-            returnSurface.RenderArea = surface.RenderArea;
 
             return returnSurface;
         }
