@@ -186,7 +186,7 @@ namespace SadConsole.Input
                 var worldPos = ScreenPosition.PixelLocationToConsole(console.TextSurface.Font);
                 var consolePos = worldPos - console.CalculatedPosition + console.TextSurface.RenderArea.Location;
 
-                return console.TextSurface.RenderArea.Contains(console.CalculatedPosition);
+                return console.TextSurface.RenderArea.Contains(consolePos);
             }
         }
 
