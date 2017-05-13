@@ -16,7 +16,7 @@ namespace SadConsole.Renderers
         /// <summary>
         /// Controls to render.
         /// </summary>
-        public List<Controls.ControlBase> Controls { get; set; }
+        public List<Controls.ControlBase> Controls { get; set; } = new List<SadConsole.Controls.ControlBase>();
 
         /// <summary>
         /// Renders a surface to the screen.
