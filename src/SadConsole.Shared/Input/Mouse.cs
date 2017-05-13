@@ -102,6 +102,9 @@ namespace SadConsole.Input
             RightButtonDown = rightDown;
         }
 
+        /// <summary>
+        /// Builds information about the mouse state based on the <see cref="Global.FocusedConsoles"/> or <see cref="Global.CurrentScreen"/>. Should be called each frame.
+        /// </summary>
         public virtual void Process()
         {
 
@@ -170,26 +173,21 @@ namespace SadConsole.Input
                 GetConsoles(child, ref list);
             }
         }
-        
 
+        /// <summary>
+        /// Returns true when the mouse is currently over the provided console.
+        /// </summary>
+        /// <param name="console">The console to check.</param>
+        /// <returns>True or false indicating if the mouse is over the console.</returns>
         public bool IsMouseOverConsole(IConsole console)
         {
-            if (console.UsePixelPositioning)
-            {
-                var worldPos = ScreenPosition - console.CalculatedPosition;
-                //var consolePos = worldPos.WorldLocationToConsole(console.TextSurface.Font);
-
-                return console.TextSurface.AbsoluteArea.Contains(worldPos);
-            }
-            else
-            {
-                var worldPos = ScreenPosition.PixelLocationToConsole(console.TextSurface.Font);
-                var consolePos = worldPos - console.CalculatedPosition + console.TextSurface.RenderArea.Location;
-
-                return console.TextSurface.RenderArea.Contains(consolePos);
-            }
+            return new MouseConsoleState(console, this).IsOnConsole;
         }
 
+        /// <summary>
+        /// Clones this mouse into a new object.
+        /// </summary>
+        /// <returns>A clone.</returns>
         public Mouse Clone()
         {
             return new Mouse()
