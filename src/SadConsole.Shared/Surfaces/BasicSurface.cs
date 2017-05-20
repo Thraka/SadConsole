@@ -257,14 +257,10 @@ namespace SadConsole.Surfaces
             else if (initialCells.Length != width * height)
                 throw new ArgumentOutOfRangeException("initialCells", "initialCells length must equal width * height");
             else
-            {
-                cells = new Cell[initialCells.Length];
-                RenderCells = new Cell[initialCells.Length];
-                initialCells.CopyTo(cells, 0);
-                initialCells.CopyTo(RenderCells, 0);
-            }
+                cells = initialCells;
 
-            Font = font;
+            this.font = font;
+            ResetArea();
         }
 
         /// <summary>
@@ -282,7 +278,8 @@ namespace SadConsole.Surfaces
             for (int i = 0; i < cells.Length; i++)
                 cells[i] = new Cell(this.DefaultForeground, this.DefaultBackground, 0);
 
-            RenderCells = cells;
+            RenderCells = new Cell[cells.Length];
+            cells.CopyTo(RenderCells, 0);
         }
 
         /// <summary>
