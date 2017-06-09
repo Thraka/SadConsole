@@ -94,7 +94,7 @@ namespace SadConsole.Surfaces
             set
             {
                 font = value;
-                ResetArea();
+                SetRenderCells();
             }
         }
 
@@ -170,7 +170,7 @@ namespace SadConsole.Surfaces
         public Rectangle ViewArea
         {
             get { return viewArea; }
-            set { viewArea = value; ResetArea(); }
+            set { viewArea = value; SetRenderCells(); }
         }
 
         /// <summary>
@@ -229,9 +229,9 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Keeps the text view data in sync with this surface.
+        /// Calculates which cells to draw based on <see cref="SurfaceView.RenderArea"/>.
         /// </summary>
-        protected virtual void ResetArea()
+        public virtual void SetRenderCells()
         {
             if (data == null)
                 return;
@@ -266,18 +266,18 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Call after the <see cref="TextSurfaceView"/> is deserialized to hook it back up to the original surface.
+        /// Call after the <see cref="SurfaceView"/> is deserialized to hook it back up to the original surface.
         /// </summary>
         /// <param name="surface">The surface to associate with the view.</param>
         public void Hydrate(ISurface surface)
         {
             data = surface;
 
-            ResetArea();
+            SetRenderCells();
         }
 
         /// <summary>
-        /// Call after the <see cref="TextSurfaceView"/> is deserialized to hook it back up to the original surface.
+        /// Call after the <see cref="SurfaceView"/> is deserialized to hook it back up to the original surface.
         /// </summary>
         /// <param name="surface">The surface to associate with the view.</param>
         /// <param name="view">The sub view of the <paramref name="surface"/>.</param>
@@ -285,10 +285,10 @@ namespace SadConsole.Surfaces
         {
             data = surface;
             viewArea = view;
-            ResetArea();
+            SetRenderCells();
         }
         /// <summary>
-        /// Saves the serialized <see cref="TextSurfaceView"/> to a file.
+        /// Saves the serialized <see cref="SurfaceView"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
         public void Save(string file)
@@ -297,7 +297,7 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Loads a <see cref="TextSurfaceView"/> from a file and existing <see cref="ITextSurfaceRendered"/>.
+        /// Loads a <see cref="SurfaceView"/> from a file and existing <see cref="ISurface"/>.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <param name="surfaceHydrate">The surface this view was originally from.</param>

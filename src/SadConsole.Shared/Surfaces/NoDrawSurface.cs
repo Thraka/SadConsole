@@ -93,7 +93,10 @@ namespace SadConsole.Surfaces
             Font = font;
         }
 
-        protected override void ResetArea()
+        /// <summary>
+        /// Calculates which cells to draw based on <see cref="BasicSurface.RenderArea"/>.
+        /// </summary>
+        public override void SetRenderCells()
         {
             RenderRects = new Rectangle[area.Width * area.Height];
             RenderCells = new Cell[area.Width * area.Height];
