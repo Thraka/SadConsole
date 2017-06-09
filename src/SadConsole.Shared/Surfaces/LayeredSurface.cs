@@ -132,7 +132,7 @@ namespace SadConsole.Surfaces
                 this.layers.Add(new Layer());
 
             InitializeCells();
-            ResetArea();
+            SetRenderCells();
             SyncLayerIndex();
 
             SetActiveLayer(0);
@@ -196,9 +196,9 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Resets all layer areas.
+        /// Calculates which cells to draw based on <see cref="BasicSurface.RenderArea"/>.
         /// </summary>
-        protected override void ResetArea()
+        public override void SetRenderCells()
         {
             if (!initDone)
                 return;
@@ -457,7 +457,7 @@ namespace SadConsole.Surfaces
         {
             initDone = true;
             SyncLayerIndex();
-            ResetArea();
+            SetRenderCells();
             SetActiveLayer(ActiveLayerIndex);
         }
         #endregion

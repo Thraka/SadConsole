@@ -153,7 +153,7 @@ namespace SadConsole.Surfaces
                     area.Y = height - area.Height;
 
                 IsDirty = true;
-                ResetArea();
+                SetRenderCells();
             }
         }
 
@@ -260,7 +260,7 @@ namespace SadConsole.Surfaces
                 cells = initialCells;
 
             this.font = font;
-            ResetArea();
+            SetRenderCells();
         }
 
         /// <summary>
@@ -283,9 +283,9 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Keeps the text view data in sync with this surface.
+        /// Calculates which cells to draw based on <see cref="BasicSurface.RenderArea"/>.
         /// </summary>
-        protected virtual void ResetArea()
+        public virtual void SetRenderCells()
         {
             RenderRects = new Rectangle[area.Width * area.Height];
             RenderCells = new Cell[area.Width * area.Height];
@@ -314,7 +314,7 @@ namespace SadConsole.Surfaces
 
         protected virtual void OnFontChanged()
         {
-            ResetArea();
+            SetRenderCells();
         }
 
 

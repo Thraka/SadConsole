@@ -168,12 +168,12 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Forces the area of this text surface to always be the full width and height.
         /// </summary>
-        protected override void ResetArea()
+        public override void SetRenderCells()
         {
             // Sub views are not allowed on animated text surfaces. Enforce full view.
             area = new Rectangle(0, 0, width, height);
 
-            base.ResetArea();
+            base.SetRenderCells();
 
             if (Frames.Count > 0)
                 UpdateFrameReferences();
