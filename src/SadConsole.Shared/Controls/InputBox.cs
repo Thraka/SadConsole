@@ -518,7 +518,6 @@ namespace SadConsole.Controls
                 base.OnLeftMouseClicked(state);
 
                 DisableKeyboard = false;
-                _editingText = Text;
 
                 if (!IsFocused)
                     Parent.FocusedControl = this;
