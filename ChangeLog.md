@@ -1,4 +1,33 @@
-﻿## 03/31/2016
+﻿## 07/25/2017
+
+- Added new Palette and Timer classes.
+- Added extension method to ColorGradient that returns a Color[] based on the stops.
+- Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
+
+## 06/08/2016
+
+- Fixed BasicSurface ctor. Now references the passed in cell array instead of copying it.
+- Surface.ResetArea has been renamed to Surface.SetRenderCells.
+- Exposed Surface.SetRenderCells as public.
+
+## 04/22/2016
+
+- LayeredSurface and SurfaceView did not reset the RenderTexture when font changed.
+- LayeredSurface deserializes the render view correctly now.
+- Scene did not serialize correctly.
+- GameObject did not recalculate position when PositionOffset was changed.
+- New NoDrawSurface added. Does not use LastRenderResult.
+- Normal surfaces dispose of LastRenderResult in the destructor.
+
+## 04/17/2016
+
+- Shapes were not marking the surface as dirty.
+- Fixed bug in listbox when parent console used a render view.
+- A window did not calculate positioning of children.
+- Layered surface has RenderArea parameter for constructor now.
+- GameObject had a bug that prevented deserialization.
+
+## 03/31/2016
 
 - `IScreen.RelativePosition` is now `IScreen.CalculatedPosition`.
 - `GameObject.PositionOffset` is back.

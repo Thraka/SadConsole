@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.3.0</version>
+    <version>6.4.0</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,8 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
-- Surface.ResetArea has been renamed to Surface.SetRenderCells.
-- Exposed Surface.SetRenderCells as public.
+- Added new Palette and Timer classes.
+- Added extension method to ColorGradient that returns a Color[] based on the stops.
+- Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

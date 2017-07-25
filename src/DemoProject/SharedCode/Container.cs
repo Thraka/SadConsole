@@ -28,12 +28,12 @@ namespace StarterProject
 
             consoles = new IConsoleMetadata[] {
                 //consoleReal,
-                new CustomConsoles.SerializationTests(),
+                //new CustomConsoles.MouseRenderingDebug(),
                 new CustomConsoles.AutoTypingConsole(),
+                new CustomConsoles.SerializationTests(),
                 new CustomConsoles.SplashScreen() { SplashCompleted = () => MoveNextConsole() },
                 new CustomConsoles.StringParsingConsole(),
                 new CustomConsoles.TextCursorConsole(),
-                new CustomConsoles.MouseRenderingDebug(),
                 new CustomConsoles.ViewsAndSubViews(),
                 new CustomConsoles.ControlsTest(),
                 new CustomConsoles.SubConsoleCursor(),
