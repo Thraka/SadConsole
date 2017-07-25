@@ -109,6 +109,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Animations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Palette.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Timer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Hotspot.cs" />
