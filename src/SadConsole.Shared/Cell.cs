@@ -290,5 +290,23 @@ namespace SadConsole
                    left.Mirror != right.Mirror ||
                    left.IsVisible != right.IsVisible;
         }
+
+        public static bool operator ==(Cell right, CellState left)
+        {
+            return left.Background == right.Background &&
+                   left.Foreground == right.Foreground &&
+                   left.Glyph == right.Glyph &&
+                   left.Mirror == right.Mirror &&
+                   left.IsVisible == right.IsVisible;
+        }
+
+        public static bool operator !=(Cell left, CellState right)
+        {
+            return left.Background != right.Background ||
+                   left.Foreground != right.Foreground ||
+                   left.Glyph != right.Glyph ||
+                   left.Mirror != right.Mirror ||
+                   left.IsVisible != right.IsVisible;
+        }
     }
 }

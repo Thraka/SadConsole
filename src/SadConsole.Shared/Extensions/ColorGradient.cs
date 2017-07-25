@@ -144,6 +144,49 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
+        /// Gets an array of colors based from the gradient.
+        /// </summary>
+        /// <param name="count">The amount of colors to produce.</param>
+        /// <returns>An array of colors.</returns>
+        public Color[] ToColorArray(int count)
+        {
+            Color[] returnArray = new Color[count];
+
+            if (Stops.Length == 0)
+                throw new global::System.IndexOutOfRangeException("The ColorGradient object does not have any gradient stops defined.");
+
+            else if (Stops.Length == 1)
+            {
+                for (int i = 0; i < count; i++)
+                    returnArray[i] = Stops[0].Color;
+
+                return returnArray;
+            }
+
+            float lerp = 1f / (count - 1);
+            float lerpTotal = 0f;
+
+            returnArray[0] = Stops[0].Color;
+            returnArray[count - 1] = Stops[Stops.Length - 1].Color;
+
+            for (int i = 1; i < count - 1; i++)
+            {
+                lerpTotal += lerp;
+                int counter;
+                for (counter = 0; counter < Stops.Length && Stops[counter].Stop < lerpTotal; counter++) ;
+
+                counter--;
+                counter = (int)MyMathHelper.Clamp(counter, 0, Stops.Length - 2);
+
+                float newLerp = (Stops[counter].Stop - (float)lerpTotal) / (Stops[counter].Stop - Stops[counter + 1].Stop);
+
+                returnArray[i] = ColorHelper.Lerp(Stops[counter].Color, Stops[counter + 1].Color, newLerp);
+            }
+
+            return returnArray;
+        }
+
+        /// <summary>
         /// Returns a color from this gradient at the specified lerp value.
         /// </summary>
         /// <param name="amount">The lerp amount.</param>
