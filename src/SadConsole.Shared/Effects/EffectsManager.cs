@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Linq;
 
 namespace SadConsole.Effects
 {
@@ -151,10 +152,13 @@ namespace SadConsole.Effects
         /// <param name="effect">Effect to remove.</param>
         public void Remove(ICellEffect effect)
         {
-            CellEffectData data = _effects[effect];
+            if (_effects.ContainsKey(effect))
+            {
+                Cell[] cells = _effects[effect].Cells.ToArray();
 
-            foreach (var cell in data.Cells)
-                ClearCellEffect(cell);
+                foreach (var cell in cells)
+                    ClearCellEffect(cell);
+            }
         }
 
         /// <summary>
@@ -162,6 +166,11 @@ namespace SadConsole.Effects
         /// </summary>
         public void RemoveAll()
         {
+            ICellEffect[] effects = _effects.Keys.ToArray();
+
+            foreach (var effect in effects)
+                Remove(effect);
+
             _effectCells.Clear();
             _effects.Clear();
         }
