@@ -1,4 +1,8 @@
-﻿## 07/25/2017
+﻿## 08/09/2017
+
+- Fixed effect manager remove methods.
+
+## 07/25/2017
 
 - Added new Palette and Timer classes.
 - Added extension method to ColorGradient that returns a Color[] based on the stops.

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.4.0</version>
+    <version>6.4.1</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -15,6 +15,7 @@
 - Added new Palette and Timer classes.
 - Added extension method to ColorGradient that returns a Color[] based on the stops.
 - Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
+- Fixed effect manager remove methods.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

@@ -24,7 +24,7 @@ namespace SadConsole.Effects
         public ColorGradient DestinationForeground { get; set; }
 
         /// <summary>
-        /// Gets or sets how long the fade takes to complete in milliseconds.
+        /// Gets or sets how long the fade takes to complete in seconds.
         /// </summary>
         [DataMember]
         public double FadeDuration { get; set; }
