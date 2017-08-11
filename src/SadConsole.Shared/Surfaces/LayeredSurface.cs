@@ -407,10 +407,20 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <param name="layerMetadataType">Type of <see cref="Layer.Metadata"/>.</param>
-        /// <returns>The <see cref="LayeredSurface"/>The deserialized service.</returns>
+        /// <returns>The <see cref="LayeredSurface"/>The deserialized surface.</returns>
         public static LayeredSurface Load(string file, Type layerMetadataType)
         {
             return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, new Type[] { layerMetadataType });
+        }
+
+        /// <summary>
+        /// Loads a <see cref="LayeredSurface"/> from a file using the <see cref="LayerMetadata"/> type for metadata.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns>The <see cref="LayeredSurface"/>The deserialized surface.</returns>
+        public static new LayeredSurface Load(string file)
+        {
+            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, new Type[] { typeof(LayerMetadata) });
         }
 
         /// <summary>
