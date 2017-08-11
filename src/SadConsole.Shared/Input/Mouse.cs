@@ -143,12 +143,11 @@ namespace SadConsole.Input
                     if (consoles[i].ProcessMouse(state))
                     {
                         if (lastMouseConsole != null && lastMouseConsole != consoles[i])
-                        {
                             lastMouseConsole.LostMouse(state);
-                            lastMouseConsole = consoles[i];
-                        }
 
                         foundMouseTarget = true;
+                        lastMouseConsole = consoles[i];
+                        break;
                     }
                 }
 

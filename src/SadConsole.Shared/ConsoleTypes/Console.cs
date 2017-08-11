@@ -389,46 +389,51 @@ namespace SadConsole
         /// <summary>
         /// Processes the mouse.
         /// </summary>
-        /// <param name="state"></param>
-        /// <returns>True when the mouse is over this console.</returns>
+        /// <param name="state">The mouse state related to this console.</param>
+        /// <returns>True when the mouse is over this console and processing should stop.</returns>
         public virtual bool ProcessMouse(MouseConsoleState state)
         {
-            var handlerResult = MouseHandler?.Invoke(this, state) ?? false;
+            return MouseHandler?.Invoke(this, state) ?? ProcessMouseNonHandler(state);
+        }
 
-            if (!handlerResult)
+        /// <summary>
+        /// Processing the mouse ignoring the attached <see cref="MouseHandler"/>.
+        /// </summary>
+        /// <param name="state">The mouse state related to this console.</param>
+        /// <returns>True when the mouse is over this console and processing should stop.</returns>
+        public bool ProcessMouseNonHandler(MouseConsoleState state)
+        {
+            if (this.IsVisible && this.UseMouse)
             {
-                if (this.IsVisible && this.UseMouse)
+                if (state.IsOnConsole)
                 {
-                    if (state.IsOnConsole)
+                    if (isMouseOver != true)
                     {
-                        if (isMouseOver != true)
-                        {
-                            isMouseOver = true;
-                            OnMouseEnter(state);
-                        }
-
-                        OnMouseMove(state);
-
-                        if (state.Mouse.LeftClicked)
-                            OnMouseLeftClicked(state);
-
-                        if (state.Mouse.RightClicked)
-                            OnRightMouseClicked(state);
-
-                        return true;
+                        isMouseOver = true;
+                        OnMouseEnter(state);
                     }
-                    else
+
+                    OnMouseMove(state);
+
+                    if (state.Mouse.LeftClicked)
+                        OnMouseLeftClicked(state);
+
+                    if (state.Mouse.RightClicked)
+                        OnRightMouseClicked(state);
+
+                    return true;
+                }
+                else
+                {
+                    if (isMouseOver)
                     {
-                        if (isMouseOver)
-                        {
-                            isMouseOver = false;
-                            OnMouseExit(state);
-                        }
+                        isMouseOver = false;
+                        OnMouseExit(state);
                     }
                 }
             }
 
-            return handlerResult;
+            return false;
         }
 
         /// <summary>
