@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.FNA</id>
-    <version>6.4.1</version>
+    <version>6.4.2</version>
     <title>SadConsole for FNA</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,10 +12,13 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An FNA library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
-- Added new Palette and Timer classes.
-- Added extension method to ColorGradient that returns a Color[] based on the stops.
-- Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
-- Fixed effect manager remove methods.
+      - Added new Palette and Timer classes.
+      - Added extension method to ColorGradient that returns a Color[] based on the stops.
+      - Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
+      - Fixed effect manager remove methods.
+      - Fixed mouse processing other consoles after it was found over the top-most
+      - Created a LayeredSurface.Load single param overload to block accidentally calling BasicSurface.Load
+      - MouseHandler for a Console has changed. If it assigned, the normal mouse processing logic will no longer run.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
