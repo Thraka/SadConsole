@@ -1,4 +1,8 @@
-﻿## 08/09/2017
+﻿## 09/26/2017
+
+- Added new FNA library support. Mostly untested.
+
+## 08/09/2017
 
 - Fixed effect manager remove methods.
 

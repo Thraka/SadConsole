@@ -52,6 +52,9 @@ build/
 [Oo]bj/
 [Pp]ackages/
 
+!/FNA/library/[dD]ebug/
+!/FNA/library/[rR]elease/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

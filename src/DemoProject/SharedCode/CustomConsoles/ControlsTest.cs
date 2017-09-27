@@ -195,6 +195,12 @@ namespace StarterProject.CustomConsoles
             return base.ProcessMouse(state);
         }
 
+
+        public override void Update(TimeSpan time)
+        {
+            base.Update(time);
+        }
+
         public override void Invalidate()
         {
             base.Invalidate();
