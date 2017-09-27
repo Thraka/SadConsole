@@ -2,6 +2,12 @@
 
 - Added new FNA library support. Mostly untested.
 
+## 08/11/2017
+
+- Fixed mouse processing other consoles after it was found over the top-most
+- Created a LayeredSurface.Load single param overload to block accidentally calling BasicSurface.Load
+- MouseHandler for a Console has changed. If it assigned, the normal mouse processing logic will no longer run.
+
 ## 08/09/2017
 
 - Fixed effect manager remove methods.
