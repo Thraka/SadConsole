@@ -1,4 +1,8 @@
-﻿## 08/11/2017
+﻿## 09/26/2017
+
+- Added new FNA library support. Mostly untested.
+
+## 08/11/2017
 
 - Fixed mouse processing other consoles after it was found over the top-most
 - Created a LayeredSurface.Load single param overload to block accidentally calling BasicSurface.Load

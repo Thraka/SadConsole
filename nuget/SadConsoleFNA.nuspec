@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SadConsole.FNA</id>
+    <version>6.4.2</version>
+    <title>SadConsole for FNA</title>
+    <authors>SadLogic</authors>
+    <owners>Thraka</owners>
+    <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An FNA library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
+    <releaseNotes>
+      - Added new Palette and Timer classes.
+      - Added extension method to ColorGradient that returns a Color[] based on the stops.
+      - Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
+      - Fixed effect manager remove methods.
+      - Fixed mouse processing other consoles after it was found over the top-most
+      - Created a LayeredSurface.Load single param overload to block accidentally calling BasicSurface.Load
+      - MouseHandler for a Console has changed. If it assigned, the normal mouse processing logic will no longer run.
+    </releaseNotes>
+    <copyright>Copyright 2017 Steve De George JR</copyright>
+    <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+  </metadata>
+  <files>
+
+    <!-- Cross-platform reference assemblies -->
+    <file src="..\src\SadConsoleFNA\bin\Release\SadConsoleFNA.dll" target="lib\net" />
+    <file src="..\src\SadConsoleFNA\bin\Release\SadConsoleFNA.pdb" target="lib\net" />
+    <file src="..\src\SadConsoleFNA\bin\Release\SadConsoleFNA.xml" target="lib\net" />
+
+    <!-- UWP reference assemblies 
+    <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.dll" target="lib\UAP10" />
+    <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.pdb" target="lib\UAP10" />
+    <file src="..\src\SadConsole.Universal\bin\Release\SadConsole.xml" target="lib\UAP10" />
+    --> 
+    
+    <!-- Source code -->
+    <file src="..\src\SadConsole.Shared\**\*.cs" target="src" />
+
+  </files>
+</package>

@@ -53,7 +53,9 @@ namespace SadConsole
             this.font = font;
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
+#if MONOGAME
             GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
+#endif
             
 
             ctorCallback?.Invoke(this);
