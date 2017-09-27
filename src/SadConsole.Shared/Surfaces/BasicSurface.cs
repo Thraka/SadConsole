@@ -305,7 +305,7 @@ namespace SadConsole.Surfaces
             // TODO: Optimization by calculating AbsArea and seeing if it's diff from current, if so, don't create new RenderRects
             AbsoluteArea = new Rectangle(0, 0, area.Width * font.Size.X, area.Height * font.Size.Y);
 
-            if (LastRenderResult.Bounds.Size != AbsoluteArea.Size)
+            if (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
             {
                 LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
