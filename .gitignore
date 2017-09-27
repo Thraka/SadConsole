@@ -54,6 +54,7 @@ build/
 
 !/FNA/library/[dD]ebug/
 !/FNA/library/[rR]elease/
+!/FNA/dependencies/x64/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
