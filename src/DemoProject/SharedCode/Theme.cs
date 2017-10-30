@@ -137,6 +137,23 @@ namespace StarterProject
             SadConsole.Themes.Library.Default.SelectionButtonTheme.MouseClicking = Appearance_ControlMouseDown;
             SadConsole.Themes.Library.Default.SelectionButtonTheme.Focused = Appearance_ControlFocused;
 
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Normal = Appearance_ControlNormal.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Normal.Glyph = 176;
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Focused = Appearance_ControlNormal.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Focused.Glyph = 176;
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Disabled = Appearance_ControlDisabled.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Disabled.Glyph = 176;
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.MouseOver = Appearance_ControlNormal.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.MouseOver.Glyph = 176;
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Normal = Appearance_ControlSelected.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Normal.Glyph = 219;
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Focused = Appearance_ControlSelected.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Focused.Glyph = 219;
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Disabled = Appearance_ControlDisabled.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Disabled.Glyph = 219;
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.MouseOver = Appearance_ControlSelected.Clone();
+            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.MouseOver.Glyph = 219;
+
         }
     }
 }
