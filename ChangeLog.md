@@ -1,4 +1,9 @@
-﻿## 09/26/2017
+﻿## 11/14/2017
+
+- Fixed the possability of the GraphicsDevice.ViewPort being changed by a console rendered during the Update loop.
+- Fixed the possability of the last surface created during the Update loop being erased.
+
+## 09/26/2017
 
 - Added new FNA library support. Mostly untested.
 

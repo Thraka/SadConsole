@@ -62,6 +62,8 @@ namespace SadConsole.Renderers
                 Global.SpriteBatch.End();
 
                 surface.IsDirty = false;
+
+                Global.GraphicsDevice.SetRenderTarget(null);
             }
         }
 
