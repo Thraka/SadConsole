@@ -108,6 +108,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\NoiseLookupTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Animations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Direction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Palette.cs" />

@@ -1,7 +1,12 @@
-﻿## 11/14/2017
+﻿## 12/24/2017
+
+- Added SadConsole.GameHelpers.Directions class and helpers.
+
+## 11/14/2017
 
 - Fixed the possability of the GraphicsDevice.ViewPort being changed by a console rendered during the Update loop.
 - Fixed the possability of the last surface created during the Update loop being erased.
+- Added progress bar control.
 
 ## 09/26/2017
 

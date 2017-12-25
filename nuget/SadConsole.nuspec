@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.4.3</version>
+    <version>6.4.4</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -20,6 +20,7 @@
       - Created a LayeredSurface.Load single param overload to block accidentally calling BasicSurface.Load
       - MouseHandler for a Console has changed. If it assigned, the normal mouse processing logic will no longer run.
       - Fixed rendering problem with consoles created after initialization. (thanks kingvitamin103)
+      - Added SadConsole.GameHelpers.Directions class and helpers.
     </releaseNotes>
     <copyright>Copyright 2017 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
