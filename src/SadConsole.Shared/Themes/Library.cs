@@ -66,6 +66,12 @@ namespace SadConsole.Themes
         public InputBoxTheme InputBoxTheme;
 
         /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.ProgressBar"/> control.
+        /// </summary>
+        [DataMember]
+        public ProgressBarTheme ProgressBarTheme;
+
+        /// <summary>
         /// Theme for <see cref="Consoles.ControlsConsole"/>.
         /// </summary>
         [DataMember]
@@ -175,6 +181,18 @@ namespace SadConsole.Themes
                 GlyphIndex = 95,
                 BlinkSpeed = 0.4f
             };
+
+            ProgressBarTheme = new ProgressBarTheme();
+            ProgressBarTheme.Background = new ThemePartBase();
+            ProgressBarTheme.Background.Normal = new Cell(ColorHelper.LightGray, ColorHelper.Black, 176);
+            ProgressBarTheme.Background.Focused = new Cell(ColorHelper.LightGray, ColorHelper.Black, 176);
+            ProgressBarTheme.Background.Disabled = new Cell(ColorHelper.Gray, ColorHelper.Black, 176);
+            ProgressBarTheme.Background.MouseOver = new Cell(ColorHelper.LightGray, ColorHelper.Black, 176);
+            ProgressBarTheme.Foreground = new ThemePartBase();
+            ProgressBarTheme.Foreground.Normal = new Cell(ColorHelper.LightGray, ColorHelper.Black, 219);
+            ProgressBarTheme.Foreground.Focused = new Cell(ColorHelper.LightGray, ColorHelper.Black, 219);
+            ProgressBarTheme.Foreground.Disabled = new Cell(ColorHelper.Gray, ColorHelper.Black, 219);
+            ProgressBarTheme.Foreground.MouseOver = new Cell(ColorHelper.LightGray, ColorHelper.Black, 219);
         }
     }
 }

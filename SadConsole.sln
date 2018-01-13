@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Libraries", "01 Libraries", "{4EACED7C-3BF4-488D-813F-7D481122A21C}"
 EndProject
@@ -61,6 +61,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{111f8273-2ead-47d3-88ec-cb0cd6122be8}*SharedItemsImports = 13
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{364c730b-b238-4ed2-a3e3-427a8a5d5f07}*SharedItemsImports = 4
+		src\SadConsole.Shared\SadConsole.Shared.projitems*{653ebcbd-af0e-48ad-89e1-e38bb0db130b}*SharedItemsImports = 4
 		src\DemoProject\SharedCode\DemoProject.projitems*{680ff2f5-ae1c-4ae7-92f2-62bee74f7a43}*SharedItemsImports = 4
 		src\DemoProject\SharedCode\DemoProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{7a8507b4-db2c-453e-a72b-2384175bdff1}*SharedItemsImports = 13
