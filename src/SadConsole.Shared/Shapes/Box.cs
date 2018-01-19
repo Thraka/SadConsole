@@ -139,11 +139,22 @@ namespace SadConsole.Shapes
             DrawTransparency = false;
         }
 
+        [System.Obsolete("Use Thick() instead")]
         public static Box GetDefaultBox()
         {
             Box box = new Box(186, 205, 201, 187, 188, 200, 4, 4);
 
             return box;
+        }
+
+        public static Box Thick()
+        {
+            return new Box(186, 205, 201, 187, 188, 200, 4, 4);
+        }
+
+        public static Box Thin()
+        {
+            return new Box(179, 196, 218, 191, 217, 192, 4, 4);
         }
     }
 }
