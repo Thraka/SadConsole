@@ -59,5 +59,21 @@ namespace SadConsole
             return r < 0 ? r + m : r;
         }
 
+        /// <summary>
+        /// Wraps a value around the min and max.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <param name="min">The minimum value before it transforms into the maximum.</param>
+        /// <param name="max">The maximum value before it transforms into the minimum.</param>
+        /// <returns>A new value if it falls outside the min/max range otherwise, the same value.</returns>
+        public static float Wrap(float value, float min, float max)
+        {
+            if (value < min)
+                value = max - (min - value) % (max - min);
+            else
+                value = min + (value - min) % (max - min);
+
+            return value;
+        }
     }
 }

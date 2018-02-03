@@ -116,7 +116,7 @@ namespace SadConsole.GameHelpers
         /// <param name="direction">The direction.</param>
         /// <param name="favorNorthSouth">If true, returns N for NW/NE and S for SW/SE. Otherwise W for SW/NW and E for SE/NE.</param>
         /// <returns>The opposite direction.</returns>
-        public static DirectionEnum GetMajorDirection(this DirectionEnum direction, bool favorNorthSouth = true)
+        public static DirectionEnum GetCardinalDirection(this DirectionEnum direction, bool favorNorthSouth = true)
         {
             if (favorNorthSouth)
             {
@@ -348,8 +348,7 @@ namespace SadConsole.GameHelpers
         /// Gets an array of <see cref="SadConsole.Surfaces.ISurface.Cells"/> indexes of each <see cref="DirectionEnum"/> from the current <paramref name="position"/>.
         /// </summary>
         /// <param name="position">The position center.</param>
-        /// <param name="areaWidth">The area containing the position.</param>
-        /// <param name="areaHeight">The height of the area.</param>
+        /// <param name="area">The area containing the position.</param>
         /// <returns>The index of each position. A value of -1 represents an invalid position.</returns>
         public static int[] GetDirectionIndexes(this Point position, Rectangle area)
         {
@@ -374,5 +373,93 @@ namespace SadConsole.GameHelpers
                 return new int[] { -1, -1, -1, -1, -1, -1, -1, -1 };
         }
 
+        /// <summary>
+        /// Returns a heading angle based on the direction.
+        /// </summary>
+        /// <param name="direction">Direction to convert.</param>
+        /// <returns>An angle between 0 (east) and 315 (south east) degrees.</returns>
+        public static float ToHeading(this DirectionEnum direction)
+        {
+            switch (direction)
+            {
+                case DirectionEnum.North:
+                    return 90;
+                case DirectionEnum.South:
+                    return 270;
+                case DirectionEnum.East:
+                    return 0;
+                case DirectionEnum.West:
+                    return 180;
+                case DirectionEnum.NorthWest:
+                    return 135;
+                case DirectionEnum.NorthEast:
+                    return 45;
+                case DirectionEnum.SouthWest:
+                    return 225;
+                case DirectionEnum.SouthEast:
+                    return 315;
+                default:
+                    return 0;
+            }
+        }
+
+        /// <summary>
+        /// Returns a direction based on a heading angle
+        /// </summary>
+        /// <param name="heading"></param>
+        /// <param name="compensationHeading"></param>
+        /// <returns></returns>
+        public static DirectionEnum FromHeading(float heading, float compensationHeading = 0f)
+        {
+            if (compensationHeading != 0)
+                heading = MathHelper.Wrap(heading + (90 /* north */ - compensationHeading), 0, 359);
+            else
+                heading = MathHelper.Wrap(heading, 0, 359);
+
+            // S
+            if (heading > 240 && heading < 300)
+            {
+                return DirectionEnum.South;
+            }
+            // N
+            else if (heading < 120 && heading > 60)
+            {
+                return DirectionEnum.North;
+            }
+            // SW
+            else if (heading >= 210 && heading <= 240)
+            {
+                return DirectionEnum.SouthWest;
+            }
+            // NE
+            else if (heading <= 60 && heading >= 30)
+            {
+                return DirectionEnum.NorthEast;
+            }
+            // SE
+            else if (heading >= 300 && heading <= 330)
+            {
+                return DirectionEnum.SouthEast;
+            }
+            // NW
+            else if (heading <= 150 && heading >= 120)
+            {
+                return DirectionEnum.NorthWest;
+            }
+            // W
+            else if (heading > 150 && heading < 210)
+            {
+                return DirectionEnum.West;
+            }
+            // E
+            else if ((heading < 30 && heading >= 0) || (heading > 330 || heading <= 360))
+            {
+                return DirectionEnum.East;
+            }
+            else
+            {
+                throw new Exception("Heading out of range");
+            }
+        }
     }
 }

@@ -8,20 +8,39 @@ using System.Text;
 using SadConsole.Effects;
 using System.Runtime.Serialization;
 using SadConsole.StringParser;
+using Microsoft.Xna.Framework;
 
 namespace SadConsole.Surfaces
 {
     /// <summary>
-    /// Provides methods to manipulate a <see cref="ISurfaceRendered"/>.
+    /// Provides methods to manipulate a <see cref="ISurface"/>.
     /// </summary>
     [DataContract]
-    public class SurfaceEditor
+    public partial class SurfaceEditor
     {
+        /// <summary>
+        /// The surface this editor is working with.
+        /// </summary>
         protected ISurface textSurface;
         
+        /// <summary>
+        /// A variable that tracks how many times this editor shifted the surface down.
+        /// </summary>
         public int TimesShiftedDown;
+
+        /// <summary>
+        /// A variable that tracks how many times this editor shifted the surface right.
+        /// </summary>
         public int TimesShiftedRight;
+
+        /// <summary>
+        /// A variable that tracks how many times this editor shifted the surface left.
+        /// </summary>
         public int TimesShiftedLeft;
+
+        /// <summary>
+        /// A variable that tracks how many times this editor shifted the surface up.
+        /// </summary>
         public int TimesShiftedUp;
 
         /// <summary>
@@ -35,7 +54,7 @@ namespace SadConsole.Surfaces
         public int Height { get { return textSurface.Height; } }
 
         /// <summary>
-        /// When true, the <see cref="ColoredString.Parse(string, int, ISurface, ParseCommandStacks)"/> command is used to print strings.
+        /// When true, the <see cref="ColoredString.Parse(string, int, ISurface, SurfaceEditor, ParseCommandStacks)"/> command is used to print strings.
         /// </summary>
         public bool UsePrintProcessor = true;
 
@@ -90,7 +109,6 @@ namespace SadConsole.Surfaces
             protected set { textSurface.Cells[index] = value; }
         }
 
-#region Constructors
         /// <summary>
         /// Creates a new cell surface that can be resized and also have its textSurface.Cells resized.
         /// </summary>
@@ -99,7 +117,6 @@ namespace SadConsole.Surfaces
         {
             TextSurface = surface;
         }
-#endregion
 
         /// <summary>
         /// Called when the <see cref="TextSurface"/> property is changed. Sets <see cref="Effects"/> to a new instance of <see cref="EffectsManager"/>.
@@ -128,7 +145,6 @@ namespace SadConsole.Surfaces
             textSurface.IsDirty = true;
         }
 
-#region IsValidCell
         /// <summary>
         /// Tests if a cell is valid based on its x,y position.
         /// </summary>
@@ -170,12 +186,10 @@ namespace SadConsole.Surfaces
         {
             return index >= 0 && index < textSurface.Cells.Length;
         }
-#endregion
 
+        #region Cell Manipulation
 
-#region Cell Manipulation
-
-#region Cell Specifics
+        #region Cell Specifics
         /// <summary>
         /// Changes the glyph of a specified cell to a new value.
         /// </summary>
@@ -228,7 +242,7 @@ namespace SadConsole.Surfaces
         /// <param name="glyph">The desired glyph.</param>
         /// <param name="foreground">The desired foreground.</param>
         /// <param name="background">The desired background.</param>
-        /// <param name="effect">Sets the effect of the cell</param>
+        /// <param name="mirror">Sets how the glyph will be mirrored.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror)
         {
             int index = y * textSurface.Width + x;
@@ -762,6 +776,9 @@ namespace SadConsole.Surfaces
 
         #region Shifting Rows
 
+        /// <summary>
+        /// Resets the shifted amounts to 0, as if the surface has never shifted.
+        /// </summary>
         public void ClearShiftValues()
         {
             TimesShiftedDown = 0;
@@ -782,6 +799,7 @@ namespace SadConsole.Surfaces
         /// Scrolls all the console data up by the specified amount of rows.
         /// </summary>
         /// <param name="amount">How many rows to shift.</param>
+        /// <param name="wrap">When false, a blank line appears at the borrom. When true, the top line appears at the borrom.</param>
         public void ShiftUp(int amount, bool wrap = false)
         {
             if (amount == 0)
@@ -861,6 +879,7 @@ namespace SadConsole.Surfaces
         /// Scrolls all the console data down by the specified amount of rows.
         /// </summary>
         /// <param name="amount">How many rows to shift.</param>
+        /// <param name="wrap">When false, a blank line appears at the top. When true, the bottom line appears at the top.</param>
         public void ShiftDown(int amount, bool wrap = false)
         {
             if (amount == 0)
@@ -940,6 +959,7 @@ namespace SadConsole.Surfaces
         /// Scrolls all the console data right by the specified amount.
         /// </summary>
         /// <param name="amount">How much to scroll.</param>
+        /// <param name="wrap">When false, a blank line appears at the left. When true, the right line appears at the left.</param>
         public void ShiftRight(int amount, bool wrap = false)
         {
             if (amount == 0)
@@ -1020,6 +1040,7 @@ namespace SadConsole.Surfaces
         /// Scrolls all the console data left by the specified amount.
         /// </summary>
         /// <param name="amount">How much to scroll.</param>
+        /// <param name="wrap">When false, a blank line appears at the right. When true, the left line appears at the right.</param>
         public void ShiftLeft(int amount, bool wrap = false)
         {
             if (amount == 0)
@@ -1159,32 +1180,77 @@ namespace SadConsole.Surfaces
 
             return new Cell[] { };
         }
-#endregion
-
         #endregion
 
         #endregion
 
+        #endregion
 
-        ///// <summary>
-        ///// Saves this TextSurface.
-        ///// </summary>
-        ///// <param name="file">The file to save the TextSurface too.</param>
-        //public void Save(string file)
-        //{
-        //    TextSurfaceSerialized.Save(this, file);
-        //}
+        /// <summary>
+        /// Draws a line from <paramref name="start"/> to <paramref name="end"/>.
+        /// </summary>
+        /// <param name="start">Starting point of the line.</param>
+        /// <param name="end">Ending point of the line.</param>
+        /// <param name="foreground">Foreground to set. If null, skipped.</param>
+        /// <param name="background">Background to set. If null, skipped.</param>
+        /// <param name="glyph">Glyph to set. If null, skipped.</param>
+        /// <returns>A list of cells the line touched; ordered from first to last.</returns>
+        public IEnumerable<Cell> DrawLine(Point start, Point end, Color? foreground = null, Color? background = null, int? glyph = null)
+        {
+            List<Cell> cells = new List<Cell>();
+            Func<int, int, bool> processor;
 
-        ///// <summary>
-        ///// Loads a TextSurface.
-        ///// </summary>
-        ///// <param name="file">The file to load.</param>
-        ///// <returns></returns>
-        //public static TextSurface Load(string file)
+            if (foreground.HasValue || background.HasValue || glyph.HasValue)
+                processor = (x, y) =>
+                {
+                    if (textSurface.IsValidCell(x, y, out int index))
+                    {
+                        var cell = textSurface[index];
+                        cells.Add(cell);
+
+                        if (foreground.HasValue)
+                        {
+                            cell.Foreground = foreground.Value;
+                            textSurface.IsDirty = true;
+                        }
+                        if (background.HasValue)
+                        {
+                            cell.Background = background.Value;
+                            textSurface.IsDirty = true;
+                        }
+                        if (glyph.HasValue)
+                        {
+                            cell.Glyph = glyph.Value;
+                            textSurface.IsDirty = true;
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                };
+
+            else
+                processor = (x, y) =>
+                {
+                    if (textSurface.IsValidCell(x, y, out int index))
+                    {
+                        cells.Add(textSurface[index]);
+                        return true;
+                    }
+
+                    return false;
+                };
+                
+
+            Algorithms.Line(start.X, start.Y, end.X, end.Y, processor);
+
+            return cells;
+        }
+
+        //public IEnumerable<Cell> DrawBox(Rectangle area, int[] lineStyle, Color foreground, Color background, bool fillInside, int fillGlyph)
         //{
-        //    return TextSurfaceSerialized.Load(file);
+
         //}
     }
-
-
 }

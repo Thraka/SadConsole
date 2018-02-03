@@ -52,10 +52,10 @@ namespace SadConsole
         bool ProcessMouse(MouseConsoleState state);
 
         /// <summary>
-        /// Called by the engine to process the keyboard. If the <see cref="KeyboardHandler"/> has been set, that will be called instead of this method.
+        /// Called by the engine to process the keyboard.
         /// </summary>
         /// <param name="state">Keyboard information.</param>
-        /// <returns>True when the keyboard had data and this console did something with it.</returns>
+        /// <returns>True to signal that the keyboard was handled by this object.</returns>
         bool ProcessKeyboard(Keyboard state);
 
         /// <summary>
