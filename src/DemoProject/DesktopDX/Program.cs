@@ -38,6 +38,8 @@ namespace StarterProject
             //
             // Code here will not run until the game has shut down.
             //
+
+            SadConsole.Game.Instance.Dispose();
         }
 
         private static void DrawFrame(GameTime time)

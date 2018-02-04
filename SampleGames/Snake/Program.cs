@@ -18,6 +18,8 @@ namespace Snake
 
             // Start the game.
             SadConsole.Game.Instance.Run();
+
+            SadConsole.Game.Instance.Dispose();
         }
 
         private static void Init()

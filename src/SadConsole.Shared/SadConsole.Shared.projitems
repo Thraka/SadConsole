@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DrawingSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\InputBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ListBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ProgressBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ScrollBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SelectionButton.cs" />
@@ -107,9 +108,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\NoiseLookupTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Animations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Direction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Palette.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\ProgressBarTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Timer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\GameObject.cs" />

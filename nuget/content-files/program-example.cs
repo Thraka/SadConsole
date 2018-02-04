@@ -28,6 +28,8 @@ namespace MyProject
             //
             // Code here will not run until the game window closes.
             //
+            
+            SadConsole.Game.Instance.Dispose();
         }
         
         private static void Update(GameTime time)

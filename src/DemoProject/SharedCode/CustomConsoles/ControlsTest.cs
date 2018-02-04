@@ -15,6 +15,7 @@ namespace StarterProject.CustomConsoles
     {
         Color[] backgroundcycle;
         int backIndex = 0;
+        SadConsole.Timer progressTimer;
 
         public ConsoleMetadata Metadata
         {
@@ -58,6 +59,12 @@ namespace StarterProject.CustomConsoles
             checkbox.Text = "Check box";
             checkbox.Position = new Point(1, 9);
             Add(checkbox);
+
+            var prog = new SadConsole.Controls.ProgressBar(10, 1, System.Windows.HorizontalAlignment.Left);
+            prog.Position = new Point(checkbox.Bounds.Left, checkbox.Bounds.Bottom + 1);
+            Add(prog);
+
+            progressTimer = new Timer(0.5, (timer, time) => { prog.Progress = prog.Progress >= 1f ? 0f : prog.Progress + 0.1f; });
 
             var listbox = new SadConsole.Controls.ListBox(20, 6);
             listbox.Position = new Point(25, 1);
@@ -195,9 +202,9 @@ namespace StarterProject.CustomConsoles
             return base.ProcessMouse(state);
         }
 
-
         public override void Update(TimeSpan time)
         {
+            progressTimer.Update(time.TotalSeconds);
             base.Update(time);
         }
 
