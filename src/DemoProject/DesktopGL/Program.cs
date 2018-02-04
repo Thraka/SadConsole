@@ -11,6 +11,7 @@ namespace StarterProject
         private static Windows.CharacterViewer _characterWindow;
         private static Container MainConsole;
 
+        [STAThread]
         static void Main(string[] args)
         {
             //SadConsole.Settings.UnlimitedFPS = true;
@@ -62,6 +63,8 @@ namespace StarterProject
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
                 {
+                    
+                    EditorWPF.Editor.ShowEditor();
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
                 {
@@ -96,4 +99,32 @@ namespace StarterProject
 
         }
     }
+
 }
+
+//namespace SadConsole
+//{
+//    public static class Editor
+//    {
+        
+
+//        public static void Activate()
+//        {
+            
+//        }
+
+
+//        private class EditorScreen: Screen
+//        {
+//            public Console Tools;
+
+
+//            public EditorScreen()
+//            {
+//                Tools
+//            }
+//        }
+
+        
+//    }
+//}
