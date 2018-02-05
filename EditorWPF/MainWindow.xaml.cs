@@ -19,13 +19,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfWindow = System.Windows.Window;
+using PointSys = System.Windows.Point;
 
 namespace EditorWPF
 {
     public class EditorContext: DependencyObject
     {
-
-
         public SadConsole.Surfaces.ISurface Surface
         {
             get { return (SadConsole.Surfaces.ISurface)GetValue(SurfaceProperty); }
@@ -37,6 +36,19 @@ namespace EditorWPF
             DependencyProperty.Register("Surface", typeof(SadConsole.Surfaces.ISurface), typeof(EditorContext), new PropertyMetadata(null));
 
 
+
+        public PointSys MousePosition
+        {
+            get { return (PointSys)GetValue(MousePositionProperty); }
+            set { SetValue(MousePositionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MousePosition.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MousePositionProperty =
+            DependencyProperty.Register("MousePosition", typeof(PointSys), typeof(EditorContext), new PropertyMetadata(new PointSys()));
+
+
+        public SadConsole.Surfaces.SurfaceEditor Editor;    
 
     }
 
@@ -88,18 +100,23 @@ namespace EditorWPF
             if (screen is SadConsole.Console)
             {
                 dataContext.Surface = ((SadConsole.Console)screen).TextSurface;
-
-                MemoryStream memoryStream = new MemoryStream();
-                var texture = dataContext.Surface.LastRenderResult;
-                texture.SaveAsPng(memoryStream, texture.Width, texture.Height); //Or SaveAsPng( memoryStream, texture.Width, texture.Height )
-                memoryStream.Position = 0;
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = memoryStream;
-                image.EndInit();
-                ImageSurface.Source = image;
-                
+                dataContext.Editor = new SadConsole.Surfaces.SurfaceEditor(dataContext.Surface);
+                RefreshImage();
             }
+        }
+
+        private void RefreshImage()
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            var texture = dataContext.Surface.LastRenderResult;
+            texture.SaveAsPng(memoryStream, texture.Width, texture.Height); //Or SaveAsPng( memoryStream, texture.Width, texture.Height )
+            memoryStream.Position = 0;
+            BitmapImage initialImage = new BitmapImage();
+            initialImage.BeginInit();
+            initialImage.StreamSource = memoryStream;
+            initialImage.EndInit();
+            WriteableBitmap img = new WriteableBitmap(initialImage);
+            ImageSurface.Source = img;
             
         }
 
@@ -107,6 +124,31 @@ namespace EditorWPF
         {
             TreeScreens.Items.Clear();
             TreeScreens.Items.Add(CreateNode(SadConsole.Global.CurrentScreen));
+        }
+
+        private void ImageSurface_MouseMove(object sender, MouseEventArgs e)
+        {
+            var point = e.GetPosition(ImageSurface);
+            dataContext.MousePosition = point;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Microsoft.Xna.Framework.Point sadPoint = PointExtensions.PixelLocationToConsole(new Microsoft.Xna.Framework.Point((int)point.X, (int)point.Y), dataContext.Surface.Font);
+                dataContext.Editor.SetBackground(sadPoint.X, sadPoint.Y, Microsoft.Xna.Framework.Color.BlueViolet);
+                //RefreshImage();
+            }
+
+        }
+
+        private void ImageSurface_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var point = dataContext.MousePosition;
+                Microsoft.Xna.Framework.Point sadPoint = PointExtensions.PixelLocationToConsole(new Microsoft.Xna.Framework.Point((int)point.X, (int)point.Y), dataContext.Surface.Font);
+                dataContext.Editor.SetBackground(sadPoint.X, sadPoint.Y, Microsoft.Xna.Framework.Color.BlueViolet);
+                //RefreshImage();
+            }
         }
     }
 
@@ -120,7 +162,6 @@ namespace EditorWPF
                 form = new MainWindow();
 
             form.Show();
-
         }
     }
 
@@ -160,4 +201,6 @@ namespace EditorWPF
         }
     }
     */
+
+    
 }
