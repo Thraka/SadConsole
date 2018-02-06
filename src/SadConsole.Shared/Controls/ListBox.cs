@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using System.Windows;
-using SadConsole.Input;
 
 namespace SadConsole.Controls
 {
@@ -227,7 +225,7 @@ namespace SadConsole.Controls
             if (initialized)
             {
                 //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-                slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, Height);
+                slider = ScrollBar.Create(Orientation.Vertical, Height);
                 slider.ValueChanged += new EventHandler(_slider_ValueChanged);
                 slider.IsVisible = false;
                 slider.Theme = this.Theme.ScrollBarTheme;

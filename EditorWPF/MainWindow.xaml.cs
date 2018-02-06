@@ -21,7 +21,7 @@ using System.Windows.Shapes;
 using WpfWindow = System.Windows.Window;
 using PointSys = System.Windows.Point;
 
-namespace EditorWPF
+namespace SadConsole.Editor
 {
     public class EditorContext: DependencyObject
     {
@@ -91,7 +91,7 @@ namespace EditorWPF
             if (TreeScreens.SelectedItem == null)
             {
                 dataContext.Surface = null;
-                ImageSurface.Source = null;
+                //ImageSurface.Source = null;
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace EditorWPF
             initialImage.StreamSource = memoryStream;
             initialImage.EndInit();
             WriteableBitmap img = new WriteableBitmap(initialImage);
-            ImageSurface.Source = img;
+            //ImageSurface.Source = img;
             
         }
 
@@ -125,21 +125,7 @@ namespace EditorWPF
             TreeScreens.Items.Clear();
             TreeScreens.Items.Add(CreateNode(SadConsole.Global.CurrentScreen));
         }
-
-        private void ImageSurface_MouseMove(object sender, MouseEventArgs e)
-        {
-            var point = e.GetPosition(ImageSurface);
-            dataContext.MousePosition = point;
-
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                Microsoft.Xna.Framework.Point sadPoint = PointExtensions.PixelLocationToConsole(new Microsoft.Xna.Framework.Point((int)point.X, (int)point.Y), dataContext.Surface.Font);
-                dataContext.Editor.SetBackground(sadPoint.X, sadPoint.Y, Microsoft.Xna.Framework.Color.BlueViolet);
-                //RefreshImage();
-            }
-
-        }
-
+        
         private void ImageSurface_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -163,15 +149,25 @@ namespace EditorWPF
 
             form.Show();
         }
+
+        public static void StartApp()
+        {
+            SadConsole.Editor.App.Main();
+        }
+
+        public static void StartApp(string font, int width, int height, Action init, Action<GameTime> drawFrame, Action<GameTime> update)
+        {
+            
+        }
     }
 
-    /*
+    
     public class MyGame : WpfGame
     {
         private IGraphicsDeviceService _graphicsDeviceManager;
         private WpfKeyboard _keyboard;
         private WpfMouse _mouse;
-
+        
         protected override void Initialize()
         {
             // must be initialized. required by Content loading and rendering (will add itself to the Services)
@@ -184,7 +180,7 @@ namespace EditorWPF
 
             // must be called after the WpfGraphicsDeviceService instance was created
             base.Initialize();
-
+            
             // content loading now possible
         }
 
@@ -200,7 +196,4 @@ namespace EditorWPF
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
         }
     }
-    */
-
-    
 }

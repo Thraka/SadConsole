@@ -3,6 +3,9 @@ using SadConsole;
 using Microsoft.Xna.Framework;
 using SadConsole.Input;
 using Console = SadConsole.Console;
+using Microsoft.Xna.Framework.Graphics;
+using SadConsole.StringParser;
+using SadConsole.Surfaces;
 
 namespace StarterProject
 {
@@ -14,6 +17,9 @@ namespace StarterProject
         [STAThread]
         static void Main(string[] args)
         {
+            SadConsole.Editor.Editor.StartApp("Fonts/IBM.font", 80, 25, Init, DrawFrame, Update);
+            return;
+
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
 
@@ -43,10 +49,12 @@ namespace StarterProject
         private static void DrawFrame(GameTime time)
         {
             // Custom drawing. You don't usually have to do this.
+            
         }
 
         private static void Update(GameTime time)
         {
+
             // Called each logic update.
             if (!_characterWindow.IsVisible)
             {
@@ -63,7 +71,6 @@ namespace StarterProject
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
                 {
-
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
                 {
@@ -81,49 +88,15 @@ namespace StarterProject
             // Setup our custom theme.
             Theme.SetupThemes();
 
-            SadConsole.Game.Instance.Window.Title = "DemoProject OpenGL";
+            SadConsole.Game.Instance.Window.Title = "DemoProject DirectX";
 
-            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
-            // We don't want to use that for the sample project so we'll remove it.
-
-            //Global.MouseState.ProcessMouseWhenOffScreen = true;
-
-            MainConsole = new Container();
 
             // We'll instead use our demo consoles that show various features of SadConsole.
+            MainConsole = new Container();
             Global.CurrentScreen = MainConsole;
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
-
         }
     }
-
 }
-
-//namespace SadConsole
-//{
-//    public static class Editor
-//    {
-        
-
-//        public static void Activate()
-//        {
-            
-//        }
-
-
-//        private class EditorScreen: Screen
-//        {
-//            public Console Tools;
-
-
-//            public EditorScreen()
-//            {
-//                Tools
-//            }
-//        }
-
-        
-//    }
-//}

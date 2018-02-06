@@ -1,5 +1,5 @@
 ﻿#if !SILVERLIGHT && !WPF && !WINDOWS_PHONE
-namespace System.Windows
+namespace SadConsole
 {
     public enum HorizontalAlignment
     {
@@ -16,10 +16,7 @@ namespace System.Windows
         Bottom = 2,
         Stretch = 3,
     }
-}
 
-namespace System.Windows.Controls
-{
     public enum Orientation
     {
         Vertical = 0,

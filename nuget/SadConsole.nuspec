@@ -27,6 +27,9 @@
       - Promoted a bunch of private members for the Window class to protected.
       - Window title row can be positioned by the class now. Use the protected titleLocationY variable.
       - ListBox.HideBorder instantly redraws instead of waiting for a `IsDirty` flag.
+      
+      ## NEXT
+      - Orientation, HorizontalAlignment, and VerticalAlignment have been moved to the SadConsole namespace.
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

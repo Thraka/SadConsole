@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 
 using System;
-using System.Windows;
 using System.Runtime.Serialization;
 using SadConsole.Renderers;
 using SadConsole.Input;

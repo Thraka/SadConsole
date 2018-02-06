@@ -25,7 +25,7 @@ namespace SadConsole.Controls
         [DataMember(Name = "Text")]
         protected string _text;
         [DataMember(Name = "TextAlignment")]
-        protected System.Windows.HorizontalAlignment _textAlignment;
+        protected HorizontalAlignment _textAlignment;
         [DataMember(Name = "IsSelected")]
         protected bool _isSelected;
         protected bool _isMouseDown;
@@ -62,7 +62,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// The alignment of the text, left, center, or right.
         /// </summary>
-        public System.Windows.HorizontalAlignment TextAlignment
+        public HorizontalAlignment TextAlignment
         {
             get { return _textAlignment; }
             set { _textAlignment = value; Compose(true); }

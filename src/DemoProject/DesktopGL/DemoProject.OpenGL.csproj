@@ -72,14 +72,6 @@
     <None Include="Rendering.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\EditorForms\EditorForms.csproj">
-      <Project>{8baaa527-e16b-459c-8473-7343087d46c5}</Project>
-      <Name>EditorForms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\EditorWPF\EditorWPF.csproj">
-      <Project>{e3fa35e8-0a75-4b94-b81b-6779ae621697}</Project>
-      <Name>EditorWPF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SadConsole\SadConsole.csproj">
       <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
       <Name>SadConsole</Name>

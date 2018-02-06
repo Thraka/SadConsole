@@ -52,7 +52,7 @@ namespace SadConsole
         public static void ToggleFullScreen()
         {
             Global.GraphicsDeviceManager.ApplyChanges();
-
+            
             // Coming back from fullscreen
             if (Global.GraphicsDeviceManager.IsFullScreen)
             {

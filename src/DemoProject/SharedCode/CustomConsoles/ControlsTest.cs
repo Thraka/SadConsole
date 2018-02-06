@@ -60,7 +60,7 @@ namespace StarterProject.CustomConsoles
             checkbox.Position = new Point(1, 9);
             Add(checkbox);
 
-            var prog = new SadConsole.Controls.ProgressBar(10, 1, System.Windows.HorizontalAlignment.Left);
+            var prog = new SadConsole.Controls.ProgressBar(10, 1, HorizontalAlignment.Left);
             prog.Position = new Point(checkbox.Bounds.Left, checkbox.Bounds.Bottom + 1);
             Add(prog);
 
@@ -79,12 +79,12 @@ namespace StarterProject.CustomConsoles
             listbox.Items.Add("item 8");
             Add(listbox);
 
-            var slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Horizontal, 20);
+            var slider = SadConsole.Controls.ScrollBar.Create(Orientation.Horizontal, 20);
             slider.Position = new Point(25, 7);
             slider.Maximum = 18;
             Add(slider);
 
-            slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 8);
+            slider = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, 8);
             slider.Position = new Point(47, 1);
             slider.Maximum = 6;
             Add(slider);

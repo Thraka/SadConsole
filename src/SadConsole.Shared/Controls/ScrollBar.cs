@@ -28,7 +28,7 @@ namespace SadConsole.Controls
         protected int _sliderBarCharacter;
 
         [DataMember(Name="Orientation")]
-        protected System.Windows.Controls.Orientation _barOrientation;
+        protected Orientation _barOrientation;
         [DataMember(Name = "Value")]
         protected int _value;
         [DataMember(Name = "Minimum")]
@@ -173,26 +173,26 @@ namespace SadConsole.Controls
             set { _sliderBarCharacter = value; this.IsDirty = true; }
         }
 
-        public static ScrollBar Create(System.Windows.Controls.Orientation orientation, int size)
+        public static ScrollBar Create(Orientation orientation, int size)
         {
             if (size <= 2)
                 throw new Exception("The scroll bar must be 4 or more in size.");
 
-            if (orientation == System.Windows.Controls.Orientation.Vertical)
+            if (orientation == Orientation.Vertical)
                 return new ScrollBar(orientation, 1, size);
             else
                 return new ScrollBar(orientation, size, 1);
         }
 
 
-        private ScrollBar(System.Windows.Controls.Orientation orientation, int width, int height): base(width, height)
+        private ScrollBar(Orientation orientation, int width, int height): base(width, height)
         {
             _initialized = true;
             _barOrientation = orientation;
 
             _sliderCharacter = 219;
 
-            if (orientation == System.Windows.Controls.Orientation.Horizontal)
+            if (orientation == Orientation.Horizontal)
             {
                 _sliderBarCharacter = 176;
                 _topOrLeftCharacter = 17;
@@ -251,7 +251,7 @@ namespace SadConsole.Controls
         {
             if (IsDirty)
             {
-                if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
+                if (_barOrientation == Orientation.Horizontal)
                 {
                     this.SetCell(0, 0, Theme.Ends.Normal);
                     this.SetGlyph(0, 0, _topOrLeftCharacter);
@@ -325,7 +325,7 @@ namespace SadConsole.Controls
 
                         if (state.Mouse.LeftClicked)
                         {
-                            if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
+                            if (_barOrientation == Orientation.Horizontal)
                             {
                                 if (mouseControlPosition.X == 0)
                                     Value -= Step;
@@ -347,7 +347,7 @@ namespace SadConsole.Controls
                         // When the mouse button is let go, clear the flag.
                         if (state.Mouse.LeftButtonDown)
                         {
-                            if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
+                            if (_barOrientation == Orientation.Horizontal)
                             {
                                 if (mouseControlPosition.Y == 0)
                                     if (mouseControlPosition.X == _currentSliderPosition + 1)
@@ -377,7 +377,7 @@ namespace SadConsole.Controls
                     {
                         if (state.Mouse.LeftButtonDown)
                         {
-                            if (_barOrientation == System.Windows.Controls.Orientation.Horizontal)
+                            if (_barOrientation == Orientation.Horizontal)
                             {
                                 //if (mouseControlPosition.Y == 0)
                                 //{

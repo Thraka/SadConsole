@@ -56,13 +56,13 @@ namespace SadConsole.Controls
         /// The alignment if the bar is horizontal.
         /// </summary>
         [DataMember]
-        protected System.Windows.HorizontalAlignment horizontalAlignment;
+        protected HorizontalAlignment horizontalAlignment;
 
         /// <summary>
         /// The alignment if the bar is vertical.
         /// </summary>
         [DataMember]
-        protected System.Windows.VerticalAlignment verticalAlignment;
+        protected VerticalAlignment verticalAlignment;
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -85,13 +85,13 @@ namespace SadConsole.Controls
         /// <summary>
         /// The horizontal orientation used when <see cref="IsHorizontal"/> is set to true.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="System.Windows.HorizontalAlignment.Center"/> or <see cref="System.Windows.HorizontalAlignment.Stretch"/>.</exception>
-        public System.Windows.HorizontalAlignment HorizontalAlignment
+        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="HorizontalAlignment.Center"/> or <see cref="HorizontalAlignment.Stretch"/>.</exception>
+        public HorizontalAlignment HorizontalAlignment
         {
             get { return horizontalAlignment; }
             set
             {
-                if (value == System.Windows.HorizontalAlignment.Center || value == System.Windows.HorizontalAlignment.Stretch)
+                if (value == HorizontalAlignment.Center || value == HorizontalAlignment.Stretch)
                     throw new InvalidOperationException("HorizontalAlignment.Center or HorizontalAlignment.Stretch is invalid for the progress bar control.");
 
                 horizontalAlignment = value;
@@ -102,13 +102,13 @@ namespace SadConsole.Controls
         /// <summary>
         /// The vertical orientation used when <see cref="IsHorizontal"/> is set to false.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="System.Windows.VerticalAlignment.Center"/> or <see cref="System.Windows.VerticalAlignment.Stretch"/>.</exception>
-        public System.Windows.VerticalAlignment VerticalAlignment
+        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="VerticalAlignment.Center"/> or <see cref="VerticalAlignment.Stretch"/>.</exception>
+        public VerticalAlignment VerticalAlignment
         {
             get { return verticalAlignment; }
             set
             {
-                if (value == System.Windows.VerticalAlignment.Center || value == System.Windows.VerticalAlignment.Stretch)
+                if (value == VerticalAlignment.Center || value == VerticalAlignment.Stretch)
                     throw new InvalidOperationException("VerticalAlignment.Center or VerticalAlignment.Stretch is invalid for the progress bar control.");
 
                 verticalAlignment = value;
@@ -170,10 +170,10 @@ namespace SadConsole.Controls
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
         /// <param name="horizontalAlignment">Sets the control to be horizontal, starting from the specified side. Center/Stretch is invalid.</param>
-        /// <exception cref="InvalidOperationException">Thrown when <paramref name="horizontalAlignment"/> is set to either <see cref="System.Windows.HorizontalAlignment.Center"/> or <see cref="System.Windows.HorizontalAlignment.Stretch"/>.</exception>
-        public ProgressBar(int width, int height, System.Windows.HorizontalAlignment horizontalAlignment) : base(width, height)
+        /// <exception cref="InvalidOperationException">Thrown when <paramref name="horizontalAlignment"/> is set to either <see cref="HorizontalAlignment.Center"/> or <see cref="HorizontalAlignment.Stretch"/>.</exception>
+        public ProgressBar(int width, int height, HorizontalAlignment horizontalAlignment) : base(width, height)
         {
-            if (horizontalAlignment == System.Windows.HorizontalAlignment.Center || horizontalAlignment == System.Windows.HorizontalAlignment.Stretch)
+            if (horizontalAlignment == HorizontalAlignment.Center || horizontalAlignment == HorizontalAlignment.Stretch)
                 throw new InvalidOperationException("HorizontalAlignment.Center or HorizontalAlignment.Stretch is invalid for the progress bar control.");
 
             this.horizontalAlignment = horizontalAlignment;
@@ -192,10 +192,10 @@ namespace SadConsole.Controls
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
         /// <param name="verticalAlignment">Sets the control to be vertical, starting from the specified side. Center/Stretch is invalid.</param>
-        /// <exception cref="InvalidOperationException">Thrown when <paramref name="verticalAlignment"/> is set to either <see cref="System.Windows.VerticalAlignment.Center"/> or <see cref="System.Windows.VerticalAlignment.Stretch"/>.</exception>
-        public ProgressBar(int width, int height, System.Windows.VerticalAlignment verticalAlignment) : base(width, height)
+        /// <exception cref="InvalidOperationException">Thrown when <paramref name="verticalAlignment"/> is set to either <see cref="VerticalAlignment.Center"/> or <see cref="VerticalAlignment.Stretch"/>.</exception>
+        public ProgressBar(int width, int height, VerticalAlignment verticalAlignment) : base(width, height)
         {
-            if (verticalAlignment == System.Windows.VerticalAlignment.Center || verticalAlignment == System.Windows.VerticalAlignment.Stretch)
+            if (verticalAlignment == VerticalAlignment.Center || verticalAlignment == VerticalAlignment.Stretch)
                 throw new InvalidOperationException("VerticalAlignment.Center or VerticalAlignment.Stretch is invalid for the progress bar control.");
 
             this.verticalAlignment = verticalAlignment;
@@ -279,7 +279,7 @@ namespace SadConsole.Controls
                 {
                     Rectangle fillRect;
 
-                    if (horizontalAlignment == System.Windows.HorizontalAlignment.Left)
+                    if (horizontalAlignment == HorizontalAlignment.Left)
                         fillRect = new Rectangle(0, 0, fillSize, Height);
                     else
                         fillRect = new Rectangle(Width - fillSize, 0, fillSize, Height);
@@ -291,7 +291,7 @@ namespace SadConsole.Controls
                 {
                     Rectangle fillRect;
 
-                    if (verticalAlignment == System.Windows.VerticalAlignment.Top)
+                    if (verticalAlignment == VerticalAlignment.Top)
                         fillRect = new Rectangle(0, 0, Width, fillSize);
                     else
                         fillRect = new Rectangle(0, Height - fillSize, Width, fillSize);

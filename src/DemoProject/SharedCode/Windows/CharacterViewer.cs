@@ -34,13 +34,13 @@ namespace StarterProject.Windows
             //DefaultShowLocation = StartupLocation.CenterScreen;
             //Fill(Color.White, Color.Black, 0, null);
             Title = (char)198 + "Character" + (char)198;
-            TitleAlignment = System.Windows.HorizontalAlignment.Left;
-            //SetTitle(" Characters ", System.Windows.HorizontalAlignment.Center, Color.Blue, Color.LightGray);
+            TitleAlignment = HorizontalAlignment.Left;
+            //SetTitle(" Characters ", HorizontalAlignment.Center, Color.Blue, Color.LightGray);
             CloseOnESC = true;
             UsePixelPositioning = true;
 
             // CHARACTER SCROLL
-            _charScrollBar = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 16);
+            _charScrollBar = ScrollBar.Create(Orientation.Vertical, 16);
             _charScrollBar.Position = new Point(17, 1);
             _charScrollBar.Name = "ScrollBar";
             _charScrollBar.Maximum = textSurface.Font.Rows - 16;

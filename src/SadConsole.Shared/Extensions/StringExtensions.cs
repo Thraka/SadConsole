@@ -4,7 +4,6 @@ using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using SadConsole;
 using SadConsole.StringParser;
-using System.Windows;
 
 namespace System
 {
