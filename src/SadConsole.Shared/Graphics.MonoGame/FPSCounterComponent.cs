@@ -6,6 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#if WPF
+using MonoGame_Game = MonoGame.Framework.WpfInterop.WpfGame;
+using DrawableGameComponent = MonoGame.Framework.WpfInterop.WpfDrawableGameComponent;
+#else
+using MonoGame_Game = Microsoft.Xna.Framework.Game;
+#endif
+
+
 namespace SadConsole
 {
     public partial class Game
@@ -24,7 +32,7 @@ namespace SadConsole
             TimeSpan elapsedTime = TimeSpan.Zero;
 
 
-            public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
+            public FPSCounterComponent(MonoGame_Game game)
                 : base(game)
             {
                 surface = new BasicSurface(30, 1);
@@ -33,7 +41,7 @@ namespace SadConsole
                 editor.Clear();
                 consoleRender = new SurfaceRenderer();
                 DrawOrder = 8;
-                Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+                GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
             }
 
 
@@ -58,7 +66,7 @@ namespace SadConsole
                 editor.Print(0, 0, fps);
                 consoleRender.Render(surface);
 
-                Global.GraphicsDevice.SetRenderTarget(null);
+                Global.GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
                 Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
                 Global.SpriteBatch.Draw(surface.LastRenderResult, Vector2.Zero, Color.White);
                 Global.SpriteBatch.End();

@@ -71,7 +71,12 @@ namespace SadConsole.Input
         /// <param name="gameTime">Delta from last update.</param>
         public void Update(GameTime gameTime)
         {
+#if !WPF
+            KeyboardState state = Microsoft.Xna.Framework.Input.Keyboard.GetState();
             MouseState currentState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+#else
+            MouseState currentState = SadConsole.Game.Instance.WpfMouse.GetState();
+#endif
 
             // Update local state
             bool leftDown = currentState.LeftButton == ButtonState.Pressed;

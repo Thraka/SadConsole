@@ -5,11 +5,20 @@ using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
+#if WPF
+using GraphicsDeviceManager = MonoGame.Framework.WpfInterop.WpfGraphicsDeviceService;
+#endif
+
 namespace SadConsole
 {
     public static class Global
     {
         internal static string SerializerPathHint;
+
+        /// <summary>
+        /// Internal use only. For all purposes, should be null.
+        /// </summary>
+        public static RenderTarget2D OriginalRenderTarget = null;
 
         /// <summary>
         /// Collection of fonts. Used mainly by the deserialization system.

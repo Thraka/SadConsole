@@ -3,13 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#if WPF
+using MonoGame_Game = MonoGame.Framework.WpfInterop.WpfGame;
+using DrawableGameComponent = MonoGame.Framework.WpfInterop.WpfDrawableGameComponent;
+#else
+using MonoGame_Game = Microsoft.Xna.Framework.Game;
+#endif
+
 namespace SadConsole
 {
     public partial class Game
     {
         public class ClearScreenGameComponent : DrawableGameComponent
         {
-            internal ClearScreenGameComponent(Game game) : base(game)
+            internal ClearScreenGameComponent(MonoGame_Game game) : base(game)
             {
                 DrawOrder = 0;
             }

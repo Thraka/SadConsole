@@ -2,16 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
+
+#if WPF
+using MonoGame_Game = MonoGame.Framework.WpfInterop.WpfGame;
+using GraphicsDeviceManager = MonoGame.Framework.WpfInterop.WpfGraphicsDeviceService;
+#else
+using MonoGame_Game = Microsoft.Xna.Framework.Game;
+#endif
+
 
 namespace SadConsole
 {
     /// <summary>
     /// A MonoGame <see cref="Game"/> instance that runs SadConsole. This is used when you don't provide one and call <see cref="Engine.Initialize(string, int, int)"/>.
     /// </summary>
-    public partial class Game : Microsoft.Xna.Framework.Game
+    public partial class Game : MonoGame_Game
     {
         #region Static
-        public static Microsoft.Xna.Framework.Game Instance { get; set; }
+        public static Game Instance { get; set; }
 
         /// <summary>
         /// Called after each frame of update logic has happened.
@@ -27,11 +36,20 @@ namespace SadConsole
         /// Called when the device is created.
         /// </summary>
         public static Action OnInitialize;
-        
+
+#if !WPF
+        /// <summary>
+        /// Initializes and creates a new SadConsole game.
+        /// </summary>
+        /// <param name="font">The path to the font that will become the <see cref="Global.FontDefault"/>.</param>
+        /// <param name="consoleWidth">The width in cells (based on the font) the initial console and screen will be.</param>
+        /// <param name="consoleHeight">The height in cells (based on the font) the initial console and screen will be.</param>
+        /// <param name="ctorCallback">Optional callback pre SadConsole init but after MonoGame has created the Game instance.</param>
         public static void Create(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null)
         {
             Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
         }
+#endif
         #endregion
 
         private bool resizeBusy = false;
@@ -39,13 +57,9 @@ namespace SadConsole
         private int consoleWidth;
         private int consoleHeight;
 
-#if WPF
         public GraphicsDeviceManager GraphicsDeviceManager;
-#else
-        public GraphicsDeviceManager GraphicsDeviceManager;
-#endif
-        // public stuff from Engine (like defaultfont)
 
+#if !WPF
         protected Game(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback)
         {
             if (Instance == null)
@@ -53,18 +67,17 @@ namespace SadConsole
 
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
+            
             this.font = font;
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
-#if MONOGAME
+            #if MONOGAME
             GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
-#endif
-            
-
+            #endif
             ctorCallback?.Invoke(this);
         }
-        
+
+
         private void Window_ClientSizeChanged(object sender, EventArgs e)
         {
             //if (!resizeBusy && Settings.IsExitingFullscreen)
@@ -87,17 +100,52 @@ namespace SadConsole
 
         }
 
+#else
+        public static string WpfFont;
+        public static int WpfConsoleWidth;
+        public static int WpfConsoleHeight;
+
+        public MonoGame.Framework.WpfInterop.Input.WpfKeyboard WpfKeyboard;
+        public MonoGame.Framework.WpfInterop.Input.WpfMouse WpfMouse;
+
+        public Game() : base()
+        {
+            if (Instance == null)
+                Instance = this;
+        }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            //if (sizeInfo.NewSize != sizeInfo.PreviousSize)
+            //{
+            //    Global.FontDefault.ResizeGraphicsDeviceManager(consoleWidth, consoleHeight, 0, 0);
+            //    Global.ResetRendering();
+            //}
+        }
+#endif
+
 
         protected override void Initialize()
         {
+#if !WPF
             if (Settings.UnlimitedFPS)
             {
                 GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
                 IsFixedTimeStep = false;
             }
+#else
+            GraphicsDeviceManager = new MonoGame.Framework.WpfInterop.WpfGraphicsDeviceService(this);
+            
+            font = WpfFont;
+            consoleWidth = WpfConsoleWidth;
+            consoleHeight = WpfConsoleHeight;
 
-            // Let the XNA framework show the mouse.
-            IsMouseVisible = true;
+            WpfKeyboard = new MonoGame.Framework.WpfInterop.Input.WpfKeyboard(this);
+            WpfMouse = new MonoGame.Framework.WpfInterop.Input.WpfMouse(this);
+
+#endif
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
             Components.Add(new ClearScreenGameComponent(this));
@@ -106,22 +154,26 @@ namespace SadConsole
             // Call the default initialize of the base class.
             base.Initialize();
 
+            // Let the XNA framework show the mouse.
+#if !WPF
+            IsMouseVisible = true;
+
             // Hook window change for resolution fixes
             Window.ClientSizeChanged += Window_ClientSizeChanged;
             Window.AllowUserResizing = SadConsole.Settings.AllowWindowResize;
-
+#endif
             Global.GraphicsDevice = GraphicsDevice;
             Global.GraphicsDeviceManager = GraphicsDeviceManager;
             Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
             Global.FontDefault = Global.LoadFont(font).GetFont(Font.FontSizes.One);
-            Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
+            Global.FontDefault.ResizeGraphicsDeviceManager(consoleWidth, consoleHeight, 0, 0);
             Global.ResetRendering();
 
             // Tell the main engine we're ready
             OnInitialize?.Invoke();
 
             // After we've init, clear the graphics device so everything is ready to start
-            Global.GraphicsDevice.SetRenderTarget(null);
+            Global.GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
         }
     }
 }

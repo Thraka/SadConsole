@@ -63,7 +63,7 @@ namespace SadConsole.Renderers
 
                 surface.IsDirty = false;
 
-                Global.GraphicsDevice.SetRenderTarget(null);
+                Global.GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
             }
         }
 

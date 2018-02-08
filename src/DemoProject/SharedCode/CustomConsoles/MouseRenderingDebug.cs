@@ -172,8 +172,8 @@ namespace StarterProject.CustomConsoles
             Clear();
             Print(0, 0, $"mouse:           {state.Mouse.ScreenPosition}");
             Print(0, 1, $"adapter:         {SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width},{SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height}");
-            Print(0, 2, $"window:          {SadConsole.Game.Instance.Window.ClientBounds}");
-            Print(0, 3, $"pref:            {SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferWidth},{SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferHeight}");
+//            Print(0, 2, $"window:          {SadConsole.Game.Instance.Window.ClientBounds}");
+//            Print(0, 3, $"pref:            {SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferWidth},{SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferHeight}");
             Print(0, 4, $"pparams:         {SadConsole.Global.GraphicsDevice.PresentationParameters.BackBufferWidth},{SadConsole.Global.GraphicsDevice.PresentationParameters.BackBufferHeight}");
             Print(0, 5, $"viewport:        {SadConsole.Global.GraphicsDevice.Viewport}");
             Print(0, 6, $"viewport.bounds: {SadConsole.Global.GraphicsDevice.Viewport.Bounds}");

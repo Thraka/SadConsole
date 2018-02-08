@@ -23,41 +23,14 @@ using PointSys = System.Windows.Point;
 
 namespace SadConsole.Editor
 {
-    public class EditorContext: DependencyObject
-    {
-        public SadConsole.Surfaces.ISurface Surface
-        {
-            get { return (SadConsole.Surfaces.ISurface)GetValue(SurfaceProperty); }
-            set { SetValue(SurfaceProperty, value); }
-        }
 
-        // Using a DependencyProperty as the backing store for Surface.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SurfaceProperty =
-            DependencyProperty.Register("Surface", typeof(SadConsole.Surfaces.ISurface), typeof(EditorContext), new PropertyMetadata(null));
-
-
-
-        public PointSys MousePosition
-        {
-            get { return (PointSys)GetValue(MousePositionProperty); }
-            set { SetValue(MousePositionProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for MousePosition.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MousePositionProperty =
-            DependencyProperty.Register("MousePosition", typeof(PointSys), typeof(EditorContext), new PropertyMetadata(new PointSys()));
-
-
-        public SadConsole.Surfaces.SurfaceEditor Editor;    
-
-    }
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : WpfWindow
     {
-        EditorContext dataContext = new EditorContext();
+        EditorDataContext dataContext = new EditorDataContext();
 
 
 
@@ -150,50 +123,65 @@ namespace SadConsole.Editor
             form.Show();
         }
 
-        public static void StartApp()
-        {
-            SadConsole.Editor.App.Main();
-        }
+        //public static void StartApp()
+        //{
+        //    SadConsole.Editor.App.Main();
+        //}
 
         public static void StartApp(string font, int width, int height, Action init, Action<GameTime> drawFrame, Action<GameTime> update)
         {
-            
+            SadConsole.Game.WpfFont = font;
+            SadConsole.Game.WpfConsoleWidth = width;
+            SadConsole.Game.WpfConsoleHeight = height;
+            SadConsole.Game.OnInitialize = init;
+            SadConsole.Game.OnUpdate = update;
+            SadConsole.Game.OnDraw = drawFrame;
+
+            SadConsole.Editor.App.Main();
+        }
+
+        public static void InputOverride()
+        {
+            //Global.KeyboardState.Update(gameTime);
+            //Global.KeyboardState.Process();
+            //Global.MouseState.Update(gameTime);
+            //Global.MouseState.Process();
         }
     }
 
     
-    public class MyGame : WpfGame
-    {
-        private IGraphicsDeviceService _graphicsDeviceManager;
-        private WpfKeyboard _keyboard;
-        private WpfMouse _mouse;
+    //public class MyGame : WpfGame
+    //{
+    //    private IGraphicsDeviceService _graphicsDeviceManager;
+    //    private WpfKeyboard _keyboard;
+    //    private WpfMouse _mouse;
         
-        protected override void Initialize()
-        {
-            // must be initialized. required by Content loading and rendering (will add itself to the Services)
-            _graphicsDeviceManager = new WpfGraphicsDeviceService(this);
-
-            // wpf and keyboard need reference to the host control in order to receive input
-            // this means every WpfGame control will have it's own keyboard & mouse manager which will only react if the mouse is in the control
-            _keyboard = new WpfKeyboard(this);
-            _mouse = new WpfMouse(this);
-
-            // must be called after the WpfGraphicsDeviceService instance was created
-            base.Initialize();
+    //    protected override void Initialize()
+    //    {
+    //        // must be initialized. required by Content loading and rendering (will add itself to the Services)
+    //        _graphicsDeviceManager = new WpfGraphicsDeviceService(this);
             
-            // content loading now possible
-        }
+    //        // wpf and keyboard need reference to the host control in order to receive input
+    //        // this means every WpfGame control will have it's own keyboard & mouse manager which will only react if the mouse is in the control
+    //        _keyboard = new WpfKeyboard(this);
+    //        _mouse = new WpfMouse(this);
 
-        protected override void Update(GameTime time)
-        {
-            // every update we can now query the keyboard & mouse for our WpfGame
-            var mouseState = _mouse.GetState();
-            var keyboardState = _keyboard.GetState();
-        }
+    //        // must be called after the WpfGraphicsDeviceService instance was created
+    //        base.Initialize();
+            
+    //        // content loading now possible
+    //    }
 
-        protected override void Draw(GameTime time)
-        {
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
-        }
-    }
+    //    protected override void Update(GameTime time)
+    //    {
+    //        // every update we can now query the keyboard & mouse for our WpfGame
+    //        var mouseState = _mouse.GetState();
+    //        var keyboardState = _keyboard.GetState();
+    //    }
+
+    //    protected override void Draw(GameTime time)
+    //    {
+    //        GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+    //    }
+    //}
 }

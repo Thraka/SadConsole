@@ -51,6 +51,7 @@ namespace SadConsole
 
         public static void ToggleFullScreen()
         {
+#if !WPF
             Global.GraphicsDeviceManager.ApplyChanges();
             
             // Coming back from fullscreen
@@ -78,6 +79,74 @@ namespace SadConsole
 
                 Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
                 Global.GraphicsDeviceManager.ApplyChanges();
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Returns the width of the MonoGame drawing space.
+        /// </summary>
+        public static int PreferredBackBufferWidth
+        {
+            get
+            {
+#if WPF
+                return (int)SadConsole.Game.Instance.RenderSize.Width;
+#else
+                return SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferWidth;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Returns the height of the MonoGame drawing space.
+        /// </summary>
+        public static int PreferredBackBufferHeight
+        {
+            get
+            {
+#if WPF
+                //return (int)Height;
+                return (int)SadConsole.Game.Instance.RenderSize.Height;
+#else
+                return SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferHeight;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Resizes the MonoGame drawing space, also resizes the window.
+        /// </summary>
+        public static void ResizeBackbuffer(int width, int height)
+        {
+#if WPF
+            //SadConsole.Game.Instance.RenderSize = new System.Windows.Size(width, height);
+            SadConsole.Global.GraphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferWidth = width;
+            SadConsole.Global.GraphicsDeviceManager.GraphicsDevice.PresentationParameters.BackBufferHeight = height;
+            SadConsole.Game.Instance.Width = width;
+            SadConsole.Game.Instance.Height = height;
+#else
+            SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
+            SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
+            SadConsole.Global.GraphicsDeviceManager.ApplyChanges();
+#endif
+        }
+
+        public static string WindowTitle
+        {
+            get
+            {
+#if WPF
+                return "SadConsole";
+#else
+                return SadConsole.Game.Instance.Window.Title;
+#endif
+            }
+            set
+            {
+#if !WPF
+                SadConsole.Game.Instance.Window.Title = value;
+#endif
             }
         }
 

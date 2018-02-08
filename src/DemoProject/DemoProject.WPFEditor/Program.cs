@@ -17,8 +17,9 @@ namespace StarterProject
         [STAThread]
         static void Main(string[] args)
         {
+#if EDITOR
             SadConsole.Editor.Editor.StartApp("Fonts/IBM.font", 80, 25, Init, DrawFrame, Update);
-            return;
+#else
 
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
@@ -44,7 +45,17 @@ namespace StarterProject
             //
 
             SadConsole.Game.Instance.Dispose();
+#endif
         }
+
+#if EDITOR
+        private static void Init2()
+        {
+            Init();
+
+            
+        }
+#endif
 
         private static void DrawFrame(GameTime time)
         {
@@ -82,13 +93,13 @@ namespace StarterProject
         private static void Init()
         {
             // Any setup
-            if (Settings.UnlimitedFPS)
-                SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
+            //if (Settings.UnlimitedFPS)
+            //    SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
 
             // Setup our custom theme.
             Theme.SetupThemes();
 
-            SadConsole.Game.Instance.Window.Title = "DemoProject DirectX";
+            SadConsole.Settings.WindowTitle = "DemoProject DirectX";
 
 
             // We'll instead use our demo consoles that show various features of SadConsole.

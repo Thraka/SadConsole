@@ -4,13 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#if WPF
+using MonoGame_Game = MonoGame.Framework.WpfInterop.WpfGame;
+using DrawableGameComponent = MonoGame.Framework.WpfInterop.WpfDrawableGameComponent;
+#else
+using MonoGame_Game = Microsoft.Xna.Framework.Game;
+#endif
+
 namespace SadConsole
 {
     public partial class Game
     {
         public class SadConsoleGameComponent : DrawableGameComponent
         {
-            internal SadConsoleGameComponent(Game game) : base(game)
+            internal SadConsoleGameComponent(MonoGame_Game game) : base(game)
             {
                 DrawOrder = 5;
                 UpdateOrder = 5;
@@ -20,6 +27,9 @@ namespace SadConsole
             {
                 if (Settings.DoDraw)
                 {
+#if WPF
+                    Global.OriginalRenderTarget = (Microsoft.Xna.Framework.Graphics.RenderTarget2D)GraphicsDevice.GetRenderTargets()[0].RenderTarget;
+#endif
                     Global.GameTimeRender = gameTime;
                     Global.GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -43,7 +53,7 @@ namespace SadConsole
                     }
 
                     Global.SpriteBatch.End();
-                    GraphicsDevice.SetRenderTarget(null);
+                    GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
 
                     // If we're going to draw to the screen, do it.
                     if (Settings.DoFinalDraw)

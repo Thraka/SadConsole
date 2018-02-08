@@ -104,7 +104,11 @@ namespace SadConsole.Input
             this.KeysReleased.Clear();
 
             // Cycle all the keys down known if any are up currently, remove
+#if !WPF
             KeyboardState state = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+#else
+            KeyboardState state = SadConsole.Game.Instance.WpfKeyboard.GetState();
+#endif
             bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
             var keys = state.GetPressedKeys();
             for (int i = 0; i < this.KeysDown.Count;)

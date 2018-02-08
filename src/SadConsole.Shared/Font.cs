@@ -4,6 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
+#if WPF
+using GraphicsDeviceManager = MonoGame.Framework.WpfInterop.WpfGraphicsDeviceService;
+#endif
+
 namespace SadConsole
 {
     /// <summary>
@@ -155,25 +159,31 @@ namespace SadConsole
         /// <param name="height">The height glyphs.</param>
         /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        [Obsolete("Do not use this method anymore, use the other overload. This with be removed in the future.")]
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
-            int oldWidth = manager.PreferredBackBufferWidth;
-            int oldHeight = manager.PreferredBackBufferHeight;
+            ResizeGraphicsDeviceManager(width, height, additionalWidth, additionalHeight);
+        }
 
-            manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
-            manager.PreferredBackBufferHeight = (Size.Y * height) + additionalHeight;
+        /// <summary>
+        /// Resizes the graphics device manager based on this font's glyph size.
+        /// </summary>
+        /// <param name="width">The width glyphs.</param>
+        /// <param name="height">The height glyphs.</param>
+        /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
+        /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        public void ResizeGraphicsDeviceManager(int width, int height, int additionalWidth, int additionalHeight)
+        {
+            int oldWidth = SadConsole.Settings.PreferredBackBufferWidth;
+            int oldHeight = SadConsole.Settings.PreferredBackBufferHeight;
+            
+            Global.WindowWidth = Global.RenderWidth = (Size.X * width) + additionalWidth;
+            Global.WindowHeight = Global.RenderHeight = (Size.Y * height) + additionalHeight;
 
-            Global.WindowWidth = Global.RenderWidth = manager.PreferredBackBufferWidth;
-            Global.WindowHeight = Global.RenderHeight = manager.PreferredBackBufferHeight;
+            //int diffWidth = (Global.RenderWidth - oldWidth) / 2;
+            //int diffHeight = (Global.RenderHeight - oldHeight) / 2;
 
-            int diffWidth = (Global.RenderWidth - oldWidth) / 2;
-            int diffHeight = (Global.RenderHeight - oldHeight) / 2;
-
-            // Center screen
-            //if (Game.Instance != null)
-            //    Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
-
-            manager.ApplyChanges();
+            SadConsole.Settings.ResizeBackbuffer(Global.WindowWidth, Global.WindowHeight);
         }
 
         public Rectangle GetRenderRect(int x, int y)

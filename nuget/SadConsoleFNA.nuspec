@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.FNA</id>
-    <version>6.4.5</version>
+    <version>7.0.0</version>
     <title>SadConsole for FNA</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,21 +12,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An FNA library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
-      - Added new Palette and Timer classes.
-      - Added extension method to ColorGradient that returns a Color[] based on the stops.
-      - Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
-      - Fixed effect manager remove methods.
-      - Fixed mouse processing other consoles after it was found over the top-most
-      - Created a LayeredSurface.Load single param overload to block accidentally calling BasicSurface.Load
-      - MouseHandler for a Console has changed. If it assigned, the normal mouse processing logic will no longer run.
-      - Fixed rendering problem with consoles created after initialization. (thanks kingvitamin103)
-      ## 6.4.5
-      - Added SadConsole.GameHelpers.Directions class and helpers.
-      - SurfaceEditor now supports basic shape functions. Easier to draw shapes than previous model. (Line only supported for now, more to come)
-      - Lines can be auto connected through static SurfaceEditor.ConnectLines method.
-      - Promoted a bunch of private members for the Window class to protected.
-      - Window title row can be positioned by the class now. Use the protected titleLocationY variable.
-      - ListBox.HideBorder instantly redraws instead of waiting for a `IsDirty` flag.
+      - Orientation, HorizontalAlignment, and VerticalAlignment have been moved to the SadConsole namespace.
+      - SadConsole.Game.Instance.Window.Title has a wrapper: SadConsole.Settings.WindowTitle.
+      - New ResizeGraphicsDeviceManager overload which does not need a GraphicsDeviceManager passed.
+      - Instead of calling manager.PreferredBackBufferWidth/Height + manager.ApplyChanges to resize (per monogame standards) use SadConsole.Settings.ResizeBackbuffer()
+      - Backbuffer width/height can be read with SadConsole.Settings.PreferredBackBufferWidth/Height
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
