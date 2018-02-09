@@ -29,6 +29,8 @@ namespace SadConsole.Editor
             set { SetValue(IsEditModeProperty, value); }
         }
 
+        public IEnumerable<string> Tools { get => new string[] { "Pencil", "Eraser", "Recolor" }; }
+
         public static readonly DependencyProperty SurfaceProperty =
             DependencyProperty.Register("Surface", typeof(SadConsole.Surfaces.ISurface), typeof(EditorDataContext), new PropertyMetadata(null));
 
@@ -45,5 +47,10 @@ namespace SadConsole.Editor
         {
             Settings.DoUpdate = !IsEditMode;
         }
+
+
+
+
+
     }
 }

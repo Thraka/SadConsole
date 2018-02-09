@@ -59,10 +59,9 @@
 
             <ScrollViewer x:Name="WpfHostContainer" x:FieldModifier="public" Grid.Row="2" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SnapsToDevicePixels="True">
                 <!--<Image x:Name="ImageSurface" Stretch="None" MouseLeftButtonDown="ImageSurface_MouseLeftButtonDown" MouseMove="ImageSurface_MouseMove"></Image>-->
-                <editor:Game Width="200" Height="200" SnapsToDevicePixels="True" />
+                <editor:Game Width="Auto" Height="Auto" SnapsToDevicePixels="True" />
             </ScrollViewer>
         </Grid>
-        <GridSplitter Grid.Column="3" Grid.RowSpan="2" Width="6" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" ShowsPreview="True"/>
 
 
 
@@ -78,14 +77,15 @@
                 </Button>
             </Grid>
             <TreeView Margin="2" Height="100" x:Name="TreeScreens" SelectedItemChanged="TreeScreens_SelectedItemChanged" FontSize="10" />
-            <TextBlock Style="{DynamicResource MaterialDesignSubheadingTextBlock}" ><Run Text="Tools"/></TextBlock>
-            <StackPanel>
-                <RadioButton Content="Pencil"/>
-                <RadioButton Content="Recolor"/>
-                <RadioButton Content="Line"/>
-                <RadioButton Content="Box"/>
-                <RadioButton Content="Circle"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{DynamicResource MaterialDesignSubheadingTextBlock}" VerticalAlignment="Center" Margin="0,0,5,0">Tool</TextBlock>
+                <ComboBox ItemsSource="{Binding Tools}" SelectedItem="{Binding SelectedTool}" HorizontalAlignment="Stretch" Grid.Column="1" />
+            </Grid>
+            
         </StackPanel>
     </Grid>
 </Window>

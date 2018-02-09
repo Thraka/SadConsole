@@ -130,6 +130,7 @@ namespace SadConsole.Editor
 
         public static void StartApp(string font, int width, int height, Action init, Action<GameTime> drawFrame, Action<GameTime> update)
         {
+            SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Center;
             SadConsole.Game.WpfFont = font;
             SadConsole.Game.WpfConsoleWidth = width;
             SadConsole.Game.WpfConsoleHeight = height;
