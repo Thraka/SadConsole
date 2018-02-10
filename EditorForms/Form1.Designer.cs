@@ -1,4 +1,4 @@
-﻿namespace EditorForms
+﻿namespace SadConsole.Editor
 {
     partial class Form1
     {
@@ -28,32 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.game1 = new SadConsole.Editor.Game();
             this.SuspendLayout();
             // 
-            // treeView1
+            // game1
             // 
-            this.treeView1.Location = new System.Drawing.Point(12, 12);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(257, 266);
-            this.treeView1.TabIndex = 0;
+            this.game1.Location = new System.Drawing.Point(285, 260);
+            this.game1.Name = "game1";
+            this.game1.Size = new System.Drawing.Size(559, 324);
+            this.game1.TabIndex = 7;
+            this.game1.Text = "game1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(809, 577);
-            this.Controls.Add(this.treeView1);
+            this.ClientSize = new System.Drawing.Size(1128, 845);
+            this.Controls.Add(this.game1);
             this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Text = "SadConsole Editor";
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView1;
+        private Game game1;
     }
 }
 

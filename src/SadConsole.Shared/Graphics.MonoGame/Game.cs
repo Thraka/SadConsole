@@ -7,6 +7,9 @@ using System.Windows;
 #if WPF
 using MonoGame_Game = MonoGame.Framework.WpfInterop.WpfGame;
 using GraphicsDeviceManager = MonoGame.Framework.WpfInterop.WpfGraphicsDeviceService;
+#elif FORMS
+//using MonoGame_Game = MonoGame.Forms.Controls.
+using MonoGame_Game = Microsoft.Xna.Framework.Game;
 #else
 using MonoGame_Game = Microsoft.Xna.Framework.Game;
 #endif
@@ -14,12 +17,11 @@ using MonoGame_Game = Microsoft.Xna.Framework.Game;
 
 namespace SadConsole
 {
-    /// <summary>
-    /// A MonoGame <see cref="Game"/> instance that runs SadConsole. This is used when you don't provide one and call <see cref="Engine.Initialize(string, int, int)"/>.
-    /// </summary>
-    public partial class Game : MonoGame_Game
+    public partial class Game
     {
-        #region Static
+        /// <summary>
+        /// Instance of the MonoGame game
+        /// </summary>
         public static Game Instance { get; set; }
 
         /// <summary>
@@ -37,7 +39,7 @@ namespace SadConsole
         /// </summary>
         public static Action OnInitialize;
 
-#if !WPF
+        #if !WPF
         /// <summary>
         /// Initializes and creates a new SadConsole game.
         /// </summary>
@@ -50,8 +52,19 @@ namespace SadConsole
             Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
         }
 #endif
-        #endregion
 
+#if FORMS
+        public static string WpfFont;
+        public static int WpfConsoleWidth;
+        public static int WpfConsoleHeight;
+#endif
+    }
+
+    /// <summary>
+    /// A MonoGame <see cref="Game"/> instance that runs SadConsole. This is used when you don't provide one and call <see cref="Engine.Initialize(string, int, int)"/>.
+    /// </summary>
+    public partial class Game : MonoGame_Game
+    {
         private bool resizeBusy = false;
         private string font;
         private int consoleWidth;
@@ -71,9 +84,9 @@ namespace SadConsole
             this.font = font;
             this.consoleHeight = consoleHeight;
             this.consoleWidth = consoleWidth;
-            #if MONOGAME
+#if MONOGAME
             GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
-            #endif
+#endif
             ctorCallback?.Invoke(this);
         }
 

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8BAAA527-E16B-459C-8473-7343087D46C5}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>EditorForms</RootNamespace>
-    <AssemblyName>EditorForms</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ProjectGuid>{88737307-A612-46C0-9717-F6C92CDDFE2F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SadConsole.Editor</RootNamespace>
+    <AssemblyName>SadConsole.Editor</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -19,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;FORMS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -28,17 +27,27 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;FORMS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MonoGame.Forms, Version=1.5.6552.3920, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoGame.Forms.1.5.6552.3920\lib\net451\MonoGame.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoGame.Framework.WindowsDX.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MonoGame.Forms\Libs\MonoGame 3.7.0.1114\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,11 +59,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Game.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,11 +98,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\src\SadConsole\SadConsole.csproj">
-      <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
-      <Name>SadConsole</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <Import Project="..\src\SadConsole.Shared\SadConsole.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

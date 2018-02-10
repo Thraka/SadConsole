@@ -136,7 +136,7 @@ namespace SadConsole
         {
             get
             {
-#if WPF
+#if WPF || FORMS
                 return "SadConsole";
 #else
                 return SadConsole.Game.Instance.Window.Title;
@@ -144,7 +144,7 @@ namespace SadConsole
             }
             set
             {
-#if !WPF
+#if !WPF && !FORMS
                 SadConsole.Game.Instance.Window.Title = value;
 #endif
             }

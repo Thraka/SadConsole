@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EditorForms.Properties {
+namespace SadConsole.Editor.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

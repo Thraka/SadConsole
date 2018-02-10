@@ -1,5 +1,4 @@
-﻿using SadConsole;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EditorForms
+namespace SadConsole.Editor
 {
     public partial class Form1 : Form
     {
@@ -18,35 +17,13 @@ namespace EditorForms
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            treeView1.Nodes.Add(CreateNode(SadConsole.Global.CurrentScreen));
-            treeView1.ExpandAll();
+            SadConsole.Settings.DoUpdate = !SadConsole.Settings.DoUpdate;
         }
 
-        private TreeNode CreateNode(IScreen screen)
+        private void Form1_ResizeEnd(object sender, EventArgs e)
         {
-            TreeNode node = new TreeNode(screen.GetType().ToString());
-
-            foreach (var child in screen.Children)
-            {
-                node.Nodes.Add(CreateNode(child));
-            }
-            
-            return node;
-        }
-    }
-
-    public static class Editor
-    {
-        private static Form1 form;
-
-        public static void ShowEditor()
-        {
-            if (form == null)
-                form = new Form1();
-
-            form.Show();
             
         }
     }
