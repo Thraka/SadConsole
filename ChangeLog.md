@@ -1,4 +1,16 @@
-﻿## 12/24/2017
+﻿## 02/10/2018
+
+- Fixed logic for TabStop with ControlsConsole. It was stopping a focused control from being tabbed off of, not stopping a control from being tabbed to.
+
+## 02/01/2018
+
+- SurfaceEditor now supports basic shape functions. Easier to draw shapes than previous model. (Line only supported for now, more to come)
+- Lines can be auto connected through static SurfaceEditor.ConnectLines method.
+- Promoted a bunch of private members for the Window class to protected.
+- Window title row can be positioned by the class now. Use the protected titleLocationY variable.
+- ListBox.HideBorder instantly redraws instead of waiting for a `IsDirty` flag.
+
+## 12/24/2017
 
 - Added SadConsole.GameHelpers.Directions class and helpers.
 
