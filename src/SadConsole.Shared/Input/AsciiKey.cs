@@ -209,15 +209,15 @@ namespace SadConsole.Input
                     break;
                 case Keys.OemOpenBrackets:
                     if (shiftPressed)
-                        this.Character = (char)91;
-                    else
                         this.Character = (char)123;
+                    else
+                        this.Character = (char)91;
                     break;
                 case Keys.OemCloseBrackets:
                     if (shiftPressed)
-                        this.Character = (char)93;
-                    else
                         this.Character = (char)125;
+                    else
+                        this.Character = (char)93;
                     break;
                 case Keys.OemPeriod:
                     if (shiftPressed)
