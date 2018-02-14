@@ -12,11 +12,15 @@ namespace SadConsole.Editor
     {
         GameTime gameTime = new GameTime();
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnClientSizeChanged(EventArgs e)
         {
-            base.OnResize(e);
+            base.OnClientSizeChanged(e);
 
-            
+            if (SwapChainRenderTarget != null)
+            {
+                Global.OriginalRenderTarget = SwapChainRenderTarget;
+                Global.ResetRendering();
+            }
         }
 
         protected override void Initialize()

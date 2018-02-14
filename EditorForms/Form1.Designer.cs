@@ -28,22 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.game1 = new SadConsole.Editor.Game();
             this.SuspendLayout();
             // 
             // game1
             // 
-            this.game1.Location = new System.Drawing.Point(285, 260);
+            this.game1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.game1.Location = new System.Drawing.Point(12, 12);
             this.game1.Name = "game1";
-            this.game1.Size = new System.Drawing.Size(559, 324);
-            this.game1.TabIndex = 7;
+            this.game1.Size = new System.Drawing.Size(715, 442);
+            this.game1.TabIndex = 0;
             this.game1.Text = "game1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1128, 845);
+            this.ClientSize = new System.Drawing.Size(739, 466);
             this.Controls.Add(this.game1);
             this.Name = "Form1";
             this.Text = "SadConsole Editor";
@@ -53,7 +57,7 @@
         }
 
         #endregion
-
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private Game game1;
     }
 }
