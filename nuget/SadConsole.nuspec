@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.4.5</version>
+    <version>6.4.6</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -27,6 +27,11 @@
       - Promoted a bunch of private members for the Window class to protected.
       - Window title row can be positioned by the class now. Use the protected titleLocationY variable.
       - ListBox.HideBorder instantly redraws instead of waiting for a `IsDirty` flag.
+      ## 6.4.6
+      - Fixed logic for TabStop with ControlsConsole. It was stopping a focused control from being tabbed off of, not stopping a control from being tabbed to.
+      - Keyboard input was reversing '[' with '{' and ']' with '}'
+      - Controls now refresh when you change the theme with Control.Theme = variable.
+
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

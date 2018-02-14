@@ -1,4 +1,9 @@
-﻿## 02/10/2018
+﻿## 02/14/2018
+
+- Keyboard input was reversing '[' with '{' and ']' with '}'
+- Controls now refresh when you change the theme with Control.Theme = variable.
+
+## 02/10/2018
 
 - Fixed logic for TabStop with ControlsConsole. It was stopping a focused control from being tabbed off of, not stopping a control from being tabbed to.
 
