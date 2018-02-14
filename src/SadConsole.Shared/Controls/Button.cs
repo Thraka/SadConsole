@@ -85,6 +85,8 @@ namespace SadConsole.Controls
             set
             {
                 theme = value;
+                DetermineAppearance();
+                Compose();
             }
         }
 

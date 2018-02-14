@@ -116,6 +116,8 @@ namespace SadConsole.Controls
             set
             {
                 _theme = value;
+                DetermineAppearance();
+                Compose();
             }
         }
 
