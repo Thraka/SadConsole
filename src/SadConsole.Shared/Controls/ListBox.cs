@@ -92,6 +92,9 @@ namespace SadConsole.Controls
                     slider.Theme = Library.Default.ListBoxTheme.ScrollBarTheme;
                 else
                     slider.Theme = theme.ScrollBarTheme;
+
+                DetermineAppearance();
+                Compose();
             }
         }
 
