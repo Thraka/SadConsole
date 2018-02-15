@@ -81,11 +81,8 @@ namespace Castle
             player = new Player();
             player.Position = new Microsoft.Xna.Framework.Point(Width / 2, Height / 2);
 
-
-
             DrawBorder();
             DrawRoom();
-
         }
 
 
@@ -142,7 +139,7 @@ namespace Castle
 
                 RunTick = false;
                 MovePlayer();
-                player.Update();
+                player.Update(delta);
                 foreach (Monster monster in ItemManager.CurrentRoomMonsters)
                 {
                     if (currentTurnCount == MonsterTurn)
@@ -152,7 +149,7 @@ namespace Castle
                             MoveMonster(monster);
                         }
                     }
-                    monster.Update();
+                    monster.Update(delta);
                 }
 
 
