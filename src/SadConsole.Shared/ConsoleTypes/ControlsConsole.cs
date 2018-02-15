@@ -102,12 +102,12 @@ namespace SadConsole
         /// <summary>
         /// Sets reference to the console to tab to when the <see cref="CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
         /// </summary>
-        public IConsole NextTabConsole { get; set; }
+        public ControlsConsole NextTabConsole { get; set; }
 
         /// <summary>
         /// Sets reference to the console to tab to when the <see cref="CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
         /// </summary>
-        public IConsole PreviousTabConsole { get; set; }
+        public ControlsConsole PreviousTabConsole { get; set; }
 
         /// <summary>
         /// When set to true, child controls are not alerted to (non-)focused states.
@@ -210,56 +210,28 @@ namespace SadConsole
             {
                 if (controls.Count != 0)
                 {
-                    FocusedControl = controls[0];
+                    for (int i = 0; i < controls.Count; i++)
+                    {
+                        if (controls[i].TabStop)
+                        {
+                            FocusedControl = controls[i];
+                            break;
+                        }
+                    }
+
+                    // Still couldn't find one, try moving previous console if we can
+                    if (FocusedControl == null)
+                        TryTabNextConsole();
                 }
             }
             else
             {
                 int index = controls.IndexOf(focusedControl);
 
-                if (index == controls.Count - 1)
+                if (index == controls.Count - 1 && !TryTabNextConsole())
                 {
-                    // Check to see if we should move to the next console
-                    if (CanTabToNextConsole && Parent != null)
-                    {
-                        IConsole newConsole;
-                        var consoles = Parent.Children.OfType<IConsole>().ToList();
-
-                        // If a next console has not be explicitly set, find the next console.
-                        if (NextTabConsole == null || !consoles.Contains(NextTabConsole))
-                        {
-                            var parentIndex = consoles.IndexOf(this);
-                            if (parentIndex == consoles.Count - 1)
-                                parentIndex = 0;
-                            else
-                                parentIndex += 1;
-
-                            // Get the new focused console
-                            newConsole = consoles[parentIndex];
-                        }
-                        else
-                            newConsole = NextTabConsole;
-
-                        // If it's a controls console, set the focused control to the first control (if available)
-                        if (newConsole is ControlsConsole && Global.FocusedConsoles.Console == this)
-                        {
-                            // Set focus to this new console
-                            Global.FocusedConsoles.Set(newConsole);
-
-                            var controlConsole = (ControlsConsole)newConsole;
-                            if (controlConsole.Controls.Count > 0)
-                                ((ControlsConsole)newConsole).FocusedControl = ((ControlsConsole)newConsole).Controls[0];
-                        }
-                        else
-                            FocusedControl = controls[0];
-                    }
-                    else
-                        FocusedControl = controls[0];
+                    FocusedControl = controls[0];
                 }
-                else
-                    FocusedControl = controls[index + 1];
-
-                
             }
         }
 
@@ -272,56 +244,103 @@ namespace SadConsole
             {
                 if (controls.Count != 0)
                 {
-                    FocusedControl = controls[0];
+                    for (int i = controls.Count - 1; i > 0; i--)
+                    {
+                        if (controls[i].TabStop)
+                        {
+                            FocusedControl = controls[i];
+                            break;
+                        }
+                    }
+
+                    // Still couldn't find one, try moving previous console if we can
+                    if (FocusedControl == null)
+                        TryTabPreviousConsole();
                 }
             }
             else
             {
                 int index = controls.IndexOf(focusedControl);
 
-                if (index == 0)
+                if (index == 0 && !TryTabPreviousConsole())
                 {
-                    // Check to see if we should move to the next console
-                    if (CanTabToNextConsole && Parent != null)
-                    {
-                        IConsole newConsole;
-                        var consoles = Parent.Children.OfType<IConsole>().ToList();
+                    FocusedControl = controls[controls.Count - 1];
+                }
+            }
+        }
 
-                        // If a next console has not be explicitly set, find the previous console.
-                        if (PreviousTabConsole == null || !consoles.Contains(PreviousTabConsole))
-                        {
-                            var parentIndex = consoles.IndexOf(this);
-                            if (parentIndex == 0)
-                                parentIndex = consoles.Count - 1;
-                            else
-                                parentIndex -= 1;
+        protected bool TryTabPreviousConsole()
+        {
+            if (CanTabToNextConsole && Parent != null)
+            {
+                ControlsConsole newConsole;
+                var consoles = Parent.Children.OfType<ControlsConsole>().ToList();
 
-                            // Get the new focused console
-                            newConsole = consoles[parentIndex];
-                        }
-                        else
-                            newConsole = PreviousTabConsole;
+                // If no consoles found, get out
+                if (consoles.Count == 0)
+                    return false;
 
-                        // If it's a controls console, set the focused control to the last control (if available)
-                        if (newConsole is ControlsConsole)
-                        {
-                            // Set focus to this new console
-                            Global.FocusedConsoles.Set(newConsole);
-
-                            var controlConsole = (ControlsConsole)newConsole;
-                            if (controlConsole.Controls.Count > 0)
-                                controlConsole.FocusedControl = controlConsole.Controls[controlConsole.Controls.Count - 1];
-                        }
-                        else
-                            FocusedControl = controls[controls.Count - 1];
-                        
-                    }
+                // If a previous console has not be explicitly set, find the previous console.
+                else if (PreviousTabConsole == null || !consoles.Contains(PreviousTabConsole))
+                {
+                    var parentIndex = consoles.IndexOf(this);
+                    if (parentIndex == 0)
+                        parentIndex = consoles.Count - 1;
                     else
-                        FocusedControl = controls[controls.Count - 1];
+                        parentIndex -= 1;
+
+                    // Get the new focused console
+                    newConsole = consoles[parentIndex];
                 }
                 else
-                    FocusedControl = controls[index - 1];
+                    newConsole = PreviousTabConsole;
+
+                // Set focus to this new console
+                Global.FocusedConsoles.Set(newConsole);
+                newConsole.FocusedControl = null;
+                newConsole.TabPreviousControl();
+
+                return true;
             }
+
+            return false;
+        }
+
+        protected bool TryTabNextConsole()
+        {
+            if (CanTabToNextConsole && Parent != null)
+            {
+                ControlsConsole newConsole;
+                var consoles = Parent.Children.OfType<ControlsConsole>().ToList();
+
+                // If no consoles found, get out
+                if (consoles.Count == 0)
+                    return false;
+
+                // If a previous console has not be explicitly set, find the previous console.
+                else if (NextTabConsole == null || !consoles.Contains(NextTabConsole))
+                {
+                    var parentIndex = consoles.IndexOf(this);
+                    if (parentIndex == consoles.Count - 1)
+                        parentIndex = 0;
+                    else
+                        parentIndex += 1;
+
+                    // Get the new focused console
+                    newConsole = consoles[parentIndex];
+                }
+                else
+                    newConsole = NextTabConsole;
+
+                // Set focus to this new console
+                Global.FocusedConsoles.Set(newConsole);
+                newConsole.FocusedControl = null;
+                newConsole.TabNextControl();
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -420,32 +439,26 @@ namespace SadConsole
 
             if (!handlerResult && this.UseKeyboard)
             {
-                bool canTab = true;
-
-                if (FocusedControl != null)
-                    canTab = FocusedControl.TabStop;
-
-                if (canTab)
-                    if (
-                        ((info.IsKeyDown(Keys.LeftShift)  ||
-                        info.IsKeyDown(Keys.RightShift)) || 
+                if (
+                    ((info.IsKeyDown(Keys.LeftShift)  ||
+                    info.IsKeyDown(Keys.RightShift)) || 
                         
-                        info.IsKeyReleased(Keys.LeftShift)  ||
-                        info.IsKeyReleased(Keys.RightShift)) 
+                    info.IsKeyReleased(Keys.LeftShift)  ||
+                    info.IsKeyReleased(Keys.RightShift)) 
 
-                        &&
-                        info.IsKeyReleased(Keys.Tab))
-                    {
-                        // TODO: Handle tab by changing focused control unless existing control doesn't support tab
-                        TabPreviousControl();
-                        return true;
-                    }
-                    else if (info.IsKeyReleased(Keys.Tab))
-                    {
-                        // TODO: Handle tab by changing focused control unless existing control doesn't support tab
-                        TabNextControl();
-                        return false;
-                    }
+                    &&
+                    info.IsKeyReleased(Keys.Tab))
+                {
+                    // TODO: Handle tab by changing focused control unless existing control doesn't support tab
+                    TabPreviousControl();
+                    return true;
+                }
+                else if (info.IsKeyReleased(Keys.Tab))
+                {
+                    // TODO: Handle tab by changing focused control unless existing control doesn't support tab
+                    TabNextControl();
+                    return false;
+                }
 
                 if (FocusedControl != null && FocusedControl.IsEnabled && FocusedControl.UseKeyboard)
                     return FocusedControl.ProcessKeyboard(info);

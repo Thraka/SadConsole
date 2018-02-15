@@ -3,6 +3,7 @@ using SadConsole.Renderers;
 using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SadConsole

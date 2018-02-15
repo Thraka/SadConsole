@@ -27,7 +27,7 @@ namespace SadConsole
         /// Called when the device is created.
         /// </summary>
         public static Action OnInitialize;
-
+        
         public static void Create(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null)
         {
             Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
@@ -74,7 +74,13 @@ namespace SadConsole
             //    Settings.IsExitingFullscreen = false;
             //}
 
+            //Global.WindowWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
+            //Global.WindowHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
+            //Global.WindowWidth = Global.RenderWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
+            //Global.WindowHeight = Global.RenderHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
+
             Global.ResetRendering();
+
         }
 
 

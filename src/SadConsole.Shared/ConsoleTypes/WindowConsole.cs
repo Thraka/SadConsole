@@ -18,30 +18,33 @@ namespace SadConsole
         public event EventHandler Closed;
 
         [DataMember(Name="IsModal")]
-        private bool isModal;
+        protected bool isModal;
 
         [DataMember(Name="Title")]
-        private string title;
+        protected string title;
 
         [DataMember(Name="Theme")]
-        private SadConsole.Themes.WindowTheme theme;
+        protected SadConsole.Themes.WindowTheme theme;
 
         [DataMember(Name = "TitleLocX")]
-        private int titleLocationX;
+        protected int titleLocationX;
+
+        [DataMember(Name = "TitleLocY")]
+        protected int titleLocationY;
 
         [DataMember(Name = "TitleWidth")]
-        private int titleWidth;
+        protected int titleWidth;
 
         [DataMember(Name="TitleAlignment")]
-        private HorizontalAlignment _titleAlignment;
+        protected HorizontalAlignment titleAlignment;
 
-        private MouseConsoleState previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
-        private Point cellAtDragPosition;
-        private Point consoleAtDragAbsPos;
-        private bool prevousMouseExclusiveDrag;
-        private bool addedToParent;
-        private Shapes.Box _border;
-        private bool isDragging;
+        protected MouseConsoleState previousMouseInfo = new MouseConsoleState(null, new Input.Mouse());
+        protected Point cellAtDragPosition;
+        protected Point consoleAtDragAbsPos;
+        protected bool prevousMouseExclusiveDrag;
+        protected bool addedToParent;
+        protected Shapes.Box _border;
+        protected bool isDragging;
 
         /// <summary>
         /// Gets the whether or not the console is being shown as modal. 
@@ -83,8 +86,8 @@ namespace SadConsole
         /// </summary>
         public HorizontalAlignment TitleAlignment
         {
-            get { return _titleAlignment; }
-            set { _titleAlignment = value; Redraw(); }
+            get { return titleAlignment; }
+            set { titleAlignment = value; Redraw(); }
         }
 
         /// <summary>
@@ -200,7 +203,7 @@ namespace SadConsole
                 // Left button freshly down and we're not already dragging, check to see if in title
                 if (state.IsOnConsole && !isDragging && !previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
                 {
-                    if (state.CellPosition.Y == 0 && state.CellPosition.X >= titleLocationX && state.CellPosition.X < titleLocationX + titleWidth)
+                    if (state.CellPosition.Y == titleLocationY && state.CellPosition.X >= titleLocationX && state.CellPosition.X < titleLocationX + titleWidth)
                     {
                         prevousMouseExclusiveDrag = IsExclusiveMouse;
 
@@ -344,21 +347,17 @@ namespace SadConsole
             if (!string.IsNullOrEmpty(adjustedText))
             {
                 titleWidth = adjustedText.Length;
-                if (_titleAlignment == HorizontalAlignment.Left)
-                {
-                    Print(1, 0, adjustedText, Theme.TitleStyle);
+
+                if (titleAlignment == HorizontalAlignment.Left)
                     titleLocationX = 1;
-                }
-                else if (_titleAlignment == HorizontalAlignment.Center)
-                {
+
+                else if (titleAlignment == HorizontalAlignment.Center)
                     titleLocationX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
-                    Print(titleLocationX, 0, adjustedText, Theme.TitleStyle);
-                }
+
                 else
-                {
                     titleLocationX = textSurface.Width - 1 - adjustedText.Length;
-                    Print(titleLocationX, 0, adjustedText, Theme.TitleStyle);
-                }
+
+                Print(titleLocationX, titleLocationY, adjustedText, Theme.TitleStyle);
             }
         }
 

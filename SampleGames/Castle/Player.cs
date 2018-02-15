@@ -17,14 +17,13 @@ namespace Castle
         public Direction CurrentDirection { get; private set; }
         public Direction Facing { get; private set; }
         public int Health { get; private set; }
-        public Player() : base()
+        public Player() : base(1, 1)
         {
-            Animation = new AnimatedSurface("default", 1, 1);
-            var frame = Animation.CreateFrame();
-            frame[0].Glyph = 5;
+            Animation.CurrentFrame[0].Glyph = 5;
+            Animation.IsDirty = true;
+
             this.CurrentDirection = Direction.None;
             Health = 70;
-
         }
 
         public bool ProcessKeyboard(SadConsole.Input.Keyboard info)
@@ -94,8 +93,7 @@ namespace Castle
         {
             if (this.IsVisible)
             {
-                position.X = location.X;
-                position.Y = location.Y;
+                Position = location;
             }
         }
         public Point PreviewMove(Direction direction)

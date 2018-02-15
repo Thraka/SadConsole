@@ -23,7 +23,7 @@ namespace Castle
         public int Value { get; protected set; }
         public bool IsGuard { get; protected set; }
 
-        public Monster(String name, String inventoryName, int roomId, int x, int y, int character, int health, string description, string deadDescription): base()
+        public Monster(String name, String inventoryName, int roomId, int x, int y, int character, int health, string description, string deadDescription): base(1, 1)
         {
             this.IsAlive = true;
             this.Name = inventoryName;
@@ -37,12 +37,9 @@ namespace Castle
             this.DeadDescription = deadDescription;
             this.Value = 100;
             this.IsGuard = false;
-
-
-            Animation = new AnimatedSurface("default", 1, 1);
-            var frame = Animation.CreateFrame();
-            frame[0].Glyph = character;
             
+            Animation.CurrentFrame[0].Glyph = character;
+            Animation.IsDirty = true;
         }
 
         public virtual Point PreviewMove(Point playerLocation)
@@ -82,8 +79,7 @@ namespace Castle
         {
             if (this.IsVisible)
             {
-                position.X = location.X;
-                position.Y = location.Y;
+                Position = location;
             }
         }
 

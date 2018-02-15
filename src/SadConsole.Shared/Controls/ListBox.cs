@@ -34,30 +34,30 @@ namespace SadConsole.Controls
                 Item = item;
             }
         }
-        protected bool _hideBorder;
-        protected bool _initialized;
+        protected bool hideBorder;
+        protected bool initialized;
         [DataMember(Name="SelectedIndex")]
-        protected int _selectedIndex;
+        protected int selectedIndex;
 
         [DataMember(Name="Theme")]
-        protected ListBoxTheme _theme;
-        protected List<TItemContainer> _containers;
-        protected object _selectedItem;
-        protected TItemContainer _selectedItemContainer;
+        protected ListBoxTheme theme;
+        protected List<TItemContainer> containers;
+        protected object selectedItem;
+        protected TItemContainer selectedItemContainer;
         [DataMember(Name = "Slider")]
-        protected ScrollBar _slider;
-        protected Point _sliderRenderLocation;
+        protected ScrollBar slider;
+        protected Point sliderRenderLocation;
         [DataMember(Name = "ShowSlider")]
-        protected bool _showSlider = false;
+        protected bool showSlider = false;
         [DataMember(Name = "Border")]
-        protected Shapes.Box _border;
-        protected bool _mouseIn = false;
-        protected DateTime _leftMouseLastClick = DateTime.Now;
+        protected Shapes.Box border;
+        protected bool mouseIn = false;
+        protected DateTime leftMouseLastClick = DateTime.Now;
 
         [DataMember(Name = "ScrollBarOffset")]
-        protected Point _scrollBarOffset = new Point(0, 0);
+        protected Point scrollBarOffset = new Point(0, 0);
         [DataMember(Name = "ScrollBarSizeAdjust")]
-        protected int _scrollBarSizeAdjust = 0;
+        protected int scrollBarSizeAdjust = 0;
 
         public event EventHandler<SelectedItemEventArgs> SelectedItemChanged;
         public event EventHandler<SelectedItemEventArgs> SelectedItemExecuted;
@@ -72,7 +72,7 @@ namespace SadConsole.Controls
         /// When set to true, does not render the border.
         /// </summary>
         [DataMember]
-        public bool HideBorder { get { return _hideBorder; } set { _hideBorder = value; ShowHideSlider(); IsDirty = true; } }
+        public bool HideBorder { get { return hideBorder; } set { hideBorder = value; ShowHideSlider(); Compose(true); } }
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -81,19 +81,22 @@ namespace SadConsole.Controls
         {
             get
             {
-                if (_theme == null)
+                if (theme == null)
                     return Library.Default.ListBoxTheme;
                 else
-                    return _theme;
+                    return theme;
             }
             set
             {
-                _theme = value;
+                theme = value;
 
-                if (_theme == null)
-                    _slider.Theme = Library.Default.ListBoxTheme.ScrollBarTheme;
+                if (theme == null)
+                    slider.Theme = Library.Default.ListBoxTheme.ScrollBarTheme;
                 else
-                    _slider.Theme = _theme.ScrollBarTheme;
+                    slider.Theme = theme.ScrollBarTheme;
+
+                DetermineAppearance();
+                Compose();
             }
         }
 
@@ -105,13 +108,13 @@ namespace SadConsole.Controls
             get
             {
                 int index = -1;
-                if (_selectedItem != null)
+                if (selectedItem != null)
                 {
                     for (int i = 0; i < Items.Count; i++)
                     {
                         if (CompareByReference)
                         {
-                            if (object.ReferenceEquals(Items[i], _selectedItem))
+                            if (object.ReferenceEquals(Items[i], selectedItem))
                             {
                                 index = i;
                                 break;
@@ -119,7 +122,7 @@ namespace SadConsole.Controls
                         }
                         else
                         {
-                            if (object.Equals(Items[i], _selectedItem))
+                            if (object.Equals(Items[i], selectedItem))
                             {
                                 index = i;
                                 break;
@@ -134,22 +137,22 @@ namespace SadConsole.Controls
 
         public object SelectedItem
         {
-            get { return _selectedItem; }
+            get { return selectedItem; }
             set
             {
                 // Check if we'll get the same container or not.
                 var newContainer = GetContainer(value);
-                if (newContainer != _selectedItemContainer)
+                if (newContainer != selectedItemContainer)
                 {
-                    if (_selectedItemContainer != null)
-                        _selectedItemContainer.IsSelected = false;
+                    if (selectedItemContainer != null)
+                        selectedItemContainer.IsSelected = false;
 
-                    _selectedItem = value;
-                    _selectedItemContainer = newContainer;
-                    _selectedIndex = Items.IndexOf(_selectedItem);
+                    selectedItem = value;
+                    selectedItemContainer = newContainer;
+                    selectedIndex = Items.IndexOf(selectedItem);
 
-                    if (_selectedItemContainer != null)
-                        _selectedItemContainer.IsSelected = true;
+                    if (selectedItemContainer != null)
+                        selectedItemContainer.IsSelected = true;
 
                     OnSelectedItemChanged();
                 }
@@ -158,14 +161,14 @@ namespace SadConsole.Controls
 
         public Point ScrollBarOffset
         {
-            get { return _scrollBarOffset; }
-            set { _scrollBarOffset = value; SetupSlider();  }
+            get { return scrollBarOffset; }
+            set { scrollBarOffset = value; SetupSlider();  }
         }
 
         public int ScrollBarSizeAdjust
         {
-            get { return _scrollBarSizeAdjust; }
-            set { _scrollBarSizeAdjust = value; SetupSlider(); }
+            get { return scrollBarSizeAdjust; }
+            set { scrollBarSizeAdjust = value; SetupSlider(); }
         }
 
         #region Constructors
@@ -174,11 +177,11 @@ namespace SadConsole.Controls
         /// </summary>
         public ListBox(int width, int height): base(width, height)
         {
-            _initialized = true;
-            _containers = new List<TItemContainer>();
+            initialized = true;
+            containers = new List<TItemContainer>();
 
-            _border = Shapes.Box.GetDefaultBox();
-            _border.Fill = true;
+            border = Shapes.Box.GetDefaultBox();
+            border.Fill = true;
 
             SetupSlider();
 
@@ -192,7 +195,7 @@ namespace SadConsole.Controls
 
         protected override void OnParentChanged()
         {
-            _slider.Parent = this.Parent;
+            slider.Parent = this.Parent;
         }
 
         void _slider_ValueChanged(object sender, EventArgs e)
@@ -203,13 +206,13 @@ namespace SadConsole.Controls
         protected virtual void OnSelectedItemChanged()
         {
             if (SelectedItemChanged != null)
-                SelectedItemChanged(this, new SelectedItemEventArgs(_selectedItem));
+                SelectedItemChanged(this, new SelectedItemEventArgs(selectedItem));
         }
 
         protected virtual void OnItemAction()
         {
             if (SelectedItemExecuted != null)
-                SelectedItemExecuted(this, new SelectedItemEventArgs(_selectedItem));
+                SelectedItemExecuted(this, new SelectedItemEventArgs(selectedItem));
         }
 
         public override void DetermineAppearance()
@@ -219,22 +222,22 @@ namespace SadConsole.Controls
 
         protected override void OnPositionChanged()
         {
-            _slider.Position = new Point(this.Position.X + _sliderRenderLocation.X, this.Position.Y + _sliderRenderLocation.Y);
+            slider.Position = new Point(this.Position.X + sliderRenderLocation.X, this.Position.Y + sliderRenderLocation.Y);
         }
 
         protected void SetupSlider()
         {
-            if (_initialized)
+            if (initialized)
             {
                 //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-                _slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, Height);
-                _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
-                _slider.IsVisible = false;
-                _slider.Theme = this.Theme.ScrollBarTheme;
-                _sliderRenderLocation = new Point(Width - 1 + _scrollBarOffset.X, 0 + _scrollBarOffset.Y);
-                _slider.Position = new Point(position.X + _sliderRenderLocation.X, position.Y + _sliderRenderLocation.Y);
-                _border.Width = Width;
-                _border.Height = Height;
+                slider = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, Height);
+                slider.ValueChanged += new EventHandler(_slider_ValueChanged);
+                slider.IsVisible = false;
+                slider.Theme = this.Theme.ScrollBarTheme;
+                sliderRenderLocation = new Point(Width - 1 + scrollBarOffset.X, 0 + scrollBarOffset.Y);
+                slider.Position = new Point(position.X + sliderRenderLocation.X, position.Y + sliderRenderLocation.Y);
+                border.Width = Width;
+                border.Height = Height;
 
                 Compose();
             }
@@ -265,8 +268,8 @@ namespace SadConsole.Controls
             }
 
             if (index != -1)
-                if (_containers.Count - 1 >= index)
-                    return _containers[index];
+                if (containers.Count - 1 >= index)
+                    return containers[index];
 
             return null;
         }
@@ -285,9 +288,9 @@ namespace SadConsole.Controls
             }
 
             if (index != -1)
-                if (_containers.Count - 1 >= index)
+                if (containers.Count - 1 >= index)
                 {
-                    var oldContainer = _containers[index];
+                    var oldContainer = containers[index];
                     oldContainer.PropertyChanged -= ItemContainer_PropertyChanged;
 
                     container.PropertyChanged += ItemContainer_PropertyChanged;
@@ -296,7 +299,7 @@ namespace SadConsole.Controls
                         container.Theme = Theme.Item;
                     container.IsDirty = true;
 
-                    _containers[index] = container;
+                    containers[index] = container;
 
                 }
         }
@@ -320,7 +323,7 @@ namespace SadConsole.Controls
                         tempContainers.Add(cont);
                     }
 
-                    _containers.InsertRange(e.NewStartingIndex, tempContainers);
+                    containers.InsertRange(e.NewStartingIndex, tempContainers);
                 }
                 else if (e.NewItems.Count == 1)
                 {
@@ -331,36 +334,36 @@ namespace SadConsole.Controls
                         cont.Theme = Theme.Item;
                     cont.IsDirty = true;
                     
-                    _containers.Insert(e.NewStartingIndex, cont);
+                    containers.Insert(e.NewStartingIndex, cont);
                 }
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
             {
-                var item = _containers[e.OldStartingIndex];
-                _containers.RemoveAt(e.OldStartingIndex);
-                _containers.Insert(e.NewStartingIndex, item);
+                var item = containers[e.OldStartingIndex];
+                containers.RemoveAt(e.OldStartingIndex);
+                containers.Insert(e.NewStartingIndex, item);
                 item.IsDirty = true;
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
                 foreach (var item in e.OldItems)
                 {
-                    TItemContainer cont = _containers[e.OldStartingIndex];
+                    TItemContainer cont = containers[e.OldStartingIndex];
                     cont.PropertyChanged -= ItemContainer_PropertyChanged;
-                    _containers.Remove(cont);
+                    containers.Remove(cont);
                 }
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
             {
-                foreach (var item in _containers)
+                foreach (var item in containers)
                 {
                     item.PropertyChanged -= ItemContainer_PropertyChanged;
                 }
-                _slider.Value = 0;
-                _containers.Clear();
+                slider.Value = 0;
+                containers.Clear();
             }
 
-            if (SelectedItem != null && !Items.Contains(_selectedItem))
+            if (SelectedItem != null && !Items.Contains(selectedItem))
                 SelectedItem = null;
 
             ShowHideSlider();
@@ -371,23 +374,23 @@ namespace SadConsole.Controls
         private void ShowHideSlider()
         {
             int heightOffset;
-            if (HideBorder)
+            if (hideBorder)
                 heightOffset = 0;
             else
                 heightOffset = 2;
 
             // process the slider
-            int sliderItems = _containers.Count - (Height - heightOffset);
+            int sliderItems = containers.Count - (Height - heightOffset);
 
             if (sliderItems > 0)
             {
-                _slider.Maximum = sliderItems;
-                _showSlider = true;
+                slider.Maximum = sliderItems;
+                showSlider = true;
             }
             else
             {
-                _slider.Maximum = 0;
-                _showSlider = false;
+                slider.Maximum = 0;
+                showSlider = false;
             }
         }
 
@@ -403,15 +406,15 @@ namespace SadConsole.Controls
             //if (_hasFocus)
             if (info.IsKeyReleased(Keys.Up))
             {
-                int index = Items.IndexOf(_selectedItem);
-                if (_selectedItem != null)
+                int index = Items.IndexOf(selectedItem);
+                if (selectedItem != null)
                 {
                     if (index != 0)
                     {
                         SelectedItem = Items[index - 1];
 
-                        if (index <= _slider.Value)
-                            _slider.Value -= 1;
+                        if (index <= slider.Value)
+                            slider.Value -= 1;
 
                     }
                 }
@@ -419,15 +422,15 @@ namespace SadConsole.Controls
             }
             else if (info.IsKeyReleased(Keys.Down))
             {
-                int index = Items.IndexOf(_selectedItem);
-                if (_selectedItem != null)
+                int index = Items.IndexOf(selectedItem);
+                if (selectedItem != null)
                 {
                     if (index != Items.Count - 1)
                     {
                         SelectedItem = Items[index + 1];
 
-                        if (index + 1 >= _slider.Value + (textSurface.Height - 2))
-                            _slider.Value += 1;
+                        if (index + 1 >= slider.Value + (textSurface.Height - 2))
+                            slider.Value += 1;
 
                     }
                 }
@@ -437,7 +440,7 @@ namespace SadConsole.Controls
             }
             else if (info.IsKeyReleased(Keys.Enter))
             {
-                if (_selectedItem != null)
+                if (selectedItem != null)
                     OnItemAction();
 
                 return true;
@@ -450,10 +453,10 @@ namespace SadConsole.Controls
         {
             base.OnMouseExit(state);
 
-            _mouseIn = false;
+            mouseIn = false;
 
             // Reset all containers
-            foreach (var item in _containers)
+            foreach (var item in containers)
                 item.IsMouseOver = false;
         }
 
@@ -461,7 +464,7 @@ namespace SadConsole.Controls
         {
             base.OnMouseEnter(state);
 
-            _mouseIn = true;
+            mouseIn = true;
         }
 
         protected override void OnMouseIn(Input.MouseConsoleState state)
@@ -469,25 +472,25 @@ namespace SadConsole.Controls
             base.OnMouseIn(state);
 
             // Reset all containers
-            foreach (var item in _containers)
+            foreach (var item in containers)
                 item.IsMouseOver = false;
 
-            int rowOffset = HideBorder ? 0 : 1;
-            int rowOffsetReverse = HideBorder ? 1 : 0;
-            int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
+            int rowOffset = hideBorder ? 0 : 1;
+            int rowOffsetReverse = hideBorder ? 1 : 0;
+            int columnOffsetEnd = showSlider || !hideBorder ? 1 : 0;
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
             {
-                if (_showSlider)
+                if (showSlider)
                 {
-                    _containers[mouseControlPosition.Y - rowOffset + _slider.Value].IsMouseOver = true;
+                    containers[mouseControlPosition.Y - rowOffset + slider.Value].IsMouseOver = true;
                 }
-                else if (mouseControlPosition.Y <= _containers.Count - rowOffsetReverse)
+                else if (mouseControlPosition.Y <= containers.Count - rowOffsetReverse)
                 {
-                    _containers[mouseControlPosition.Y - rowOffset].IsMouseOver = true;
+                    containers[mouseControlPosition.Y - rowOffset].IsMouseOver = true;
                 }
             }
         }
@@ -497,37 +500,37 @@ namespace SadConsole.Controls
             base.OnLeftMouseClicked(state);
 
             DateTime click = DateTime.Now;
-            bool doubleClicked = (click - _leftMouseLastClick).TotalSeconds <= 0.5;
-            _leftMouseLastClick = click;
+            bool doubleClicked = (click - leftMouseLastClick).TotalSeconds <= 0.5;
+            leftMouseLastClick = click;
 
-            int rowOffset = HideBorder ? 0 : 1;
-            int rowOffsetReverse = HideBorder ? 1 : 0;
-            int columnOffsetEnd = _showSlider || !HideBorder ? 1 : 0;
+            int rowOffset = hideBorder ? 0 : 1;
+            int rowOffsetReverse = hideBorder ? 1 : 0;
+            int columnOffsetEnd = showSlider || !hideBorder ? 1 : 0;
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
             {
-                object oldItem = _selectedItem;
+                object oldItem = selectedItem;
                 bool noItem = false;
 
-                if (_showSlider)
+                if (showSlider)
                 {
-                    _selectedIndex = mouseControlPosition.Y - rowOffset + _slider.Value;
-                    SelectedItem = Items[_selectedIndex];
+                    selectedIndex = mouseControlPosition.Y - rowOffset + slider.Value;
+                    SelectedItem = Items[selectedIndex];
                 }
-                else if (mouseControlPosition.Y <= _containers.Count - rowOffsetReverse)
+                else if (mouseControlPosition.Y <= containers.Count - rowOffsetReverse)
                 {
-                    _selectedIndex = mouseControlPosition.Y - rowOffset;
-                    SelectedItem = Items[_selectedIndex];
+                    selectedIndex = mouseControlPosition.Y - rowOffset;
+                    SelectedItem = Items[selectedIndex];
                 }
                 else
                     noItem = true;
 
                 if (doubleClicked && oldItem == SelectedItem && !noItem)
                 {
-                    _leftMouseLastClick = DateTime.MinValue;
+                    leftMouseLastClick = DateTime.MinValue;
                     OnItemAction();
                 }
             }
@@ -538,13 +541,13 @@ namespace SadConsole.Controls
             {
                 base.ProcessMouse(state);
 
-                if (_mouseIn)
+                if (mouseIn)
                 {
                     var mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
 
-                    if (mouseControlPosition.X == this.textSurface.Width - 1 && _showSlider)
+                    if (mouseControlPosition.X == this.textSurface.Width - 1 && showSlider)
                     {
-                        _slider.ProcessMouse(state);
+                        slider.ProcessMouse(state);
                     }
                 }
             }
@@ -564,16 +567,16 @@ namespace SadConsole.Controls
 
                 Clear();
 
-                if (!HideBorder)
+                if (!hideBorder)
                 {
                     endingRow = Height - 2;
                     startingRow = 1;
                     columnOffset = 1;
                     columnEnd = Width - 2;
-                    _border.Foreground = this.Theme.Border.Foreground;
-                    _border.BorderBackground = this.Theme.Border.Background;
-                    _border.FillColor = this.Theme.Border.Background;
-                    _border.Draw(this);
+                    border.Foreground = this.Theme.Border.Foreground;
+                    border.BorderBackground = this.Theme.Border.Background;
+                    border.FillColor = this.Theme.Border.Background;
+                    border.Draw(this);
                 }
                 else
                 {
@@ -584,22 +587,22 @@ namespace SadConsole.Controls
                     this.Fill(this.Theme.Border.Foreground, this.Theme.Border.Background, 0, null);
                 }
 
-                int offset = _showSlider ? _slider.Value : 0;
+                int offset = showSlider ? slider.Value : 0;
                 for (int i = 0; i < endingRow; i++)
                 {
-                    if (i + offset < _containers.Count)
-                        _containers[i + offset].Draw(textSurface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1));
+                    if (i + offset < containers.Count)
+                        containers[i + offset].Draw(textSurface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1));
                 }
 
-                if (_showSlider)
+                if (showSlider)
                 {
-                    _slider.Compose(true);
-                    int y = _sliderRenderLocation.Y;
+                    slider.Compose(true);
+                    int y = sliderRenderLocation.Y;
 
-                    for (int ycell = 0; ycell < _slider.TextSurface.Height; ycell++)
+                    for (int ycell = 0; ycell < slider.TextSurface.Height; ycell++)
                     {
-                        this.SetGlyph(_sliderRenderLocation.X, y, _slider[0, ycell].Glyph);
-                        this.SetCell(_sliderRenderLocation.X, y, _slider[0, ycell]);
+                        this.SetGlyph(sliderRenderLocation.X, y, slider[0, ycell].Glyph);
+                        this.SetCell(sliderRenderLocation.X, y, slider[0, ycell]);
                         y++;
                     }
                 }
@@ -613,17 +616,17 @@ namespace SadConsole.Controls
         [OnSerializing]
         private void BeforeSerializing(StreamingContext context)
         {
-            if (_selectedItem != null)
-                _selectedIndex = Items.IndexOf(_selectedItem);
+            if (selectedItem != null)
+                selectedIndex = Items.IndexOf(selectedItem);
             else
-                _selectedIndex = -1;
+                selectedIndex = -1;
         }
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            _initialized = true;
-            _containers = new List<TItemContainer>();
+            initialized = true;
+            containers = new List<TItemContainer>();
 
             foreach (var item in Items)
             {
@@ -634,14 +637,14 @@ namespace SadConsole.Controls
                     cont.Theme = Theme.Item;
                 cont.IsDirty = true;
 
-                _containers.Add(cont);
+                containers.Add(cont);
             }
 
-            _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
+            slider.ValueChanged += new EventHandler(_slider_ValueChanged);
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
 
-            if (_selectedIndex != -1)
-                SelectedItem = Items[_selectedIndex];
+            if (selectedIndex != -1)
+                SelectedItem = Items[selectedIndex];
 
             SetupSlider();
 

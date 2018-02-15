@@ -112,6 +112,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Palette.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceEditor.Static.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ProgressBarTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Timer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 using SadConsole.Surfaces;
+using System;
 using System.Collections.Generic;
 
 namespace SadConsole.Shapes

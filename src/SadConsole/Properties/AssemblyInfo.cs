@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SadLogic")]
 [assembly: AssemblyProduct("SadConsole")]
-[assembly: AssemblyCopyright("Copyright © 2017 Steve De George JR (Thraka)")]
+[assembly: AssemblyCopyright("Copyright © 2018 Steve De George JR (Thraka)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.4.4.2")]
-[assembly: AssemblyFileVersion("6.4.4.2")]
+[assembly: AssemblyVersion("6.4.6")]
+[assembly: AssemblyFileVersion("6.4.6")]

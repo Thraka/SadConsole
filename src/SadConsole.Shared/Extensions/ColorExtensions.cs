@@ -1,31 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ColorHelper = Microsoft.Xna.Framework.Color;
 
 namespace Microsoft.Xna.Framework
 {
+    /// <summary>
+    /// Classic 16 ansi color values.
+    /// </summary>
     public static class ColorAnsi
     {
-        public static readonly Color Black = new Color(0, 0, 0);
-        public static readonly Color Red = new Color(170, 0, 0);
-        public static readonly Color Green = new Color(0, 170, 0);
-        public static readonly Color Yellow = new Color(170, 85, 0);
-        public static readonly Color Blue = new Color(0, 0, 170);
-        public static readonly Color Magenta = new Color(170, 0, 170);
-        public static readonly Color Cyan = new Color(0, 170, 170);
-        public static readonly Color White = new Color(170, 170, 170);
+        /// <summary>
+        /// The black ansi color (0, 0, 0).
+        /// </summary>
+        public static Color Black = new Color(0, 0, 0);
+        /// <summary>
+        /// The Red ansi color (170, 0, 0).
+        /// </summary>
+        public static Color Red = new Color(170, 0, 0);
+        /// <summary>
+        /// The Green ansi color 0, 170, 0).
+        /// </summary>
+        public static Color Green = new Color(0, 170, 0);
+        /// <summary>
+        /// The Yellow ansi color (170, 85, 0).
+        /// </summary>
+        public static Color Yellow = new Color(170, 85, 0);
+        /// <summary>
+        /// The Blue ansi color (0, 0, 170).
+        /// </summary>
+        public static Color Blue = new Color(0, 0, 170);
+        /// <summary>
+        /// The Magenta ansi color (170, 0, 170).
+        /// </summary>
+        public static Color Magenta = new Color(170, 0, 170);
+        /// <summary>
+        /// The Cyan ansi color (0, 170, 170).
+        /// </summary>
+        public static Color Cyan = new Color(0, 170, 170);
+        /// <summary>
+        /// The White ansi color (170, 170, 170).
+        /// </summary>
+        public static Color White = new Color(170, 170, 170);
 
-        public static readonly Color BlackBright = new Color(85, 85, 85);
-        public static readonly Color RedBright = new Color(255, 85, 85);
-        public static readonly Color GreenBright = new Color(85, 255, 85);
-        public static readonly Color YellowBright = new Color(255, 255, 85);
-        public static readonly Color BlueBright = new Color(85, 85, 255);
-        public static readonly Color MagentaBright = new Color(255, 85, 255);
-        public static readonly Color CyanBright = new Color(85, 255, 255);
-        public static readonly Color WhiteBright = new Color(255, 255, 255);
+        /// <summary>
+        /// The BlackBright ansi color (85, 85, 85).
+        /// </summary>
+        public static Color BlackBright = new Color(85, 85, 85);
+        /// <summary>
+        /// The RedBright ansi color (255, 85, 85).
+        /// </summary>
+        public static Color RedBright = new Color(255, 85, 85);
+        /// <summary>
+        /// The GreenBright ansi color (85, 255, 85).
+        /// </summary>
+        public static Color GreenBright = new Color(85, 255, 85);
+        /// <summary>
+        /// The YellowBright ansi color (255, 255, 85).
+        /// </summary>
+        public static Color YellowBright = new Color(255, 255, 85);
+        /// <summary>
+        /// The BlueBright ansi color (85, 85, 255).
+        /// </summary>
+        public static Color BlueBright = new Color(85, 85, 255);
+        /// <summary>
+        /// The MagentaBright ansi color (255, 85, 255).
+        /// </summary>
+        public static Color MagentaBright = new Color(255, 85, 255);
+        /// <summary>
+        /// The CyanBright ansi color (85, 255, 255).
+        /// </summary>
+        public static Color CyanBright = new Color(85, 255, 255);
+        /// <summary>
+        /// The WhiteBright ansi color (255, 255, 255).
+        /// </summary>
+        public static Color WhiteBright = new Color(255, 255, 255);
     }
 
+    /// <summary>
+    /// Various extension methods to <see cref="Color"/> class.
+    /// </summary>
     public static class ColorExtensions
     {
         /// <summary>
@@ -48,12 +101,23 @@ namespace Microsoft.Xna.Framework
                                                                                                     { "ansicyanbright", ColorAnsi.CyanBright },
                                                                                                     { "ansiwhitebright", ColorAnsi.WhiteBright } };
 
+        /// <summary>
+        /// Wrapper for <see cref="Color.PackedValue"/>.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public static uint ToInteger(this Color color)
         {
-            //return color.PackedValue;
-            return 0;
+            return color.PackedValue;
         }
 
+        /// <summary>
+        /// Creates an array of colors that includes the <paramref name="color"/> and <paramref name="endingColor"/> and <paramref name="steps"/> of colors between them.
+        /// </summary>
+        /// <param name="color">The starting color which will be at index 0 in the array.</param>
+        /// <param name="endingColor">The ending color which will be at index `steps - 1` in the array.</param>
+        /// <param name="steps">The gradient steps in the array which uses <see cref="Color.Lerp(Color, Color, float)"/>.</param>
+        /// <returns>An array of colors.</returns>
         public static Color[] LerpSteps(this Color color, Color endingColor, int steps)
         {
             Color[] colors = new Color[steps];
@@ -69,13 +133,20 @@ namespace Microsoft.Xna.Framework
             {
                 lerpTotal += stopStrength;
 
-                colors[i] = ColorHelper.Lerp(color, endingColor, lerpTotal);
+                colors[i] = Color.Lerp(color, endingColor, lerpTotal);
             }
 
             return colors;
         }
 
-        // Taken from http://www.easyrgb.com/index.php?X=MATH&H=19#text19
+        /// <summary>
+        /// Sets the color values based on HSL instead of RGB.
+        /// </summary>
+        /// <param name="color">The color to change.</param>
+        /// <param name="h">The hue amount.</param>
+        /// <param name="s">The saturation amount.</param>
+        /// <param name="l">The luminance amount.</param>
+        /// <remarks>Taken from http://www.easyrgb.com/index.php?X=MATH&amp;H=19#text19 </remarks>
         public static void SetHSL(this Color color, float h, float s, float l)
         {
             if (s == 0f)
@@ -112,6 +183,12 @@ namespace Microsoft.Xna.Framework
             return (v1);
         }
 
+        /// <summary>
+        /// Gets a random color.
+        /// </summary>
+        /// <param name="color">The color object to start with. Will be overridden.</param>
+        /// <param name="random">A random object to get numbers from.</param>
+        /// <returns>A new color.</returns>
         public static Color GetRandomColor(this Color color, Random random)
         {
             return new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
@@ -121,7 +198,7 @@ namespace Microsoft.Xna.Framework
         /// Returns a new Color using only the Red value of this color.
         /// </summary>
         /// <param name="color">Object instance.</param>
-        /// <returns></returns>
+        /// <returns>A color with only the red channel set.</returns>
         public static Color RedOnly(this Color color)
         {
             return new Color(color.R, 0, 0);
@@ -131,7 +208,7 @@ namespace Microsoft.Xna.Framework
         /// Returns a new Color using only the Green value of this color.
         /// </summary>
         /// <param name="color">Object instance.</param>
-        /// <returns></returns>
+        /// <returns>A color with only the green channel set.</returns>
         public static Color GreenOnly(this Color color)
         {
             return new Color(0, color.G, 0);
@@ -141,18 +218,28 @@ namespace Microsoft.Xna.Framework
         /// Returns a new Color using only the Blue value of this color.
         /// </summary>
         /// <param name="color">Object instance.</param>
-        /// <returns></returns>
+        /// <returns>A color with only the blue channel set.</returns>
         public static Color BlueOnly(this Color color)
         {
             return new Color(0, 0, color.B);
         }
 
+        /// <summary>
+        /// Gets the luma of an existing color.
+        /// </summary>
+        /// <param name="color">The color to calculate the luma from.</param>
+        /// <returns>A value based on this code: (color.R + color.R + color.B + color.G + color.G + color.G) / 6f</returns>
         public static float GetLuma(this Color color)
         {
             return (color.R + color.R + color.B + color.G + color.G + color.G) / 6f;
         }
 
-        #region Color methods taken from mono source code
+        /// <summary>
+        /// Gets the brightness of a color.
+        /// </summary>
+        /// <param name="color">The color to process.</param>
+        /// <returns>The brightness value.</returns>
+        /// <remarks>Taken from the mono source code.</remarks>
         public static float GetBrightness(this Color color)
         {
             byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
@@ -161,7 +248,12 @@ namespace Microsoft.Xna.Framework
             return (float)(maxval + minval) / 510;
         }
 
-
+        /// <summary>
+        /// Gets the saturation of a color.
+        /// </summary>
+        /// <param name="color">The color to process.</param>
+        /// <returns>The saturation value.</returns>
+        /// <remarks>Taken from the mono source code.</remarks>
         public static float GetSaturation(this Color color)
         {
             byte minval = (byte)Math.Min(color.R, Math.Min(color.G, color.B));
@@ -180,7 +272,12 @@ namespace Microsoft.Xna.Framework
             return (float)(maxval - minval) / sum;
         }
 
-
+        /// <summary>
+        /// Gets the hue of a color.
+        /// </summary>
+        /// <param name="color">The color to process.</param>
+        /// <returns>The hue value.</returns>
+        /// <remarks>Taken from the mono source code.</remarks>
         public static float GetHue(this Color color)
         {
             int r = color.R;
@@ -213,7 +310,6 @@ namespace Microsoft.Xna.Framework
 
             return hue;
         }
-        #endregion
 
         /// <summary>
         /// Converts a color to the format used by <see cref="SadConsole.ParseCommandRecolor"/> command.
@@ -308,7 +404,7 @@ namespace Microsoft.Xna.Framework
                 {
                     // Lookup color in framework
 
-                    TypeInfo colorType = typeof(ColorHelper).GetTypeInfo();
+                    TypeInfo colorType = typeof(Color).GetTypeInfo();
 
                     foreach (var item in colorType.DeclaredProperties)
                     {
