@@ -20,6 +20,7 @@ namespace SadConsole.Editor
             SadConsole.Game.OnDraw = drawFrame;
 
             //SadConsole.Editor.App.Main();
+            System.Windows.Forms.Application.EnableVisualStyles();
             Form1 form = new Form1();
             form.ShowDialog();
             form.Dispose();
