@@ -79,8 +79,7 @@ namespace Castle
         {
             if (this.IsVisible)
             {
-                position.X = location.X;
-                position.Y = location.Y;
+                Position = location;
             }
         }
 
