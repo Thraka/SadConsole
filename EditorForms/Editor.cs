@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,93 @@ namespace SadConsole.Editor
             Form1 form = new Form1();
             form.ShowDialog();
             form.Dispose();
+        }
+
+
+        static Editor()
+        {
+        }
+    }
+
+    internal class DataContext: System.ComponentModel.INotifyPropertyChanged
+    {
+        private ITool selectedTool;
+        private IScreen selectedScreen;
+        private System.Windows.Forms.Control selectedToolPanel;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public List<ITool> Tools { get; set; }
+
+        public ITool SelectedTool
+        {
+            get => selectedTool;
+            set
+            {
+                selectedTool = value;
+                selectedToolPanel = selectedTool.GetUI();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedToolPanel"));
+            }
+        }
+
+        public System.Windows.Forms.Control SelectedToolPanel => selectedToolPanel;
+
+        public IScreen Screen
+        {
+            get => selectedScreen;
+            set
+            {
+                if (selectedScreen != value)
+                {
+                    selectedScreen = value;
+
+                    // REFRESH
+                }
+            }
+        }
+        
+        public DataContext()
+        {
+            Tools = new List<ITool>() { new Pencil(), new Box(), new Recolor() };
+
+            selectedTool = Tools[2];
+        }
+    }
+
+    internal interface ITool
+    {
+        string Name { get; }
+
+        System.Windows.Forms.Control GetUI();
+    }
+
+    internal class Pencil : ITool
+    {
+        public string Name => "Pencil";
+
+        public System.Windows.Forms.Control GetUI()
+        {
+            return new ToolControls.PencilPanel();
+        }
+    }
+
+    internal class Box : ITool
+    {
+        public string Name => "Box";
+
+        public System.Windows.Forms.Control GetUI()
+        {
+            return new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Box", Name = "ToolPanel" };
+        }
+    }
+
+    internal class Recolor : ITool
+    {
+        public string Name => "Recolor";
+
+        public System.Windows.Forms.Control GetUI()
+        {
+            return new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Recolor", Name = "ToolPanel" };
         }
     }
 }
