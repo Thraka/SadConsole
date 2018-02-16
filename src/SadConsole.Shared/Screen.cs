@@ -8,6 +8,7 @@ namespace SadConsole
     /// <summary>
     /// A basic implementation of <see cref="IScreen"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Screen")]
     public class Screen: IScreen
     {
         /// <summary>

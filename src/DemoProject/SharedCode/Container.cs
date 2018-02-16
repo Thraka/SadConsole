@@ -9,6 +9,7 @@ using StarterProject.CustomConsoles;
 
 namespace StarterProject
 {
+    [System.Diagnostics.DebuggerDisplay("Demo Container")]
     class Container : ConsoleContainer
     {
         private int currentConsoleIndex = -1;

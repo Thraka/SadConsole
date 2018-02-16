@@ -14,6 +14,7 @@ namespace SadConsole
     /// <summary>
     /// An <see cref="IConsole" implementation that only processes the <see cref="IScreen.Children"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Console (Container Only)")]
     public partial class ConsoleContainer : IConsole
     {
         protected IScreen parentScreen;

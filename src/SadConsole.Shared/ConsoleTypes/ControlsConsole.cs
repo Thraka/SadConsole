@@ -14,6 +14,7 @@ namespace SadConsole
     /// A basic console that can contain controls.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("Console (Controls)")]
     public class ControlsConsole: Console, IEnumerable<ControlBase>
     {
         /// <summary>
