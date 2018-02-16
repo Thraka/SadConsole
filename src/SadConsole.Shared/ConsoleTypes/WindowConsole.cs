@@ -9,6 +9,7 @@ using SadConsole.Input;
 namespace SadConsole
 {
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("Window")]
     public partial class Window: ControlsConsole
     {
         /// <summary>
