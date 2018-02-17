@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Color = Microsoft.Xna.Framework.Color;
 using System.Drawing.Imaging;
 using SadConsole.Editor.Model;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.Editor.Panels
 {
@@ -84,33 +85,41 @@ namespace SadConsole.Editor.Panels
                 picFontSheet.Image = null;
             }
 
-            originalImage = Image.FromFile(dataObject.Font.Master.LoadedFilePath);
-            recoloredImage = new Bitmap(originalImage);
+            //originalImage = Image.FromFile(dataObject.Font.Master.LoadedFilePath);
+            //recoloredImage = new Bitmap(originalImage);
 
             RecolorImage();
         }
 
         private void RecolorImage()
         {
-            recoloredImage.Save("test2.png");
+            if (recoloredImage != null)
+                recoloredImage.Dispose();
 
-            using (var g = Graphics.FromImage(recoloredImage))
+            using (var stream = new System.IO.FileStream(dataObject.Font.Master.LoadedFilePath, System.IO.FileMode.Open))
             {
-                ImageAttributes imageAttributes = new ImageAttributes();
-                var color = ForegroundColor.ToDrawingColor();
-                var matrix = ForegroundColor.ToDrawingColor().ToColorMatrix();
+                Texture2D font = Texture2D.FromStream(Global.GraphicsDevice, stream);
+                RenderTarget2D output = new RenderTarget2D(Global.GraphicsDevice, font.Width, font.Height);
+                Global.GraphicsDevice.SetRenderTarget(output);
 
-                matrix.Matrix40 = color.R / 255f;
-                matrix.Matrix41 = color.G / 255f;
-                matrix.Matrix42 = color.B / 255f;
-                matrix.Matrix33 = color.A / 255f;
+                using (var batch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(SadConsole.Global.GraphicsDevice))
+                {
+                    batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                    batch.Draw(font, Microsoft.Xna.Framework.Vector2.Zero, ForegroundColor);
+                    batch.End();
+                }
 
-                imageAttributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-                
-                g.DrawImage(originalImage, new Rectangle(0, 0, originalImage.Width, originalImage.Height), 0, 0, originalImage.Width, originalImage.Height, GraphicsUnit.Pixel, imageAttributes);
+                Global.GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
+                font.Dispose();
+
+                using (var outputStream = new System.IO.MemoryStream())
+                {
+                    output.SaveAsPng(outputStream, output.Width, output.Height);
+                    recoloredImage = new Bitmap(outputStream);
+                    picFontSheet.Image = recoloredImage;
+                }
+
             }
-            
-            picFontSheet.Image = recoloredImage;
         }
 
         public GlyphEditPanel()
