@@ -36,15 +36,15 @@ namespace SadConsole.Editor
 
     internal class DataContext: System.ComponentModel.INotifyPropertyChanged
     {
-        private ITool selectedTool;
+        private Tools.ITool selectedTool;
         private IScreen selectedScreen;
         private System.Windows.Forms.Control selectedToolPanel;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public List<ITool> Tools { get; set; }
+        public List<Tools.ITool> Tools { get; set; }
 
-        public ITool SelectedTool
+        public Tools.ITool SelectedTool
         {
             get => selectedTool;
             set
@@ -73,51 +73,10 @@ namespace SadConsole.Editor
         
         public DataContext()
         {
-            Tools = new List<ITool>() { new Pencil(), new Box(), new Recolor() };
+            Tools = new List<Tools.ITool>() { new Tools.Pencil(), new Tools.Box(), new Tools.Recolor() };
 
             selectedTool = Tools[2];
         }
     }
 
-    internal interface ITool
-    {
-        string Name { get; }
-
-        System.Windows.Forms.Control GetUI();
-    }
-
-    internal class Pencil : ITool
-    {
-        public Model.GlyphItem Glyph = new Model.GlyphItem();
-
-        public string Name => "Pencil";
-
-        public System.Windows.Forms.Control GetUI()
-        {
-            var panel = new System.Windows.Forms.Panel();
-            ToolControls.GlyphEditPanel.SharedInstance.DataObject = Glyph;
-            panel.AddArrangeControls(ToolControls.GlyphEditPanel.SharedInstance, new System.Windows.Forms.Button(), new System.Windows.Forms.Button());
-            return panel;
-        }
-    }
-
-    internal class Box : ITool
-    {
-        public string Name => "Box";
-
-        public System.Windows.Forms.Control GetUI()
-        {
-            return new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Box", Name = "ToolPanel" };
-        }
-    }
-
-    internal class Recolor : ITool
-    {
-        public string Name => "Recolor";
-
-        public System.Windows.Forms.Control GetUI()
-        {
-            return new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Recolor", Name = "ToolPanel" };
-        }
-    }
 }

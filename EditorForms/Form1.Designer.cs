@@ -30,28 +30,28 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.game1 = new SadConsole.Editor.Game();
             this.pnlScreens = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlToolsList = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.cboToolsList = new System.Windows.Forms.ComboBox();
-            this.editorBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.game1 = new SadConsole.Editor.Game();
+            this.editorBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.pnlScreens.SuspendLayout();
             this.pnlToolsList.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -66,21 +66,13 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.pnlScreens);
             this.splitContainer1.Panel2.Controls.Add(this.pnlToolsList);
             this.splitContainer1.Panel2MinSize = 200;
             this.splitContainer1.Size = new System.Drawing.Size(784, 509);
             this.splitContainer1.SplitterDistance = 560;
             this.splitContainer1.TabIndex = 1;
-            // 
-            // game1
-            // 
-            this.game1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.game1.Location = new System.Drawing.Point(0, 0);
-            this.game1.Name = "game1";
-            this.game1.Size = new System.Drawing.Size(560, 509);
-            this.game1.TabIndex = 0;
-            this.game1.Text = "game1";
             // 
             // pnlScreens
             // 
@@ -151,13 +143,6 @@
             this.cboToolsList.TabIndex = 3;
             this.cboToolsList.SelectedIndexChanged += new System.EventHandler(this.cboToolsList_SelectedIndexChanged);
             // 
-            // editorBindingSource
-            // 
-            this.editorBindingSource.DataSource = typeof(SadConsole.Editor.DataContext);
-            this.editorBindingSource.DataSourceChanged += new System.EventHandler(this.editorBindingSource_DataSourceChanged);
-            this.editorBindingSource.CurrentChanged += new System.EventHandler(this.editorBindingSource_CurrentChanged);
-            this.editorBindingSource.CurrentItemChanged += new System.EventHandler(this.editorBindingSource_CurrentItemChanged);
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
@@ -221,6 +206,22 @@
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // game1
+            // 
+            this.game1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.game1.Location = new System.Drawing.Point(0, 0);
+            this.game1.Name = "game1";
+            this.game1.Size = new System.Drawing.Size(560, 509);
+            this.game1.TabIndex = 0;
+            this.game1.Text = "game1";
+            // 
+            // editorBindingSource
+            // 
+            this.editorBindingSource.DataSource = typeof(SadConsole.Editor.DataContext);
+            this.editorBindingSource.DataSourceChanged += new System.EventHandler(this.editorBindingSource_DataSourceChanged);
+            this.editorBindingSource.CurrentChanged += new System.EventHandler(this.editorBindingSource_CurrentChanged);
+            this.editorBindingSource.CurrentItemChanged += new System.EventHandler(this.editorBindingSource_CurrentItemChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -239,11 +240,11 @@
             this.pnlScreens.PerformLayout();
             this.pnlToolsList.ResumeLayout(false);
             this.pnlToolsList.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

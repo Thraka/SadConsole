@@ -1,4 +1,4 @@
-﻿namespace SadConsole.Editor.ToolControls
+﻿namespace SadConsole.Editor.Panels
 {
     partial class GlyphEditPanel
     {
@@ -30,17 +30,17 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.picFontSheet = new System.Windows.Forms.PictureBox();
             this.picBackground = new System.Windows.Forms.PictureBox();
             this.picForeground = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.picFontSheet = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBackground)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picForeground)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFontSheet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picBackground)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picForeground)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -70,44 +70,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settings";
             // 
-            // picBackground
-            // 
-            this.picBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBackground.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.picBackground.Location = new System.Drawing.Point(184, 52);
-            this.picBackground.Name = "picBackground";
-            this.picBackground.Size = new System.Drawing.Size(20, 20);
-            this.picBackground.TabIndex = 5;
-            this.picBackground.TabStop = false;
-            // 
-            // picForeground
-            // 
-            this.picForeground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picForeground.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.picForeground.Location = new System.Drawing.Point(184, 26);
-            this.picForeground.Name = "picForeground";
-            this.picForeground.Size = new System.Drawing.Size(20, 20);
-            this.picForeground.TabIndex = 4;
-            this.picForeground.TabStop = false;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 79);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Glyph";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 55);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Background Color";
-            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -130,6 +92,48 @@
             this.picFontSheet.TabIndex = 4;
             this.picFontSheet.TabStop = false;
             // 
+            // picBackground
+            // 
+            this.picBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picBackground.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.picBackground.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picBackground.Location = new System.Drawing.Point(184, 52);
+            this.picBackground.Name = "picBackground";
+            this.picBackground.Size = new System.Drawing.Size(20, 20);
+            this.picBackground.TabIndex = 5;
+            this.picBackground.TabStop = false;
+            this.picBackground.Click += new System.EventHandler(this.picBackground_Click);
+            // 
+            // picForeground
+            // 
+            this.picForeground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picForeground.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.picForeground.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picForeground.Location = new System.Drawing.Point(184, 26);
+            this.picForeground.Name = "picForeground";
+            this.picForeground.Size = new System.Drawing.Size(20, 20);
+            this.picForeground.TabIndex = 4;
+            this.picForeground.TabStop = false;
+            this.picForeground.Click += new System.EventHandler(this.picForeground_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 79);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Glyph";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 55);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(92, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Background Color";
+            // 
             // GlyphEditPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -140,11 +144,11 @@
             this.Size = new System.Drawing.Size(216, 295);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBackground)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picForeground)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFontSheet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picBackground)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picForeground)).EndInit();
             this.ResumeLayout(false);
 
         }

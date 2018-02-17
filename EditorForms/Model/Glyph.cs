@@ -11,7 +11,7 @@ namespace SadConsole.Editor.Model
     {
         private Font font;
 
-        public Color Foreground = Color.Green;
+        public Color Foreground = Color.White;
         public Color Background = Color.Black;
         public int Glyph = 1;
         public Font Font

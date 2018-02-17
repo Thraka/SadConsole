@@ -11,9 +11,9 @@ using System.Reflection;
 
 namespace SadConsole.Editor
 {
-    public partial class Form1 : Form
+    internal partial class Form1 : Form
     {
-        DataContext context = new DataContext();
+        public static DataContext context = new DataContext();
         int panelSplitterPosition = 0;
         Control selectedToolPanel;
 

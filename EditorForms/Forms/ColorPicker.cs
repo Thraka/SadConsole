@@ -16,5 +16,13 @@ namespace SadConsole.Editor.Forms
         {
             InitializeComponent();
         }
+
+        private void ColorPicker_Load(object sender, EventArgs e)
+        {
+            cslRainbow.ColorRange = new[] { Color.Red, Color.Yellow, Color.Green, Color.Turquoise, Color.Blue, Color.Purple, Color.Red };
+            cslRed.ColorRange = new[] { Color.Black, Color.Red };
+            cslGreen.ColorRange = new[] { Color.Black, Color.Green };
+            cslBlue.ColorRange = new[] { Color.Black, Color.Blue };
+        }
     }
 }

@@ -11,7 +11,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using System.Drawing.Imaging;
 using SadConsole.Editor.Model;
 
-namespace SadConsole.Editor.ToolControls
+namespace SadConsole.Editor.Panels
 {
     internal partial class GlyphEditPanel : UserControl
     {
@@ -116,6 +116,25 @@ namespace SadConsole.Editor.ToolControls
         public GlyphEditPanel()
         {
             InitializeComponent();
+        }
+
+        private void picForeground_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.ColorDialog colorDialog = new ColorDialog();
+            colorDialog.SolidColorOnly = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+                ForegroundColor = colorDialog.Color.ToMonoGameColor();
+
+            //Forms.ColorPicker picker = new Forms.ColorPicker();
+            //picker.ShowDialog(this.ParentForm);
+        }
+
+        private void picBackground_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.ColorDialog colorDialog = new ColorDialog();
+            colorDialog.SolidColorOnly = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+                BackgroundColor = colorDialog.Color.ToMonoGameColor();
         }
     }
 }

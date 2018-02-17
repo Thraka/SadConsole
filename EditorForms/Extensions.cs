@@ -11,7 +11,7 @@ namespace SadConsole.Editor
 {
     internal static class Extensions
     {
-        internal static void AddArrangeControls(this Control container, params Control[] controls)
+        public static void AddArrangeControls(this Control container, params Control[] controls)
         {
             int heightCalculator = 0;
 
@@ -33,27 +33,33 @@ namespace SadConsole.Editor
             }
         }
 
-        internal static ColorMatrix ToColorMatrix(this Color color)
+        public static ColorMatrix ToColorMatrix(this Color color)
         {
             float red = (float)color.R / 255;
             float green = (float)color.G / 255;
             float blue = (float)color.B / 255;
             float alpha = (float)color.A / 255;
 
-
+            // THIS is still not correct with the "white" foreground font.
+            // System.Drawing wants it black to color properly. Hrm...
             float[][] colorMatrixElements = {
-                new float[] {1,  0,  0,  0, 0},
-                new float[] {0,  1,  0,  0, 0},
-                new float[] {0,  0,  1,  0, 0},
-                new float[] {0,  0,  0,  1, 0},
-                new float[] {red, green, blue, alpha, 1}};
+                new float[] {red,  0,  0,  0, 0},
+                new float[] {0,  green,  0,  0, 0},
+                new float[] {0,  0,  blue,  0, 0},
+                new float[] {0,  0,  0, alpha, 0},
+                new float[] {red, green, blue, 0, 1}};
 
             return new ColorMatrix(colorMatrixElements);
         }
 
-        internal static Color ToDrawingColor(this Microsoft.Xna.Framework.Color color)
+        public static Color ToDrawingColor(this Microsoft.Xna.Framework.Color color)
         {
             return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
+        public static Microsoft.Xna.Framework.Color ToMonoGameColor(this Color color)
+        {
+            return new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A);
         }
     }
 }
