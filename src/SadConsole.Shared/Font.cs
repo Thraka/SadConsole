@@ -100,6 +100,11 @@ namespace SadConsole
         /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// The <see cref="FontMaster"/> that created this <see cref="Font"/> instance.
+        /// </summary>
+        public FontMaster Master { get; private set; }
+
         internal Font() { }
 
         internal Font(FontMaster masterFont, FontSizes fontMultiple)
@@ -109,6 +114,7 @@ namespace SadConsole
 
         private void Initialize(FontMaster masterFont, FontSizes fontMultiple)
         {
+            Master = masterFont;
             FontImage = masterFont.Image;
             MaxGlyphIndex = masterFont.Rows * masterFont.Columns - 1;
 
@@ -207,10 +213,15 @@ namespace SadConsole
         public string Name { get; set; }
 
         /// <summary>
-        /// Where this font was loaded from.
+        /// The name of the image file as defined in the .font file.
         /// </summary>
         [DataMember]
         public string FilePath { get; set; }
+
+        /// <summary>
+        /// The path to the file per <see cref="SadConsole.Global.SerializerPathHint"/>.
+        /// </summary>
+        public string LoadedFilePath { get; private set; }
 
         /// <summary>
         /// The height of each glyph in pixels.
@@ -281,10 +292,10 @@ namespace SadConsole
         /// </summary>
         public void Generate()
         {
-            string file = System.IO.Path.Combine(Global.SerializerPathHint, FilePath);
+            LoadedFilePath = System.IO.Path.Combine(Global.SerializerPathHint, FilePath);
 
 
-            using (System.IO.Stream fontStream = TitleContainer.OpenStream(file))
+            using (System.IO.Stream fontStream = TitleContainer.OpenStream(LoadedFilePath))
                 Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
 
             ConfigureRects();
