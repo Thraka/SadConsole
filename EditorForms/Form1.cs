@@ -161,7 +161,7 @@ namespace SadConsole.Editor
 
         private void editorBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (selectedToolPanel != context.SelectedToolPanel)
+            if (context.SelectedToolPanel != null && selectedToolPanel != context.SelectedToolPanel)
             {
                 if (selectedToolPanel != null)
                     selectedToolPanel.Parent.Controls.Remove(selectedToolPanel);
@@ -172,7 +172,7 @@ namespace SadConsole.Editor
                 pnlToolsList.Parent.Controls.Add(selectedToolPanel);
                 selectedToolPanel.Location = new Point(pnlToolsList.Left, pnlToolsList.Bottom + pnlToolsList.Margin.Bottom);
                 selectedToolPanel.Width = pnlToolsList.Width;
-                selectedToolPanel.Anchor = pnlToolsList.Anchor;
+                //selectedToolPanel.Anchor = pnlToolsList.Anchor;
             }
         }
 

@@ -22,6 +22,7 @@ namespace SadConsole.Editor
 
             //SadConsole.Editor.App.Main();
             System.Windows.Forms.Application.EnableVisualStyles();
+            
             Form1 form = new Form1();
             form.ShowDialog();
             form.Dispose();
@@ -87,11 +88,16 @@ namespace SadConsole.Editor
 
     internal class Pencil : ITool
     {
+        public Model.GlyphItem Glyph = new Model.GlyphItem();
+
         public string Name => "Pencil";
 
         public System.Windows.Forms.Control GetUI()
         {
-            return new ToolControls.PencilPanel();
+            var panel = new System.Windows.Forms.Panel();
+            ToolControls.GlyphEditPanel.SharedInstance.DataObject = Glyph;
+            panel.AddArrangeControls(ToolControls.GlyphEditPanel.SharedInstance, new System.Windows.Forms.Button(), new System.Windows.Forms.Button());
+            return panel;
         }
     }
 
