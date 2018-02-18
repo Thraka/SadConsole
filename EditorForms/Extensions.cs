@@ -70,5 +70,10 @@ namespace SadConsole.Editor
                 return new Bitmap(outputStream);
             }
         }
+
+        public static Rectangle ToDrawingRectangle(this Microsoft.Xna.Framework.Rectangle rect)
+        {
+            return new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+        }
     }
 }

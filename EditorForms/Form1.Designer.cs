@@ -30,28 +30,28 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.game1 = new SadConsole.Editor.Game();
             this.pnlScreens = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlToolsList = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.cboToolsList = new System.Windows.Forms.ComboBox();
+            this.editorBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.game1 = new SadConsole.Editor.Game();
-            this.editorBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.chkEditMode = new System.Windows.Forms.CheckBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.pnlScreens.SuspendLayout();
             this.pnlToolsList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -73,6 +73,15 @@
             this.splitContainer1.Size = new System.Drawing.Size(784, 509);
             this.splitContainer1.SplitterDistance = 560;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // game1
+            // 
+            this.game1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.game1.Location = new System.Drawing.Point(0, 0);
+            this.game1.Name = "game1";
+            this.game1.Size = new System.Drawing.Size(560, 509);
+            this.game1.TabIndex = 0;
+            this.game1.Text = "game1";
             // 
             // pnlScreens
             // 
@@ -143,6 +152,11 @@
             this.cboToolsList.TabIndex = 3;
             this.cboToolsList.SelectedIndexChanged += new System.EventHandler(this.cboToolsList_SelectedIndexChanged);
             // 
+            // editorBindingSource
+            // 
+            this.editorBindingSource.DataSource = typeof(SadConsole.Editor.DataContext);
+            this.editorBindingSource.CurrentItemChanged += new System.EventHandler(this.editorBindingSource_CurrentItemChanged);
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
@@ -160,7 +174,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(790, 564);
             this.tableLayoutPanel1.TabIndex = 2;
-            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
             // statusStrip1
             // 
@@ -173,54 +186,38 @@
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.checkBox1);
-            this.flowLayoutPanel1.Controls.Add(this.button1);
+            this.flowLayoutPanel1.Controls.Add(this.chkEditMode);
+            this.flowLayoutPanel1.Controls.Add(this.btnRefresh);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(784, 23);
             this.flowLayoutPanel1.TabIndex = 5;
             // 
-            // checkBox1
+            // chkEditMode
             // 
-            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(0, 0);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(78, 23);
-            this.checkBox1.TabIndex = 4;
-            this.checkBox1.Text = "Pause Game";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
+            this.chkEditMode.Appearance = System.Windows.Forms.Appearance.Button;
+            this.chkEditMode.AutoSize = true;
+            this.chkEditMode.Location = new System.Drawing.Point(0, 0);
+            this.chkEditMode.Margin = new System.Windows.Forms.Padding(0);
+            this.chkEditMode.Name = "chkEditMode";
+            this.chkEditMode.Size = new System.Drawing.Size(78, 23);
+            this.chkEditMode.TabIndex = 4;
+            this.chkEditMode.Text = "Pause Game";
+            this.chkEditMode.UseVisualStyleBackColor = true;
+            this.chkEditMode.CheckedChanged += new System.EventHandler(this.chkEditMode_CheckedChanged);
             // 
-            // button1
+            // btnRefresh
             // 
-            this.button1.Location = new System.Drawing.Point(78, 0);
-            this.button1.Margin = new System.Windows.Forms.Padding(0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Refresh";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // game1
-            // 
-            this.game1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.game1.Location = new System.Drawing.Point(0, 0);
-            this.game1.Name = "game1";
-            this.game1.Size = new System.Drawing.Size(560, 509);
-            this.game1.TabIndex = 0;
-            this.game1.Text = "game1";
-            // 
-            // editorBindingSource
-            // 
-            this.editorBindingSource.DataSource = typeof(SadConsole.Editor.DataContext);
-            this.editorBindingSource.DataSourceChanged += new System.EventHandler(this.editorBindingSource_DataSourceChanged);
-            this.editorBindingSource.CurrentChanged += new System.EventHandler(this.editorBindingSource_CurrentChanged);
-            this.editorBindingSource.CurrentItemChanged += new System.EventHandler(this.editorBindingSource_CurrentItemChanged);
+            this.btnRefresh.Location = new System.Drawing.Point(78, 0);
+            this.btnRefresh.Margin = new System.Windows.Forms.Padding(0);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btnRefresh.TabIndex = 5;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Visible = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // Form1
             // 
@@ -231,7 +228,6 @@
             this.Name = "Form1";
             this.Text = "SadConsole Editor";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -240,11 +236,11 @@
             this.pnlScreens.PerformLayout();
             this.pnlToolsList.ResumeLayout(false);
             this.pnlToolsList.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -262,8 +258,8 @@
         private System.Windows.Forms.ComboBox cboToolsList;
         private System.Windows.Forms.BindingSource editorBindingSource;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox chkEditMode;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 

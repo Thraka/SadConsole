@@ -20,36 +20,7 @@ namespace SadConsole.Editor
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            SadConsole.Settings.DoUpdate = !SadConsole.Settings.DoUpdate;
-        }
-
-        private void Form1_ResizeEnd(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void editorBindingSource_CurrentChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void editorBindingSource_DataSourceChanged(object sender, EventArgs e)
-        {
-        }
-
+        
         private void UpdateTree()
         {
             if (treeView1.SelectedNode != null)
@@ -90,31 +61,7 @@ namespace SadConsole.Editor
 
             return null;
         }
-
-        private class TreeViewNodeScreen: TreeNode
-        {
-            public IScreen Screen;
-
-            public TreeViewNodeScreen(IScreen screen)
-            {
-                var debugger = screen.GetType().GetTypeInfo().GetCustomAttributes<System.Diagnostics.DebuggerDisplayAttribute>().FirstOrDefault();
-
-                if (debugger != null)
-                    Text = debugger.Value;
-                else
-                    Text = screen.ToString();
-
-                Screen = screen;
-
-                foreach (var child in screen.Children)
-                {
-                    Nodes.Add(new TreeViewNodeScreen(child));
-                }
-
-                Expand();
-            }
-        }
-
+        
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (treeView1.SelectedNode == null)
@@ -134,27 +81,29 @@ namespace SadConsole.Editor
             splitContainer1.Panel2Collapsed = true;
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void btnRefresh_Click(object sender, EventArgs e)
         {
             UpdateTree();
         }
 
         
 
-        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
+        private void chkEditMode_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
+            if (chkEditMode.Checked)
             {
-                SadConsole.Settings.DoUpdate = false;
                 UpdateTree();
                 splitContainer1.Panel2Collapsed = false;
                 splitContainer1.SplitterDistance = splitContainer1.Width - panelSplitterPosition;
+                DataContext.Instance.EnableEditMode();
+                DataContext.Instance.Screen = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
             }
             else
             {
                 panelSplitterPosition = splitContainer1.Width - splitContainer1.SplitterDistance;
                 SadConsole.Settings.DoUpdate = true;
                 splitContainer1.Panel2Collapsed = true;
+                DataContext.Instance.DisableEditMode();
             }
         }
 
@@ -179,5 +128,30 @@ namespace SadConsole.Editor
         {
             cboToolsList.DataBindings[0].WriteValue();
         }
+
+        private class TreeViewNodeScreen : TreeNode
+        {
+            public IScreen Screen;
+
+            public TreeViewNodeScreen(IScreen screen)
+            {
+                var debugger = screen.GetType().GetTypeInfo().GetCustomAttributes<System.Diagnostics.DebuggerDisplayAttribute>().FirstOrDefault();
+
+                if (debugger != null)
+                    Text = debugger.Value;
+                else
+                    Text = screen.ToString();
+
+                Screen = screen;
+
+                foreach (var child in screen.Children)
+                {
+                    Nodes.Add(new TreeViewNodeScreen(child));
+                }
+
+                Expand();
+            }
+        }
+        
     }
 }

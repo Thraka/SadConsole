@@ -35,7 +35,7 @@ namespace SadConsole.Editor.Panels
                     else
                     {
                         dataObject = value;
-                        RecolorImage();
+                        UpdateFont();
                     }
                 }
             }
@@ -50,7 +50,7 @@ namespace SadConsole.Editor.Panels
             {
                 DataObject.Foreground = value;
                 picForeground.BackColor = value.ToDrawingColor();
-                RecolorImage();
+                UpdateFont();
             }
         }
 
@@ -61,7 +61,7 @@ namespace SadConsole.Editor.Panels
             {
                 DataObject.Background = value;
                 picBackground.BackColor = value.ToDrawingColor();
-                picFontSheet.BackColor = picBackground.BackColor;
+                UpdateFont();
             }
         }
 
@@ -71,57 +71,16 @@ namespace SadConsole.Editor.Panels
             DataObject = glyph;
             ForegroundColor = glyph.Foreground;
             BackgroundColor = glyph.Background;
-            //SadConsole.Serializer
         }
 
         private void UpdateFont()
         {
-            RecolorImage();
-        }
-
-        private void RecolorImage()
-        {
-            if (recoloredImage != null)
-                recoloredImage.Dispose();
-
-            var surface = new Surfaces.BasicSurface(16, dataObject.Font.Rows) { DefaultBackground = Color.Transparent, DefaultForeground = ForegroundColor };
-            for (int i = 0; i < surface.Cells.Length; i++)
-            {
-                surface.Cells[i].Glyph = i;
-                surface.Cells[i].Foreground = ForegroundColor;
-                surface.Cells[i].Background = Color.Transparent;
-            }
-            surface.IsDirty = true;
-            var renderer = new Renderers.SurfaceRenderer();
-            renderer.Render(surface);
-            recoloredImage = surface.LastRenderResult.ToImage();
-            picFontSheet.Image = recoloredImage;
-            return;
-
-            using (var stream = new System.IO.FileStream(dataObject.Font.Master.LoadedFilePath, System.IO.FileMode.Open))
-            {
-                Texture2D font = Texture2D.FromStream(Global.GraphicsDevice, stream);
-                RenderTarget2D output = new RenderTarget2D(Global.GraphicsDevice, font.Width, font.Height);
-                Global.GraphicsDevice.SetRenderTarget(output);
-
-                using (var batch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(SadConsole.Global.GraphicsDevice))
-                {
-                    batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-                    batch.Draw(font, Microsoft.Xna.Framework.Vector2.Zero, ForegroundColor);
-                    batch.End();
-                }
-
-                Global.GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
-                font.Dispose();
-
-                using (var outputStream = new System.IO.MemoryStream())
-                {
-                    output.SaveAsPng(outputStream, output.Width, output.Height);
-                    recoloredImage = new Bitmap(outputStream);
-                    picFontSheet.Image = recoloredImage;
-                }
-
-            }
+            Forms.GlyphPicker form = new Forms.GlyphPicker();
+            form.SetFont(dataObject.Font, dataObject.Foreground, dataObject.Background);
+            form.Glyph = dataObject.Glyph;
+            picGlyph.Image = form.GetGlyphImage();
+            picGlyph.BackColor = dataObject.Background.ToDrawingColor();
+            form.Dispose();
         }
 
         public GlyphEditPanel()
@@ -131,21 +90,35 @@ namespace SadConsole.Editor.Panels
 
         private void picForeground_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.ColorDialog colorDialog = new ColorDialog();
-            colorDialog.SolidColorOnly = true;
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-                ForegroundColor = colorDialog.Color.ToMonoGameColor();
-
-            //Forms.ColorPicker picker = new Forms.ColorPicker();
-            //picker.ShowDialog(this.ParentForm);
+            using (ColorDialog colorDialog = new ColorDialog())
+            {
+                colorDialog.SolidColorOnly = true;
+                if (colorDialog.ShowDialog(this.ParentForm) == DialogResult.OK)
+                    ForegroundColor = colorDialog.Color.ToMonoGameColor();
+            }
         }
 
         private void picBackground_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.ColorDialog colorDialog = new ColorDialog();
-            colorDialog.SolidColorOnly = true;
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-                BackgroundColor = colorDialog.Color.ToMonoGameColor();
+            using (ColorDialog colorDialog = new ColorDialog())
+            {
+                colorDialog.SolidColorOnly = true;
+                if (colorDialog.ShowDialog(this.ParentForm) == DialogResult.OK)
+                    BackgroundColor = colorDialog.Color.ToMonoGameColor();
+            }
+        }
+
+        private void picGlyph_Click(object sender, EventArgs e)
+        {
+            using (var form = new Forms.GlyphPicker())
+            {
+                form.SetFont(dataObject.Font, ForegroundColor, BackgroundColor);
+                if (form.ShowDialog(this.ParentForm) == DialogResult.OK)
+                {
+                    dataObject.Glyph = form.Glyph;
+                    UpdateFont();
+                }
+            }
         }
     }
 }

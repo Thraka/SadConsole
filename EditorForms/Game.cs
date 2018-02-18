@@ -28,20 +28,14 @@ namespace SadConsole.Editor
         {
             base.Initialize();
 
-            
-
             Global.OriginalRenderTarget = SwapChainRenderTarget;
 
             Global.GraphicsDevice = GraphicsDevice;
-            //Global.GraphicsDeviceManager = GraphicsDeviceManager;
             Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
             Global.FontDefault = Global.LoadFont(SadConsole.Game.WpfFont).GetFont(SadConsole.Font.FontSizes.One);
-            //Global.FontDefault.ResizeGraphicsDeviceManager(SadConsole.Game.wp, consoleHeight, 0, 0);
 
             Global.WindowWidth = Global.RenderWidth = (Global.FontDefault.Size.X * SadConsole.Game.WpfConsoleWidth);
             Global.WindowHeight = Global.RenderHeight = (Global.FontDefault.Size.Y * SadConsole.Game.WpfConsoleHeight);
-
-
             Global.ResetRendering();
 
             // Tell the main engine we're ready
@@ -55,13 +49,8 @@ namespace SadConsole.Editor
         {
             base.Draw();
 
-
-
             if (Settings.DoDraw)
             {
-#if WPF
-                    Global.OriginalRenderTarget = (Microsoft.Xna.Framework.Graphics.RenderTarget2D)GraphicsDevice.GetRenderTargets()[0].RenderTarget;
-#endif
                 Global.GameTimeRender = gameTime;
                 Global.GameTimeElapsedRender = gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -95,13 +84,6 @@ namespace SadConsole.Editor
                     Editor.spriteBatch.End();
                 }
             }
-
-
-
-
-
-
-        
         }
 
         protected override void Update(GameTime gameTime)

@@ -38,11 +38,14 @@ namespace SadConsole.Editor
     {
         public static DataContext Instance = new DataContext();
 
-
-
         private Tools.ITool selectedTool;
         private IScreen selectedScreen;
         private System.Windows.Forms.Control selectedToolPanel;
+        private Dictionary<Font, Surfaces.BasicSurface> FontSurfaces = new Dictionary<Font, Surfaces.BasicSurface>();
+
+        private bool IsEditMode;
+        private IScreen OriginalScreen;
+        private IScreen oldParent;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -55,7 +58,7 @@ namespace SadConsole.Editor
             {
                 selectedTool = value;
                 selectedToolPanel = selectedTool.GetUI();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedToolPanel"));
+                NotifyProperty();
             }
         }
 
@@ -66,21 +69,72 @@ namespace SadConsole.Editor
             get => selectedScreen;
             set
             {
-                if (selectedScreen != value)
+                if (selectedScreen != value || !SadConsole.Global.CurrentScreen.Children.Contains(value))
                 {
                     selectedScreen = value;
 
-                    // REFRESH
+                    if (IsEditMode && value != null)
+                    {
+                        if (SadConsole.Global.CurrentScreen.Children.Count != 0)
+                        {
+                            var removed = SadConsole.Global.CurrentScreen.Children[0];
+                            removed.Parent = oldParent;
+                        }
+                        SadConsole.Global.CurrentScreen.Children.Clear();
+                        oldParent = value.Parent;
+                        SadConsole.Global.CurrentScreen.Children.Add(value);
+                    }
                 }
             }
         }
         
+        private void NotifyProperty([System.Runtime.CompilerServices.CallerMemberName] string name = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public Surfaces.BasicSurface GetFontSurface(Font font)
+        {
+            if (!FontSurfaces.ContainsKey(font))
+            {
+                var surface = new Surfaces.BasicSurface(16, font.Rows, font);
+                for (int i = 0; i < surface.Cells.Length; i++)
+                {
+                    surface.Cells[i].Glyph = i;
+                    surface.Cells[i].Background = Color.Transparent;
+                }
+                FontSurfaces[font] = surface;
+                return surface;
+            }
+            else
+                return FontSurfaces[font];
+        }
+
         public DataContext()
         {
             Tools = new List<Tools.ITool>() { new Tools.Pencil(), new Tools.Box(), new Tools.Recolor() };
 
             selectedTool = Tools[2];
         }
+
+
+
+        public void EnableEditMode()
+        {
+            SadConsole.Settings.DoUpdate = false;
+            OriginalScreen = SadConsole.Global.CurrentScreen;
+            SadConsole.Global.CurrentScreen = new Screen();
+            IsEditMode = true;
+        }
+
+        public void DisableEditMode()
+        {
+            SadConsole.Settings.DoUpdate = true;
+            SadConsole.Global.CurrentScreen.Children.Clear();
+            SadConsole.Global.CurrentScreen = OriginalScreen;
+            IsEditMode = false;
+        }
+
     }
 
 }
