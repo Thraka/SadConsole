@@ -1,5 +1,4 @@
 ﻿using SadConsole.Input;
-using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +25,6 @@ namespace SadConsole.Editor.Tools
         {
             if (Global.MouseState.IsOnScreen && mouse.IsOnConsole)
             {
-                new SurfaceEditor(mouse.Console.TextSurface).Print(0, 0, "MOUSE IS ON ME");
-                
                 if (Global.MouseState.LeftButtonDown)
                 {
                     mouse.Cell.Foreground = Glyph.Foreground;

@@ -36,6 +36,10 @@ namespace SadConsole.Editor
 
     internal class DataContext: System.ComponentModel.INotifyPropertyChanged
     {
+        public static DataContext Instance = new DataContext();
+
+
+
         private Tools.ITool selectedTool;
         private IScreen selectedScreen;
         private System.Windows.Forms.Control selectedToolPanel;

@@ -13,7 +13,6 @@ namespace SadConsole.Editor
 {
     internal partial class Form1 : Form
     {
-        public static DataContext context = new DataContext();
         int panelSplitterPosition = 0;
         Control selectedToolPanel;
 
@@ -124,13 +123,13 @@ namespace SadConsole.Editor
             }
             else
             {
-                context.Screen = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
+                DataContext.Instance.Screen = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            editorBindingSource.DataSource = context;
+            editorBindingSource.DataSource = DataContext.Instance;
             panelSplitterPosition = splitContainer1.Panel2MinSize;
             splitContainer1.Panel2Collapsed = true;
         }
@@ -161,12 +160,12 @@ namespace SadConsole.Editor
 
         private void editorBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (context.SelectedToolPanel != null && selectedToolPanel != context.SelectedToolPanel)
+            if (DataContext.Instance.SelectedToolPanel != null && selectedToolPanel != DataContext.Instance.SelectedToolPanel)
             {
                 if (selectedToolPanel != null)
                     selectedToolPanel.Parent.Controls.Remove(selectedToolPanel);
 
-                selectedToolPanel = context.SelectedToolPanel;
+                selectedToolPanel = DataContext.Instance.SelectedToolPanel;
 
                 //Controls.Add(selectedToolPanel);
                 pnlToolsList.Parent.Controls.Add(selectedToolPanel);

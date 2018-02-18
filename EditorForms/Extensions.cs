@@ -61,5 +61,14 @@ namespace SadConsole.Editor
         {
             return new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A);
         }
+
+        public static Image ToImage(this Microsoft.Xna.Framework.Graphics.RenderTarget2D renderTarget)
+        {
+            using (var outputStream = new System.IO.MemoryStream())
+            {
+                renderTarget.SaveAsPng(outputStream, renderTarget.Width, renderTarget.Height);
+                return new Bitmap(outputStream);
+            }
+        }
     }
 }

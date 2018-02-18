@@ -173,7 +173,7 @@ namespace SadConsole.Editor
                     }
                 }
 
-                Form1.context.SelectedTool.OnUpdate(mouseConsoleState);
+                DataContext.Instance.SelectedTool.OnUpdate(mouseConsoleState);
             }
         }
     }

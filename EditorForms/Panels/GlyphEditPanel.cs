@@ -40,9 +40,7 @@ namespace SadConsole.Editor.Panels
                 }
             }
         }
-
-
-        public Image originalImage;
+        
         public Image recoloredImage;
 
         public Color ForegroundColor
@@ -78,16 +76,6 @@ namespace SadConsole.Editor.Panels
 
         private void UpdateFont()
         {
-            if (originalImage != null)
-            {
-                originalImage.Dispose();
-                recoloredImage.Dispose();
-                picFontSheet.Image = null;
-            }
-
-            //originalImage = Image.FromFile(dataObject.Font.Master.LoadedFilePath);
-            //recoloredImage = new Bitmap(originalImage);
-
             RecolorImage();
         }
 
@@ -95,6 +83,20 @@ namespace SadConsole.Editor.Panels
         {
             if (recoloredImage != null)
                 recoloredImage.Dispose();
+
+            var surface = new Surfaces.BasicSurface(16, dataObject.Font.Rows) { DefaultBackground = Color.Transparent, DefaultForeground = ForegroundColor };
+            for (int i = 0; i < surface.Cells.Length; i++)
+            {
+                surface.Cells[i].Glyph = i;
+                surface.Cells[i].Foreground = ForegroundColor;
+                surface.Cells[i].Background = Color.Transparent;
+            }
+            surface.IsDirty = true;
+            var renderer = new Renderers.SurfaceRenderer();
+            renderer.Render(surface);
+            recoloredImage = surface.LastRenderResult.ToImage();
+            picFontSheet.Image = recoloredImage;
+            return;
 
             using (var stream = new System.IO.FileStream(dataObject.Font.Master.LoadedFilePath, System.IO.FileMode.Open))
             {
