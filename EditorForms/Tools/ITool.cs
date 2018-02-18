@@ -11,6 +11,8 @@ namespace SadConsole.Editor.Tools
     {
         string Name { get; }
 
+        ToolBrush Brush { get; }
+
         System.Windows.Forms.Control GetUI();
 
         void OnUpdate(MouseConsoleState mouse);

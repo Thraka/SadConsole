@@ -10,6 +10,7 @@ namespace SadConsole.Editor.Tools
     internal class Box : ITool
     {
         public string Name => "Box";
+        public ToolBrush Brush { get; private set; } = new ToolBrush(1, 1);
 
         public System.Windows.Forms.Control GetUI()
         {

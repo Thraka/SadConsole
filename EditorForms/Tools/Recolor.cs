@@ -10,6 +10,7 @@ namespace SadConsole.Editor.Tools
     internal class Recolor : ITool
     {
         public string Name => "Recolor";
+        public ToolBrush Brush { get; private set; } = new ToolBrush(1, 1);
 
         public System.Windows.Forms.Control GetUI()
         {

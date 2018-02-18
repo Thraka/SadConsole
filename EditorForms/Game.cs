@@ -60,6 +60,11 @@ namespace SadConsole.Editor
                 // Make sure all items in the screen are drawn. (Build a list of draw calls)
                 Global.CurrentScreen?.Draw(gameTime.ElapsedGameTime);
 
+                // Editor drawing
+                if (DataContext.Instance.IsEditMode)
+                    if (DataContext.Instance.SelectedTool != null)
+                        DataContext.Instance.SelectedTool.Brush.Draw(gameTime.ElapsedGameTime);
+
                 SadConsole.Game.OnDraw?.Invoke(gameTime);
 
                 // Render to the global output texture
@@ -72,15 +77,25 @@ namespace SadConsole.Editor
                 {
                     call.Draw();
                 }
-
                 Global.SpriteBatch.End();
                 GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
+
+                if (DataContext.Instance.IsEditMode)
+                    GraphicsDevice.Clear(Color.LightSlateGray);
+                else
+                    GraphicsDevice.Clear(Settings.ClearColor);
 
                 // If we're going to draw to the screen, do it.
                 if (Settings.DoFinalDraw)
                 {
                     Editor.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
                     Editor.spriteBatch.Draw(Global.RenderOutput, Global.RenderRect, Color.White);
+
+                    // Editor drawing
+                    if (DataContext.Instance.IsEditMode)
+                        if (DataContext.Instance.SelectedTool != null)
+                            DataContext.Instance.SelectedTool.Brush.EditorDraw(Editor.spriteBatch);
+
                     Editor.spriteBatch.End();
                 }
             }
@@ -91,7 +106,7 @@ namespace SadConsole.Editor
             this.gameTime = gameTime;
             base.Update(gameTime);
 
-            if (Settings.DoUpdate)
+            if (Settings.DoUpdate && !DataContext.Instance.IsEditMode)
             {
                 Global.GameTimeUpdate = gameTime;
                 Global.GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
@@ -115,47 +130,9 @@ namespace SadConsole.Editor
 
                 SadConsole.Game.OnUpdate?.Invoke(gameTime);
             }
-            else
+            else if (DataContext.Instance.IsEditMode && !DataContext.Instance.PauseEditMode)
             {
-                // Process our editor events instead
-                Global.MouseState.Update(gameTime);
-                MouseConsoleState mouseConsoleState = new MouseConsoleState(null, Global.MouseState);
-
-                // Scan through each "console" in the current screen, including children.
-                if (Global.CurrentScreen != null)
-                {
-                    bool foundMouseTarget = false;
-
-                    // Build a list of all consoles
-                    var consoles = new List<IConsole>();
-
-                    // Inline code for GetConsoles
-                    void GetConsoles(IScreen screen, ref List<IConsole> list)
-                    {
-                        if (screen is IConsole)
-                            list.Add((IConsole)screen);
-
-                        foreach (var child in screen.Children)
-                        {
-                            GetConsoles(child, ref list);
-                        }
-                    }
-
-                    GetConsoles(Global.CurrentScreen, ref consoles);
-
-                    // Process top-most consoles first.
-                    consoles.Reverse();
-
-                    for (int i = 0; i < consoles.Count; i++)
-                    {
-                        mouseConsoleState = new MouseConsoleState(consoles[i], Global.MouseState);
-
-                        if (mouseConsoleState.IsOnConsole)
-                            break;
-                    }
-                }
-
-                DataContext.Instance.SelectedTool.OnUpdate(mouseConsoleState);
+                DataContext.Instance.Update(gameTime);
             }
         }
     }

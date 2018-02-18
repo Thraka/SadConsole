@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace SadConsole.Editor.Tools
 {
@@ -12,6 +13,8 @@ namespace SadConsole.Editor.Tools
         public Model.GlyphItem Glyph = new Model.GlyphItem();
 
         public string Name => "Pencil";
+
+        public ToolBrush Brush { get; private set; } = new ToolBrush(1, 1);
 
         public System.Windows.Forms.Control GetUI()
         {
@@ -33,6 +36,13 @@ namespace SadConsole.Editor.Tools
                     mouse.Console.TextSurface.IsDirty = true;
                 }
             }
+
+            // Sync brush
+            Brush.Animation.CurrentFrame[0].Foreground = Glyph.Foreground;
+            Brush.Animation.CurrentFrame[0].Background = Glyph.Background;
+            Brush.Animation.CurrentFrame[0].Glyph = Glyph.Glyph;
+            Brush.Position = (Global.MouseState.ScreenPosition + Global.RenderRect.Location).PixelLocationToConsole(Brush.Animation.Font);
+            Brush.Animation.IsDirty = true;
         }
     }
 }

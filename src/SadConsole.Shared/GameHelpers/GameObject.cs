@@ -12,6 +12,7 @@ namespace SadConsole.GameHelpers
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("GameObject (hide)")]
     public class GameObject : Screen
     {
         /// <summary>

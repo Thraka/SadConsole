@@ -106,6 +106,7 @@
     <Compile Include="Tools\ITool.cs" />
     <Compile Include="Tools\Pencil.cs" />
     <Compile Include="Tools\Recolor.cs" />
+    <Compile Include="Tools\ToolBrush.cs" />
     <EmbeddedResource Include="Controls\ColorSlider.resx">
       <DependentUpon>ColorSlider.cs</DependentUpon>
     </EmbeddedResource>

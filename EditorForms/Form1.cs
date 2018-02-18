@@ -132,10 +132,12 @@ namespace SadConsole.Editor
         private class TreeViewNodeScreen : TreeNode
         {
             public IScreen Screen;
+            public bool Hide;
 
             public TreeViewNodeScreen(IScreen screen)
             {
                 var debugger = screen.GetType().GetTypeInfo().GetCustomAttributes<System.Diagnostics.DebuggerDisplayAttribute>().FirstOrDefault();
+                Hide = debugger.Value.Contains("(hide)");
 
                 if (debugger != null)
                     Text = debugger.Value;
@@ -146,7 +148,10 @@ namespace SadConsole.Editor
 
                 foreach (var child in screen.Children)
                 {
-                    Nodes.Add(new TreeViewNodeScreen(child));
+                    var node = new TreeViewNodeScreen(child);
+
+                    if (!node.Hide)
+                        Nodes.Add(node);
                 }
 
                 Expand();
