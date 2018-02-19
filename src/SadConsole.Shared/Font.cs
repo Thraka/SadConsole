@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace SadConsole
@@ -206,6 +207,8 @@ namespace SadConsole
     [DataContract]
     public class FontMaster
     {
+        private Dictionary<Font.FontSizes, Font> cachedFonts = new Dictionary<Font.FontSizes, Font>();
+
         /// <summary>
         /// The name of this font family.
         /// </summary>
@@ -328,7 +331,12 @@ namespace SadConsole
         /// <returns>A font.</returns>
         public Font GetFont(Font.FontSizes multiple)
         {
-            return new Font(this, multiple);
+            if (cachedFonts.ContainsKey(multiple))
+                return cachedFonts[multiple];
+
+            var font = new Font(this, multiple);
+            cachedFonts.Add(multiple, font);
+            return font;
         }
 
         ///// <summary>
