@@ -23,32 +23,32 @@ namespace SadConsole
             /// <summary>
             /// One quater the size of the font. (Original Width and Height * 0.25)
             /// </summary>
-            Quarter,
+            Quarter = 0,
 
             /// <summary>
             /// Half the size of the font. (Original Width and Height * 0.50)
             /// </summary>
-            Half,
+            Half = 1,
 
             /// <summary>
             /// Exact size of the font. (Original Width and Height * 1.0)
             /// </summary>
-            One,
+            One = 2,
 
             /// <summary>
             /// Two times the size of the font. (Original Width and Height * 2.0)
             /// </summary>
-            Two,
+            Two = 3,
 
             /// <summary>
             /// Two times the size of the font. (Original Width and Height * 3.0)
             /// </summary>
-            Three,
+            Three = 4,
 
             /// <summary>
             /// Two times the size of the font. (Original Width and Height * 4.0)
             /// </summary>
-            Four
+            Four = 5
         }
 
         /// <summary>
@@ -295,6 +295,8 @@ namespace SadConsole
         /// </summary>
         public void Generate()
         {
+            cachedFonts = new Dictionary<Font.FontSizes, Font>();
+
             LoadedFilePath = System.IO.Path.Combine(Global.SerializerPathHint, FilePath);
 
 
