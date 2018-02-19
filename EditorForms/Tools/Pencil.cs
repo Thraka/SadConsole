@@ -20,7 +20,7 @@ namespace SadConsole.Editor.Tools
         {
             var panel = new System.Windows.Forms.Panel();
             Panels.GlyphEditPanel.SharedInstance.DataObject = Glyph;
-            panel.AddArrangeControls(Panels.GlyphEditPanel.SharedInstance, new System.Windows.Forms.Button(), new System.Windows.Forms.Button());
+            panel.AddArrangeControls(Panels.GlyphEditPanel.SharedInstance);
             return panel;
         }
 

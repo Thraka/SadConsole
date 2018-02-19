@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.game1 = new SadConsole.Editor.Game();
+            this.btnChangeFont = new System.Windows.Forms.Button();
             this.pnlScreens = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
@@ -67,6 +68,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
+            this.splitContainer1.Panel2.Controls.Add(this.btnChangeFont);
             this.splitContainer1.Panel2.Controls.Add(this.pnlScreens);
             this.splitContainer1.Panel2.Controls.Add(this.pnlToolsList);
             this.splitContainer1.Panel2MinSize = 200;
@@ -82,6 +84,16 @@
             this.game1.Size = new System.Drawing.Size(560, 509);
             this.game1.TabIndex = 0;
             this.game1.Text = "game1";
+            // 
+            // btnChangeFont
+            // 
+            this.btnChangeFont.Location = new System.Drawing.Point(3, 145);
+            this.btnChangeFont.Name = "btnChangeFont";
+            this.btnChangeFont.Size = new System.Drawing.Size(75, 23);
+            this.btnChangeFont.TabIndex = 7;
+            this.btnChangeFont.Text = "Change font";
+            this.btnChangeFont.UseVisualStyleBackColor = true;
+            this.btnChangeFont.Click += new System.EventHandler(this.btnChangeFont_Click);
             // 
             // pnlScreens
             // 
@@ -122,7 +134,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlToolsList.Controls.Add(this.label2);
             this.pnlToolsList.Controls.Add(this.cboToolsList);
-            this.pnlToolsList.Location = new System.Drawing.Point(3, 145);
+            this.pnlToolsList.Location = new System.Drawing.Point(3, 174);
             this.pnlToolsList.Name = "pnlToolsList";
             this.pnlToolsList.Size = new System.Drawing.Size(214, 27);
             this.pnlToolsList.TabIndex = 6;
@@ -260,6 +272,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.CheckBox chkEditMode;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button btnChangeFont;
     }
 }
 

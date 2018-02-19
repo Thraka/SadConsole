@@ -157,6 +157,18 @@ namespace SadConsole.Editor
                 Expand();
             }
         }
-        
+
+        private void btnChangeFont_Click(object sender, EventArgs e)
+        {
+            using (var form = new Forms.ChangeFont(DataContext.Instance.SelectedFont))
+            {
+                DataContext.Instance.PauseEditMode = true;
+
+                if (form.ShowDialog(this) == DialogResult.OK)
+                    DataContext.Instance.SelectedFont = form.SelectedFont;
+
+                DataContext.Instance.PauseEditMode = false;
+            }
+        }
     }
 }

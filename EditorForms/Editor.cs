@@ -64,6 +64,8 @@ namespace SadConsole.Editor
             }
         }
 
+        public Font SelectedFont = Global.FontDefault;
+
         public System.Windows.Forms.Control SelectedToolPanel => selectedToolPanel;
 
         public IScreen Screen
