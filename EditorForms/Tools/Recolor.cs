@@ -12,9 +12,11 @@ namespace SadConsole.Editor.Tools
         public string Name => "Recolor";
         public ToolBrush Brush { get; private set; } = new ToolBrush(1, 1);
 
-        public System.Windows.Forms.Control GetUI()
+        public System.Windows.Forms.Control UI => new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Refresh", Name = "ToolPanel" };
+
+        public void Refresh()
         {
-            return new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Recolor", Name = "ToolPanel" };
+
         }
 
         public void OnUpdate(MouseConsoleState mouse)

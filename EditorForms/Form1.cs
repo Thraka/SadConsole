@@ -77,6 +77,7 @@ namespace SadConsole.Editor
         private void Form1_Load(object sender, EventArgs e)
         {
             editorBindingSource.DataSource = DataContext.Instance;
+            DataContext.Instance.SelectedTool = DataContext.Instance.Tools[0];
             panelSplitterPosition = splitContainer1.Panel2MinSize;
             splitContainer1.Panel2Collapsed = true;
         }

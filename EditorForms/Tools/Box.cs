@@ -24,9 +24,11 @@ namespace SadConsole.Editor.Tools
 
         public ToolBrush Brush { get; private set; } = new ToolBrush(1, 1);
 
-        public System.Windows.Forms.Control GetUI()
+        public System.Windows.Forms.Control UI => new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Box", Name = "ToolPanel" };
+
+        public void Refresh()
         {
-            return new System.Windows.Forms.Button() { Width = 100, Height = 25, Text = "Box", Name = "ToolPanel" };
+
         }
 
         public void OnUpdate(MouseConsoleState state)

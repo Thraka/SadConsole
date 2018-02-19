@@ -16,13 +16,23 @@ namespace SadConsole.Editor.Tools
 
         public ToolBrush Brush { get; private set; } = new ToolBrush(1, 1);
 
-        public System.Windows.Forms.Control GetUI()
+        private System.Windows.Forms.Control toolsPanel;
+        private Panels.GlyphEditPanel glyphPanel;
+
+        public Pencil()
         {
-            var panel = new System.Windows.Forms.Panel();
-            Panels.GlyphEditPanel.SharedInstance.DataObject = Glyph;
-            panel.AddArrangeControls(Panels.GlyphEditPanel.SharedInstance);
-            return panel;
+            toolsPanel = new System.Windows.Forms.Panel();
+            glyphPanel = new Panels.GlyphEditPanel();
+            toolsPanel.AddArrangeControls(glyphPanel);
         }
+
+        public System.Windows.Forms.Control UI => toolsPanel;
+
+        public void Refresh()
+        {   
+            glyphPanel.DataObject = Glyph;
+        }
+
 
         public void OnUpdate(MouseConsoleState mouse)
         {

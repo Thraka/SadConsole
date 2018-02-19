@@ -59,7 +59,8 @@ namespace SadConsole.Editor
             set
             {
                 selectedTool = value;
-                selectedToolPanel = selectedTool.GetUI();
+                selectedTool.Refresh();
+                selectedToolPanel = selectedTool.UI;
                 NotifyProperty();
             }
         }
@@ -117,8 +118,6 @@ namespace SadConsole.Editor
         public DataContext()
         {
             Tools = new List<Tools.ITool>() { new Tools.Pencil(), new Tools.Box(), new Tools.Recolor() };
-
-            selectedTool = Tools[2];
         }
 
 

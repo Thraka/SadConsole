@@ -16,7 +16,7 @@ namespace SadConsole.Editor.Panels
 {
     internal partial class GlyphEditPanel : UserControl
     {
-        public static GlyphEditPanel SharedInstance = new GlyphEditPanel(new Model.GlyphItem());
+        //public static GlyphEditPanel SharedInstance = new GlyphEditPanel(new Model.GlyphItem());
 
         Model.GlyphItem dataObject;
 
@@ -25,19 +25,8 @@ namespace SadConsole.Editor.Panels
             get => dataObject;
             set
             {
-                if (dataObject != value)
-                {
-                    if (dataObject == null || dataObject.Font != value.Font)
-                    {
-                        dataObject = value;
-                        UpdateFont();
-                    }
-                    else
-                    {
-                        dataObject = value;
-                        UpdateFont();
-                    }
-                }
+                dataObject = value;
+                UpdateFont();
             }
         }
         
@@ -49,7 +38,6 @@ namespace SadConsole.Editor.Panels
             set
             {
                 DataObject.Foreground = value;
-                picForeground.BackColor = value.ToDrawingColor();
                 UpdateFont();
             }
         }
@@ -60,7 +48,6 @@ namespace SadConsole.Editor.Panels
             set
             {
                 DataObject.Background = value;
-                picBackground.BackColor = value.ToDrawingColor();
                 UpdateFont();
             }
         }
@@ -75,6 +62,9 @@ namespace SadConsole.Editor.Panels
 
         private void UpdateFont()
         {
+            picForeground.BackColor = DataObject.Foreground.ToDrawingColor();
+            picBackground.BackColor = DataObject.Background.ToDrawingColor();
+
             Forms.GlyphPicker form = new Forms.GlyphPicker();
             form.SetFont(dataObject.Font, dataObject.Foreground, dataObject.Background);
             form.Glyph = dataObject.Glyph;
