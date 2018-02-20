@@ -69,7 +69,11 @@ namespace SadConsole.Editor
 
                 // Render to the global output texture
                 GraphicsDevice.SetRenderTarget(Global.RenderOutput);
-                GraphicsDevice.Clear(Settings.ClearColor);
+
+                if (DataContext.Instance.IsEditMode)
+                    GraphicsDevice.Clear(Color.LightSlateGray);
+                else
+                    GraphicsDevice.Clear(Settings.ClearColor);
 
                 // Render each draw call
                 Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
@@ -79,16 +83,29 @@ namespace SadConsole.Editor
                 }
                 Global.SpriteBatch.End();
                 GraphicsDevice.SetRenderTarget(Global.OriginalRenderTarget);
-
-                if (DataContext.Instance.IsEditMode)
-                    GraphicsDevice.Clear(Color.LightSlateGray);
-                else
-                    GraphicsDevice.Clear(Settings.ClearColor);
-
+                
                 // If we're going to draw to the screen, do it.
                 if (Settings.DoFinalDraw)
                 {
+                    if (DataContext.Instance.IsEditMode)
+                        GraphicsDevice.Clear(Color.LightSlateGray);
+                    else
+                        GraphicsDevice.Clear(Settings.ClearColor);
+
                     Editor.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                    
+                    // Draw screen border
+                    if (DataContext.Instance.IsEditMode)
+                    {
+                        var rect1 = Global.RenderRect;
+                        var rect2 = Global.RenderRect;
+                        rect1.Inflate(1, 1);
+                        rect2.Inflate(2, 2);
+
+                        Editor.spriteBatch.Draw(Global.FontDefault.FontImage, rect2, Global.FontDefault.SolidGlyphRectangle, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                        Editor.spriteBatch.Draw(Global.FontDefault.FontImage, rect1, Global.FontDefault.SolidGlyphRectangle, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                    }
+
                     Editor.spriteBatch.Draw(Global.RenderOutput, Global.RenderRect, Color.White);
 
                     // Editor drawing
@@ -100,7 +117,7 @@ namespace SadConsole.Editor
                 }
             }
         }
-
+        
         protected override void Update(GameTime gameTime)
         {
             this.gameTime = gameTime;

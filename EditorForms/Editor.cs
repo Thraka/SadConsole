@@ -21,11 +21,15 @@ namespace SadConsole.Editor
             SadConsole.Game.OnUpdate = update;
             SadConsole.Game.OnDraw = drawFrame;
 
+            Config.Create();
+            Config.Load();
+
             //SadConsole.Editor.App.Main();
             System.Windows.Forms.Application.EnableVisualStyles();
             
             Form1 form = new Form1();
             form.ShowDialog();
+            Config.Save();
             form.Dispose();
         }
 
@@ -42,10 +46,10 @@ namespace SadConsole.Editor
         public bool PauseEditMode;
 
         private Tools.ITool selectedTool;
-        private IScreen selectedScreen;
         private System.Windows.Forms.Control selectedToolPanel;
         private Dictionary<Font, Surfaces.BasicSurface> FontSurfaces = new Dictionary<Font, Surfaces.BasicSurface>();
 
+        private IScreen selectedScreen;
         private IScreen OriginalScreen;
         private IScreen oldParent;
 
@@ -133,6 +137,8 @@ namespace SadConsole.Editor
         public void DisableEditMode()
         {
             SadConsole.Settings.DoUpdate = true;
+            var removed = SadConsole.Global.CurrentScreen.Children[0];
+            removed.Parent = oldParent;
             SadConsole.Global.CurrentScreen.Children.Clear();
             SadConsole.Global.CurrentScreen = OriginalScreen;
             IsEditMode = false;

@@ -66,11 +66,13 @@ namespace SadConsole.Editor
         {
             if (treeView1.SelectedNode == null)
             {
-
+                pnlScreenSettings.IsError = true;
             }
             else
             {
                 DataContext.Instance.Screen = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
+                pnlScreenSettings.IsError = !(DataContext.Instance.Screen is SadConsole.Console);
+                pnlScreenSettings.RefreshScreen();
             }
         }
 
@@ -86,8 +88,6 @@ namespace SadConsole.Editor
         {
             UpdateTree();
         }
-
-        
 
         private void chkEditMode_CheckedChanged(object sender, EventArgs e)
         {
@@ -156,19 +156,6 @@ namespace SadConsole.Editor
                 }
 
                 Expand();
-            }
-        }
-
-        private void btnChangeFont_Click(object sender, EventArgs e)
-        {
-            using (var form = new Forms.ChangeFont(DataContext.Instance.SelectedFont))
-            {
-                DataContext.Instance.PauseEditMode = true;
-
-                if (form.ShowDialog(this) == DialogResult.OK)
-                    DataContext.Instance.SelectedFont = form.SelectedFont;
-
-                DataContext.Instance.PauseEditMode = false;
             }
         }
     }

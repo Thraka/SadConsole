@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.game1 = new SadConsole.Editor.Game();
-            this.btnChangeFont = new System.Windows.Forms.Button();
             this.pnlScreens = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
@@ -44,6 +43,8 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.chkEditMode = new System.Windows.Forms.CheckBox();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlScreenSettings = new SadConsole.Editor.Panels.ScreenSettingsPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -53,6 +54,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.editorBindingSource)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -68,12 +70,12 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
-            this.splitContainer1.Panel2.Controls.Add(this.btnChangeFont);
+            this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.pnlScreens);
             this.splitContainer1.Panel2.Controls.Add(this.pnlToolsList);
-            this.splitContainer1.Panel2MinSize = 200;
+            this.splitContainer1.Panel2MinSize = 215;
             this.splitContainer1.Size = new System.Drawing.Size(784, 509);
-            this.splitContainer1.SplitterDistance = 560;
+            this.splitContainer1.SplitterDistance = 545;
             this.splitContainer1.TabIndex = 1;
             // 
             // game1
@@ -81,19 +83,9 @@
             this.game1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.game1.Location = new System.Drawing.Point(0, 0);
             this.game1.Name = "game1";
-            this.game1.Size = new System.Drawing.Size(560, 509);
+            this.game1.Size = new System.Drawing.Size(545, 509);
             this.game1.TabIndex = 0;
             this.game1.Text = "game1";
-            // 
-            // btnChangeFont
-            // 
-            this.btnChangeFont.Location = new System.Drawing.Point(3, 145);
-            this.btnChangeFont.Name = "btnChangeFont";
-            this.btnChangeFont.Size = new System.Drawing.Size(75, 23);
-            this.btnChangeFont.TabIndex = 7;
-            this.btnChangeFont.Text = "Change font";
-            this.btnChangeFont.UseVisualStyleBackColor = true;
-            this.btnChangeFont.Click += new System.EventHandler(this.btnChangeFont_Click);
             // 
             // pnlScreens
             // 
@@ -103,7 +95,7 @@
             this.pnlScreens.Controls.Add(this.label1);
             this.pnlScreens.Location = new System.Drawing.Point(3, 3);
             this.pnlScreens.Name = "pnlScreens";
-            this.pnlScreens.Size = new System.Drawing.Size(214, 136);
+            this.pnlScreens.Size = new System.Drawing.Size(228, 136);
             this.pnlScreens.TabIndex = 5;
             // 
             // treeView1
@@ -114,7 +106,7 @@
             this.treeView1.HideSelection = false;
             this.treeView1.Location = new System.Drawing.Point(6, 16);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(205, 117);
+            this.treeView1.Size = new System.Drawing.Size(219, 117);
             this.treeView1.TabIndex = 4;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -134,9 +126,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlToolsList.Controls.Add(this.label2);
             this.pnlToolsList.Controls.Add(this.cboToolsList);
-            this.pnlToolsList.Location = new System.Drawing.Point(3, 174);
+            this.pnlToolsList.Location = new System.Drawing.Point(2, 331);
             this.pnlToolsList.Name = "pnlToolsList";
-            this.pnlToolsList.Size = new System.Drawing.Size(214, 27);
+            this.pnlToolsList.Size = new System.Drawing.Size(229, 27);
             this.pnlToolsList.TabIndex = 6;
             // 
             // label2
@@ -151,8 +143,6 @@
             // 
             // cboToolsList
             // 
-            this.cboToolsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.cboToolsList.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.editorBindingSource, "SelectedTool", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.cboToolsList.DataBindings.Add(new System.Windows.Forms.Binding("DataSource", this.editorBindingSource, "Tools", true));
             this.cboToolsList.DisplayMember = "Name";
@@ -160,7 +150,7 @@
             this.cboToolsList.FormattingEnabled = true;
             this.cboToolsList.Location = new System.Drawing.Point(42, 3);
             this.cboToolsList.Name = "cboToolsList";
-            this.cboToolsList.Size = new System.Drawing.Size(169, 21);
+            this.cboToolsList.Size = new System.Drawing.Size(184, 21);
             this.cboToolsList.TabIndex = 3;
             this.cboToolsList.SelectedIndexChanged += new System.EventHandler(this.cboToolsList_SelectedIndexChanged);
             // 
@@ -231,6 +221,23 @@
             this.btnRefresh.Visible = false;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.pnlScreenSettings);
+            this.panel1.Location = new System.Drawing.Point(3, 145);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(228, 180);
+            this.panel1.TabIndex = 7;
+            // 
+            // pnlScreenSettings
+            // 
+            this.pnlScreenSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlScreenSettings.Location = new System.Drawing.Point(3, 3);
+            this.pnlScreenSettings.Name = "pnlScreenSettings";
+            this.pnlScreenSettings.Size = new System.Drawing.Size(223, 174);
+            this.pnlScreenSettings.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,6 +260,7 @@
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -272,7 +280,8 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.CheckBox chkEditMode;
         private System.Windows.Forms.Button btnRefresh;
-        private System.Windows.Forms.Button btnChangeFont;
+        private System.Windows.Forms.Panel panel1;
+        private Panels.ScreenSettingsPanel pnlScreenSettings;
     }
 }
 
