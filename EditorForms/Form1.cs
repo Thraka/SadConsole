@@ -158,5 +158,10 @@ namespace SadConsole.Editor
                 Expand();
             }
         }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
