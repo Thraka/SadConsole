@@ -280,6 +280,7 @@ namespace SadConsole
             if (modal)
             {
                 Global.FocusedConsoles.Push(this);
+                IsFocused = true;
             }
 
             this.IsExclusiveMouse = modal;

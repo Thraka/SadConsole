@@ -462,7 +462,7 @@ namespace SadConsole
         /// <returns>True when the mouse is over this console and it is the active console; otherwise false.</returns>
         public override bool ProcessMouse(Input.MouseConsoleState state)
         {
-            if (base.ProcessMouse(state))
+            if (base.ProcessMouse(state) || IsExclusiveMouse)
             {
                 if (capturedControl != null)
                     capturedControl.ProcessMouse(state);

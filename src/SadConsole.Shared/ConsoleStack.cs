@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace SadConsole
 {
     /// <summary>
-    /// A stack of conoles. The top-most of the stack is considered active and represented by the <see cref="Console"/> property.
+    /// A stack of consoles. The top-most of the stack is considered active and represented by the <see cref="Console"/> property.
     /// </summary>
     public class ConsoleStack
     {
