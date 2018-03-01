@@ -11,10 +11,13 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DemoProject", "src\DemoProj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorForms", "EditorForms\EditorForms.csproj", "{88737307-A612-46C0-9717-F6C92CDDFE2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{89592F16-C22C-42BE-BC70-F1D9A6AD2F40}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{111f8273-2ead-47d3-88ec-cb0cd6122be8}*SharedItemsImports = 13
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{88737307-a612-46c0-9717-f6c92cddfe2f}*SharedItemsImports = 4
+		src\SadConsole.Shared\SadConsole.Shared.projitems*{89592f16-c22c-42be-bc70-f1d9a6ad2f40}*SharedItemsImports = 4
 		src\DemoProject\SharedCode\DemoProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
 		src\DemoProject\SharedCode\DemoProject.projitems*{d10fb059-72b1-4d10-9671-34b218322b08}*SharedItemsImports = 4
 	EndGlobalSection
@@ -31,6 +34,10 @@ Global
 		{88737307-A612-46C0-9717-F6C92CDDFE2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88737307-A612-46C0-9717-F6C92CDDFE2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88737307-A612-46C0-9717-F6C92CDDFE2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89592F16-C22C-42BE-BC70-F1D9A6AD2F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89592F16-C22C-42BE-BC70-F1D9A6AD2F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89592F16-C22C-42BE-BC70-F1D9A6AD2F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89592F16-C22C-42BE-BC70-F1D9A6AD2F40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
