@@ -71,7 +71,7 @@ namespace SadConsole.Editor
             else
             {
                 DataContext.Instance.Screen = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
-                pnlScreenSettings.IsError = !(DataContext.Instance.Screen is SadConsole.Console);
+                pnlScreenSettings.IsError = DataContext.Instance.IsScreenConsole;
                 pnlScreenSettings.RefreshScreen();
             }
         }
@@ -161,7 +161,20 @@ namespace SadConsole.Editor
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
+            using (var form = new Forms.EditorSettings())
+            {
+                form.ShowDialog(this);
+            }
+        }
 
+        private void Form1_Deactivate(object sender, EventArgs e)
+        {
+            DataContext.Instance.PauseEditMode = true;
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            DataContext.Instance.PauseEditMode = false;
         }
     }
 }

@@ -25,8 +25,6 @@ namespace SadConsole.Editor.Panels
         {
             using (var form = new Forms.ChangeFont(DataContext.Instance.SelectedFont))
             {
-                DataContext.Instance.PauseEditMode = true;
-
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var console = DataContext.Instance.Screen as SadConsole.Console;
@@ -34,8 +32,6 @@ namespace SadConsole.Editor.Panels
                     console.TextSurface.Font = form.SelectedFont;
                     RefreshScreen();
                 }
-
-                DataContext.Instance.PauseEditMode = false;
             }
         }
 
@@ -53,7 +49,6 @@ namespace SadConsole.Editor.Panels
         {
             using (ColorDialog colorDialog = new ColorDialog())
             {
-                DataContext.Instance.PauseEditMode = true;
                 colorDialog.SolidColorOnly = true;
                 if (colorDialog.ShowDialog(this.ParentForm) == DialogResult.OK)
                 {
@@ -61,7 +56,6 @@ namespace SadConsole.Editor.Panels
                     picForeground.BackColor = console.TextSurface.DefaultForeground.ToDrawingColor();
                     RefreshScreen();
                 }
-                DataContext.Instance.PauseEditMode = false;
             }
         }
 
@@ -69,7 +63,6 @@ namespace SadConsole.Editor.Panels
         {
             using (ColorDialog colorDialog = new ColorDialog())
             {
-                DataContext.Instance.PauseEditMode = true;
                 colorDialog.SolidColorOnly = true;
                 if (colorDialog.ShowDialog(this.ParentForm) == DialogResult.OK)
                 {
@@ -77,7 +70,6 @@ namespace SadConsole.Editor.Panels
                     console.TextSurface.DefaultBackground = colorDialog.Color.ToMonoGameColor();
                     RefreshScreen();
                 }
-                DataContext.Instance.PauseEditMode = false;
             }
         }
 

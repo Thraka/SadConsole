@@ -82,11 +82,9 @@ namespace SadConsole.Editor.Panels
         {
             using (ColorDialog colorDialog = new ColorDialog())
             {
-                DataContext.Instance.PauseEditMode = true;
                 colorDialog.SolidColorOnly = true;
                 if (colorDialog.ShowDialog(this.ParentForm) == DialogResult.OK)
                     ForegroundColor = colorDialog.Color.ToMonoGameColor();
-                DataContext.Instance.PauseEditMode = false;
             }
         }
 
@@ -94,11 +92,9 @@ namespace SadConsole.Editor.Panels
         {
             using (ColorDialog colorDialog = new ColorDialog())
             {
-                DataContext.Instance.PauseEditMode = true;
                 colorDialog.SolidColorOnly = true;
                 if (colorDialog.ShowDialog(this.ParentForm) == DialogResult.OK)
                     BackgroundColor = colorDialog.Color.ToMonoGameColor();
-                DataContext.Instance.PauseEditMode = false;
             }
         }
 
@@ -106,15 +102,18 @@ namespace SadConsole.Editor.Panels
         {
             using (var form = new Forms.GlyphPicker())
             {
-                DataContext.Instance.PauseEditMode = true;
                 form.SetFont(dataObject.Font, ForegroundColor, BackgroundColor);
                 if (form.ShowDialog(this.ParentForm) == DialogResult.OK)
                 {
                     dataObject.Glyph = form.Glyph;
                     UpdateFont();
                 }
-                DataContext.Instance.PauseEditMode = false;
             }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

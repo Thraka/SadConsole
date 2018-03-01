@@ -38,6 +38,7 @@ namespace SadConsole.Editor.Tools
         {
             if (Global.MouseState.IsOnScreen && mouse.IsOnConsole)
             {
+                Brush.Animation.Font = mouse.Console.TextSurface.Font;
                 if (Global.MouseState.LeftButtonDown)
                 {
                     mouse.Cell.Foreground = Glyph.Foreground;

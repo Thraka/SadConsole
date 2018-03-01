@@ -60,7 +60,7 @@ namespace SadConsole.Editor
                 // Make sure all items in the screen are drawn. (Build a list of draw calls)
                 Global.CurrentScreen?.Draw(gameTime.ElapsedGameTime);
 
-                // Editor drawing
+                // Draw the editor brush on its surface to render later
                 if (DataContext.Instance.IsEditMode)
                     if (DataContext.Instance.SelectedTool != null)
                         DataContext.Instance.SelectedTool.Brush.Draw(gameTime.ElapsedGameTime);
@@ -70,8 +70,14 @@ namespace SadConsole.Editor
                 // Render to the global output texture
                 GraphicsDevice.SetRenderTarget(Global.RenderOutput);
 
+                // Inner clear color
                 if (DataContext.Instance.IsEditMode)
-                    GraphicsDevice.Clear(Color.LightSlateGray);
+                {
+                    if (Config.Instance.DrawEditClearColorInner)
+                        GraphicsDevice.Clear(Config.Instance.EditClearColorInner);
+                    else
+                        GraphicsDevice.Clear(Settings.ClearColor);
+                }
                 else
                     GraphicsDevice.Clear(Settings.ClearColor);
 
@@ -88,9 +94,15 @@ namespace SadConsole.Editor
                 if (Settings.DoFinalDraw)
                 {
                     if (DataContext.Instance.IsEditMode)
-                        GraphicsDevice.Clear(Color.LightSlateGray);
+                    {
+                        if (Config.Instance.DrawEditClearColorOuter)
+                            GraphicsDevice.Clear(Config.Instance.EditClearColorOuter);
+                        else
+                            GraphicsDevice.Clear(Settings.ClearColor);
+                    }
                     else
                         GraphicsDevice.Clear(Settings.ClearColor);
+
 
                     Editor.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
                     
@@ -102,13 +114,16 @@ namespace SadConsole.Editor
                         rect1.Inflate(1, 1);
                         rect2.Inflate(2, 2);
 
-                        Editor.spriteBatch.Draw(Global.FontDefault.FontImage, rect2, Global.FontDefault.SolidGlyphRectangle, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-                        Editor.spriteBatch.Draw(Global.FontDefault.FontImage, rect1, Global.FontDefault.SolidGlyphRectangle, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                        if (Config.Instance.DrawOuterBorder)
+                        {
+                            Editor.spriteBatch.Draw(Global.FontDefault.FontImage, rect2, Global.FontDefault.SolidGlyphRectangle, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                            Editor.spriteBatch.Draw(Global.FontDefault.FontImage, rect1, Global.FontDefault.SolidGlyphRectangle, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                        }
                     }
 
                     Editor.spriteBatch.Draw(Global.RenderOutput, Global.RenderRect, Color.White);
 
-                    // Editor drawing
+                    // Draw the editor brush to the screen
                     if (DataContext.Instance.IsEditMode)
                         if (DataContext.Instance.SelectedTool != null)
                             DataContext.Instance.SelectedTool.Brush.EditorDraw(Editor.spriteBatch);
@@ -128,7 +143,7 @@ namespace SadConsole.Editor
                 Global.GameTimeUpdate = gameTime;
                 Global.GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
 
-                //if (Game.IsActive)
+                if (!DataContext.Instance.PauseEditMode)
                 {
                     if (Settings.Input.DoKeyboard)
                     {

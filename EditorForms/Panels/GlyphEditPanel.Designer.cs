@@ -110,6 +110,7 @@
             this.label2.Size = new System.Drawing.Size(92, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Background Color";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label1
             // 

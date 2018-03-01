@@ -96,6 +96,14 @@ namespace SadConsole.Editor
                 }
             }
         }
+
+        public bool IsScreenConsole
+        {
+            get
+            {
+                return DataContext.Instance.Screen is SadConsole.Console;
+            }
+        }
         
         private void NotifyProperty([System.Runtime.CompilerServices.CallerMemberName] string name = "")
         {
@@ -151,39 +159,44 @@ namespace SadConsole.Editor
             MouseConsoleState mouseConsoleState = new MouseConsoleState(null, Global.MouseState);
 
             // Scan through each "console" in the current screen, including children.
-            if (Global.CurrentScreen != null)
+            //if (Global.CurrentScreen != null)
+            //{
+            //    // Build a list of all consoles
+            //    var consoles = new List<IConsole>();
+
+            //    // Inline code for GetConsoles
+            //    void GetConsoles(IScreen screen, ref List<IConsole> list)
+            //    {
+            //        if (screen is IConsole)
+            //            list.Add((IConsole)screen);
+
+            //        foreach (var child in screen.Children)
+            //        {
+            //            GetConsoles(child, ref list);
+            //        }
+            //    }
+
+            //    GetConsoles(Global.CurrentScreen, ref consoles);
+
+            //    // Process top-most consoles first.
+            //    consoles.Reverse();
+
+            //    for (int i = 0; i < consoles.Count; i++)
+            //    {
+            //        mouseConsoleState = new MouseConsoleState(consoles[i], Global.MouseState);
+
+            //        if (mouseConsoleState.IsOnConsole)
+            //            break;
+            //    }
+            //}
+
+            if (IsScreenConsole)
             {
-                // Build a list of all consoles
-                var consoles = new List<IConsole>();
+                mouseConsoleState = new MouseConsoleState((Console)selectedScreen, Global.MouseState);
 
-                // Inline code for GetConsoles
-                void GetConsoles(IScreen screen, ref List<IConsole> list)
-                {
-                    if (screen is IConsole)
-                        list.Add((IConsole)screen);
-
-                    foreach (var child in screen.Children)
-                    {
-                        GetConsoles(child, ref list);
-                    }
-                }
-
-                GetConsoles(Global.CurrentScreen, ref consoles);
-
-                // Process top-most consoles first.
-                consoles.Reverse();
-
-                for (int i = 0; i < consoles.Count; i++)
-                {
-                    mouseConsoleState = new MouseConsoleState(consoles[i], Global.MouseState);
-
-                    if (mouseConsoleState.IsOnConsole)
-                        break;
-                }
+                // Process tool
+                SelectedTool.OnUpdate(mouseConsoleState);
             }
-
-            // Process tool
-            SelectedTool.OnUpdate(mouseConsoleState);
         }
     }
 
