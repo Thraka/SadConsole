@@ -30,9 +30,9 @@ namespace SadConsole.Editor
 
             //Global.OriginalRenderTarget = SwapChainRenderTarget;
 
-            //Global.GraphicsDevice = GraphicsDevice;
-            //Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
-            //Global.FontDefault = Global.LoadFont(SadConsole.Game.WpfFont).GetFont(SadConsole.Font.FontSizes.One);
+            Global.GraphicsDevice = GraphicsDevice;
+            Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
+            Global.FontDefault = Global.LoadFont("IBM.font").GetFont(SadConsole.Font.FontSizes.One);
 
             //Global.WindowWidth = Global.RenderWidth = (Global.FontDefault.Size.X * SadConsole.Game.WpfConsoleWidth);
             //Global.WindowHeight = Global.RenderHeight = (Global.FontDefault.Size.Y * SadConsole.Game.WpfConsoleHeight);

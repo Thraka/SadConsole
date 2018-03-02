@@ -28,35 +28,47 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.game1 = new SadConsole.Editor.Game();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pnlScreens = new System.Windows.Forms.Panel();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.pnlToolsList = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cboToolsList = new System.Windows.Forms.ComboBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.chkEditMode = new System.Windows.Forms.CheckBox();
-            this.btnSettings = new System.Windows.Forms.Button();
+            this.lstDocuments = new System.Windows.Forms.ListBox();
+            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.pnlScreens.SuspendLayout();
-            this.pnlToolsList.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.settingsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1099, 24);
+            this.menuStrip1.TabIndex = 6;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Location = new System.Drawing.Point(0, 673);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1099, 22);
+            this.statusStrip1.TabIndex = 7;
+            this.statusStrip1.Text = "statusStrip1";
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 32);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -66,198 +78,115 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
-            this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Panel2.Controls.Add(this.pnlScreens);
-            this.splitContainer1.Panel2.Controls.Add(this.pnlToolsList);
+            this.splitContainer1.Panel2.Controls.Add(this.lstDocuments);
+            this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2MinSize = 240;
-            this.splitContainer1.Size = new System.Drawing.Size(784, 509);
-            this.splitContainer1.SplitterDistance = 518;
-            this.splitContainer1.TabIndex = 1;
+            this.splitContainer1.Size = new System.Drawing.Size(1099, 649);
+            this.splitContainer1.SplitterDistance = 855;
+            this.splitContainer1.TabIndex = 8;
             // 
             // game1
             // 
             this.game1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.game1.Location = new System.Drawing.Point(0, 0);
             this.game1.Name = "game1";
-            this.game1.Size = new System.Drawing.Size(518, 509);
+            this.game1.Size = new System.Drawing.Size(855, 649);
             this.game1.TabIndex = 0;
             this.game1.Text = "game1";
             // 
-            // panel1
+            // fileToolStripMenuItem
             // 
-            this.panel1.Location = new System.Drawing.Point(3, 145);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(228, 180);
-            this.panel1.TabIndex = 7;
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
+            this.loadToolStripMenuItem,
+            this.saveToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
             // 
-            // pnlScreens
+            // newToolStripMenuItem
             // 
-            this.pnlScreens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlScreens.Controls.Add(this.treeView1);
-            this.pnlScreens.Controls.Add(this.label1);
-            this.pnlScreens.Location = new System.Drawing.Point(3, 3);
-            this.pnlScreens.Name = "pnlScreens";
-            this.pnlScreens.Size = new System.Drawing.Size(258, 136);
-            this.pnlScreens.TabIndex = 5;
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Text = "New...";
             // 
-            // treeView1
+            // loadToolStripMenuItem
             // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeView1.HideSelection = false;
-            this.treeView1.Location = new System.Drawing.Point(6, 16);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(246, 117);
-            this.treeView1.TabIndex = 4;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadToolStripMenuItem.Text = "Load";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Location = new System.Drawing.Point(5, 0);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Screens";
+            this.label1.Size = new System.Drawing.Size(61, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Documents";
             // 
-            // pnlToolsList
+            // lstDocuments
             // 
-            this.pnlToolsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lstDocuments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlToolsList.Controls.Add(this.label2);
-            this.pnlToolsList.Controls.Add(this.cboToolsList);
-            this.pnlToolsList.Location = new System.Drawing.Point(2, 331);
-            this.pnlToolsList.Name = "pnlToolsList";
-            this.pnlToolsList.Size = new System.Drawing.Size(262, 27);
-            this.pnlToolsList.TabIndex = 6;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 7);
-            this.label2.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Tools";
-            // 
-            // cboToolsList
-            // 
-            this.cboToolsList.DisplayMember = "Name";
-            this.cboToolsList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboToolsList.FormattingEnabled = true;
-            this.cboToolsList.Location = new System.Drawing.Point(42, 3);
-            this.cboToolsList.Name = "cboToolsList";
-            this.cboToolsList.Size = new System.Drawing.Size(184, 21);
-            this.cboToolsList.TabIndex = 3;
-            this.cboToolsList.SelectedIndexChanged += new System.EventHandler(this.cboToolsList_SelectedIndexChanged);
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.statusStrip1, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(790, 564);
-            this.tableLayoutPanel1.TabIndex = 2;
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 544);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(790, 20);
-            this.statusStrip1.TabIndex = 4;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.chkEditMode);
-            this.flowLayoutPanel1.Controls.Add(this.btnSettings);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(784, 23);
-            this.flowLayoutPanel1.TabIndex = 5;
-            // 
-            // chkEditMode
-            // 
-            this.chkEditMode.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkEditMode.AutoSize = true;
-            this.chkEditMode.Location = new System.Drawing.Point(0, 0);
-            this.chkEditMode.Margin = new System.Windows.Forms.Padding(0);
-            this.chkEditMode.Name = "chkEditMode";
-            this.chkEditMode.Size = new System.Drawing.Size(78, 23);
-            this.chkEditMode.TabIndex = 4;
-            this.chkEditMode.Text = "Pause Game";
-            this.chkEditMode.UseVisualStyleBackColor = true;
-            this.chkEditMode.CheckedChanged += new System.EventHandler(this.chkEditMode_CheckedChanged);
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.Location = new System.Drawing.Point(78, 0);
-            this.btnSettings.Margin = new System.Windows.Forms.Padding(0);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(75, 23);
-            this.btnSettings.TabIndex = 5;
-            this.btnSettings.Text = "Settings";
-            this.btnSettings.UseVisualStyleBackColor = true;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            this.lstDocuments.FormattingEnabled = true;
+            this.lstDocuments.Location = new System.Drawing.Point(8, 16);
+            this.lstDocuments.Name = "lstDocuments";
+            this.lstDocuments.Size = new System.Drawing.Size(220, 82);
+            this.lstDocuments.TabIndex = 9;
+            this.lstDocuments.SelectedIndexChanged += new System.EventHandler(this.lstDocuments_SelectedIndexChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(790, 564);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(1099, 695);
+            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.menuStrip1);
             this.Name = "Form1";
             this.Text = "SadConsole Editor";
             this.Activated += new System.EventHandler(this.Form1_Activated);
             this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.pnlScreens.ResumeLayout(false);
-            this.pnlScreens.PerformLayout();
-            this.pnlToolsList.ResumeLayout(false);
-            this.pnlToolsList.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-        private Game game1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+
+        private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.Panel pnlScreens;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private Game game1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ListBox lstDocuments;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel pnlToolsList;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cboToolsList;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.CheckBox chkEditMode;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnSettings;
     }
 }
 

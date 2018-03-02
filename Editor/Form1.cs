@@ -23,24 +23,24 @@ namespace SadConsole.Editor
         
         private void UpdateTree()
         {
-            if (treeView1.SelectedNode != null)
-            {
-                var previousSelectedItem = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
-                treeView1.Nodes.Clear();
-                treeView1.Nodes.Add(new TreeViewNodeScreen(SadConsole.Global.CurrentScreen));
-                var newNodeSelected = FindScreenInNodes(previousSelectedItem, treeView1.Nodes);
+        //    if (treeView1.SelectedNode != null)
+        //    {
+        //        var previousSelectedItem = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
+        //        treeView1.Nodes.Clear();
+        //        treeView1.Nodes.Add(new TreeViewNodeScreen(SadConsole.Global.CurrentScreen));
+        //        var newNodeSelected = FindScreenInNodes(previousSelectedItem, treeView1.Nodes);
 
-                if (newNodeSelected == null)
-                    treeView1.SelectedNode = treeView1.Nodes[0];
-                else
-                    treeView1.SelectedNode = newNodeSelected;
-            }
-            else
-            {
-                treeView1.Nodes.Clear();
-                treeView1.Nodes.Add(new TreeViewNodeScreen(SadConsole.Global.CurrentScreen));
-                treeView1.SelectedNode = treeView1.Nodes[0];
-            }
+        //        if (newNodeSelected == null)
+        //            treeView1.SelectedNode = treeView1.Nodes[0];
+        //        else
+        //            treeView1.SelectedNode = newNodeSelected;
+        //    }
+        //    else
+        //    {
+        //        treeView1.Nodes.Clear();
+        //        treeView1.Nodes.Add(new TreeViewNodeScreen(SadConsole.Global.CurrentScreen));
+        //        treeView1.SelectedNode = treeView1.Nodes[0];
+        //    }
         }
 
         private TreeViewNodeScreen FindScreenInNodes(IScreen screen, TreeNodeCollection nodes)
@@ -89,24 +89,7 @@ namespace SadConsole.Editor
             UpdateTree();
         }
 
-        private void chkEditMode_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkEditMode.Checked)
-            {
-                UpdateTree();
-                splitContainer1.Panel2Collapsed = false;
-                splitContainer1.SplitterDistance = splitContainer1.Width - panelSplitterPosition;
-                //DataContext.Instance.EnableEditMode();
-                //DataContext.Instance.Screen = ((TreeViewNodeScreen)treeView1.SelectedNode).Screen;
-            }
-            else
-            {
-                panelSplitterPosition = splitContainer1.Width - splitContainer1.SplitterDistance;
-                SadConsole.Settings.DoUpdate = true;
-                splitContainer1.Panel2Collapsed = true;
-                //DataContext.Instance.DisableEditMode();
-            }
-        }
+        
 
         private void editorBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
@@ -127,7 +110,7 @@ namespace SadConsole.Editor
 
         private void cboToolsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cboToolsList.DataBindings[0].WriteValue();
+            //cboToolsList.DataBindings[0].WriteValue();
         }
 
         private class TreeViewNodeScreen : TreeNode
@@ -175,6 +158,11 @@ namespace SadConsole.Editor
         private void Form1_Activated(object sender, EventArgs e)
         {
             //DataContext.Instance.PauseEditMode = false;
+        }
+
+        private void lstDocuments_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
