@@ -21,6 +21,10 @@ namespace SadConsole.Editor.FormsControls
         /// <summary>
         /// The caption displayed with the color box.
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Always),
+        Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Bindable(true)]
         public override string Text { get => lblCaption.Text; set => lblCaption.Text = value; }
 
         /// <summary>

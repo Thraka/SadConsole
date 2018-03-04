@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace SadConsole.Editor
 {
-    interface IEditor
+    public interface IEditor
     {
         string File { get; set; }
 
         Surfaces.BasicSurface Surface { get; }
+
+        Font Font { get; set; }
 
         void Update();
 

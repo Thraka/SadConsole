@@ -164,5 +164,17 @@ namespace SadConsole.Editor
         {
 
         }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new NewDocument())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    var document = form.GetEditor();
+
+                }
+            }
+        }
     }
 }

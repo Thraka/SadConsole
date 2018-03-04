@@ -35,7 +35,7 @@
             // 
             // picColor
             // 
-            this.picColor.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.picColor.BackColor = System.Drawing.Color.Black;
             this.picColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picColor.Location = new System.Drawing.Point(3, 3);
             this.picColor.Name = "picColor";

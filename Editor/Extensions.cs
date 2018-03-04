@@ -6,11 +6,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MonoColor = Microsoft.Xna.Framework.Color;
 
-namespace SadConsole.Editor
+namespace SadConsole
 {
     internal static class Extensions
     {
+        private static Dictionary<Font, Surfaces.BasicSurface> FontSurfaces = new Dictionary<Font, Surfaces.BasicSurface>();
+
+        public static Surfaces.BasicSurface GetFontSurface(this Font font)
+        {
+            if (!FontSurfaces.ContainsKey(font))
+            {
+                var surface = new Surfaces.BasicSurface(16, font.Rows, font);
+                for (int i = 0; i < surface.Cells.Length; i++)
+                {
+                    surface.Cells[i].Glyph = i;
+                    surface.Cells[i].Background = MonoColor.Transparent;
+                }
+                FontSurfaces[font] = surface;
+                return surface;
+            }
+            else
+                return FontSurfaces[font];
+        }
+
         public static void AddArrangeControls(this Control container, params Control[] controls)
         {
             int heightCalculator = 0;

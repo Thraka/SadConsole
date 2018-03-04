@@ -17,6 +17,8 @@ namespace SadConsole.Editor
         
         public Surfaces.BasicSurface Surface => surface;
 
+        public Font Font { get => surface.Font; set => surface.Font = value; }
+
         public void Update()
         {
 
