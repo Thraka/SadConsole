@@ -38,6 +38,15 @@
     <Reference Include="MonoGame.Framework, Version=3.7.0.1114, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Forms.1.6.4\lib\net451\MonoGame 3.7.0.1114\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="MugenMvvmToolkit, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MugenMvvmToolkit.6.5.0\lib\net45\MugenMvvmToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="MugenMvvmToolkit.Binding, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MugenMvvmToolkit.Binding.6.5.0\lib\net45\MugenMvvmToolkit.Binding.dll</HintPath>
+    </Reference>
+    <Reference Include="MugenMvvmToolkit.WinForms, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MugenMvvmToolkit.WinForms.6.5.0\lib\net45\MugenMvvmToolkit.WinForms.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -62,6 +71,9 @@
     <Compile Include="ChangeFont.designer.cs">
       <DependentUpon>ChangeFont.cs</DependentUpon>
     </Compile>
+    <Compile Include="Converters\IntToDoubleConverter.cs" />
+    <Compile Include="CustomDataBindingMembers.cs" />
+    <Compile Include="EditorTypeEnum.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -79,16 +91,23 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IEditor.cs" />
-    <Compile Include="NewDocument.cs">
+    <Compile Include="Views\NewDocumentView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewDocument.Designer.cs">
-      <DependentUpon>NewDocument.cs</DependentUpon>
+    <Compile Include="Views\NewDocumentView.Designer.cs">
+      <DependentUpon>NewDocumentView.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SurfaceEditor.cs" />
+    <Compile Include="ViewModels\NewDocumentViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\MainView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\MainView.designer.cs">
+      <DependentUpon>MainView.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ChangeFont.resx">
       <DependentUpon>ChangeFont.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,8 +117,8 @@
     <EmbeddedResource Include="FormsControls\ColorPresenter.resx">
       <DependentUpon>ColorPresenter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewDocument.resx">
-      <DependentUpon>NewDocument.cs</DependentUpon>
+    <EmbeddedResource Include="Views\NewDocumentView.resx">
+      <DependentUpon>NewDocumentView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -111,6 +130,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Views\MainView.resx">
+      <DependentUpon>MainView.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

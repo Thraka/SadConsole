@@ -8,17 +8,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
+using MugenMvvmToolkit.Binding.Builders;
+using MugenMvvmToolkit.Binding;
 
-namespace SadConsole.Editor
+namespace SadConsole.Editor.Views
 {
-    internal partial class Form1 : Form
+    internal partial class MainView : Form
     {
         int panelSplitterPosition = 0;
         Control selectedToolPanel;
 
-        public Form1()
+        public MainView()
         {
             InitializeComponent();
+
+            using (var set = new BindingSet<ViewModels.MainViewModel>())
+            {
+                //set.Bind(label, () => l => l.Text).To(() => (vm, ctx) => vm.Text);
+
+                set.Bind(newToolStripMenuItem).To(() => (vm, ctx) => vm.NewDocumentCommand);
+
+            }
         }
         
         private void UpdateTree()

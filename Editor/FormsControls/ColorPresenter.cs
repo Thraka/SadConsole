@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using System.Windows.Forms.Design;
+using MugenMvvmToolkit.Binding.Builders;
 
 namespace SadConsole.Editor.FormsControls
 {
@@ -17,6 +18,8 @@ namespace SadConsole.Editor.FormsControls
     {
         private Microsoft.Xna.Framework.Color color;
         private const int FIXED_HEIGHT = 26;
+
+        public event EventHandler ColorChanged;
 
         /// <summary>
         /// The caption displayed with the color box.
@@ -31,7 +34,16 @@ namespace SadConsole.Editor.FormsControls
         /// The selected color.
         /// </summary>
         
-        public Microsoft.Xna.Framework.Color Color { get => color; set { color = value; picColor.BackColor = value.ToDrawingColor(); } }
+        public Microsoft.Xna.Framework.Color Color
+        {
+            get => color;
+            set
+            {
+                color = value;
+                picColor.BackColor = value.ToDrawingColor();
+                ColorChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
         
         private void picColor_Click(object sender, EventArgs e)
         {
@@ -54,7 +66,10 @@ namespace SadConsole.Editor.FormsControls
             base.OnSizeChanged(e);
         }
 
-        public ColorPresenter() => InitializeComponent();
+        public ColorPresenter()
+        {
+            InitializeComponent();
+        }
     }
 
     public class FixedHeightUserControlDesigner : ControlDesigner
