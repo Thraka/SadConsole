@@ -65,11 +65,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeFont.cs">
+    <Compile Include="Views\ChangeFontView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ChangeFont.designer.cs">
-      <DependentUpon>ChangeFont.cs</DependentUpon>
+    <Compile Include="Views\ChangeFontView.designer.cs">
+      <DependentUpon>ChangeFontView.cs</DependentUpon>
     </Compile>
     <Compile Include="Converters\IntToDoubleConverter.cs" />
     <Compile Include="CustomDataBindingMembers.cs" />
@@ -108,8 +108,8 @@
     <Compile Include="Views\MainView.designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ChangeFont.resx">
-      <DependentUpon>ChangeFont.cs</DependentUpon>
+    <EmbeddedResource Include="Views\ChangeFontView.resx">
+      <DependentUpon>ChangeFontView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

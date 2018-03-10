@@ -7,22 +7,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MugenMvvmToolkit.Binding.Builders;
+using MugenMvvmToolkit.Binding;
+using MugenMvvmToolkit.Attributes;
 
-namespace SadConsole.Editor.Forms
+namespace SadConsole.Editor.Views
 {
-    public partial class ChangeFont : Form
+    [ViewModel(typeof(ViewModels.NewDocumentViewModel), "ChangeFontView")]
+    public partial class ChangeFontView : Form
     {
         private bool loading;
 
-        public ChangeFont()
+        public ChangeFontView()
         {
             InitializeComponent();
+
+            using (var set = new BindingSet<ViewModels.NewDocumentViewModel>())
+            {
+                //set.Bind(numWidth, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentWidth).TwoWay();
+                //set.Bind(numHeight, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentHeight).TwoWay();
+                //set.Bind(clrBackground, () => clr => clr.Color).To(() => (vm, ctx) => vm.DocumentBackground).TwoWay();
+                //set.Bind(clrForeground, () => clr => clr.Color).To(() => (vm, ctx) => vm.DocumentForeground).TwoWay();
+                //set.Bind(txtFont, () => txt => txt.Text).To(() => (vm, ctx) => vm.FontName);
+                //set.Bind(txtFontSize, () => txt => txt.Text).To(() => (vm, ctx) => vm.FontSize);
+                //set.Bind(btnChangeFont).ToAction()
+            }
         }
 
         public Font SelectedFont;
 
 
-        public ChangeFont(Font font)
+        public ChangeFontView(Font font)
         {
             loading = true;
             SelectedFont = font;

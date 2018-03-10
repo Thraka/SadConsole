@@ -1,6 +1,6 @@
-﻿namespace SadConsole.Editor.Forms
+﻿namespace SadConsole.Editor.Views
 {
-    partial class ChangeFont
+    partial class ChangeFontView
     {
         /// <summary>
         /// Required designer variable.

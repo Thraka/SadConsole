@@ -36,9 +36,6 @@ namespace SadConsole.Editor.Views
 
         //public Color DocumentBackground { get => clrBackground.Color; set => clrBackground.Color = value; }
 
-        public Color DocumentForeground { get => clrForeground.Color; set => clrForeground.Color = value; }
-
-
         public NewDocumentView()
         {
             InitializeComponent();
@@ -49,7 +46,10 @@ namespace SadConsole.Editor.Views
                 set.Bind(numWidth, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentWidth).TwoWay();
                 set.Bind(numHeight, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentHeight).TwoWay();
                 set.Bind(clrBackground, () => clr => clr.Color).To(() => (vm, ctx) => vm.DocumentBackground).TwoWay();
-                set.Bind(this, () => clr => clr.DocumentForeground).To(() => (vm, ctx) => vm.DocumentForeground).TwoWay();
+                set.Bind(clrForeground, () => clr => clr.Color).To(() => (vm, ctx) => vm.DocumentForeground).TwoWay();
+                set.Bind(txtFont, () => txt => txt.Text).To(() => (vm, ctx) => vm.FontName);
+                set.Bind(txtFontSize, () => txt => txt.Text).To(() => (vm, ctx) => vm.FontSize);
+                set.Bind(btnChangeFont).To(() => (vm, ctx) => vm.SetFontCommand);
             }
         }
 
