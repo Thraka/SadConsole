@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MugenMvvmToolkit.Interfaces.Models;
 
 namespace SadConsole.Editor.ViewModels
 {
@@ -50,15 +51,24 @@ namespace SadConsole.Editor.ViewModels
             SetFontCommand = MugenMvvmToolkit.Models.RelayCommandBase.FromAsyncHandler(ShowFontChooser);
         }
 
+        protected override void OnInitializing(IDataContext context)
+        {
+            base.OnInitializing(context);
+
+
+        }
+
         private async Task ShowFontChooser()
         {
             using (var viewModel = GetViewModel<NewDocumentViewModel>())
             {
                 await viewModel.ShowAsync("ChangeFontView", new MugenMvvmToolkit.Models.DataContext());
-                
+
                 //viewModel.
             }
             //await this.ShowAsync("ChangeFontView", new MugenMvvmToolkit.Models.DataContext());
         }
+
+        
     }
 }

@@ -29,7 +29,7 @@ namespace SadConsole.Editor.ViewModels
         {
             using (var viewModel = GetViewModel<NewDocumentViewModel>())
             {
-                await viewModel.ShowAsync(new MugenMvvmToolkit.Models.DataContext());
+                await viewModel.ShowAsync(new Models.BasicDocument(Microsoft.Xna.Framework.Color.Yellow));
 
                 //viewModel.
             }
