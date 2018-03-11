@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MugenMvvmToolkit.Interfaces.Models;
+using MugenMvvmToolkit.Models;
 
 namespace SadConsole.Editor.ViewModels
 {
     class NewDocumentViewModel: CloseableViewModel
     {
-        public string[] FontSizeNames = new[] { "Quarter", "Half", "1x", "2x", "3x", "4x" };
         private Font documentFont = SadConsole.Global.FontDefault;
 
         //private EditorTypeEnum
@@ -43,7 +43,7 @@ namespace SadConsole.Editor.ViewModels
 
         public string FontName => documentFont.Master.Name;
 
-        public string FontSize => FontSizeNames[(int)documentFont.SizeMultiple];
+        public string FontSize => Program.FontSizeNames[(int)documentFont.SizeMultiple];
         
 
         public NewDocumentViewModel()
@@ -60,9 +60,11 @@ namespace SadConsole.Editor.ViewModels
 
         private async Task ShowFontChooser()
         {
-            using (var viewModel = GetViewModel<NewDocumentViewModel>())
+            
+            using (var viewModel = GetViewModel<FontViewModel>())
             {
-                await viewModel.ShowAsync("ChangeFontView", new MugenMvvmToolkit.Models.DataContext());
+                viewModel.SetFont(documentFont);
+                await viewModel.ShowAsync("ChangeFontView");
 
                 //viewModel.
             }

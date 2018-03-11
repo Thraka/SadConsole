@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\BasicDocument.cs" />
+    <Compile Include="ViewModels\FontViewModel.cs" />
     <Compile Include="Views\ChangeFontView.cs">
       <SubType>Form</SubType>
     </Compile>

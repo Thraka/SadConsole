@@ -27,11 +27,12 @@ namespace SadConsole.Editor.ViewModels
 
         private async Task ShowNewDocument()
         {
+            
             using (var viewModel = GetViewModel<NewDocumentViewModel>())
             {
-                await viewModel.ShowAsync(new Models.BasicDocument(Microsoft.Xna.Framework.Color.Yellow));
+                await viewModel.ShowAsync();
 
-                //viewModel.
+                //Documents.Add(new SurfaceEditor())
             }
         }
     }

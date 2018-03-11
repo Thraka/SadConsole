@@ -42,7 +42,7 @@ namespace SadConsole.Editor.Views
 
             using (var set = new BindingSet<ViewModels.NewDocumentViewModel>())
             {
-                //set.Bind(label, () => l => l.Text).To(() => (vm, ctx) => vm.Text);
+
                 set.Bind(numWidth, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentWidth).TwoWay();
                 set.Bind(numHeight, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentHeight).TwoWay();
                 set.Bind(clrBackground, () => clr => clr.Color).To(() => (vm, ctx) => vm.DocumentBackground).TwoWay();

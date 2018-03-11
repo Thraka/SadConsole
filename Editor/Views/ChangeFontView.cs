@@ -13,7 +13,7 @@ using MugenMvvmToolkit.Attributes;
 
 namespace SadConsole.Editor.Views
 {
-    [ViewModel(typeof(ViewModels.NewDocumentViewModel), "ChangeFontView")]
+    [ViewModel(typeof(ViewModels.FontViewModel), "ChangeFontView")]
     public partial class ChangeFontView : Form
     {
         private bool loading;
@@ -22,15 +22,10 @@ namespace SadConsole.Editor.Views
         {
             InitializeComponent();
 
-            using (var set = new BindingSet<ViewModels.NewDocumentViewModel>())
+            using (var set = new BindingSet<ViewModels.FontViewModel>())
             {
-                //set.Bind(numWidth, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentWidth).TwoWay();
-                //set.Bind(numHeight, () => num => num.Value).To(() => (vm, ctx) => vm.DocumentHeight).TwoWay();
-                //set.Bind(clrBackground, () => clr => clr.Color).To(() => (vm, ctx) => vm.DocumentBackground).TwoWay();
-                //set.Bind(clrForeground, () => clr => clr.Color).To(() => (vm, ctx) => vm.DocumentForeground).TwoWay();
-                //set.Bind(txtFont, () => txt => txt.Text).To(() => (vm, ctx) => vm.FontName);
-                //set.Bind(txtFontSize, () => txt => txt.Text).To(() => (vm, ctx) => vm.FontSize);
-                //set.Bind(btnChangeFont).ToAction()
+                set.Bind(lstFonts, "Items").To(() => (vm, ctx) => vm.Fonts);
+                set.Bind(lstFonts, AttachedMemberConstants.SelectedItem).To(() => (vm, ctx) => vm.FontMaster).TwoWay();
             }
         }
 
@@ -46,24 +41,24 @@ namespace SadConsole.Editor.Views
 
         private void ChangeFont_Load(object sender, EventArgs e)
         {
-            cboMultiplier.SelectedIndex = 0;
-            foreach(var master in Global.Fonts.Values)
-            {
-                lstFonts.Items.Add(master);
-            }
+            //cboMultiplier.SelectedIndex = 0;
+            //foreach(var master in Global.Fonts.Values)
+            //{
+            //    lstFonts.Items.Add(master);
+            //}
 
-            foreach (var item in lstFonts.Items)
-            {
-                if (((SadConsole.FontMaster)item) == SelectedFont.Master)
-                {
-                    lstFonts.SelectedItem = item;
-                    break;
-                }
-            }
+            //foreach (var item in lstFonts.Items)
+            //{
+            //    if (((SadConsole.FontMaster)item) == SelectedFont.Master)
+            //    {
+            //        lstFonts.SelectedItem = item;
+            //        break;
+            //    }
+            //}
 
-            cboMultiplier.SelectedIndex = (int)SelectedFont.SizeMultiple;
+            //cboMultiplier.SelectedIndex = (int)SelectedFont.SizeMultiple;
             loading = false;
-            DrawFont();
+            //DrawFont();
         }
 
         public void DrawFont()
@@ -94,12 +89,12 @@ namespace SadConsole.Editor.Views
 
         private void cboMultiplier_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DrawFont();
+            //DrawFont();
         }
 
         private void lstFonts_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DrawFont();
+            //DrawFont();
         }
     }
 }
