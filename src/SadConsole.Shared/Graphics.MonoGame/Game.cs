@@ -48,6 +48,7 @@ namespace SadConsole
                 Instance = this;
 
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
+            GraphicsDeviceManager.GraphicsProfile = Settings.GraphicsProfile;
             Content.RootDirectory = "Content";
 
             this.font = font;
