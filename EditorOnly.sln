@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole", "src\SadConsol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "src\Editor\Editor.csproj", "{3F7C5C62-D177-4A92-B2A7-14BFC3D33C70}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor.Xaml", "src\Editor.Xaml\Editor.Xaml.csproj", "{18552E45-2C0C-4047-B45C-81B00A7D134D}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SadConsole.Shared\SadConsole.Shared.projitems*{111f8273-2ead-47d3-88ec-cb0cd6122be8}*SharedItemsImports = 13
@@ -27,6 +29,10 @@ Global
 		{3F7C5C62-D177-4A92-B2A7-14BFC3D33C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F7C5C62-D177-4A92-B2A7-14BFC3D33C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F7C5C62-D177-4A92-B2A7-14BFC3D33C70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18552E45-2C0C-4047-B45C-81B00A7D134D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18552E45-2C0C-4047-B45C-81B00A7D134D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18552E45-2C0C-4047-B45C-81B00A7D134D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18552E45-2C0C-4047-B45C-81B00A7D134D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

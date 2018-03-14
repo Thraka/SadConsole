@@ -1,5 +1,6 @@
 ﻿#if NOESIS
 using Noesis;
+using System.Collections.Generic;
 #else
 using System;
 using System.Windows;
@@ -20,9 +21,22 @@ namespace Editor.Xaml
         }
 
 #if NOESIS
+        public static List<WindowBase> Windows = new List<WindowBase>();
+
         private void InitializeComponent()
         {
             Noesis.GUI.LoadComponent(this, "Views\\WindowBase.xaml");
+        }
+
+        public static void Show(FrameworkElement content)
+        {
+            var window = new WindowBase();
+            
+        }
+
+        public void Hide()
+        {
+
         }
 #endif
     }

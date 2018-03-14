@@ -6,7 +6,15 @@
              xmlns:local="clr-namespace:Editor.Xaml"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="Yellow">
-            
+    <Grid Background="Yellow" x:Name="BackgroundPart">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border>
+                <TextBlock>Title!</TextBlock>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
