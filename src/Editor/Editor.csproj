@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NOESIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -36,11 +36,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MonoGame.Framework.DesktopGL.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SadConsole, Version=6.4.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SadConsole.6.4.6\lib\net\SadConsole.dll</HintPath>
+    <Reference Include="NoesisGUI.MonoGameWrapper">
+      <HintPath>..\..\..\NoesisGUI.MonoGameWrapper\NoesisGUI.MonoGameWrapper\bin\Debug\NoesisGUI.MonoGameWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="NoesisManaged">
+      <HintPath>..\..\..\NoesisGUI.MonoGameWrapper\NoesisGUI-CSharpSDK\Bin\NoesisManaged.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,9 +55,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Editor.Xaml\MainWindow.xaml.cs">
+      <Link>Views\MainWindow.xaml.cs</Link>
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\Root.xaml.cs">
+      <Link>Views\Root.xaml.cs</Link>
+      <DependentUpon>Root.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\WindowBase.xaml.cs">
+      <Link>Views\WindowBase.xaml.cs</Link>
+      <DependentUpon>WindowBase.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Converters\FontSizeToName.cs" />
+    <Compile Include="DelegateCommand.cs" />
+    <Compile Include="EditorGameComponent.cs" />
+    <Compile Include="EditorTypes.cs" />
+    <Compile Include="IDocument.cs" />
     <Compile Include="program-example.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\ITool.cs" />
+    <Compile Include="ViewModels\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\FontViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -73,7 +101,6 @@
     <None Include="libSDL2-2.0.0.dylib">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoGame.Framework.dll.config" />
     <None Include="packages.config" />
     <None Include="x64\libopenal.so.1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -95,6 +122,9 @@
     <Content Include="IBM8x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Noesis.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="x64\SDL2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -110,6 +140,29 @@
     <Content Include="Yayo_c64.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SadConsole\SadConsole.csproj">
+      <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
+      <Name>SadConsole</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\MainWindow.xaml">
+      <Link>Views\MainWindow.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Editor.Xaml\Root.xaml">
+      <Link>Views\Root.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Editor.Xaml\WindowBase.xaml">
+      <Link>Views\WindowBase.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

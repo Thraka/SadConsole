@@ -13,6 +13,8 @@ namespace Editor
 
         static void Main(string[] args)
         {
+            SadConsole.Settings.GraphicsProfile = Microsoft.Xna.Framework.Graphics.GraphicsProfile.HiDef;
+
             // Setup the engine and creat the main window.
             SadConsole.Game.Create("IBM.font", Width, Height);
 
@@ -22,6 +24,8 @@ namespace Editor
             // Hook the update event that happens each frame so we can trap keys and respond.
             SadConsole.Game.OnUpdate = Update;
 
+            SadConsole.Game.OnDraw = Draw;
+
             // Start the game.
             SadConsole.Game.Instance.Run();
 
@@ -30,6 +34,11 @@ namespace Editor
             //
 
             SadConsole.Game.Instance.Dispose();
+        }
+
+        private static void Draw(GameTime time)
+        {
+
         }
 
         private static void Update(GameTime time)
@@ -46,6 +55,8 @@ namespace Editor
         private static void Init()
         {
             // Any custom loading and prep. We will use a sample console for now
+            SadConsole.Game.Instance.Components.RemoveAt(1); //SadConsoleGameComponent
+            SadConsole.Game.Instance.Components.Add(new EditorGameComponent((SadConsole.Game)SadConsole.Game.Instance));
 
             Console startingConsole = new Console(Width, Height);
             startingConsole.FillWithRandomGarbage();
@@ -54,6 +65,10 @@ namespace Editor
 
             // Set our new console as the thing to render and process
             SadConsole.Global.CurrentScreen = startingConsole;
+
+            // Load main GUI
+            var window = new Xaml.MainWindow();
+            ((Noesis.Grid)EditorGameComponent.noesisGUIWrapper.ControlTreeRoot).Children.Add(window);
         }
     }
 }
