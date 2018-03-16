@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace SadConsole
@@ -22,32 +23,32 @@ namespace SadConsole
             /// <summary>
             /// One quater the size of the font. (Original Width and Height * 0.25)
             /// </summary>
-            Quarter,
+            Quarter = 0,
 
             /// <summary>
             /// Half the size of the font. (Original Width and Height * 0.50)
             /// </summary>
-            Half,
+            Half = 1,
 
             /// <summary>
             /// Exact size of the font. (Original Width and Height * 1.0)
             /// </summary>
-            One,
+            One = 2,
 
             /// <summary>
             /// Two times the size of the font. (Original Width and Height * 2.0)
             /// </summary>
-            Two,
+            Two = 3,
 
             /// <summary>
             /// Two times the size of the font. (Original Width and Height * 3.0)
             /// </summary>
-            Three,
+            Three = 4,
 
             /// <summary>
             /// Two times the size of the font. (Original Width and Height * 4.0)
             /// </summary>
-            Four
+            Four = 5
         }
 
         /// <summary>
@@ -100,6 +101,11 @@ namespace SadConsole
         /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// The <see cref="FontMaster"/> that created this <see cref="Font"/> instance.
+        /// </summary>
+        public FontMaster Master { get; private set; }
+
         internal Font() { }
 
         internal Font(FontMaster masterFont, FontSizes fontMultiple)
@@ -109,6 +115,7 @@ namespace SadConsole
 
         private void Initialize(FontMaster masterFont, FontSizes fontMultiple)
         {
+            Master = masterFont;
             FontImage = masterFont.Image;
             MaxGlyphIndex = masterFont.Rows * masterFont.Columns - 1;
 
@@ -200,6 +207,8 @@ namespace SadConsole
     [DataContract]
     public class FontMaster
     {
+        private Dictionary<Font.FontSizes, Font> cachedFonts = new Dictionary<Font.FontSizes, Font>();
+
         /// <summary>
         /// The name of this font family.
         /// </summary>
@@ -207,10 +216,15 @@ namespace SadConsole
         public string Name { get; set; }
 
         /// <summary>
-        /// Where this font was loaded from.
+        /// The name of the image file as defined in the .font file.
         /// </summary>
         [DataMember]
         public string FilePath { get; set; }
+
+        /// <summary>
+        /// The path to the file per <see cref="SadConsole.Global.SerializerPathHint"/>.
+        /// </summary>
+        public string LoadedFilePath { get; private set; }
 
         /// <summary>
         /// The height of each glyph in pixels.
@@ -281,10 +295,12 @@ namespace SadConsole
         /// </summary>
         public void Generate()
         {
-            string file = System.IO.Path.Combine(Global.SerializerPathHint, FilePath);
+            cachedFonts = new Dictionary<Font.FontSizes, Font>();
+
+            LoadedFilePath = System.IO.Path.Combine(Global.SerializerPathHint, FilePath);
 
 
-            using (System.IO.Stream fontStream = TitleContainer.OpenStream(file))
+            using (System.IO.Stream fontStream = TitleContainer.OpenStream(LoadedFilePath))
                 Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
 
             ConfigureRects();
@@ -317,7 +333,12 @@ namespace SadConsole
         /// <returns>A font.</returns>
         public Font GetFont(Font.FontSizes multiple)
         {
-            return new Font(this, multiple);
+            if (cachedFonts.ContainsKey(multiple))
+                return cachedFonts[multiple];
+
+            var font = new Font(this, multiple);
+            cachedFonts.Add(multiple, font);
+            return font;
         }
 
         ///// <summary>

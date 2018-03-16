@@ -17,6 +17,7 @@ namespace SadConsole
     /// <summary>
     /// Represents a traditional console that implements mouse and keyboard handling as well as a cursor.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Console (Basic)")]
     public partial class Console : SurfaceEditor, IConsole
     {
         /// <summary>

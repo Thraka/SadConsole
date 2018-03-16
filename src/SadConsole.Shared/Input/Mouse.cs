@@ -103,6 +103,22 @@ namespace SadConsole.Input
         }
 
         /// <summary>
+        /// Clears the buttons, position, wheel information.
+        /// </summary>
+        public void Clear()
+        {
+            RightDoubleClicked = false;
+            RightClicked = false;
+            RightButtonDown = false;
+            LeftDoubleClicked = false;
+            LeftClicked = false;
+            LeftButtonDown = false;
+            ScrollWheelValue = 0;
+            ScrollWheelValueChange = 0;
+            ScreenPosition = Point.Zero;
+        }
+
+        /// <summary>
         /// Builds information about the mouse state based on the <see cref="Global.FocusedConsoles"/> or <see cref="Global.CurrentScreen"/>. Should be called each frame.
         /// </summary>
         public virtual void Process()

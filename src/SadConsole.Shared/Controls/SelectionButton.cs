@@ -51,8 +51,6 @@ namespace SadConsole.Controls
         /// <param name="info">The keyboard state.</param>
         public override bool ProcessKeyboard(Input.Keyboard info)
         {
-            base.ProcessKeyboard(info);
-
             if (info.IsKeyReleased(Keys.Up) && PreviousSelection != null)
             {
                 PreviousSelection.IsFocused = true;
@@ -67,7 +65,7 @@ namespace SadConsole.Controls
                 return true;
             }
 
-            return false;
+            return base.ProcessKeyboard(info);
         }
 
         /// <summary>

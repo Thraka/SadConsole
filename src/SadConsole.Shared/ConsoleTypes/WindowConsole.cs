@@ -10,6 +10,7 @@ using SadConsole.Input;
 namespace SadConsole
 {
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("Window")]
     public partial class Window: ControlsConsole
     {
         /// <summary>
@@ -280,6 +281,7 @@ namespace SadConsole
             if (modal)
             {
                 Global.FocusedConsoles.Push(this);
+                IsFocused = true;
             }
 
             this.IsExclusiveMouse = modal;

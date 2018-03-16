@@ -345,6 +345,17 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
+        /// Changes the effect of a cell to the specified effect.
+        /// </summary>
+        /// <param name="cell">The cells for the effect.</param>
+        /// <param name="effect">The desired effect.</param>
+        public void SetEffect(Cell cell, Effects.ICellEffect effect)
+        {
+            Effects.SetEffect(cell, effect);
+            textSurface.IsDirty = true;
+        }
+
+        /// <summary>
         /// Gets the effect of the specified cell.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>

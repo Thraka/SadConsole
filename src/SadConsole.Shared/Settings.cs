@@ -42,6 +42,11 @@ namespace SadConsole
         /// </summary>
         public static bool DoUpdate = true;
 
+        /// <summary>
+        /// The <see cref="Microsoft.Xna.Framework.Graphics.GraphicsProfile"/> value to use.
+        /// </summary>
+        public static Microsoft.Xna.Framework.Graphics.GraphicsProfile GraphicsProfile = Microsoft.Xna.Framework.Graphics.GraphicsProfile.Reach;
+
         internal static bool IsExitingFullscreen = false;
 
         /// <summary>

@@ -28,7 +28,13 @@ namespace SadConsole.Instructions
         /// </summary>
         [DataMember]
         public Point Position { get; set; }
-        
+
+        /// <summary>
+        /// Represents the cursor used in printing. Use this for styling and printing behavior.
+        /// </summary>
+        [DataMember]
+        public Cursor Cursor { get => _cursor; set => _cursor = value; }
+
         #endregion
 
         private double _timeElapsed = 0d;
@@ -37,10 +43,14 @@ namespace SadConsole.Instructions
         private short _textIndex;
         private bool _started = false;
         private Point _tempLocation;
+        private Cursor _cursor;
+        
 
         public DrawString(Surfaces.SurfaceEditor target)
             : base(target)
         {
+            _cursor = new Cursor(target);
+            _cursor.DisableWordBreak = true;
         }
 
         public override void Run()
@@ -67,7 +77,8 @@ namespace SadConsole.Instructions
 
             if (TotalTimeToPrint == 0f)
             {
-                Target.Print(Position.X, Position.Y, Text);
+                Cursor.Position = Position;
+                Cursor.Print(Text);
                 IsFinished = true;
             }
             else
@@ -78,11 +89,7 @@ namespace SadConsole.Instructions
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
                     _timeElapsed = 0d;
 
-                    Cursor cur;
-                    
-                    cur = new Cursor(Target);
-
-                    cur.Position = _tempLocation;
+                    _cursor.Position = _tempLocation;
 
                     if (charCount >= _textCopy.Length - _textIndex)
                     {
@@ -91,10 +98,10 @@ namespace SadConsole.Instructions
                     }
 
                     var textToPrint = Text.SubString(_textIndex, charCount);
-                    cur.Print(textToPrint);
+                    _cursor.Print(textToPrint);
                     _textIndex += (short)charCount;
 
-                    _tempLocation = cur.Position;
+                    _tempLocation = _cursor.Position;
                 }
             }
 

@@ -16,7 +16,7 @@ namespace SadConsole
         private SurfaceEditor editor;
         private Point position = new Point();
 
-        private int cursorCharacter = 95;
+        private int cursorCharacter = 219;
 
         /// <summary>
         /// Cell used to render the cursor on the screen.
@@ -81,6 +81,9 @@ namespace SadConsole
         /// </summary>
         public bool UseLinuxLineEndings = false;
 
+        /// <summary>
+        /// Calls <see cref="ColoredString.Parse"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, Cell, ICellEffect)"/>
+        /// </summary>
         public bool UseStringParser = false;
 
         /// <summary>
@@ -182,18 +185,20 @@ namespace SadConsole
 
             if (!PrintOnlyCharacterData)
             {
+                if (!settings.IgnoreGlyph)
+                    cell.Glyph = glyph.GlyphCharacter;
                 if (!settings.IgnoreBackground)
                     cell.Background = glyph.Background;
                 if (!settings.IgnoreForeground)
                     cell.Foreground = glyph.Foreground;
-                //if (!settings.IgnoreEffect)
-                //    cell.Effect = glyph.Effect;
                 if (!settings.IgnoreMirror)
                     cell.Mirror = glyph.Mirror;
+                if (!settings.IgnoreEffect)
+                    editor.SetEffect(cell, glyph.Effect);
             }
-
-            if (!settings.IgnoreGlyph)
+            else if (!settings.IgnoreGlyph)
                 cell.Glyph = glyph.GlyphCharacter;
+
 
             position.X += 1;
             if (position.X >= editor.TextSurface.Width)
@@ -257,6 +262,11 @@ namespace SadConsole
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(ColoredString text)
         {
+            if (text.Count == 0)
+                return this;
+
+            CursorEffect?.Restart();
+
             // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
             // Then use the pretty print system.
             if (!DisableWordBreak && text.String.Length != 1)
