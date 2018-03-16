@@ -81,6 +81,9 @@ namespace SadConsole
         /// </summary>
         public bool UseLinuxLineEndings = false;
 
+        /// <summary>
+        /// Calls <see cref="ColoredString.Parse"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, Cell, ICellEffect)"/>
+        /// </summary>
         public bool UseStringParser = false;
 
         /// <summary>
@@ -257,6 +260,9 @@ namespace SadConsole
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(ColoredString text)
         {
+            if (text.Count == 0)
+                return this;
+
             // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
             // Then use the pretty print system.
             if (!DisableWordBreak && text.String.Length != 1)
