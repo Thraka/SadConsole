@@ -25,7 +25,7 @@ namespace Editor
             }
         }
 
-        public static Noesis.Grid RootFrameworkElement => (Noesis.Grid)SadConsole.EditorGameComponent.noesisGUIWrapper.ControlTreeRoot;
+        public static Noesis.Grid RootFrameworkElement => (Noesis.Grid)NoesisManager.noesisGUIWrapper.ControlTreeRoot;
 
     }
 }

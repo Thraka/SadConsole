@@ -11,7 +11,6 @@ namespace SadConsole
 {
     public class EditorGameComponent : DrawableGameComponent
     {
-        public static NoesisWrapper noesisGUIWrapper;
         private TimeSpan lastUpdateTotalGameTime;
 
         internal EditorGameComponent(Game game) : base(game)
@@ -19,7 +18,7 @@ namespace SadConsole
             DrawOrder = 5;
             UpdateOrder = 5;
 
-            CreateNoesisGUI();
+            Editor.NoesisManager.CreateNoesisGUI();
         }
 
         protected override void Dispose(bool disposing)
@@ -27,17 +26,11 @@ namespace SadConsole
             foreach (var font in SadConsole.Global.Fonts.Values)
                 font.Image.Dispose();
 
-
+            Editor.Xaml.WindowBase.Windows.Clear();
+            Editor.NoesisManager.DestroyGUI();
         }
 
-        public static void DestroyGUI()
-        {
-            if (noesisGUIWrapper != null)
-            {
-                noesisGUIWrapper.Dispose();
-                noesisGUIWrapper = null;
-            }
-        }
+
 
         protected override void UnloadContent()
         {
@@ -46,35 +39,14 @@ namespace SadConsole
 
         }
 
-private void CreateNoesisGUI()
-{
-    var rootPath = Environment.CurrentDirectory;//Path.Combine(Environment.CurrentDirectory, "Data");
-    var providerManager = new NoesisProviderManager(
-        new FolderXamlProvider(rootPath),
-        new FolderFontProvider(rootPath),
-        new FolderTextureProvider(rootPath, this.GraphicsDevice));
 
-    var config = new NoesisConfig(
-        this.Game.Window,
-        SadConsole.Global.GraphicsDeviceManager,
-        providerManager,
-        rootXamlFilePath: "Views/Root.xaml",
-        // uncomment this line to use theme file
-        themeXamlFilePath: "Themes/NocturnalStyle.xaml",
-        currentTotalGameTime: this.lastUpdateTotalGameTime);
-
-    config.SetupInputFromWindows();
-
-    noesisGUIWrapper = new NoesisWrapper(config);
-    noesisGUIWrapper.ControlTreeRoot.DataContext = new Editor.ViewModels.MainViewModel();
-}
 
         public override void Draw(GameTime gameTime)
         {
             if (Settings.DoDraw)
             {
                 // GUI
-                noesisGUIWrapper.PreRender();
+                Editor.NoesisManager.noesisGUIWrapper.PreRender();
                 
                 // SADCONSOLE
                 Global.GameTimeRender = gameTime;
@@ -111,7 +83,7 @@ private void CreateNoesisGUI()
                 SadConsole.Game.OnDraw?.Invoke(gameTime);
 
                 // GUI
-                noesisGUIWrapper.Render();
+                Editor.NoesisManager.noesisGUIWrapper.Render();
             }
         }
 
@@ -121,12 +93,12 @@ private void CreateNoesisGUI()
             {
                 // GUI
                 this.lastUpdateTotalGameTime = gameTime.TotalGameTime;
-                noesisGUIWrapper.UpdateInput(gameTime, isWindowActive: this.Game.IsActive);
+                Editor.NoesisManager.noesisGUIWrapper.UpdateInput(gameTime, isWindowActive: this.Game.IsActive);
 
                 bool blockInput = Editor.Globals.BlockSadConsoleInput
-                    || noesisGUIWrapper.Input.ConsumedKeyboardKeys.Count != 0
-                    || noesisGUIWrapper.Input.ConsumedMouseButtons.Count != 0
-                    || noesisGUIWrapper.Input.ConsumedMouseDeltaWheel != 0;
+                    || Editor.NoesisManager.noesisGUIWrapper.Input.ConsumedKeyboardKeys.Count != 0
+                    || Editor.NoesisManager.noesisGUIWrapper.Input.ConsumedMouseButtons.Count != 0
+                    || Editor.NoesisManager.noesisGUIWrapper.Input.ConsumedMouseDeltaWheel != 0;
 
                 // SadConsole
                 Global.GameTimeUpdate = gameTime;
@@ -152,7 +124,7 @@ private void CreateNoesisGUI()
                 SadConsole.Game.OnUpdate?.Invoke(gameTime);
 
                 // GUI
-                noesisGUIWrapper.Update(gameTime);
+                Editor.NoesisManager.noesisGUIWrapper.Update(gameTime);
             }
         }
     }

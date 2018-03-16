@@ -81,6 +81,7 @@
     <Compile Include="EditorTypes.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IDocument.cs" />
+    <Compile Include="NoesisManager.cs" />
     <Compile Include="program-example.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

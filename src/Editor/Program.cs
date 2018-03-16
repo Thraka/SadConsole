@@ -28,8 +28,9 @@ namespace Editor
 
             SadConsole.Game.OnDestroy = () =>
             {
+                Xaml.WindowBase.Windows.ForEach( (w) => w.Hide() );
                 Xaml.WindowBase.Windows.Clear();
-                EditorGameComponent.DestroyGUI();
+                NoesisManager.DestroyGUI();
             };
 
             // Start the game.
@@ -40,7 +41,7 @@ namespace Editor
             //
 
             SadConsole.Game.Instance.Dispose();
-            
+
         }
 
         private static void Draw(GameTime time)
@@ -75,7 +76,7 @@ namespace Editor
 
             // Load main GUI
             var window = new Xaml.MainWindow();
-            ((Noesis.Grid)EditorGameComponent.noesisGUIWrapper.ControlTreeRoot).Children.Add(window);
+            ((Noesis.Grid)NoesisManager.noesisGUIWrapper.ControlTreeRoot).Children.Add(window);
         }
     }
 }
