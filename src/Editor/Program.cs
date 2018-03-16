@@ -26,6 +26,12 @@ namespace Editor
 
             SadConsole.Game.OnDraw = Draw;
 
+            SadConsole.Game.OnDestroy = () =>
+            {
+                Xaml.WindowBase.Windows.Clear();
+                EditorGameComponent.DestroyGUI();
+            };
+
             // Start the game.
             SadConsole.Game.Instance.Run();
 
@@ -34,6 +40,7 @@ namespace Editor
             //
 
             SadConsole.Game.Instance.Dispose();
+            
         }
 
         private static void Draw(GameTime time)

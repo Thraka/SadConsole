@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Editor.Xaml.NewDocument"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Editor.Xaml"
+             mc:Ignorable="d" 
+             TextBlock.FontFamily="Fonts#Roboto"
+             Background="{StaticResource NormalDarkBgBrush}"
+             d:DesignHeight="300" d:DesignWidth="300" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical">
+            <TextBlock Margin="0,0,0,10" FontSize="15">Type</TextBlock>
+            <RadioButton Margin="10,0,0,0" x:Name="radSingle">Single-layer Surface</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radMulti">Multi-layer Surface</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radScene">Game Scene</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radAnimated">Animated Object</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radControls">Controls Surface</RadioButton>
+        </StackPanel>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+    </Grid>
+</UserControl>

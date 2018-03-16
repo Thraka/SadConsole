@@ -6,14 +6,23 @@
              xmlns:local="clr-namespace:Editor.Xaml"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="Yellow" x:Name="BackgroundPart">
-        <Grid>
+
+    <Grid x:Name="BackgroundPart">
+        <Grid.Background>
+            <SolidColorBrush Color="#AAB0CFE6"/>
+        </Grid.Background>
+        
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border>
-                <TextBlock>Title!</TextBlock>
+            <Border Background="{DynamicResource NormalBdBrush}" BorderBrush="{DynamicResource LinkNormalBrush}" BorderThickness="0,2,0,0" Padding="5">
+                <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Text="{Binding Title, FallbackValue=TITLE}"/>
+            </Border>
+            <Button HorizontalAlignment="Right" Height="22" Width="22" Focusable="False">X</Button>
+            <Border Grid.Row="1" Background="{DynamicResource NormalDarkBgBrush}">
+                <ContentPresenter x:Name="Content" Margin="10" />
             </Border>
         </Grid>
     </Grid>

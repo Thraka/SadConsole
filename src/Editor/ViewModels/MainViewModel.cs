@@ -38,10 +38,11 @@ namespace Editor.ViewModels
         {
             ShowNewDocument = new DelegateCommand(_ =>
             {
-                window1 = new Xaml.WindowBase();
-                window1.Width = 200;
-                window1.Height = 200;
-                ((Noesis.Grid)SadConsole.EditorGameComponent.noesisGUIWrapper.ControlTreeRoot).Children.Add(window1);
+                Xaml.WindowBase.Show(new Xaml.NewDocument(), new Xaml.WindowSettings());
+                //window1 = new Xaml.WindowBase();
+                //window1.Width = 200;
+                //window1.Height = 200;
+                //((Noesis.Grid)SadConsole.EditorGameComponent.noesisGUIWrapper.ControlTreeRoot).Children.Add(window1);
             });
         }
     }

@@ -22,28 +22,52 @@ namespace SadConsole
             CreateNoesisGUI();
         }
 
-        private void CreateNoesisGUI()
+        protected override void Dispose(bool disposing)
         {
-            var rootPath = Environment.CurrentDirectory;//Path.Combine(Environment.CurrentDirectory, "Data");
-            var providerManager = new NoesisProviderManager(
-                new FolderXamlProvider(rootPath),
-                new FolderFontProvider(rootPath),
-                new FolderTextureProvider(rootPath, this.GraphicsDevice));
+            foreach (var font in SadConsole.Global.Fonts.Values)
+                font.Image.Dispose();
 
-            var config = new NoesisConfig(
-                this.Game.Window,
-                SadConsole.Global.GraphicsDeviceManager,
-                providerManager,
-                rootXamlFilePath: "Views/Root.xaml",
-                // uncomment this line to use theme file
-                //themeXamlFilePath: "Themes/NocturnalStyle.xaml",
-                currentTotalGameTime: this.lastUpdateTotalGameTime);
 
-            config.SetupInputFromWindows();
-
-            noesisGUIWrapper = new NoesisWrapper(config);
-            noesisGUIWrapper.ControlTreeRoot.DataContext = new Editor.ViewModels.MainViewModel();
         }
+
+        public static void DestroyGUI()
+        {
+            if (noesisGUIWrapper != null)
+            {
+                noesisGUIWrapper.Dispose();
+                noesisGUIWrapper = null;
+            }
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+
+
+        }
+
+private void CreateNoesisGUI()
+{
+    var rootPath = Environment.CurrentDirectory;//Path.Combine(Environment.CurrentDirectory, "Data");
+    var providerManager = new NoesisProviderManager(
+        new FolderXamlProvider(rootPath),
+        new FolderFontProvider(rootPath),
+        new FolderTextureProvider(rootPath, this.GraphicsDevice));
+
+    var config = new NoesisConfig(
+        this.Game.Window,
+        SadConsole.Global.GraphicsDeviceManager,
+        providerManager,
+        rootXamlFilePath: "Views/Root.xaml",
+        // uncomment this line to use theme file
+        themeXamlFilePath: "Themes/NocturnalStyle.xaml",
+        currentTotalGameTime: this.lastUpdateTotalGameTime);
+
+    config.SetupInputFromWindows();
+
+    noesisGUIWrapper = new NoesisWrapper(config);
+    noesisGUIWrapper.ControlTreeRoot.DataContext = new Editor.ViewModels.MainViewModel();
+}
 
         public override void Draw(GameTime gameTime)
         {
@@ -98,13 +122,17 @@ namespace SadConsole
                 // GUI
                 this.lastUpdateTotalGameTime = gameTime.TotalGameTime;
                 noesisGUIWrapper.UpdateInput(gameTime, isWindowActive: this.Game.IsActive);
-                noesisGUIWrapper.Update(gameTime);
+
+                bool blockInput = Editor.Globals.BlockSadConsoleInput
+                    || noesisGUIWrapper.Input.ConsumedKeyboardKeys.Count != 0
+                    || noesisGUIWrapper.Input.ConsumedMouseButtons.Count != 0
+                    || noesisGUIWrapper.Input.ConsumedMouseDeltaWheel != 0;
 
                 // SadConsole
                 Global.GameTimeUpdate = gameTime;
                 Global.GameTimeElapsedUpdate = gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (Game.IsActive)
+                if (Game.IsActive && !blockInput)
                 {
                     if (Settings.Input.DoKeyboard)
                     {
@@ -122,6 +150,9 @@ namespace SadConsole
                 Global.CurrentScreen?.Update(gameTime.ElapsedGameTime);
 
                 SadConsole.Game.OnUpdate?.Invoke(gameTime);
+
+                // GUI
+                noesisGUIWrapper.Update(gameTime);
             }
         }
     }

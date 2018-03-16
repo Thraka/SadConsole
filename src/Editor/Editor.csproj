@@ -60,6 +60,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="..\Editor.Xaml\NewDocument.xaml.cs">
+      <Link>Views\NewDocument.xaml.cs</Link>
+      <DependentUpon>NewDocument.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="..\Editor.Xaml\Root.xaml.cs">
       <Link>Views\Root.xaml.cs</Link>
       <DependentUpon>Root.xaml</DependentUpon>
@@ -74,6 +79,7 @@
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="EditorGameComponent.cs" />
     <Compile Include="EditorTypes.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="IDocument.cs" />
     <Compile Include="program-example.cs" />
     <Compile Include="Program.cs" />
@@ -160,6 +166,13 @@
     </None>
     <None Include="..\Editor.Xaml\WindowBase.xaml">
       <Link>Views\WindowBase.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\NewDocument.xaml">
+      <Link>Views\NewDocument.xaml</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
