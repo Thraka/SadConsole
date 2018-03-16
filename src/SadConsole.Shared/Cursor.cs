@@ -16,7 +16,7 @@ namespace SadConsole
         private SurfaceEditor editor;
         private Point position = new Point();
 
-        private int cursorCharacter = 95;
+        private int cursorCharacter = 219;
 
         /// <summary>
         /// Cell used to render the cursor on the screen.
@@ -262,6 +262,8 @@ namespace SadConsole
         {
             if (text.Count == 0)
                 return this;
+
+            CursorEffect?.Restart();
 
             // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
             // Then use the pretty print system.
