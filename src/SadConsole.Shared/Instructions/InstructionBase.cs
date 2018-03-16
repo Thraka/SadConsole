@@ -107,8 +107,7 @@
         /// </summary>
         protected virtual void OnExecutionFinished()
         {
-            if (ExecutionFinished != null)
-                ExecutionFinished(this, EventArgs.Empty);
+            ExecutionFinished?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -116,8 +115,7 @@
         /// </summary>
         protected virtual void OnExecutionRepeating()
         {
-            if (ExecutionRepeating != null)
-                ExecutionRepeating(this, EventArgs.Empty);
+            ExecutionRepeating?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }
