@@ -185,18 +185,20 @@ namespace SadConsole
 
             if (!PrintOnlyCharacterData)
             {
+                if (!settings.IgnoreGlyph)
+                    cell.Glyph = glyph.GlyphCharacter;
                 if (!settings.IgnoreBackground)
                     cell.Background = glyph.Background;
                 if (!settings.IgnoreForeground)
                     cell.Foreground = glyph.Foreground;
-                //if (!settings.IgnoreEffect)
-                //    cell.Effect = glyph.Effect;
                 if (!settings.IgnoreMirror)
                     cell.Mirror = glyph.Mirror;
+                if (!settings.IgnoreEffect)
+                    editor.SetEffect(cell, glyph.Effect);
             }
-
-            if (!settings.IgnoreGlyph)
+            else if (!settings.IgnoreGlyph)
                 cell.Glyph = glyph.GlyphCharacter;
+
 
             position.X += 1;
             if (position.X >= editor.TextSurface.Width)
