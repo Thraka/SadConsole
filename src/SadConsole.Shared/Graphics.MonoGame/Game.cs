@@ -27,7 +27,12 @@ namespace SadConsole
         /// Called when the device is created.
         /// </summary>
         public static Action OnInitialize;
-        
+
+        /// <summary>
+        /// Called when the game is ending.
+        /// </summary>
+        public static Action OnDestroy;
+
         public static void Create(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null)
         {
             Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
@@ -84,6 +89,10 @@ namespace SadConsole
 
         }
 
+        protected override void UnloadContent()
+        {
+            OnDestroy?.Invoke();
+        }
 
         protected override void Initialize()
         {
