@@ -1,0 +1,23 @@
+﻿{
+  "dependencies": {
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
+    "SadConsole.Starter": "2.0.1",
+    "SharpDX": "3.0.2",
+    "SharpDX.Direct2D1": "3.0.2",
+    "SharpDX.Direct3D11": "3.0.2",
+    "SharpDX.DXGI": "3.0.2",
+    "SharpDX.XAudio2": "3.0.2",
+    "System.Runtime.Serialization.Primitives": "4.1.1"
+  },
+  "frameworks": {
+    "uap10.0.10240": {}
+  },
+  "runtimes": {
+    "win10-arm": {},
+    "win10-arm-aot": {},
+    "win10-x86": {},
+    "win10-x86-aot": {},
+    "win10-x64": {},
+    "win10-x64-aot": {}
+  }
+}
