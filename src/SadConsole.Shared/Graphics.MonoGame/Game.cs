@@ -52,7 +52,7 @@ namespace SadConsole
         /// <summary>
         /// Raised when the window is resized and the render area has been calculated.
         /// </summary>
-        public EventHandler WindowResized;
+        public event EventHandler WindowResized;
 
         protected Game(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback)
         {
