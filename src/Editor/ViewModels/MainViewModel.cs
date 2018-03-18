@@ -38,7 +38,7 @@ namespace Editor.ViewModels
         {
             ShowNewDocument = new DelegateCommand(_ =>
             {
-                Xaml.WindowBase.Show(new Xaml.NewDocument(), new Xaml.WindowSettings());
+                Xaml.WindowBase.Show(new Xaml.WindowNewDocument(), new Xaml.WindowSettings() { Title = "HI FROM TITLE", ChildContentDataContext = new DocumentViewModel() });
                 //window1 = new Xaml.WindowBase();
                 //window1.Width = 200;
                 //window1.Height = 200;

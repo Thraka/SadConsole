@@ -77,6 +77,11 @@ namespace Editor
             // Load main GUI
             var window = new Xaml.MainWindow();
             ((Noesis.Grid)NoesisManager.noesisGUIWrapper.ControlTreeRoot).Children.Add(window);
+
+            var customTheme = (Noesis.ResourceDictionary)Noesis.GUI.LoadXaml("Views\\CustomStyles.xaml");
+            customTheme.MergedDictionaries.Add(NoesisManager.noesisGUIWrapper.Theme);
+
+            Noesis.GUI.SetApplicationResources(customTheme);
         }
     }
 }

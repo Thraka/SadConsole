@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Editor.Xaml.ColorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Editor.Xaml"
+             xmlns:localConv="clr-namespace:Editor.Xaml.Converters"
+             mc:Ignorable="d" 
+             x:Name="ColorControl"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <localConv:ColorToBrush x:Key="ColorToBrush" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Name="ColorBox" MouseLeftButtonUp="ColorBox_MouseLeftButtonUp" Background="{Binding SelectedColor, ElementName=ColorControl, FallbackValue=Yellow, Converter={StaticResource ColorToBrush}}" Width="20" />
+        <TextBlock Grid.Column="1" Text="{Binding Text, ElementName=ColorControl, FallbackValue=Color1}" Margin="5,0,0,0" />
+    </Grid>
+</UserControl>

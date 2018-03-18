@@ -55,14 +55,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Editor.Xaml\ColorView.xaml.cs">
+      <Link>Views\ColorView.xaml.cs</Link>
+      <DependentUpon>ColorView.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\Converters\ColorToBrush.cs">
+      <Link>Converters\ColorToBrush.cs</Link>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\Converters\MonoColorToWPFColor.cs">
+      <Link>Converters\MonoColorToWPFColor.cs</Link>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\Font.xaml.cs">
+      <Link>Views\Font.xaml.cs</Link>
+      <DependentUpon>Font.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="..\Editor.Xaml\MainWindow.xaml.cs">
       <Link>Views\MainWindow.xaml.cs</Link>
       <DependentUpon>MainWindow.xaml</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="..\Editor.Xaml\NewDocument.xaml.cs">
-      <Link>Views\NewDocument.xaml.cs</Link>
-      <DependentUpon>NewDocument.xaml</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="..\Editor.Xaml\Root.xaml.cs">
@@ -73,6 +84,16 @@
     <Compile Include="..\Editor.Xaml\WindowBase.xaml.cs">
       <Link>Views\WindowBase.xaml.cs</Link>
       <DependentUpon>WindowBase.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\WindowColorPicker.xaml.cs">
+      <Link>Views\WindowColorPicker.xaml.cs</Link>
+      <DependentUpon>WindowColorPicker.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\WindowNewDocument.xaml.cs">
+      <Link>Views\WindowNewDocument.xaml.cs</Link>
+      <DependentUpon>WindowNewDocument.xaml</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Converters\FontSizeToName.cs" />
@@ -172,8 +193,36 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Editor.Xaml\NewDocument.xaml">
-      <Link>Views\NewDocument.xaml</Link>
+    <None Include="..\Editor.Xaml\CustomStyles.xaml">
+      <Link>Views\CustomStyles.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\Font.xaml">
+      <Link>Views\Font.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\ColorView.xaml">
+      <Link>Views\ColorView.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\WindowColorPicker.xaml">
+      <Link>Views\WindowColorPicker.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\WindowNewDocument.xaml">
+      <Link>Views\WindowNewDocument.xaml</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

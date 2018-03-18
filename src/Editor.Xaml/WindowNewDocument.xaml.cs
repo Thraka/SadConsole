@@ -12,9 +12,9 @@ namespace Editor.Xaml
     /// <summary>
     /// Interaction logic for NewDocument.xaml
     /// </summary>
-    public partial class NewDocument : UserControl
+    public partial class WindowNewDocument : UserControl
     {
-        public NewDocument()
+        public WindowNewDocument()
         {
             InitializeComponent();
         }
@@ -22,7 +22,7 @@ namespace Editor.Xaml
 #if NOESIS
         private void InitializeComponent()
         {
-            Noesis.GUI.LoadComponent(this, "Views\\NewDocument.xaml");
+            Noesis.GUI.LoadComponent(this, "Views\\WindowNewDocument.xaml");
         }
 #endif
     }

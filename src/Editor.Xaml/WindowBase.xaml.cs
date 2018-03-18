@@ -13,6 +13,8 @@ namespace Editor.Xaml
     public class WindowSettings
     {
         public string Title { get; set; } = "Crazy title";
+
+        public object ChildContentDataContext { get; set; }
     }
 
 
@@ -40,6 +42,9 @@ namespace Editor.Xaml
             window.DataContext = settings;
             ContentPresenter contentObject = (ContentPresenter)window.FindName("Content");
             contentObject.Content = content;
+
+            if (settings.ChildContentDataContext != null)
+                content.DataContext = settings.ChildContentDataContext;
 
             Globals.RootFrameworkElement.Children.Add(window);
         }
