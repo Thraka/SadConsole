@@ -1,4 +1,9 @@
-﻿## 03/17/2018
+﻿## 03/18/2018
+
+- Added WindowResized event to the Game class.
+- Added some new color extension methods (clear channel, alpha only).
+
+## 03/17/2018
       
 - Added Settings.WindowMinimumSize.
 
