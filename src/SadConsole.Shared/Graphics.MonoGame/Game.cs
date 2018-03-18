@@ -39,13 +39,20 @@ namespace SadConsole
         }
         #endregion
 
-        private bool resizeBusy = false;
+        /// <summary>
+        /// Indicates the window is going to resize itself.
+        /// </summary>
+        public bool ResizeBusy = false;
         private string font;
         private int consoleWidth;
         private int consoleHeight;
         public GraphicsDeviceManager GraphicsDeviceManager;
 
-        // public stuff from Engine (like defaultfont)
+
+        /// <summary>
+        /// Raised when the window is resized and the render area has been calculated.
+        /// </summary>
+        public EventHandler WindowResized;
 
         protected Game(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback)
         {
@@ -62,21 +69,21 @@ namespace SadConsole
 #if MONOGAME
             GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
 #endif
-            
+
 
             ctorCallback?.Invoke(this);
         }
-        
+
         private void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!resizeBusy)
+            if (!ResizeBusy)
             {
                 if (!Global.GraphicsDeviceManager.IsFullScreen && Settings.WindowMinimumSize != Point.Zero)
                 {
                     if (GraphicsDeviceManager.PreferredBackBufferWidth < Settings.WindowMinimumSize.X
                         || GraphicsDeviceManager.PreferredBackBufferHeight < Settings.WindowMinimumSize.Y)
                     {
-                        resizeBusy = true;
+                        ResizeBusy = true;
                         GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth = Settings.WindowMinimumSize.X;
                         GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight = Settings.WindowMinimumSize.Y;
                         GraphicsDeviceManager.ApplyChanges();
@@ -84,7 +91,7 @@ namespace SadConsole
                 }
             }
             else
-                resizeBusy = false;
+                ResizeBusy = false;
 
             //if (!resizeBusy && Settings.IsExitingFullscreen)
             //{
@@ -101,9 +108,10 @@ namespace SadConsole
             //Global.WindowHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
             //Global.WindowWidth = Global.RenderWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
             //Global.WindowHeight = Global.RenderHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
-
             Global.ResetRendering();
 
+            if (!ResizeBusy)
+                WindowResized?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void UnloadContent()
