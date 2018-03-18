@@ -199,30 +199,56 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with only the red channel set.</returns>
-        public static Color RedOnly(this Color color)
-        {
-            return new Color(color.R, 0, 0);
-        }
+        public static Color RedOnly(this Color color) => new Color(color.R, 0, 0);
 
         /// <summary>
         /// Returns a new Color using only the Green value of this color.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with only the green channel set.</returns>
-        public static Color GreenOnly(this Color color)
-        {
-            return new Color(0, color.G, 0);
-        }
+        public static Color GreenOnly(this Color color) => new Color(0, color.G, 0);
 
         /// <summary>
         /// Returns a new Color using only the Blue value of this color.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with only the blue channel set.</returns>
-        public static Color BlueOnly(this Color color)
-        {
-            return new Color(0, 0, color.B);
-        }
+        public static Color BlueOnly(this Color color) => new Color(0, 0, color.B);
+
+        /// <summary>
+        /// Returns a new Color using only the Alpha value of this color.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with only the alpha channel set.</returns>
+        public static Color AlphaOnly(this Color color) => new Color((byte)0, (byte)0, (byte)0, color.A);
+
+        /// <summary>
+        /// Returns a new color with the red channel set to 0.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the red channel cleared.</returns>
+        public static Color ClearRed(this Color color) => new Color((byte)0, color.G, color.B, color.A);
+
+        /// <summary>
+        /// Returns a new color with the green channel set to 0.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the green channel cleared.</returns>
+        public static Color ClearGreen(this Color color) => new Color(color.R, (byte)0, color.B, color.A);
+
+        /// <summary>
+        /// Returns a new color with the blue channel set to 0.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the blue channel cleared.</returns>
+        public static Color ClearBlue(this Color color) => new Color(color.R, color.G, (byte)0, color.A);
+
+        /// <summary>
+        /// Returns a new color with the alpha channel set to 0.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the alpha channel cleared.</returns>
+        public static Color ClearAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)0);
 
         /// <summary>
         /// Gets the luma of an existing color.
