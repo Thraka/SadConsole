@@ -1,4 +1,22 @@
-﻿## 02/14/2018
+﻿## 03/17/2018
+      
+- Added Settings.WindowMinimumSize.
+
+## 03/16/2018
+
+- Controls now refresh when you change the theme with Control.Theme = variable.
+- Fixed keyboard problem with selection button.
+- Font class now has a link back to the FontMaster instance.
+- Added SadConsole.Settings.GraphicsProfile for monogame hidef vs reach.
+- Added a Mouse.Clear to clear state (like keyboard has)
+- Game has a OnDestroy callback now for when the game starts to shut down.
+- VirtualCursor bugs fixed. Also supports print effects again.
+- DrawString instruction uses a VirtualCursor all the time (.Cursor property) to fix issues with printing. (thanks vga256)
+- VirtualCursor uses the solid square character as default now instead of underscore.
+- FontMaster caches Font objects created with GetFont. The same instance is passed around now instead of a new one.
+- Fade effect has UseCellDestinationReverse to reverse the logic of the of using the back/fore cell color.
+
+## 02/14/2018
 
 - Keyboard input was reversing '[' with '{' and ']' with '}'
 - Controls now refresh when you change the theme with Control.Theme = variable.
