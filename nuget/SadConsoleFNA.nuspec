@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.FNA</id>
-    <version>6.4.6</version>
+    <version>6.4.8</version>
     <title>SadConsole for FNA</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -31,6 +31,19 @@
       - Fixed logic for TabStop with ControlsConsole. It was stopping a focused control from being tabbed off of, not stopping a control from being tabbed to.
       - Keyboard input was reversing '[' with '{' and ']' with '}'
       - Controls now refresh when you change the theme with Control.Theme = variable.
+      ## 6.4.7
+      - Fixed keyboard problem with selection button.
+      - Font class now has a link back to the FontMaster instance.
+      - Added SadConsole.Settings.GraphicsProfile for monogame hidef vs reach.
+      - Added a Mouse.Clear to clear state (like keyboard has)
+      - Game has a OnDestroy callback now for when the game starts to shut down.
+      - VirtualCursor bugs fixed. Also supports print effects again.
+      - DrawString instruction uses a VirtualCursor all the time (.Cursor property) to fix issues with printing. (thanks vga256)
+      - VirtualCursor uses the solid square character as default now instead of underscore.
+      - FontMaster caches Font objects created with GetFont. The same instance is passed around now instead of a new one.
+      - Fade effect has UseCellDestinationReverse to reverse the logic of the of using the back/fore cell color.
+      ## 6.4.8
+      - Added Settings.WindowMinimumSize.
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

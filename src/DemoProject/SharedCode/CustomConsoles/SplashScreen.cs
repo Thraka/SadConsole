@@ -17,7 +17,7 @@ namespace StarterProject.CustomConsoles
         {
             get
             {
-                return new ConsoleMetadata() { Title = "Text Mouse Cursor", Summary = "Draws a game object where ever the mouse cursor is." };
+                return new ConsoleMetadata() { Title = "Splash Screen - Using instructions", Summary = "Chains multiple SadConsole.Instruction types to create an animation." };
             }
         }
 

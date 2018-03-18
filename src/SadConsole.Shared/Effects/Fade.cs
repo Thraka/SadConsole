@@ -65,12 +65,18 @@ namespace SadConsole.Effects
         [DataMember]
         public bool AutoReverse { get; set; }
 
+        /// <summary>
+        /// When <see cref="UseCellForeground"/> or <see cref="UseCellBackground"/> is set, and this is true, the last color in the fade will be set to the cell instead of the first.
+        /// </summary>
         [DataMember]
-        private double _timeElapsed;
+        public bool UseCellDestinationReverse { get; set; }
+
         [DataMember]
-        private double _calculatedValue;
+        protected double _timeElapsed;
         [DataMember]
-        private bool _goingDown;
+        protected double _calculatedValue;
+        [DataMember]
+        protected bool _goingDown;
 
         public Fade()
         {
@@ -98,7 +104,7 @@ namespace SadConsole.Effects
             if (FadeForeground)
             {
                 if (UseCellForeground)
-                    DestinationForeground.Stops[0].Color = cell.State.Value.Foreground;
+                    DestinationForeground.Stops[UseCellDestinationReverse ? DestinationForeground.Stops.Length - 1 : 0].Color = cell.State.Value.Foreground;
 
                 cell.Foreground = DestinationForeground.Lerp((float)_calculatedValue);
             }
@@ -106,7 +112,7 @@ namespace SadConsole.Effects
             if (FadeBackground)
             {
                 if (UseCellBackground)
-                    DestinationBackground.Stops[0].Color = cell.State.Value.Background;
+                    DestinationBackground.Stops[UseCellDestinationReverse ? DestinationBackground.Stops.Length - 1 : 0].Color = cell.State.Value.Background;
 
                 cell.Background = DestinationBackground.Lerp((float)_calculatedValue);
             }
@@ -219,7 +225,8 @@ namespace SadConsole.Effects
                 Permanent = this.Permanent,
                 Repeat = this.Repeat,
                 StartDelay = this.StartDelay,
-                CloneOnApply = this.CloneOnApply
+                CloneOnApply = this.CloneOnApply,
+                UseCellDestinationReverse = this.UseCellDestinationReverse
             };
         }
 

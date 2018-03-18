@@ -12,7 +12,7 @@ namespace StarterProject.CustomConsoles
         {
             get
             {
-                return new ConsoleMetadata() { Title = "Sring Parser", Summary = "Examples of using the string parser" };
+                return new ConsoleMetadata() { Title = "String Parser", Summary = "Examples of using the string parser" };
             }
         }
 

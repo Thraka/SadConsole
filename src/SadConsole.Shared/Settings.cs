@@ -54,6 +54,11 @@ namespace SadConsole
         /// </summary>
         public static bool UseHardwareFullScreen { get; set; } = false;
 
+        /// <summary>
+        /// When not set to (0,0) this property specifies the minimum size of the game window in pixels.
+        /// </summary>
+        public static Point WindowMinimumSize { get; set; } = Point.Zero;
+
         public static void ToggleFullScreen()
         {
             Global.GraphicsDeviceManager.ApplyChanges();
@@ -86,19 +91,45 @@ namespace SadConsole
             }
         }
 
+        /// <summary>
+        /// Settings related to input.
+        /// </summary>
         public static class Input
         {
+            /// <summary>
+            /// Not currently used
+            /// </summary>
             public static bool ProcessMouseOffscreen = false;
 
+            /// <summary>
+            /// When true, the <see cref="Game"/> object updates the mouse state every update frame.
+            /// </summary>
             public static bool DoMouse = true;
 
+            /// <summary>
+            /// When true, the <see cref="Game"/> object updates the keyboard state every update frame.
+            /// </summary>
             public static bool DoKeyboard = true;
         }
 
+        /// <summary>
+        /// Resize modes for the final SadConsole render pass.
+        /// </summary>
         public enum WindowResizeOptions
         {
+            /// <summary>
+            /// Stretches the <see cref="Global.RenderOutput"/> to fit the window.
+            /// </summary>
             Stretch,
+
+            /// <summary>
+            /// Centers <see cref="Global.RenderOutput"/> in the window.
+            /// </summary>
             Center,
+
+            /// <summary>
+            /// Scales <see cref="Global.RenderOutput"/> to fit the window as best as possible while maintaining a good picture.
+            /// </summary>
             Scale,
         }
     }
