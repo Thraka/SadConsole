@@ -18,6 +18,7 @@ namespace Editor.Xaml
         {
             InitializeComponent();
         }
+        
 
 #if NOESIS
         private void InitializeComponent()

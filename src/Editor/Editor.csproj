@@ -60,6 +60,11 @@
       <DependentUpon>ColorView.xaml</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="..\Editor.Xaml\ControlColorBar.xaml.cs">
+      <Link>Views\ControlColorBar.xaml.cs</Link>
+      <DependentUpon>ControlColorBar.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="..\Editor.Xaml\Converters\ColorToBrush.cs">
       <Link>Converters\ColorToBrush.cs</Link>
     </Compile>
@@ -223,6 +228,13 @@
   <ItemGroup>
     <None Include="..\Editor.Xaml\WindowNewDocument.xaml">
       <Link>Views\WindowNewDocument.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\ControlColorBar.xaml">
+      <Link>Views\ControlColorBar.xaml</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

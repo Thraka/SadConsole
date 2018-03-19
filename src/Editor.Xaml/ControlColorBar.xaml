@@ -7,15 +7,20 @@
              mc:Ignorable="d" 
              x:Name="ThisControl"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid MouseMove="UserControl_MouseMove" MouseLeftButtonDown="UserControl_MouseMove">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Canvas Height="24">
-            <Viewbox Height="24" Width="24" Canvas.Left="0" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+        <Canvas Height="20" VerticalAlignment="Top" Grid.Row="0" Grid.Column="1">
+            <Viewbox Height="20" Width="20" Canvas.Left="0" Name="SelectorViewBox" >
                 <Viewbox.RenderTransform>
-                    <TranslateTransform X="-12" />
+                    <TranslateTransform X="-10" />
                 </Viewbox.RenderTransform>
                 <Viewbox.LayoutTransform>
                     <RotateTransform Angle="90" />
@@ -23,6 +28,8 @@
                 <TextBlock Text=">" />
             </Viewbox>
         </Canvas>
-        <Grid Background="{Binding Brush, ElementName=ThisControl}" Grid.Row="1" MouseLeftButtonDown="Grid_MouseLeftButtonDown" />
+        <Border Grid.Row="1" Name="LowColorFill" MouseMove="BorderStart_MouseMove" MouseLeftButtonDown="BorderStart_MouseMove" />
+        <Grid Name="ColorGrid" Background="{Binding Brush, ElementName=ThisControl}" Grid.Row="1" Grid.Column="1" />
+        <Border Grid.Row="1" Grid.Column="2" Name="HighColorFill" MouseMove="BorderEnd_MouseMove" MouseLeftButtonDown="BorderEnd_MouseMove" />
     </Grid>
 </UserControl>
