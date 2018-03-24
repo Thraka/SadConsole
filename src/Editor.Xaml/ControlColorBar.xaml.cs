@@ -48,7 +48,7 @@ namespace Editor.Xaml
             InitializeComponent();
         }
 
-        private void Grid_MouseLeftButtonDown(object sender, MouseEventArgs e)
+        private void Grid_MouseEvent(object sender, MouseEventArgs e)
         {
             var grid = (Grid)this.FindName("ColorGrid");
             var box = ((Viewbox)this.FindName("SelectorViewBox"));
@@ -57,7 +57,7 @@ namespace Editor.Xaml
             if (e.LeftButton == MouseButtonState.Pressed && mousePos >= 0 && mousePos < grid.ActualWidth)
             {
                 box.SetValue(Canvas.LeftProperty, mousePos);
-                internalSet = true;
+                //internalSet = true;
                 SelectedColor = Brush.GradientStops.GetRelativeColor(mousePos / grid.ActualWidth);
                 internalSet = false;
             }
@@ -69,9 +69,10 @@ namespace Editor.Xaml
             {
                 var box = ((Viewbox)this.FindName("SelectorViewBox"));
                 var grid = (Grid)this.FindName("ColorGrid");
-                box.SetValue(Canvas.LeftProperty, 0f);
-                internalSet = true;
-                SelectedColor = Brush.GradientStops.GetRelativeColor(1);
+                var border = (Border)sender;
+                box.SetValue(Canvas.LeftProperty, 0f - (border.ActualWidth / 2));
+                //internalSet = true;
+                SelectedColor = Brush.GradientStops.GetRelativeColor(0);
                 internalSet = false;
             }
         }
@@ -82,8 +83,9 @@ namespace Editor.Xaml
             {
                 var box = ((Viewbox)this.FindName("SelectorViewBox"));
                 var grid = (Grid)this.FindName("ColorGrid");
-                box.SetValue(Canvas.LeftProperty, grid.ActualWidth);
-                internalSet = true;
+                var border = (Border)sender;
+                box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (border.ActualWidth / 2));
+                //internalSet = true;
                 SelectedColor = Brush.GradientStops.GetRelativeColor(1);
                 internalSet = false;
             }
@@ -97,16 +99,16 @@ namespace Editor.Xaml
 
         protected override bool ConnectEvent(object source, string eventName, string handlerName)
         {
-            if (handlerName == "UserControl_MouseMove")
+            if (handlerName == "Grid_MouseEvent")
             {
                 if (eventName == "MouseMove")
                 {
-                    ((Grid)source).MouseMove += Grid_MouseLeftButtonDown;
+                    ((Grid)source).MouseMove += Grid_MouseEvent;
                     return true;
                 }
                 if (eventName == "MouseLeftButtonDown")
                 {
-                    ((Grid)source).MouseLeftButtonDown += Grid_MouseLeftButtonDown;
+                    ((Grid)source).MouseLeftButtonDown += Grid_MouseEvent;
                     return true;
                 }
             }
@@ -164,7 +166,6 @@ namespace Editor.Xaml
             if (newValue != oldValue && !control.internalSet)
             {
                 control.Background = new SolidColorBrush(newValue);
-
             }
         }
 

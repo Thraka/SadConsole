@@ -71,6 +71,9 @@
     <Compile Include="..\Editor.Xaml\Converters\MonoColorToWPFColor.cs">
       <Link>Converters\MonoColorToWPFColor.cs</Link>
     </Compile>
+    <Compile Include="..\Editor.Xaml\Converters\TextToNumber.cs">
+      <Link>Converters\TextToNumber.cs</Link>
+    </Compile>
     <Compile Include="..\Editor.Xaml\Font.xaml.cs">
       <Link>Views\Font.xaml.cs</Link>
       <DependentUpon>Font.xaml</DependentUpon>

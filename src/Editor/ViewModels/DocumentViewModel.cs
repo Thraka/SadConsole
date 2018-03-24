@@ -35,6 +35,10 @@ namespace Editor.ViewModels
 
         public ICommand ChangeBackground { get => _changeBackgroundColorCommand; }
 
+
+        private Xaml.BindableColor _selectedColor = new Xaml.BindableColor() { Color = Noesis.Colors.DarkTurquoise };
+        public Xaml.BindableColor SelectedColor { get => _selectedColor; set { _selectedColor = value; OnPropertyChanged(); } }
+
         public DocumentViewModel()
         {
             _changeBackgroundColorCommand = new DelegateCommand(ChangeBackColor);

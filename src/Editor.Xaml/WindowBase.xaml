@@ -21,7 +21,7 @@
             <Border Background="{DynamicResource NormalBdBrush}" BorderBrush="{DynamicResource LinkNormalBrush}" BorderThickness="0,2,0,0" Padding="5">
                 <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Text="{Binding Title, FallbackValue=TITLE}"/>
             </Border>
-            <Button HorizontalAlignment="Right" Height="22" Width="22" Focusable="False">X</Button>
+            <Button HorizontalAlignment="Right" Height="22" Width="22" Margin="4" Focusable="False" Command="{Binding CloseWindowCommand}">X</Button>
             <Border Grid.Row="1" Background="{DynamicResource NormalDarkBgBrush}">
                 <ContentPresenter x:Name="Content" Margin="10" />
             </Border>
