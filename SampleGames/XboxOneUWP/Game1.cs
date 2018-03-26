@@ -1,18 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole;
 
 namespace MonoGame1
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : SadConsole.Game
     {
-        SpriteBatch spriteBatch;
+        SpriteBatch _spriteBatch;
+        SadConsole.Console _console;
+        SadConsole.GameHelpers.GameObject _gameObject;
 
-        public Game1() : base("Fonts/IBM.font", 80, 25, null)
+        public Game1() : base("Fonts/IBM.font", 240, 68, null)
         {
             Content.RootDirectory = "Content";
+            GraphicsDeviceManager.IsFullScreen = true;
+            SadConsole.Game.OnDraw = DrawFrame;
         }
 
         /// <summary>
@@ -23,66 +25,110 @@ namespace MonoGame1
         /// </summary>
         protected override void Initialize()
         {
-            // Generally you don't want to hide the mouse from the user
             IsMouseVisible = true;
-
-            // Finish the initialization of SadConsole
             base.Initialize();
+            _console = new SadConsole.Console(120, 34);
+            SadConsole.Global.CurrentScreen.Children.Add(_console);
+            SadConsole.FontMaster fontMaster = SadConsole.Global.LoadFont("Fonts/IBM.font");
+            _console.TextSurface.Font = fontMaster.GetFont(SadConsole.Font.FontSizes.Two);
 
-            // Create your console
-            var firstConsole = new SadConsole.Console(60, 30);
-
-            firstConsole.FillWithRandomGarbage();
-            firstConsole.Fill(new Rectangle(2, 2, 20, 3), Color.Aqua, Color.Black, 0);
-            firstConsole.Print(3, 3, "Hello World!");
-
-            SadConsole.Global.CurrentScreen.Children.Add(firstConsole);
+            AddDebugEdgeNumbers();
+            AddFill();
+            AddBox();
+            AddCircle();
+            AddLine();
+            AddGameObject();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+        void AddDebugEdgeNumbers()
+        {
+            for (int i = 0; i < _console.Width; i++)
+            {
+                int r1 = (i > 100) ? ((i - 100) / 10) : i / 10;
+                int r2 = i % 10;
+                _console.Print(i, 0, r1.ToString());
+                _console.Print(i, 1, r2.ToString());
+            }
+
+            for (int i = 0; i < _console.Height; i++)
+            {
+                _console.Print(0, i, i.ToString());
+            }
+        }
+
+        void AddFill()
+        {
+            _console.Fill(new Rectangle(2, 2, 20, 3), Color.Aqua, Color.OliveDrab, 0);
+        }
+
+        void AddGameObject()
+        {
+            _gameObject = new SadConsole.GameHelpers.GameObject(1,1);
+            _gameObject.Animation.CurrentFrame[0].Glyph = '@';
+            _gameObject.Animation.CurrentFrame[0].Background = Color.Red;
+            _gameObject.Animation.CurrentFrame[0].Foreground = Color.White;
+            _gameObject.Animation.IsDirty = true;
+            _gameObject.IsVisible = true;
+            _gameObject.Position = new Point(20, 20);
+        }
+
+        void AddBox()
+        {
+            SadConsole.Shapes.Box box = SadConsole.Shapes.Box.GetDefaultBox();
+            box.Foreground = Color.Blue;
+            box.BorderBackground = Color.Black;
+            box.FillColor = Color.Black;
+            box.Fill = true;
+            box.Position = new Point(5, 5);
+            box.Width = 10;
+            box.Height = 10;
+            box.Draw(_console);
+        }
+
+        void AddCircle()
+        {
+            SadConsole.Shapes.Circle circle = new SadConsole.Shapes.Circle();
+            circle.BorderAppearance = new Cell(Color.Yellow, Color.Black, 'x');
+            circle.Center = new Point(35, 15);
+            circle.Radius = 10;
+            circle.Draw(_console);
+        }
+
+        void AddLine()
+        {
+            SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
+            line.StartingLocation = new Point(50, 30);
+            line.EndingLocation = new Point(80, 20);
+            line.UseEndingCell = false;
+            line.UseStartingCell = false;
+            line.Cell = new Cell { Foreground = Color.Purple, Background = Color.Black, Glyph = 'o' };
+            line.Draw(_console);
+        }
+
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
+            _gameObject.Update(gameTime.ElapsedGameTime);
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
+        private void DrawFrame(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            base.Draw(gameTime);
+            // TODO: Add your custom draw logic here
+            _gameObject.Draw(gameTime.ElapsedGameTime);
         }
+
     }
 }

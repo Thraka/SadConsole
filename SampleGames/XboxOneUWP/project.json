@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-    "SadConsole.Starter": "2.0.1",
+    "SadConsole": "6.4.10",
     "SharpDX": "3.0.2",
     "SharpDX.Direct2D1": "3.0.2",
     "SharpDX.Direct3D11": "3.0.2",
