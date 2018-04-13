@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.4.5-pre4c</version>
+    <version>6.4.11-pre1</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,11 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics.</description>
     <releaseNotes>
-      - SurfaceEditor now supports basic shape functions. Easier to draw shapes than previous model. (Line only supported for now, more to come)
-      - Lines can be auto connected through static SurfaceEditor.FixRoadLines method.
-      - Promoted a bunch of private members for the Window class to protected.
-      - Window title row can be positioned by the class now. Use the protected titleLocationY variable.
-      - ListBox.HideBorder instantly redraws instead of waiting for a `IsDirty` flag.
+      - Fixed bug in mouse processing (thanks VGA256)
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
