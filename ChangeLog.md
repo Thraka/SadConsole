@@ -1,4 +1,8 @@
-﻿## 03/18/2018
+﻿## 04/06/2018
+
+- Fixed bug in Mouse processing. (Thanks VGA256)
+
+## 03/18/2018
 
 - Added WindowResized event to the Game class.
 - Added some new color extension methods (clear channel, alpha only).
