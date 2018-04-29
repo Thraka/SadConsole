@@ -80,6 +80,12 @@ namespace Editor.Xaml
             set { Color = new Color() { R = Color.R, G = Color.G, B = value, A = Color.A }; OnPropertyChanged(); }
         }
 
+        public byte A
+        {
+            get { return Color.A; }
+            set { Color = new Color() { R = Color.R, G = Color.G, B = value, A = value }; OnPropertyChanged(); }
+        }
+
         //public byte R
         //{
         //    get { return (byte)GetValue(RProperty); }

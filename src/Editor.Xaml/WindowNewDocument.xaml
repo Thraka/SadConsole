@@ -41,6 +41,7 @@
             <StackPanel Orientation="Vertical" Grid.Row="1">
                 <local:Font Grid.Row="1" />
                 <local:ColorView Text="Default Background" SelectedColor="{Binding DefaultBackground, Converter={StaticResource MonoColorToWPFColor}}" ColorClickCommand="{Binding ChangeBackground}" />
+                <local:ColorView Text="Default Foreground" SelectedColor="{Binding DefaultForeground, Converter={StaticResource MonoColorToWPFColor}}" ColorClickCommand="{Binding ChangeForeground}" />
             </StackPanel>
         </Grid>
     </Grid>

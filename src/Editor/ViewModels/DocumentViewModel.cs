@@ -21,6 +21,7 @@ namespace Editor.ViewModels
         private ICommand _editFontCommand;
         private ICommand _saveDocumentCommand;
         private DelegateCommand _changeBackgroundColorCommand;
+        private DelegateCommand _changeForegroundColorCommand;
 
         public Color DefaultForeground { get => _defaultForeground; set { _defaultForeground = value; OnPropertyChanged(); } }
         public Color DefaultBackground { get => _defaultBackground; set { _defaultBackground = value; OnPropertyChanged(); } }
@@ -35,10 +36,12 @@ namespace Editor.ViewModels
         public ICommand SaveDocument { get => _saveDocumentCommand; private set => _saveDocumentCommand = value; }
 
         public ICommand ChangeBackground { get => _changeBackgroundColorCommand; }
+        public ICommand ChangeForeground { get => _changeForegroundColorCommand; }
         
         public DocumentViewModel()
         {
             _changeBackgroundColorCommand = new DelegateCommand(ChangeBackColor);
+            _changeForegroundColorCommand = new DelegateCommand(ChangeForeColor);
         }
 
         void ChangeBackColor(object parameter)
@@ -58,6 +61,32 @@ namespace Editor.ViewModels
 
                 if (result)
                     DefaultBackground = content.SelectedColor.Color.ToMonoColor();
+
+                settings.Window.Hide();
+            });
+
+            //settings.CloseWindowCommand = new DelegateCommand(_ => settings.Window.Hide());
+
+            Xaml.WindowBase.Show(content, settings);
+        }
+
+        void ChangeForeColor(object parameter)
+        {
+            var content = new Xaml.WindowColorPicker();
+            var settings = new Xaml.WindowSettings()
+            {
+                Title = "COLOR PICKERS",
+                ChildContentDataContext = content,
+            };
+
+            content.SelectedColor.Color = DefaultForeground.ToWpfColor();
+
+            settings.CloseWindowCommand = new DelegateCommand(o => 
+            {
+                bool.TryParse((string)o, out bool result);
+
+                if (result)
+                    DefaultForeground = content.SelectedColor.Color.ToMonoColor();
 
                 settings.Window.Hide();
             });
