@@ -68,11 +68,17 @@
     <Compile Include="..\Editor.Xaml\Converters\ColorToBrush.cs">
       <Link>Converters\ColorToBrush.cs</Link>
     </Compile>
+    <Compile Include="..\Editor.Xaml\Converters\FontSizeToName.cs">
+      <Link>Converters\FontSizeToName.cs</Link>
+    </Compile>
     <Compile Include="..\Editor.Xaml\Converters\MonoColorToWPFColor.cs">
       <Link>Converters\MonoColorToWPFColor.cs</Link>
     </Compile>
     <Compile Include="..\Editor.Xaml\Converters\TextToNumber.cs">
       <Link>Converters\TextToNumber.cs</Link>
+    </Compile>
+    <Compile Include="..\Editor.Xaml\Extensions.cs">
+      <Link>Extensions.cs</Link>
     </Compile>
     <Compile Include="..\Editor.Xaml\Font.xaml.cs">
       <Link>Views\Font.xaml.cs</Link>
@@ -104,7 +110,6 @@
       <DependentUpon>WindowNewDocument.xaml</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Converters\FontSizeToName.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="EditorGameComponent.cs" />
     <Compile Include="EditorTypes.cs" />

@@ -68,6 +68,7 @@
     <Compile Include="Converters\MonoColorToWPFColor.cs" />
     <Compile Include="Converters\ColorToBrush.cs" />
     <Compile Include="Converters\TextToNumber.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Font.xaml.cs">
       <DependentUpon>Font.xaml</DependentUpon>
     </Compile>

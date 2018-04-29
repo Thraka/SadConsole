@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Editor.Xaml.Converters;
 
 namespace Editor.ViewModels
 {
@@ -34,11 +35,7 @@ namespace Editor.ViewModels
         public ICommand SaveDocument { get => _saveDocumentCommand; private set => _saveDocumentCommand = value; }
 
         public ICommand ChangeBackground { get => _changeBackgroundColorCommand; }
-
-
-        private Xaml.BindableColor _selectedColor = new Xaml.BindableColor() { Color = Noesis.Colors.DarkTurquoise };
-        public Xaml.BindableColor SelectedColor { get => _selectedColor; set { _selectedColor = value; OnPropertyChanged(); } }
-
+        
         public DocumentViewModel()
         {
             _changeBackgroundColorCommand = new DelegateCommand(ChangeBackColor);
@@ -46,7 +43,28 @@ namespace Editor.ViewModels
 
         void ChangeBackColor(object parameter)
         {
-            Xaml.WindowBase.Show(new Xaml.WindowColorPicker(), new Xaml.WindowSettings() { Title = "COLOR PICKERS", ChildContentDataContext = this });
+            var content = new Xaml.WindowColorPicker();
+            var settings = new Xaml.WindowSettings()
+            {
+                Title = "COLOR PICKERS",
+                ChildContentDataContext = content,
+            };
+
+            content.SelectedColor.Color = DefaultBackground.ToWpfColor();
+
+            settings.CloseWindowCommand = new DelegateCommand(o => 
+            {
+                bool.TryParse((string)o, out bool result);
+
+                if (result)
+                    DefaultBackground = content.SelectedColor.Color.ToMonoColor();
+
+                settings.Window.Hide();
+            });
+
+            //settings.CloseWindowCommand = new DelegateCommand(_ => settings.Window.Hide());
+
+            Xaml.WindowBase.Show(content, settings);
         }
     }
 }

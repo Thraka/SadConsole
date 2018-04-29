@@ -47,6 +47,58 @@ namespace Editor.Xaml
         {
             InitializeComponent();
         }
+        private void ThisControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            var control = this;
+
+            var box = ((Viewbox)control.FindName("SelectorViewBox"));
+            var grid = (Grid)control.FindName("ColorGrid");
+            var borderLow = (Border)control.FindName("LowColorFill");
+            var borderHigh = (Border)control.FindName("HighColorFill");
+
+            // Red channel
+            if (control.SelectedColor.R != 0)
+            {
+                if (control.SelectedColor.R == 255)
+                {
+                    box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (borderHigh.ActualWidth / 2));
+                }
+                else
+                {
+                    box.SetValue(Canvas.LeftProperty, (control.SelectedColor.R / 255f) * grid.ActualWidth);
+                }
+            }
+            // Green channel
+            else if (control.SelectedColor.G != 0)
+            {
+                if (control.SelectedColor.G == 255)
+                {
+                    box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (borderHigh.ActualWidth / 2));
+                }
+                else
+                {
+                    box.SetValue(Canvas.LeftProperty, (control.SelectedColor.G / 255f) * grid.ActualWidth);
+                }
+            }
+            // Blue
+            else if (control.SelectedColor.B != 0)
+            {
+                if (control.SelectedColor.B == 255)
+                {
+                    box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (borderHigh.ActualWidth / 2));
+                }
+                else
+                {
+                    box.SetValue(Canvas.LeftProperty, (control.SelectedColor.B / 255f) * grid.ActualWidth);
+                }
+            }
+            // 0 value
+            else
+            {
+                box.SetValue(Canvas.LeftProperty, 0f - (borderLow.ActualWidth / 2));
+            }
+
+        }
 
         private void Grid_MouseEvent(object sender, MouseEventArgs e)
         {
@@ -56,8 +108,9 @@ namespace Editor.Xaml
 
             if (e.LeftButton == MouseButtonState.Pressed && mousePos >= 0 && mousePos < grid.ActualWidth)
             {
+
                 box.SetValue(Canvas.LeftProperty, mousePos);
-                //internalSet = true;
+                internalSet = true;
                 SelectedColor = Brush.GradientStops.GetRelativeColor(mousePos / grid.ActualWidth);
                 internalSet = false;
             }
@@ -71,7 +124,7 @@ namespace Editor.Xaml
                 var grid = (Grid)this.FindName("ColorGrid");
                 var border = (Border)sender;
                 box.SetValue(Canvas.LeftProperty, 0f - (border.ActualWidth / 2));
-                //internalSet = true;
+                internalSet = true;
                 SelectedColor = Brush.GradientStops.GetRelativeColor(0);
                 internalSet = false;
             }
@@ -85,7 +138,7 @@ namespace Editor.Xaml
                 var grid = (Grid)this.FindName("ColorGrid");
                 var border = (Border)sender;
                 box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (border.ActualWidth / 2));
-                //internalSet = true;
+                internalSet = true;
                 SelectedColor = Brush.GradientStops.GetRelativeColor(1);
                 internalSet = false;
             }
@@ -111,6 +164,16 @@ namespace Editor.Xaml
                     ((Grid)source).MouseLeftButtonDown += Grid_MouseEvent;
                     return true;
                 }
+            }
+            if (handlerName == "ColorGrid_LayoutUpdated")
+            {
+                
+                return true;
+            }
+            if (handlerName == "ThisControl_Loaded")
+            {
+                ((Grid)source).Loaded += ThisControl_Loaded;
+                return true;
             }
             if (handlerName == "BorderStart_MouseMove")
             {
@@ -163,47 +226,65 @@ namespace Editor.Xaml
 
             Color newValue = (Color)e.NewValue;
             Color oldValue = (Color)e.OldValue;
+
+            control.Background = new SolidColorBrush(newValue);
+
             if (newValue != oldValue && !control.internalSet)
             {
-                control.Background = new SolidColorBrush(newValue);
+                var box = ((Viewbox)control.FindName("SelectorViewBox"));
+                var grid = (Grid)control.FindName("ColorGrid");
+                var borderLow = (Border)control.FindName("LowColorFill");
+                var borderHigh = (Border)control.FindName("HighColorFill");
+
+                // Red channel
+                if (control.SelectedColor.R != 0)
+                {
+                    if (control.SelectedColor.R == 255)
+                    {
+                        box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (borderHigh.ActualWidth / 2));
+                    }
+                    else
+                    {
+                        box.SetValue(Canvas.LeftProperty, (control.SelectedColor.R / 255f) * grid.ActualWidth);
+                    }
+                }
+                // Green channel
+                else if (control.SelectedColor.G != 0)
+                {
+                    if (control.SelectedColor.G == 255)
+                    {
+                        box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (borderHigh.ActualWidth / 2));
+                    }
+                    else
+                    {
+                        box.SetValue(Canvas.LeftProperty, (control.SelectedColor.G / 255f) * grid.ActualWidth);
+                    }
+                }
+                // Blue
+                else if (control.SelectedColor.B != 0)
+                {
+                    if (control.SelectedColor.B == 255)
+                    {
+                        box.SetValue(Canvas.LeftProperty, grid.ActualWidth + (borderHigh.ActualWidth / 2));
+                    }
+                    else
+                    {
+                        box.SetValue(Canvas.LeftProperty, (control.SelectedColor.B / 255f) * grid.ActualWidth);
+                    }
+                }
+                // 0 value
+                else
+                {
+                    box.SetValue(Canvas.LeftProperty, 0f - (borderLow.ActualWidth / 2));
+                }
+
+                //internalSet = true;
+                //SelectedColor = Brush.GradientStops.GetRelativeColor(1);
+                //internalSet = false;
+
             }
         }
 
-    }
 
-    public static class Extensions
-    {
-        public static Color GetRelativeColor(this GradientStopCollection gsc, double offset)
-        {
-            var collection = new List<GradientStop>();
-            foreach (var colorStop in gsc)
-            {
-                collection.Add((GradientStop)colorStop);
-            }
-            
-            GradientStop before = collection.Where(w => w.Offset == collection.Min(m => m.Offset)).First();
-            GradientStop after = collection.Where(w => w.Offset == collection.Max(m => m.Offset)).First();
-            
-            foreach (var gs in collection)
-            {
-                if (gs.Offset < offset && gs.Offset > before.Offset)
-                {
-                    before = gs;
-                }
-                if (gs.Offset > offset && gs.Offset < after.Offset)
-                {
-                    after = gs;
-                }
-            }
-
-            var color = new Color();
-
-            color.ScA = (float)((offset - before.Offset) * (after.Color.ScA - before.Color.ScA) / (after.Offset - before.Offset) + before.Color.ScA);
-            color.ScR = (float)((offset - before.Offset) * (after.Color.ScR - before.Color.ScR) / (after.Offset - before.Offset) + before.Color.ScR);
-            color.ScG = (float)((offset - before.Offset) * (after.Color.ScG - before.Color.ScG) / (after.Offset - before.Offset) + before.Color.ScG);
-            color.ScB = (float)((offset - before.Offset) * (after.Color.ScB - before.Color.ScB) / (after.Offset - before.Offset) + before.Color.ScB);
-
-            return color;
-        }
     }
 }

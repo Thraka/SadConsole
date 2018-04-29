@@ -31,7 +31,7 @@ namespace Editor.Xaml
 
         // Using a DependencyProperty as the backing store for bindableColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty bindableColorProperty =
-            DependencyProperty.Register("SelectedColor", typeof(BindableColor), typeof(WindowColorPicker), new PropertyMetadata(new BindableColor()));
+            DependencyProperty.Register("SelectedColor", typeof(BindableColor), typeof(WindowColorPicker), new PropertyMetadata(new BindableColor() { Color = Colors.White }));
 
 
 
@@ -61,7 +61,7 @@ namespace Editor.Xaml
 
         //public static readonly DependencyProperty ColorProperty =
         //    DependencyProperty.Register("Color", typeof(Color), typeof(BindableColor), new PropertyMetadata(Colors.ForestGreen));
-
+        
         public byte R
         {
             get { return Color.R; }

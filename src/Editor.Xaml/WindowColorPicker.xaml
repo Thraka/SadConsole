@@ -23,12 +23,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
 
         </Grid.ColumnDefinitions>
 
-        <Rectangle Fill="{Binding Path=SelectedColor.Color, FallbackValue=Yellow, Converter={StaticResource color_to_brush}}" />
+        <Rectangle Fill="#FF333333" Margin="2" />
+        <Rectangle Fill="{Binding Path=SelectedColor.Color, FallbackValue=Yellow, Converter={StaticResource color_to_brush}}" Margin="5" />
         <!--<Rectangle>
             <Rectangle.Fill>
                 <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
@@ -54,13 +56,14 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <local:ControlColorBar SelectedColor="{Binding Path=SelectedColor.R, Mode=TwoWay, Converter={StaticResource byter_color}}" > 
                 <local:ControlColorBar.Brush>
-                    <LinearGradientBrush >
-                        <GradientStop Color="Black" Offset="0"/>
-                        <GradientStop Color="Red" Offset="1"/>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#FF000000" Offset="0.0"/>
+                        <GradientStop Color="#FFFF0000" Offset="1.0"/>
                     </LinearGradientBrush>
                 </local:ControlColorBar.Brush>
             </local:ControlColorBar>
@@ -89,6 +92,14 @@
             <TextBlock Grid.Row="2" Grid.Column="1" Text="Blue" VerticalAlignment="Center" Margin="4,0" />
             <TextBox Grid.Row="2" Grid.Column="2" Margin="4" HorizontalContentAlignment="Center" Text="{Binding Path=SelectedColor.B, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Alpha" VerticalAlignment="Center" Margin="4,0" />
+            <TextBox Grid.Row="3" Grid.Column="2" Margin="4" HorizontalContentAlignment="Center" Text="{Binding Path=SelectedColor.A, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Button Content="OK" HorizontalAlignment="Right" Margin="0,5" Command="{Binding Path=DataContext.CloseWindowCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowBase}}}" CommandParameter="True" />
+            <Button Content="Cancel" HorizontalAlignment="Left" Margin="0,5" Command="{Binding Path=DataContext.CloseWindowCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowBase}}}" CommandParameter="False"/>
         </Grid>
     </Grid>
 </UserControl>

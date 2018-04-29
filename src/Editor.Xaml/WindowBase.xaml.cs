@@ -14,6 +14,8 @@ namespace Editor.Xaml
 {
     public class WindowSettings
     {
+        public WindowBase Window { get; set; }
+
         public string Title { get; set; } = "Crazy title";
 
         public object ChildContentDataContext { get; set; }
@@ -43,8 +45,11 @@ namespace Editor.Xaml
         public static void Show(FrameworkElement content, WindowSettings settings)
         {
             var window = new WindowBase();
-            settings.CloseWindowCommand = new DelegateCommand(_ => window.Hide());
 
+            settings.Window = window;
+
+            if (settings.CloseWindowCommand == null)
+                settings.CloseWindowCommand = new DelegateCommand(_ => window.Hide());
 
             window.DataContext = settings;
             

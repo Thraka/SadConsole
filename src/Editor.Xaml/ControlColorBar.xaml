@@ -15,9 +15,8 @@
         </Grid.ColumnDefinitions>
         
         <Border Grid.Row="1" Name="LowColorFill" MouseMove="BorderStart_MouseMove" MouseLeftButtonDown="BorderStart_MouseMove"  BorderThickness="3" />
-        <Grid Name="ColorGrid" Background="{Binding Brush, ElementName=ThisControl}" Grid.Row="1" Grid.Column="1" />
+        <Grid Name="ColorGrid" Background="{Binding Brush, ElementName=ThisControl}" Grid.Row="1" Grid.Column="1" Loaded="ThisControl_Loaded" />
         <Border Grid.Row="1" Grid.Column="2" Name="HighColorFill" MouseMove="BorderEnd_MouseMove" MouseLeftButtonDown="BorderEnd_MouseMove" BorderThickness="3" />
-
         <Canvas VerticalAlignment="Center" Height="20" Grid.Row="1" Grid.Column="1" >
             <Viewbox Height="20" Width="2" Canvas.Left="20" Name="SelectorViewBox" >
                 <Viewbox.RenderTransform>

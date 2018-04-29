@@ -1,5 +1,6 @@
 ﻿#if NOESIS
 using Noesis;
+using System.Linq;
 using System;
 using System.Globalization;
 #else
