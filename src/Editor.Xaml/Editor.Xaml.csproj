@@ -69,8 +69,8 @@
     <Compile Include="Converters\ColorToBrush.cs" />
     <Compile Include="Converters\TextToNumber.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Font.xaml.cs">
-      <DependentUpon>Font.xaml</DependentUpon>
+    <Compile Include="ControlFontPanel.xaml.cs">
+      <DependentUpon>ControlFontPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowNewDocument.xaml.cs">
       <DependentUpon>WindowNewDocument.xaml</DependentUpon>
@@ -96,7 +96,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Font.xaml">
+    <Page Include="ControlFontPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

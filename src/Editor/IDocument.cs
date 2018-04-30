@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    interface IDocument
+    public interface IDocument
     {
+        SadConsole.IScreen DrawingScreen { get; }
+
         string Title { get; set; }
 
         string FilePath { get; set; }

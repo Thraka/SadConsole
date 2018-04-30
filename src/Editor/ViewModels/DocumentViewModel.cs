@@ -42,6 +42,46 @@ namespace Editor.ViewModels
         {
             _changeBackgroundColorCommand = new DelegateCommand(ChangeBackColor);
             _changeForegroundColorCommand = new DelegateCommand(ChangeForeColor);
+            _font = SadConsole.Global.FontDefault;
+        }
+
+        public DocumentViewModel(IDocument document)
+        {
+            _changeBackgroundColorCommand = new DelegateCommand(ChangeBackColor);
+            _changeForegroundColorCommand = new DelegateCommand(ChangeForeColor);
+
+            switch (document.EditorType)
+            {
+                case EditorTypes.SingleSurface:
+                    break;
+                case EditorTypes.LayeredSurface:
+                    break;
+                case EditorTypes.GameScene:
+                    break;
+                case EditorTypes.GameObject:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public IDocument CreateDocument()
+        {
+            switch (EditorType)
+            {
+                case EditorTypes.SingleSurface:
+                    return new SurfaceDocument();
+                case EditorTypes.LayeredSurface:
+                    break;
+                case EditorTypes.GameScene:
+                    break;
+                case EditorTypes.GameObject:
+                    break;
+                default:
+                    break;
+            }
+
+            return null;
         }
 
         void ChangeBackColor(object parameter)
@@ -49,7 +89,7 @@ namespace Editor.ViewModels
             var content = new Xaml.WindowColorPicker();
             var settings = new Xaml.WindowSettings()
             {
-                Title = "COLOR PICKERS",
+                Title = "Color",
                 ChildContentDataContext = content,
             };
 
@@ -75,7 +115,7 @@ namespace Editor.ViewModels
             var content = new Xaml.WindowColorPicker();
             var settings = new Xaml.WindowSettings()
             {
-                Title = "COLOR PICKERS",
+                Title = "Color",
                 ChildContentDataContext = content,
             };
 

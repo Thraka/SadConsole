@@ -65,6 +65,11 @@
       <DependentUpon>ControlColorBar.xaml</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="..\Editor.Xaml\ControlFontPanel.xaml.cs">
+      <Link>Views\ControlFontPanel.xaml.cs</Link>
+      <DependentUpon>ControlFontPanel.xaml</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="..\Editor.Xaml\Converters\ColorToBrush.cs">
       <Link>Converters\ColorToBrush.cs</Link>
     </Compile>
@@ -79,11 +84,6 @@
     </Compile>
     <Compile Include="..\Editor.Xaml\Extensions.cs">
       <Link>Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Editor.Xaml\Font.xaml.cs">
-      <Link>Views\Font.xaml.cs</Link>
-      <DependentUpon>Font.xaml</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="..\Editor.Xaml\MainWindow.xaml.cs">
       <Link>Views\MainWindow.xaml.cs</Link>
@@ -111,6 +111,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="DocumentTypes\SurfaceDocument.cs" />
     <Compile Include="EditorGameComponent.cs" />
     <Compile Include="EditorTypes.cs" />
     <Compile Include="Globals.cs" />
@@ -213,13 +214,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Editor.Xaml\Font.xaml">
-      <Link>Views\Font.xaml</Link>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Editor.Xaml\ColorView.xaml">
       <Link>Views\ColorView.xaml</Link>
       <SubType>Designer</SubType>
@@ -243,6 +237,13 @@
   <ItemGroup>
     <None Include="..\Editor.Xaml\ControlColorBar.xaml">
       <Link>Views\ControlColorBar.xaml</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Editor.Xaml\ControlFontPanel.xaml">
+      <Link>Views\ControlFontPanel.xaml</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

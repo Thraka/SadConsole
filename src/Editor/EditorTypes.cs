@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    enum EditorTypes
+    public enum EditorTypes
     {
         SingleSurface,
         LayeredSurface,

@@ -11,9 +11,9 @@ namespace Editor.Xaml
     /// <summary>
     /// Interaction logic for Font.xaml
     /// </summary>
-    public partial class Font : UserControl
+    public partial class ControlFontPanel : UserControl
     {
-        public Font()
+        public ControlFontPanel()
         {
             InitializeComponent();
         }
@@ -21,7 +21,7 @@ namespace Editor.Xaml
 #if NOESIS
         private void InitializeComponent()
         {
-            Noesis.GUI.LoadComponent(this, "Views\\Font.xaml");
+            Noesis.GUI.LoadComponent(this, "Views\\ControlFontPanel.xaml");
         }
 #endif
     }

@@ -36,9 +36,31 @@ namespace Editor.ViewModels
 
         public MainViewModel()
         {
+            _documents = new ObservableCollection<IDocument>();
+            _tools = new ObservableCollection<Tools.ITool>();
+
             ShowNewDocument = new DelegateCommand(_ =>
             {
-                Xaml.WindowBase.Show(new Xaml.WindowNewDocument(), new Xaml.WindowSettings() { Title = "HI FROM TITLE", ChildContentDataContext = new DocumentViewModel() });
+                var content = new Xaml.WindowNewDocument();
+                var settings = new Xaml.WindowSettings()
+                {
+                    Title = "Create new document",
+                    ChildContentDataContext = new DocumentViewModel(),
+                };
+
+                settings.CloseWindowCommand = new DelegateCommand(o =>
+                {
+                    bool.TryParse((string)o, out bool result);
+
+                    if (result)
+                    {
+                        _documents.Add(((DocumentViewModel)settings.ChildContentDataContext).CreateDocument());
+                    }
+
+                    settings.Window.Hide();
+                });
+
+                Xaml.WindowBase.Show(new Xaml.WindowNewDocument(), settings);
                 //window1 = new Xaml.WindowBase();
                 //window1.Width = 200;
                 //window1.Height = 200;

@@ -24,11 +24,11 @@
 
         <StackPanel Orientation="Vertical" Margin="5">
             <TextBlock Margin="0,0,0,10" Style="{DynamicResource Header1}">Type</TextBlock>
-            <RadioButton Margin="10,0,0,0" x:Name="radSingle">Single-layer Surface</RadioButton>
-            <RadioButton Margin="10,0,0,0" x:Name="radMulti">Multi-layer Surface</RadioButton>
-            <RadioButton Margin="10,0,0,0" x:Name="radScene">Game Scene</RadioButton>
-            <RadioButton Margin="10,0,0,0" x:Name="radAnimated">Animated Object</RadioButton>
-            <RadioButton Margin="10,0,0,0" x:Name="radControls">Controls Surface</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radSingle" IsChecked="True">Single-layer Surface</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radMulti" IsEnabled="False">Multi-layer Surface</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radScene" IsEnabled="False">Game Scene</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radAnimated" IsEnabled="False">Animated Object</RadioButton>
+            <RadioButton Margin="10,0,0,0" x:Name="radControls" IsEnabled="False">Controls Surface</RadioButton>
         </StackPanel>
         <Separator Grid.Column="1" HorizontalAlignment="Left" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
 
@@ -39,10 +39,15 @@
             </Grid.RowDefinitions>
             <TextBlock Margin="0,0,0,10" Style="{DynamicResource Header1}">Single-layer Surface</TextBlock>
             <StackPanel Orientation="Vertical" Grid.Row="1">
-                <local:Font Grid.Row="1" />
-                <local:ColorView Text="Default Background" SelectedColor="{Binding DefaultBackground, Converter={StaticResource MonoColorToWPFColor}}" ColorClickCommand="{Binding ChangeBackground}" />
-                <local:ColorView Text="Default Foreground" SelectedColor="{Binding DefaultForeground, Converter={StaticResource MonoColorToWPFColor}}" ColorClickCommand="{Binding ChangeForeground}" />
+                <local:ControlFontPanel Margin="0,2" Grid.Row="1" DataContext="{Binding Font}" />
+                <local:ColorView Margin="0,2" Text="Default Background" SelectedColor="{Binding DefaultBackground, Converter={StaticResource MonoColorToWPFColor}}" ColorClickCommand="{Binding ChangeBackground}" />
+                <local:ColorView Margin="0,2" Text="Default Foreground" SelectedColor="{Binding DefaultForeground, Converter={StaticResource MonoColorToWPFColor}}" ColorClickCommand="{Binding ChangeForeground}" />
             </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            <Button Content="OK" HorizontalAlignment="Right" Margin="0,5" Command="{Binding Path=DataContext.CloseWindowCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowBase}}}" CommandParameter="True" />
+            <Button Content="Cancel" HorizontalAlignment="Left" Margin="0,5" Command="{Binding Path=DataContext.CloseWindowCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowBase}}}" CommandParameter="False"/>
         </Grid>
     </Grid>
 </UserControl>
