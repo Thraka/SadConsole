@@ -12,8 +12,11 @@ namespace Editor
 
         string Title { get; set; }
 
-        string FilePath { get; set; }
+        string FilePath { get; }
 
         EditorTypes EditorType { get; }
+
+        void OnShow();
+        void OnHide();
     }
 }

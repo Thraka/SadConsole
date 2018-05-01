@@ -23,11 +23,11 @@ namespace Editor.ViewModels
 
         public ObservableCollection<IDocument> Documents => _documents;
 
-        public IDocument CurrentDocument { get => _currentDocument; set => _currentDocument = value; }
+        public IDocument CurrentDocument { get => _currentDocument; set { _currentDocument = value; OnPropertyChanged(); } }
 
         public ObservableCollection<Tools.ITool> Tools => _tools;
 
-        public Tools.ITool CurrentTool { get => _currentTool; set => _currentTool = value; }
+        public Tools.ITool CurrentTool { get => _currentTool; set { _currentTool = value; OnPropertyChanged(); } }
 
 
         public ICommand ShowNewDocument { get => _showNewDocument; private set => _showNewDocument = value; }
@@ -55,16 +55,17 @@ namespace Editor.ViewModels
                     if (result)
                     {
                         _documents.Add(((DocumentViewModel)settings.ChildContentDataContext).CreateDocument());
+
+                        if (_documents.Count == 1)
+                        {
+                            CurrentDocument = _documents[0];
+                        }
                     }
 
                     settings.Window.Hide();
                 });
 
                 Xaml.WindowBase.Show(new Xaml.WindowNewDocument(), settings);
-                //window1 = new Xaml.WindowBase();
-                //window1.Width = 200;
-                //window1.Height = 200;
-                //((Noesis.Grid)SadConsole.EditorGameComponent.noesisGUIWrapper.ControlTreeRoot).Children.Add(window1);
             });
         }
     }

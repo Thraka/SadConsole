@@ -114,6 +114,7 @@
     <Compile Include="DocumentTypes\SurfaceDocument.cs" />
     <Compile Include="EditorGameComponent.cs" />
     <Compile Include="EditorTypes.cs" />
+    <Compile Include="EditViewScreen.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IDocument.cs" />
     <Compile Include="NoesisManager.cs" />

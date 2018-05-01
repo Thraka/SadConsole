@@ -9,14 +9,27 @@ namespace Editor
 {
     public class SurfaceDocument : IDocument
     {
+        protected string filePath;
+        protected SadConsole.Console surface;
+
         public string DisplayTitle { get => $"Surface: {Title}"; }
 
         public string Title { get => "TEMP 1234567890 1234567890"; set => throw new NotImplementedException(); }
 
-        public string FilePath { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FilePath => filePath;
 
         public EditorTypes EditorType => EditorTypes.SingleSurface;
 
-        public IScreen DrawingScreen => throw new NotImplementedException();
+        public IScreen DrawingScreen => surface;
+
+        public void OnHide()
+        {
+
+        }
+
+        public void OnShow()
+        {
+
+        }
     }
 }

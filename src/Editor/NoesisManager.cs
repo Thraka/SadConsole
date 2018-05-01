@@ -41,7 +41,7 @@ namespace Editor
             config.SetupInputFromWindows();
 
             noesisGUIWrapper = new NoesisWrapper(config);
-            noesisGUIWrapper.ControlTreeRoot.DataContext = new Editor.ViewModels.MainViewModel();
+            noesisGUIWrapper.ControlTreeRoot.DataContext = Program.MainViewModel;
         }
     }
 }

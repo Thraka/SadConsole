@@ -30,7 +30,7 @@
             <Border Background="#44000000">
                 <StackPanel Orientation="Horizontal">
                     <Label VerticalAlignment="Center" Margin="4,0,4,0">Documents</Label>
-                    <ComboBox VerticalAlignment="Center" Width="160" ItemsSource="{Binding Documents}" DisplayMemberPath="DisplayTitle" />
+                    <ComboBox VerticalAlignment="Center" Width="160" ItemsSource="{Binding Documents}" DisplayMemberPath="DisplayTitle" SelectedItem="{Binding CurrentDocument, Mode=TwoWay}" />
                 </StackPanel>
             </Border>
         </Menu>

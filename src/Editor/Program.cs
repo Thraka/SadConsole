@@ -7,6 +7,8 @@ namespace Editor
 {
     class Program
     {
+        public static Editor.ViewModels.MainViewModel MainViewModel;
+        public static EditViewScreen MainEditorScreen;
 
         public const int Width = 80;
         public const int Height = 25;
@@ -28,6 +30,7 @@ namespace Editor
 
             SadConsole.Game.OnDestroy = () =>
             {
+                MainViewModel = null;
                 Xaml.WindowBase.Windows.ForEach( (w) => w.Hide() );
                 Xaml.WindowBase.Windows.Clear();
                 NoesisManager.DestroyGUI();
@@ -62,17 +65,21 @@ namespace Editor
 
         private static void Init()
         {
+            MainViewModel = new Editor.ViewModels.MainViewModel();
+
             // Any custom loading and prep. We will use a sample console for now
             SadConsole.Game.Instance.Components.RemoveAt(1); //SadConsoleGameComponent
             SadConsole.Game.Instance.Components.Add(new EditorGameComponent((SadConsole.Game)SadConsole.Game.Instance));
 
-            Console startingConsole = new Console(Width, Height);
-            startingConsole.FillWithRandomGarbage();
-            startingConsole.Fill(new Rectangle(3, 3, 27, 5), null, Color.Black, 0);
-            startingConsole.Print(6, 5, "Hello from SadConsole", ColorAnsi.CyanBright);
+            SadConsole.Global.CurrentScreen = MainEditorScreen = new EditViewScreen();
 
-            // Set our new console as the thing to render and process
-            SadConsole.Global.CurrentScreen = startingConsole;
+            //Console startingConsole = new Console(Width, Height);
+            //startingConsole.FillWithRandomGarbage();
+            //startingConsole.Fill(new Rectangle(3, 3, 27, 5), null, Color.Black, 0);
+            //startingConsole.Print(6, 5, "Hello from SadConsole", ColorAnsi.CyanBright);
+
+            //// Set our new console as the thing to render and process
+            //SadConsole.Global.CurrentScreen = startingConsole;
 
             // Load main GUI
             var window = new Xaml.MainWindow();
