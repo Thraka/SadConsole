@@ -243,17 +243,44 @@ namespace SadConsole
     [DataContract]
     public struct CellState
     {
+        /// <summary>
+        /// Foreground color of the state.
+        /// </summary>
         [DataMember]
         public readonly Color Foreground;
+
+        /// <summary>
+        /// Background color of the state.
+        /// </summary>
         [DataMember]
         public readonly Color Background;
+
+        /// <summary>
+        /// Glyph of the state.
+        /// </summary>
         [DataMember]
         public readonly int Glyph;
+
+        /// <summary>
+        /// Mirror setting of the state.
+        /// </summary>
         [DataMember]
         public readonly SpriteEffects Mirror;
+
+        /// <summary>
+        /// Visible setting of the state.
+        /// </summary>
         [DataMember]
         public readonly bool IsVisible;
 
+        /// <summary>
+        /// Creates a new state with the specified colors, glyph, visiblity, and mirror settings.
+        /// </summary>
+        /// <param name="foreground">Foreground color.</param>
+        /// <param name="background">Background color.</param>
+        /// <param name="glyph">Glyph value.</param>
+        /// <param name="mirror">Mirror setting.</param>
+        /// <param name="isVisible">Visbility setting.</param>
         public CellState(Color foreground, Color background, int glyph, SpriteEffects mirror, bool isVisible)
         {
             Foreground = foreground;
@@ -262,6 +289,12 @@ namespace SadConsole
             Mirror = mirror;
             IsVisible = isVisible;
         }
+
+        /// <summary>
+        /// Creates a cell state from a cell.
+        /// </summary>
+        /// <param name="source">The source cell to create a state from.</param>
+        public CellState(Cell source) : this(source.Foreground, source.Background, source.Glyph, source.Mirror, source.IsVisible) { }
 
         public static bool operator ==(CellState left, CellState right)
         {
