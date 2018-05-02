@@ -159,10 +159,12 @@ namespace SadConsole
         /// <summary>
         /// Saves the current state of this cell to the <see cref="State"/> property.
         /// </summary>
-        public void SaveState()
-        {
-            State = new CellState(Foreground, Background, Glyph, Mirror, IsVisible);
-        }
+        public void SaveState() => State = new CellState(Foreground, Background, Glyph, Mirror, IsVisible);
+
+        /// <summary>
+        /// Saves the current state of this cell to the provided state variable.
+        /// </summary>
+        public void SaveState(out CellState state) => state = new CellState(Foreground, Background, Glyph, Mirror, IsVisible);
 
         /// <summary>
         /// Restores the state of this cell from the <see cref="State"/> property.
@@ -182,21 +184,27 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Restores the state of this cell from the <paramref name="state"/> parameter.
+        /// </summary>
+        public void RestoreState(ref CellState state)
+        {
+            Foreground = state.Foreground;
+            Background = state.Background;
+            Glyph = state.Glyph;
+            Mirror = state.Mirror;
+            IsVisible = state.IsVisible;
+        }
+
+        /// <summary>
         /// Resets the <see cref="State"/> to nothing.
         /// </summary>
-        public void ClearState()
-        {
-            State = null;
-        }
+        public void ClearState() => State = null;
 
         /// <summary>
         /// Returns a new cell with the same properties as this one.
         /// </summary>
         /// <returns>The new cell.</returns>
-        public Cell Clone()
-        {
-            return new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = this.IsVisible };
-        }
+        public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = this.IsVisible };
 
         /// <summary>
         /// Compares if the cell is the same as the state.
