@@ -181,7 +181,7 @@ namespace SadConsole
         /// <summary>
         /// Indicates whether or not this console is visible.
         /// </summary>
-        public bool IsVisible { get { return isVisible; } set { isVisible = value; OnVisibleChanged(); } }
+        public bool IsVisible { get { return isVisible; } set { isVisible = value; IsExclusiveMouse = false; OnVisibleChanged(); } }
 
         /// <summary>
         /// Indicates the screen object should not process <see cref="Update(TimeSpan)"/>.
