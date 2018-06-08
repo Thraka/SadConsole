@@ -18,6 +18,11 @@ namespace SadConsole
     public class Cell
     {
         /// <summary>
+        /// Modifies the look of a cell with additional character. 
+        /// </summary>
+        public List<CellDecorator> Decorators = new List<CellDecorator>();
+
+        /// <summary>
         /// The foreground color of this cell.
         /// </summary>
         [DataMember]
@@ -348,6 +353,59 @@ namespace SadConsole
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror ||
                    left.IsVisible != right.IsVisible;
+        }
+    }
+
+    /// <summary>
+    /// Decorates a cell, such as an underline.
+    /// </summary>
+    [DataContract]
+    public struct CellDecorator
+    {
+        /// <summary>
+        /// Foreground color of the decorator.
+        /// </summary>
+        [DataMember]
+        public readonly Color Foreground;
+
+
+        /// <summary>
+        /// Glyph of the decorator.
+        /// </summary>
+        [DataMember]
+        public readonly int Glyph;
+
+        /// <summary>
+        /// Mirror setting of the decorator.
+        /// </summary>
+        [DataMember]
+        public readonly SpriteEffects Mirror;
+
+        /// <summary>
+        /// Creates a new decorator with the specified colors, glyph, visiblity, and mirror settings.
+        /// </summary>
+        /// <param name="foreground">Foreground color.</param>
+        /// <param name="glyph">Glyph value.</param>
+        /// <param name="mirror">Mirror setting.</param>
+        public CellDecorator(Color foreground, int glyph, SpriteEffects mirror)
+        {
+            Foreground = foreground;
+            Glyph = glyph;
+            Mirror = mirror;
+        }
+        
+        public static bool operator ==(CellDecorator left, CellDecorator right)
+        {
+            return left.Foreground == right.Foreground &&
+                   left.Glyph == right.Glyph &&
+                   left.Mirror == right.Mirror;
+        }
+
+        public static bool operator !=(CellDecorator left, CellDecorator right)
+        {
+            return left.Foreground != right.Foreground ||
+                   left.Glyph != right.Glyph ||
+                   left.Mirror != right.Mirror;
         }
     }
 }
