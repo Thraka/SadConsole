@@ -292,7 +292,7 @@ namespace SadConsole
         /// </summary>
         public virtual void Hide()
         {
-            isVisible = false;
+            IsVisible = false;
 
             if (isModal)
                 Global.FocusedConsoles.Pop(this);

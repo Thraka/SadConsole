@@ -123,12 +123,20 @@ namespace SadConsole.Input
         /// </summary>
         public virtual void Process()
         {
+            // Check if last mouse was marked exclusive
+            if (lastMouseConsole != null && lastMouseConsole.IsExclusiveMouse)
+            {
+                var state = new MouseConsoleState(lastMouseConsole, this);
 
-            // Check if the focused input console will handle mouse or not
-            if (Global.FocusedConsoles.Console != null && Global.FocusedConsoles.Console.IsExclusiveMouse)
+                lastMouseConsole.ProcessMouse(state);
+            }
+
+            // Check if the focused input console wants exclusive mouse
+            else if (Global.FocusedConsoles.Console != null && Global.FocusedConsoles.Console.IsExclusiveMouse)
             {
                 var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
 
+                // if the last console to have the mouse is not our global, signal
                 if (lastMouseConsole != null && lastMouseConsole != Global.FocusedConsoles.Console)
                 {
                     lastMouseConsole.LostMouse(state);
