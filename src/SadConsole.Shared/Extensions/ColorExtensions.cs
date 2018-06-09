@@ -251,6 +251,36 @@ namespace Microsoft.Xna.Framework
         public static Color ClearAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)0);
 
         /// <summary>
+        /// Returns a new color with the red channel set to 255.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the red channel fully set.</returns>
+        public static Color FillRed(this Color color) => new Color((byte)255, color.G, color.B, color.A);
+
+        /// <summary>
+        /// Returns a new color with the green channel set to 255.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the green channel fully set.</returns>
+        public static Color FillGreen(this Color color) => new Color(color.R, (byte)255, color.B, color.A);
+
+        /// <summary>
+        /// Returns a new color with the blue channel set to 255.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the blue channel fully set.</returns>
+        public static Color FillBlue(this Color color) => new Color(color.R, color.G, (byte)255, color.A);
+
+        /// <summary>
+        /// Returns a new color with the alpha channel set to 255.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A color with the alpha channel fully set.</returns>
+        public static Color FillAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)255);
+
+
+
+        /// <summary>
         /// Gets the luma of an existing color.
         /// </summary>
         /// <param name="color">The color to calculate the luma from.</param>
