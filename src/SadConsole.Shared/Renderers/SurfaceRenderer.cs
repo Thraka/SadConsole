@@ -74,7 +74,6 @@ namespace SadConsole.Renderers
                 if (surface.Tint.A != 255)
                 {
                     Cell cell;
-                    CellDecorator decorator;
 
                     if (surface.DefaultBackground.A != 0)
                         Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
@@ -90,12 +89,6 @@ namespace SadConsole.Renderers
 
                             if (cell.Foreground != Color.Transparent)
                                 Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
-
-                            for (int d = 0; d < cell.Decorators.Count; d++)
-                            {
-                                decorator = cell.Decorators[d];
-                                Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[decorator.Glyph], decorator.Foreground, 0f, Vector2.Zero, decorator.Mirror, 0.4f);
-                            }
                         }
                     }
                 }

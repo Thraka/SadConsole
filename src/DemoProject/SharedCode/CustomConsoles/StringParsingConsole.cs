@@ -47,12 +47,6 @@ namespace StarterProject.CustomConsoles
             Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]Examples                                                                      ");
             SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
 
-            var temp = new CellDecorator(Color.White, 95, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
-            for (int i = 241; i < 241 + 24; i++)
-            {
-                textSurface[i].Decorators.Add(temp);
-            }
-
             r += 2;
 
             SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
