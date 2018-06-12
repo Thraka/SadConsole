@@ -182,10 +182,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="index">The index to test.</param>
         /// <returns>A true value indicating the cell index is in this cell surface.</returns>
-        public bool IsValidCell(int index)
-        {
-            return index >= 0 && index < textSurface.Cells.Length;
-        }
+        public bool IsValidCell(int index) => index >= 0 && index < textSurface.Cells.Length;
 
         #region Cell Manipulation
 
@@ -261,10 +258,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The glyph index.</returns>
-        public int GetGlyph(int x, int y)
-        {
-            return textSurface.Cells[y * textSurface.Width + x].Glyph;
-        }
+        public int GetGlyph(int x, int y) => textSurface.Cells[y * textSurface.Width + x].Glyph;
 
         /// <summary>
         /// Changes the foreground of a specified cell to a new color.
@@ -283,10 +277,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
-        public Color GetForeground(int x, int y)
-        {
-            return textSurface.Cells[y * textSurface.Width + x].Foreground;
-        }
+        public Color GetForeground(int x, int y) => textSurface.Cells[y * textSurface.Width + x].Foreground;
 
         /// <summary>
         /// Changes the background of a cell to the specified color.
@@ -305,10 +296,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
-        public Color GetBackground(int x, int y)
-        {
-            return textSurface.Cells[y * textSurface.Width + x].Background;
-        }
+        public Color GetBackground(int x, int y) => textSurface.Cells[y * textSurface.Width + x].Background;
 
         /// <summary>
         /// Changes the effect of a cell to the specified effect.
@@ -361,10 +349,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The effect.</returns>
-        public Effects.ICellEffect GetEffect(int x, int y)
-        {
-            return Effects.GetEffect(textSurface[x, y]);
-        }
+        public Effects.ICellEffect GetEffect(int x, int y) => Effects.GetEffect(textSurface[x, y]);
 
         /// <summary>
         /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -399,10 +384,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
-        public SpriteEffects GetMirror(int x, int y)
-        {
-            return textSurface.Cells[y * textSurface.Width + x].Mirror;
-        }
+        public SpriteEffects GetMirror(int x, int y) => textSurface.Cells[y * textSurface.Width + x].Mirror;
 
         /// <summary>
         /// Sets the sprite effect of a specified cell.
@@ -1196,6 +1178,17 @@ namespace SadConsole.Surfaces
         #endregion
 
         #endregion
+
+        /// <summary>
+        /// Connects all lines for both <see cref="LineStyleIndexesThin"/> and <see cref="LineStyleIndexesThick"/> styles.
+        /// </summary>
+        public void ConnectLines() => SurfaceEditor.ConnectLines(textSurface);
+
+        /// <summary>
+        /// Connects all lines based on the <paramref name="lineStyle"/> style provided.
+        /// </summary>
+        /// <param name="lineStyle">The array of line styles indexed by <see cref="LineRoadIndex"/>.</param>
+        public void ConnectLines(int[] lineStyle) => SurfaceEditor.ConnectLines(textSurface, lineStyle);
 
         /// <summary>
         /// Draws a line from <paramref name="start"/> to <paramref name="end"/>.

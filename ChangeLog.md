@@ -1,4 +1,10 @@
-﻿## 04/06/2018
+﻿## 06/11/2018
+
+- Fix a stack overflow problem in the window object introduced by the previous mouse bug fix.
+- Cell states can be stored and restored with variables now. Each cell still has a backing cellstate that can be used.
+- NoDrawSurface.FromSurface is now static. (as it should have been)
+
+## 04/06/2018
 
 - Fixed bug in Mouse processing. (Thanks VGA256)
 

@@ -293,6 +293,7 @@ namespace SadConsole
         public virtual void Hide()
         {
             isVisible = false;
+            IsExclusiveMouse = false;
 
             if (isModal)
                 Global.FocusedConsoles.Pop(this);
@@ -300,12 +301,11 @@ namespace SadConsole
             if (addedToParent && Parent != null)
                 Parent = null;
 
-            if (Closed != null)
-                Closed(this, new EventArgs());
+            Closed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
-        /// Centers the window according to the <see cref="SadConsole.Engine.Device.Viewport"/> size.
+        /// Centers the window within the bounds of <see cref="Global.RenderWidth"/> and <see cref="Global.RenderHeight"/>
         /// </summary>
         public void Center()
         {

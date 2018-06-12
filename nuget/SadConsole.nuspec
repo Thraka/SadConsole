@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.4.11</version>
+    <version>6.5.0</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,6 +12,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>
+## 6.5.0
+- Fix a stack overflow problem in the window object introduced by the previous mouse bug fix.
+- Cell states can be stored and restored with variables now. Each cell still has a backing cellstate that can be used.
+- NoDrawSurface.FromSurface is now static. (as it should have been)
 ## 6.4.11
 - Fixed bug in mouse processing (thanks VGA256)
 ## 6.4.10

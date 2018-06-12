@@ -15,7 +15,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="surface">The original surface</param>
         /// <returns></returns>
-        public NoDrawSurface FromSurface(ISurface surface)
+        public static NoDrawSurface FromSurface(ISurface surface)
         {
             return new NoDrawSurface(surface.Width, surface.Height, surface.Font, surface.RenderArea, surface.Cells);
         }
@@ -35,7 +35,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
-        /// <param name="renderArea">Initial value for the <see cref="RenderArea"/> view.</param>
+        /// <param name="renderArea">Initial value for the <see cref="BasicSurface.RenderArea"/> view.</param>
         public NoDrawSurface(int width, int height, Rectangle renderArea) : this(width, height, Global.FontDefault, renderArea, null)
         {
 
@@ -58,7 +58,7 @@ namespace SadConsole.Surfaces
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        /// <param name="renderArea">Initial value for the <see cref="RenderArea"/> view.</param>
+        /// <param name="renderArea">Initial value for the <see cref="BasicSurface.RenderArea"/> view.</param>
         public NoDrawSurface(int width, int height, Font font, Rectangle renderArea) : this(width, height, font, renderArea, null)
         {
 
@@ -71,7 +71,7 @@ namespace SadConsole.Surfaces
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        /// <param name="renderArea">Initial value for the <see cref="RenderArea"/> view.</param>
+        /// <param name="renderArea">Initial value for the <see cref="BasicSurface.RenderArea"/> view.</param>
         public NoDrawSurface(int width, int height, Font font, Rectangle renderArea, Cell[] initialCells)
         {
             this.area = renderArea;
@@ -120,7 +120,7 @@ namespace SadConsole.Surfaces
         /// Saves the <see cref="NoDrawSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
-        public void Save(string file)
+        public new void Save(string file)
         {
             Serializer.Save((SerializedTypes.BasicSurfaceSerialized)this, file);
         }
@@ -130,7 +130,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static NoDrawSurface Load(string file)
+        public static new NoDrawSurface Load(string file)
         {
             return Serializer.Load<SerializedTypes.BasicSurfaceSerialized>(file);
         }
