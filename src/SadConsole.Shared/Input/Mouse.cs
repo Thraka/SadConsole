@@ -21,6 +21,21 @@ namespace SadConsole.Input
         public Point ScreenPosition { get; set; }
 
         /// <summary>
+        /// Indicates the middle mouse button is currently being pressed.
+        /// </summary>
+        public bool MiddleButtonDown { get; set; }
+
+        /// <summary>
+        /// Indicates the middle mouse button was clicked. (Held and then released)
+        /// </summary>
+        public bool MiddleClicked { get; set; }
+
+        /// <summary>
+        /// Inidcates the middle mouse button was double-clicked within one second.
+        /// </summary>
+        public bool MiddleDoubleClicked { get; set; }
+
+        /// <summary>
         /// Indicates the left mouse button is currently being pressed.
         /// </summary>
         public bool LeftButtonDown { get; set; }
@@ -76,6 +91,7 @@ namespace SadConsole.Input
             // Update local state
             bool leftDown = currentState.LeftButton == ButtonState.Pressed;
             bool rightDown = currentState.RightButton == ButtonState.Pressed;
+            bool middleDown = currentState.MiddleButton == ButtonState.Pressed;
 
             ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
             ScrollWheelValue = currentState.ScrollWheelValue;
@@ -83,23 +99,30 @@ namespace SadConsole.Input
             ScreenPosition = new Point((int)(currentState.X * Global.RenderScale.X), (int)(currentState.Y * Global.RenderScale.Y)) - new Point((int)(Global.RenderRect.X * Global.RenderScale.X), (int)(Global.RenderRect.Y * Global.RenderScale.Y));
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
+            bool newMiddleClicked = MiddleButtonDown && !middleDown;
 
             if (!newLeftClicked)
                 LeftDoubleClicked = false;
             if (!newRightClicked)
                 RightDoubleClicked = false;
+            if (!newMiddleClicked)
+                MiddleDoubleClicked = false;
 
             if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
                 LeftDoubleClicked = true;
             if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
                 RightDoubleClicked = true;
+            if (MiddleClicked && newMiddleClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+                MiddleDoubleClicked = true;
 
             LeftClicked = newLeftClicked;
             RightClicked = newRightClicked;
+            MiddleClicked = newMiddleClicked;
             _leftLastClickedTime = gameTime.ElapsedGameTime;
             _rightLastClickedTime = gameTime.ElapsedGameTime;
             LeftButtonDown = leftDown;
             RightButtonDown = rightDown;
+            MiddleButtonDown = middleDown;
         }
 
         /// <summary>
@@ -113,6 +136,9 @@ namespace SadConsole.Input
             LeftDoubleClicked = false;
             LeftClicked = false;
             LeftButtonDown = false;
+            MiddleDoubleClicked = false;
+            MiddleClicked = false;
+            MiddleButtonDown = false;
             ScrollWheelValue = 0;
             ScrollWheelValueChange = 0;
             ScreenPosition = Point.Zero;
@@ -222,6 +248,9 @@ namespace SadConsole.Input
                 RightButtonDown = this.RightButtonDown,
                 RightClicked = this.RightClicked,
                 RightDoubleClicked = this.RightDoubleClicked,
+                MiddleButtonDown = this.MiddleButtonDown,
+                MiddleClicked = this.MiddleClicked,
+                MiddleDoubleClicked = this.MiddleDoubleClicked,
                 ScrollWheelValue = this.ScrollWheelValue,
                 ScrollWheelValueChange = this.ScrollWheelValueChange
             };
