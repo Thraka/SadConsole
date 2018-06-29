@@ -94,7 +94,9 @@ namespace SadConsole.Renderers
                             for (int d = 0; d < cell.Decorators.Count; d++)
                             {
                                 decorator = cell.Decorators[d];
-                                Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[decorator.Glyph], decorator.Foreground, 0f, Vector2.Zero, decorator.Mirror, 0.4f);
+
+                                if (decorator.Color != Color.Transparent)
+                                    Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
                             }
                         }
                     }

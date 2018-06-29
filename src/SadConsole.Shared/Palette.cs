@@ -98,8 +98,15 @@ namespace SadConsole
         /// Gets the closest color in the palette to the provided color.
         /// </summary>
         /// <param name="color">The color to find.</param>
+        /// <returns>The closest matching color.</returns>
+        public Color GetNearest(Color color) => colors[GetNearestIndex(color)];
+
+        /// <summary>
+        /// Gets the index of the closest color in the palette to the provided color.
+        /// </summary>
+        /// <param name="color">The color to find.</param>
         /// <returns>The palette index of the closest color.</returns>
-        public int GetNearest(Color color)
+        public int GetNearestIndex(Color color)
         {
             int lowestDistanceIndex = -1;
             int lowestDistance = int.MaxValue;

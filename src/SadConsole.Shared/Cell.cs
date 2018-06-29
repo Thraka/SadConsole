@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,7 +22,8 @@ namespace SadConsole
         /// <summary>
         /// Modifies the look of a cell with additional character. 
         /// </summary>
-        public List<CellDecorator> Decorators = new List<CellDecorator>();
+        [DataMember]
+        public List<CellDecorator> Decorators { get; internal set; } = new List<CellDecorator>();
 
         /// <summary>
         /// The foreground color of this cell.
@@ -109,6 +112,7 @@ namespace SadConsole
             cell.Background = this.Background;
             cell.Glyph = this.Glyph;
             cell.Mirror = this.Mirror;
+            cell.Decorators = new List<CellDecorator>(this.Decorators);
         }
 
         /// <summary>
@@ -121,6 +125,7 @@ namespace SadConsole
             this.Background = cell.Background;
             this.Glyph = cell.Glyph;
             this.Mirror = cell.Mirror;
+            this.Decorators = new List<CellDecorator>(cell.Decorators);
         }
 
         /// <summary>
@@ -132,6 +137,7 @@ namespace SadConsole
             Background = Color.Black;
             Glyph = 0;
             Mirror = SpriteEffects.None;
+            Decorators.Clear();
         }
 
         /// <summary>
@@ -159,17 +165,21 @@ namespace SadConsole
 
             if (Foreground != Color.Transparent)
                 batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[Glyph], Foreground, 0f, Vector2.Zero, Mirror, 0.4f);
+
+            foreach (var decorator in Decorators)
+                if (decorator.Color != Color.Transparent)
+                    batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
         }
 
         /// <summary>
         /// Saves the current state of this cell to the <see cref="State"/> property.
         /// </summary>
-        public void SaveState() => State = new CellState(Foreground, Background, Glyph, Mirror, IsVisible);
+        public void SaveState() => State = new CellState(Foreground, Background, Glyph, Mirror, IsVisible, Decorators);
 
         /// <summary>
         /// Saves the current state of this cell to the provided state variable.
         /// </summary>
-        public void SaveState(out CellState state) => state = new CellState(Foreground, Background, Glyph, Mirror, IsVisible);
+        public void SaveState(out CellState state) => state = new CellState(Foreground, Background, Glyph, Mirror, IsVisible, Decorators);
 
         /// <summary>
         /// Restores the state of this cell from the <see cref="State"/> property.
@@ -183,7 +193,7 @@ namespace SadConsole
                 Glyph = State.Value.Glyph;
                 Mirror = State.Value.Mirror;
                 IsVisible = State.Value.IsVisible;
-
+                Decorators = new List<CellDecorator>(State.Value.Decorators);
                 State = null;
             }
         }
@@ -198,6 +208,7 @@ namespace SadConsole
             Glyph = state.Glyph;
             Mirror = state.Mirror;
             IsVisible = state.IsVisible;
+            Decorators = new List<CellDecorator>(state.Decorators);
         }
 
         /// <summary>
@@ -209,7 +220,7 @@ namespace SadConsole
         /// Returns a new cell with the same properties as this one.
         /// </summary>
         /// <returns>The new cell.</returns>
-        public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = this.IsVisible };
+        public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = this.IsVisible, Decorators = new List<CellDecorator>(this.Decorators) };
 
         /// <summary>
         /// Compares if the cell is the same as the state.
@@ -223,7 +234,8 @@ namespace SadConsole
                    left.Foreground == right.Foreground &&
                    left.Glyph == right.Glyph &&
                    left.Mirror == right.Mirror &&
-                   left.IsVisible == right.IsVisible;
+                   left.IsVisible == right.IsVisible &&
+                   left.Decorators.SequenceEqual(right.Decorators);
         }
 
         /// <summary>
@@ -238,174 +250,11 @@ namespace SadConsole
                    left.Foreground != right.Foreground ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror ||
-                   left.IsVisible != right.IsVisible;
+                   left.IsVisible != right.IsVisible &&
+                   !left.Decorators.SequenceEqual(right.Decorators);
         }
     }
 
-    /// <summary>
-    /// A cell in structure format for temporary storage.
-    /// </summary>
-    [DataContract]
-    public struct CellState
-    {
-        /// <summary>
-        /// Foreground color of the state.
-        /// </summary>
-        [DataMember]
-        public readonly Color Foreground;
 
-        /// <summary>
-        /// Background color of the state.
-        /// </summary>
-        [DataMember]
-        public readonly Color Background;
-
-        /// <summary>
-        /// Glyph of the state.
-        /// </summary>
-        [DataMember]
-        public readonly int Glyph;
-
-        /// <summary>
-        /// Mirror setting of the state.
-        /// </summary>
-        [DataMember]
-        public readonly SpriteEffects Mirror;
-
-        /// <summary>
-        /// Visible setting of the state.
-        /// </summary>
-        [DataMember]
-        public readonly bool IsVisible;
-
-        /// <summary>
-        /// Creates a new state with the specified colors, glyph, visiblity, and mirror settings.
-        /// </summary>
-        /// <param name="foreground">Foreground color.</param>
-        /// <param name="background">Background color.</param>
-        /// <param name="glyph">Glyph value.</param>
-        /// <param name="mirror">Mirror setting.</param>
-        /// <param name="isVisible">Visbility setting.</param>
-        public CellState(Color foreground, Color background, int glyph, SpriteEffects mirror, bool isVisible)
-        {
-            Foreground = foreground;
-            Background = background;
-            Glyph = glyph;
-            Mirror = mirror;
-            IsVisible = isVisible;
-        }
-
-        /// <summary>
-        /// Creates a cell state from a cell.
-        /// </summary>
-        /// <param name="source">The source cell to create a state from.</param>
-        public CellState(Cell source) : this(source.Foreground, source.Background, source.Glyph, source.Mirror, source.IsVisible) { }
-
-        public static bool operator ==(CellState left, CellState right)
-        {
-            return left.Background == right.Background &&
-                   left.Foreground == right.Foreground &&
-                   left.Glyph == right.Glyph &&
-                   left.Mirror == right.Mirror &&
-                   left.IsVisible == right.IsVisible;
-        }
-
-        public static bool operator !=(CellState left, CellState right)
-        {
-            return left.Background != right.Background ||
-                   left.Foreground != right.Foreground ||
-                   left.Glyph != right.Glyph ||
-                   left.Mirror != right.Mirror ||
-                   left.IsVisible != right.IsVisible;
-        }
-
-        public static bool operator ==(CellState left, Cell right)
-        {
-            return left.Background == right.Background &&
-                   left.Foreground == right.Foreground &&
-                   left.Glyph == right.Glyph &&
-                   left.Mirror == right.Mirror &&
-                   left.IsVisible == right.IsVisible;
-        }
-
-        public static bool operator !=(CellState left, Cell right)
-        {
-            return left.Background != right.Background ||
-                   left.Foreground != right.Foreground ||
-                   left.Glyph != right.Glyph ||
-                   left.Mirror != right.Mirror ||
-                   left.IsVisible != right.IsVisible;
-        }
-
-        public static bool operator ==(Cell right, CellState left)
-        {
-            return left.Background == right.Background &&
-                   left.Foreground == right.Foreground &&
-                   left.Glyph == right.Glyph &&
-                   left.Mirror == right.Mirror &&
-                   left.IsVisible == right.IsVisible;
-        }
-
-        public static bool operator !=(Cell left, CellState right)
-        {
-            return left.Background != right.Background ||
-                   left.Foreground != right.Foreground ||
-                   left.Glyph != right.Glyph ||
-                   left.Mirror != right.Mirror ||
-                   left.IsVisible != right.IsVisible;
-        }
-    }
-
-    /// <summary>
-    /// Decorates a cell, such as an underline.
-    /// </summary>
-    [DataContract]
-    public struct CellDecorator
-    {
-        /// <summary>
-        /// Foreground color of the decorator.
-        /// </summary>
-        [DataMember]
-        public readonly Color Foreground;
-
-
-        /// <summary>
-        /// Glyph of the decorator.
-        /// </summary>
-        [DataMember]
-        public readonly int Glyph;
-
-        /// <summary>
-        /// Mirror setting of the decorator.
-        /// </summary>
-        [DataMember]
-        public readonly SpriteEffects Mirror;
-
-        /// <summary>
-        /// Creates a new decorator with the specified colors, glyph, visiblity, and mirror settings.
-        /// </summary>
-        /// <param name="foreground">Foreground color.</param>
-        /// <param name="glyph">Glyph value.</param>
-        /// <param name="mirror">Mirror setting.</param>
-        public CellDecorator(Color foreground, int glyph, SpriteEffects mirror)
-        {
-            Foreground = foreground;
-            Glyph = glyph;
-            Mirror = mirror;
-        }
-        
-        public static bool operator ==(CellDecorator left, CellDecorator right)
-        {
-            return left.Foreground == right.Foreground &&
-                   left.Glyph == right.Glyph &&
-                   left.Mirror == right.Mirror;
-        }
-
-        public static bool operator !=(CellDecorator left, CellDecorator right)
-        {
-            return left.Foreground != right.Foreground ||
-                   left.Glyph != right.Glyph ||
-                   left.Mirror != right.Mirror;
-        }
-    }
+    
 }

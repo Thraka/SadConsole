@@ -1,4 +1,10 @@
-﻿## 06/11/2018
+﻿## 06/28/2018 V7.0.0
+
+- Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
+- Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
+- CellDecorator class added that has a color, glyph, and mirror setting.
+
+## 06/11/2018
 
 - Fix a stack overflow problem in the window object introduced by the previous mouse bug fix.
 - Cell states can be stored and restored with variables now. Each cell still has a backing cellstate that can be used.

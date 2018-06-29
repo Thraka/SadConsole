@@ -41,6 +41,8 @@ namespace SadConsole.Renderers
                 Controls.ControlBase control;
                 Cell cell;
                 Font font;
+                CellDecorator decorator;
+
                 // For each control
                 for (int i = 0; i < Controls.Count; i++)
                 {
@@ -71,6 +73,14 @@ namespace SadConsole.Renderers
 
                                     if (cell.Foreground != Color.Transparent)
                                         Global.SpriteBatch.Draw(font.FontImage, rect, font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.26f);
+
+                                    for (int d = 0; d < cell.Decorators.Count; d++)
+                                    {
+                                        decorator = cell.Decorators[d];
+
+                                        if (decorator.Color != Color.Transparent)
+                                            Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+                                    }
                                 }
                             }
                         }
