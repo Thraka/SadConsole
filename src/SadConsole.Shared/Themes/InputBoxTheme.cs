@@ -12,7 +12,7 @@ namespace SadConsole.Themes
         /// The style to use for the carrot.
         /// </summary>
         [DataMember]
-        public SadConsole.Effects.ICellEffect CarrotEffect;
+        public SadConsole.Effects.ICellEffect CaretEffect;
 
         /// <summary>
         /// Returns a clone of this object.
@@ -25,7 +25,7 @@ namespace SadConsole.Themes
             newItem.Focused = this.Focused.Clone();
             newItem.MouseOver = this.MouseOver.Clone();
             newItem.Disabled = this.Disabled.Clone();
-            newItem.CarrotEffect = this.CarrotEffect.Clone();
+            newItem.CaretEffect = this.CaretEffect.Clone();
             return newItem;
         }
     }

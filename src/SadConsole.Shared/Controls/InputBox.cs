@@ -21,9 +21,9 @@ namespace SadConsole.Controls
     public class InputBox: ControlBase
     {
         /// <summary>
-        /// Indicates the carrot is visible.
+        /// Indicates the caret is visible.
         /// </summary>
-        protected bool isCarrotVisible = false;
+        protected bool isCaretVisible = false;
 
         /// <summary>
         /// A list of valid number characters
@@ -48,10 +48,10 @@ namespace SadConsole.Controls
 		protected int _leftDrawOffset;
 
         /// <summary>
-        /// The location of the carrot.
+        /// The location of the caret.
         /// </summary>
-        [DataMember(Name = "CarrotPosition")]
-        protected int _carrotPos;
+        [DataMember(Name = "CaretPosition")]
+        protected int _caretPos;
 
         /// <summary>
         /// The text value of the input box.
@@ -122,7 +122,7 @@ namespace SadConsole.Controls
         }
 
         /// <summary>
-        /// The alignment of the carrot.
+        /// The alignment of the caret.
         /// </summary>
         public HorizontalAlignment TextAlignment
         {
@@ -137,14 +137,14 @@ namespace SadConsole.Controls
         public int MaxLength { get; set; }
 
         /// <summary>
-        /// Gets or sets the position of the carrot in the current text.
+        /// Gets or sets the position of the caret in the current text.
         /// </summary>
-        public int CarrotPosition
+        public int CaretPosition
         {
-            get { return _carrotPos; }
+            get { return _caretPos; }
             set
             {
-                _carrotPos = value;
+                _caretPos = value;
                 IsDirty = true;
             }
         }
@@ -224,12 +224,12 @@ namespace SadConsole.Controls
                 if (base.IsFocused && !DisableKeyboard)
                 {
                     this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
-                    effects.SetEffect(this[this._carrotPos - _leftDrawOffset, 0], Theme.CarrotEffect);
-                    isCarrotVisible = true;
+                    effects.SetEffect(this[this._caretPos - _leftDrawOffset, 0], Theme.CaretEffect);
+                    isCaretVisible = true;
                 }
                 else
                 {
-                    isCarrotVisible = false;
+                    isCaretVisible = false;
                     this.Print(0, 0, _text.Align(TextAlignment, this.Width));
                 }
 
@@ -307,15 +307,15 @@ namespace SadConsole.Controls
                 _editingText = _editingText.Substring(0, MaxLength);
 
                 if (_editingText.Length == MaxLength)
-                    _carrotPos = _editingText.Length - 1;
+                    _caretPos = _editingText.Length - 1;
                 else
-                    _carrotPos = _editingText.Length;
+                    _caretPos = _editingText.Length;
             }
             else
-                _carrotPos = _editingText.Length;
+                _caretPos = _editingText.Length;
 
-			// Test to see if carrot is off edge of box
-			if (_carrotPos >= Width)
+			// Test to see if caret is off edge of box
+			if (_caretPos >= Width)
 			{
 				_leftDrawOffset = _editingText.Length - Width + 1;
 
@@ -387,33 +387,33 @@ namespace SadConsole.Controls
 
 						else
 						{
-                            if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _carrotPos != 0)
+                            if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _caretPos != 0)
                             {
-                                if (_carrotPos == newText.Length)
+                                if (_caretPos == newText.Length)
 									newText.Remove(newText.Length - 1, 1);
 								else
-									newText.Remove(_carrotPos - 1, 1);
+									newText.Remove(_caretPos - 1, 1);
 
-								_carrotPos -= 1;
+								_caretPos -= 1;
 
-								if (_carrotPos == -1)
-									_carrotPos = 0;
+								if (_caretPos == -1)
+									_caretPos = 0;
 							}
 							else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
 							{
-								newText.Insert(_carrotPos, ' ');
-								_carrotPos++;
+								newText.Insert(_caretPos, ' ');
+								_caretPos++;
 
-								if (_carrotPos > newText.Length)
-									_carrotPos = newText.Length;
+								if (_caretPos > newText.Length)
+									_caretPos = newText.Length;
 							}
 
-							else if (info.KeysPressed[i].Key == Keys.Delete && _carrotPos != newText.Length)
+							else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
 							{
-								newText.Remove(_carrotPos, 1);
+								newText.Remove(_caretPos, 1);
 
-								if (_carrotPos > newText.Length)
-									_carrotPos = newText.Length;
+								if (_caretPos > newText.Length)
+									_caretPos = newText.Length;
 							}
 
 							else if (info.KeysPressed[i].Key == Keys.Enter)
@@ -429,40 +429,40 @@ namespace SadConsole.Controls
 							}
 							else if (info.KeysPressed[i].Key == Keys.Left)
 							{
-								_carrotPos -= 1;
+								_caretPos -= 1;
 
-								if (_carrotPos == -1)
-									_carrotPos = 0;
+								if (_caretPos == -1)
+									_caretPos = 0;
 							}
 							else if (info.KeysPressed[i].Key == Keys.Right)
 							{
-								_carrotPos += 1;
+								_caretPos += 1;
 
-								if (_carrotPos > newText.Length)
-									_carrotPos = newText.Length;
+								if (_caretPos > newText.Length)
+									_caretPos = newText.Length;
 							}
 
 							else if (info.KeysPressed[i].Key == Keys.Home)
 							{
-								_carrotPos = 0;
+								_caretPos = 0;
 							}
 
 							else if (info.KeysPressed[i].Key == Keys.End)
 							{
-									_carrotPos = newText.Length;
+									_caretPos = newText.Length;
 							}
 
 							else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
 							{
-								newText.Insert(_carrotPos, info.KeysPressed[i].Character);
-								_carrotPos++;
+								newText.Insert(_caretPos, info.KeysPressed[i].Character);
+								_caretPos++;
 
-								if (_carrotPos > newText.Length)
-									_carrotPos = newText.Length;
+								if (_caretPos > newText.Length)
+									_caretPos = newText.Length;
 							}
 
-							// Test to see if carrot is off edge of box
-							if (_carrotPos >= Width)
+							// Test to see if caret is off edge of box
+							if (_caretPos >= Width)
 							{
 								_leftDrawOffset = newText.Length - Width + 1;
 
@@ -530,7 +530,7 @@ namespace SadConsole.Controls
 
         public override void Update()
         {
-            if (isCarrotVisible)
+            if (isCaretVisible)
             {
                 effects.UpdateEffects(Global.GameTimeElapsedUpdate);
                 OnComposed?.Invoke(this);

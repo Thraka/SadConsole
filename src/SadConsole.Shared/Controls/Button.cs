@@ -45,7 +45,7 @@ namespace SadConsole.Controls
         /// The alignment of the <see cref="text"/>.
         /// </summary>
         [DataMember(Name = "TextAlignment")]
-        protected System.Windows.HorizontalAlignment textAlignment = System.Windows.HorizontalAlignment.Center;
+        protected HorizontalAlignment textAlignment = HorizontalAlignment.Center;
 
         /// <summary>
         /// Selected part of the theme based on the state of the control.
@@ -64,7 +64,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// The alignment of the text, left, center, or right.
         /// </summary>
-        public System.Windows.HorizontalAlignment TextAlignment
+        public HorizontalAlignment TextAlignment
         {
             get { return textAlignment; }
             set { textAlignment = value; Compose(true); }
