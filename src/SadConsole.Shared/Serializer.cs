@@ -46,7 +46,16 @@ namespace SadConsole
             var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
 
             using (var stream = System.IO.File.OpenWrite(file))
-                serializer.WriteObject(stream, instance);
+            //using (var sw = new System.IO.StreamWriter(stream))
+            using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
+            {
+                var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Newtonsoft.Json.Formatting.None));
+
+                sw.Write(bytes, 0, bytes.Length);
+            }
+
+            //serializer.WriteObject(stream, instance);
+
         }
 
         /// <summary>
@@ -58,14 +67,55 @@ namespace SadConsole
         /// <returns>A new object instance.</returns>
         public static T Load<T>(string file, IEnumerable<Type> knownTypes = null)
         {
+            bool isCompressed = false;
+
             //if (System.IO.File.Exists(file))
             //{
             Global.SerializerPathHint = System.IO.Path.GetDirectoryName(file);
             using (var fileObject = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
             {
+                if (isCompressed)
+                {
+                    using (var sw = new System.IO.Compression.GZipStream(fileObject, System.IO.Compression.CompressionMode.Decompress))
+                    {
+
+                        using (var stringStream = new System.IO.MemoryStream())
+                        {
+                            sw.CopyTo(stringStream);
+
+                            using (var sr = new System.IO.StreamReader(stringStream))
+                            {
+                                string content = sr.ReadToEnd();
+
+                                //using (var tr = new System.IO.StringReader(content))
+                                {
+                                    return (T)Newtonsoft.Json.JsonConvert.DeserializeObject(content, typeof(T));
+                                    //return (T)Newtonsoft.Json.JsonSerializer.Create().Deserialize(tr, typeof(T));
+
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+                else
+                    using (var sr = new System.IO.StreamReader(fileObject))
+                    {
+                        string content = sr.ReadToEnd();
+
+                        //using (var tr = new System.IO.StringReader(content))
+                        {
+                            return (T)Newtonsoft.Json.JsonConvert.DeserializeObject(content, typeof(T));
+                            //return (T)Newtonsoft.Json.JsonSerializer.Create().Deserialize(tr, typeof(T));
+
+                        }
+                    }
+
+
+
                 //var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
                 var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
-
                 return (T)serializer.ReadObject(fileObject);
             }
             //}
