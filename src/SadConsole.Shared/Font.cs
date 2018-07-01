@@ -289,6 +289,12 @@ namespace SadConsole
             ConfigureRects();
         }
 
+        [Newtonsoft.Json.JsonConstructor]
+        private FontMaster()
+        {
+
+        }
+
 #region Methods
         /// <summary>
         /// After the font has been loaded, (with the <see cref="FilePath"/>, <see cref="GlyphHeight"/>, and <see cref="GlyphWidth"/> fields filled out) this method will create the actual texture.
