@@ -36,6 +36,7 @@ namespace SadConsole.Renderers
                 if (surface.Tint.A != 255)
                 {
                     Cell cell;
+                    CellDecorator decorator;
 
                     if (surface.DefaultBackground.A != 0)
                         Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
@@ -50,9 +51,19 @@ namespace SadConsole.Renderers
 
                                 if (cell.IsVisible)
                                 {
-                                    Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                                    if (cell.Background != Color.Transparent && cell.Background != surface.DefaultBackground)
+                                        Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
-                                    Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
+                                    if (cell.Foreground != Color.Transparent)
+                                        Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
+
+                                    for (int d = 0; d < cell.Decorators.Count; d++)
+                                    {
+                                        decorator = cell.Decorators[d];
+
+                                        if (decorator.Color != Color.Transparent)
+                                            Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+                                    }
                                 }
                             }
                         }
