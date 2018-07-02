@@ -1,8 +1,11 @@
-﻿## 06/28/2018 V7.0.0
+﻿## 07/01/2018 V7.0.0
 
 - Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
 - Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
 - CellDecorator class added that has a color, glyph, and mirror setting.
+- SadConsole.Serialization uses Newtonsoft.Json instead of the default .NET classes.
+- SadConsole.Serialization supports GZIP compression now.
+- Settings.SerializationIsCompressed can be set to true to set all internal save/load to use compression.
 
 ## 06/11/2018
 

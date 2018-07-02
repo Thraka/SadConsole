@@ -143,7 +143,7 @@ namespace SadConsole
             //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
             try
             {
-                var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
+                var masterFont = SadConsole.Serializer.Load<FontMaster>(font, false);
 
                 if (Fonts.ContainsKey(masterFont.Name))
                     Fonts.Remove(masterFont.Name);

@@ -1,20 +1,9 @@
-﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
-using FrameworkPoint = Microsoft.Xna.Framework.Point;
-using FrameworkRect = Microsoft.Xna.Framework.Rectangle;
-using FrameworkSpriteEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects;
-
-
-namespace SadConsole
+﻿namespace SadConsole
 {
     using System;
-    using System.CodeDom;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
     using System.Text;
-    using System.Threading.Tasks;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Common serialization tasks for SadConsole.
@@ -36,26 +25,30 @@ namespace SadConsole
         /// <typeparam name="T">Type of object to serialize</typeparam>
         /// <param name="instance">The object to serialize.</param>
         /// <param name="file">The file to save the object to.</param>
-        /// <param name="knownTypes">Optional list of known types for serialization.</param>
-        public static void Save<T>(T instance, string file, IEnumerable<Type> knownTypes = null)
+        /// <param name="compress">When true, uses GZIP compression on the json string saved to the <paramref name="file"/></param>
+        public static void Save<T>(T instance, string file, bool compress)
         {
             if (System.IO.File.Exists(file))
                 System.IO.File.Delete(file);
 
-            //var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
-            var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
-
             using (var stream = System.IO.File.OpenWrite(file))
-            //using (var sw = new System.IO.StreamWriter(stream))
-            using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
             {
-                var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Newtonsoft.Json.Formatting.None));
-
-                sw.Write(bytes, 0, bytes.Length);
+                if (compress)
+                {
+                    using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
+                    {
+                        var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto }));
+                        sw.Write(bytes, 0, bytes.Length);
+                    }
+                }
+                else
+                {
+                    using (var sw = new System.IO.StreamWriter(stream))
+                    {
+                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto }  ));
+                    }
+                }
             }
-
-            //serializer.WriteObject(stream, instance);
-
         }
 
         /// <summary>
@@ -63,64 +56,30 @@ namespace SadConsole
         /// </summary>
         /// <typeparam name="T">The type of object to deserialize.</typeparam>
         /// <param name="file">The file to load from.</param>
-        /// <param name="knownTypes">Known types used during deserialization.</param>
+        /// <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
         /// <returns>A new object instance.</returns>
-        public static T Load<T>(string file, IEnumerable<Type> knownTypes = null)
+        public static T Load<T>(string file, bool isCompressed)
         {
-            bool isCompressed = false;
-
-            //if (System.IO.File.Exists(file))
-            //{
             Global.SerializerPathHint = System.IO.Path.GetDirectoryName(file);
+
             using (var fileObject = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
             {
                 if (isCompressed)
                 {
                     using (var sw = new System.IO.Compression.GZipStream(fileObject, System.IO.Compression.CompressionMode.Decompress))
                     {
-
-                        using (var stringStream = new System.IO.MemoryStream())
+                        using (var sr = new System.IO.StreamReader(sw, Encoding.UTF32))
                         {
-                            sw.CopyTo(stringStream);
-
-                            using (var sr = new System.IO.StreamReader(stringStream))
-                            {
-                                string content = sr.ReadToEnd();
-
-                                //using (var tr = new System.IO.StringReader(content))
-                                {
-                                    return (T)Newtonsoft.Json.JsonConvert.DeserializeObject(content, typeof(T));
-                                    //return (T)Newtonsoft.Json.JsonSerializer.Create().Deserialize(tr, typeof(T));
-
-                                }
-                            }
+                            string value = sr.ReadToEnd();
+                            return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto });
                         }
-
-
                     }
                 }
                 else
                     using (var sr = new System.IO.StreamReader(fileObject))
-                    {
-                        string content = sr.ReadToEnd();
+                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto });
 
-                        //using (var tr = new System.IO.StringReader(content))
-                        {
-                            return (T)Newtonsoft.Json.JsonConvert.DeserializeObject(content, typeof(T));
-                            //return (T)Newtonsoft.Json.JsonSerializer.Create().Deserialize(tr, typeof(T));
-
-                        }
-                    }
-
-
-
-                //var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
-                var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
-                return (T)serializer.ReadObject(fileObject);
             }
-            //}
-
-            //throw new System.IO.FileNotFoundException("File not found.", file);
         }
     }
 }

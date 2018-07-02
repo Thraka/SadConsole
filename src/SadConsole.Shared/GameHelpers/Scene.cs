@@ -141,7 +141,7 @@ namespace SadConsole.GameHelpers
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serializer.Save((SerializedTypes.SceneSerialized)this, file);
+            Serializer.Save((SerializedTypes.SceneSerialized)this, file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace SadConsole.GameHelpers
         /// <returns></returns>
         public static Scene Load(string file, ISurface surface, Renderers.ISurfaceRenderer renderer)
         {
-            var scene = (Scene)Serializer.Load<SerializedTypes.SceneSerialized>(file);
+            var scene = (Scene)Serializer.Load<SerializedTypes.SceneSerialized>(file, Settings.SerializationIsCompressed);
 
             scene.Surface.TextSurface = surface;
             scene.SurfaceRenderer = renderer;

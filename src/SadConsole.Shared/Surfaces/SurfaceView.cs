@@ -293,7 +293,7 @@ namespace SadConsole.Surfaces
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            SadConsole.Serializer.Save((SerializedTypes.SurfaceViewSerialized)this, file);
+            SadConsole.Serializer.Save((SerializedTypes.SurfaceViewSerialized)this, file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace SadConsole.Surfaces
         /// <returns>A surface view.</returns>
         public static SurfaceView Load(string file, ISurface surfaceHydrate)
         {
-            return Serializer.Load<SerializedTypes.SurfaceViewSerialized>(file).ToSurfaceView(surfaceHydrate);
+            return Serializer.Load<SerializedTypes.SurfaceViewSerialized>(file, Settings.SerializationIsCompressed).ToSurfaceView(surfaceHydrate);
         }
     }
 }

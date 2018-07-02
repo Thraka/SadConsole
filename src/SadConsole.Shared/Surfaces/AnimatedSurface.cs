@@ -303,7 +303,7 @@ namespace SadConsole.Surfaces
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serializer.Save((SerializedTypes.AnimatedSurfaceSerialized)this, file);
+            Serializer.Save((SerializedTypes.AnimatedSurfaceSerialized)this, file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace SadConsole.Surfaces
         /// <returns></returns>
         public static AnimatedSurface Load(string file)
         {
-            return Serializer.Load<SerializedTypes.AnimatedSurfaceSerialized>(file);
+            return Serializer.Load<SerializedTypes.AnimatedSurfaceSerialized>(file, Settings.SerializationIsCompressed);
         }
 
 

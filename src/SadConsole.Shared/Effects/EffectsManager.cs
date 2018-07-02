@@ -309,12 +309,12 @@ namespace SadConsole.Effects
                     data.Effects.Add(effectData.Effect, effectCellPositions.ToArray());
                 }
 
-                SadConsole.Serializer.Save(data, file);
+                SadConsole.Serializer.Save(data, file, Settings.SerializationIsCompressed);
             }
 
             public static EffectsManager Load(string file, ISurface surface)
             {
-                EffectsManagerSerialized data = Serializer.Load<EffectsManagerSerialized>(file);
+                EffectsManagerSerialized data = Serializer.Load<EffectsManagerSerialized>(file, Settings.SerializationIsCompressed);
                 EffectsManager manager = new EffectsManager(surface);
 
                 foreach (var effect in data.Effects.Keys)

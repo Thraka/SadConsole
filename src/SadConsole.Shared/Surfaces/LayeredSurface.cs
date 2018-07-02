@@ -17,6 +17,7 @@ namespace SadConsole.Surfaces
         /// A layer.
         /// </summary>
         [DataContract]
+        
         public class Layer
         {
             /// <summary>
@@ -111,7 +112,6 @@ namespace SadConsole.Surfaces
         /// <param name="font">The font.</param>
         public LayeredSurface(int width, int height, Font font, int layers): this(width, height, font, new Rectangle(0, 0, width, height), layers)
         {
-
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace SadConsole.Surfaces
         /// <param name="layerMetadataType">Type of <see cref="Layer.Metadata"/>.</param>
         public void Save(string file, Type layerMetadataType)
         {
-            Serializer.Save((SerializedTypes.LayeredSurfaceSerialized)this, file, new Type[] { layerMetadataType });
+            Serializer.Save((SerializedTypes.LayeredSurfaceSerialized)this, file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>
@@ -410,7 +410,8 @@ namespace SadConsole.Surfaces
         /// <returns>The <see cref="LayeredSurface"/>The deserialized surface.</returns>
         public static LayeredSurface Load(string file, Type layerMetadataType)
         {
-            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, new Type[] { layerMetadataType });
+            //return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, new Type[] { layerMetadataType });
+            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>
@@ -420,7 +421,7 @@ namespace SadConsole.Surfaces
         /// <returns>The <see cref="LayeredSurface"/>The deserialized surface.</returns>
         public static new LayeredSurface Load(string file)
         {
-            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, new Type[] { typeof(LayerMetadata) });
+            return Serializer.Load<SerializedTypes.LayeredSurfaceSerialized>(file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>

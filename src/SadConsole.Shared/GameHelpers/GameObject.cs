@@ -177,7 +177,7 @@ namespace SadConsole.GameHelpers
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serializer.Save((SerializedTypes.GameObjectSerialized)this, file);
+            Serializer.Save((SerializedTypes.GameObjectSerialized)this, file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace SadConsole.GameHelpers
         /// <returns></returns>
         public static GameObject Load(string file)
         {
-            return Serializer.Load<SerializedTypes.GameObjectSerialized>(file);
+            return Serializer.Load<SerializedTypes.GameObjectSerialized>(file, Settings.SerializationIsCompressed);
         }
     }
 
