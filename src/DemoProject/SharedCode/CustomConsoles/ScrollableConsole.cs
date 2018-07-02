@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using SadConsole.Surfaces;
 using SadConsole.Input;
+using SadConsole;
 
 namespace StarterProject.CustomConsoles
 {
@@ -29,7 +30,7 @@ namespace StarterProject.CustomConsoles
 
             textSurface.RenderArea = new Rectangle(0, 0, width, height);
 
-            scrollBar = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, height);
+            scrollBar = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, height);
             scrollBar.IsEnabled = false;
             scrollBar.ValueChanged += ScrollBar_ValueChanged;
 
