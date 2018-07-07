@@ -116,7 +116,7 @@ namespace StarterProject.CustomConsoles
         {
             if (optionButtonSurface.IsSelected)
             {
-                basicSurface.Save("basicsurface.surface");
+                //basicSurface.Save("basicsurface.surface");
                 loadedView.TextSurface = SadConsole.Surfaces.BasicSurface.Load("basicsurface.surface");
             }
             else if (optionButtonView.IsSelected)

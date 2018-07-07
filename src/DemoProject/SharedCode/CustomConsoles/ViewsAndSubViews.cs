@@ -33,7 +33,7 @@ namespace StarterProject.CustomConsoles
             IsVisible = false;
             UseMouse = true;
 
-            //titleAndLine.Print(0, 0, " View and Sub View".Align(System.Windows.HorizontalAlignment.Left, 80), ColorHelper.GreenYellow, ColorHelper.DarkGreen);
+            //titleAndLine.Print(0, 0, " View and Sub View".Align(HorizontalAlignment.Left, 80), ColorHelper.GreenYellow, ColorHelper.DarkGreen);
             SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
             line.UseStartingCell = false;
             line.UseEndingCell = false;

@@ -49,7 +49,7 @@ namespace SadConsole.SerializedTypes
             var newCell = new Cell(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
             {
                 IsVisible = cell.IsVisible,
-                Decorators = new List<CellDecorator>(cell.Decorators)
+                Decorators = cell.Decorators != null ? new List<CellDecorator>(cell.Decorators) : new List<CellDecorator>()
             };
 
             if (cell.CellState != null)
