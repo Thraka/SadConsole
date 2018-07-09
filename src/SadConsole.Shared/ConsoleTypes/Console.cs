@@ -557,20 +557,8 @@ namespace SadConsole
         protected virtual void OnBeforeRenderTint(SpriteBatch batch)
         {
             if (VirtualCursor.IsVisible)
-            {
-                // Bug - Virtual cursor position index is incorrectly positioned in the render area when the render area
-                //       is smaller than width.
-                //       Render 
-
-                int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
-                    new Point(VirtualCursor.Position.X - TextSurface.RenderArea.Left,
-                              VirtualCursor.Position.Y - TextSurface.RenderArea.Top), TextSurface.RenderArea.Width);
-
-                if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < textSurface.RenderRects.Length)
-                {
-                    VirtualCursor.Render(batch, textSurface.Font, textSurface.RenderRects[virtualCursorLocationIndex]);
-                }
-            }
+                if (textSurface.RenderArea.Contains(virtualCursor.Position))
+                    VirtualCursor.Render(batch, textSurface.Font, textSurface.Font.GetRenderRect(virtualCursor.Position.X - textSurface.RenderArea.Location.X, virtualCursor.Position.Y - textSurface.RenderArea.Location.Y));
         }
 
         /// <summary>

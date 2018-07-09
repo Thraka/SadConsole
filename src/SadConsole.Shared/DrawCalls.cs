@@ -78,29 +78,4 @@ namespace SadConsole
             Global.SpriteBatch.Draw(Global.FontDefault.FontImage, Rectangle, Global.FontDefault.SolidGlyphRectangle, Shade);
         }
     }
-
-    public class DrawCallCursor : IDrawCall
-    {
-        public Console Console;
-        public Vector2 Position;
-
-        public DrawCallCursor(Console console)
-        {
-            Console = console;
-        }
-
-        public void Draw()
-        {
-            int virtualCursorLocationIndex = BasicSurface.GetIndexFromPoint(
-                new Point(Console.VirtualCursor.Position.X - Console.TextSurface.RenderArea.Left,
-                          Console.VirtualCursor.Position.Y - Console.TextSurface.RenderArea.Top), Console.TextSurface.RenderArea.Width);
-
-            if (virtualCursorLocationIndex >= 0 && virtualCursorLocationIndex < Console.TextSurface.RenderRects.Length)
-            {
-                var rect = Console.TextSurface.RenderRects[virtualCursorLocationIndex];
-                rect.Offset(Console.Position.ConsoleLocationToPixel(Console.TextSurface.Font.Size.X, Console.TextSurface.Font.Size.Y));
-                Console.VirtualCursor.Render(Global.SpriteBatch, Console.TextSurface.Font, rect);
-            }
-        }
-    }
 }
