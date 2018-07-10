@@ -50,7 +50,7 @@ namespace SadConsole
         /// Creates a new colored glyph based on the provided cell.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        public ColoredGlyph(Cell cell) : base(cell.Foreground, cell.Background, cell.Glyph)
+        public ColoredGlyph(Cell cell) : base(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
         {
             GlyphCharacter = (char)cell.Glyph;
         }

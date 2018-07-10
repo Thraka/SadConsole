@@ -198,8 +198,9 @@ namespace SadConsole.Surfaces
             textSurface.Cells[y * textSurface.Width + x].Glyph = glyph;
             textSurface.IsDirty = true;
         }
+
         /// <summary>
-        /// Changes the glyph, foreground, and background of a cell.
+        /// Changes the glyph and foreground of a cell.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
@@ -213,6 +214,7 @@ namespace SadConsole.Surfaces
             textSurface.Cells[index].Glyph = glyph;
             textSurface.IsDirty = true;
         }
+
         /// <summary>
         /// Changes the glyph, foreground, and background of a cell.
         /// </summary>
@@ -248,6 +250,30 @@ namespace SadConsole.Surfaces
             textSurface.Cells[index].Foreground = foreground;
             textSurface.Cells[index].Glyph = glyph;
             textSurface.Cells[index].Mirror = mirror;
+
+            textSurface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Changes the glyph, foreground, background, and effect of a cell.
+        /// </summary>
+        /// <param name="x">The x location of the cell.</param>
+        /// <param name="y">The y location of the cell.</param>
+        /// <param name="glyph">The desired glyph.</param>
+        /// <param name="foreground">The desired foreground.</param>
+        /// <param name="background">The desired background.</param>
+        /// <param name="mirror">Sets how the glyph will be mirrored.</param>
+        /// <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
+        public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror, IEnumerable<CellDecorator> decorators)
+        {
+            int index = y * textSurface.Width + x;
+
+            textSurface.Cells[index].Background = background;
+            textSurface.Cells[index].Foreground = foreground;
+            textSurface.Cells[index].Glyph = glyph;
+            textSurface.Cells[index].Mirror = mirror;
+            textSurface.Cells[index].Decorators.Clear();
+            textSurface.Cells[index].Decorators.AddRange(decorators);
 
             textSurface.IsDirty = true;
         }
