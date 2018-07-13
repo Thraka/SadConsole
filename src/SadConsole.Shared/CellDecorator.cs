@@ -37,6 +37,12 @@ namespace SadConsole
         public readonly SpriteEffects Mirror;
 
         /// <summary>
+        /// Identifier assigned by a font.
+        /// </summary>
+        [DataMember]
+        public readonly int Id;
+
+        /// <summary>
         /// Creates a new decorator with the specified colors, glyph, visiblity, and mirror settings.
         /// </summary>
         /// <param name="color">Foreground color.</param>
@@ -47,6 +53,22 @@ namespace SadConsole
             Color = color;
             Glyph = glyph;
             Mirror = mirror;
+            Id = -1;
+        }
+
+        /// <summary>
+        /// Creates a new decorator with the specified colors, glyph, visiblity, and mirror settings.
+        /// </summary>
+        /// <param name="color">Foreground color.</param>
+        /// <param name="glyph">Glyph value.</param>
+        /// <param name="mirror">Mirror setting.</param>
+        /// <param name="id">Id assigned by a font.</param>
+        internal CellDecorator(Color color, int glyph, SpriteEffects mirror, int id)
+        {
+            Color = color;
+            Glyph = glyph;
+            Mirror = mirror;
+            Id = id;
         }
 
         /// <summary>

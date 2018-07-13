@@ -105,7 +105,7 @@ namespace SadConsole
         /// The <see cref="FontMaster"/> that created this <see cref="Font"/> instance.
         /// </summary>
         public FontMaster Master { get; private set; }
-
+        
         internal Font() { }
 
         internal Font(FontMaster masterFont, FontSizes fontMultiple)
@@ -269,6 +269,12 @@ namespace SadConsole
         /// A cached array of rectangles of individual glyphs.
         /// </summary>
         public Rectangle[] GlyphIndexRects;
+
+
+        /// <summary>
+        /// Standard decorators used by your app.
+        /// </summary>
+        public Dictionary<string, CellDecorator> Decorators { get; } = new Dictionary<string, CellDecorator>();
 
         /// <summary>
         /// Creates a SadConsole font using an existing image.
