@@ -3,7 +3,9 @@ using Color = Microsoft.Xna.Framework.Color;
 using SpriteEffects = Microsoft.Xna.Framework.Graphics.SpriteEffects;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using SadConsole.Effects;
 using System.Runtime.Serialization;
@@ -266,14 +268,18 @@ namespace SadConsole.Surfaces
         /// <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror, IEnumerable<CellDecorator> decorators)
         {
-            int index = y * textSurface.Width + x;
+            var index = y * textSurface.Width + x;
 
             textSurface.Cells[index].Background = background;
             textSurface.Cells[index].Foreground = foreground;
             textSurface.Cells[index].Glyph = glyph;
             textSurface.Cells[index].Mirror = mirror;
             textSurface.Cells[index].Decorators.Clear();
-            textSurface.Cells[index].Decorators.AddRange(decorators);
+
+            if (decorators != null)
+                textSurface.Cells[index].Decorators = decorators.ToArray();
+            else
+                textSurface.Cells[index].Decorators = new CellDecorator[0];
 
             textSurface.IsDirty = true;
         }
@@ -422,6 +428,34 @@ namespace SadConsole.Surfaces
         {
             textSurface.Cells[y * textSurface.Width + x].Mirror = mirror;
             textSurface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Sets the decorator of one or more cells.
+        /// </summary>
+        /// <param name="x">The x coordinate of the cell.</param>
+        /// <param name="y">The y coordinate of the cell.</param>
+        /// <param name="count">The count of cells to use from the x,y cooridnate (inclusive).</param>
+        /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators)
+            => SetDecorator(y * textSurface.Width + x, count, decorators);
+
+        /// <summary>
+        /// Sets the decorator of one or more cells.
+        /// </summary>
+        /// <param name="index">The index of the cell to start applying.</param>
+        /// <param name="count">The count of cells to use from the index (inclusive).</param>
+        /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        public void SetDecorator(int index, int count, params CellDecorator[] decorators)
+        {
+            if (!IsValidCell(index) || index + count >= textSurface.Cells.Length) return;
+            for (var i = index; i < index + count; i++)
+            {
+                textSurface[i].Decorators = new CellDecorator[decorators.Length];
+
+                if(decorators.Length != 0)
+                    decorators.CopyTo(textSurface[i].Decorators, 0)
+            }
         }
 
         /// <summary>

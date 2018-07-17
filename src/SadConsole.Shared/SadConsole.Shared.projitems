@@ -66,6 +66,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FontMaster.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\Cache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\CellularCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameHelpers\AccidentalNoise\CellularGenerator.cs" />

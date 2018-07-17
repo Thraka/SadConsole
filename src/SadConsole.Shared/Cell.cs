@@ -23,7 +23,7 @@ namespace SadConsole
         /// Modifies the look of a cell with additional character. 
         /// </summary>
         [DataMember]
-        public List<CellDecorator> Decorators { get; internal set; } = new List<CellDecorator>();
+        public CellDecorator[] Decorators { get; internal set; } = new CellDecorator[0];
 
         /// <summary>
         /// The foreground color of this cell.

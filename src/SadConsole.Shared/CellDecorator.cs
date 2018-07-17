@@ -16,7 +16,7 @@ namespace SadConsole
         /// <summary>
         /// An empty cell decorator.
         /// </summary>
-        public static CellDecorator Empty { get; }
+        public static CellDecorator Empty => default;
 
         /// <summary>
         /// Foreground color of the decorator.
