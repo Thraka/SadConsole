@@ -74,7 +74,7 @@ namespace SadConsole.Renderers
                                     if (cell.Foreground != Color.Transparent)
                                         Global.SpriteBatch.Draw(font.FontImage, rect, font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.26f);
 
-                                    for (int d = 0; d < cell.Decorators.Count; d++)
+                                    for (int d = 0; d < cell.Decorators.Length; d++)
                                     {
                                         decorator = cell.Decorators[d];
 

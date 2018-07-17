@@ -40,7 +40,7 @@ namespace SadConsole.SerializedTypes
                 IsVisible = cell.IsVisible,
                 Mirror = cell.Mirror,
                 Decorators = cell.Decorators.ToArray(),
-                CellState = cell.State == null ? null : cell.State
+                CellState = cell.State
             };
         }
 
@@ -49,7 +49,7 @@ namespace SadConsole.SerializedTypes
             var newCell = new Cell(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
             {
                 IsVisible = cell.IsVisible,
-                Decorators = cell.Decorators != null ? new List<CellDecorator>(cell.Decorators) : new List<CellDecorator>()
+                Decorators = cell.Decorators != null ? cell.Decorators.ToArray() : new CellDecorator[0]
             };
 
             if (cell.CellState != null)

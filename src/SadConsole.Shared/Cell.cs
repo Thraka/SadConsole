@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using System.Text;
 
 #if MONOGAME
@@ -112,7 +113,7 @@ namespace SadConsole
             cell.Background = this.Background;
             cell.Glyph = this.Glyph;
             cell.Mirror = this.Mirror;
-            cell.Decorators = new List<CellDecorator>(this.Decorators);
+            cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : new CellDecorator[0];
         }
 
         /// <summary>
@@ -125,7 +126,7 @@ namespace SadConsole
             this.Background = cell.Background;
             this.Glyph = cell.Glyph;
             this.Mirror = cell.Mirror;
-            this.Decorators = new List<CellDecorator>(cell.Decorators);
+            this.Decorators = cell.Decorators.ToArray();
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace SadConsole
             Background = Color.Black;
             Glyph = 0;
             Mirror = SpriteEffects.None;
-            Decorators.Clear();
+            Decorators = new CellDecorator[0];
         }
 
         /// <summary>
@@ -193,7 +194,7 @@ namespace SadConsole
                 Glyph = State.Value.Glyph;
                 Mirror = State.Value.Mirror;
                 IsVisible = State.Value.IsVisible;
-                Decorators = new List<CellDecorator>(State.Value.Decorators);
+                Decorators = State.Value.Decorators.ToArray();
                 State = null;
             }
         }
@@ -208,7 +209,7 @@ namespace SadConsole
             Glyph = state.Glyph;
             Mirror = state.Mirror;
             IsVisible = state.IsVisible;
-            Decorators = new List<CellDecorator>(state.Decorators);
+            Decorators = state.Decorators.ToArray();
         }
 
         /// <summary>
@@ -220,7 +221,7 @@ namespace SadConsole
         /// Returns a new cell with the same properties as this one.
         /// </summary>
         /// <returns>The new cell.</returns>
-        public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = this.IsVisible, Decorators = new List<CellDecorator>(this.Decorators) };
+        public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = this.IsVisible, Decorators = Decorators.ToArray() };
 
         /// <summary>
         /// Compares if the cell is the same as the state.
