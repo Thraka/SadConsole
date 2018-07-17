@@ -11,7 +11,7 @@ namespace SadConsole
     /// Decorates a cell with a colored glyph.
     /// </summary>
     [DataContract]
-    public struct CellDecorator : IEquatable<CellDecorator>
+    public readonly struct CellDecorator : IEquatable<CellDecorator>
     {
         /// <summary>
         /// An empty cell decorator.
@@ -37,12 +37,6 @@ namespace SadConsole
         public readonly SpriteEffects Mirror;
 
         /// <summary>
-        /// Identifier assigned by a font.
-        /// </summary>
-        [DataMember]
-        public readonly int Id;
-
-        /// <summary>
         /// Creates a new decorator with the specified colors, glyph, visiblity, and mirror settings.
         /// </summary>
         /// <param name="color">Foreground color.</param>
@@ -53,22 +47,6 @@ namespace SadConsole
             Color = color;
             Glyph = glyph;
             Mirror = mirror;
-            Id = -1;
-        }
-
-        /// <summary>
-        /// Creates a new decorator with the specified colors, glyph, visiblity, and mirror settings.
-        /// </summary>
-        /// <param name="color">Foreground color.</param>
-        /// <param name="glyph">Glyph value.</param>
-        /// <param name="mirror">Mirror setting.</param>
-        /// <param name="id">Id assigned by a font.</param>
-        internal CellDecorator(Color color, int glyph, SpriteEffects mirror, int id)
-        {
-            Color = color;
-            Glyph = glyph;
-            Mirror = mirror;
-            Id = id;
         }
 
         /// <summary>
@@ -78,6 +56,12 @@ namespace SadConsole
         /// <returns>True if the objects have the same values.</returns>
         public bool Equals(CellDecorator other) => other == this;
 
+        /// <summary>
+        /// Checks that the left and right objects match.
+        /// </summary>
+        /// <param name="left">The first object to test.</param>
+        /// <param name="right">The second object to test.</param>
+        /// <returns>True when the <see cref="Color"/>, <see cref="Glyph"/>, and <see cref="Mirror"/> match.</returns>
         public static bool operator ==(CellDecorator left, CellDecorator right)
         {
             return left.Color == right.Color &&
@@ -85,11 +69,37 @@ namespace SadConsole
                    left.Mirror == right.Mirror;
         }
 
+        /// <summary>
+        /// Checks that the left and right objects do not match.
+        /// </summary>
+        /// <param name="left">The first object to test.</param>
+        /// <param name="right">The second object to test.</param>
+        /// <returns>True when the <see cref="Color"/>, <see cref="Glyph"/>, and <see cref="Mirror"/> do not match.</returns>
         public static bool operator !=(CellDecorator left, CellDecorator right)
         {
             return left.Color != right.Color ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror;
+        }
+
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is CellDecorator decorator && Equals(decorator);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Color.GetHashCode();
+                hashCode = (hashCode * 397) ^ Glyph;
+                hashCode = (hashCode * 397) ^ (int)Mirror;
+                return hashCode;
+            }
         }
     }
 }
