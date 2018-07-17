@@ -274,12 +274,7 @@ namespace SadConsole.Surfaces
             textSurface.Cells[index].Foreground = foreground;
             textSurface.Cells[index].Glyph = glyph;
             textSurface.Cells[index].Mirror = mirror;
-            textSurface.Cells[index].Decorators.Clear();
-
-            if (decorators != null)
-                textSurface.Cells[index].Decorators = decorators.ToArray();
-            else
-                textSurface.Cells[index].Decorators = new CellDecorator[0];
+            textSurface.Cells[index].Decorators = decorators != null ? decorators.ToArray() : new CellDecorator[0];
 
             textSurface.IsDirty = true;
         }
@@ -453,8 +448,8 @@ namespace SadConsole.Surfaces
             {
                 textSurface[i].Decorators = new CellDecorator[decorators.Length];
 
-                if(decorators.Length != 0)
-                    decorators.CopyTo(textSurface[i].Decorators, 0)
+                if (decorators.Length != 0)
+                    decorators.CopyTo(textSurface[i].Decorators, 0);
             }
         }
 
