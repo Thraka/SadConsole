@@ -27,7 +27,6 @@ namespace StarterProject.CustomConsoles
 
             ColoredString.CustomProcessor = CustomParseCommand;
 
-
             Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]String parsing supports...                                                    ");
             SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
 
@@ -47,11 +46,20 @@ namespace StarterProject.CustomConsoles
             Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]Examples                                                                      ");
             SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
 
-            var temp = new CellDecorator(Color.White, 95, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
-            for (int i = 241; i < 241 + 24; i++)
-            {
-                textSurface[i].Decorators.Add(temp);
-            }
+            //var temp = new CellDecorator(Color.White, 95, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
+            var temp = TextSurface.Font.Master.GetDecorator("underline", Color.White);
+            SetDecorator(1, 3, 24, new[] { temp });
+            temp = TextSurface.Font.Master.GetDecorator("strikethrough", Color.White);
+            SetDecorator(1, 5, 24, new[] { temp });
+
+            temp = TextSurface.Font.Master.GetDecorator("box-edge-left-top-bottom", Color.White);
+            SetDecorator(1, 7, 1, new[] { temp });
+            var doubletemp = new CellDecorator[] { TextSurface.Font.Master.GetDecorator("box-edge-top", Color.White),
+                                                   TextSurface.Font.Master.GetDecorator("box-edge-bottom", Color.White) };
+            SetDecorator(2, 7, 31, doubletemp);
+            temp = TextSurface.Font.Master.GetDecorator("box-edge-top-right-bottom", Color.White);
+            SetDecorator(33, 7, 1, new[] { temp });
+
 
             r += 2;
 
@@ -65,6 +73,8 @@ namespace StarterProject.CustomConsoles
 
             Print(1, r, "Some `[c:r f:red]text`[c:u] to print                       ");
             Print(c + 2, r, $"Some [c:r f:{Color.Red.ToParser()}]text[c:u] to print");
+
+
 
             Print(1, ++r, "Some `[c:r f:100,100,33]text`[c:u] to print");
             Print(c + 2, r, "Some [c:r f:255,255,0]text[c:u] to print");

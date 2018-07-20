@@ -54,6 +54,9 @@
     <None Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM_ext.font">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Ansi\files.json">
@@ -65,6 +68,9 @@
     <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16_NoPadding_extended.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="$(MSBuildThisFileDirectory)Game.ico" />
     <Content Include="$(MSBuildThisFileDirectory)GameThumbnail.png" />
     <Content Include="$(MSBuildThisFileDirectory)sad.png">
