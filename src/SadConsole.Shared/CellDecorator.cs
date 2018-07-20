@@ -82,7 +82,6 @@ namespace SadConsole
                    left.Mirror != right.Mirror;
         }
 
-
         /// <inheritdoc />
         public override bool Equals(object obj)
         {

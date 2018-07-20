@@ -66,7 +66,7 @@ namespace SadConsole
             Glyph = glyph;
             Mirror = mirror;
             IsVisible = isVisible;
-            Decorators = decorators == null ? new CellDecorator[] { } : new List<CellDecorator>(decorators).ToArray();
+            Decorators = decorators == null ? new CellDecorator[0] { } : new List<CellDecorator>(decorators).ToArray();
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +10,7 @@ namespace SadConsole
     /// The font stored by the engine. Used to generate the <see cref="Font"/> type used by the engine.
     /// </summary>
     [DataContract]
-    public class FontMaster
+    public sealed class FontMaster
     {
         private Dictionary<Font.FontSizes, Font> cachedFonts = new Dictionary<Font.FontSizes, Font>();
 
@@ -69,7 +70,8 @@ namespace SadConsole
         /// <summary>
         /// The total rows in the font.
         /// </summary>
-        public int Rows { get { return Image.Height / (GlyphHeight + GlyphPadding); } }
+        public int Rows => Image.Height / (GlyphHeight + GlyphPadding);
+
         /// <summary>
         /// The texture used by the font.
         /// </summary>
@@ -85,7 +87,7 @@ namespace SadConsole
         /// Standard decorators used by your app.
         /// </summary>
         [DataMember]
-        public Dictionary<string, CellDecoratorDefinition> Decorators { get; } = new Dictionary<string, CellDecoratorDefinition>();
+        private Dictionary<string, GlyphDefinition> GlyphDefinitions { get; } = new Dictionary<string, GlyphDefinition>();
 
         /// <summary>
         /// Creates a SadConsole font using an existing image.
@@ -113,7 +115,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets a <see cref="CellDecorator"/> by name from the <see cref="Decorators"/> dictionary.
+        /// Gets a <see cref="CellDecorator"/> by name from the <see cref="GlyphDefinitions"/> dictionary.
         /// </summary>
         /// <param name="name">The name of the decorator to get.</param>
         /// <param name="color">The color to apply to the decorator.</param>
@@ -121,16 +123,16 @@ namespace SadConsole
         /// <remarks>If the decorator does not exist, <see cref="CellDecorator.Empty"/> is returned.</remarks>
         public CellDecorator GetDecorator(string name, Color color)
         {
-            if (Decorators.ContainsKey(name))
-                return Decorators[name].CreateCellDecorator(color);
+            if (GlyphDefinitions.ContainsKey(name))
+                return GlyphDefinitions[name].CreateCellDecorator(color);
 
-            return CellDecorator.Empty;
+            throw new Exception("Cell decorator does not exist");
         }
         
         /// <summary>
         /// Represents a decorator (glyph and mirror) defined by a font.
         /// </summary>
-        public class CellDecoratorDefinition
+        public readonly struct GlyphDefinition
         {
             /// <summary>
             /// The glyph of the decorator.
@@ -147,7 +149,7 @@ namespace SadConsole
             /// </summary>
             /// <param name="glyph"></param>
             /// <param name="mirror"></param>
-            public CellDecoratorDefinition(int glyph, SpriteEffects mirror)
+            public GlyphDefinition(int glyph, SpriteEffects mirror)
             {
                 Glyph = glyph;
                 Mirror = mirror;
@@ -159,6 +161,14 @@ namespace SadConsole
             /// <param name="foreground">The color of the decorator.</param>
             /// <returns>A new decorator instance.</returns>
             public CellDecorator CreateCellDecorator(Color foreground) => new CellDecorator(foreground, Glyph, Mirror);
+
+            /// <summary>
+            /// Creates a <see cref="Cell"/> from this definition.
+            /// </summary>
+            /// <param name="foreground">The foreground color of the cell.</param>
+            /// <param name="background">The background color of the cell.</param>
+            /// <returns>A new cell instance.</returns>
+            public Cell CreateCell(Color foreground, Color background) => new Cell(foreground, background, Glyph, Mirror);
         }
 
         #region Methods
@@ -212,19 +222,7 @@ namespace SadConsole
             cachedFonts.Add(multiple, font);
             return font;
         }
-
-        ///// <summary>
-        ///// Not used... I think I was going to do something with this...
-        ///// </summary>
-        //private void GetImageMask()
-        //{
-        //    Texture2D texture = new Texture2D(Engine.Device, Image.Width, Image.Height,
-        //                                        false, SurfaceFormat.Color);
-        //    Color[] newPixels = new Color[texture.Width * texture.Height];
-        //    Color[] oldPixels = new Color[texture.Width * texture.Height];
-        //    texture.GetData<Color>(newPixels);
-        //    Image.GetData<Color>(oldPixels);
-        //}
+        
         
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)

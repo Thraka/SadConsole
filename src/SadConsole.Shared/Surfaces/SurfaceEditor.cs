@@ -432,7 +432,7 @@ namespace SadConsole.Surfaces
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y cooridnate (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators)
+        public void SetDecorator(int x, int y, int count, CellDecorator[] decorators)
             => SetDecorator(y * textSurface.Width + x, count, decorators);
 
         /// <summary>
@@ -441,15 +441,19 @@ namespace SadConsole.Surfaces
         /// <param name="index">The index of the cell to start applying.</param>
         /// <param name="count">The count of cells to use from the index (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        public void SetDecorator(int index, int count, params CellDecorator[] decorators)
+        public void SetDecorator(int index, int count, CellDecorator[] decorators)
         {
             if (!IsValidCell(index) || index + count >= textSurface.Cells.Length) return;
+
+            if (decorators == null)
+                decorators = new CellDecorator[0];
+
             for (var i = index; i < index + count; i++)
             {
-                textSurface[i].Decorators = new CellDecorator[decorators.Length];
-
                 if (decorators.Length != 0)
-                    decorators.CopyTo(textSurface[i].Decorators, 0);
+                    textSurface[i].Decorators = (CellDecorator[]) decorators.Clone();
+                else
+                    textSurface[i].Decorators = new CellDecorator[0];
             }
         }
 

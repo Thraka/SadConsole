@@ -231,7 +231,8 @@ namespace SadConsole
         /// <returns>True when they match.</returns>
         public static bool operator ==(Cell left, CellState right)
         {
-            return left.Background == right.Background &&
+            return left != null &&
+                   left.Background == right.Background &&
                    left.Foreground == right.Foreground &&
                    left.Glyph == right.Glyph &&
                    left.Mirror == right.Mirror &&
@@ -247,7 +248,8 @@ namespace SadConsole
         /// <returns>True when are different.</returns>
         public static bool operator !=(Cell left, CellState right)
         {
-            return left.Background != right.Background ||
+            return left == null ||
+                   left.Background != right.Background ||
                    left.Foreground != right.Foreground ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror ||

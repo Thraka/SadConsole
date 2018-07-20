@@ -90,7 +90,7 @@ namespace SadConsole.SerializedTypes
                 Glyph = cell.Glyph,
                 IsVisible = cell.IsVisible,
                 Mirror = cell.Mirror,
-                Decorators = cell.Decorators.ToArray()
+                Decorators = cell.Decorators
             };
         }
 
