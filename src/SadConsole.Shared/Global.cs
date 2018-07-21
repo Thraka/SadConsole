@@ -39,7 +39,7 @@ namespace SadConsole
         /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public static IScreen CurrentScreen = new Screen();
+        public static IScreenObject CurrentScreen = new ScreenObject();
 
         /// <summary>
         /// The stack of consoles that will receive keyboard and mouse input.

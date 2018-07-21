@@ -7,7 +7,7 @@ namespace SadConsole
     /// <summary>
     /// Supports basic console management and input functionallity.
     /// </summary>
-    public interface IConsole : IScreen
+    public interface IConsole : IScreenObject
     {
         /// <summary>
         /// The surface of the console.

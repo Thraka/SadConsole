@@ -12,7 +12,7 @@ namespace SadConsole.GameHelpers
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
-    public class GameObject : Screen
+    public class GameObject : ScreenObject
     {
         /// <summary>
         /// Automatically forwards the <see cref="AnimatedSurface.AnimationStateChanged"/> event.
@@ -45,7 +45,7 @@ namespace SadConsole.GameHelpers
         protected Point positionOffset;
 
         /// <summary>
-        /// Treats the <see cref="IScreen.Position"/> of the game object as if it is pixels and not cells.
+        /// Treats the <see cref="IScreenObject.Position"/> of the game object as if it is pixels and not cells.
         /// </summary>
         public bool UsePixelPositioning { get { return usePixelPositioning; } set { usePixelPositioning = value; } }
 
@@ -126,7 +126,7 @@ namespace SadConsole.GameHelpers
         public override void OnCalculateRenderPosition()
         {
             calculatedPosition = Position + PositionOffset;
-            IScreen parent = Parent;
+            IScreenObject parent = Parent;
 
             while (parent != null)
             {

@@ -13,7 +13,7 @@ namespace SadConsole.GameHelpers
     /// <summary>
     /// Groups a <see cref="ISurface"/> and a list of <see cref="GameObject"/> types together.
     /// </summary>
-    public class Scene: Screen
+    public class Scene: ScreenObject
     {
         /// <summary>
         /// The objects for the scene.
@@ -95,7 +95,7 @@ namespace SadConsole.GameHelpers
                 // Draw the children.
                 if (Children.Count != 0)
                 {
-                    var copyList = new List<IScreen>(Children);
+                    var copyList = new List<IScreenObject>(Children);
 
                     foreach (var child in copyList)
                         child.Draw(timeElapsed);

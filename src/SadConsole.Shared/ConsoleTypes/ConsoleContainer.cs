@@ -12,12 +12,12 @@ using System.Collections.Generic;
 namespace SadConsole
 {
     /// <summary>
-    /// An <see cref="IConsole" implementation that only processes the <see cref="IScreen.Children"/>.
+    /// An <see cref="IConsole" implementation that only processes the <see cref="IScreenObject.Children"/>.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Console (Container Only)")]
     public partial class ConsoleContainer : IConsole
     {
-        protected IScreen parentScreen;
+        protected IScreenObject parentScreen;
         protected Point relativePosition;
         protected Point position;
 
@@ -43,12 +43,12 @@ namespace SadConsole
         /// <summary>
         /// Child screen objects.
         /// </summary>
-        public ScreenCollection Children { get; }
+        public ScreenObjectCollection Children { get; }
 
         /// <summary>
         /// Gets or sets the Parent screen.
         /// </summary>
-        public IScreen Parent
+        public IScreenObject Parent
         {
             get { return parentScreen; }
             set
@@ -100,7 +100,7 @@ namespace SadConsole
 
         public ConsoleContainer()
         {
-            Children = new ScreenCollection(this);
+            Children = new ScreenObjectCollection(this);
         }
 
         public virtual bool ProcessKeyboard(Input.Keyboard state)
@@ -123,7 +123,7 @@ namespace SadConsole
         {
             if (!IsPaused)
             {
-                var copyList = new List<IScreen>(Children);
+                var copyList = new List<IScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Update(delta);
@@ -138,7 +138,7 @@ namespace SadConsole
         {
             if (IsVisible)
             {
-                var copyList = new List<IScreen>(Children);
+                var copyList = new List<IScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Draw(delta);
@@ -151,7 +151,7 @@ namespace SadConsole
         public virtual void OnCalculateRenderPosition()
         {
             relativePosition = Position;
-            IScreen parent = parentScreen;
+            IScreenObject parent = parentScreen;
 
             while (parent != null)
             {

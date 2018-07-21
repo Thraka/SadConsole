@@ -181,7 +181,7 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(IScreen screen, ref List<IConsole> list)
+        private void GetConsoles(IScreenObject screen, ref List<IConsole> list)
         {
             if (screen is IConsole)
             {

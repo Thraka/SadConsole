@@ -59,7 +59,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Recolor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IScreenList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ISurfaceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
@@ -154,7 +153,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\Wait.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IScreenObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Color.cs" />
@@ -166,8 +165,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredSurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\SurfaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Screen.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ScreenCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ScreenObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ScreenObjectCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\AnimatedSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\BasicSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Color.cs" />

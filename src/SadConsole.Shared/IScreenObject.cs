@@ -8,7 +8,7 @@ namespace SadConsole
     /// <summary>
     /// A visible screen object.
     /// </summary>
-    public interface IScreen
+    public interface IScreenObject
     {
         /// <summary>
         /// The top-left coordinate of the screen object.
@@ -23,12 +23,12 @@ namespace SadConsole
         /// <summary>
         /// Child screen objects related to this one.
         /// </summary>
-        ScreenCollection Children { get; }
+        ScreenObjectCollection Children { get; }
 
         /// <summary>
         /// A parented screen object.
         /// </summary>
-        IScreen Parent { get; set; }
+        IScreenObject Parent { get; set; }
 
         /// <summary>
         /// Indicates this screen object is visible and should process <see cref="Draw(TimeSpan)"/>.

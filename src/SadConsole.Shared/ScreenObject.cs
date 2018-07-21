@@ -6,10 +6,10 @@ using System.Text;
 namespace SadConsole
 {
     /// <summary>
-    /// A basic implementation of <see cref="IScreen"/>.
-    /// </summary>
     [System.Diagnostics.DebuggerDisplay("Screen")]
-    public class Screen: IScreen
+    /// A basic implementation of <see cref="IScreenObject"/>.
+    /// </summary>
+    public class ScreenObject: IScreenObject
     {
         /// <summary>
         /// Position to render the screen at based on <see cref="Position"/> all parents.
@@ -19,7 +19,7 @@ namespace SadConsole
         /// <summary>
         /// The parent screen.
         /// </summary>
-        protected IScreen parentScreen;
+        protected IScreenObject parentScreen;
 
         /// <summary>
         /// The position of the console.
@@ -43,12 +43,12 @@ namespace SadConsole
         /// <summary>
         /// Child screen objects.
         /// </summary>
-        public ScreenCollection Children { get; }
+        public ScreenObjectCollection Children { get; }
 
         /// <summary>
         /// Gets or sets the Parent screen.
         /// </summary>
-        public IScreen Parent
+        public IScreenObject Parent
         {
             get { return parentScreen; }
             set
@@ -90,9 +90,9 @@ namespace SadConsole
         /// <summary>
         /// Creates a new screen.
         /// </summary>
-        public Screen()
+        public ScreenObject()
         {
-            Children = new ScreenCollection(this);
+            Children = new ScreenObjectCollection(this);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SadConsole
         {
             if (IsVisible)
             {
-                var copyList = new List<IScreen>(Children);
+                var copyList = new List<IScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Draw(timeElapsed);
@@ -118,7 +118,7 @@ namespace SadConsole
         {
             if (!IsPaused)
             {
-                var copyList = new List<IScreen>(Children);
+                var copyList = new List<IScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Update(timeElapsed);
@@ -131,7 +131,7 @@ namespace SadConsole
         public virtual void OnCalculateRenderPosition()
         {
             calculatedPosition = Position;
-            IScreen parent = Parent;
+            IScreenObject parent = Parent;
 
             while (parent != null)
             {

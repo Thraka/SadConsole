@@ -82,7 +82,7 @@ namespace SadConsole
         /// <summary>
         /// The parent console.
         /// </summary>
-        protected IScreen parentConsole;
+        protected IScreenObject parentConsole;
 
         /// <summary>
         /// Indicates that the mouse is currently over this console.
@@ -117,7 +117,7 @@ namespace SadConsole
         /// <summary>
         /// Children objects related to this one.
         /// </summary>
-        public ScreenCollection Children { get; }
+        public ScreenObjectCollection Children { get; }
         
         /// <summary>
         /// Indicates that the mouse is currently over this console.
@@ -127,7 +127,7 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the Parent console.
         /// </summary>
-        public IScreen Parent
+        public IScreenObject Parent
         {
             get { return parentConsole; }
             set
@@ -340,7 +340,7 @@ namespace SadConsole
         /// <param name="textData">The backing text surface.</param>
         public Console(ISurface textData) : base(textData)
         {
-            Children = new ScreenCollection(this);
+            Children = new ScreenObjectCollection(this);
             virtualCursor = new Cursor(this);
             Renderer = new SurfaceRenderer();
             textSurface = textData;
@@ -601,7 +601,7 @@ namespace SadConsole
                 if (VirtualCursor.IsVisible)
                     VirtualCursor.Update(delta);
 
-                var copyList = new List<IScreen>(Children);
+                var copyList = new List<IScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Update(delta);
@@ -620,7 +620,7 @@ namespace SadConsole
 
                 Global.DrawCalls.Add(new DrawCallSurface(textSurface, calculatedPosition, UsePixelPositioning));
 
-                var copyList = new List<IScreen>(Children);
+                var copyList = new List<IScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Draw(delta);
@@ -632,7 +632,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="oldParent">The previous parent.</param>
         /// <param name="newParent">The new parent.</param>
-        protected virtual void OnParentConsoleChanged(IScreen oldParent, IScreen newParent) { }
+        protected virtual void OnParentConsoleChanged(IScreenObject oldParent, IScreenObject newParent) { }
 
         /// <summary>
         /// Called when the parent position changes.
@@ -640,7 +640,7 @@ namespace SadConsole
         public virtual void OnCalculateRenderPosition()
         {
             calculatedPosition = position;
-            IScreen parent = parentConsole;
+            IScreenObject parent = parentConsole;
 
             while (parent != null)
             {
