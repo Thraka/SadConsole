@@ -9,7 +9,7 @@ using System.Text;
 
 namespace StarterProject.CustomConsoles
 {
-    class HexConsole : SadConsole.Consoles.Console
+    class HexConsole : SadConsole.Console
     {
         int lastCell = -1;
         bool lastCellHexRow = false;

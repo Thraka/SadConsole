@@ -17,6 +17,12 @@ namespace SadConsole.Themes
         public Cell Border;
 
         /// <summary>
+        /// /The
+        /// </summary>
+        [DataMember]
+        public int[] BorderLineStyle;
+
+        /// <summary>
         /// The appearance of an item.
         /// </summary>
         [DataMember]
@@ -41,6 +47,7 @@ namespace SadConsole.Themes
             newItem.Focused = this.Focused.Clone();
             newItem.MouseOver = this.MouseOver.Clone();
             newItem.Disabled = this.Disabled.Clone();
+            newItem.BorderLineStyle = (int[])BorderLineStyle.Clone();
             newItem.Item = (ThemePartSelected)this.Item.Clone();
             return newItem;
         }

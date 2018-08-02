@@ -9,21 +9,13 @@ using SadConsole.Surfaces;
 
 namespace StarterProject.CustomConsoles
 {
-    class GameObjectConsole: Console, IConsoleMetadata
+    class GameObjectConsole: Console
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
         private SadConsole.GameHelpers.GameObject player;
         private Point playerPreviousPosition;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Game object", Summary = "Use the cursor keys to move the little character" };
-            }
-        }
-
+        
         public GameObjectConsole()
             : base(80, 23)
         {

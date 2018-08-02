@@ -99,7 +99,6 @@ namespace SadConsole.Controls
         public bool DisableKeyboard;
 
         private string _editingText = "";
-        private Effects.EffectsManager effects;
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -205,7 +204,6 @@ namespace SadConsole.Controls
         public InputBox(int width)
             : base(width, 1)
         {
-            effects = new Effects.EffectsManager(textSurface);
             DetermineAppearance();
         }
         #endregion
@@ -219,12 +217,12 @@ namespace SadConsole.Controls
             {
                 this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.Glyph, null);
 
-                effects.RemoveAll();
+                Effects.RemoveAll();
 
                 if (base.IsFocused && !DisableKeyboard)
                 {
                     this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
-                    effects.SetEffect(this[this._caretPos - _leftDrawOffset, 0], Theme.CaretEffect);
+                    Effects.SetEffect(this[this._caretPos - _leftDrawOffset, 0], Theme.CaretEffect);
                     isCaretVisible = true;
                 }
                 else
@@ -352,7 +350,7 @@ namespace SadConsole.Controls
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, textSurface.Width - 1);
+                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, Width - 1);
 
                     this.IsDirty = true;
 
@@ -532,11 +530,11 @@ namespace SadConsole.Controls
         {
             if (isCaretVisible)
             {
-                effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+                Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
                 OnComposed?.Invoke(this);
             }
 
-            base.Update();
+           // base.Update();
         }
 
         [OnDeserializedAttribute]

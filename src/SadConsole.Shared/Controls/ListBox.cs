@@ -49,8 +49,8 @@ namespace SadConsole.Controls
         protected Point sliderRenderLocation;
         [DataMember(Name = "ShowSlider")]
         protected bool showSlider = false;
-        [DataMember(Name = "Border")]
-        protected Shapes.Box border;
+        //[DataMember(Name = "BorderLines")]
+        //protected int[] borderLineStyle;
         protected bool mouseIn = false;
         protected DateTime leftMouseLastClick = DateTime.Now;
 
@@ -180,9 +180,6 @@ namespace SadConsole.Controls
             initialized = true;
             containers = new List<TItemContainer>();
 
-            border = Shapes.Box.GetDefaultBox();
-            border.Fill = true;
-
             SetupSlider();
 
             Items = new ObservableCollection<object>();
@@ -236,9 +233,7 @@ namespace SadConsole.Controls
                 slider.Theme = this.Theme.ScrollBarTheme;
                 sliderRenderLocation = new Point(Width - 1 + scrollBarOffset.X, 0 + scrollBarOffset.Y);
                 slider.Position = new Point(position.X + sliderRenderLocation.X, position.Y + sliderRenderLocation.Y);
-                border.Width = Width;
-                border.Height = Height;
-
+                
                 Compose();
             }
         }
@@ -429,7 +424,7 @@ namespace SadConsole.Controls
                     {
                         SelectedItem = Items[index + 1];
 
-                        if (index + 1 >= slider.Value + (textSurface.Height - 2))
+                        if (index + 1 >= slider.Value + (Height - 2))
                             slider.Value += 1;
 
                     }
@@ -481,8 +476,8 @@ namespace SadConsole.Controls
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
-            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
-                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
             {
                 if (showSlider)
                 {
@@ -509,8 +504,8 @@ namespace SadConsole.Controls
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
-            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.textSurface.Height - rowOffset &&
-                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.textSurface.Width - columnOffsetEnd)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
             {
                 object oldItem = selectedItem;
                 bool noItem = false;
@@ -545,7 +540,7 @@ namespace SadConsole.Controls
                 {
                     var mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
 
-                    if (mouseControlPosition.X == this.textSurface.Width - 1 && showSlider)
+                    if (mouseControlPosition.X == this.Width - 1 && showSlider)
                     {
                         slider.ProcessMouse(state);
                     }
@@ -573,10 +568,7 @@ namespace SadConsole.Controls
                     startingRow = 1;
                     columnOffset = 1;
                     columnEnd = Width - 2;
-                    border.Foreground = this.Theme.Border.Foreground;
-                    border.BorderBackground = this.Theme.Border.Background;
-                    border.FillColor = this.Theme.Border.Background;
-                    border.Draw(this);
+                    DrawBox(new Rectangle(0, 0, Width, Height), Theme.Border.Foreground, Theme.Border.Background, null, Theme.BorderLineStyle, true);
                 }
                 else
                 {
@@ -591,7 +583,7 @@ namespace SadConsole.Controls
                 for (int i = 0; i < endingRow; i++)
                 {
                     if (i + offset < containers.Count)
-                        containers[i + offset].Draw(textSurface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1));
+                        containers[i + offset].Draw(this, new Rectangle(columnOffset, i + startingRow, columnEnd, 1));
                 }
 
                 if (showSlider)
@@ -599,10 +591,10 @@ namespace SadConsole.Controls
                     slider.Compose(true);
                     int y = sliderRenderLocation.Y;
 
-                    for (int ycell = 0; ycell < slider.TextSurface.Height; ycell++)
+                    for (int ycell = 0; ycell < slider.Height; ycell++)
                     {
                         this.SetGlyph(sliderRenderLocation.X, y, slider[0, ycell].Glyph);
-                        this.SetCell(sliderRenderLocation.X, y, slider[0, ycell]);
+                        this.SetCellAppearance(sliderRenderLocation.X, y, slider[0, ycell]);
                         y++;
                     }
                 }
@@ -734,15 +726,14 @@ namespace SadConsole.Controls
             set { _isDirty = value; OnPropertyChanged("IsDirty"); }
         }
 
-        public virtual void Draw(ISurface surface, Rectangle area)
+        public virtual void Draw(Surfaces.SurfaceBase surface, Rectangle area)
         {
             string value = Item.ToString();
             if (value.Length < area.Width)
                 value += new string(' ', area.Width - value.Length);
             else if (value.Length > area.Width)
                 value = value.Substring(0, area.Width);
-            var editor = new SurfaceEditor(surface);
-            editor.Print(area.Left, area.Top, value, _currentAppearance);
+            surface.Print(area.Left, area.Top, value, _currentAppearance);
             _isDirty = false;
         }
 
@@ -763,11 +754,10 @@ namespace SadConsole.Controls
     [DataContract]
     public class ListBoxItemColor : ListBoxItem
     {
-        public override void Draw(ISurface surface, Rectangle area)
+        public override void Draw(Surfaces.SurfaceBase surface, Rectangle area)
         {
             if (Item is Color || Item is Tuple<Color, Color, string>)
             {
-                var editor = new SurfaceEditor(surface);
                 string value = new string(' ', area.Width - 2);
 
                 Cell cellLook = new Cell();
@@ -776,23 +766,23 @@ namespace SadConsole.Controls
                 if (Item is Color)
                 {
                     cellLook.Background = (Color)Item;
-                    editor.Print(area.Left + 1, area.Top, value, cellLook);
+                    surface.Print(area.Left + 1, area.Top, value, cellLook);
                 }
                 else
                 {
                     cellLook.Foreground = ((Tuple<Color, Color, string>)Item).Item2;
                     cellLook.Background = ((Tuple<Color, Color, string>)Item).Item1;
                     value = ((Tuple<Color, Color, string>)Item).Item3.Align(HorizontalAlignment.Left, area.Width - 2);
-                    editor.Print(area.Left + 1, area.Top, value, cellLook);
+                    surface.Print(area.Left + 1, area.Top, value, cellLook);
                 }
 
-                editor.Print(area.Left, area.Top, " ", _currentAppearance);
-                editor.Print(area.Left + area.Width - 1, area.Top, " ", _currentAppearance);
+                surface.Print(area.Left, area.Top, " ", _currentAppearance);
+                surface.Print(area.Left + area.Width - 1, area.Top, " ", _currentAppearance);
 
                 if (IsSelected)
                 {
-                    editor.SetGlyph(area.Left, area.Top, 16);
-                    editor.SetGlyph(area.Left + area.Width - 1, area.Top, 17);
+                    surface.SetGlyph(area.Left, area.Top, 16);
+                    surface.SetGlyph(area.Left + area.Width - 1, area.Top, 17);
                 }
 
                 IsDirty = false;

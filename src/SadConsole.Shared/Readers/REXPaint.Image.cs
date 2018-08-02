@@ -111,13 +111,13 @@ namespace SadConsole.Readers
         /// Converts this REXPaint image to a <see cref="Consoles.LayeredTextSurface"/>.
         /// </summary>
         /// <returns></returns>
-        public Surfaces.LayeredSurface ToTextSurface()
+        public Surfaces.Layered ToLayeredSurface()
         {
-            var surface = new Surfaces.LayeredSurface(Width, Height, LayerCount);
-
+            var surface = new Surfaces.Layered();
+            
             for (int i = 0; i < LayerCount; i++)
             {
-                surface.SetActiveLayer(i);
+                var layer = new Surfaces.Basic(Width, Height);
 
                 for (int y = 0; y < Height; y++)
                 {
@@ -126,13 +126,16 @@ namespace SadConsole.Readers
                         var rexCell = layers[i][x, y];
                         if (!rexCell.IsTransparent())
                         {
-                            var newCell = surface[x, y];
+                            var newCell = layer[x, y];
                             newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
                             newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
                             newCell.Glyph = rexCell.Character;
                         }
                     }
                 }
+
+                layer.IsDirty = true;
+                surface.Add(layer);
             }
 
             return surface;

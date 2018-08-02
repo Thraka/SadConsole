@@ -24,7 +24,7 @@ namespace SadConsole.Ansi
         private int _charsPerSecond;
         private int _readerIndex;
         private byte[] _bytes;
-        private SurfaceEditor _editor;
+        private SurfaceBase _editor;
         private State _ansiState;
         private Point _storedCursorLocation;
 
@@ -44,14 +44,14 @@ namespace SadConsole.Ansi
             }
         }
 
-        public AnsiWriter(Document ansiDocument, SurfaceEditor editor)
+        public AnsiWriter(Document ansiDocument, SurfaceBase editor)
         {
             _ansiDoc = ansiDocument;
             _editor = editor;
             _cursor = new Cursor(editor);
             _cursor.UseStringParser = false;
             _cursor.DisableWordBreak = true;
-                        
+
             CharactersPerSecond = 800;
 
             _bytes = ansiDocument.AnsiBytes;
@@ -194,7 +194,7 @@ namespace SadConsole.Ansi
                     case 'J':
                     case 'j':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _editor.TextSurface.Width; i++)
+                            for (int i = _cursor.Position.X; i < _editor.Width; i++)
                                 _editor.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
@@ -210,7 +210,7 @@ namespace SadConsole.Ansi
                     case 'K':
                     case 'k':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _editor.TextSurface.Width; i++)
+                            for (int i = _cursor.Position.X; i < _editor.Width; i++)
                                 _editor.Clear(i, _cursor.Position.Y);
 
                         else if (data == "1")
@@ -219,7 +219,7 @@ namespace SadConsole.Ansi
 
                         else if (data == "2")
                         {
-                            for (int i = 0; i < _editor.TextSurface.Width; i++)
+                            for (int i = 0; i < _editor.Width; i++)
                                 _editor.Clear(i, _cursor.Position.Y);
                         }
                         break;
@@ -312,7 +312,7 @@ namespace SadConsole.Ansi
                 return true;
             }
 
-            bool onLastLine = _cursor.Position.Y == _editor.TextSurface.Height - 1;
+            bool onLastLine = _cursor.Position.Y == _editor.Height - 1;
 
             foreach (var item in line)
             {
@@ -372,17 +372,52 @@ namespace SadConsole.Ansi
         /// <param name="path">The paath to the ansi file.</param>
         public void ReadEntireDocument()
         {
-            string[] lines = _ansiDoc.AnsiString.Split('\n');
+            //string[] lines = _ansiDoc.AnsiString.Split('\n');
+            //_ansiState.AnsiResetVideo();
+            //int counter = 0;
+
+            //foreach (var line in lines)
+            //{
+            //    counter++;
+            //    bool onLastLine = _cursor.Position.Y == _editor.Height - 1;
+
+            //    if (AnsiReadLine(line, counter != lines.Length) == false)
+            //        return;
+            //}
+
             _ansiState.AnsiResetVideo();
-            int counter = 0;
 
-            foreach (var line in lines)
+            for (int i = 0; i < _bytes.Length; i++)
             {
-                counter++;
-                bool onLastLine = _cursor.Position.Y == _editor.TextSurface.Height - 1;
+                char character = (char)_bytes[_readerIndex];
+                _readerIndex++;
 
-                if (AnsiReadLine(line, counter != lines.Length) == false)
-                    return;
+                if (_inEscapeCode)
+                {
+                    if (ValidAnsiCodes.Contains(character))
+                    {
+                        _ansiCodeBuilder.Append(character);
+                        AnsiInterpret(_ansiCodeBuilder.ToString());
+                        _inEscapeCode = false;
+                    }
+                    else
+                        _ansiCodeBuilder.Append(character);
+                }
+
+                else if (character == (char)26)
+                { }
+
+                else if (character == (char)27)
+                {
+                    _ansiCodeBuilder.Clear();
+                    _ansiCodeBuilder.Append(character);
+                    _inEscapeCode = true;
+                }
+                else if (_readerIndex - 1 < _bytes.Length || (_readerIndex - 1 == _bytes.Length && character != '\n'))
+                {
+                    _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
+                    _cursor.Print(character.ToString());
+                }
             }
         }
 

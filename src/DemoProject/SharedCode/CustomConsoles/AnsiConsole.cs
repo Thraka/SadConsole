@@ -8,19 +8,12 @@ using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class AnsiConsole: Console, IConsoleMetadata
+    class AnsiConsole: Console
     {
         int fileIndex = -1;
         string[] files;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Ansi", Summary = "Parses ANSI and text files" };
-            }
-        }
-
+        private Basic ansiSurface;
+        
         public AnsiConsole(): base(80, 23)
         {
             IsVisible = false;
@@ -35,16 +28,16 @@ namespace StarterProject.CustomConsoles
             {
 
                 if (info.IsKeyDown(Keys.Left))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left - 1, cons.TextSurface.RenderArea.Top, 80, 25);
+                    cons.ViewPort = new Rectangle(cons.ViewPort.Left - 1, cons.ViewPort.Top, 80, 23);
 
                 if (info.IsKeyDown(Keys.Right))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left + 1, cons.TextSurface.RenderArea.Top, 80, 25);
+                    cons.ViewPort = new Rectangle(cons.ViewPort.Left + 1, cons.ViewPort.Top, 80, 23);
 
                 if (info.IsKeyDown(Keys.Up))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top - 1, 80, 25);
+                    cons.ViewPort = new Rectangle(cons.ViewPort.Left, cons.ViewPort.Top - 1, 80, 23);
 
                 if (info.IsKeyDown(Keys.Down))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top + 1, 80, 25);
+                    cons.ViewPort = new Rectangle(cons.ViewPort.Left, cons.ViewPort.Top + 1, 80, 23);
 
                 if (info.IsKeyReleased(Keys.Space))
                 {
@@ -93,12 +86,16 @@ namespace StarterProject.CustomConsoles
         private void LoadAnsi()
         {
             Clear();
+
+            ansiSurface = new Basic(80, 25);
+            writer = new SadConsole.Ansi.AnsiWriter(doc, ansiSurface);
+            writer.ReadEntireDocument();
+
+            Resize(80, ansiSurface.Height + ansiSurface.TimesShiftedUp, true);
+            ViewPort = new Rectangle(0, 0, 80, 25);
+
             writer = new SadConsole.Ansi.AnsiWriter(doc, this);
             writer.ReadEntireDocument();
-            TextSurface = new BasicSurface(80, 25 + TimesShiftedUp);
-            writer = new SadConsole.Ansi.AnsiWriter(doc, this);
-            writer.ReadEntireDocument();
-            textSurface.RenderArea = new Rectangle(0, 0, 80, 25);
             writer = null;
         }
 

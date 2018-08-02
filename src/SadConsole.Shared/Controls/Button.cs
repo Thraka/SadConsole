@@ -239,12 +239,12 @@ namespace SadConsole.Controls
 
                 if (ShowEnds)
                 {
-                    this.Print(1, 0, (Text).Align(TextAlignment, this.TextSurface.Width - 2));
+                    this.Print(1, 0, (Text).Align(TextAlignment, this.Width - 2));
                     SetGlyph(0, 0, EndCharacterLeft);
-                    SetGlyph(this.TextSurface.Width - 1, 0, EndCharacterRight);
+                    SetGlyph(this.Width - 1, 0, EndCharacterRight);
                 }
                 else
-                    this.Print(0, 0, (Text).Align(TextAlignment, this.TextSurface.Width));
+                    this.Print(0, 0, (Text).Align(TextAlignment, this.Width));
 
                 OnComposed?.Invoke(this);
                 this.IsDirty = false;

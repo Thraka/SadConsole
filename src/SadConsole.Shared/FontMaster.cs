@@ -128,7 +128,7 @@ namespace SadConsole
 
             throw new Exception("Cell decorator does not exist");
         }
-        
+
         /// <summary>
         /// Represents a decorator (glyph and mirror) defined by a font.
         /// </summary>
@@ -222,8 +222,8 @@ namespace SadConsole
             cachedFonts.Add(multiple, font);
             return font;
         }
-        
-        
+
+
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {

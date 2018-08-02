@@ -255,15 +255,15 @@ namespace SadConsole.Controls
             {
                 if (_barOrientation == Orientation.Horizontal)
                 {
-                    this.SetCell(0, 0, Theme.Ends.Normal);
+                    this.SetCellAppearance(0, 0, Theme.Ends.Normal);
                     this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                    this.SetCell(textSurface.Width - 1, 0, Theme.Ends.Normal);
-                    this.SetGlyph(textSurface.Width - 1, 0, _bottomOrRightCharacter);
+                    this.SetCellAppearance(Width - 1, 0, Theme.Ends.Normal);
+                    this.SetGlyph(Width - 1, 0, _bottomOrRightCharacter);
 
                     for (int i = 1; i <= _sliderBarSize; i++)
                     {
-                        this.SetCell(i, 0, Theme.Bar.Normal);
+                        this.SetCellAppearance(i, 0, Theme.Bar.Normal);
                         this.SetGlyph(i, 0, _sliderBarCharacter);
                     }
 
@@ -271,22 +271,22 @@ namespace SadConsole.Controls
                     {
                         if (IsEnabled)
                         {
-                            this.SetCell(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
+                            this.SetCellAppearance(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
                             this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
                         }
                     }
                 }
                 else
                 {
-                    this.SetCell(0, 0, Theme.Ends.Normal);
+                    this.SetCellAppearance(0, 0, Theme.Ends.Normal);
                     this.SetGlyph(0, 0, _topOrLeftCharacter);
 
-                    this.SetCell(0, textSurface.Height - 1, Theme.Ends.Normal);
-                    this.SetGlyph(0, textSurface.Height - 1, _bottomOrRightCharacter);
+                    this.SetCellAppearance(0, Height - 1, Theme.Ends.Normal);
+                    this.SetGlyph(0, Height - 1, _bottomOrRightCharacter);
 
                     for (int i = 0; i < _sliderBarSize; i++)
                     {
-                        this.SetCell(0, i + 1, Theme.Bar.Normal);
+                        this.SetCellAppearance(0, i + 1, Theme.Bar.Normal);
                         this.SetGlyph(0, i + 1, _sliderBarCharacter);
                     }
 
@@ -294,7 +294,7 @@ namespace SadConsole.Controls
                     {
                         if (IsEnabled)
                         {
-                            this.SetCell(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
+                            this.SetCellAppearance(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
                             this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
                         }
                     }
@@ -321,8 +321,8 @@ namespace SadConsole.Controls
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.CapturedControl == null)
                 {
-                    if (state.CellPosition.X >= this.Position.X && state.CellPosition.X < this.Position.X + textSurface.Width &&
-                        state.CellPosition.Y >= this.Position.Y && state.CellPosition.Y < this.Position.Y + textSurface.Height)
+                    if (state.CellPosition.X >= this.Position.X && state.CellPosition.X < this.Position.X + Width &&
+                        state.CellPosition.Y >= this.Position.Y && state.CellPosition.Y < this.Position.Y + Height)
                     {
 
                         if (state.Mouse.LeftClicked)
@@ -331,14 +331,14 @@ namespace SadConsole.Controls
                             {
                                 if (mouseControlPosition.X == 0)
                                     Value -= Step;
-                                if (mouseControlPosition.X == textSurface.Width - 1)
+                                if (mouseControlPosition.X == Width - 1)
                                     Value += Step;
                             }
                             else
                             {
                                 if (mouseControlPosition.Y == 0)
                                     Value -= Step;
-                                if (mouseControlPosition.Y == textSurface.Height - 1)
+                                if (mouseControlPosition.Y == Height - 1)
                                     Value += Step;
                             }
 
@@ -374,8 +374,8 @@ namespace SadConsole.Controls
                 }
                 else if (Parent.CapturedControl == this)
                 {
-                    if (state.CellPosition.X >= this.Position.X - 2 && state.CellPosition.X < this.Position.X + textSurface.Width + 2 &&
-                        state.CellPosition.Y >= this.Position.Y - 3 && state.CellPosition.Y < this.Position.Y + textSurface.Height + 3)
+                    if (state.CellPosition.X >= this.Position.X - 2 && state.CellPosition.X < this.Position.X + Width + 2 &&
+                        state.CellPosition.Y >= this.Position.Y - 3 && state.CellPosition.Y < this.Position.Y + Height + 3)
                     {
                         if (state.Mouse.LeftButtonDown)
                         {

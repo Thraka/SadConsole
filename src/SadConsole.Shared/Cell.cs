@@ -65,20 +65,20 @@ namespace SadConsole
         /// <summary>
         /// Creates a cell with a white foreground, black background, glyph 0, and no mirror effect.
         /// </summary>
-        public Cell(): this(Color.White, Color.Black, 0, SpriteEffects.None) { }
+        public Cell() : this(Color.White, Color.Black, 0, SpriteEffects.None) { }
 
         /// <summary>
         /// Creates a cell with the specified foreground, black background, glyph 0, and no mirror effect.
         /// </summary>
         /// <param name="foreground">Foreground color.</param>
-        public Cell(Color foreground): this(foreground, Color.Black, 0, SpriteEffects.None) { }
+        public Cell(Color foreground) : this(foreground, Color.Black, 0, SpriteEffects.None) { }
 
         /// <summary>
         /// Creates a cell with the specified foreground, specified background, glyph 0, and no mirror effect.
         /// </summary>
         /// <param name="foreground">Foreground color.</param>
         /// <param name="background">Background color.</param>
-        public Cell(Color foreground, Color background): this(foreground, background, 0, SpriteEffects.None) { }
+        public Cell(Color foreground, Color background) : this(foreground, background, 0, SpriteEffects.None) { }
 
         /// <summary>
         /// Creates a cell with the specified foreground, background, and glyph, with no mirror effect.
@@ -86,7 +86,7 @@ namespace SadConsole
         /// <param name="foreground">Foreground color.</param>
         /// <param name="background">Background color.</param>
         /// <param name="glyph">The glyph index.</param>
-        public Cell(Color foreground, Color background, int glyph): this(foreground, background, glyph, SpriteEffects.None) { }
+        public Cell(Color foreground, Color background, int glyph) : this(foreground, background, glyph, SpriteEffects.None) { }
 
         /// <summary>
         /// Creates a cell with the specified foreground, background, glyph, and mirror effect.
@@ -259,5 +259,5 @@ namespace SadConsole
     }
 
 
-    
+
 }

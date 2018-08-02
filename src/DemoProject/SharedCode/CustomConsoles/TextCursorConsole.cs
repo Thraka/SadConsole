@@ -6,26 +6,19 @@ using SadConsole;
 using System;
 using System.Linq;
 using SadConsole.Input;
+using SadConsole.Surfaces;
 
 namespace StarterProject.CustomConsoles
 {
-    class TextCursorConsole : Console, IConsoleMetadata
+    class TextCursorConsole : Console
     {
-        SadConsole.GameHelpers.GameObject mouseCursor;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Text Mouse Cursor", Summary = "Draws a game object where ever the mouse cursor is." };
-            }
-        }
-
+        Basic mouseCursor;
+        
         public TextCursorConsole()
             : base(80, 23)
         {
-            mouseCursor = new SadConsole.GameHelpers.GameObject(1, 1);
-            mouseCursor.Animation.CurrentFrame.Cells[0].Glyph = 178;
+            mouseCursor = new Basic(1, 1);
+            mouseCursor.SetGlyph(0,0, 178);
 
             Children.Add(mouseCursor);
         }

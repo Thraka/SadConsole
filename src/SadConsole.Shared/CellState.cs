@@ -12,7 +12,7 @@ namespace SadConsole
     /// A cell in structure format for temporary storage.
     /// </summary>
     [DataContract]
-    public struct CellState: IEquatable<CellState>
+    public struct CellState : IEquatable<CellState>
     {
         /// <summary>
         /// Decorators of the state.

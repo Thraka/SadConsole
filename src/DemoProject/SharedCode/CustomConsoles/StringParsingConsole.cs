@@ -6,21 +6,13 @@ using SadConsole.StringParser;
 
 namespace StarterProject.CustomConsoles
 {
-    class StringParsingConsole: Console, IConsoleMetadata
+    class StringParsingConsole: Console
     {
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "String Parser", Summary = "Examples of using the string parser" };
-            }
-        }
-
         public StringParsingConsole():base(80, 23)
         {
             IsVisible = false;
             UseKeyboard = false;
-            textSurface.DefaultForeground = ColorAnsi.White;
+            DefaultForeground = ColorAnsi.White;
             Clear();
             int c = 59;
             int r = 1;
@@ -47,29 +39,29 @@ namespace StarterProject.CustomConsoles
             SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
 
             //var temp = new CellDecorator(Color.White, 95, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
-            var temp = TextSurface.Font.Master.GetDecorator("underline", Color.White);
+            var temp = Font.Master.GetDecorator("underline", Color.White);
             SetDecorator(1, 3, 24, new[] { temp });
-            temp = TextSurface.Font.Master.GetDecorator("strikethrough", Color.White);
+            temp = Font.Master.GetDecorator("strikethrough", Color.White);
             SetDecorator(1, 5, 24, new[] { temp });
 
-            temp = TextSurface.Font.Master.GetDecorator("box-edge-left-top-bottom", Color.White);
+            temp = Font.Master.GetDecorator("box-edge-left-top-bottom", Color.White);
             SetDecorator(1, 7, 1, new[] { temp });
-            var doubletemp = new CellDecorator[] { TextSurface.Font.Master.GetDecorator("box-edge-top", Color.White),
-                                                   TextSurface.Font.Master.GetDecorator("box-edge-bottom", Color.White) };
+            var doubletemp = new CellDecorator[] { Font.Master.GetDecorator("box-edge-top", Color.White),
+                                                   Font.Master.GetDecorator("box-edge-bottom", Color.White) };
             SetDecorator(2, 7, 31, doubletemp);
-            temp = TextSurface.Font.Master.GetDecorator("box-edge-top-right-bottom", Color.White);
+            temp = Font.Master.GetDecorator("box-edge-top-right-bottom", Color.White);
             SetDecorator(33, 7, 1, new[] { temp });
 
 
             r += 2;
 
-            SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
-            line.StartingLocation = new Point(c, r);
-            line.EndingLocation = new Point(c, r + 5);
-            line.UseEndingCell = false;
-            line.UseStartingCell = false;
-            line.Cell.Glyph = 179;
-            line.Draw(this);
+            //SadConsole.Shapes.Line line = new SadConsole.Shapes.Line();
+            //line.StartingLocation = new Point(c, r);
+            //line.EndingLocation = new Point(c, r + 5);
+            //line.UseEndingCell = false;
+            //line.UseStartingCell = false;
+            //line.Cell.Glyph = 179;
+            //line.Draw(this);
 
             Print(1, r, "Some `[c:r f:red]text`[c:u] to print                       ");
             Print(c + 2, r, $"Some [c:r f:{Color.Red.ToParser()}]text[c:u] to print");
@@ -90,7 +82,7 @@ namespace StarterProject.CustomConsoles
         }
 
         ParseCommandBase CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
-                                                          ISurface surface, SurfaceEditor editor, ParseCommandStacks commandStacks)
+                                                          SurfaceBase surface, ParseCommandStacks commandStacks)
         {
             switch (command)
             {
@@ -123,7 +115,7 @@ namespace StarterProject.CustomConsoles
                 CommandType = CommandTypes.Glyph;
             }
 
-            public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ISurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
             {
                 glyphState.Glyph = Glyph;
 

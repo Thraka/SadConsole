@@ -10,48 +10,44 @@ using System;
 
 namespace StarterProject.CustomConsoles
 {
-    class RandomScrollingConsole : Console, IConsoleMetadata
+    class RandomScrollingConsole : Console
     {
-        private BasicSurface mainData;
-        private SurfaceEditor messageData;
+        private Basic mainData;
+        private Basic messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Scrolling", Summary = "2000x2000 scrollable console. Use the cursor keys." };
-            }
-        }
-
+        
         public RandomScrollingConsole() : base(80, 23)
         {
-            
-
-            messageData = new SurfaceEditor(new BasicSurface(10, 1));
+            messageData = new Basic(80, 1);
+            messageData.Print(0, 0, "Generating random console data, please wait...");
+            mainData = new Basic(1, 1);
             IsVisible = false;
-
+            mainData.IsVisible = false;
             
             KeyboardHandler = (cons, info) =>
             {
+                if (!mainData.IsVisible)
+                    return false; 
 
                 if (info.IsKeyDown(Keys.Left))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left - 1, cons.TextSurface.RenderArea.Top, 80, 23);
+                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left - 1, mainData.ViewPort.Top, 80, 23);
 
                 if (info.IsKeyDown(Keys.Right))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left + 1, cons.TextSurface.RenderArea.Top, 80, 23);
+                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left + 1, mainData.ViewPort.Top, 80, 23);
 
                 if (info.IsKeyDown(Keys.Up))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top - 1, 80, 23);
+                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left, mainData.ViewPort.Top - 1, 80, 23);
 
                 if (info.IsKeyDown(Keys.Down))
-                    cons.TextSurface.RenderArea = new Rectangle(cons.TextSurface.RenderArea.Left, cons.TextSurface.RenderArea.Top + 1, 80, 23);
+                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left, mainData.ViewPort.Top + 1, 80, 23);
 
                 return true;
             };
 
+            Children.Add(mainData);
+            Children.Add(messageData);
         }
 
         protected override void OnVisibleChanged()
@@ -59,7 +55,6 @@ namespace StarterProject.CustomConsoles
             if (IsVisible && !initialized)
             {
                 // Write to the message layer
-                Print(0, 0, "Generating random console data, please wait...");
                 initialized = true;
             }
         }
@@ -83,13 +78,14 @@ namespace StarterProject.CustomConsoles
                     base.Draw(delta);
 
                     // Generate the content
-                    TextSurface = new BasicSurface(2000, 2000, new Rectangle(0, 0, 80, 23));
+                    mainData.Resize(2000, 2000, false, new Rectangle(0, 0, 80, 23));
+                    mainData.FillWithRandomGarbage();
+                    mainData.IsVisible = true;
 
                     // Clear message data and make it transparent so that it acts as a layer
-                    messageData.Fill(Color.White, Color.Transparent, 0, null);
+                    messageData.IsVisible = false;
 
                     // We need to set celldata to the big console data so we can use the FillWithRandom method.
-                    FillWithRandomGarbage();
                     initializedStep3 = true;
                 }
 

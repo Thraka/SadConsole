@@ -1,28 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
-
 using SadConsole.Input;
 
 namespace SadConsole
 {
-    /// <summary>
-    /// Supports basic console management and input functionallity.
-    /// </summary>
-    public interface IConsole : IScreenObject
+    public interface IConsole
     {
         /// <summary>
-        /// The surface of the console.
+        /// The private virtual curser reference.
         /// </summary>
-        Surfaces.ISurface TextSurface { get; set; }
+        Cursor Cursor { get; }
 
         /// <summary>
-        /// A controllable cursor for the console.
+        /// Gets or sets whether or not this console has exclusive access to the mouse events.
         /// </summary>
-        Cursor VirtualCursor { get; }
-        
+        bool IsExclusiveMouse { get; set; }
+
         /// <summary>
-        /// When true, changes the <see cref="Position"/> to be in pixels rather than cell coordinates.
+        /// Gets or sets this console as the <see cref="Global.InputTargets.Console"/> value.
         /// </summary>
-        bool UsePixelPositioning { get; set; }
+        /// <remarks>If the <see cref="Console.ActiveConsoles.Console"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
+        bool IsFocused { get; set; }
 
         /// <summary>
         /// Allows this console to accept keyboard input.
@@ -35,32 +32,89 @@ namespace SadConsole
         bool UseMouse { get; set; }
 
         /// <summary>
-        /// Gets or sets whether or not this console has exclusive access to the mouse events.
+        /// How many cells wide the surface is.
         /// </summary>
-        bool IsExclusiveMouse { get; set; }
+        int Width { get; }
 
         /// <summary>
-        /// Called when the console had the mouse last frame but no longer has it.
+        /// How many cells high the surface is.
         /// </summary>
-        void LostMouse(MouseConsoleState state);
+        int Height { get; }
 
         /// <summary>
-        /// Processes the mouse. If the mosue is over this console and the left button is clicked, this console will move to the top and become active focus of the engine.
+        /// Font used with rendering.
         /// </summary>
-        /// <param name="state"></param>
-        /// <returns>True when the mouse is over this console.</returns>
+        Font Font { get; set; }
+
+        /// <summary>
+        /// The poistion of the screen object.
+        /// </summary>
+        /// <remarks>This position has no substance.</remarks>
+        Point Position { get; set; }
+
+        /// <summary>
+        /// A position that is based on the <see cref="Parent"/> position.
+        /// </summary>
+        Point CalculatedPosition { get; }
+
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        bool UsePixelPositioning { get; set; }
+
+        /// <summary>
+        /// The child objects of this instance.
+        /// </summary>
+        ScreenObjectCollection Children { get; }
+
+        /// <summary>
+        /// The parent object that this instance is a child of.
+        /// </summary>
+        ScreenObject Parent { get; set; }
+
+        /// <summary>
+        /// Sets the area of the console surface that should be rendered.
+        /// </summary>
+        Rectangle ViewPort { get; set; }
+
+        /// <summary>
+        /// Gets or sets the visibility of the console.
+        /// </summary>
+        bool IsVisible { get; set; }
+
+        /// <summary>
+        /// Processes the mouse.
+        /// </summary>
+        /// <param name="state">The mouse state related to this console.</param>
+        /// <returns>True when the mouse is over this console and processing should stop.</returns>
         bool ProcessMouse(MouseConsoleState state);
 
         /// <summary>
         /// Called by the engine to process the keyboard.
         /// </summary>
-        /// <param name="state">Keyboard information.</param>
-        /// <returns>True to signal that the keyboard was handled by this object.</returns>
-        bool ProcessKeyboard(Keyboard state);
+        /// <param name="info">Keyboard information.</param>
+        /// <returns>True when the keyboard had data and this console did something with it.</returns>
+        bool ProcessKeyboard(Input.Keyboard info);
 
         /// <summary>
-        /// Sets or gets if the console has input focus.
+        /// Tells the console it should not consider the mouse over it anymore.
         /// </summary>
-        bool IsFocused { get; set; }
+        /// <param name="state"></param>
+        void LostMouse(MouseConsoleState state);
+
+        /// <summary>
+        /// Gets a cell based on its coordinates on the surface.
+        /// </summary>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate.</param>
+        /// <returns>The indicated cell.</returns>
+        Cell this[int x, int y] { get; }
+
+        /// <summary>
+        /// Gets a cell by index.
+        /// </summary>
+        /// <param name="index">The index of the cell.</param>
+        /// <returns>The indicated cell.</returns>
+        Cell this[int index] { get; }
     }
 }

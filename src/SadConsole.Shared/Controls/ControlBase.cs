@@ -11,7 +11,7 @@ namespace SadConsole.Controls
     /// Base class for all controls.
     /// </summary>
     [DataContract]
-    public abstract class ControlBase: SurfaceEditor
+    public abstract class ControlBase: Surfaces.BasicNoDraw
     {
         protected Point position;
         protected Rectangle bounds;
@@ -127,16 +127,6 @@ namespace SadConsole.Controls
         }
 
         /// <summary>
-        /// The width of the control.
-        /// </summary>
-        public int Width { get { return textSurface.Width; } }
-
-        /// <summary>
-        /// The height of the control.
-        /// </summary>
-        public int Height { get { return textSurface.Height; } }
-
-        /// <summary>
         /// The area this control covers.
         /// </summary>
         public Rectangle Bounds { get { return bounds; } }
@@ -171,11 +161,12 @@ namespace SadConsole.Controls
         public event System.EventHandler<MouseEventArgs> MouseButtonClicked;
 
         #region Constructors
+        /// <inheritdoc />
         /// <summary>
-        /// Default constructor of the control.
+        /// Creates a control.
         /// </summary>
         public ControlBase(int width, int height)
-            : base(new NoDrawSurface(width, height))
+            : base (width, height)
         {
             IsDirty = true;
             TabStop = true;

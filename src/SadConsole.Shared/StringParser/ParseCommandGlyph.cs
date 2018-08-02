@@ -54,7 +54,7 @@ namespace SadConsole.StringParser
             CommandType = CommandTypes.Glyph;
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ISurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, Surfaces.SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             if (RandomGlyph)
                 glyphState.GlyphCharacter = (char)SadConsole.Global.Random.Next(RandomGlyphMin, RandomGlyphMax);

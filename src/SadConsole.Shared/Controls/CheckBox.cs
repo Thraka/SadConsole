@@ -214,7 +214,7 @@ namespace SadConsole.Controls
                 {
                     for (int x = 0; x < 4; x++)
                     {
-                        this.SetCell(x, 0, _currentAppearanceButton);
+                        this.SetCellAppearance(x, 0, _currentAppearanceButton);
                     }
                     this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.Glyph, null);
                     this.Print(4, 0, Text.Align(TextAlignment, this.Width - 4));

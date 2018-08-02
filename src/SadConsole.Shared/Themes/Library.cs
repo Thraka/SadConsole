@@ -2,6 +2,7 @@
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using System.Runtime.Serialization;
+using SadConsole.Surfaces;
 
 namespace SadConsole.Themes
 {
@@ -158,6 +159,7 @@ namespace SadConsole.Themes
 
             ListBoxTheme = new ListBoxTheme();
             ListBoxTheme.Border = new Cell(ColorHelper.LightGray, ColorHelper.Black);
+            ListBoxTheme.BorderLineStyle = SurfaceBase.ConnectedLineThin;
             ListBoxTheme.Item = new ThemePartSelected();
             ListBoxTheme.Item.Normal = new Cell(ColorHelper.White, ColorHelper.Transparent);
             ListBoxTheme.Item.Focused = new Cell(ColorHelper.White, ColorHelper.Transparent);

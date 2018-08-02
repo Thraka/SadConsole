@@ -27,36 +27,40 @@ namespace StarterProject.CustomConsoles
         }
     }
 
-    public class PaletteSurface: BasicSurface
+    public class PaletteSurface: Basic
     {
         private Palette palette;
 
         public Palette Palette
         {
             get { return palette; }
-            set { palette = value; ValidateCells(); }
+            set { palette = value;
+                ((PaletteSurfaceRenderer) Renderer).palette = value; ValidateCells(); }
         }
 
 
         public PaletteSurface(int width, int height, Palette palette): base(width, height)
         {
             this.palette = palette;
+            Renderer = new PaletteSurfaceRenderer() {palette = palette};
+
         }
         
 
         protected override void InitializeCells()
         {
-            cells = new Cell[width * height];
+            Cells = new Cell[Width * Height];
 
-            for (int i = 0; i < cells.Length; i++)
-                cells[i] = new CellPalette(0, 1, 0);
+            for (int i = 0; i < Cells.Length; i++)
+                Cells[i] = new CellPalette(0, 1, 0);
 
-            RenderCells = cells;
+            RenderCells = (Cell[])Cells.Clone();
+            RenderRects = new Rectangle[Cells.Length];
         }
 
         protected void ValidateCells()
         {
-            foreach (var cell in this.cells.Cast<CellPalette>())
+            foreach (var cell in this.Cells.Cast<CellPalette>())
             {
                 if (cell.ForegroundIndex >= palette.Length)
                     cell.ForegroundIndex = 0;
@@ -67,16 +71,16 @@ namespace StarterProject.CustomConsoles
         }
     }
 
-    public class PaletteSurfaceRenderer: SadConsole.Renderers.SurfaceRenderer
+    public class PaletteSurfaceRenderer: SadConsole.Renderers.Basic
     {
         public Palette palette;
 
-        public override void Render(ISurface surface, bool force = false)
+        public override void Render(SurfaceBase surface, bool force = false)
         {
             base.Render(surface, true);
         }
 
-        public override void RenderCells(ISurface surfacePreCast, bool force = false)
+        public override void RenderCells(SurfaceBase surfacePreCast, bool force = false)
         {
             PaletteSurface surface = (PaletteSurface)surfacePreCast;
             if (surface.IsDirty || force)
@@ -115,18 +119,10 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class MouseRenderingDebug : Console, IConsoleMetadata
+    class MouseRenderingDebug : Console
     {
         SadConsole.Instructions.DrawString typingInstruction;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "SadConsole.Instructions", Summary = "Automatic typing to a console." };
-            }
-        }
-
+        
         Palette pal;
         Timer timer;
         Timer timer2;
@@ -138,17 +134,14 @@ namespace StarterProject.CustomConsoles
         {
             pal = new Palette(new ColorGradient(Color.White, Color.Violet, Color.Black, Color.White).ToColorArray(25));
             PaletteSurface surfacePal = new PaletteSurface(5, 5, pal);
-            PaletteSurfaceRenderer rendererPal = new PaletteSurfaceRenderer();
-            rendererPal.palette = pal;
 
             for (int i = 0; i < 25; i++)
                 ((CellPalette)surfacePal[i]).BackgroundIndex = i;
 
-            Console childConsole = new Console(surfacePal);
-            childConsole.Renderer = rendererPal;
-            childConsole.Position = new Point(4, 12);
-            
-            Children.Add(childConsole);
+            Children.Add(surfacePal);
+
+            surfacePal.Print(0, 0, "Hello from printing!");
+
             timer = new Timer(100, (t, a) => pal.ShiftRight(0, 5));
             timer5 = new Timer(2000, (t, a) => pal.ShiftLeft());
         }

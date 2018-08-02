@@ -11,26 +11,18 @@ using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class ControlsTest: ControlsConsole, IConsoleMetadata
+    class ControlsTest: ControlsConsole
     {
         Color[] backgroundcycle;
         int backIndex = 0;
         SadConsole.Timer progressTimer;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Controls Test", Summary = "Interact with SadConsole controls" };
-            }
-        }
-
+        
         public ControlsTest():base(80, 23)
         {
             var button1 = new SadConsole.Controls.Button(11);
             button1.Text = "Click";
             button1.Position = new Point(1, 1);
-            button1.Click += (s, e) => Window.Message("Clicked!", "OK");
+            //button1.Click += (s, e) => Window.Message("Clicked!", "OK");
             Add(button1);
 
             var radioButton = new SadConsole.Controls.RadioButton(20, 1);

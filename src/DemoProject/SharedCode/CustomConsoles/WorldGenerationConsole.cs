@@ -9,16 +9,8 @@ using System.Threading.Tasks;
 
 namespace StarterProject.CustomConsoles
 {
-    class WorldGenerationConsole : Console, IConsoleMetadata
+    class WorldGenerationConsole : Console
     {
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Random world generator", Summary = "Generates a random world, displaying it at half-font size." };
-            }
-        }
-
         private enum InitState
         {
             BeforeGeneration,

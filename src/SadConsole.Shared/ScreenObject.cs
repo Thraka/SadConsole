@@ -1,75 +1,76 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using Newtonsoft.Json;
+using SadConsole.SerializedTypes;
 
 namespace SadConsole
 {
     /// <summary>
-    [System.Diagnostics.DebuggerDisplay("Screen")]
-    /// A basic implementation of <see cref="IScreenObject"/>.
+    /// An object that can be positioned on the screen and receive updates.
     /// </summary>
-    public class ScreenObject: IScreenObject
+    public class ScreenObject
     {
-        /// <summary>
-        /// Position to render the screen at based on <see cref="Position"/> all parents.
-        /// </summary>
-        protected Point calculatedPosition;
+        private ScreenObject _parentScreen;
+        private Point _position;
+        private bool _isVisible = true;
+        private bool _isPaused;
 
         /// <summary>
-        /// The parent screen.
+        /// The poistion of the screen object.
         /// </summary>
-        protected IScreenObject parentScreen;
-
-        /// <summary>
-        /// The position of the console.
-        /// </summary>
-        protected Point position;
-
-        /// <summary>
-        /// The position of the console.
-        /// </summary>
+        /// <remarks>This position has no substance.</remarks>
         public Point Position
         {
-            get { return position; }
-            set { position = value; OnCalculateRenderPosition(); }
+            get => _position;
+            set
+            {
+                var oldPosition = _position;
+                _position = value;
+                OnCalculateRenderPosition();
+                OnPositionChanged(oldPosition);
+            }
         }
 
         /// <summary>
-        /// The position of this screen relative to the parents.
+        /// A position that is based on the <see cref="Parent"/> position.
         /// </summary>
-        public Point CalculatedPosition { get { return calculatedPosition; } }
+        public Point CalculatedPosition { get; protected set; }
 
         /// <summary>
-        /// Child screen objects.
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get; set; } = false;
+
+        /// <summary>
+        /// The child objects of this instance.
         /// </summary>
         public ScreenObjectCollection Children { get; }
 
         /// <summary>
-        /// Gets or sets the Parent screen.
+        /// The parent object that this instance is a child of.
         /// </summary>
-        public IScreenObject Parent
+        public ScreenObject Parent
         {
-            get { return parentScreen; }
+            get => _parentScreen;
             set
             {
-                if (parentScreen != value)
+                if (_parentScreen != value)
                 {
-                    if (parentScreen == null)
+                    if (_parentScreen == null)
                     {
-                        parentScreen = value;
-                        parentScreen.Children.Add(this);
+                        _parentScreen = value;
+                        _parentScreen.Children.Add(this);
                         OnCalculateRenderPosition();
                     }
                     else
                     {
-                        var oldParent = parentScreen;
-                        parentScreen = value;
+                        var oldParent = _parentScreen;
+                        _parentScreen = value;
 
                         oldParent.Children.Remove(this);
 
-                        if (parentScreen != null)
-                            parentScreen.Children.Add(this);
+                        _parentScreen?.Children.Add(this);
 
                         OnCalculateRenderPosition();
                     }
@@ -78,14 +79,30 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Indicates this screen object is visible and should process <see cref="Draw(TimeSpan)"/>.
+        /// Gets or sets the visibility of this object.
         /// </summary>
-        public bool IsVisible { get; set; } = true;
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+                OnVisibleChanged();
+            }
+        }
 
         /// <summary>
-        /// Indicates the screen object should not process <see cref="Update(TimeSpan)"/>.
+        /// Gets or sets the paused status of this object.
         /// </summary>
-        public bool IsPaused { get; set; }
+        public bool IsPaused
+        {
+            get => _isPaused;
+            set
+            {
+                _isPaused = value;
+                OnPausedChanged();
+            }
+        }
 
         /// <summary>
         /// Creates a new screen.
@@ -96,14 +113,15 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Draws all children.
+        /// Draws all <see cref="Children"/>.
         /// </summary>
         /// <param name="timeElapsed">Time since the last call.</param>
+        /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
         public virtual void Draw(TimeSpan timeElapsed)
         {
             if (IsVisible)
             {
-                var copyList = new List<IScreenObject>(Children);
+                var copyList = new List<ScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Draw(timeElapsed);
@@ -111,14 +129,15 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Updates all children.
+        /// Updates all <see cref="Children"/>.
         /// </summary>
         /// <param name="timeElapsed">Time since the last call.</param>
+        /// <remarks>Only processes if <see cref="IsPaused"/> is <see langword="false"/>.</remarks>
         public virtual void Update(TimeSpan timeElapsed)
         {
             if (!IsPaused)
             {
-                var copyList = new List<IScreenObject>(Children);
+                var copyList = new List<ScreenObject>(Children);
 
                 foreach (var child in copyList)
                     child.Update(timeElapsed);
@@ -126,16 +145,17 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Called when the parent position changes.
+        /// Sets a value for <see cref="CalculatedPosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
         /// </summary>
         public virtual void OnCalculateRenderPosition()
         {
-            calculatedPosition = Position;
-            IScreenObject parent = Parent;
+            CalculatedPosition = Position;
+            ScreenObject parent = Parent;
 
+            //TODO couldn't this just be parent.CalculatedPosition + this.Position and then skip the whole loop?
             while (parent != null)
             {
-                calculatedPosition += parent.Position;
+                CalculatedPosition += parent.Position;
                 parent = parent.Parent;
             }
 
@@ -144,5 +164,28 @@ namespace SadConsole
                 child.OnCalculateRenderPosition();
             }
         }
+
+        /// <summary>
+        /// Called when the parent console changes for this console.
+        /// </summary>
+        /// <param name="oldParent">The previous parent.</param>
+        /// <param name="newParent">The new parent.</param>
+        protected virtual void OnParentChanged(ScreenObject oldParent, ScreenObject newParent) { }
+
+        /// <summary>
+        /// Called when the <see cref="Position" /> property changes.
+        /// </summary>
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
+
+        /// <summary>
+        /// Called when the visibility of the object changes.
+        /// </summary>
+        protected virtual void OnVisibleChanged() { }
+
+        /// <summary>
+        /// Called when the paused status of the object changes.
+        /// </summary>
+        protected virtual void OnPausedChanged() { }
     }
 }

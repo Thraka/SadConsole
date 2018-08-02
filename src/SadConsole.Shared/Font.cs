@@ -103,7 +103,7 @@ namespace SadConsole
         /// The <see cref="FontMaster"/> that created this <see cref="Font"/> instance.
         /// </summary>
         public FontMaster Master { get; private set; }
-        
+
         internal Font() { }
 
         internal Font(FontMaster masterFont, FontSizes fontMultiple)
@@ -143,7 +143,7 @@ namespace SadConsole
 
             if (Size.X == 0 || Size.Y == 0)
                 throw new ArgumentException($"This font cannot use size {fontMultiple.ToString()}, at least one axis is 0.", "fontMultiple");
-            
+
             SizeMultiple = fontMultiple;
             Name = masterFont.Name;
             GlyphRects = masterFont.GlyphIndexRects;
@@ -174,9 +174,9 @@ namespace SadConsole
             int diffWidth = (Global.RenderWidth - oldWidth) / 2;
             int diffHeight = (Global.RenderHeight - oldHeight) / 2;
 
-            // Center screen
-            //if (Game.Instance != null)
-            //    Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
+            //Center screen
+            if (Game.Instance != null)
+                Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
 
             manager.ApplyChanges();
         }
@@ -196,6 +196,6 @@ namespace SadConsole
             return new Point(position.X * Size.X, position.Y * Size.Y);
         }
 
-        
+
     }
 }

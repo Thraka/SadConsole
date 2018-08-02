@@ -6,17 +6,17 @@ using System.Collections.Generic;
 namespace SadConsole
 {
     /// <summary>
-    /// Manages the parent and children relationship for <see cref="IScreenObject"/>.
+    /// Manages the parent and children relationship for <see cref="ScreenObject"/>.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("IScreen Collection")]
-    public class ScreenObjectCollection: IEnumerable<IScreenObject>, System.Collections.IEnumerable
+    public class ScreenObjectCollection : IEnumerable<ScreenObject>, System.Collections.IEnumerable
     {
-        protected List<IScreenObject> screens;
-        protected WeakReference<IScreenObject> owningScreen;
+        protected List<ScreenObject> screens;
+        protected WeakReference<ScreenObject> owningScreen;
 
         public int Count { get { return screens.Count; } }
 
-        public IScreenObject this[int index]
+        public ScreenObject this[int index]
         {
             get { return screens[index]; }
             set
@@ -31,10 +31,10 @@ namespace SadConsole
             }
         }
 
-        public ScreenObjectCollection(IScreenObject owner)
+        public ScreenObjectCollection(ScreenObject owner)
         {
-            screens = new List<IScreenObject>();
-            owningScreen = new WeakReference<IScreenObject>(owner);
+            screens = new List<ScreenObject>();
+            owningScreen = new WeakReference<ScreenObject>(owner);
         }
 
         /// <summary>
@@ -50,20 +50,20 @@ namespace SadConsole
         /// </summary>
         /// <param name="screen">The console to search for.</param>
         /// <returns></returns>
-        public bool Contains(IScreenObject screen)
+        public bool Contains(ScreenObject screen)
         {
             return screens.Contains(screen);
         }
 
-        public bool IsTop(IScreenObject screen)
+        public bool IsTop(ScreenObject screen)
         {
             if (screens.Contains(screen))
                 return screens.IndexOf(screen) == screens.Count - 1;
             else
                 return false;
         }
-        
-        public void Add(IScreenObject screen)
+
+        public void Add(ScreenObject screen)
         {
             if (!screens.Contains(screen))
                 screens.Add(screen);
@@ -71,7 +71,7 @@ namespace SadConsole
             SetScreenParent(screen);
         }
 
-        public void Insert(int index, IScreenObject screen)
+        public void Insert(int index, ScreenObject screen)
         {
             if (!screens.Contains(screen))
                 screens.Insert(index, screen);
@@ -79,7 +79,7 @@ namespace SadConsole
             SetScreenParent(screen);
         }
 
-        public void Remove(IScreenObject screen)
+        public void Remove(ScreenObject screen)
         {
             if (screens.Contains(screen))
                 screens.Remove(screen);
@@ -87,7 +87,7 @@ namespace SadConsole
             RemoveConsolesParent(screen);
         }
 
-        public void MoveToTop(IScreenObject screen)
+        public void MoveToTop(ScreenObject screen)
         {
             if (screens.Contains(screen))
             {
@@ -96,7 +96,7 @@ namespace SadConsole
             }
         }
 
-        public void MoveToBottom(IScreenObject screen)
+        public void MoveToBottom(ScreenObject screen)
         {
             if (screens.Contains(screen))
             {
@@ -105,7 +105,7 @@ namespace SadConsole
             }
         }
 
-        public int IndexOf(IScreenObject screen)
+        public int IndexOf(ScreenObject screen)
         {
             return screens.IndexOf(screen);
         }
@@ -160,9 +160,9 @@ namespace SadConsole
         //    return null;
         //}
 
-        private bool SetScreenParent(IScreenObject screen)
+        private bool SetScreenParent(ScreenObject screen)
         {
-            if (owningScreen.TryGetTarget(out IScreenObject owner) && screen != owner )
+            if (owningScreen.TryGetTarget(out ScreenObject owner) && screen != owner)
             {
                 screen.Parent = owner;
                 return true;
@@ -171,9 +171,9 @@ namespace SadConsole
             return false;
         }
 
-        private bool RemoveConsolesParent(IScreenObject screen)
+        private bool RemoveConsolesParent(ScreenObject screen)
         {
-            if (owningScreen.TryGetTarget(out IScreenObject owner) && screen == owner )
+            if (owningScreen.TryGetTarget(out ScreenObject owner) && screen == owner)
             {
                 screen.Parent = null;
                 return true;
@@ -187,7 +187,7 @@ namespace SadConsole
             return screens.GetEnumerator();
         }
 
-        public IEnumerator<IScreenObject> GetEnumerator()
+        public IEnumerator<ScreenObject> GetEnumerator()
         {
             return screens.GetEnumerator();
         }

@@ -10,13 +10,13 @@ using StarterProject.CustomConsoles;
 namespace StarterProject
 {
     [System.Diagnostics.DebuggerDisplay("Demo Container")]
-    class Container : ConsoleContainer
+    class Container : ScreenObject
     {
         private int currentConsoleIndex = -1;
-        private IConsoleMetadata selectedConsole;
+        private IConsole selectedConsole;
         private HeaderConsole headerConsole;
 
-        IConsoleMetadata[] consoles;
+        CustomConsole[] consoles;
 
         public Container()
         {
@@ -27,24 +27,27 @@ namespace StarterProject
             //var consoleReal = new StretchedConsole();
             //consoleReal.TextSurface = console1.TextSurface;
 
-            consoles = new IConsoleMetadata[] {
+            consoles = new CustomConsole[] {
                 //consoleReal,
                 //new CustomConsoles.MouseRenderingDebug(),
-                new CustomConsoles.AutoTypingConsole(),
-                new CustomConsoles.SerializationTests(),
-                new CustomConsoles.SplashScreen() { SplashCompleted = () => MoveNextConsole() },
-                new CustomConsoles.StringParsingConsole(),
-                new CustomConsoles.TextCursorConsole(),
-                new CustomConsoles.ViewsAndSubViews(),
-                new CustomConsoles.ControlsTest(),
-                new CustomConsoles.SubConsoleCursor(),
-                new CustomConsoles.DOSConsole(),
-                new CustomConsoles.GameObjectConsole(),
-                new CustomConsoles.SceneProjectionConsole(),
-                new CustomConsoles.AnsiConsole(),
-                new CustomConsoles.StretchedConsole(),
-                new CustomConsoles.WorldGenerationConsole(),
-                new CustomConsoles.RandomScrollingConsole(),
+                //new CustomConsoles.AutoTypingConsole(),
+                //new CustomConsole(new CustomConsoles.GameObjectConsole(), "Game object", "Use the cursor keys to move the little character"),
+                //new CustomConsole(new CustomConsoles.WorldGenerationConsole(), "Random world generator", "Generates a random world, displaying it at half-font size."),
+                new CustomConsole(new CustomConsoles.SubConsoleCursor(), "Subconsole Cursor", "Two consoles with a single backing TextSurface"),
+                new CustomConsole(new CustomConsoles.RandomScrollingConsole(), "Scrolling", "2000x2000 scrollable console. Use the cursor keys."),
+                new CustomConsole(new CustomConsoles.AnsiConsole(), "Ansi parsing", "Read in old DOS ANSI files."),
+                new CustomConsole(new CustomConsoles.ScrollableConsole(20, 10, 60), "Text scrolling", "Renders a tiny console with a cursor along with a scroll bar"),
+                new CustomConsole(new CustomConsoles.ShapesConsole(), "Shape Drawing", "Examples of drawing shapes"),
+                new CustomConsole(new CustomConsoles.StretchedConsole(), "Font Zoom", "Console where font has been zoomed x2"),
+                new CustomConsole(new CustomConsoles.SerializationTests(), "Serialization Tests", "Test serializing various types from SadConsole"),
+                new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = () => MoveNextConsole() }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
+                new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
+                new CustomConsole(new CustomConsoles.StringParsingConsole(), "String Parser", "Examples of using the string parser"),
+                new CustomConsole(new CustomConsoles.ControlsTest(), "Controls Test", "Interact with SadConsole controls"),
+                new CustomConsole(new CustomConsoles.TextCursorConsole(), "Text Mouse Cursor", "Draws a game object where ever the mouse cursor is."),
+                new CustomConsole(new CustomConsoles.ViewsAndSubViews(), "Sub Views", "Single text surface with two views into it. Click on either view."),
+                new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
+                new CustomConsole(new CustomConsoles.SceneProjectionConsole(), "Scene Projection", "Translating a 3D scene to a TextSurface T=Toggle B=Block Mode"),
             };
 
             MoveNextConsole();
@@ -57,10 +60,10 @@ namespace StarterProject
             if (currentConsoleIndex >= consoles.Length)
                 currentConsoleIndex = 0;
 
-            selectedConsole = consoles[currentConsoleIndex];
+            selectedConsole = consoles[currentConsoleIndex].Console;
 
             Children.Clear();
-            Children.Add(selectedConsole);
+            Children.Add((ScreenObject)selectedConsole);
             Children.Add(headerConsole);
 
             selectedConsole.IsVisible = true;
@@ -68,7 +71,7 @@ namespace StarterProject
             selectedConsole.Position = new Point(0, 2);
 
             Global.FocusedConsoles.Set(selectedConsole);
-            headerConsole.SetConsole(selectedConsole);
+            headerConsole.SetConsole(consoles[currentConsoleIndex].Title, consoles[currentConsoleIndex].Summary);
         }
 
         //public override bool ProcessKeyboard(Keyboard state)

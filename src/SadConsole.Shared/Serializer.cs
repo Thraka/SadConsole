@@ -1,4 +1,7 @@
-﻿namespace SadConsole
+﻿using System.Diagnostics;
+using Newtonsoft.Json.Serialization;
+
+namespace SadConsole
 {
     using System;
     using System.Collections.Generic;
@@ -10,14 +13,7 @@
     /// </summary>
     public static partial class Serializer
     {
-        /// <summary>
-        /// The types commonly used when sesrializing a basic console.
-        /// </summary>
-        public static IEnumerable<Type> KnownTypes { get; set; }
-
-        static Serializer()
-        {
-        }
+        public static Dictionary<Type, Type> ConversionMappings = new Dictionary<Type, Type>();
 
         /// <summary>
         /// Serializes the <paramref name="instance"/> instance to the specified file.
@@ -37,7 +33,7 @@
                 {
                     using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
                     {
-                        var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto }));
+                        var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
                         sw.Write(bytes, 0, bytes.Length);
                     }
                 }
@@ -45,7 +41,7 @@
                 {
                     using (var sw = new System.IO.StreamWriter(stream))
                     {
-                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto }  ));
+                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
                     }
                 }
             }
@@ -71,15 +67,31 @@
                         using (var sr = new System.IO.StreamReader(sw, Encoding.UTF32))
                         {
                             string value = sr.ReadToEnd();
-                            return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto });
+                            return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
                         }
                     }
                 }
                 else
                     using (var sr = new System.IO.StreamReader(fileObject))
-                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto });
-
+                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
             }
+        }
+
+        public static ITraceWriter LogWriter = new MemoryTraceWriter();
+
+        internal class LogTraceWriter : ITraceWriter
+        {
+            internal static readonly StringBuilder Log = new StringBuilder();
+
+            private TraceLevel _levelFilter;
+
+            public void Trace(TraceLevel level, string message, Exception ex)
+            {
+                _levelFilter = level;
+                LogTraceWriter.Log.AppendLine($"{Enum.GetName(typeof(TraceLevel), level)} :: {message}");
+            }
+
+            public TraceLevel LevelFilter => _levelFilter;
         }
     }
 }
