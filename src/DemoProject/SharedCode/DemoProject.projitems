@@ -59,8 +59,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\MouseRenderingDebug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\RandomScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SceneProjectionConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ScrollableConsole.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SerializationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ShapesConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\SplashScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\StretchedConsole.cs" />

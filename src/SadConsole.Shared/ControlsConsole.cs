@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using SadConsole.Renderers;
+using SadConsole.Surfaces;
 
 namespace SadConsole
 {
@@ -17,6 +18,9 @@ namespace SadConsole
     [System.Diagnostics.DebuggerDisplay("Console (Controls)")]
     public class ControlsConsole: Console, IEnumerable<ControlBase>
     {
+        protected Surfaces.Basic controlsSurface;
+
+
         /// <summary>
         /// Keyboard processor shared by all Controls Consoles.
         /// </summary>
@@ -56,7 +60,7 @@ namespace SadConsole
             }
             set { _theme = value; Invalidate(); }
         }
-        
+
         /// <summary>
         /// Gets a read-only collection of the controls this console contains.
         /// </summary>
@@ -128,6 +132,12 @@ namespace SadConsole
         {
             controls = new List<ControlBase>();
 
+            controlsSurface = new Surfaces.Basic(width, height)
+            {
+                DefaultBackground = Color.Transparent,
+                DefaultForeground = Color.White
+            };
+            controlsSurface.Clear();
             Cursor.IsVisible = false;
             AutoCursorOnFocus = false;
             UseKeyboard = true;
@@ -415,11 +425,30 @@ namespace SadConsole
             DefaultBackground = Theme.FillStyle.Background;
             Fill(DefaultForeground, DefaultBackground, Theme.FillStyle.Glyph, null);
             IsDirty = true;
+            controlsSurface.IsDirty = true;
+
+            foreach (var control in controls)
+            {
+                control.IsDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Calls the Update method of the base class and then Update on each control.
+        /// </summary>
+        public override void Update(System.TimeSpan time)
+        {
+            base.Update(time);
+
+            foreach (var control in controls)
+                control.Update(controlsSurface);
+
+            IsDirty = IsDirty || controlsSurface.IsDirty;
         }
 
         public override void Draw(System.TimeSpan update)
         {
-            ((Renderers.ControlsConsole)Renderer).Controls = controls;
+            ((Renderers.ControlsConsole)Renderer).ControlsSurface = controlsSurface;
 
             base.Draw(update);
         }
@@ -558,18 +587,7 @@ namespace SadConsole
         {
             return controls.GetEnumerator();
         }
-
-        /// <summary>
-        /// Calls the Update method of the base class and then Update on each control.
-        /// </summary>
-        public override void Update(System.TimeSpan time)
-        {
-            base.Update(time);
-
-            for (int i = 0; i < controls.Count; i++)
-                controls[i].Update();
-        }
-
+        
         protected override void OnFocused()
         {
             base.OnFocused();

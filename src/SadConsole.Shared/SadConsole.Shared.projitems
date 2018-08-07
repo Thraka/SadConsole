@@ -26,15 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\DrawingSurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\InputBox.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\ListBox.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\ProgressBar.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\ScrollBar.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\SelectionButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Direction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DoubleAnimation.cs" />
@@ -100,6 +92,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\Basic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\IRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScreenObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScreenObjectCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\AnimatedSurface.cs" />
@@ -130,18 +123,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceBase.Editor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceBase.Editor.Static.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ButtonTheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\Colors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ControlsConsoleTheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\InputBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Library.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\ListBoxTheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\ProgressBarTheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\RadioButtonTheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\ScrollBarTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartClickable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartSelected.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\WindowTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Timer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowConsole.Static.cs" />
   </ItemGroup>
 </Project>

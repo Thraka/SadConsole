@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
-
+using SadConsole.Surfaces;
 using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
@@ -11,20 +11,8 @@ namespace SadConsole.Controls
     /// </summary>
     /// <typeparam name="TTheme"></typeparam>
     [DataContract]
-    public abstract class ButtonBase<TTheme>: ControlBase
-        where TTheme : ButtonTheme
+    public abstract class ButtonBase: ControlBase
     {
-        /// <summary>
-        /// The theme override for the button.
-        /// </summary>
-        [DataMember(Name = "Theme")]
-        protected TTheme theme;
-
-        /// <summary>
-        /// The default theme if a theme is not set for the button.
-        /// </summary>
-        protected TTheme defaultTheme;
-
         /// <summary>
         /// Raised when the button is clicked.
         /// </summary>
@@ -50,15 +38,15 @@ namespace SadConsole.Controls
         /// <summary>
         /// Selected part of the theme based on the state of the control.
         /// </summary>
-        protected Cell currentAppearance;
+        public Cell StateAppearance { get; protected set; }
 
         /// <summary>
         /// The text displayed on the control.
         /// </summary>
         public string Text
         {
-            get { return text; }
-            set { text = value; Compose(true); }
+            get => text;
+            set { text = value; IsDirty = true; }
         }
 
         /// <summary>
@@ -66,28 +54,8 @@ namespace SadConsole.Controls
         /// </summary>
         public HorizontalAlignment TextAlignment
         {
-            get { return textAlignment; }
-            set { textAlignment = value; Compose(true); }
-        }
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public virtual TTheme Theme
-        {
-            get
-            {
-                if (theme == null)
-                    return defaultTheme;
-                else
-                    return theme;
-            }
-            set
-            {
-                theme = value;
-                DetermineAppearance();
-                Compose();
-            }
+            get => textAlignment;
+            set { textAlignment = value; IsDirty = true; }
         }
 
         /// <summary>
@@ -95,8 +63,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="width">Width of the button.</param>
         /// <param name="height">Height of the button.</param>
-        /// <param name="defaultTheme">The default theme, cannot be null.</param>
-        public ButtonBase(int width, int height, TTheme defaultTheme): base(width, height) { this.defaultTheme = defaultTheme; }
+        public ButtonBase(int width, int height): base(width, height) { }
 
         /// <summary>
         /// Raises the <see cref="Click"/> event.
@@ -105,33 +72,7 @@ namespace SadConsole.Controls
         {
             Click?.Invoke(this, new EventArgs());
         }
-
-        /// <summary>
-        /// Sets the appearance of the control depending on the current state of the control.
-        /// </summary>
-        public override void DetermineAppearance()
-        {
-            Cell currentappearance = currentAppearance;
-
-            if (!isEnabled)
-                currentAppearance = Theme.Disabled;
-
-            else if (!isMouseDown && isMouseOver)
-                currentAppearance = Theme.MouseOver;
-
-            else if (!isMouseDown && !isMouseOver && IsFocused && Global.FocusedConsoles.Console == parent)
-                currentAppearance = Theme.Focused;
-
-            else if (isMouseDown && isMouseOver)
-                currentAppearance = Theme.MouseClicking;
-
-            else
-                currentAppearance = Theme.Normal;
-
-            if (currentappearance != currentAppearance)
-                IsDirty = true;
-        }
-
+        
         /// <summary>
         /// Detects if the SPACE and ENTER keys are pressed and calls the <see cref="Click"/> method.
         /// </summary>
@@ -186,35 +127,30 @@ namespace SadConsole.Controls
     /// Simple button control with a height of 1.
     /// </summary>
     [DataContract]
-    public class Button: ButtonBase<ButtonTheme>
+    public class Button: ButtonBase
     {
-        /// <summary>
-        /// When true, renders the <see cref="EndCharacterLeft"/> and <see cref="EndCharacterRight"/> on the button.
-        /// </summary>
-        [DataMember]
-        public bool ShowEnds { get; set; } = true;
+        private ButtonTheme theme;
 
         /// <summary>
-        /// The character on the left side of the button. Defaults to '&lt;'.
+        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        [DataMember]
-        public int EndCharacterLeft { get; set; } = (int)'<';
-
-        /// <summary>
-        /// The character on the right side of the button. Defaults to '>'.
-        /// </summary>
-        [DataMember]
-        public int EndCharacterRight { get; set; } = (int)'>';
-
-        /// <summary>
-        /// Creates an instance of the button control with the specified width.
-        /// </summary>
-        /// <param name="width">Width of the control.</param>
-        public Button(int width)
-            : base(width, 1, Themes.Library.Default.ButtonTheme)
+        public virtual ButtonTheme Theme
         {
-            DetermineAppearance();
+            get
+            {
+                if (theme == null)
+                    return Library.Default.ButtonTheme;
+                else
+                    return theme;
+            }
+            set
+            {
+                theme = value;
+                DetermineAppearance();
+                IsDirty = true;
+            }
         }
+
 
         /// <summary>
         /// Creates an instance of the button control with the specified width.
@@ -222,40 +158,49 @@ namespace SadConsole.Controls
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
         public Button(int width, int height)
-            :base(width, height, Themes.Library.Default.ButtonTheme)
+            : base(width, height)
         {
             DetermineAppearance();
         }
 
         /// <summary>
-        /// Draws the control.
+        /// Sets the appearance of the control depending on the current state of the control.
         /// </summary>
-        public override void Compose()
+        public override void DetermineAppearance()
         {
-            if (this.IsDirty)
-            {
-                // Redraw the control
-                this.Fill(currentAppearance.Foreground, currentAppearance.Background, currentAppearance.Glyph, null);
+            //TODO does this belong in theme?
+            Cell currentappearance = StateAppearance;
 
-                if (ShowEnds)
-                {
-                    this.Print(1, 0, (Text).Align(TextAlignment, this.Width - 2));
-                    SetGlyph(0, 0, EndCharacterLeft);
-                    SetGlyph(this.Width - 1, 0, EndCharacterRight);
-                }
-                else
-                    this.Print(0, 0, (Text).Align(TextAlignment, this.Width));
+            if (!isEnabled)
+                StateAppearance = Theme.Disabled;
 
-                OnComposed?.Invoke(this);
-                this.IsDirty = false;
-            }
+            else if (!isMouseDown && isMouseOver)
+                StateAppearance = Theme.MouseOver;
+
+            else if (!isMouseDown && !isMouseOver && IsFocused && Global.FocusedConsoles.Console == parent)
+                StateAppearance = Theme.Focused;
+
+            else if (isMouseDown && isMouseOver)
+                StateAppearance = Theme.Selected;
+
+            else
+                StateAppearance = Theme.Normal;
+
+            if (currentappearance != StateAppearance)
+                IsDirty = true;
+        }
+
+        public override void Update(SurfaceBase hostSurface)
+        {
+            if (IsDirty)
+                Theme.Render(this, hostSurface);
         }
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             DetermineAppearance();
-            Compose(true);
+            IsDirty = true;
         }
     }
 }

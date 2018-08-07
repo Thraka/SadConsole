@@ -11,24 +11,39 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Glyph indexes for a thin line.
         /// </summary>
-        public static readonly int[] ConnectedLineThin = { 218, 196, 191,
+        public static readonly int[] ConnectedLineThin = 
+          { 218, 196, 191,
             179, 197, 179,
             192, 196, 217,
 
-            194,
+                 194,
             195,      180,
-            193};
+                 193};
 
         /// <summary>
         /// Glyph indexes for a thick line.
         /// </summary>
-        public static readonly int[] ConnectedLineThick = { 201, 205, 187,
+        public static readonly int[] ConnectedLineThick = 
+          { 201, 205, 187,
             186, 206, 186,
             200, 205, 188,
 
-            203,
+                 203,
             204,      185,
-            202};
+                 202};
+
+        /// <summary>
+        /// Glyph indexes for a thin line using a SadConsole extended font.
+        /// </summary>
+        public static readonly int[] ConnectedLineThinExtended =
+          { 261, 257, 262,
+            256, 000, 258,
+            264, 259, 263,
+
+                 001,
+            001,      001,
+                 001};
+
 
         /// <summary>
         /// Returns a value that indicates a line style array is not null and contains the required number of elements.

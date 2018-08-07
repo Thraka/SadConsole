@@ -3,6 +3,7 @@ using SadConsole;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Input;
+using SadConsole.Surfaces;
 using Console = SadConsole.Console;
 
 namespace StarterProject
@@ -93,7 +94,7 @@ namespace StarterProject
 
             // We'll instead use our demo consoles that show various features of SadConsole.
             Global.CurrentScreen = MainConsole;
-
+            
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
 

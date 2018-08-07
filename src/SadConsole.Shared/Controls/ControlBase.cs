@@ -11,10 +11,9 @@ namespace SadConsole.Controls
     /// Base class for all controls.
     /// </summary>
     [DataContract]
-    public abstract class ControlBase: Surfaces.BasicNoDraw
+    public abstract class ControlBase
     {
         protected Point position;
-        protected Rectangle bounds;
         protected bool isMouseOver = false;
         protected bool isEnabled = true;
         protected ControlsConsole parent;
@@ -40,7 +39,7 @@ namespace SadConsole.Controls
         /// Indicates he rendering location of this control.
         /// </summary>
         [DataMember]
-        public Point Position { get { return position; } set { position = value; bounds = new Rectangle(position.X, position.Y, Width, Height); OnPositionChanged(); } }
+        public Point Position { get { return position; } set { position = value; Bounds = new Rectangle(position.X, position.Y, Width, Height); OnPositionChanged(); } }
 
         /// <summary>
         /// Indicates weather or not this control is visible.
@@ -76,6 +75,17 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember]
         public bool FocusOnClick { get; set; }
+
+        /// <summary>
+        /// The width of the control.
+        /// </summary>
+        public int Width { get; protected set; }
+
+        /// <summary>
+        /// The height of the control.
+        /// </summary>
+        public int Height { get; protected set; }
+
 
         /// <summary>
         /// Gets or sets weather or not this control is focused.
@@ -129,8 +139,8 @@ namespace SadConsole.Controls
         /// <summary>
         /// The area this control covers.
         /// </summary>
-        public Rectangle Bounds { get { return bounds; } }
-        
+        public Rectangle Bounds { get; private set; }
+
         /// <summary>
         /// Gets or sets the parent console of this control.
         /// </summary>
@@ -166,8 +176,9 @@ namespace SadConsole.Controls
         /// Creates a control.
         /// </summary>
         public ControlBase(int width, int height)
-            : base (width, height)
         {
+            Width = width;
+            Height = height;
             IsDirty = true;
             TabStop = true;
             IsVisible = true;
@@ -176,7 +187,7 @@ namespace SadConsole.Controls
             position = new Point();
             UseMouse = true;
             UseKeyboard = true;
-            bounds = new Rectangle(0, 0, width, height);
+            Bounds = new Rectangle(0, 0, width, height);
         }
         #endregion
 
@@ -206,7 +217,7 @@ namespace SadConsole.Controls
         {
             if (IsEnabled && UseMouse)
             {
-                if (bounds.Contains(state.CellPosition))
+                if (Bounds.Contains(state.CellPosition))
                 {
                     if (isMouseOver != true)
                     {
@@ -260,7 +271,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <remarks>Called by the control as the mouse state changes, like when the mouse is clicked on top of the control or leaves the area of the control. This method is implemented by each derived control.</remarks>
         public abstract void DetermineAppearance();
-
+        
         /// <summary>
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineAppearance"/> method.
         /// </summary>
@@ -335,42 +346,15 @@ namespace SadConsole.Controls
         }
 
         /// <summary>
-        /// Redraw the lastest appearance of the control.
+        /// Update the control appearance based on <see cref="DetermineAppearance"/> and <see cref="IsDirty"/>.
         /// </summary>
-        /// <remarks>This method is implemented by each derived control.</remarks>
-        public abstract void Compose();
-
-        /// <summary>
-        /// Redraw the latest appearance of the control if <see cref="IsDirty"/> is set to true.
-        /// </summary>
-        /// <param name="force">Force the draw to happen by setting IsDirty as true.</param>
-        public virtual void Compose(bool force)
-        {
-            if (force)
-            {
-                IsDirty = true;
-                Compose();
-            }
-            else
-                Compose();
-        }
-
-        /// <summary>
-        /// Update the control. Calls Compose() and then updates each cell effect if needed.
-        /// </summary>
-        public virtual void Update()
-        {
-            Compose();
-            
-            //TODO: Effects
-            //UpdateEffects(Engine.GameTimeElapsedUpdate);
-        }
+        public abstract void Update(SurfaceBase hostSurface);
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
             IsDirty = true;
-            bounds = new Rectangle(position.X, position.Y, Width, Height);
+            Bounds = new Rectangle(position.X, position.Y, Width, Height);
         }
     }
 }

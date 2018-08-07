@@ -44,6 +44,8 @@ namespace StarterProject.CustomConsoles
             // Ad the consoles to the list.
             Children.Add(mainView);
             Children.Add(subView);
+
+            IsVisible = false;
         }
         
         public override bool ProcessKeyboard(Keyboard info)

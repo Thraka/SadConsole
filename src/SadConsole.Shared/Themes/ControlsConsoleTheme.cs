@@ -14,6 +14,11 @@ namespace SadConsole.Themes
         [DataMember]
         public Cell FillStyle;
 
+        public ControlsConsoleTheme()
+        {
+            FillStyle = new Cell(Colors.ControlHostFore, Colors.ControlHostBack);
+        }
+
         /// <summary>
         /// Returns a clone of this object.
         /// </summary>

@@ -1052,12 +1052,22 @@ namespace SadConsole.Surfaces
         /// <param name="y">The y location of the cell.</param>
         public void Clear(int x, int y)
         {
-            var cell = Cells[y * Width + x];
+            if (!IsValidCell(x, y, out var index)) return;
+            var cell = Cells[index];
             cell.Clear();
             cell.Foreground = DefaultForeground;
             cell.Background = DefaultBackground;
             cell.Mirror = SpriteEffects.None;
             IsDirty = true;
+        }
+
+        /// <summary>
+        /// Clears an area of cells. Character is reset to 0, the forground and background is set to default, and effect is set to none.
+        /// </summary>
+        /// <param name="area"></param>
+        public void Clear(Rectangle area)
+        {
+            Fill(area, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
         }
 
         /// <summary>
@@ -1095,39 +1105,34 @@ namespace SadConsole.Surfaces
         /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
         public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, SpriteEffects? spriteEffect = null)
         {
-            // Check for valid rect
-            Rectangle consoleArea = new Rectangle(0, 0, Width, Height);
 
-            if (consoleArea.Contains(area))
+            if (area.Width == 0 || area.Height == 0) return new Cell[] { };
+
+            var cells = new Cell[area.Width * area.Height];
+            int cellIndex = 0;
+
+            for (int x = area.Left; x < area.Left + area.Width; x++)
             {
-                var cells = new Cell[consoleArea.Width * consoleArea.Height];
-                int cellIndex = 0;
-
-                for (int x = area.Left; x < area.Left + area.Width; x++)
+                for (int y = area.Top; y < area.Top + area.Height; y++)
                 {
-                    for (int y = area.Top; y < area.Top + area.Height; y++)
-                    {
-                        Cell cell = Cells[y * Width + x];
+                    Cell cell = Cells[y * Width + x];
 
-                        if (glyph.HasValue)
-                            cell.Glyph = glyph.Value;
-                        if (background.HasValue)
-                            cell.Background = background.Value;
-                        if (foreground.HasValue)
-                            cell.Foreground = foreground.Value;
-                        if (spriteEffect.HasValue)
-                            cell.Mirror = spriteEffect.Value;
+                    if (glyph.HasValue)
+                        cell.Glyph = glyph.Value;
+                    if (background.HasValue)
+                        cell.Background = background.Value;
+                    if (foreground.HasValue)
+                        cell.Foreground = foreground.Value;
+                    if (spriteEffect.HasValue)
+                        cell.Mirror = spriteEffect.Value;
 
-                        cells[cellIndex] = cell;
-                        cellIndex++;
-                    }
+                    cells[cellIndex] = cell;
+                    cellIndex++;
                 }
-
-                IsDirty = true;
-                return cells;
             }
 
-            return new Cell[] { };
+            IsDirty = true;
+            return cells;
         }
 
         /// <summary>
