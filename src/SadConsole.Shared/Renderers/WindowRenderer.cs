@@ -37,8 +37,7 @@ namespace SadConsole.Renderers
 
         public override void Render(SurfaceBase surface, bool force = false)
         {
-            if (IsModal && ModalTint.A != 0)
-                Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), ModalTint));
+            
 
             base.Render(surface, force);
         }

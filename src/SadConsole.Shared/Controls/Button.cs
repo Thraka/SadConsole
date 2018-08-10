@@ -18,11 +18,7 @@ namespace SadConsole.Controls
         /// </summary>
         public event EventHandler Click;
 
-        /// <summary>
-        /// True when the mouse is down.
-        /// </summary>
-        protected bool isMouseDown;
-
+        
         /// <summary>
         /// The display text of the button.
         /// </summary>
@@ -34,12 +30,7 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember(Name = "TextAlignment")]
         protected HorizontalAlignment textAlignment = HorizontalAlignment.Center;
-
-        /// <summary>
-        /// Selected part of the theme based on the state of the control.
-        /// </summary>
-        public Cell StateAppearance { get; protected set; }
-
+        
         /// <summary>
         /// The text displayed on the control.
         /// </summary>
@@ -87,29 +78,7 @@ namespace SadConsole.Controls
 
             return false;
         }
-
-        /// <summary>
-        /// Called when the mouse is in the control area.
-        /// </summary>
-        /// <param name="state">The mouse state.</param>
-        protected override void OnMouseIn(Input.MouseConsoleState state)
-        {
-            isMouseDown = state.Mouse.LeftButtonDown;
-
-            base.OnMouseIn(state);
-        }
-
-        /// <summary>
-        /// Called when the mouse leaves the control area.
-        /// </summary>
-        /// <param name="state">The mouse state.</param>
-        protected override void OnMouseExit(Input.MouseConsoleState state)
-        {
-            isMouseDown = false;
-
-            base.OnMouseExit(state);
-        }
-
+        
         /// <summary>
         /// Called when the left-mouse button is clicked.
         /// </summary>
@@ -146,7 +115,7 @@ namespace SadConsole.Controls
             set
             {
                 theme = value;
-                DetermineAppearance();
+                DetermineState();
                 IsDirty = true;
             }
         }
@@ -160,46 +129,22 @@ namespace SadConsole.Controls
         public Button(int width, int height)
             : base(width, height)
         {
-            DetermineAppearance();
         }
-
+        
         /// <summary>
-        /// Sets the appearance of the control depending on the current state of the control.
+        /// Redraws the control if it is dirty.
         /// </summary>
-        public override void DetermineAppearance()
-        {
-            //TODO does this belong in theme?
-            Cell currentappearance = StateAppearance;
-
-            if (!isEnabled)
-                StateAppearance = Theme.Disabled;
-
-            else if (!isMouseDown && isMouseOver)
-                StateAppearance = Theme.MouseOver;
-
-            else if (!isMouseDown && !isMouseOver && IsFocused && Global.FocusedConsoles.Console == parent)
-                StateAppearance = Theme.Focused;
-
-            else if (isMouseDown && isMouseOver)
-                StateAppearance = Theme.Selected;
-
-            else
-                StateAppearance = Theme.Normal;
-
-            if (currentappearance != StateAppearance)
-                IsDirty = true;
-        }
-
+        /// <param name="hostSurface">The surface where the control will be drawn.</param>
         public override void Update(SurfaceBase hostSurface)
         {
             if (IsDirty)
-                Theme.Render(this, hostSurface);
+                Theme.Draw(this, hostSurface);
         }
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
-            DetermineAppearance();
+            DetermineState();
             IsDirty = true;
         }
     }

@@ -17,6 +17,13 @@ namespace SadConsole.Controls
         protected bool isMouseOver = false;
         protected bool isEnabled = true;
         protected ControlsConsole parent;
+        protected ControlStates state;
+
+        /// <summary>
+        /// True when the mouse is down.
+        /// </summary>
+        protected bool isMouseLeftDown;
+        protected bool isMouseRightDown;
 
         public Action<ControlBase> OnComposed;
 
@@ -116,7 +123,7 @@ namespace SadConsole.Controls
                             Parent.FocusedControl = null;
                     }
 
-                    DetermineAppearance();
+                    DetermineState();
                 }
 
             }
@@ -132,7 +139,7 @@ namespace SadConsole.Controls
             set
             {
                 isEnabled = value;
-                DetermineAppearance();
+                DetermineState();
             }
         }
 
@@ -146,9 +153,14 @@ namespace SadConsole.Controls
         /// </summary>
         public ControlsConsole Parent
         {
-            get { return parent; }
+            get => parent;
             set { parent = value; OnParentChanged(); }
         }
+
+        /// <summary>
+        /// The state of the control.
+        /// </summary>
+        public ControlStates State => state;
 
         /// <summary>
         /// Raised when the mouse enters this control.
@@ -194,12 +206,12 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the control loses focus. Calls DetermineAppearance.
         /// </summary>
-        public virtual void FocusLost() { DetermineAppearance(); }
+        public virtual void FocusLost() { DetermineState(); }
 
         /// <summary>
         /// Called when the control is focused. Calls DetermineAppearance.
         /// </summary>
-        public virtual void Focused() { DetermineAppearance(); }
+        public virtual void Focused() { DetermineState(); }
 
         #region Input
         /// <summary>
@@ -270,10 +282,51 @@ namespace SadConsole.Controls
         /// Sets the appropriate theme for the control based on the current state of the control.
         /// </summary>
         /// <remarks>Called by the control as the mouse state changes, like when the mouse is clicked on top of the control or leaves the area of the control. This method is implemented by each derived control.</remarks>
-        public abstract void DetermineAppearance();
+        public virtual void DetermineState()
+        {
+            ControlStates oldState = state;
+
+            if (!isEnabled)
+                Helpers.SetFlag(ref state, ControlStates.Disabled);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.Disabled);
+
+            if (isMouseOver)
+                Helpers.SetFlag(ref state, ControlStates.MouseOver);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.MouseOver);
+
+            if (IsFocused)
+                Helpers.SetFlag(ref state, ControlStates.Focused);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.Focused);
+
+            if (isMouseLeftDown)
+                Helpers.SetFlag(ref state, ControlStates.MouseLeftButtonDown);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.MouseLeftButtonDown);
+
+            if (isMouseRightDown)
+                Helpers.SetFlag(ref state, ControlStates.MouseRightButtonDown);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.MouseRightButtonDown);
+
+            if (oldState != state)
+                IsDirty = true;
+        }
+
+        /// <summary>
+        /// Called when the <see cref="State"/> changes. Sets the <see cref="IsDirty"/> to true.
+        /// </summary>
+        /// <param name="oldState">The original state.</param>
+        /// <param name="newState">The new state.</param>
+        protected virtual void OnStateChanged(ControlStates oldState, ControlStates newState)
+        {
+            IsDirty = true;
+        }
         
         /// <summary>
-        /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseEnter(Input.MouseConsoleState state)
@@ -281,58 +334,60 @@ namespace SadConsole.Controls
             isMouseOver = true;
             MouseEnter?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
-        /// Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseExit(Input.MouseConsoleState state)
         {
+            isMouseLeftDown = false;
+            isMouseRightDown = false;
             isMouseOver = false;
             MouseExit?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
-        /// Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseIn(Input.MouseConsoleState state)
         {
-            if (MouseMove != null)
-                MouseMove(this, new MouseEventArgs(state));
+            MouseMove?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            isMouseLeftDown = state.Mouse.LeftButtonDown;
+            isMouseRightDown = state.Mouse.RightButtonDown;
+
+            DetermineState();
         }
 
         /// <summary>
-        /// Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
-            if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(state));
+            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
 
             if (FocusOnClick)
                 this.IsFocused = true;
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
-        /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnRightMouseClicked(Input.MouseConsoleState state)
         {
-            if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(state));
+            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
@@ -346,7 +401,7 @@ namespace SadConsole.Controls
         }
 
         /// <summary>
-        /// Update the control appearance based on <see cref="DetermineAppearance"/> and <see cref="IsDirty"/>.
+        /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.
         /// </summary>
         public abstract void Update(SurfaceBase hostSurface);
 

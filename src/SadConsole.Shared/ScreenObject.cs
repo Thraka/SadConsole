@@ -55,25 +55,23 @@ namespace SadConsole
             get => _parentScreen;
             set
             {
-                if (_parentScreen != value)
+                if (_parentScreen == value) return;
+                if (_parentScreen == null)
                 {
-                    if (_parentScreen == null)
-                    {
-                        _parentScreen = value;
-                        _parentScreen.Children.Add(this);
-                        OnCalculateRenderPosition();
-                    }
-                    else
-                    {
-                        var oldParent = _parentScreen;
-                        _parentScreen = value;
+                    _parentScreen = value;
+                    _parentScreen.Children.Add(this);
+                    OnCalculateRenderPosition();
+                }
+                else
+                {
+                    var oldParent = _parentScreen;
+                    _parentScreen = value;
 
-                        oldParent.Children.Remove(this);
+                    oldParent.Children.Remove(this);
 
-                        _parentScreen?.Children.Add(this);
+                    _parentScreen?.Children.Add(this);
 
-                        OnCalculateRenderPosition();
-                    }
+                    OnCalculateRenderPosition();
                 }
             }
         }
@@ -86,6 +84,7 @@ namespace SadConsole
             get => _isVisible;
             set
             {
+                if (_isVisible == value) return;
                 _isVisible = value;
                 OnVisibleChanged();
             }
@@ -99,6 +98,7 @@ namespace SadConsole
             get => _isPaused;
             set
             {
+                if (_isPaused == value) return;
                 _isPaused = value;
                 OnPausedChanged();
             }

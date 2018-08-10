@@ -3,6 +3,7 @@
 using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
+using SadConsole.Surfaces;
 
 namespace SadConsole.Controls
 {
@@ -18,35 +19,36 @@ namespace SadConsole.Controls
 
         [DataMember(Name = "Theme")]
         protected ScrollBarTheme _theme;
-        protected Cell _currentAppearanceEnds;
-        protected Cell _currentAppearanceBar;
-        protected Cell _currentAppearanceSlider;
+        //protected Cell _currentAppearanceEnds;
+        //protected Cell _currentAppearanceBar;
+        //protected Cell _currentAppearanceSlider;
 
         protected int _topOrLeftCharacter;
         protected int _bottomOrRightCharacter;
         protected int _sliderCharacter;
         protected int _sliderBarCharacter;
 
-        [DataMember(Name="Orientation")]
-        protected Orientation _barOrientation;
-        [DataMember(Name = "Value")]
-        protected int _value;
         [DataMember(Name = "Minimum")]
         protected int _minValue = 0;
-        [DataMember(Name="Maximum")]
         protected int _maxValue = 1;
-        protected int _sliderBarSize;
-        protected int _currentSliderPosition;
+        protected int _value = 0;
         protected int _valueStep = 1;
 
         protected int[] _sliderPositionValues;
 
+        public Orientation Orientation { get; private set; }
+
+        public int SliderBarSize { get; private set; }
+
+        public int CurrentSliderPosition { get; private set; }
+
         /// <summary>
         /// Gets or sets the value of the scrollbar between the minimum and maximum values.
         /// </summary>
+        [DataMember]
         public int Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 if (_value != value)
@@ -59,31 +61,30 @@ namespace SadConsole.Controls
                         _value = _maxValue;
 
                     if (_value == 0)
-                        _currentSliderPosition = 0;
+                        CurrentSliderPosition = 0;
                     else if (_value == _maxValue)
-                        _currentSliderPosition = _sliderBarSize - 1;
+                        CurrentSliderPosition = SliderBarSize - 1;
                     else
                     {
                         // Find which slot is < value where the slot after is > value
-                        for (int i = 1; i < _sliderBarSize - 1; i++)
+                        for (int i = 1; i < SliderBarSize - 1; i++)
                         {
                             if (_sliderPositionValues[i] == _value)
                             {
-                                _currentSliderPosition = i;
+                                CurrentSliderPosition = i;
                                 break;
                             }
                             if (_sliderPositionValues[i] > _value && _sliderPositionValues[i - 1] < _value && _sliderPositionValues[i] != -1)
                             {
-                                _currentSliderPosition = i;
+                                CurrentSliderPosition = i;
                                 break;
                             }
                         }
                     }
 
-                    this.IsDirty = true;
+                    IsDirty = true;
 
-                    if (ValueChanged != null)
-                        ValueChanged.Invoke(this, EventArgs.Empty);
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -93,7 +94,7 @@ namespace SadConsole.Controls
         /// </summary>
         public int Maximum
         {
-            get { return _maxValue; }
+            get => _maxValue;
             set
             {
                 _maxValue = value;
@@ -101,9 +102,11 @@ namespace SadConsole.Controls
                     _maxValue = 1;
 
                 DetermineSliderPositions();
-                this.IsDirty = true;
+                IsDirty = true;
             }
         }
+
+        public int Minimum => 0;
 
         /// <summary>
         /// Gets or sets the amount of values to add or substract to the <see cref="Value"/> when the up or down arrows are used.
@@ -111,8 +114,8 @@ namespace SadConsole.Controls
         [DataMember]
         public int Step
         {
-            get { return _valueStep; }
-            set { _valueStep = value; }
+            get => _valueStep;
+            set => _valueStep = value;
         }
 
         /// <summary>
@@ -120,61 +123,15 @@ namespace SadConsole.Controls
         /// </summary>
         public virtual ScrollBarTheme Theme
         {
-            get
-            {
-                if (_theme == null)
-                    return Library.Default.ScrollBarTheme;
-                else
-                    return _theme;
-            }
+            get => _theme ?? Library.Default.ScrollBarTheme;
             set
             {
                 _theme = value;
-                DetermineAppearance();
-                Compose();
+                IsDirty = true;
+                DetermineState();
             }
         }
-
-        /// <summary>
-        /// Gets or sets the character used on the top or left of the control depending on the orientation of the control when it was created.
-        /// </summary>
-        [DataMember]
-        public int TopOrLeftCharacter
-        {
-            get { return _topOrLeftCharacter; }
-            set { _topOrLeftCharacter = value; this.IsDirty = true; }
-        }
-
-        /// <summary>
-        /// Gets or sets the character used on the bottom or right of the control depending on the orientation of the control when it was created.
-        /// </summary>
-        [DataMember]
-        public int BottomOrRightCharacter
-        {
-            get { return _bottomOrRightCharacter; }
-            set { _bottomOrRightCharacter = value; this.IsDirty = true; }
-        }
-
-        /// <summary>
-        /// Gets or sets the character displayed for the slider.
-        /// </summary>
-        [DataMember]
-        public int SliderCharacter
-        {
-            get { return _sliderCharacter; }
-            set { _sliderCharacter = value; this.IsDirty = true; }
-        }
-
-        /// <summary>
-        /// Gets or sets the character displayed for the slider bar.
-        /// </summary>
-        [DataMember]
-        public int SliderBarCharacter
-        {
-            get { return _sliderBarCharacter; }
-            set { _sliderBarCharacter = value; this.IsDirty = true; }
-        }
-
+        
         public static ScrollBar Create(Orientation orientation, int size)
         {
             if (size <= 2)
@@ -190,7 +147,7 @@ namespace SadConsole.Controls
         private ScrollBar(Orientation orientation, int width, int height): base(width, height)
         {
             _initialized = true;
-            _barOrientation = orientation;
+            Orientation = orientation;
 
             _sliderCharacter = 219;
 
@@ -208,102 +165,12 @@ namespace SadConsole.Controls
             }
 
             if (width > height)
-                _sliderBarSize = width - 2;
+                SliderBarSize = width - 2;
             else
-                _sliderBarSize = height - 2;
+                SliderBarSize = height - 2;
 
-            _sliderPositionValues = new int[_sliderBarSize];
+            _sliderPositionValues = new int[SliderBarSize];
             DetermineSliderPositions();
-        }
-
-        public override void DetermineAppearance()
-        {
-            Cell currentappearanceEnds = _currentAppearanceEnds;
-            Cell currentappearanceBar = _currentAppearanceBar;
-            Cell currentappearanceSlider = _currentAppearanceSlider;
-
-            if (!isEnabled)
-            {
-                _currentAppearanceEnds = Theme.Ends.Disabled;
-                _currentAppearanceBar = Theme.Bar.Disabled;
-                _currentAppearanceSlider = Theme.Slider.Disabled;
-            }
-            else if (isMouseOver)
-            {
-                _currentAppearanceEnds = Theme.Ends.MouseOver;
-                _currentAppearanceBar = Theme.Bar.MouseOver;
-                _currentAppearanceSlider = Theme.Slider.MouseOver;
-            }
-            else if (!isMouseOver)
-            {
-                _currentAppearanceEnds = Theme.Ends.Normal;
-                _currentAppearanceBar = Theme.Bar.Normal;
-                _currentAppearanceSlider = Theme.Slider.Normal;
-            }
-
-            if (currentappearanceEnds != _currentAppearanceEnds ||
-                currentappearanceBar != _currentAppearanceBar ||
-                currentappearanceSlider != _currentAppearanceSlider)
-
-                this.IsDirty = true;
-        }
-        
-
-        public override void Compose()
-        {
-            if (IsDirty)
-            {
-                if (_barOrientation == Orientation.Horizontal)
-                {
-                    this.SetCellAppearance(0, 0, Theme.Ends.Normal);
-                    this.SetGlyph(0, 0, _topOrLeftCharacter);
-
-                    this.SetCellAppearance(Width - 1, 0, Theme.Ends.Normal);
-                    this.SetGlyph(Width - 1, 0, _bottomOrRightCharacter);
-
-                    for (int i = 1; i <= _sliderBarSize; i++)
-                    {
-                        this.SetCellAppearance(i, 0, Theme.Bar.Normal);
-                        this.SetGlyph(i, 0, _sliderBarCharacter);
-                    }
-
-                    if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
-                    {
-                        if (IsEnabled)
-                        {
-                            this.SetCellAppearance(1 + _currentSliderPosition, 0, Theme.Slider.Normal);
-                            this.SetGlyph(1 + _currentSliderPosition, 0, _sliderCharacter);
-                        }
-                    }
-                }
-                else
-                {
-                    this.SetCellAppearance(0, 0, Theme.Ends.Normal);
-                    this.SetGlyph(0, 0, _topOrLeftCharacter);
-
-                    this.SetCellAppearance(0, Height - 1, Theme.Ends.Normal);
-                    this.SetGlyph(0, Height - 1, _bottomOrRightCharacter);
-
-                    for (int i = 0; i < _sliderBarSize; i++)
-                    {
-                        this.SetCellAppearance(0, i + 1, Theme.Bar.Normal);
-                        this.SetGlyph(0, i + 1, _sliderBarCharacter);
-                    }
-
-                    if (_value >= _minValue && _value <= _maxValue && _minValue != _maxValue)
-                    {
-                        if (IsEnabled)
-                        {
-                            this.SetCellAppearance(0, 1 + _currentSliderPosition, Theme.Slider.Normal);
-                            this.SetGlyph(0, 1 + _currentSliderPosition, _sliderCharacter);
-                        }
-                    }
-
-                }
-                OnComposed?.Invoke(this);
-
-                this.IsDirty = false;
-            }
         }
 
         // Locking the mouse to this control is actually locking the parent console to the engine, and then
@@ -327,7 +194,7 @@ namespace SadConsole.Controls
 
                         if (state.Mouse.LeftClicked)
                         {
-                            if (_barOrientation == Orientation.Horizontal)
+                            if (Orientation == Orientation.Horizontal)
                             {
                                 if (mouseControlPosition.X == 0)
                                     Value -= Step;
@@ -349,10 +216,10 @@ namespace SadConsole.Controls
                         // When the mouse button is let go, clear the flag.
                         if (state.Mouse.LeftButtonDown)
                         {
-                            if (_barOrientation == Orientation.Horizontal)
+                            if (Orientation == Orientation.Horizontal)
                             {
                                 if (mouseControlPosition.Y == 0)
-                                    if (mouseControlPosition.X == _currentSliderPosition + 1)
+                                    if (mouseControlPosition.X == CurrentSliderPosition + 1)
                                     {
                                         Parent.CaptureControl(this);
                                     }
@@ -360,7 +227,7 @@ namespace SadConsole.Controls
                             else
                             {
                                 if (mouseControlPosition.X == 0)
-                                    if (mouseControlPosition.Y == _currentSliderPosition + 1)
+                                    if (mouseControlPosition.Y == CurrentSliderPosition + 1)
                                     {
                                         Parent.CaptureControl(this);
                                     }
@@ -379,7 +246,7 @@ namespace SadConsole.Controls
                     {
                         if (state.Mouse.LeftButtonDown)
                         {
-                            if (_barOrientation == Orientation.Horizontal)
+                            if (Orientation == Orientation.Horizontal)
                             {
                                 //if (mouseControlPosition.Y == 0)
                                 //{
@@ -388,14 +255,14 @@ namespace SadConsole.Controls
                                 //}
 
 
-                                if (mouseControlPosition.X >= 1 && mouseControlPosition.X <= _sliderBarSize)
+                                if (mouseControlPosition.X >= 1 && mouseControlPosition.X <= SliderBarSize)
                                 {
 
-                                    _currentSliderPosition = mouseControlPosition.X - 1;
+                                    CurrentSliderPosition = mouseControlPosition.X - 1;
 
-                                    if (_sliderPositionValues[_currentSliderPosition] != -1)
+                                    if (_sliderPositionValues[CurrentSliderPosition] != -1)
                                     {
-                                        _value = _sliderPositionValues[_currentSliderPosition];
+                                        _value = _sliderPositionValues[CurrentSliderPosition];
                                         if (ValueChanged != null)
                                             ValueChanged.Invoke(this, EventArgs.Empty);
 
@@ -406,14 +273,14 @@ namespace SadConsole.Controls
                             }
                             else
                             {
-                                if (mouseControlPosition.Y >= 1 && mouseControlPosition.Y <= _sliderBarSize)
+                                if (mouseControlPosition.Y >= 1 && mouseControlPosition.Y <= SliderBarSize)
                                 {
 
-                                    _currentSliderPosition = mouseControlPosition.Y - 1;
+                                    CurrentSliderPosition = mouseControlPosition.Y - 1;
 
-                                    if (_sliderPositionValues[_currentSliderPosition] != -1)
+                                    if (_sliderPositionValues[CurrentSliderPosition] != -1)
                                     {
-                                        _value = _sliderPositionValues[_currentSliderPosition];
+                                        _value = _sliderPositionValues[CurrentSliderPosition];
                                         if (ValueChanged != null)
                                             ValueChanged.Invoke(this, EventArgs.Empty);
 
@@ -455,15 +322,15 @@ namespace SadConsole.Controls
         private void DetermineSliderPositions()
         {
             _sliderPositionValues[0] = 0;
-            _sliderPositionValues[_sliderBarSize - 1] = _maxValue;
+            _sliderPositionValues[SliderBarSize - 1] = _maxValue;
 
             // Clear other spots
-            for (int i = 1; i < _sliderBarSize - 1; i++)
+            for (int i = 1; i < SliderBarSize - 1; i++)
             {
                 _sliderPositionValues[i] = -1;
             }
 
-            int rest = _sliderBarSize - 2;
+            int rest = SliderBarSize - 2;
 
             if (_maxValue == 1)
             {
@@ -491,11 +358,17 @@ namespace SadConsole.Controls
             {
                 float itemValue = (float)(_maxValue - 1) / rest;
 
-                for (int i = 1; i < _sliderBarSize - 1; i++)
+                for (int i = 1; i < SliderBarSize - 1; i++)
                 {
                     _sliderPositionValues[i] = (int)((float)i * itemValue);
                 }
             }
+        }
+
+        public override void Update(SurfaceBase hostSurface)
+        {
+            if (IsDirty)
+                Theme.Draw(this, hostSurface);
         }
 
         [OnDeserializedAttribute]
@@ -507,7 +380,8 @@ namespace SadConsole.Controls
             _value = -22;
             Value = temp;
 
-            Compose(true);
+            IsDirty = true;
+            DetermineState();
         }
     }
 

@@ -6,11 +6,10 @@ namespace SadConsole.Themes
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// The base class for a theme.
+    /// Has the basic appearances of each control state.
     /// </summary>
     [DataContract]
-    public abstract class ThemeBase<T> 
-        where T : ControlBase
+    public class ThemeStates
     {
         /// <summary>
         /// The normal appearance of the control.
@@ -49,16 +48,9 @@ namespace SadConsole.Themes
         public Cell MouseDown;
 
         /// <summary>
-        /// Draws the control state to the control.
+        /// Creates a new instance of the theme states object.
         /// </summary>
-        /// <param name="control">The control to draw.</param>
-        /// <param name="hostSurface">The surface the control renders to.</param>
-        public abstract void Render(T control, SurfaceBase hostSurface);
-
-        /// <summary>
-        /// Defaults the base properties to the library.
-        /// </summary>
-        protected ThemeBase()
+        public ThemeStates()
         {
             Normal = Library.Default.Appearance_ControlNormal;
             Disabled = Library.Default.Appearance_ControlDisabled;
@@ -67,5 +59,26 @@ namespace SadConsole.Themes
             Selected = Library.Default.Appearance_ControlSelected;
             Focused = Library.Default.Appearance_ControlFocused;
         }
+    }
+
+
+    /// <summary>
+    /// The base class for a theme.
+    /// </summary>
+    [DataContract]
+    public abstract class ThemeBase<T> : ThemeStates
+        where T : ControlBase
+    {
+        /// <summary>
+        /// Draws the control state to the control.
+        /// </summary>
+        /// <param name="control">The control to draw.</param>
+        /// <param name="hostSurface">The surface the control renders to.</param>
+        public abstract void Draw(T control, SurfaceBase hostSurface);
+
+        /// <summary>
+        /// Defaults the base properties to the library.
+        /// </summary>
+        protected ThemeBase() { }
     }
 }

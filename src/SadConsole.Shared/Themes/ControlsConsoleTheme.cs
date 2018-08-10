@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using SadConsole.Surfaces;
 
 namespace SadConsole.Themes
 {
@@ -28,6 +29,13 @@ namespace SadConsole.Themes
             var newItem = new ControlsConsoleTheme();
             newItem.FillStyle = this.FillStyle.Clone();
             return newItem;
+        }
+
+        public virtual void Draw(ControlsConsole console, SurfaceBase hostSurface)
+        {
+            hostSurface.DefaultForeground = FillStyle.Foreground;
+            hostSurface.DefaultBackground = FillStyle.Background;
+            hostSurface.Fill(hostSurface.DefaultForeground, hostSurface.DefaultBackground, FillStyle.Glyph, null);
         }
     }
 }

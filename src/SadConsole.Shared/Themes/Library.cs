@@ -32,11 +32,11 @@ namespace SadConsole.Themes
         //[DataMember]
         //public ButtonTheme SelectionButtonTheme;
 
-        ///// <summary>
-        ///// Theme for the <see cref="SadConsole.Controls.ScrollBar"/> control.
-        ///// </summary>
-        //[DataMember]
-        //public ScrollBarTheme ScrollBarTheme;
+        /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.ScrollBar"/> control.
+        /// </summary>
+        [DataMember]
+        public ScrollBarTheme ScrollBarTheme;
 
         ///// <summary>
         ///// Theme for the <see cref="SadConsole.Controls.RadioButton"/> control.
@@ -100,11 +100,13 @@ namespace SadConsole.Themes
 
         private void Init()
         {
-            ButtonTheme = new ButtonTheme();
-
             ControlsConsoleTheme = new ControlsConsoleTheme();
             WindowTheme = new WindowTheme();
+
+            ButtonTheme = new ButtonTheme();
+            ScrollBarTheme = new ScrollBarTheme();
         }
+
 
         /// <summary>
         /// Creates a new instance of the theme library with default themes.

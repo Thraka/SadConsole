@@ -41,26 +41,45 @@ namespace SadConsole.Themes
             Focused = Library.Default.Appearance_ControlFocused;
         }
 
-        public override void Render(Button control, SurfaceBase hostSurface)
+        public override void Draw(Button control, SurfaceBase hostSurface)
         {
             if (control.IsDirty)
             {
+                Cell appearance;
+
+                if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+                    appearance = Disabled;
+                
+                else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+                    appearance = MouseDown;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+                    appearance = MouseOver;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+                    appearance = Focused;
+
+                else
+                    appearance = Normal;
+
+                
+
                 int middle = (control.Height != 1 ? control.Height / 2 : 0) + control.Position.Y;
 
                 // Redraw the control
-                hostSurface.Fill(control.Bounds, 
-                                control.StateAppearance.Foreground, 
-                                control.StateAppearance.Background, 
-                                control.StateAppearance.Glyph, null);
+                hostSurface.Fill(control.Bounds,
+                    appearance.Foreground,
+                    appearance.Background,
+                    appearance.Glyph, null);
 
                 if (ShowEnds)
                 {
-                    hostSurface.Print(control.Position.X + 1, middle, (control.Text).Align(control.TextAlignment, control.Width - 2));
-                    hostSurface.SetGlyph(control.Position.X, middle, EndCharacterLeft);
-                    hostSurface.SetGlyph(control.Width, middle, EndCharacterRight);
+                    hostSurface.Print(control.Bounds.Left + 1, middle, (control.Text).Align(control.TextAlignment, control.Width - 2));
+                    hostSurface.SetGlyph(control.Bounds.Left, middle, EndCharacterLeft);
+                    hostSurface.SetGlyph(control.Bounds.Right - 1, middle, EndCharacterRight);
                 }
                 else
-                    hostSurface.Print(control.Position.X, middle, control.Text.Align(control.TextAlignment, control.Width));
+                    hostSurface.Print(control.Bounds.Left, middle, control.Text.Align(control.TextAlignment, control.Width));
                 
                 control.IsDirty = false;
                 hostSurface.IsDirty = true;
@@ -82,41 +101,59 @@ namespace SadConsole.Themes
             Shade = new Cell(Colors.ControlBackDark, Color.Transparent, 176);
         }
 
-        public override void Render(Button control, SurfaceBase hostSurface)
+        public override void Draw(Button control, SurfaceBase hostSurface)
         {
             if (control.IsDirty)
             {
+                Cell appearance;
+
+                if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+                    appearance = Disabled;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+                    appearance = MouseDown;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+                    appearance = MouseOver;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+                    appearance = Focused;
+
+                else
+                    appearance = Normal;
+
+
                 int middle = (control.Height != 1 ? control.Height / 2 : 0) + control.Position.Y;
 
                 Rectangle shadowBounds = control.Bounds;
                 shadowBounds.Location += new Point(2, 1);
 
-                hostSurface.Clear(new Rectangle(control.Bounds.X, control.Bounds.Y, control.Width + 2, control.Height + 1));
+                hostSurface.Clear(new Rectangle(control.Bounds.Left, control.Bounds.Top, control.Width + 2, control.Height + 1));
 
-                if (control.StateAppearance == Selected)
+                if (appearance == Selected)
                 {
                     middle += 1;
 
                     // Redraw the control
                     hostSurface.Fill(shadowBounds,
-                        control.StateAppearance.Foreground,
-                        control.StateAppearance.Background,
-                        control.StateAppearance.Glyph, null);
+                        appearance.Foreground,
+                        appearance.Background,
+                        appearance.Glyph, null);
 
-                    hostSurface.Print(shadowBounds.X, middle, control.Text.Align(control.TextAlignment, control.Width));
+                    hostSurface.Print(shadowBounds.Left, middle, control.Text.Align(control.TextAlignment, control.Width));
                 }
                 else
                 {
                     // Redraw the control
                     hostSurface.Fill(control.Bounds,
-                        control.StateAppearance.Foreground,
-                        control.StateAppearance.Background,
-                        control.StateAppearance.Glyph, null);
+                        appearance.Foreground,
+                        appearance.Background,
+                        appearance.Glyph, null);
 
-                    hostSurface.Print(control.Bounds.X, middle, control.Text.Align(control.TextAlignment, control.Width));
+                    hostSurface.Print(control.Bounds.Left, middle, control.Text.Align(control.TextAlignment, control.Width));
 
                     // Bottom line
-                    hostSurface.DrawLine(new Point(shadowBounds.Location.X, shadowBounds.Bottom - 1),
+                    hostSurface.DrawLine(new Point(shadowBounds.Left, shadowBounds.Bottom - 1),
                         new Point(shadowBounds.Right - 1, shadowBounds.Bottom - 1), Shade.Foreground, Shade.Background,
                         Shade.Glyph);
 
@@ -157,17 +194,32 @@ namespace SadConsole.Themes
             BottomRightLineColors = new Cell(Themes.Colors.Gray, Color.Transparent);
         }
 
-        public override void Render(Button control, SurfaceBase hostSurface)
+        public override void Draw(Button control, SurfaceBase hostSurface)
         {
             if (control.IsDirty)
             {
-                int middle = (control.Height != 1 ? control.Height / 2 : 0) + control.Position.Y;
+                Cell appearance;
+
+                if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+                    appearance = Disabled;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+                    appearance = MouseDown;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+                    appearance = MouseOver;
+
+                else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+                    appearance = Focused;
+
+                else
+                    appearance = Normal;
 
                 // Redraw the control
                 hostSurface.Fill(control.Bounds,
-                                control.StateAppearance.Foreground,
-                                control.StateAppearance.Background,
-                                control.StateAppearance.Glyph, null);
+                                appearance.Foreground,
+                                appearance.Background,
+                                appearance.Glyph, null);
 
                 hostSurface.DrawLine(control.Position, new Point(control.Bounds.Right - 1, control.Bounds.Top), TopLeftLineColors.Foreground, TopLeftLineColors.Background, ConnectedLineStyle[0]);
                 hostSurface.DrawLine(control.Position, new Point(control.Position.X, control.Bounds.Bottom - 1), TopLeftLineColors.Foreground, TopLeftLineColors.Background, ConnectedLineStyle[0]);

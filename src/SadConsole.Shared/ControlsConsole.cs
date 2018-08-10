@@ -27,12 +27,12 @@ namespace SadConsole
         public static Input.Keyboard KeyboardState = new Input.Keyboard();
 
         [DataMember]
-        private List<ControlBase> controls;
+        protected List<ControlBase> _controls;
 
         [DataMember]
-        private ControlBase focusedControl;
+        private ControlBase _focusedControl;
 
-        private ControlBase capturedControl;
+        private ControlBase _capturedControl;
 
         private bool wasFocusedBeforeCapture;
         private bool exclusiveBeforeCapture;
@@ -51,13 +51,7 @@ namespace SadConsole
         /// </summary>
         public SadConsole.Themes.ControlsConsoleTheme Theme
         {
-            get
-            {
-                if (_theme == null)
-                    return SadConsole.Themes.Library.Default.ControlsConsoleTheme;
-                else
-                    return _theme;
-            }
+            get => _theme ?? SadConsole.Themes.Library.Default.ControlsConsoleTheme;
             set { _theme = value; Invalidate(); }
         }
 
@@ -66,7 +60,7 @@ namespace SadConsole
         /// </summary>
         public System.Collections.ObjectModel.ReadOnlyCollection<ControlBase> Controls
         {
-            get { return controls.AsReadOnly(); }
+            get { return _controls.AsReadOnly(); }
         }
 
         /// <summary>
@@ -74,7 +68,7 @@ namespace SadConsole
         /// </summary>
         public ControlBase CapturedControl
         {
-            get { return capturedControl; }
+            get { return _capturedControl; }
         }
 
         /// <summary>
@@ -82,17 +76,17 @@ namespace SadConsole
         /// </summary>
         public ControlBase FocusedControl
         {
-            get { return focusedControl; }
+            get { return _focusedControl; }
             set
             {
                 if (!DisableControlFocusing)
                 {
-                    if (FocusedControlChanging(value, focusedControl))
+                    if (FocusedControlChanging(value, _focusedControl))
                     {
-                        var oldControl = focusedControl;
-                        focusedControl = value;
+                        var oldControl = _focusedControl;
+                        _focusedControl = value;
 
-                        FocusedControlChanged(focusedControl, oldControl);
+                        FocusedControlChanged(_focusedControl, oldControl);
                     }
                 }
             }
@@ -130,7 +124,7 @@ namespace SadConsole
         public ControlsConsole(int width, int height)
             : base(width, height)
         {
-            controls = new List<ControlBase>();
+            _controls = new List<ControlBase>();
 
             controlsSurface = new Surfaces.Basic(width, height)
             {
@@ -162,13 +156,13 @@ namespace SadConsole
         /// <param name="control">The control to add.</param>
         public void Add(ControlBase control)
         {
-            if (!controls.Contains(control))
-                controls.Add(control);
+            if (!_controls.Contains(control))
+                _controls.Add(control);
 
             control.Parent = this;
-            control.TabIndex = controls.Count - 1;
+            control.TabIndex = _controls.Count - 1;
 
-            if (controls.Count == 1)
+            if (_controls.Count == 1)
                 FocusedControl = control;
 
             control.OnComposed = ControlChanged;
@@ -184,25 +178,25 @@ namespace SadConsole
         /// <param name="control">The control to remove.</param>
         public void Remove(ControlBase control)
         {
-            if (controls.Contains(control))
+            if (_controls.Contains(control))
             {
                 control.TabIndex = -1;
                 control.Parent = null;
 
                 if (FocusedControl == control)
                 {
-                    int index = controls.IndexOf(control);
-                    controls.Remove(control);
+                    int index = _controls.IndexOf(control);
+                    _controls.Remove(control);
 
-                    if (controls.Count == 0)
+                    if (_controls.Count == 0)
                         FocusedControl = null;
-                    else if (index > controls.Count - 1)
-                        FocusedControl = controls[controls.Count - 1];
+                    else if (index > _controls.Count - 1)
+                        FocusedControl = _controls[_controls.Count - 1];
                     else
-                        FocusedControl = controls[index];
+                        FocusedControl = _controls[index];
                 }
                 else
-                    controls.Remove(control);
+                    _controls.Remove(control);
 
                 control.OnComposed = null;
 
@@ -217,15 +211,15 @@ namespace SadConsole
         /// </summary>
         public void TabNextControl()
         {
-            if (focusedControl == null)
+            if (_focusedControl == null)
             {
-                if (controls.Count != 0)
+                if (_controls.Count != 0)
                 {
-                    for (int i = 0; i < controls.Count; i++)
+                    for (int i = 0; i < _controls.Count; i++)
                     {
-                        if (controls[i].TabStop)
+                        if (_controls[i].TabStop)
                         {
-                            FocusedControl = controls[i];
+                            FocusedControl = _controls[i];
                             break;
                         }
                     }
@@ -237,11 +231,11 @@ namespace SadConsole
             }
             else
             {
-                int index = controls.IndexOf(focusedControl);
+                int index = _controls.IndexOf(_focusedControl);
 
-                if (index == controls.Count - 1 && !TryTabNextConsole())
+                if (index == _controls.Count - 1 && !TryTabNextConsole())
                 {
-                    FocusedControl = controls[0];
+                    FocusedControl = _controls[0];
                 }
             }
         }
@@ -251,15 +245,15 @@ namespace SadConsole
         /// </summary>
         public void TabPreviousControl()
         {
-            if (focusedControl == null)
+            if (_focusedControl == null)
             {
-                if (controls.Count != 0)
+                if (_controls.Count != 0)
                 {
-                    for (int i = controls.Count - 1; i > 0; i--)
+                    for (int i = _controls.Count - 1; i > 0; i--)
                     {
-                        if (controls[i].TabStop)
+                        if (_controls[i].TabStop)
                         {
-                            FocusedControl = controls[i];
+                            FocusedControl = _controls[i];
                             break;
                         }
                     }
@@ -271,11 +265,11 @@ namespace SadConsole
             }
             else
             {
-                int index = controls.IndexOf(focusedControl);
+                int index = _controls.IndexOf(_focusedControl);
 
                 if (index == 0 && !TryTabPreviousConsole())
                 {
-                    FocusedControl = controls[controls.Count - 1];
+                    FocusedControl = _controls[_controls.Count - 1];
                 }
             }
         }
@@ -359,12 +353,12 @@ namespace SadConsole
         /// </summary>
         public void RemoveAll()
         {
-            for (int i = 0; i < controls.Count; i++)
+            for (int i = 0; i < _controls.Count; i++)
             {
-                controls[i].Parent = null;
+                _controls[i].Parent = null;
             }
 
-            controls.Clear();
+            _controls.Clear();
             FocusedControl = null;
         }
 
@@ -375,7 +369,7 @@ namespace SadConsole
         /// <returns>True when the control exists in this console; otherwise false.</returns>
         public bool Contains(ControlBase control)
         {
-            return controls.Contains(control);
+            return _controls.Contains(control);
         }
 
         /// <summary>
@@ -396,11 +390,8 @@ namespace SadConsole
         /// <param name="oldControl">The control that previously had focus.</param>
         protected virtual void FocusedControlChanged(ControlBase newControl, ControlBase oldControl)
         {
-            if (oldControl != null)
-                oldControl.FocusLost();
-
-            if (newControl != null)
-                newControl.Focused();
+            oldControl?.FocusLost();
+            newControl?.Focused();
         }
 
         /// <summary>
@@ -408,7 +399,7 @@ namespace SadConsole
         /// </summary>
         public void ReOrderControls()
         {
-            controls.Sort((x, y) =>
+            _controls.Sort((x, y) =>
             {
                 if (x.TabIndex == y.TabIndex)
                     return 0;
@@ -421,16 +412,11 @@ namespace SadConsole
 
         public virtual void Invalidate()
         {
-            DefaultForeground = Theme.FillStyle.Foreground;
-            DefaultBackground = Theme.FillStyle.Background;
-            Fill(DefaultForeground, DefaultBackground, Theme.FillStyle.Glyph, null);
-            IsDirty = true;
+            Theme.Draw(this, this);
             controlsSurface.IsDirty = true;
 
-            foreach (var control in controls)
-            {
+            foreach (var control in _controls)
                 control.IsDirty = true;
-            }
         }
 
         /// <summary>
@@ -440,7 +426,7 @@ namespace SadConsole
         {
             base.Update(time);
 
-            foreach (var control in controls)
+            foreach (var control in _controls)
                 control.Update(controlsSurface);
 
             IsDirty = IsDirty || controlsSurface.IsDirty;
@@ -506,14 +492,14 @@ namespace SadConsole
         {
             if (base.ProcessMouse(state) || IsExclusiveMouse)
             {
-                if (capturedControl != null)
-                    capturedControl.ProcessMouse(state);
+                if (_capturedControl != null)
+                    _capturedControl.ProcessMouse(state);
 
                 else
                 {
-                    for (int i = 0; i < controls.Count; i++)
+                    for (int i = 0; i < _controls.Count; i++)
                     {
-                        if (controls[i].IsVisible && controls[i].ProcessMouse(state))
+                        if (_controls[i].IsVisible && _controls[i].ProcessMouse(state))
                             break;
                     }
                 }
@@ -528,9 +514,9 @@ namespace SadConsole
         {
             base.OnMouseExit(state);
 
-            for (int i = 0; i < controls.Count; i++)
+            for (int i = 0; i < _controls.Count; i++)
             {
-                controls[i].LostMouse(state);
+                _controls[i].LostMouse(state);
             }
 
             //if (_focusedControl != null)
@@ -555,7 +541,7 @@ namespace SadConsole
 
             exclusiveBeforeCapture = IsExclusiveMouse;
             IsExclusiveMouse = true;
-            capturedControl = control;
+            _capturedControl = control;
         }
 
         /// <summary>
@@ -567,7 +553,7 @@ namespace SadConsole
                 Global.FocusedConsoles.Pop(this);
 
             IsExclusiveMouse = exclusiveBeforeCapture;
-            capturedControl = null;
+            _capturedControl = null;
         }
 
         /// <summary>
@@ -576,7 +562,7 @@ namespace SadConsole
         /// <returns>The enumerator of the controls collection.</returns>
         public IEnumerator<ControlBase> GetEnumerator()
         {
-            return controls.GetEnumerator();
+            return _controls.GetEnumerator();
         }
 
         /// <summary>
@@ -585,7 +571,7 @@ namespace SadConsole
         /// <returns>The enumerator of the controls collection.</returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return controls.GetEnumerator();
+            return _controls.GetEnumerator();
         }
         
         protected override void OnFocused()
@@ -593,7 +579,7 @@ namespace SadConsole
             base.OnFocused();
 
             if (FocusedControl != null)
-                FocusedControl.DetermineAppearance();
+                FocusedControl.DetermineState();
         }
 
         protected override void OnFocusLost()
@@ -601,7 +587,7 @@ namespace SadConsole
             base.OnFocusLost();
 
             if (FocusedControl != null)
-                FocusedControl.DetermineAppearance();
+                FocusedControl.DetermineState();
         }
 
         [OnDeserializedAttribute]
@@ -609,7 +595,7 @@ namespace SadConsole
         {
             Cursor.IsVisible = false;
 
-            foreach (var control in controls)
+            foreach (var control in _controls)
             {
                 control.Parent = this;
             }

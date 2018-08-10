@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Windows;
 using System.Runtime.Serialization;
+using SadConsole.DrawCalls;
 using SadConsole.Renderers;
 using SadConsole.Input;
 
@@ -26,16 +27,7 @@ namespace SadConsole
 
         [DataMember(Name="Theme")]
         protected SadConsole.Themes.WindowTheme theme;
-
-        [DataMember(Name = "TitleLocX")]
-        protected int titleLocationX;
-
-        [DataMember(Name = "TitleLocY")]
-        protected int titleLocationY;
-
-        [DataMember(Name = "TitleWidth")]
-        protected int titleWidth;
-
+        
         [DataMember(Name="TitleAlignment")]
         protected HorizontalAlignment titleAlignment;
 
@@ -46,16 +38,26 @@ namespace SadConsole
         protected bool addedToParent;
         protected bool isDragging;
 
+
+        /// <summary>
+        /// Gets or sets the alignment of the window title.
+        /// </summary>
+        [DataMember]
+        public HorizontalAlignment TitleAlignment
+        {
+            get => titleAlignment;
+            set
+            {
+                titleAlignment = value;
+                Invalidate();
+            }
+        }
+
         /// <summary>
         /// Gets the whether or not the console is being shown as modal. 
         /// </summary>
-        public bool IsModal { get { return isModal; } }
+        public bool IsModal => isModal;
 
-        /// <summary>
-        /// When true, indiciates that the window should be redrawn.
-        /// </summary>
-        public bool IsDirty { get; set; }
-        
         /// <summary>
         /// Gets or sets whether or not this window can be moved with the mouse.
         /// </summary>
@@ -81,42 +83,28 @@ namespace SadConsole
         public bool ModalIsDefault { get; set; }
 
         /// <summary>
-        /// Gets or sets the alignment of the window title.
-        /// </summary>
-        public HorizontalAlignment TitleAlignment
-        {
-            get { return titleAlignment; }
-            set { titleAlignment = value; Redraw(); }
-        }
-
-        /// <summary>
         /// Gets or sets the title displayed on the window.
         /// </summary>
         public string Title
         {
-            get { return title; }
+            get => title;
             set
             {
                 title = value;
-                Redraw();
+                Invalidate();
             }
         }
 
         /// <summary>
         /// Gets or sets the theme of the window.
         /// </summary>
-        public SadConsole.Themes.WindowTheme Theme
+        public new SadConsole.Themes.WindowTheme Theme
         {
-            get
-            {
-                if (theme == null)
-                    return SadConsole.Themes.Library.Default.WindowTheme;
-                else
-                    return theme;
-            }
+            get => theme ?? SadConsole.Themes.Library.Default.WindowTheme;
             set
             {
                 theme = value;
+                Invalidate();
             }
         }
         
@@ -124,15 +112,9 @@ namespace SadConsole
         public Window(int width, int height)
             : base(width, height)
         {
-            //_border = Shapes.Box.GetDefaultBox();
-            //_border.Width = width;
-            //_border.Height = height;
             IsVisible = false;
 
             Renderer = new SadConsole.Renderers.Window();
-
-            IsDirty = true;
-            Redraw();
         }
         #endregion
 
@@ -153,7 +135,20 @@ namespace SadConsole
             ((SadConsole.Renderers.Window)Renderer).IsModal = isModal;
             ((SadConsole.Renderers.Window)Renderer).ModalTint = Theme.ModalTint;
 
+            if (IsModal && Theme.ModalTint.A != 0)
+                Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), Theme.ModalTint));
+
             base.Draw(drawTime);
+        }
+
+        /// <inheritdoc />
+        public override void Invalidate()
+        {
+            Theme.Draw(this, this);
+            controlsSurface.IsDirty = true;
+
+            foreach (var control in _controls)
+                control.IsDirty = true;
         }
 
         /// <summary>
@@ -163,7 +158,8 @@ namespace SadConsole
         /// <returns></returns>
         public override bool ProcessMouse(Input.MouseConsoleState state)
         { 
-            if (titleWidth != 0 && IsVisible)
+            
+            if (Theme.TitleAreaLength != 0 && IsVisible)
             {
                 if (isDragging && state.Mouse.LeftButtonDown)
                 {
@@ -186,7 +182,7 @@ namespace SadConsole
                 // Left button freshly down and we're not already dragging, check to see if in title
                 if (state.IsOnConsole && !isDragging && !previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
                 {
-                    if (state.CellPosition.Y == titleLocationY && state.CellPosition.X >= titleLocationX && state.CellPosition.X < titleLocationX + titleWidth)
+                    if (state.CellPosition.Y == Theme.TitleAreaY && state.CellPosition.X >= Theme.TitleAreaX && state.CellPosition.X < Theme.TitleAreaX + Theme.TitleAreaLength)
                     {
                         prevousMouseExclusiveDrag = IsExclusiveMouse;
 
@@ -248,8 +244,12 @@ namespace SadConsole
                 return;
             }
 
-            isModal = modal;
-            IsVisible = true;
+            if (IsVisible)
+                return;
+            else
+                IsVisible = true;
+
+            IsExclusiveMouse = isModal = modal;
             addedToParent = false;
 
             if (Parent == null)
@@ -265,8 +265,6 @@ namespace SadConsole
                 Global.FocusedConsoles.Push(this);
                 IsFocused = true;
             }
-
-            this.IsExclusiveMouse = modal;
         }
 
         /// <summary>
@@ -299,50 +297,6 @@ namespace SadConsole
             else
                 this.Position = new Point(((screenWidth / Font.Size.X) / 2) - (Width / 2), ((screenHeight / Font.Size.Y) / 2) - (Height / 2));
             
-        }
-
-        /// <summary>
-        /// Redraws the border and title of the window.
-        /// </summary>
-        public virtual void Redraw()
-        {
-            //DefaultForeground = Theme.FillStyle.Foreground;
-            //DefaultBackground = Theme.FillStyle.Background;
-
-            //Clear();
-
-            //ResetBox();
-            //Border.Draw(this);
-
-            //// Draw title
-            //string adjustedText = "";
-            //titleWidth = 0;
-            //titleLocationX = 0;
-            //int adjustedWidth = Width - 2;
-
-            //if (!string.IsNullOrEmpty(title))
-            //{
-            //    if (title.Length > adjustedWidth)
-            //        adjustedText = title.Substring(0, title.Length - (title.Length - adjustedWidth));
-            //    else
-            //        adjustedText = title;
-            //}
-
-            //if (!string.IsNullOrEmpty(adjustedText))
-            //{
-            //    titleWidth = adjustedText.Length;
-
-            //    if (titleAlignment == HorizontalAlignment.Left)
-            //        titleLocationX = 1;
-
-            //    else if (titleAlignment == HorizontalAlignment.Center)
-            //        titleLocationX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
-
-            //    else
-            //        titleLocationX = Width - 1 - adjustedText.Length;
-
-            //    Print(titleLocationX, titleLocationY, adjustedText, Theme.TitleStyle);
-            //}
         }
 
         [OnDeserialized]

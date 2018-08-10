@@ -78,13 +78,22 @@ namespace SadConsole
         /// <param name="closedCallback">A callback indicating the message was dismissed.</param>
         public static void Message(ColoredString message, string closeButtonText, Action closedCallback = null)
         {
-            Window window = new Window(message.ToString().Length + 4, 6);
+            var width = message.ToString().Length + 4;
+            var buttonWidth = closeButtonText.Length + 2;
 
+            if (buttonWidth < 9)
+                buttonWidth = 9;
+
+            if (width < buttonWidth + 4)
+                width = buttonWidth + 4;
+
+            Window window = new Window(width, 6);
+            
             message.IgnoreBackground = true;
 
             window.Print(2, 2, message);
 
-            Button closeButton = new Button(closeButtonText.Length + 2, 1);
+            Button closeButton = new Button(buttonWidth, 1);
 
             closeButton.Position = new Point(2, window.Height - 2);
 

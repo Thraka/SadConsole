@@ -279,7 +279,7 @@ namespace SadConsole.Surfaces
                 if (LastRenderResult != null)
                 {
                     Renderer.Render(this);
-                    Global.DrawCalls.Add(new DrawCallSurface(this, CalculatedPosition, false));
+                    Global.DrawCalls.Add(new DrawCallSurface(this, CalculatedPosition, UsePixelPositioning));
                 }
 
                 base.Draw(timeElapsed);

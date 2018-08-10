@@ -26,7 +26,7 @@ namespace SadConsole.Renderers
         {
             RenderBegin(surface, force);
             RenderCells(surface, force);
-            RenderCells(ControlsSurface, force);
+            RenderCells(ControlsSurface, surface.IsDirty || force);
             ControlsSurface.IsDirty = false;
             RenderTint(surface, force);
             RenderEnd(surface, force);
