@@ -14,7 +14,7 @@ namespace SadConsole.Themes
         public static Color Black = Color.Black;
         public static Color Gray = new Color(176, 196, 222);
 
-        public static Color GrayDark = new Color(94, 94, 94);
+        public static Color GrayDark = new Color(66,66,66);
 
         public static Color Red = new Color(255, 0, 51);
         public static Color Green = new Color(153, 224, 0);

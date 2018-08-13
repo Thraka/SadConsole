@@ -37,7 +37,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         public static readonly int[] ConnectedLineThinExtended =
           { 261, 257, 262,
-            256, 000, 258,
+            256, 295, 258,
             264, 259, 263,
 
                  001,

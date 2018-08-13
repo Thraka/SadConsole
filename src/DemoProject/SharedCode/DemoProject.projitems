@@ -69,5 +69,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)HeaderConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Theme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\CharacterViewer.cs" />
   </ItemGroup>
 </Project>

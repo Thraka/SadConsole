@@ -234,9 +234,9 @@ namespace SadConsole
                 int index = _controls.IndexOf(_focusedControl);
 
                 if (index == _controls.Count - 1 && !TryTabNextConsole())
-                {
                     FocusedControl = _controls[0];
-                }
+                else
+                    FocusedControl = _controls[index + 1];
             }
         }
 
@@ -268,9 +268,9 @@ namespace SadConsole
                 int index = _controls.IndexOf(_focusedControl);
 
                 if (index == 0 && !TryTabPreviousConsole())
-                {
                     FocusedControl = _controls[_controls.Count - 1];
-                }
+                else
+                    FocusedControl = _controls[index - 1];
             }
         }
 

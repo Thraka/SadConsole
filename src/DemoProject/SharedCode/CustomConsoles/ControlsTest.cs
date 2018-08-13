@@ -26,6 +26,7 @@ namespace StarterProject.CustomConsoles
                 Text = "Click",
                 Position = new Point(1, 1)
             };
+            button.Click += (s, a) => Window.Message("This has been clicked!", "Close");
             Add(button);
 
             button = new SadConsole.Controls.Button(11, 2)
@@ -45,7 +46,7 @@ namespace StarterProject.CustomConsoles
             button = new SadConsole.Controls.Button(11, 3)
             {
                 Text = "Click",
-                Position = new Point(1, 10),
+                Position = new Point(15, 5),
                 Theme = new Button3dTheme()
             };
             Add(button);

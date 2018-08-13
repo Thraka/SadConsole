@@ -130,7 +130,7 @@ namespace SadConsole.Themes
 
                 hostSurface.Clear(new Rectangle(control.Bounds.Left, control.Bounds.Top, control.Width + 2, control.Height + 1));
 
-                if (appearance == Selected)
+                if (appearance == MouseDown)
                 {
                     middle += 1;
 
@@ -190,8 +190,8 @@ namespace SadConsole.Themes
         public ButtonLinesTheme()
         {
             ConnectedLineStyle = SurfaceBase.ConnectedLineThinExtended;
-            TopLeftLineColors = new Cell(Themes.Colors.White, Color.Transparent);
-            BottomRightLineColors = new Cell(Themes.Colors.Gray, Color.Transparent);
+            TopLeftLineColors = new Cell(Themes.Colors.Gray, Color.Transparent);
+            BottomRightLineColors = new Cell(Themes.Colors.GrayDark, Color.Transparent);
         }
 
         public override void Draw(Button control, SurfaceBase hostSurface)
@@ -199,21 +199,36 @@ namespace SadConsole.Themes
             if (control.IsDirty)
             {
                 Cell appearance;
+                var mouseDown = false;
+                var mouseOver = false;
+                var focused = false;
 
                 if (Helpers.HasFlag(control.State, ControlStates.Disabled))
                     appearance = Disabled;
-
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
-                    appearance = MouseDown;
-
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
-                    appearance = MouseOver;
-
-                else if (Helpers.HasFlag(control.State, ControlStates.Focused))
-                    appearance = Focused;
-
                 else
                     appearance = Normal;
+
+                if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) ||
+                    Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+                    mouseDown = true;
+
+                if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+                    mouseOver = true;
+
+                if (Helpers.HasFlag(control.State, ControlStates.Focused))
+                    focused = true;
+
+
+                // Middle part of the button for text.
+                var middle = (control.Height != 1 ? control.Height / 2 : 0) + control.Position.Y;
+                var topleftcolor = !mouseDown ? TopLeftLineColors.Foreground : BottomRightLineColors.Foreground;
+                var bottomrightcolor = !mouseDown ? BottomRightLineColors.Foreground : TopLeftLineColors.Foreground;
+                Color textColor = Normal.Foreground;
+
+                if (mouseOver)
+                    textColor = MouseOver.Foreground;
+                else if (focused)
+                    textColor = Focused.Foreground;
 
                 // Redraw the control
                 hostSurface.Fill(control.Bounds,
@@ -221,10 +236,46 @@ namespace SadConsole.Themes
                                 appearance.Background,
                                 appearance.Glyph, null);
 
-                hostSurface.DrawLine(control.Position, new Point(control.Bounds.Right - 1, control.Bounds.Top), TopLeftLineColors.Foreground, TopLeftLineColors.Background, ConnectedLineStyle[0]);
-                hostSurface.DrawLine(control.Position, new Point(control.Position.X, control.Bounds.Bottom - 1), TopLeftLineColors.Foreground, TopLeftLineColors.Background, ConnectedLineStyle[0]);
-                hostSurface.DrawLine(control.Position, new Point(control.Bounds.Right - 1, control.Bounds.Top), TopLeftLineColors.Foreground, TopLeftLineColors.Background, ConnectedLineStyle[0]);
-                hostSurface.DrawLine(control.Position, new Point(control.Bounds.Right - 1, control.Bounds.Top), TopLeftLineColors.Foreground, TopLeftLineColors.Background, ConnectedLineStyle[0]);
+                hostSurface.Print(control.Bounds.Left, middle, control.Text.Align(control.TextAlignment, control.Width), textColor);
+
+
+                hostSurface.DrawBox(control.Bounds, topleftcolor, TopLeftLineColors.Background,
+                    connectedLineStyle: ConnectedLineStyle);
+
+                hostSurface.DrawLine(control.Position, new Point(control.Bounds.Right - 1, control.Bounds.Top), topleftcolor, appearance.Background);
+                hostSurface.DrawLine(control.Position, new Point(control.Position.X, control.Bounds.Bottom - 1), topleftcolor, appearance.Background);
+                hostSurface.DrawLine(new Point(control.Bounds.Right - 1, control.Bounds.Top), control.Position + new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
+                hostSurface.DrawLine(new Point(control.Position.X + 1, control.Bounds.Bottom - 1), control.Position + new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
+
+
+
+                // connectedLineStyle[(int)ConnectedLineIndex.TopLeft]
+
+                // Tweak the corners
+                //hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Top, 0);
+                hostSurface.SetGlyph(control.Bounds.Right - 1, control.Bounds.Top, 0);
+                hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Bottom - 1, 0);
+                //hostSurface.SetGlyph(control.Bounds.Right - 1, control.Bounds.Bottom - 1, 0);
+
+                hostSurface.SetDecorator(new Point(control.Bounds.Left, control.Bounds.Bottom - 1).ToIndex(hostSurface.Width), 1, new[] {
+                        hostSurface.Font.Master.GetDecorator("box-edge-left", topleftcolor),
+                        hostSurface.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor)
+                    });
+
+                //hostSurface.SetDecorator(new Point(control.Bounds.Left, control.Bounds.Top).ToIndex(hostSurface.Width), 1, new[] {
+                //    hostSurface.Font.Master.GetDecorator("box-edge-left", topleftcolor),
+                //    hostSurface.Font.Master.GetDecorator("box-edge-top", topleftcolor)
+                //});
+
+                hostSurface.SetDecorator(new Point(control.Bounds.Right - 1, control.Bounds.Top).ToIndex(hostSurface.Width), 1, new[] {
+                    hostSurface.Font.Master.GetDecorator("box-edge-top", topleftcolor),
+                    hostSurface.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
+                });
+
+                //hostSurface.SetDecorator(new Point(control.Bounds.Right - 1, control.Bounds.Bottom - 1).ToIndex(hostSurface.Width), 1, new[] {
+                //    hostSurface.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor),
+                //    hostSurface.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
+                //});
 
                 control.IsDirty = false;
                 hostSurface.IsDirty = true;

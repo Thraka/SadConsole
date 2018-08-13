@@ -10,7 +10,7 @@ namespace StarterProject
 {
     class Program
     {
-        //private static Windows.CharacterViewer _characterWindow;
+        private static Windows.CharacterViewer _characterWindow;
         private static Container MainConsole;
 
         static void Main(string[] args)
@@ -49,7 +49,7 @@ namespace StarterProject
         private static void Update(GameTime time)
         {
             // Called each logic update.
-            //if (!_characterWindow.IsVisible)
+            if (!_characterWindow.IsVisible)
             {
                 // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
                 // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
@@ -60,7 +60,7 @@ namespace StarterProject
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F2))
                 {
-                    //_characterWindow.Show(true);
+                    _characterWindow.Show(true);
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
                 {
@@ -96,7 +96,7 @@ namespace StarterProject
             Global.CurrentScreen = MainConsole;
             
             // Initialize the windows
-            //_characterWindow = new Windows.CharacterViewer();
+            _characterWindow = new Windows.CharacterViewer();
 
         }
     }

@@ -1038,7 +1038,7 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Clears the console data. Characters are reset to 0, the forground and background are set to default, and effect set to none.
+        /// Clears the console data. Characters are reset to 0, the forground and background are set to default, and effect set to none. Clears cell decorators.
         /// </summary>
         public void Clear()
         {
@@ -1046,7 +1046,7 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Clears a cell. Character is reset to 0, the forground and background is set to default, and effect is set to none.
+        /// Clears a cell. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
@@ -1058,11 +1058,12 @@ namespace SadConsole.Surfaces
             cell.Foreground = DefaultForeground;
             cell.Background = DefaultBackground;
             cell.Mirror = SpriteEffects.None;
+            cell.Decorators = new CellDecorator[0];
             IsDirty = true;
         }
 
         /// <summary>
-        /// Clears an area of cells. Character is reset to 0, the forground and background is set to default, and effect is set to none.
+        /// Clears an area of cells. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="area"></param>
         public void Clear(Rectangle area)
@@ -1071,7 +1072,7 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Fills the console.
+        /// Fills the console. Clears cell decorators.
         /// </summary>
         /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
         /// <param name="background">Foregorund of every cell. If null, skips.</param>
@@ -1089,6 +1090,8 @@ namespace SadConsole.Surfaces
                     Cells[i].Foreground = foreground.Value;
                 if (spriteEffect.HasValue)
                     Cells[i].Mirror = spriteEffect.Value;
+
+                SetDecorator(i, 1, null);
             }
 
             IsDirty = true;
@@ -1096,7 +1099,7 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Fills the specified area.
+        /// Fills the specified area. Clears cell decorators.
         /// </summary>
         /// <param name="area">The area to fill.</param>
         /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
@@ -1125,6 +1128,8 @@ namespace SadConsole.Surfaces
                         cell.Foreground = foreground.Value;
                     if (spriteEffect.HasValue)
                         cell.Mirror = spriteEffect.Value;
+
+                    SetDecorator(cellIndex, 1, null);
 
                     cells[cellIndex] = cell;
                     cellIndex++;
@@ -1212,7 +1217,7 @@ namespace SadConsole.Surfaces
             DrawLine(area.Location, area.Location + new Point(area.Width - 1, 0), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Top]);
             DrawLine(area.Location + new Point(0, area.Height - 1), area.Location + new Point(area.Width - 1, area.Height - 1), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Bottom]);
             DrawLine(area.Location, area.Location + new Point(0, area.Height - 1), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Left]);
-            DrawLine(area.Location + new Point(area.Width - 1, 0), area.Location + new Point(area.Width - 1, area.Height - 1), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Left]);
+            DrawLine(area.Location + new Point(area.Width - 1, 0), area.Location + new Point(area.Width - 1, area.Height - 1), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Right]);
 
             // Tweak the corners
             SetGlyph(area.Left, area.Top, connectedLineStyle[(int) ConnectedLineIndex.TopLeft]);
