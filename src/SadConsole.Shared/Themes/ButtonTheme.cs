@@ -23,13 +23,13 @@ namespace SadConsole.Themes
         /// The character on the left side of the button. Defaults to '&lt;'.
         /// </summary>
         [DataMember]
-        public int EndCharacterLeft { get; set; } = (int)'<';
+        public int EndCharacterLeft { get; set; } = '<';
 
         /// <summary>
         /// The character on the right side of the button. Defaults to '>'.
         /// </summary>
         [DataMember]
-        public int EndCharacterRight { get; set; } = (int)'>';
+        public int EndCharacterRight { get; set; } = '>';
 
         public ButtonTheme()
         {
@@ -62,9 +62,7 @@ namespace SadConsole.Themes
                 else
                     appearance = Normal;
 
-                
-
-                int middle = (control.Height != 1 ? control.Height / 2 : 0) + control.Position.Y;
+                var middle = (control.Height != 1 ? control.Height / 2 : 0) + control.Position.Y;
 
                 // Redraw the control
                 hostSurface.Fill(control.Bounds,
@@ -88,7 +86,7 @@ namespace SadConsole.Themes
     }
 
     /// <summary>
-    /// The theme of the button control
+    /// A 3D shadow theme of the button control
     /// </summary>
     [DataContract]
     public class Button3dTheme : ButtonTheme
@@ -175,21 +173,19 @@ namespace SadConsole.Themes
     }
 
     /// <summary>
-    /// The theme of the button control
+    /// A 3D theme of the button control using thin lines. Supports the SadConsole extended character set.
     /// </summary>
     [DataContract]
     public class ButtonLinesTheme : ButtonTheme
     {
-        //TODO Finish this theme
-
+        [DataMember]
         public Cell TopLeftLineColors;
-        public Cell BottomRightLineColors;
-        public int[] ConnectedLineStyle;
 
+        [DataMember]
+        public Cell BottomRightLineColors;
 
         public ButtonLinesTheme()
         {
-            ConnectedLineStyle = SurfaceBase.ConnectedLineThinExtended;
             TopLeftLineColors = new Cell(Themes.Colors.Gray, Color.Transparent);
             BottomRightLineColors = new Cell(Themes.Colors.GrayDark, Color.Transparent);
         }
@@ -237,46 +233,48 @@ namespace SadConsole.Themes
                                 appearance.Glyph, null);
 
                 hostSurface.Print(control.Bounds.Left, middle, control.Text.Align(control.TextAlignment, control.Width), textColor);
-
-
+                
                 hostSurface.DrawBox(control.Bounds, topleftcolor, TopLeftLineColors.Background,
-                    connectedLineStyle: ConnectedLineStyle);
+                    connectedLineStyle: control.Parent.Font.Master.IsSadExtended ? SurfaceBase.ConnectedLineThinExtended : SurfaceBase.ConnectedLineThin);
 
                 hostSurface.DrawLine(control.Position, new Point(control.Bounds.Right - 1, control.Bounds.Top), topleftcolor, appearance.Background);
                 hostSurface.DrawLine(control.Position, new Point(control.Position.X, control.Bounds.Bottom - 1), topleftcolor, appearance.Background);
                 hostSurface.DrawLine(new Point(control.Bounds.Right - 1, control.Bounds.Top), control.Position + new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
                 hostSurface.DrawLine(new Point(control.Position.X + 1, control.Bounds.Bottom - 1), control.Position + new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
 
+                if (control.Parent.Font.Master.IsSadExtended)
+                {
+                    // Tweak the corners
+                    //hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Top, 0);
+                    hostSurface.SetGlyph(control.Bounds.Right - 1, control.Bounds.Top, 0);
+                    hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Bottom - 1, 0);
+                    //hostSurface.SetGlyph(control.Bounds.Right - 1, control.Bounds.Bottom - 1, 0);
 
+                    hostSurface.SetDecorator(
+                        new Point(control.Bounds.Left, control.Bounds.Bottom - 1).ToIndex(hostSurface.Width), 1, new[]
+                        {
+                            hostSurface.Font.Master.GetDecorator("box-edge-left", topleftcolor),
+                            hostSurface.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor)
+                        });
 
-                // connectedLineStyle[(int)ConnectedLineIndex.TopLeft]
+                    //hostSurface.SetDecorator(new Point(control.Bounds.Left, control.Bounds.Top).ToIndex(hostSurface.Width), 1, new[] {
+                    //    hostSurface.Font.Master.GetDecorator("box-edge-left", topleftcolor),
+                    //    hostSurface.Font.Master.GetDecorator("box-edge-top", topleftcolor)
+                    //});
 
-                // Tweak the corners
-                //hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Top, 0);
-                hostSurface.SetGlyph(control.Bounds.Right - 1, control.Bounds.Top, 0);
-                hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Bottom - 1, 0);
-                //hostSurface.SetGlyph(control.Bounds.Right - 1, control.Bounds.Bottom - 1, 0);
+                    hostSurface.SetDecorator(
+                        new Point(control.Bounds.Right - 1, control.Bounds.Top).ToIndex(hostSurface.Width), 1, new[]
+                        {
+                            hostSurface.Font.Master.GetDecorator("box-edge-top", topleftcolor),
+                            hostSurface.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
+                        });
 
-                hostSurface.SetDecorator(new Point(control.Bounds.Left, control.Bounds.Bottom - 1).ToIndex(hostSurface.Width), 1, new[] {
-                        hostSurface.Font.Master.GetDecorator("box-edge-left", topleftcolor),
-                        hostSurface.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor)
-                    });
-
-                //hostSurface.SetDecorator(new Point(control.Bounds.Left, control.Bounds.Top).ToIndex(hostSurface.Width), 1, new[] {
-                //    hostSurface.Font.Master.GetDecorator("box-edge-left", topleftcolor),
-                //    hostSurface.Font.Master.GetDecorator("box-edge-top", topleftcolor)
-                //});
-
-                hostSurface.SetDecorator(new Point(control.Bounds.Right - 1, control.Bounds.Top).ToIndex(hostSurface.Width), 1, new[] {
-                    hostSurface.Font.Master.GetDecorator("box-edge-top", topleftcolor),
-                    hostSurface.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
-                });
-
-                //hostSurface.SetDecorator(new Point(control.Bounds.Right - 1, control.Bounds.Bottom - 1).ToIndex(hostSurface.Width), 1, new[] {
-                //    hostSurface.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor),
-                //    hostSurface.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
-                //});
-
+                    //hostSurface.SetDecorator(new Point(control.Bounds.Right - 1, control.Bounds.Bottom - 1).ToIndex(hostSurface.Width), 1, new[] {
+                    //    hostSurface.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor),
+                    //    hostSurface.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
+                    //});
+                }
+                
                 control.IsDirty = false;
                 hostSurface.IsDirty = true;
             }

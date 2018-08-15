@@ -50,17 +50,17 @@ namespace SadConsole.Themes
         //[DataMember]
         //public ListBoxTheme ListBoxTheme;
 
-        ///// <summary>
-        ///// Theme for the <see cref="SadConsole.Controls.CheckBox"/> control.
-        ///// </summary>
-        //[DataMember]
-        //public CheckBoxTheme CheckBoxTheme;
+        /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.CheckBox"/> control.
+        /// </summary>
+        [DataMember]
+        public CheckBoxTheme CheckBoxTheme;
 
-        ///// <summary>
-        ///// Theme for the <see cref="SadConsole.Controls.InputBox"/> control.
-        ///// </summary>
-        //[DataMember]
-        //public InputBoxTheme InputBoxTheme;
+        /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.InputBox"/> control.
+        /// </summary>
+        [DataMember]
+        public InputBoxTheme InputBoxTheme;
 
         ///// <summary>
         ///// Theme for the <see cref="SadConsole.Controls.ProgressBar"/> control.
@@ -105,6 +105,8 @@ namespace SadConsole.Themes
 
             ButtonTheme = new ButtonTheme();
             ScrollBarTheme = new ScrollBarTheme();
+            CheckBoxTheme = new CheckBoxTheme();
+            InputBoxTheme = new InputBoxTheme();
         }
 
 

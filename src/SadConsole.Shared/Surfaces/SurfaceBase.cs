@@ -292,12 +292,11 @@ namespace SadConsole.Surfaces
         /// <inheritdoc />
         public override void Update(TimeSpan timeElapsed)
         {
-            if (!IsPaused)
-            {
-                Effects.UpdateEffects(timeElapsed.TotalSeconds);
+            if (IsPaused) return;
 
-                base.Update(timeElapsed);
-            }
+            Effects.UpdateEffects(timeElapsed.TotalSeconds);
+
+            base.Update(timeElapsed);
         }
 
         /// <summary>

@@ -147,7 +147,7 @@ namespace SadConsole
         /// Marks the text surface as dirty when a control changes appearance.
         /// </summary>
         /// <param name="control">The control.</param>
-        protected void ControlChanged(ControlBase control) => IsDirty = true;
+        //protected void ControlChanged(ControlBase control) => IsDirty = true;
 
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace SadConsole
             if (_controls.Count == 1)
                 FocusedControl = control;
 
-            control.OnComposed = ControlChanged;
+            //control.OnComposed = ControlChanged;
             IsDirty = true;
 
             ReOrderControls();
@@ -198,7 +198,7 @@ namespace SadConsole
                 else
                     _controls.Remove(control);
 
-                control.OnComposed = null;
+                //control.OnComposed = null;
 
                 IsDirty = true;
 
@@ -424,10 +424,14 @@ namespace SadConsole
         /// </summary>
         public override void Update(System.TimeSpan time)
         {
+            if (IsPaused) return;
+
             base.Update(time);
 
             foreach (var control in _controls)
                 control.Update(controlsSurface);
+
+            controlsSurface.Update(time);
 
             IsDirty = IsDirty || controlsSurface.IsDirty;
         }

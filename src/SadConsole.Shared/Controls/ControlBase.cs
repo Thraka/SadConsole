@@ -25,7 +25,7 @@ namespace SadConsole.Controls
         protected bool isMouseLeftDown;
         protected bool isMouseRightDown;
 
-        public Action<ControlBase> OnComposed;
+        //public Action<ControlBase> OnComposed;
 
         [DataMember]
         public bool UseKeyboard { get; set; }
@@ -86,12 +86,12 @@ namespace SadConsole.Controls
         /// <summary>
         /// The width of the control.
         /// </summary>
-        public int Width { get; protected set; }
+        public int Width { get; }
 
         /// <summary>
         /// The height of the control.
         /// </summary>
-        public int Height { get; protected set; }
+        public int Height { get; }
 
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace SadConsole.Controls
         [DataMember]
         public bool IsEnabled
         {
-            get { return isEnabled; }
+            get => isEnabled;
             set
             {
                 isEnabled = value;
@@ -312,7 +312,10 @@ namespace SadConsole.Controls
                 Helpers.UnsetFlag(ref state, ControlStates.MouseRightButtonDown);
 
             if (oldState != state)
+            {
+                OnStateChanged(oldState, state);
                 IsDirty = true;
+            }
         }
 
         /// <summary>

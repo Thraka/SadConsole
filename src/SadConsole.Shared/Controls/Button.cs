@@ -98,23 +98,17 @@ namespace SadConsole.Controls
     [DataContract]
     public class Button: ButtonBase
     {
-        private ButtonTheme theme;
+        private ButtonTheme _theme;
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
         public virtual ButtonTheme Theme
         {
-            get
-            {
-                if (theme == null)
-                    return Library.Default.ButtonTheme;
-                else
-                    return theme;
-            }
+            get => _theme ?? Library.Default.ButtonTheme;
             set
             {
-                theme = value;
+                _theme = value;
                 DetermineState();
                 IsDirty = true;
             }

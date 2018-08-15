@@ -3,6 +3,7 @@
 using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
+using SadConsole.Surfaces;
 
 namespace SadConsole.Controls
 {
@@ -37,18 +38,12 @@ namespace SadConsole.Controls
         /// </summary>
         public virtual CheckBoxTheme Theme
         {
-            get
-            {
-                if (_theme == null)
-                    return Library.Default.CheckBoxTheme;
-                else
-                    return _theme;
-            }
+            get => _theme ?? Library.Default.CheckBoxTheme;
             set
             {
                 _theme = value;
-                DetermineAppearance();
-                Compose();
+                DetermineState();
+                IsDirty = true;
             }
         }
 
@@ -57,8 +52,13 @@ namespace SadConsole.Controls
         /// </summary>
         public string Text
         {
-            get { return _text; }
-            set { _text = value; Compose(true); }
+            get => _text;
+            set
+            {
+                _text = value;
+                IsDirty = true;
+                DetermineState();
+            }
         }
 
         /// <summary>
@@ -66,8 +66,13 @@ namespace SadConsole.Controls
         /// </summary>
         public HorizontalAlignment TextAlignment
         {
-            get { return _textAlignment; }
-            set { _textAlignment = value; Compose(true); }
+            get => _textAlignment;
+            set
+            {
+                _textAlignment = value;
+                IsDirty = true;
+                DetermineState();
+            }
         }
 
         /// <summary>
@@ -76,20 +81,19 @@ namespace SadConsole.Controls
         /// <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
         public bool IsSelected
         {
-            get { return _isSelected; }
+            get => _isSelected;
             set
             {
                 if (_isSelected != value)
                 {
                     _isSelected = value;
 
-                    if (IsSelectedChanged != null)
-                        IsSelectedChanged(this, EventArgs.Empty);
+                    IsSelectedChanged?.Invoke(this, EventArgs.Empty);
 
                     //if (value)
                     //    OnAction();
-                    DetermineAppearance();
-                    Compose(true);
+                    IsDirty = true;
+                    DetermineState();
                 }
             }
         }
@@ -101,59 +105,8 @@ namespace SadConsole.Controls
         /// <param name="height">Height of the control.</param>
         public CheckBox(int width, int height) : base(width, height)
         {
-            DetermineAppearance();
         }
-
-        /// <summary>
-        /// Determines the appearance of the control based on its current state.
-        /// </summary>
-        public override void DetermineAppearance()
-        {
-            Cell currentappearanceButton = _currentAppearanceButton;
-            Cell currentappearanceText = _currentAppearanceText;
-
-            if (!isEnabled)
-            {
-                _currentAppearanceButton = Theme.Button.Disabled;
-                _currentAppearanceText = Theme.Disabled;
-            }
-
-            else if (!_isMouseDown && isMouseOver)
-            {
-                _currentAppearanceButton = Theme.Button.MouseOver;
-                _currentAppearanceText = Theme.MouseOver;
-            }
-
-            else if (!_isMouseDown && !isMouseOver && IsFocused && Global.FocusedConsoles.Console == parent)
-            {
-                _currentAppearanceButton = Theme.Button.Focused;
-                _currentAppearanceText = Theme.Focused;
-            }
-
-            else if (_isMouseDown && isMouseOver)
-            {
-                _currentAppearanceButton = Theme.Button.MouseClicking;
-                _currentAppearanceText = Theme.MouseClicking;
-            }
-
-            else if (_isSelected)
-            {
-                _currentAppearanceButton = Theme.Button.Selected;
-                _currentAppearanceText = Theme.Selected;
-            }
-
-            else
-            {
-                _currentAppearanceButton = Theme.Button.Normal;
-                _currentAppearanceText = Theme.Normal;
-            }
-
-            if (currentappearanceButton != _currentAppearanceButton ||
-                currentappearanceText != _currentAppearanceText)
-
-                this.IsDirty = true;
-        }
-
+        
         protected override void OnMouseIn(Input.MouseConsoleState state)
         {
             isMouseOver = true;
@@ -205,42 +158,21 @@ namespace SadConsole.Controls
             return false;
         }
 
-        public override void Compose()
+        /// <summary>
+        /// Redraws the control if it is dirty.
+        /// </summary>
+        /// <param name="hostSurface">The surface where the control will be drawn.</param>
+        public override void Update(SurfaceBase hostSurface)
         {
-            if (this.IsDirty)
-            {
-                // If we are doing text, then print it otherwise we're just displaying the button part
-                if (Width != 1)
-                {
-                    for (int x = 0; x < 4; x++)
-                    {
-                        this.SetCellAppearance(x, 0, _currentAppearanceButton);
-                    }
-                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.Glyph, null);
-                    this.Print(4, 0, Text.Align(TextAlignment, this.Width - 4));
-                    this.SetGlyph(0, 0, 91);
-                    this.SetGlyph(2, 0, 93);
-
-                    if (_isSelected)
-                        this.SetGlyph(1, 0, Theme.CheckedIcon);
-                    else
-                        this.SetGlyph(1, 0, Theme.UncheckedIcon);
-                }
-                else
-                {
-                }
-
-                OnComposed?.Invoke(this);
-
-                this.IsDirty = false;
-            }
+            if (IsDirty)
+                Theme.Draw(this, hostSurface);
         }
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            DetermineAppearance();
-            Compose(true);
+            DetermineState();
+            IsDirty = true;
         }
     }
 }

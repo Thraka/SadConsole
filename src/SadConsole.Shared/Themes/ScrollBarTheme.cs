@@ -95,6 +95,8 @@ namespace SadConsole.Themes
                 else
                     appearance = Normal;
 
+                hostSurface.Clear(control.Bounds);
+
                 if (control.Orientation == Orientation.Horizontal)
                 {
                     hostSurface.SetCellAppearance(control.Bounds.Left, control.Bounds.Top, appearance);

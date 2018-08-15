@@ -26,8 +26,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\InputBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ScrollBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Direction.cs" />
@@ -126,8 +128,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceBase.Editor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Surfaces\SurfaceBase.Editor.Static.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ButtonTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Colors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ControlsConsoleTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\InputBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Library.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ScrollBarTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ThemePartBase.cs" />

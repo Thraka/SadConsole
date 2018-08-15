@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,11 +61,36 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
+        /// Sets each background of a cell to the array of colors.
+        /// </summary>
+        /// <param name="area">An area to fill with pixels.</param>
+        /// <param name="pixels"></param>
+        public void SetPixels(Rectangle area, Color[] pixels)
+        {
+            if (pixels.Length != area.Width * area.Height)
+                throw new ArgumentOutOfRangeException(nameof(pixels), "The amount of colors do not match the size of the area.");
+
+            for (int x = area.Left; x < area.Left + area.Width; x++)
+            {
+                for (int y = area.Top; y < area.Top + area.Height; y++)
+                {
+                    int index = y * Width + x;
+
+                    if (IsValidCell(index))
+                        Cells[y * Width + x].Background = pixels[(y - area.Top) * area.Width + (x - area.Left)];
+                }
+            }
+
+            IsDirty = true;
+        }
+
+        /// <summary>
         /// Tests if a cell is valid based on its x,y position.
         /// </summary>
         /// <param name="x">The x coordinate of the cell to test.</param>
         /// <param name="y">The y coordinate of the cell to test.</param>
         /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsValidCell(int x, int y)
         {
             return x >= 0 && x < Width && y >= 0 && y < Height;
@@ -77,6 +103,7 @@ namespace SadConsole.Surfaces
         /// <param name="y">The y coordinate of the cell to test.</param>
         /// <param name="index">If the cell is valid, the index of the cell when found.</param>
         /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsValidCell(int x, int y, out int index)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
@@ -84,11 +111,9 @@ namespace SadConsole.Surfaces
                 index = y * Width + x;
                 return true;
             }
-            else
-            {
-                index = -1;
-                return false;
-            }
+
+            index = -1;
+            return false;
         }
 
         /// <summary>
@@ -96,6 +121,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="index">The index to test.</param>
         /// <returns>A true value indicating the cell index is in this cell surface.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsValidCell(int index) => index >= 0 && index < Cells.Length;
 
         /// <summary>
@@ -106,7 +132,9 @@ namespace SadConsole.Surfaces
         /// <param name="glyph">The desired glyph of the cell.</param>
         public void SetGlyph(int x, int y, int glyph)
         {
-            Cells[y * Width + x].Glyph = glyph;
+            if (!IsValidCell(x, y, out int index)) return;
+
+            Cells[index].Glyph = glyph;
             IsDirty = true;
         }
 
@@ -119,7 +147,7 @@ namespace SadConsole.Surfaces
         /// <param name="foreground">The desired foreground.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground)
         {
-            int index = y * Width + x;
+            if (!IsValidCell(x, y, out int index)) return;
 
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -136,8 +164,8 @@ namespace SadConsole.Surfaces
         /// <param name="background">The desired background.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background)
         {
-            int index = y * Width + x;
-
+            if (!IsValidCell(x, y, out int index)) return;
+            
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -155,8 +183,8 @@ namespace SadConsole.Surfaces
         /// <param name="mirror">Sets how the glyph will be mirrored.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror)
         {
-            int index = y * Width + x;
-
+            if (!IsValidCell(x, y, out int index)) return;
+            
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -177,8 +205,8 @@ namespace SadConsole.Surfaces
         /// <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror, IEnumerable<CellDecorator> decorators)
         {
-            var index = y * Width + x;
-
+            if (!IsValidCell(x, y, out int index)) return;
+            
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -204,7 +232,9 @@ namespace SadConsole.Surfaces
         /// <param name="color">The desired color of the cell.</param>
         public void SetForeground(int x, int y, Color color)
         {
-            Cells[y * Width + x].Foreground = color;
+            if (!IsValidCell(x, y, out int index)) return;
+
+            Cells[index].Foreground = color;
             IsDirty = true;
         }
         /// <summary>
@@ -223,7 +253,9 @@ namespace SadConsole.Surfaces
         /// <param name="color">The desired color of the cell.</param>
         public void SetBackground(int x, int y, Color color)
         {
-            Cells[y * Width + x].Background = color;
+            if (!IsValidCell(x, y, out int index)) return;
+
+            Cells[index].Background = color;
             IsDirty = true;
         }
         /// <summary>
@@ -242,7 +274,9 @@ namespace SadConsole.Surfaces
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(int x, int y, Effects.ICellEffect effect)
         {
-            Effects.SetEffect(Cells[y * Width + x], effect);
+            if (!IsValidCell(x, y, out int index)) return;
+
+            Effects.SetEffect(Cells[index], effect);
             IsDirty = true;
         }
 
@@ -253,6 +287,8 @@ namespace SadConsole.Surfaces
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(int index, ICellEffect effect)
         {
+            if (!IsValidCell(index)) return;
+
             Effects.SetEffect(Cells[index], effect);
             IsDirty = true;
         }
@@ -298,7 +334,9 @@ namespace SadConsole.Surfaces
             if (appearance == null)
                 throw new NullReferenceException("Appearance may not be null.");
 
-            appearance.CopyAppearanceTo(Cells[y * Width + x]);
+            if (!IsValidCell(x, y, out int index)) return;
+
+            appearance.CopyAppearanceTo(Cells[index]);
             IsDirty = true;
         }
 
@@ -323,9 +361,9 @@ namespace SadConsole.Surfaces
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the area is outside of the bounds of the surface.</exception>
         public Cell[] GetCells(Rectangle area)
         {
-            var consoleArea = new Rectangle(0, 0, Width, Height);
-            if (!consoleArea.Contains(area))
-                throw new ArgumentOutOfRangeException(nameof(area), "The area is outside of the surface bounds.");
+            area = Rectangle.Intersect(area, new Rectangle(0, 0, Width, Height));
+
+            if (area == Rectangle.Empty) return new Cell[0];
 
             var array = new Cell[area.Width * area.Height];
 
@@ -358,7 +396,9 @@ namespace SadConsole.Surfaces
         /// <param name="mirror">The mirror of the cell.</param>
         public void SetMirror(int x, int y, SpriteEffects mirror)
         {
-            Cells[y * Width + x].Mirror = mirror;
+            if (!IsValidCell(x, y, out int index)) return;
+
+            Cells[index].Mirror = mirror;
             IsDirty = true;
         }
 
@@ -370,7 +410,11 @@ namespace SadConsole.Surfaces
         /// <param name="count">The count of cells to use from the x,y cooridnate (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         public void SetDecorator(int x, int y, int count, CellDecorator[] decorators)
-            => SetDecorator(y * Width + x, count, decorators);
+        {
+            if (!IsValidCell(x, y, out int index) || index + count >= Cells.Length) return;
+
+            SetDecorator(index, count, decorators);
+        }
 
         /// <summary>
         /// Sets the decorator of one or more cells.
@@ -405,11 +449,8 @@ namespace SadConsole.Surfaces
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
-
-            int index = y * Width + x;
-
+            if (!IsValidCell(x, y, out int index)) return;
+            
             if (!UsePrintProcessor)
             {
                 int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
@@ -438,10 +479,7 @@ namespace SadConsole.Surfaces
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
-
-            int index = y * Width + x;
+            if (!IsValidCell(x, y, out int index)) return;
 
             if (!UsePrintProcessor)
             {
@@ -474,13 +512,9 @@ namespace SadConsole.Surfaces
         /// <param name="background">Sets the background of all characters in the text.</param>
         public void Print(int x, int y, string text, Color foreground, Color background)
         {
-            if (String.IsNullOrEmpty(text))
-                return;
+            if (String.IsNullOrEmpty(text)) return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
-
-            int index = y * Width + x;
+            if (!IsValidCell(x, y, out int index)) return;
 
             if (!UsePrintProcessor)
             {
@@ -520,10 +554,7 @@ namespace SadConsole.Surfaces
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
-
-            int index = y * Width + x;
+            if (!IsValidCell(x, y, out int index)) return;
 
             if (!UsePrintProcessor)
             {
@@ -574,10 +605,8 @@ namespace SadConsole.Surfaces
             if (String.IsNullOrEmpty(text))
                 return;
 
-            if (x >= Width || x < 0 || y >= Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
+            if (!IsValidCell(x, y, out int index)) return;
 
-            int index = y * Width + x;
             int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
             int charIndex = 0;
 
@@ -600,10 +629,8 @@ namespace SadConsole.Surfaces
         /// <param name="text">The string to display.</param>
         public void Print(int x, int y, ColoredString text)
         {
-            if (x >= Width || x < 0 || y >= Height || y < 0)
-                throw new Exception("X,Y is out of range for Print");
+            if (!IsValidCell(x, y, out int index)) return;
 
-            int index = y * Width + x;
             PrintNoCheck(index, text);
             IsDirty = true;
         }
@@ -1053,6 +1080,7 @@ namespace SadConsole.Surfaces
         public void Clear(int x, int y)
         {
             if (!IsValidCell(x, y, out var index)) return;
+
             var cell = Cells[index];
             cell.Clear();
             cell.Foreground = DefaultForeground;
@@ -1108,9 +1136,10 @@ namespace SadConsole.Surfaces
         /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
         public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, SpriteEffects? spriteEffect = null)
         {
+            area = Rectangle.Intersect(area, new Rectangle(0, 0, Width, Height));
 
-            if (area.Width == 0 || area.Height == 0) return new Cell[] { };
-
+            if (area == Rectangle.Empty) return new Cell[0];
+            
             var cells = new Cell[area.Width * area.Height];
             int cellIndex = 0;
 
@@ -1379,7 +1408,6 @@ namespace SadConsole.Surfaces
         /// Copies the contents of the cell surface to the destination.
         /// </summary>
         /// <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
-        /// <param name="source">The source surface</param>
         /// <param name="destination">The destination surface.</param>
         public void Copy(SurfaceBase destination)
         {
@@ -1407,7 +1435,6 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="x">The x coordinate of the destination.</param>
         /// <param name="y">The y coordinate of the destination.</param>
-        /// <param name="source">The source surface</param>
         /// <param name="destination">The destination surface.</param>
         public void Copy(SurfaceBase destination, int x, int y)
         {
@@ -1430,7 +1457,6 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
         /// </summary>
-        /// <param name="source">The source surface</param>
         /// <param name="x">The x coordinate to start from.</param>
         /// <param name="y">The y coordinate to start from.</param>
         /// <param name="width">The width to copy from.</param>

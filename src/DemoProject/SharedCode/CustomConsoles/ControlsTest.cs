@@ -68,7 +68,7 @@ namespace StarterProject.CustomConsoles
             Add(button);
 
 
-            
+
 
             //var radioButton = new SadConsole.Controls.RadioButton(20, 1);
             //radioButton.Text = "Group 1 Option 1";
@@ -92,10 +92,12 @@ namespace StarterProject.CustomConsoles
             //radioButton.GroupName = "group2";
             //Add(radioButton);
 
-            //var checkbox = new SadConsole.Controls.CheckBox(13, 1);
-            //checkbox.Text = "Check box";
-            //checkbox.Position = new Point(1, 9);
-            //Add(checkbox);
+            var checkbox = new SadConsole.Controls.CheckBox(13, 1)
+            {
+                Text = "Check box",
+                Position = new Point(15, 15)
+            };
+            Add(checkbox);
 
             //var prog = new SadConsole.Controls.ProgressBar(10, 1, HorizontalAlignment.Left);
             //prog.Position = new Point(checkbox.Bounds.Left, checkbox.Bounds.Bottom + 1);
@@ -126,9 +128,9 @@ namespace StarterProject.CustomConsoles
             //slider.Maximum = 6;
             //Add(slider);
 
-            //var input = new SadConsole.Controls.InputBox(20);
-            //input.Position = new Point(25, 9);
-            //Add(input);
+            var input = new SadConsole.Controls.InputBox(20);
+            input.Position = new Point(25, 9);
+            Add(input);
 
             //var selButton = new SadConsole.Controls.SelectionButton(20);
             //selButton.Text = "Selection Button 1";

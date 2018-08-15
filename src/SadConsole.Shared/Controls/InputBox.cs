@@ -7,13 +7,10 @@ using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
 using System.Windows;
+using SadConsole.Surfaces;
 
 namespace SadConsole.Controls
 {
-
-
-
-
     /// <summary>
     /// InputBox control that allows text input.
     /// </summary>
@@ -23,7 +20,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// Indicates the caret is visible.
         /// </summary>
-        protected bool isCaretVisible = false;
+        public bool IsCaretVisible = false;
 
         /// <summary>
         /// A list of valid number characters
@@ -42,10 +39,10 @@ namespace SadConsole.Controls
         [DataMember(Name = "TextAlignment")]
         protected HorizontalAlignment _alignment = HorizontalAlignment.Left;
 
-		/// <summary>
-		/// When editing the text box, this allows the text to scroll to the right so you can see what you are typing.
-		/// </summary>
-		protected int _leftDrawOffset;
+        /// <summary>
+        /// When editing the text box, this allows the text to scroll to the right so you can see what you are typing.
+        /// </summary>
+        public int LeftDrawOffset { get; protected set; }
 
         /// <summary>
         /// The location of the caret.
@@ -98,25 +95,19 @@ namespace SadConsole.Controls
         [DataMember(Name = "DisableKeyboardInput")]
         public bool DisableKeyboard;
 
-        private string _editingText = "";
+        public string EditingText { get; protected set; }
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
         public virtual InputBoxTheme Theme
         {
-            get
-            {
-                if (_theme == null)
-                    return Library.Default.InputBoxTheme;
-                else
-                    return _theme;
-            }
+            get => _theme ?? Library.Default.InputBoxTheme;
             set
             {
                 _theme = value;
-                DetermineAppearance();
-                Compose();
+                DetermineState();
+                IsDirty = true;
             }
         }
 
@@ -125,8 +116,13 @@ namespace SadConsole.Controls
         /// </summary>
         public HorizontalAlignment TextAlignment
         {
-            get { return _alignment; }
-            set { _alignment = value; this.IsDirty = true; }
+            get => _alignment;
+            set
+            {
+                _alignment = value;
+                DetermineState();
+                IsDirty = true;
+            }
         }
 
         /// <summary>
@@ -140,10 +136,11 @@ namespace SadConsole.Controls
         /// </summary>
         public int CaretPosition
         {
-            get { return _caretPos; }
+            get => _caretPos;
             set
             {
                 _caretPos = value;
+                DetermineState();
                 IsDirty = true;
             }
         }
@@ -153,27 +150,27 @@ namespace SadConsole.Controls
         /// </summary>
         public string Text
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 if (value != _text)
                 {
-                    TextChangedEventArgs args = new TextChangedEventArgs();
-                    args.NewValue = MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value;
-                    args.OldValue = _text;
+                    TextChangedEventArgs args = new TextChangedEventArgs
+                    {
+                        NewValue = MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value,
+                        OldValue = _text
+                    };
 
-                    if (TextChangedPreview != null)
-                        TextChangedPreview(this, args);
+                    TextChangedPreview?.Invoke(this, args);
 
                     _text = args.NewValue ?? "";
 					_text = MaxLength != 0 && _text.Length > MaxLength ? _text.Substring(0, MaxLength) : _text;
 
 					Validate();
-                    _editingText = _text;
+                    EditingText = _text;
 					PositionCursor();
-					
-                    if (TextChanged != null)
-                        TextChanged(this, EventArgs.Empty);
+
+                    TextChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -183,7 +180,7 @@ namespace SadConsole.Controls
         /// </summary>
         public bool IsNumeric
         {
-            get { return _isNumeric; }
+            get => _isNumeric;
             set { _isNumeric = value; Validate(); }
         }
 
@@ -192,7 +189,7 @@ namespace SadConsole.Controls
         /// </summary>
         public bool AllowDecimal
         {
-            get { return _allowDecimalPoint; }
+            get => _allowDecimalPoint;
             set { _allowDecimalPoint = value; Validate(); }
         }
 
@@ -204,56 +201,8 @@ namespace SadConsole.Controls
         public InputBox(int width)
             : base(width, 1)
         {
-            DetermineAppearance();
         }
         #endregion
-
-        /// <summary>
-        /// Draws the control.
-        /// </summary>
-        public override void Compose()
-        {
-            if (this.IsDirty)
-            {
-                this.Fill(_currentAppearance.Foreground, _currentAppearance.Background, _currentAppearance.Glyph, null);
-
-                Effects.RemoveAll();
-
-                if (base.IsFocused && !DisableKeyboard)
-                {
-                    this.Print(0, 0, _editingText.Substring(_leftDrawOffset));
-                    Effects.SetEffect(this[this._caretPos - _leftDrawOffset, 0], Theme.CaretEffect);
-                    isCaretVisible = true;
-                }
-                else
-                {
-                    isCaretVisible = false;
-                    this.Print(0, 0, _text.Align(TextAlignment, this.Width));
-                }
-
-                OnComposed?.Invoke(this);
-                this.IsDirty = false;
-            }
-        }
-
-        /// <summary>
-        /// Determines the appearance of the control based on its current state.
-        /// </summary>
-        public override void DetermineAppearance()
-        {
-            Cell currentappearance = _currentAppearance;
-
-            if (isMouseOver)
-                _currentAppearance = Theme.MouseOver;
-
-            else if (base.IsFocused && Global.FocusedConsoles.Console == parent)
-                _currentAppearance = Theme.Focused;
-            else
-                _currentAppearance = Theme.Normal;
-
-            if (currentappearance != _currentAppearance)
-                IsDirty = true;
-        }
 
         /// <summary>
         /// Validates that the value of the input box conforms to the settings of this control and sets the dirty flag to true.
@@ -285,14 +234,16 @@ namespace SadConsole.Controls
 
             PositionCursor();
 
-            this.IsDirty = true;
+            DetermineState();
+            IsDirty = true;
         }
 
         protected void ValidateEdit()
         {
             PositionCursor();
 
-            this.IsDirty = true;
+            DetermineState();
+            IsDirty = true;
         }
 
         /// <summary>
@@ -300,29 +251,29 @@ namespace SadConsole.Controls
         /// </summary>
         protected void PositionCursor()
         {
-            if (MaxLength != 0 && _editingText.Length > MaxLength)
+            if (MaxLength != 0 && EditingText.Length > MaxLength)
             {
-                _editingText = _editingText.Substring(0, MaxLength);
+                EditingText = EditingText.Substring(0, MaxLength);
 
-                if (_editingText.Length == MaxLength)
-                    _caretPos = _editingText.Length - 1;
+                if (EditingText.Length == MaxLength)
+                    _caretPos = EditingText.Length - 1;
                 else
-                    _caretPos = _editingText.Length;
+                    _caretPos = EditingText.Length;
             }
             else
-                _caretPos = _editingText.Length;
+                _caretPos = EditingText.Length;
 
 			// Test to see if caret is off edge of box
 			if (_caretPos >= Width)
 			{
-				_leftDrawOffset = _editingText.Length - Width + 1;
+				LeftDrawOffset = EditingText.Length - Width + 1;
 
-				if (_leftDrawOffset < 0)
-					_leftDrawOffset = 0;
+				if (LeftDrawOffset < 0)
+				    LeftDrawOffset = 0;
 			}
 			else
 			{
-				_leftDrawOffset = 0;
+			    LeftDrawOffset = 0;
 			}
 		}
 
@@ -343,14 +294,14 @@ namespace SadConsole.Controls
                         {
                             this.IsDirty = true;
                             DisableKeyboard = false;
-                            Text = _editingText;
+                            Text = EditingText;
                         }
                     }
                     return true;
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(_editingText, Width - 1);
+                    System.Text.StringBuilder newText = new System.Text.StringBuilder(EditingText, Width - 1);
 
                     this.IsDirty = true;
 
@@ -365,7 +316,7 @@ namespace SadConsole.Controls
                             {
 								DisableKeyboard = true;
 
-								Text = _editingText;
+								Text = EditingText;
 
 								return true;
 							}
@@ -416,7 +367,7 @@ namespace SadConsole.Controls
 
 							else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
-                                Text = _editingText;
+                                Text = EditingText;
 								DisableKeyboard = true;
 								return true;
 							}
@@ -462,22 +413,22 @@ namespace SadConsole.Controls
 							// Test to see if caret is off edge of box
 							if (_caretPos >= Width)
 							{
-								_leftDrawOffset = newText.Length - Width + 1;
+							    LeftDrawOffset = newText.Length - Width + 1;
 
-								if (_leftDrawOffset < 0)
-									_leftDrawOffset = 0;
+								if (LeftDrawOffset < 0)
+								    LeftDrawOffset = 0;
 							}
 							else
 							{
-								_leftDrawOffset = 0;
+							    LeftDrawOffset = 0;
 							}
 						}
 
 					}
 
                     string newString = newText.ToString();
-                    if (newString != _editingText)
-                        _editingText = newString;
+                    if (newString != EditingText)
+                        EditingText = newString;
 
                     ValidateEdit();
                 }
@@ -495,7 +446,7 @@ namespace SadConsole.Controls
         {
             base.FocusLost();
             DisableKeyboard = true;
-            Text = _editingText;
+            Text = EditingText;
             IsDirty = true;
         }
 
@@ -506,7 +457,7 @@ namespace SadConsole.Controls
         {
             base.Focused();
             DisableKeyboard = false;
-            _editingText = _text;
+            EditingText = _text;
             IsDirty = true;
             PositionCursor();
         }
@@ -526,23 +477,18 @@ namespace SadConsole.Controls
             }
         }
 
-        public override void Update()
+        public override void Update(SurfaceBase hostSurface)
         {
-            if (isCaretVisible)
-            {
-                Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
-                OnComposed?.Invoke(this);
-            }
-
-           // base.Update();
+            if (IsDirty)
+                Theme.Draw(this, hostSurface);
         }
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
             Text = _text;
-            DetermineAppearance();
-            Compose(true);
+            DetermineState();
+            IsDirty = true;
         }
 
         public class TextChangedEventArgs : EventArgs
