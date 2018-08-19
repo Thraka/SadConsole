@@ -1105,8 +1105,8 @@ namespace SadConsole.Surfaces
         /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
         /// <param name="background">Foregorund of every cell. If null, skips.</param>
         /// <param name="glyph">Glyph of every cell. If null, skips.</param>
-        /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
-        public Cell[] Fill(Color? foreground, Color? background, int? glyph, SpriteEffects? spriteEffect = null)
+        /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        public Cell[] Fill(Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
         {
             for (int i = 0; i < Cells.Length; i++)
             {
@@ -1116,8 +1116,8 @@ namespace SadConsole.Surfaces
                     Cells[i].Background = background.Value;
                 if (foreground.HasValue)
                     Cells[i].Foreground = foreground.Value;
-                if (spriteEffect.HasValue)
-                    Cells[i].Mirror = spriteEffect.Value;
+                if (mirror.HasValue)
+                    Cells[i].Mirror = mirror.Value;
 
                 SetDecorator(i, 1, null);
             }
@@ -1133,8 +1133,8 @@ namespace SadConsole.Surfaces
         /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
         /// <param name="background">Foregorund of every cell. If null, skips.</param>
         /// <param name="glyph">Glyph of every cell. If null, skips.</param>
-        /// <param name="spriteEffect">Sprite effect of every cell. If null, skips.</param>
-        public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, SpriteEffects? spriteEffect = null)
+        /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
         {
             area = Rectangle.Intersect(area, new Rectangle(0, 0, Width, Height));
 
@@ -1155,8 +1155,8 @@ namespace SadConsole.Surfaces
                         cell.Background = background.Value;
                     if (foreground.HasValue)
                         cell.Foreground = foreground.Value;
-                    if (spriteEffect.HasValue)
-                        cell.Mirror = spriteEffect.Value;
+                    if (mirror.HasValue)
+                        cell.Mirror = mirror.Value;
 
                     SetDecorator(cellIndex, 1, null);
 

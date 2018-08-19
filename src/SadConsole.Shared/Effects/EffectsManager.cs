@@ -18,6 +18,11 @@ namespace SadConsole.Effects
         protected SurfaceBase backingSurface;
 
         /// <summary>
+        /// Gets the number of effects.
+        /// </summary>
+        public int Count => _effects.Count;
+
+        /// <summary>
         /// Creates a new effects manager associated with a text surface.
         /// </summary>
         /// <param name="surface">Text surface to manage.</param>

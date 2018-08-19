@@ -145,7 +145,7 @@ namespace SadConsole
         public override void Invalidate()
         {
             Theme.Draw(this, this);
-            controlsSurface.IsDirty = true;
+            IsDirty = true;
 
             foreach (var control in _controls)
                 control.IsDirty = true;

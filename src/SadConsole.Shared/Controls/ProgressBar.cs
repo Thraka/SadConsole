@@ -23,7 +23,7 @@ namespace SadConsole.Controls
         /// Overriding theme.
         /// </summary>
         [DataMember(Name = "Theme")]
-        protected ProgressBarTheme theme;
+        protected ProgressBarTheme _theme;
 
         private Cell _currentAppearanceForeground;
         private Cell _currentAppearanceBackground;
@@ -44,7 +44,7 @@ namespace SadConsole.Controls
         /// The size of the bar currently filled based on the <see cref="Progress"/> property.
         /// </summary>
         [DataMember]
-        protected int fillSize;
+        public int fillSize;
 
         /// <summary>
         /// Flag to indicate this bar was created horizontal.
@@ -67,20 +67,15 @@ namespace SadConsole.Controls
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public virtual ProgressBarTheme Theme
+        public ProgressBarTheme Theme
         {
-            get
-            {
-                if (theme == null)
-                    return Library.Default.ProgressBarTheme;
-                else
-                    return theme;
-            }
+            get => _theme;
             set
             {
-                theme = value;
-                DetermineAppearance();
-                Compose();
+                _theme = value;
+                _theme.Attached(this);
+                DetermineState();
+                IsDirty = true;
             }
         }
 
@@ -90,7 +85,7 @@ namespace SadConsole.Controls
         /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="HorizontalAlignment.Center"/> or <see cref="HorizontalAlignment.Stretch"/>.</exception>
         public HorizontalAlignment HorizontalAlignment
         {
-            get { return horizontalAlignment; }
+            get => horizontalAlignment;
             set
             {
                 if (value == HorizontalAlignment.Center || value == HorizontalAlignment.Stretch)
@@ -107,7 +102,7 @@ namespace SadConsole.Controls
         /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="VerticalAlignment.Center"/> or <see cref="VerticalAlignment.Stretch"/>.</exception>
         public VerticalAlignment VerticalAlignment
         {
-            get { return verticalAlignment; }
+            get => verticalAlignment;
             set
             {
                 if (value == VerticalAlignment.Center || value == VerticalAlignment.Stretch)
@@ -123,7 +118,7 @@ namespace SadConsole.Controls
         /// </summary>
         public bool IsHorizontal
         {
-            get { return isHorizontal; }
+            get => isHorizontal;
             set
             {
                 isHorizontal = value;
@@ -138,7 +133,7 @@ namespace SadConsole.Controls
         /// </summary>
         public float Progress
         {
-            get { return progressValue; }
+            get => progressValue;
             set
             {
                 if (progressValue != value)
@@ -184,8 +179,7 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-
-            DetermineAppearance();
+            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -206,59 +200,7 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-
-            DetermineAppearance();
-        }
-
-        /// <summary>
-        /// Determines the appearance of the control based on its current state.
-        /// </summary>
-        public override void DetermineAppearance()
-        {
-            Cell currentappearanceBackground = _currentAppearanceBackground;
-            Cell currentappearanceForeground = _currentAppearanceForeground;
-
-            if (!isEnabled)
-            {
-                _currentAppearanceBackground = Theme.Background.Disabled;
-                _currentAppearanceForeground = Theme.Foreground.Disabled;
-            }
-
-            else if (isMouseOver)
-            {
-                _currentAppearanceBackground = Theme.Background.MouseOver;
-                _currentAppearanceForeground = Theme.Foreground.MouseOver;
-            }
-
-            else
-            {
-                _currentAppearanceBackground = Theme.Background.Normal;
-                _currentAppearanceForeground = Theme.Foreground.Normal;
-            }
-
-            if (currentappearanceBackground != _currentAppearanceBackground ||
-                currentappearanceForeground != _currentAppearanceForeground)
-
-                this.IsDirty = true;
-        }
-
-        protected override void OnMouseIn(Input.MouseConsoleState state)
-        {
-            isMouseOver = true;
-
-            base.OnMouseIn(state);
-        }
-
-        protected override void OnMouseExit(Input.MouseConsoleState state)
-        {
-            isMouseOver = false;
-
-            base.OnMouseExit(state);
-        }
-
-        protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
-        {
-            base.OnLeftMouseClicked(state);
+            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -271,40 +213,9 @@ namespace SadConsole.Controls
             return false;
         }
 
-        public override void Compose()
+        public override void Update(TimeSpan time)
         {
-            if (this.IsDirty)
-            {
-                Fill(_currentAppearanceBackground.Foreground, _currentAppearanceBackground.Background, _currentAppearanceBackground.Glyph);
-
-                if (isHorizontal)
-                {
-                    Rectangle fillRect;
-
-                    if (horizontalAlignment == HorizontalAlignment.Left)
-                        fillRect = new Rectangle(0, 0, fillSize, Height);
-                    else
-                        fillRect = new Rectangle(Width - fillSize, 0, fillSize, Height);
-
-                    Fill(fillRect, _currentAppearanceForeground.Foreground, _currentAppearanceForeground.Background, _currentAppearanceForeground.Glyph);
-                }
-
-                else
-                {
-                    Rectangle fillRect;
-
-                    if (verticalAlignment == VerticalAlignment.Top)
-                        fillRect = new Rectangle(0, 0, Width, fillSize);
-                    else
-                        fillRect = new Rectangle(0, Height - fillSize, Width, fillSize);
-
-                    Fill(fillRect, _currentAppearanceForeground.Foreground, _currentAppearanceForeground.Background, _currentAppearanceForeground.Glyph);
-                }
-
-                OnComposed?.Invoke(this);
-
-                this.IsDirty = false;
-            }
+            Theme.UpdateAndDraw(this, time);
         }
 
         [OnDeserializedAttribute]
@@ -313,9 +224,8 @@ namespace SadConsole.Controls
             var temp = progressValue;
             progressValue = -1;
             Progress = temp;
-
-            DetermineAppearance();
-            Compose(true);
+            DetermineState();
+            IsDirty = true;
         }
     }
 }

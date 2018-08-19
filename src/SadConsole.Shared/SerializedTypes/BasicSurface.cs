@@ -90,7 +90,7 @@ namespace SadConsole.SerializedTypes
 
         public static implicit operator Surfaces.BasicNoDraw(BasicSurfaceSerialized surface)
         {
-            return new Surfaces.BasicNoDraw(surface.Width, surface.Height, surface.ViewPort,
+            return new Surfaces.BasicNoDraw(surface.Width, surface.Height, surface.Font, surface.ViewPort,
                 surface.Cells.Select(c => (Cell) c).ToArray())
             {
                 Tint = surface.Tint,

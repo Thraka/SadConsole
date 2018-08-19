@@ -95,17 +95,21 @@ namespace SadConsole.Controls
         [DataMember(Name = "DisableKeyboardInput")]
         public bool DisableKeyboard;
 
+        /// <summary>
+        /// A temp holder for the text as it's being edited.
+        /// </summary>
         public string EditingText { get; protected set; }
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public virtual InputBoxTheme Theme
+        public  InputBoxTheme Theme
         {
-            get => _theme ?? Library.Default.InputBoxTheme;
+            get => _theme;
             set
             {
                 _theme = value;
+                _theme.Attached(this);
                 DetermineState();
                 IsDirty = true;
             }
@@ -201,6 +205,7 @@ namespace SadConsole.Controls
         public InputBox(int width)
             : base(width, 1)
         {
+            Theme = (InputBoxTheme) Library.Default.InputBoxTheme.Clone();
         }
         #endregion
 
@@ -477,10 +482,10 @@ namespace SadConsole.Controls
             }
         }
 
-        public override void Update(SurfaceBase hostSurface)
+        /// <inheritdoc />
+        public override void Update(TimeSpan time)
         {
-            if (IsDirty)
-                Theme.Draw(this, hostSurface);
+            Theme.UpdateAndDraw(this, time);
         }
 
         [OnDeserializedAttribute]

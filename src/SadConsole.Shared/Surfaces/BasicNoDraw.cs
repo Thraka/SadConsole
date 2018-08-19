@@ -19,7 +19,7 @@ namespace SadConsole.Surfaces
         /// <returns></returns>
         public static BasicNoDraw FromSurface(SurfaceBase surface)
         {
-            return new BasicNoDraw(surface.Width, surface.Height, surface.ViewPort, surface.Cells);
+            return new BasicNoDraw(surface.Width, surface.Height, surface.Font, surface.ViewPort, surface.Cells);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
-        public BasicNoDraw(int width, int height) : this(width, height, new Rectangle(0, 0, width, height), null)
+        public BasicNoDraw(int width, int height) : this(width, height, SadConsole.Global.FontDefault, new Rectangle(0, 0, width, height), null)
         {
 
         }
@@ -37,8 +37,8 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
-        /// <param name="renderArea">Initial value for the <see cref="BasicSurface.ViewPort"/> view.</param>
-        public BasicNoDraw(int width, int height, Rectangle renderArea) : this(width, height, renderArea, null)
+        /// <param name="font">The font used for calculations.</param>
+        public BasicNoDraw(int width, int height, Font font) : this(width, height, font, new Rectangle(0,0,width,height), null)
         {
 
         }
@@ -48,11 +48,29 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
+        /// <param name="font">The font used for calculations.</param>
         /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        /// <param name="renderArea">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
-        public BasicNoDraw(int width, int height, Rectangle renderArea, Cell[] initialCells): base(width, height, null, renderArea, initialCells)
+        /// <param name="viewPort">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
+        public BasicNoDraw(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells)
         {
-            Renderer = null;
+            Effects = new Effects.EffectsManager(this);
+            ViewPortRectangle = viewPort;
+            Width = width;
+            Height = height;
+
+            if (initialCells == null)
+                InitializeCells();
+
+            else if (initialCells.Length != width * height)
+                throw new ArgumentOutOfRangeException(nameof(initialCells), "initialCells length must equal width * height");
+            else
+            {
+                Cells = initialCells;
+                RenderCells = new Cell[Cells.Length];
+                RenderRects = new Rectangle[Cells.Length];
+            }
+
+            _font = font;
             SetRenderCells();
         }
 
@@ -61,7 +79,7 @@ namespace SadConsole.Surfaces
         {
             if (RenderCells.Length != ViewPort.Width * ViewPort.Height)
             {
-                //RenderRects = new Rectangle[ViewPort.Width * ViewPort.Height];
+                RenderRects = new Rectangle[ViewPort.Width * ViewPort.Height];
                 RenderCells = new Cell[ViewPort.Width * ViewPort.Height];
             }
 
@@ -71,13 +89,13 @@ namespace SadConsole.Surfaces
             {
                 for (int x = 0; x < ViewPort.Width; x++)
                 {
-                    //RenderRects[index] = Font.GetRenderRect(x, y);
+                    RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = Cells[(y + ViewPort.Top) * Width + (x + ViewPort.Left)];
                     index++;
                 }
             }
 
-            //AbsoluteArea = new Rectangle(0, 0, ViewPort.Width * Font.Size.X, ViewPort.Height * Font.Size.Y);
+            AbsoluteArea = new Rectangle(0, 0, ViewPort.Width * Font.Size.X, ViewPort.Height * Font.Size.Y);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using SadConsole.Controls;
+﻿using System;
+using SadConsole.Controls;
 using SadConsole.Surfaces;
 
 namespace SadConsole.Themes
@@ -57,96 +58,106 @@ namespace SadConsole.Themes
             SliderGlyph = 219;
         }
 
+        public override void Attached(ScrollBar control)
+        {
+            control.Surface = new BasicNoDraw(control.Width, control.Height);
+        }
+
+        public override void UpdateAndDraw(ScrollBar control, TimeSpan time)
+        {
+            if (!control.IsDirty) return;
+
+            Cell appearance;
+
+            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+                appearance = Disabled;
+
+            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+                appearance = MouseDown;
+
+            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+                appearance = MouseOver;
+
+            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+                appearance = Focused;
+
+            else
+                appearance = Normal;
+
+            control.Surface.Clear();
+
+            if (control.Orientation == Orientation.Horizontal)
+            {
+                control.Surface.SetCellAppearance(0, 0, appearance);
+                control.Surface.SetGlyph(0, 0, StartButtonVerticalGlyph);
+
+                control.Surface.SetCellAppearance(control.Width - 1, 0, appearance);
+                control.Surface.SetGlyph(control.Width - 1, 0, EndButtonVerticalGlyph);
+
+                for (int i = 1; i <= control.SliderBarSize; i++)
+                {
+                    control.Surface.SetCellAppearance(i, 0, appearance);
+                    control.Surface.SetGlyph(i, 0, SliderGlyph);
+                }
+
+                if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)
+                {
+                    if (control.IsEnabled)
+                    {
+                        control.Surface.SetCellAppearance(1 + control.CurrentSliderPosition, 0, appearance);
+                        control.Surface.SetGlyph(1 + control.CurrentSliderPosition, 0, SliderGlyph);
+                    }
+                }
+            }
+            else
+            {
+                control.Surface.SetCellAppearance(0, 0, appearance);
+                control.Surface.SetGlyph(0, 0, StartButtonVerticalGlyph);
+
+                control.Surface.SetCellAppearance(0, control.Height - 1, appearance);
+                control.Surface.SetGlyph(0, control.Height - 1, EndButtonVerticalGlyph);
+
+                for (int i = 0; i < control.SliderBarSize; i++)
+                {
+                    control.Surface.SetCellAppearance(0, i + 1, appearance);
+                    control.Surface.SetGlyph(0, i + 1, SliderGlyph);
+                }
+
+                if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)
+                {
+                    if (control.IsEnabled)
+                    {
+                        control.Surface.SetCellAppearance(0, 1 + control.CurrentSliderPosition, appearance);
+                        control.Surface.SetGlyph(0, 1 + control.CurrentSliderPosition, SliderGlyph);
+                    }
+                }
+                    
+            }
+
+            control.IsDirty = false;
+        }
+
         /// <summary>
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>The cloned object.</returns>
-        public object Clone()
+        public override object Clone()
         {
             return new ScrollBarTheme()
             {
-                StartButtonVerticalGlyph =  StartButtonVerticalGlyph,
+                Normal = Normal.Clone(),
+                Disabled = Disabled.Clone(),
+                MouseOver = MouseOver.Clone(),
+                MouseDown = MouseDown.Clone(),
+                Selected = Selected.Clone(),
+                Focused = Focused.Clone(),
+                StartButtonVerticalGlyph = StartButtonVerticalGlyph,
                 EndButtonVerticalGlyph = EndButtonVerticalGlyph,
                 StartButtonHorizontalGlyph = StartButtonHorizontalGlyph,
                 EndButtonHorizontalGlyph = EndButtonHorizontalGlyph,
                 BarGlyph = BarGlyph,
                 SliderGlyph = SliderGlyph
             };
-        }
-
-        public override void Draw(ScrollBar control, SurfaceBase hostSurface)
-        {
-            if (control.IsDirty)
-            {
-                Cell appearance;
-
-                if (Helpers.HasFlag(control.State, ControlStates.Disabled))
-                    appearance = Disabled;
-
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
-                    appearance = MouseDown;
-
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
-                    appearance = MouseOver;
-
-                else if (Helpers.HasFlag(control.State, ControlStates.Focused))
-                    appearance = Focused;
-
-                else
-                    appearance = Normal;
-
-                hostSurface.Clear(control.Bounds);
-
-                if (control.Orientation == Orientation.Horizontal)
-                {
-                    hostSurface.SetCellAppearance(control.Bounds.Left, control.Bounds.Top, appearance);
-                    hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Top, StartButtonVerticalGlyph);
-
-                    hostSurface.SetCellAppearance(control.Bounds.Right - 1, 0, appearance);
-                    hostSurface.SetGlyph(control.Bounds.Right - 1, 0, EndButtonVerticalGlyph);
-
-                    for (int i = 1; i <= control.SliderBarSize; i++)
-                    {
-                        hostSurface.SetCellAppearance(control.Bounds.Left + i, control.Bounds.Top, appearance);
-                        hostSurface.SetGlyph(control.Bounds.Left + i, control.Bounds.Top, SliderGlyph);
-                    }
-
-                    if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)
-                    {
-                        if (control.IsEnabled)
-                        {
-                            hostSurface.SetCellAppearance(control.Bounds.Left + 1 + control.CurrentSliderPosition, control.Bounds.Top, appearance);
-                            hostSurface.SetGlyph(control.Bounds.Left + 1 + control.CurrentSliderPosition, control.Bounds.Top, SliderGlyph);
-                        }
-                    }
-                }
-                else
-                {
-                    hostSurface.SetCellAppearance(control.Bounds.Left, control.Bounds.Top, appearance);
-                    hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Top, StartButtonVerticalGlyph);
-
-                    hostSurface.SetCellAppearance(control.Bounds.Left, control.Bounds.Bottom - 1, appearance);
-                    hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Bottom - 1, EndButtonVerticalGlyph);
-
-                    for (int i = 0; i < control.SliderBarSize; i++)
-                    {
-                        hostSurface.SetCellAppearance(control.Bounds.Left, control.Bounds.Top + i + 1, appearance);
-                        hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Top + i + 1, SliderGlyph);
-                    }
-
-                    if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)
-                    {
-                        if (control.IsEnabled)
-                        {
-                            hostSurface.SetCellAppearance(control.Bounds.Left, control.Bounds.Top + 1 + control.CurrentSliderPosition, appearance);
-                            hostSurface.SetGlyph(control.Bounds.Left, control.Bounds.Top + 1 + control.CurrentSliderPosition, SliderGlyph);
-                        }
-                    }
-                    
-                }
-
-                control.IsDirty = false;
-            }
         }
     }
 }

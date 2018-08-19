@@ -31,24 +31,19 @@ namespace SadConsole.Controls
         protected bool _isMouseDown;
         protected Cell _currentAppearanceButton;
         protected Cell _currentAppearanceText;
-        
+
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public virtual RadioButtonTheme Theme
+        public RadioButtonTheme Theme
         {
-            get
-            {
-                if (_theme == null)
-                    return Library.Default.RadioButtonTheme;
-                else
-                    return _theme;
-            }
+            get => _theme;
             set
             {
                 _theme = value;
-                DetermineAppearance();
-                Compose();
+                _theme.Attached(this);
+                DetermineState();
+                IsDirty = true;
             }
         }
 
@@ -57,8 +52,13 @@ namespace SadConsole.Controls
         /// </summary>
         public string Text
         {
-            get { return _text; }
-            set { _text = value; Compose(true); }
+            get => _text;
+            set
+            {
+                _text = value;
+                DetermineState();
+                IsDirty = true;
+            }
         }
 
         /// <summary>
@@ -66,8 +66,13 @@ namespace SadConsole.Controls
         /// </summary>
         public HorizontalAlignment TextAlignment
         {
-            get { return _textAlignment; }
-            set { _textAlignment = value; Compose(true); }
+            get => _textAlignment;
+            set
+            {
+                _textAlignment = value;
+                DetermineState();
+                IsDirty = true;
+            }
         }
         
         /// <summary>
@@ -75,7 +80,7 @@ namespace SadConsole.Controls
         /// </summary>
         public string GroupName
         {
-            get { return _groupName; }
+            get => _groupName;
             set
             {
                 _groupName = value.Trim();
@@ -91,7 +96,7 @@ namespace SadConsole.Controls
         /// <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
         public bool IsSelected
         {
-            get { return _isSelected; }
+            get => _isSelected;
             set
             {
                 if (_isSelected != value)
@@ -116,13 +121,12 @@ namespace SadConsole.Controls
                         }
                     }
 
-                    if (IsSelectedChanged != null)
-                        IsSelectedChanged(this, EventArgs.Empty);
+                    IsSelectedChanged?.Invoke(this, EventArgs.Empty);
 
                     //if (value)
                     //    OnAction();
-                    DetermineAppearance();
-                    Compose(true);
+                    DetermineState();
+                    IsDirty = true;
                 }
             }
         }
@@ -134,73 +138,9 @@ namespace SadConsole.Controls
         /// <param name="height">Height of the control.</param>
         public RadioButton(int width, int height): base(width, height)
         {
-            DetermineAppearance();
+            Theme = (RadioButtonTheme)Library.Default.RadioButtonTheme.Clone();
         }
-
-        /// <summary>
-        /// Determines the appearance of the control based on its current state.
-        /// </summary>
-        public override void DetermineAppearance()
-        {
-            Cell currentappearanceButton = _currentAppearanceButton;
-            Cell currentappearanceText = _currentAppearanceText;
-
-            if (!isEnabled)
-            {
-                _currentAppearanceButton = Theme.Button.Disabled;
-                _currentAppearanceText = Theme.Disabled;
-            }
-
-            else if (!_isMouseDown && isMouseOver)
-            {
-                _currentAppearanceButton = Theme.Button.MouseOver;
-                _currentAppearanceText = Theme.MouseOver;
-            }
-
-            else if (!_isMouseDown && !isMouseOver && IsFocused && Global.FocusedConsoles.Console == parent)
-            {
-                _currentAppearanceButton = Theme.Button.Focused;
-                _currentAppearanceText = Theme.Focused;
-            }
-
-            else if (_isMouseDown && isMouseOver)
-            {
-                _currentAppearanceButton = Theme.Button.MouseClicking;
-                _currentAppearanceText = Theme.MouseClicking;
-            }
-
-            else if (_isSelected)
-            {
-                _currentAppearanceButton = Theme.Button.Selected;
-                _currentAppearanceText = Theme.Selected;
-            }
-
-            else
-            {
-                _currentAppearanceButton = Theme.Button.Normal;
-                _currentAppearanceText = Theme.Normal;
-            }
-
-            if (currentappearanceButton != _currentAppearanceButton ||
-                currentappearanceText != _currentAppearanceText)
-
-                this.IsDirty = true;
-        }
-
-        protected override void OnMouseIn(Input.MouseConsoleState state)
-        {
-            isMouseOver = true;
-
-            base.OnMouseIn(state);
-        }
-
-        protected override void OnMouseExit(Input.MouseConsoleState state)
-        {
-            isMouseOver = false;
-
-            base.OnMouseExit(state);
-        }
-
+        
         protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
             base.OnLeftMouseClicked(state);
@@ -238,42 +178,16 @@ namespace SadConsole.Controls
             return false;
         }
 
-        public override void Compose()
+        public override void Update(TimeSpan time)
         {
-            if (this.IsDirty)
-            {
-                // If we are doing text, then print it otherwise we're just displaying the button part
-                if (Width != 1)
-                {
-                    for (int x = 0; x < 4; x++)
-			        {
-			            this.SetCellAppearance(x, 0, _currentAppearanceButton);
-			        }
-                    this.Fill(_currentAppearanceText.Foreground, _currentAppearanceText.Background, _currentAppearanceText.Glyph, null);
-                    this.Print(4, 0, Text.Align(TextAlignment, Width - 4));
-                    this.SetGlyph(0, 0, 40);
-                    this.SetGlyph(2, 0, 41);
-
-                    if (_isSelected)
-                        this.SetGlyph(1, 0, Theme.CheckedIcon);
-                    else
-                        this.SetGlyph(1, 0, Theme.UncheckedIcon);
-                }
-                else
-                {
-                }
-
-                OnComposed?.Invoke(this);
-
-                this.IsDirty = false;
-            }
+            Theme.UpdateAndDraw(this, time);
         }
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            DetermineAppearance();
-            Compose(true);
+            DetermineState();
+            IsDirty = true;
         }
     }
 }

@@ -21,76 +21,77 @@ namespace StarterProject.CustomConsoles
         
         public ControlsTest():base(80, 23)
         {
-            var button = new SadConsole.Controls.Button(11, 1)
-            {
-                Text = "Click",
-                Position = new Point(1, 1)
-            };
-            button.Click += (s, a) => Window.Message("This has been clicked!", "Close");
-            Add(button);
+            //var button = new SadConsole.Controls.Button(11, 1)
+            //{
+            //    Text = "Click",
+            //    Position = new Point(1, 1)
+            //};
+            //button.Click += (s, a) => Window.Message("This has been clicked!", "Close");
+            //Add(button);
 
-            button = new SadConsole.Controls.Button(11, 2)
-            {
-                Text = "Click",
-                Position = new Point(1, 3)
-            };
-            Add(button);
+            //button = new SadConsole.Controls.Button(11, 2)
+            //{
+            //    Text = "Click",
+            //    Position = new Point(1, 3)
+            //};
+            //button.Click += (s, a) => button.Position += new Point(3, 3);
+            //Add(button);
 
-            button = new SadConsole.Controls.Button(11, 3)
-            {
-                Text = "Click",
-                Position = new Point(1, 6)
-            };
-            Add(button);
+            //button = new SadConsole.Controls.Button(11, 3)
+            //{
+            //    Text = "Click",
+            //    Position = new Point(1, 6)
+            //};
+            //Add(button);
 
-            button = new SadConsole.Controls.Button(11, 3)
-            {
-                Text = "Click",
-                Position = new Point(15, 5),
-                Theme = new Button3dTheme()
-            };
-            Add(button);
+            //button = new SadConsole.Controls.Button(11, 3)
+            //{
+            //    Text = "Click",
+            //    Position = new Point(15, 5),
+            //    Theme = new Button3dTheme()
+            //};
+            //Add(button);
 
-            button = new SadConsole.Controls.Button(11, 1)
-            {
-                Text = "Click",
-                Position = new Point(15, 10),
-                Theme = new Button3dTheme()
-            };
-            Add(button);
+            //button = new SadConsole.Controls.Button(11, 1)
+            //{
+            //    Text = "Click",
+            //    Position = new Point(15, 10),
+            //    Theme = new Button3dTheme()
+            //};
+            //Add(button);
 
-            button = new SadConsole.Controls.Button(11, 3)
-            {
-                Text = "Click",
-                Position = new Point(15, 1),
-                Theme = new ButtonLinesTheme()
-            };
-            Add(button);
-
-
+            //button = new SadConsole.Controls.Button(11, 3)
+            //{
+            //    Text = "Click",
+            //    Position = new Point(15, 1),
+            //    Theme = new ButtonLinesTheme()
+            //};
+            //Add(button);
 
 
-            //var radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            //radioButton.Text = "Group 1 Option 1";
-            //radioButton.Position = new Point(1, 3);
-            //Add(radioButton);
 
-            //radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            //radioButton.Text = "Group 1 Option 2";
-            //radioButton.Position = new Point(1, 4);
-            //Add(radioButton);
 
-            //radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            //radioButton.Text = "Group 2 Option 1";
-            //radioButton.Position = new Point(1, 6);
-            //radioButton.GroupName = "group2";
-            //Add(radioButton);
+            var radioButton = new SadConsole.Controls.RadioButton(20, 1);
+            radioButton.Text = "Group 1 Option 1";
+            radioButton.Position = new Point(1, 3);
+            Add(radioButton);
 
-            //radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            //radioButton.Text = "Group 2 Option 2";
-            //radioButton.Position = new Point(1, 7);
-            //radioButton.GroupName = "group2";
-            //Add(radioButton);
+            radioButton = new SadConsole.Controls.RadioButton(20, 1);
+            radioButton.Text = "Group 1 Option 2";
+            radioButton.Position = new Point(1, 4);
+            Add(radioButton);
+
+            radioButton = new SadConsole.Controls.RadioButton(20, 1);
+            radioButton.Text = "Group 2 Option 1";
+            radioButton.Position = new Point(1, 6);
+            radioButton.GroupName = "group2";
+            Add(radioButton);
+
+            radioButton = new SadConsole.Controls.RadioButton(20, 1);
+            radioButton.Text = "Group 2 Option 2";
+            radioButton.Position = new Point(1, 7);
+            radioButton.GroupName = "group2";
+            Add(radioButton);
 
             var checkbox = new SadConsole.Controls.CheckBox(13, 1)
             {
@@ -99,11 +100,12 @@ namespace StarterProject.CustomConsoles
             };
             Add(checkbox);
 
-            //var prog = new SadConsole.Controls.ProgressBar(10, 1, HorizontalAlignment.Left);
-            //prog.Position = new Point(checkbox.Bounds.Left, checkbox.Bounds.Bottom + 1);
-            //Add(prog);
+            var prog = new SadConsole.Controls.ProgressBar(10, 1, HorizontalAlignment.Left);
+            //var prog = new SadConsole.Controls.ProgressBar(1, 10, VerticalAlignment.Bottom);
+            prog.Position = new Point(checkbox.Bounds.Left, checkbox.Bounds.Bottom + 1);
+            Add(prog);
 
-            //progressTimer = new Timer(0.5, (timer, time) => { prog.Progress = prog.Progress >= 1f ? 0f : prog.Progress + 0.1f; });
+            progressTimer = new Timer(0.5, (timer, time) => { prog.Progress = prog.Progress >= 1f ? 0f : prog.Progress + 0.1f; });
 
             //var listbox = new SadConsole.Controls.ListBox(20, 6);
             //listbox.Position = new Point(25, 1);
@@ -132,41 +134,41 @@ namespace StarterProject.CustomConsoles
             input.Position = new Point(25, 9);
             Add(input);
 
-            //var selButton = new SadConsole.Controls.SelectionButton(20);
-            //selButton.Text = "Selection Button 1";
-            //selButton.Position = new Point(55, 3);
-            //Add(selButton);
+            var selButton = new SadConsole.Controls.SelectionButton(24, 1);
+            selButton.Text = "Selection Button 1";
+            selButton.Position = new Point(53, 3);
+            Add(selButton);
 
-            //var selButton1 = new SadConsole.Controls.SelectionButton(20);
-            //selButton1.Text = "Selection Button 2";
-            //selButton1.Position = new Point(55, 4);
-            //Add(selButton1);
+            var selButton1 = new SadConsole.Controls.SelectionButton(24, 1);
+            selButton1.Text = "Selection Button 2";
+            selButton1.Position = new Point(53, 4);
+            Add(selButton1);
 
-            //var selButton2 = new SadConsole.Controls.SelectionButton(20);
-            //selButton2.Text = "Selection Button 3";
-            //selButton2.Position = new Point(55, 5);
-            //Add(selButton2);
+            var selButton2 = new SadConsole.Controls.SelectionButton(24, 1);
+            selButton2.Text = "Selection Button 3";
+            selButton2.Position = new Point(53, 5);
+            Add(selButton2);
 
-            //var selButton3 = new SadConsole.Controls.SelectionButton(20);
-            //selButton3.Text = "Selection Button 4";
-            //selButton3.Position = new Point(55, 6);
-            //Add(selButton3);
+            var selButton3 = new SadConsole.Controls.SelectionButton(24, 1);
+            selButton3.Text = "Selection Button 4";
+            selButton3.Position = new Point(53, 6);
+            Add(selButton3);
 
-            //var selButton4 = new SadConsole.Controls.SelectionButton(20);
-            //selButton4.Text = "Selection Button 5";
-            //selButton4.Position = new Point(55, 7);
-            //Add(selButton4);
+            var selButton4 = new SadConsole.Controls.SelectionButton(24, 1);
+            selButton4.Text = "Selection Button 5";
+            selButton4.Position = new Point(53, 7);
+            Add(selButton4);
 
-            //selButton.PreviousSelection = selButton4;
-            //selButton.NextSelection = selButton1;
-            //selButton1.PreviousSelection = selButton;
-            //selButton1.NextSelection = selButton2;
-            //selButton2.PreviousSelection = selButton1;
-            //selButton2.NextSelection = selButton3;
-            //selButton3.PreviousSelection = selButton2;
-            //selButton3.NextSelection = selButton4;
-            //selButton4.PreviousSelection = selButton3;
-            //selButton4.NextSelection = selButton;
+            selButton.PreviousSelection = selButton4;
+            selButton.NextSelection = selButton1;
+            selButton1.PreviousSelection = selButton;
+            selButton1.NextSelection = selButton2;
+            selButton2.PreviousSelection = selButton1;
+            selButton2.NextSelection = selButton3;
+            selButton3.PreviousSelection = selButton2;
+            selButton3.NextSelection = selButton4;
+            selButton4.PreviousSelection = selButton3;
+            selButton4.NextSelection = selButton;
 
             FocusedControl = null;
             //DisableControlFocusing = true;
@@ -243,7 +245,7 @@ namespace StarterProject.CustomConsoles
 
         public override void Update(TimeSpan time)
         {
-            //progressTimer.Update(time.TotalSeconds);
+            progressTimer.Update(time.TotalSeconds);
             base.Update(time);
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
@@ -18,9 +19,6 @@ namespace SadConsole
     [System.Diagnostics.DebuggerDisplay("Console (Controls)")]
     public class ControlsConsole: Console, IEnumerable<ControlBase>
     {
-        protected Surfaces.Basic controlsSurface;
-
-
         /// <summary>
         /// Keyboard processor shared by all Controls Consoles.
         /// </summary>
@@ -125,13 +123,6 @@ namespace SadConsole
             : base(width, height)
         {
             _controls = new List<ControlBase>();
-
-            controlsSurface = new Surfaces.Basic(width, height)
-            {
-                DefaultBackground = Color.Transparent,
-                DefaultForeground = Color.White
-            };
-            controlsSurface.Clear();
             Cursor.IsVisible = false;
             AutoCursorOnFocus = false;
             UseKeyboard = true;
@@ -165,10 +156,16 @@ namespace SadConsole
             if (_controls.Count == 1)
                 FocusedControl = control;
 
-            //control.OnComposed = ControlChanged;
+            control.IsDirtyChanged += ControlOnIsDirtyChanged;
+
             IsDirty = true;
 
             ReOrderControls();
+        }
+
+        private void ControlOnIsDirtyChanged(object sender, EventArgs e)
+        {
+            this.IsDirty = true;
         }
 
 
@@ -413,7 +410,8 @@ namespace SadConsole
         public virtual void Invalidate()
         {
             Theme.Draw(this, this);
-            controlsSurface.IsDirty = true;
+
+            IsDirty = true;
 
             foreach (var control in _controls)
                 control.IsDirty = true;
@@ -429,16 +427,24 @@ namespace SadConsole
             base.Update(time);
 
             foreach (var control in _controls)
-                control.Update(controlsSurface);
+                control.Update(time);
 
-            controlsSurface.Update(time);
-
-            IsDirty = IsDirty || controlsSurface.IsDirty;
+            
         }
 
         public override void Draw(System.TimeSpan update)
         {
-            ((Renderers.ControlsConsole)Renderer).ControlsSurface = controlsSurface;
+            ((Renderers.ControlsConsole) Renderer).Controls = _controls;
+
+            if (!IsDirty)
+                foreach (var control in _controls)
+                {
+                    if (control.IsDirty)
+                    {
+                        IsDirty = true;
+                        break;
+                    }
+                }
 
             base.Draw(update);
         }

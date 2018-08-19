@@ -44,5 +44,10 @@ namespace SadConsole.Controls
         /// The Right mouse button is down.
         /// </summary>
         MouseRightButtonDown = 1 << 5,
+
+        /// <summary>
+        /// THe control is selected
+        /// </summary>
+        Selected = 1 << 6
     }
 }

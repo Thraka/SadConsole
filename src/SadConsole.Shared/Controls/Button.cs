@@ -17,7 +17,6 @@ namespace SadConsole.Controls
         /// Raised when the button is clicked.
         /// </summary>
         public event EventHandler Click;
-
         
         /// <summary>
         /// The display text of the button.
@@ -103,12 +102,13 @@ namespace SadConsole.Controls
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public virtual ButtonTheme Theme
+        public ButtonTheme Theme
         {
-            get => _theme ?? Library.Default.ButtonTheme;
+            get => _theme;
             set
             {
                 _theme = value;
+                _theme.Attached(this);
                 DetermineState();
                 IsDirty = true;
             }
@@ -123,16 +123,16 @@ namespace SadConsole.Controls
         public Button(int width, int height)
             : base(width, height)
         {
+            Theme = (ButtonTheme)Library.Default.ButtonTheme.Clone();
         }
         
         /// <summary>
         /// Redraws the control if it is dirty.
         /// </summary>
-        /// <param name="hostSurface">The surface where the control will be drawn.</param>
-        public override void Update(SurfaceBase hostSurface)
+        /// <param name="time">The duration of this update frame.</param>
+        public override void Update(TimeSpan time)
         {
-            if (IsDirty)
-                Theme.Draw(this, hostSurface);
+            Theme.UpdateAndDraw(this, time);
         }
 
         [OnDeserialized]

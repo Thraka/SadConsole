@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Controls;
 using SadConsole.Surfaces;
 
@@ -11,6 +12,10 @@ namespace SadConsole.Themes
     [DataContract]
     public class InputBoxTheme: ThemeBase<InputBox>
     {
+        private int _oldCaretPosition;
+        private ControlStates _oldState;
+        private string _editingText;
+
         /// <summary>
         /// The style to use for the carrot.
         /// </summary>
@@ -26,49 +31,83 @@ namespace SadConsole.Themes
             };
         }
 
-        public override void Draw(InputBox control, SurfaceBase hostSurface)
+        public override void Attached(InputBox control)
         {
-            if (control.IsDirty)
+            control.Surface = new BasicNoDraw(control.Width, control.Height);
+        }
+
+        public override void UpdateAndDraw(InputBox control, TimeSpan time)
+        {
+            if (control.Surface.Effects.Count != 0)
             {
-                Cell appearance;
+                control.Surface.Update(time);
+                control.IsDirty = true;
+            }
 
-                if (Helpers.HasFlag(control.State, ControlStates.Disabled))
-                    appearance = Disabled;
+            if (!control.IsDirty) return;
 
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
-                    appearance = MouseDown;
+            Cell appearance;
 
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
-                    appearance = MouseOver;
+            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+                appearance = Disabled;
 
-                else if (Helpers.HasFlag(control.State, ControlStates.Focused))
-                    appearance = Focused;
+            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+                appearance = MouseDown;
 
-                else
-                    appearance = Normal;
+            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+                appearance = MouseOver;
 
-                // Clear the existing area of the control
+            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+                appearance = Focused;
 
-                Cell[] controlCells = hostSurface.GetCells(control.Bounds);
+            else
+                appearance = Normal;
 
-                if (controlCells.Length == 0) return;
+            if (control.IsFocused && !control.DisableKeyboard)
+            {
+                //TODO: Maybe just manage the cell effect myself? Do not use the ScratchSurface.SetEffect?
 
-                hostSurface.SetEffect(hostSurface.Fill(control.Bounds, appearance.Foreground, appearance.Background, 0), null);
-
-                if (control.IsFocused && !control.DisableKeyboard)
+                if (!control.IsCaretVisible)
                 {
-                    hostSurface.Print(control.Bounds.Left, control.Bounds.Top, control.EditingText.Substring(control.LeftDrawOffset));
-                    hostSurface.SetEffect(hostSurface[control.Bounds.Left + (control.CaretPosition - control.LeftDrawOffset), control.Bounds.Top], CaretEffect);
+                    _oldCaretPosition = control.CaretPosition;
+                    _oldState = control.State;
+                    _editingText = control.EditingText;
+                    control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
+                    control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
                     control.IsCaretVisible = true;
                 }
-                else
+
+                else if (_oldCaretPosition != control.CaretPosition || _oldState != control.State)
                 {
-                    control.IsCaretVisible = false;
-                    hostSurface.Print(control.Bounds.Left, control.Bounds.Top, control.Text.Align(control.TextAlignment, control.Width));
+                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
+                    control.Surface.Effects.Remove(CaretEffect);
+                    control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
+                    control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
+                    _oldCaretPosition = control.CaretPosition;
+                    _oldState = control.State;
                 }
-                
-                control.IsDirty = false;
             }
+            else
+            {
+                control.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
+                control.IsCaretVisible = false;
+                control.Surface.Print(0, 0, control.Text.Align(control.TextAlignment, control.Width));
+            }
+
+            control.IsDirty = false;
+        }
+        public override object Clone()
+        {
+            return new InputBoxTheme()
+            {
+                Normal = Normal.Clone(),
+                Disabled = Disabled.Clone(),
+                MouseOver = MouseOver.Clone(),
+                MouseDown = MouseDown.Clone(),
+                Selected = Selected.Clone(),
+                Focused = Focused.Clone(),
+                CaretEffect = CaretEffect.Clone()
+            };
         }
     }
 }

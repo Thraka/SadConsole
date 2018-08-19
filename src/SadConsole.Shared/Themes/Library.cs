@@ -26,11 +26,11 @@ namespace SadConsole.Themes
         [DataMember]
         public ButtonTheme ButtonTheme;
 
-        ///// <summary>
-        ///// Theme for the <see cref="SadConsole.Controls.SelectionButton"/> control.
-        ///// </summary>
-        //[DataMember]
-        //public ButtonTheme SelectionButtonTheme;
+        /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.SelectionButton"/> control.
+        /// </summary>
+        [DataMember]
+        public ButtonTheme SelectionButtonTheme;
 
         /// <summary>
         /// Theme for the <see cref="SadConsole.Controls.ScrollBar"/> control.
@@ -38,11 +38,11 @@ namespace SadConsole.Themes
         [DataMember]
         public ScrollBarTheme ScrollBarTheme;
 
-        ///// <summary>
-        ///// Theme for the <see cref="SadConsole.Controls.RadioButton"/> control.
-        ///// </summary>
-        //[DataMember]
-        //public RadioButtonTheme RadioButtonTheme;
+        /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.RadioButton"/> control.
+        /// </summary>
+        [DataMember]
+        public RadioButtonTheme RadioButtonTheme;
 
         ///// <summary>
         ///// Theme for the <see cref="SadConsole.Controls.ListBox"/> control.
@@ -62,11 +62,11 @@ namespace SadConsole.Themes
         [DataMember]
         public InputBoxTheme InputBoxTheme;
 
-        ///// <summary>
-        ///// Theme for the <see cref="SadConsole.Controls.ProgressBar"/> control.
-        ///// </summary>
-        //[DataMember]
-        //public ProgressBarTheme ProgressBarTheme;
+        /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.ProgressBar"/> control.
+        /// </summary>
+        [DataMember]
+        public ProgressBarTheme ProgressBarTheme;
 
         /// <summary>
         /// Theme for <see cref="Consoles.ControlsConsole"/>.
@@ -107,6 +107,9 @@ namespace SadConsole.Themes
             ScrollBarTheme = new ScrollBarTheme();
             CheckBoxTheme = new CheckBoxTheme();
             InputBoxTheme = new InputBoxTheme();
+            ProgressBarTheme = new ProgressBarTheme();
+            RadioButtonTheme = new RadioButtonTheme();
+            SelectionButtonTheme = new ButtonTheme();
         }
 
 

@@ -24,8 +24,9 @@ namespace SadConsole.Controls
         /// </summary>
         protected bool isMouseLeftDown;
         protected bool isMouseRightDown;
+        private bool _isDirty;
 
-        //public Action<ControlBase> OnComposed;
+        public event EventHandler<EventArgs> IsDirtyChanged;
 
         [DataMember]
         public bool UseKeyboard { get; set; }
@@ -43,10 +44,25 @@ namespace SadConsole.Controls
         public Font AlternateFont { get; set; }
 
         /// <summary>
-        /// Indicates he rendering location of this control.
+        /// The cell data to render the control. Controlled by a theme.
         /// </summary>
         [DataMember]
-        public Point Position { get { return position; } set { position = value; Bounds = new Rectangle(position.X, position.Y, Width, Height); OnPositionChanged(); } }
+        public BasicNoDraw Surface { get; set; }
+
+        /// <summary>
+        /// Indicates the rendering location of this control.
+        /// </summary>
+        [DataMember]
+        public Point Position
+        {
+            get => position;
+            set
+            {
+                position = value;
+                Bounds = new Rectangle(position.X, position.Y, Width, Height);
+                OnPositionChanged();
+            }
+        }
 
         /// <summary>
         /// Indicates weather or not this control is visible.
@@ -69,7 +85,17 @@ namespace SadConsole.Controls
         /// <summary>
         /// Indicates weather or not this control is dirty and should be redrawn.
         /// </summary>
-        public bool IsDirty { get; set; }
+        public bool IsDirty
+        {
+            get => _isDirty;
+            set
+            {
+                if (value == _isDirty) return;
+
+                _isDirty = value;
+                IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         /// <summary>
         /// Represents a name to identify a control by.
@@ -165,29 +191,29 @@ namespace SadConsole.Controls
         /// <summary>
         /// Raised when the mouse enters this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseEnter;
+        public event EventHandler<MouseEventArgs> MouseEnter;
 
         /// <summary>
         /// Raised when the mouse exits this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseExit;
+        public event EventHandler<MouseEventArgs> MouseExit;
 
         /// <summary>
         /// Raised when the mouse is moved over this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseMove;
+        public event EventHandler<MouseEventArgs> MouseMove;
 
         /// <summary>
         /// Raised when a mouse button is clicked while the mouse is over this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseButtonClicked;
+        public event EventHandler<MouseEventArgs> MouseButtonClicked;
 
         #region Constructors
         /// <inheritdoc />
         /// <summary>
         /// Creates a control.
         /// </summary>
-        public ControlBase(int width, int height)
+        protected ControlBase(int width, int height)
         {
             Width = width;
             Height = height;
@@ -406,7 +432,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.
         /// </summary>
-        public abstract void Update(SurfaceBase hostSurface);
+        public abstract void Update(TimeSpan time);
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)

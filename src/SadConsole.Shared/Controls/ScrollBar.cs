@@ -121,14 +121,15 @@ namespace SadConsole.Controls
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public virtual ScrollBarTheme Theme
+        public ScrollBarTheme Theme
         {
-            get => _theme ?? Library.Default.ScrollBarTheme;
+            get => _theme;
             set
             {
                 _theme = value;
-                IsDirty = true;
+                _theme.Attached(this);
                 DetermineState();
+                IsDirty = true;
             }
         }
         
@@ -146,6 +147,8 @@ namespace SadConsole.Controls
 
         private ScrollBar(Orientation orientation, int width, int height): base(width, height)
         {
+            Theme = (ScrollBarTheme) Library.Default.ScrollBarTheme.Clone();
+
             _initialized = true;
             Orientation = orientation;
 
@@ -365,10 +368,10 @@ namespace SadConsole.Controls
             }
         }
 
-        public override void Update(SurfaceBase hostSurface)
+        /// <inheritdoc />
+        public override void Update(TimeSpan time)
         {
-            if (IsDirty)
-                Theme.Draw(this, hostSurface);
+            Theme.UpdateAndDraw(this, time);
         }
 
         [OnDeserializedAttribute]

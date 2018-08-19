@@ -22,7 +22,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         public event EventHandler DirtyChanged;
 
-        private Font _font;
+        protected Font _font;
         private Color _tint = Color.Transparent;
         private bool _isDirty = true;
 
@@ -49,12 +49,12 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// How many cells wide the surface is.
         /// </summary>
-        public int Width { get; private set; }
+        public int Width { get; protected set; }
 
         /// <summary>
         /// How many cells high the surface is.
         /// </summary>
-        public int Height { get; private set; }
+        public int Height { get; protected set; }
 
         /// <summary>
         /// All cells of the surface.

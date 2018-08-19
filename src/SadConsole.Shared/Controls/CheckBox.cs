@@ -36,12 +36,13 @@ namespace SadConsole.Controls
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public virtual CheckBoxTheme Theme
+        public CheckBoxTheme Theme
         {
-            get => _theme ?? Library.Default.CheckBoxTheme;
+            get => _theme;
             set
             {
                 _theme = value;
+                _theme.Attached(this);
                 DetermineState();
                 IsDirty = true;
             }
@@ -105,6 +106,7 @@ namespace SadConsole.Controls
         /// <param name="height">Height of the control.</param>
         public CheckBox(int width, int height) : base(width, height)
         {
+            Theme = (CheckBoxTheme)Library.Default.CheckBoxTheme.Clone();
         }
         
         protected override void OnMouseIn(Input.MouseConsoleState state)
@@ -158,14 +160,10 @@ namespace SadConsole.Controls
             return false;
         }
 
-        /// <summary>
-        /// Redraws the control if it is dirty.
-        /// </summary>
-        /// <param name="hostSurface">The surface where the control will be drawn.</param>
-        public override void Update(SurfaceBase hostSurface)
+        /// <inheritdoc />
+        public override void Update(TimeSpan time)
         {
-            if (IsDirty)
-                Theme.Draw(this, hostSurface);
+            Theme.UpdateAndDraw(this, time);
         }
 
         [OnDeserializedAttribute]
