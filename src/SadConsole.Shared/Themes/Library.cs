@@ -44,11 +44,11 @@ namespace SadConsole.Themes
         [DataMember]
         public RadioButtonTheme RadioButtonTheme;
 
-        ///// <summary>
-        ///// Theme for the <see cref="SadConsole.Controls.ListBox"/> control.
-        ///// </summary>
-        //[DataMember]
-        //public ListBoxTheme ListBoxTheme;
+        /// <summary>
+        /// Theme for the <see cref="SadConsole.Controls.ListBox"/> control.
+        /// </summary>
+        [DataMember]
+        public ListBoxTheme ListBoxTheme;
 
         /// <summary>
         /// Theme for the <see cref="SadConsole.Controls.CheckBox"/> control.
@@ -110,6 +110,7 @@ namespace SadConsole.Themes
             ProgressBarTheme = new ProgressBarTheme();
             RadioButtonTheme = new RadioButtonTheme();
             SelectionButtonTheme = new ButtonTheme();
+            ListBoxTheme = new ListBoxTheme();
         }
 
 

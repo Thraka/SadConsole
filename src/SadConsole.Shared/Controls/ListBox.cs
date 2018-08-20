@@ -151,6 +151,7 @@ namespace SadConsole.Controls
                     throw new ArgumentOutOfRangeException("Item does not exist in collection.");
 
                 selectedIndex = index;
+                selectedItem = Items[index];
 
                 OnSelectedItemChanged();
             }
@@ -175,7 +176,7 @@ namespace SadConsole.Controls
         public ListBox(int width, int height): base(width, height)
         {
             initialized = true;
-
+            SliderRenderLocation = new Point(width - 1, 0);
             SetupSlider();
 
             Items = new ObservableCollection<object>();
@@ -208,19 +209,19 @@ namespace SadConsole.Controls
 
         protected override void OnPositionChanged()
         {
-            Slider.Position = Position + SliderRenderLocation;
+            Slider.Position = Position + new Point(Width - 1, 0);
         }
 
         protected void SetupSlider()
         {
             if (!initialized) return;
-
+            Theme = (ListBoxTheme)Library.Default.ListBoxTheme.Clone();
             //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
             Slider = ScrollBar.Create(Orientation.Vertical, Height);
             Slider.ValueChanged += new EventHandler(_slider_ValueChanged);
             Slider.IsVisible = false;
             Slider.Theme = this.Theme.ScrollBarTheme;
-            Slider.Position = Position + SliderRenderLocation;
+            Slider.Position = Position + new Point(Width - 1, 0);
 
             DetermineState();
         }

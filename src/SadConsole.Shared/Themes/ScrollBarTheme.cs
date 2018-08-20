@@ -56,6 +56,7 @@ namespace SadConsole.Themes
             StartButtonHorizontalGlyph = 17;
             EndButtonHorizontalGlyph = 16;
             SliderGlyph = 219;
+            BarGlyph = 176;
         }
 
         public override void Attached(ScrollBar control)
@@ -97,7 +98,7 @@ namespace SadConsole.Themes
                 for (int i = 1; i <= control.SliderBarSize; i++)
                 {
                     control.Surface.SetCellAppearance(i, 0, appearance);
-                    control.Surface.SetGlyph(i, 0, SliderGlyph);
+                    control.Surface.SetGlyph(i, 0, BarGlyph);
                 }
 
                 if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)
@@ -120,7 +121,7 @@ namespace SadConsole.Themes
                 for (int i = 0; i < control.SliderBarSize; i++)
                 {
                     control.Surface.SetCellAppearance(0, i + 1, appearance);
-                    control.Surface.SetGlyph(0, i + 1, SliderGlyph);
+                    control.Surface.SetGlyph(0, i + 1, BarGlyph);
                 }
 
                 if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)

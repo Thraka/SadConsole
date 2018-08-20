@@ -107,28 +107,28 @@ namespace StarterProject.CustomConsoles
 
             progressTimer = new Timer(0.5, (timer, time) => { prog.Progress = prog.Progress >= 1f ? 0f : prog.Progress + 0.1f; });
 
-            //var listbox = new SadConsole.Controls.ListBox(20, 6);
-            //listbox.Position = new Point(25, 1);
-            //listbox.HideBorder = false;
-            //listbox.Items.Add("item 1");
-            //listbox.Items.Add("item 2");
-            //listbox.Items.Add("item 3");
-            //listbox.Items.Add("item 4");
-            //listbox.Items.Add("item 5");
-            //listbox.Items.Add("item 6");
-            //listbox.Items.Add("item 7");
-            //listbox.Items.Add("item 8");
-            //Add(listbox);
+            var listbox = new SadConsole.Controls.ListBox(20, 6);
+            listbox.Position = new Point(25, 1);
+            listbox.HideBorder = false;
+            listbox.Items.Add("item 1");
+            listbox.Items.Add("item 2");
+            listbox.Items.Add("item 3");
+            listbox.Items.Add("item 4");
+            listbox.Items.Add("item 5");
+            listbox.Items.Add("item 6");
+            listbox.Items.Add("item 7");
+            listbox.Items.Add("item 8");
+            Add(listbox);
 
-            //var slider = SadConsole.Controls.ScrollBar.Create(Orientation.Horizontal, 20);
-            //slider.Position = new Point(25, 7);
-            //slider.Maximum = 18;
-            //Add(slider);
+            var slider = SadConsole.Controls.ScrollBar.Create(Orientation.Horizontal, 20);
+            slider.Position = new Point(25, 7);
+            slider.Maximum = 18;
+            Add(slider);
 
-            //slider = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, 8);
-            //slider.Position = new Point(47, 1);
-            //slider.Maximum = 6;
-            //Add(slider);
+            slider = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, 8);
+            slider.Position = new Point(47, 1);
+            slider.Maximum = 6;
+            Add(slider);
 
             var input = new SadConsole.Controls.InputBox(20);
             input.Position = new Point(25, 9);

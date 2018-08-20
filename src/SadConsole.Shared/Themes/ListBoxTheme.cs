@@ -45,7 +45,16 @@ namespace SadConsole.Themes
 
         public ListBoxTheme()
         {
+            SetForeground(Normal.Foreground);
+            SetBackground(Normal.Background);
+
             DrawBorder = true;
+            ScrollBarTheme = (ScrollBarTheme)Library.Default.ScrollBarTheme?.Clone() ?? new ScrollBarTheme();
+            ItemTheme = new ListBoxItemTheme();
+            BorderTheme = new ThemeStates();
+            BorderTheme.SetForeground(Normal.Foreground);
+            BorderTheme.SetBackground(Normal.Background);
+            BorderLineStyle = (int[])SurfaceBase.ConnectedLineThick.Clone();
         }
 
         public override void Attached(ListBox control)
@@ -71,7 +80,7 @@ namespace SadConsole.Themes
             control.Surface.Fill(
                 appearance.Foreground,
                 appearance.Background,
-                appearance.Glyph, null);
+                appearance.Glyph);
 
             if (DrawBorder)
             {
@@ -119,6 +128,7 @@ namespace SadConsole.Themes
 
             if (control.IsSliderVisible)
             {
+                control.Slider.IsDirty = true;
                 control.Slider.Update(time);
                 var y = control.SliderRenderLocation.Y;
 
@@ -131,7 +141,7 @@ namespace SadConsole.Themes
             }
 
 
-            control.IsDirty = false;
+            control.IsDirty = Helpers.HasFlag(control.State, ControlStates.MouseOver);
         }
 
         /// <summary>
@@ -159,6 +169,15 @@ namespace SadConsole.Themes
 
     public class ListBoxItemTheme: ThemeStates
     {
+        public ListBoxItemTheme()
+        {
+            SetForeground(Normal.Foreground);
+            SetBackground(Normal.Background);
+
+            Selected.Foreground = Library.Default.Appearance_ControlSelected.Foreground;
+            MouseOver = Library.Default.Appearance_ControlOver.Clone();
+        }
+
         public virtual void Draw(Surfaces.SurfaceBase surface, Rectangle area, object item, ControlStates itemState)
         {
             string value = item.ToString();
