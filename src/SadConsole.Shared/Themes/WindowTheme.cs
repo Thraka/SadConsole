@@ -57,7 +57,7 @@ namespace SadConsole.Themes
 
         public WindowTheme()
         {
-            //FillStyle = new Cell(Colors.ControlHostFore, Colors.ControlHostBack);
+            FillStyle = new Cell(Colors.ControlHostFore, Colors.ControlHostBack);
             TitleStyle = new Cell(Colors.TitleText, FillStyle.Background, FillStyle.Glyph);
             BorderStyle = new Cell(Colors.MenuLines, FillStyle.Background, 0);
             BorderLineStyle = SurfaceBase.ConnectedLineThick;

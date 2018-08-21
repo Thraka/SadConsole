@@ -51,12 +51,17 @@ namespace SadConsole.Themes
         public ScrollBarTheme()
         {
             //TODO add states for ends. Bar should use base state.
-            StartButtonVerticalGlyph = 30;
-            EndButtonVerticalGlyph = 31;
-            StartButtonHorizontalGlyph = 17;
-            EndButtonHorizontalGlyph = 16;
+            StartButtonVerticalGlyph = 17;
+            EndButtonVerticalGlyph = 16;
+            StartButtonHorizontalGlyph = 30;
+            EndButtonHorizontalGlyph = 31;
             SliderGlyph = 219;
             BarGlyph = 176;
+
+            SetForeground(Normal.Foreground);
+            SetBackground(Normal.Background);
+
+            Disabled = Library.Default.Appearance_ControlDisabled.Clone();
         }
 
         public override void Attached(ScrollBar control)
@@ -113,10 +118,10 @@ namespace SadConsole.Themes
             else
             {
                 control.Surface.SetCellAppearance(0, 0, appearance);
-                control.Surface.SetGlyph(0, 0, StartButtonVerticalGlyph);
+                control.Surface.SetGlyph(0, 0, StartButtonHorizontalGlyph);
 
                 control.Surface.SetCellAppearance(0, control.Height - 1, appearance);
-                control.Surface.SetGlyph(0, control.Height - 1, EndButtonVerticalGlyph);
+                control.Surface.SetGlyph(0, control.Height - 1, EndButtonHorizontalGlyph);
 
                 for (int i = 0; i < control.SliderBarSize; i++)
                 {

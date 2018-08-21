@@ -119,11 +119,11 @@ namespace SadConsole.Themes
         }
 
         /// <summary>
-        /// Gets an apperance defined by this theme from the <param name="state" /> parameter.
+        /// Gets an apperance defined by this theme from the <paramref name="state" /> parameter.
         /// </summary>
         /// <param name="state">The state to check.</param>
         /// <returns>A cell appearance.</returns>
-        public Cell GetState(ControlStates state)
+        public Cell GetStateAppearance(ControlStates state)
         {
             if (Helpers.HasFlag(state, ControlStates.Disabled))
                 return Disabled;

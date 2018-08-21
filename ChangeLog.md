@@ -1,4 +1,4 @@
-﻿## 07/01/2018 V7.0.0
+﻿## 08/20/2018 V7.0.0
 
 - Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
 - Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
@@ -6,6 +6,13 @@
 - SadConsole.Serialization uses Newtonsoft.Json instead of the default .NET classes.
 - SadConsole.Serialization supports GZIP compression now.
 - Settings.SerializationIsCompressed can be set to true to set all internal save/load to use compression.
+- New SurfaceBase class which all Surface's inherit from.
+- SurfaceBase has an IRenderer on it directly now.
+- SurfaceEditor has been removed and is now implemented on SurfaceBase directly.
+- Console no longer combines Renderer and TextSurface for drawing.
+- Control themes completely rewritten. Themes control all drawing for a control now.
+- Windows/ControlsConsole use a theme for drawing.
+- InputBox renamed TextBox.
 
 ## 06/11/2018
 

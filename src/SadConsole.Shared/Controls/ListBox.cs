@@ -37,7 +37,6 @@ namespace SadConsole.Controls
         [DataMember(Name = "ShowSlider")]
         //[DataMember(Name = "BorderLines")]
         //protected int[] borderLineStyle;
-        protected bool mouseIn = false;
         protected DateTime leftMouseLastClick = DateTime.Now;
 
         [DataMember(Name = "ScrollBarOffset")]
@@ -152,7 +151,7 @@ namespace SadConsole.Controls
 
                 selectedIndex = index;
                 selectedItem = Items[index];
-
+                IsDirty = true;
                 OnSelectedItemChanged();
             }
         }
@@ -185,32 +184,15 @@ namespace SadConsole.Controls
         }
         #endregion
 
-        protected override void OnParentChanged()
-        {
-            Slider.Parent = this.Parent;
-        }
+        protected override void OnParentChanged() => Slider.Parent = this.Parent;
 
-        void _slider_ValueChanged(object sender, EventArgs e)
-        {
-            this.IsDirty = true;
-        }
+        private void _slider_ValueChanged(object sender, EventArgs e) => this.IsDirty = true;
 
-        protected virtual void OnSelectedItemChanged()
-        {
-            if (SelectedItemChanged != null)
-                SelectedItemChanged(this, new SelectedItemEventArgs(selectedItem));
-        }
+        protected virtual void OnSelectedItemChanged() => SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(selectedItem));
 
-        protected virtual void OnItemAction()
-        {
-            if (SelectedItemExecuted != null)
-                SelectedItemExecuted(this, new SelectedItemEventArgs(selectedItem));
-        }
+        protected virtual void OnItemAction() => SelectedItemExecuted?.Invoke(this, new SelectedItemEventArgs(selectedItem));
 
-        protected override void OnPositionChanged()
-        {
-            Slider.Position = Position + new Point(Width - 1, 0);
-        }
+        protected override void OnPositionChanged() => Slider.Position = Position + new Point(Width - 1, 0);
 
         protected void SetupSlider()
         {
@@ -391,11 +373,11 @@ namespace SadConsole.Controls
             {
                 base.ProcessMouse(state);
 
-                if (mouseIn)
+                if (isMouseOver)
                 {
                     var mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
 
-                    if (mouseControlPosition.X == this.Width - 1 && IsSliderVisible)
+                    if (mouseControlPosition.X == SliderRenderLocation.X && IsSliderVisible)
                     {
                         Slider.ProcessMouse(state);
                     }

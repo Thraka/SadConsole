@@ -113,6 +113,7 @@ namespace SadConsole.Themes
         public Button3dTheme()
         {
             Shade = new Cell(Colors.ControlBackDark, Color.Transparent, 176);
+            Normal = new Cell(Colors.CyanDark, Colors.ControlBackLight);
         }
 
         public override void Attached(Button control)

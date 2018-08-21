@@ -29,9 +29,13 @@ namespace SadConsole.Themes
         public ProgressBarTheme()
         {
             Background = new ThemeStates();
+            Background.SetForeground(Normal.Foreground);
+            Background.SetBackground(Normal.Background);
             Background.SetGlyph(176);
             Background.Disabled = new Cell(Color.Gray, Color.Black, 176);
             Foreground = new ThemeStates();
+            Foreground.SetForeground(Normal.Foreground);
+            Foreground.SetBackground(Normal.Background);
             Foreground.SetGlyph(219);
             Foreground.Disabled = new Cell(Color.Gray, Color.Black, 219);
         }

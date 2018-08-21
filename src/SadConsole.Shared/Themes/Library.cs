@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using System.Runtime.Serialization;
+using SadConsole.Controls;
 using SadConsole.Surfaces;
 
 namespace SadConsole.Themes
@@ -57,10 +58,10 @@ namespace SadConsole.Themes
         public CheckBoxTheme CheckBoxTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.InputBox"/> control.
+        /// Theme for the <see cref="TextBox"/> control.
         /// </summary>
         [DataMember]
-        public InputBoxTheme InputBoxTheme;
+        public TextBoxTheme InputBoxTheme;
 
         /// <summary>
         /// Theme for the <see cref="SadConsole.Controls.ProgressBar"/> control.
@@ -106,7 +107,7 @@ namespace SadConsole.Themes
             ButtonTheme = new ButtonTheme();
             ScrollBarTheme = new ScrollBarTheme();
             CheckBoxTheme = new CheckBoxTheme();
-            InputBoxTheme = new InputBoxTheme();
+            InputBoxTheme = new TextBoxTheme();
             ProgressBarTheme = new ProgressBarTheme();
             RadioButtonTheme = new RadioButtonTheme();
             SelectionButtonTheme = new ButtonTheme();
@@ -119,8 +120,8 @@ namespace SadConsole.Themes
         /// </summary>
         public Library()
         {
-            Appearance_ControlNormal = new Cell(Colors.Text, Colors.ControlBackLight);
-            Appearance_ControlDisabled = new Cell(Colors.TextLight, Colors.ControlBackLight);
+            Appearance_ControlNormal = new Cell(Colors.Text, Colors.ControlBack);
+            Appearance_ControlDisabled = new Cell(Colors.TextLight, Colors.ControlBackDark);
             Appearance_ControlOver = new Cell(Colors.TextSelectedDark, Colors.ControlBackSelected);
             Appearance_ControlSelected = new Cell(Colors.TextSelected, Colors.ControlBackSelected);
             Appearance_ControlMouseDown = new Cell(Appearance_ControlSelected.Background, Appearance_ControlSelected.Foreground);

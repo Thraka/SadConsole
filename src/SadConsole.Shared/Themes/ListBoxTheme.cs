@@ -72,9 +72,9 @@ namespace SadConsole.Themes
             int endingRow;
 
 
-            Cell appearance = GetState(control.State);
-            Cell scrollBarAppearance = ScrollBarTheme.GetState(control.State);
-            Cell borderAppearance = BorderTheme.GetState(control.State);
+            Cell appearance = GetStateAppearance(control.State);
+            Cell scrollBarAppearance = ScrollBarTheme.GetStateAppearance(control.State);
+            Cell borderAppearance = BorderTheme.GetStateAppearance(control.State);
 
             // Redraw the control
             control.Surface.Fill(
@@ -107,7 +107,7 @@ namespace SadConsole.Themes
                 {
                     ControlStates state = 0;
 
-                    if (control.RelativeIndexMouseOver == itemIndexRelative)
+                    if (Helpers.HasFlag(control.State, ControlStates.MouseOver) && control.RelativeIndexMouseOver == itemIndexRelative)
                         Helpers.SetFlag(ref state, ControlStates.MouseOver);
 
                     if (control.State.HasFlag(ControlStates.MouseLeftButtonDown))
@@ -185,7 +185,10 @@ namespace SadConsole.Themes
                 value += new string(' ', area.Width - value.Length);
             else if (value.Length > area.Width)
                 value = value.Substring(0, area.Width);
-            surface.Print(area.Left, area.Top, value, GetState(itemState));
+            if (Helpers.HasFlag(itemState, ControlStates.Selected) && !Helpers.HasFlag(itemState, ControlStates.MouseOver))
+                surface.Print(area.Left, area.Top, value, Selected);
+            else
+                surface.Print(area.Left, area.Top, value, GetStateAppearance(itemState));
         }
 
         public virtual object Clone()
@@ -210,7 +213,7 @@ namespace SadConsole.Themes
             {
                 string value = new string(' ', area.Width - 2);
 
-                Cell cellLook = GetState(itemState).Clone();
+                Cell cellLook = GetStateAppearance(itemState).Clone();
 
                 if (item is Color color)
                 {

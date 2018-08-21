@@ -10,11 +10,12 @@ namespace SadConsole.Themes
     /// A theme for the input box control.
     /// </summary>
     [DataContract]
-    public class InputBoxTheme: ThemeBase<InputBox>
+    public class TextBoxTheme: ThemeBase<TextBox>
     {
         private int _oldCaretPosition;
         private ControlStates _oldState;
         private string _editingText;
+        private Cell _oldAppearance;
 
         /// <summary>
         /// The style to use for the carrot.
@@ -22,21 +23,23 @@ namespace SadConsole.Themes
         [DataMember]
         public SadConsole.Effects.ICellEffect CaretEffect;
 
-        public InputBoxTheme()
+        public TextBoxTheme()
         {
             CaretEffect = new Effects.BlinkGlyph()
             {
                 GlyphIndex = 95,
                 BlinkSpeed = 0.4f
             };
+
+            Normal = new SadConsole.Cell(Colors.Text, Colors.GrayDark);
         }
 
-        public override void Attached(InputBox control)
+        public override void Attached(TextBox control)
         {
             control.Surface = new BasicNoDraw(control.Width, control.Height);
         }
 
-        public override void UpdateAndDraw(InputBox control, TimeSpan time)
+        public override void UpdateAndDraw(TextBox control, TimeSpan time)
         {
             if (control.Surface.Effects.Count != 0)
             {
@@ -46,27 +49,10 @@ namespace SadConsole.Themes
 
             if (!control.IsDirty) return;
 
-            Cell appearance;
-
-            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
-                appearance = Disabled;
-
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
-                appearance = MouseDown;
-
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
-                appearance = MouseOver;
-
-            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
-                appearance = Focused;
-
-            else
-                appearance = Normal;
+            Cell appearance = GetStateAppearance(control.State);
 
             if (control.IsFocused && !control.DisableKeyboard)
             {
-                //TODO: Maybe just manage the cell effect myself? Do not use the ScratchSurface.SetEffect?
-
                 if (!control.IsCaretVisible)
                 {
                     _oldCaretPosition = control.CaretPosition;
@@ -79,8 +65,8 @@ namespace SadConsole.Themes
 
                 else if (_oldCaretPosition != control.CaretPosition || _oldState != control.State)
                 {
-                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
                     control.Surface.Effects.Remove(CaretEffect);
+                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
                     control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
                     control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
                     _oldCaretPosition = control.CaretPosition;
@@ -98,7 +84,7 @@ namespace SadConsole.Themes
         }
         public override object Clone()
         {
-            return new InputBoxTheme()
+            return new TextBoxTheme()
             {
                 Normal = Normal.Clone(),
                 Disabled = Disabled.Clone(),

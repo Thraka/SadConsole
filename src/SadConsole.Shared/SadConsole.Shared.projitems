@@ -30,7 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DrawingSurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\InputBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TextBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ListBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ProgressBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton.cs" />
@@ -136,7 +136,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Colors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ControlsConsoleTheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Themes\InputBoxTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\TextBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Library.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ListBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ProgressBarTheme.cs" />

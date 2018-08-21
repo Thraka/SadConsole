@@ -15,7 +15,7 @@ namespace SadConsole.Controls
     /// InputBox control that allows text input.
     /// </summary>
     [DataContract]
-    public class InputBox: ControlBase
+    public class TextBox: ControlBase
     {
         /// <summary>
         /// Indicates the caret is visible.
@@ -31,7 +31,7 @@ namespace SadConsole.Controls
         /// The theme of the control.
         /// </summary>
         [DataMember(Name="Theme")]
-        protected InputBoxTheme _theme;
+        protected TextBoxTheme _theme;
 
         /// <summary>
         /// The alignment of the text.
@@ -103,7 +103,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public  InputBoxTheme Theme
+        public  TextBoxTheme Theme
         {
             get => _theme;
             set
@@ -202,10 +202,10 @@ namespace SadConsole.Controls
         /// Creates a new instance of the input box.
         /// </summary>
         /// <param name="width">The width of the input box.</param>
-        public InputBox(int width)
+        public TextBox(int width)
             : base(width, 1)
         {
-            Theme = (InputBoxTheme) Library.Default.InputBoxTheme.Clone();
+            Theme = (TextBoxTheme) Library.Default.InputBoxTheme.Clone();
         }
         #endregion
 
