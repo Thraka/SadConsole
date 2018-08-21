@@ -205,7 +205,7 @@ namespace SadConsole.Controls
         public TextBox(int width)
             : base(width, 1)
         {
-            Theme = (TextBoxTheme) Library.Default.InputBoxTheme.Clone();
+            Theme = (TextBoxTheme) Library.Default.TextBoxTheme.Clone();
         }
         #endregion
 

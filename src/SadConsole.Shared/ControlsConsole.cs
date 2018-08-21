@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using SadConsole.Renderers;
 using SadConsole.Surfaces;
+using SadConsole.Themes;
 
 namespace SadConsole
 {
@@ -49,8 +50,13 @@ namespace SadConsole
         /// </summary>
         public SadConsole.Themes.ControlsConsoleTheme Theme
         {
-            get => _theme ?? SadConsole.Themes.Library.Default.ControlsConsoleTheme;
-            set { _theme = value; Invalidate(); }
+            get => _theme;
+            set
+            {
+                _theme = value;
+                IsDirty = true;
+                Invalidate();
+            }
         }
 
         /// <summary>
@@ -130,6 +136,7 @@ namespace SadConsole
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
             Renderer = new Renderers.ControlsConsole();
+            _theme = (ControlsConsoleTheme)Library.Default.ControlsConsoleTheme.Clone();
             Invalidate();
         }
         #endregion

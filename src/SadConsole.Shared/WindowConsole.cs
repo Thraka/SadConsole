@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using SadConsole.DrawCalls;
 using SadConsole.Renderers;
 using SadConsole.Input;
+using SadConsole.Themes;
 
 namespace SadConsole
 {
@@ -26,7 +27,7 @@ namespace SadConsole
         protected string title;
 
         [DataMember(Name="Theme")]
-        protected SadConsole.Themes.WindowTheme theme;
+        protected SadConsole.Themes.WindowTheme _theme;
         
         [DataMember(Name="TitleAlignment")]
         protected HorizontalAlignment titleAlignment;
@@ -100,10 +101,11 @@ namespace SadConsole
         /// </summary>
         public new SadConsole.Themes.WindowTheme Theme
         {
-            get => theme ?? SadConsole.Themes.Library.Default.WindowTheme;
+            get => _theme;
             set
             {
-                theme = value;
+                _theme = value;
+                IsDirty = true;
                 Invalidate();
             }
         }
@@ -113,7 +115,7 @@ namespace SadConsole
             : base(width, height)
         {
             IsVisible = false;
-
+            _theme = (WindowTheme)Themes.Library.Default.WindowTheme.Clone();
             Renderer = new SadConsole.Renderers.Window();
         }
         #endregion
