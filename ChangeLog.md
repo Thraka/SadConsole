@@ -1,4 +1,4 @@
-﻿## 08/20/2018 V7.0.0
+﻿## 08/21/2018 V7.0.0
 
 - Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
 - Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
@@ -13,7 +13,11 @@
 - Control themes completely rewritten. Themes control all drawing for a control now.
 - Windows/ControlsConsole use a theme for drawing.
 - InputBox renamed TextBox.
-
+- Removed GameHelpers namespace. Types moved to root namespace.
+- GameObject renamed to Entity.
+- Surface.RenderArea changed to Surface.ViewPort
+- Readded Zone and HotSpot types.
+- Removed random level generation.
 
 ## 06/11/2018
 

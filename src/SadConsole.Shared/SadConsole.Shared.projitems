@@ -62,6 +62,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Fade.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\ICellEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Recolor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\Game.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics.MonoGame\SadConsoleGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hotspot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\AsciiKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ConsoleViewInputHandler.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Color.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\ISerialize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\LayeredSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Point.cs" />
@@ -147,5 +150,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Timer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowConsole.Static.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Zone.cs" />
   </ItemGroup>
 </Project>

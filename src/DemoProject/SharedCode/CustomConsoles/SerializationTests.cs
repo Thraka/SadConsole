@@ -91,7 +91,7 @@ namespace StarterProject.CustomConsoles
             optionButtonAnimated.IsSelectedChanged += OptionButton_IsSelectedChanged;
             controlsConsole.Add(optionButtonAnimated);
 
-            var buttonSave = new SadConsole.Controls.Button(17)
+            var buttonSave = new SadConsole.Controls.Button(17, 1)
             {
                 Text = "Save and Load",
                 Position = new Point(controlsConsole.Width - 19, 1)

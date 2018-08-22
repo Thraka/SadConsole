@@ -144,7 +144,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        public override void Invalidate()
+        public new virtual void Invalidate()
         {
             Theme.Draw(this, this);
             IsDirty = true;

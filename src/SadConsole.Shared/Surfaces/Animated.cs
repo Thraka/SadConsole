@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System;
+using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 
@@ -21,6 +22,9 @@ namespace SadConsole.Surfaces
         public event System.EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
 
         #region Variables
+
+        protected internal List<BasicNoDraw> frames = new List<BasicNoDraw>();
+
         /// <summary>
         /// Time counter for the naimation
         /// </summary>
@@ -54,7 +58,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// All frames of the animation
         /// </summary>
-        public List<BasicNoDraw> Frames = new List<BasicNoDraw>();
+        public ReadOnlyCollection<BasicNoDraw> Frames => frames.AsReadOnly();
 
         /// <summary>
         /// The state of the animation.
@@ -78,7 +82,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// When true, the <see cref="Update"/> method will advance the frames.
         /// </summary>
-        public bool IsPlaying { get { return _isPlaying; } }
+        public bool IsPlaying => _isPlaying;
 
         /// <summary>
         /// The length of the animation.
@@ -97,7 +101,7 @@ namespace SadConsole.Surfaces
             get { return _currentFrameIndex; }
             set
             {
-                if (value < 0 || value >= Frames.Count)
+                if (value < 0 || value >= frames.Count)
                     _currentFrameIndex = 0;
                 else
                     _currentFrameIndex = value;
@@ -109,7 +113,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Indicates the animation is empty.
         /// </summary>
-        public bool IsEmpty { get { return Frames.Count == 0; } }
+        public bool IsEmpty { get { return frames.Count == 0; } }
 
         /// <summary>
         /// Gets the name of this animation.
@@ -121,7 +125,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         public BasicNoDraw CurrentFrame
         {
-            get { return Frames[_currentFrameIndex]; }
+            get { return frames[_currentFrameIndex]; }
         }
 
         /// <summary>
@@ -179,7 +183,7 @@ namespace SadConsole.Surfaces
 
             base.SetRenderCells();
 
-            if (Frames.Count > 0)
+            if (frames.Count > 0)
                 UpdateFrameReferences();
         }
 
@@ -188,7 +192,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         protected void UpdateFrameReferences()
         {
-            var frame = Frames[_currentFrameIndex];
+            var frame = frames[_currentFrameIndex];
             Cells = RenderCells = frame.Cells;
             DefaultBackground = frame.DefaultBackground;
             DefaultForeground = frame.DefaultForeground;
@@ -201,14 +205,14 @@ namespace SadConsole.Surfaces
         /// <returns>The created frame.</returns>
         public BasicNoDraw CreateFrame()
         {
-            if (Frames == null)
-                Frames = new List<BasicNoDraw>();
+            if (frames == null)
+                frames = new List<BasicNoDraw>();
 
             var frame = new BasicNoDraw(Width, Height);
             frame.DefaultBackground = DefaultBackground;
             frame.DefaultForeground = DefaultForeground;
             frame.Clear();
-            Frames.Add(frame);
+            frames.Add(frame);
             UpdateFrameReferences();
             return frame;
         }
@@ -221,7 +225,7 @@ namespace SadConsole.Surfaces
             if (IsEmpty || _animatedTime == 0f)
                 _timePerFrame = 0f;
             else
-                _timePerFrame = _animatedTime / Frames.Count;
+                _timePerFrame = _animatedTime / frames.Count;
         }
         
         /// <summary>
@@ -255,11 +259,6 @@ namespace SadConsole.Surfaces
             State = AnimationState.Playing;
         }
 
-        public override void Draw(TimeSpan timeElapsed)
-        {
-            base.Draw(timeElapsed);
-        }
-
         public override void Update(TimeSpan timeElapsed)
         {
             if (_isPlaying && _timePerFrame != 0f)
@@ -272,7 +271,7 @@ namespace SadConsole.Surfaces
                     _addedTime = 0f;
                     _currentFrameIndex++;
 
-                    if (_currentFrameIndex >= Frames.Count)
+                    if (_currentFrameIndex >= frames.Count)
                     {
                         if (Repeat)
                         {

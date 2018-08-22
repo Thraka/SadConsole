@@ -61,6 +61,7 @@ namespace SadConsole.SerializedTypes
         {
             return new BasicSurfaceSerialized()
             {
+                Font = surface.Font,
                 ViewPort = surface.ViewPort,
                 Cells = surface.Cells.Select(c => (CellSerialized) c).ToArray(),
                 Width = surface.Width,
@@ -76,7 +77,7 @@ namespace SadConsole.SerializedTypes
 
         public static implicit operator Surfaces.Basic(BasicSurfaceSerialized surface)
         {
-            return new Surfaces.Basic(surface.Width, surface.Height, surface.Font, surface.ViewPort,
+            return new Surfaces.Basic(surface.Width, surface.Height, surface.Font ?? Global.FontDefault, surface.ViewPort,
                 surface.Cells.Select(c => (Cell) c).ToArray())
             {
                 Tint = surface.Tint,
@@ -90,7 +91,7 @@ namespace SadConsole.SerializedTypes
 
         public static implicit operator Surfaces.BasicNoDraw(BasicSurfaceSerialized surface)
         {
-            return new Surfaces.BasicNoDraw(surface.Width, surface.Height, surface.Font, surface.ViewPort,
+            return new Surfaces.BasicNoDraw(surface.Width, surface.Height, surface.Font ?? Global.FontDefault, surface.ViewPort,
                 surface.Cells.Select(c => (Cell) c).ToArray())
             {
                 Tint = surface.Tint,

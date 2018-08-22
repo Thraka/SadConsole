@@ -175,9 +175,10 @@ namespace SadConsole
             int diffHeight = (Global.RenderHeight - oldHeight) / 2;
 
             //Center screen
+#if MONOGAME
             if (Game.Instance != null)
                 Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
-
+#endif
             manager.ApplyChanges();
         }
 

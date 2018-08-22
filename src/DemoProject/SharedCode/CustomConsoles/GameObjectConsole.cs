@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using System;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ColorHelper = Microsoft.Xna.Framework.Color;
@@ -13,19 +14,19 @@ namespace StarterProject.CustomConsoles
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
-        private SadConsole.GameHelpers.GameObject player;
+        private SadConsole.Entity player;
         private Point playerPreviousPosition;
         
         public GameObjectConsole()
             : base(80, 23)
         {
-            var animation = new AnimatedSurface("default", 1, 1);
+            var animation = new Animated("default", 1, 1);
             var frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
 
-            player = new SadConsole.GameHelpers.GameObject(animation);
+            player = new SadConsole.Entity(animation);
             //player.RepositionRects = true;
-            player.Position = new Point(textSurface.Width / 2, textSurface.Height / 2);
+            player.Position = new Point(Width / 2, Height / 2);
             playerPreviousPosition = player.Position;
 
             // Setup this console to accept keyboard input.
@@ -33,6 +34,11 @@ namespace StarterProject.CustomConsoles
             IsVisible = false;
 
             Children.Add(player);
+        }
+
+        public override void Draw(TimeSpan timeElapsed)
+        {
+            base.Draw(timeElapsed);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
@@ -73,7 +79,7 @@ namespace StarterProject.CustomConsoles
             if (keyHit)
             {
                 // Check if the new position is valid
-                if (textSurface.RenderArea.Contains(player.Position))
+                if (ViewPort.Contains(player.Position))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
                     SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);

@@ -59,7 +59,7 @@ namespace SadConsole.SerializedTypes
             return new Surfaces.Animated(serializedObject.Name, serializedObject.Width,
                                          serializedObject.Height, serializedObject.Font)
             {
-                Frames = new List<Surfaces.BasicNoDraw>(serializedObject.Frames.Select(s => (Surfaces.BasicNoDraw) s).ToArray()),
+                frames = new List<Surfaces.BasicNoDraw>(serializedObject.Frames.Select(s => (Surfaces.BasicNoDraw) s).ToArray()),
                 CurrentFrameIndex = 0,
                 AnimationDuration = serializedObject.AnimationDuration,
                 Repeat = serializedObject.Repeat,
