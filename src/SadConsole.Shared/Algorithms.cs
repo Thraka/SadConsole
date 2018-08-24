@@ -19,7 +19,7 @@ namespace SadConsole
         /// <typeparam name="T">The type being swapped.</typeparam>
         /// <param name="lhs">Left value.</param>
         /// <param name="rhs">Right value.</param>
-        private static void Swap<T>(ref T lhs, ref T rhs) { T temp; temp = lhs; lhs = rhs; rhs = temp; }
+        private static void Swap<T>(ref T lhs, ref T rhs) {var temp = lhs; lhs = rhs; rhs = temp; }
 
         /// <summary>
         /// Plot the line from (x0, y0) to (x1, y1) using steep.

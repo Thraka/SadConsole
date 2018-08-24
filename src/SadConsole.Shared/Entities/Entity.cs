@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 
-namespace SadConsole
+namespace SadConsole.Entities
 {
     /// <summary>
     /// A positionable and animated game object.
@@ -74,15 +74,23 @@ namespace SadConsole
         /// <summary>
         /// Offsets the position by this amount.
         /// </summary>
-        public Point PositionOffset { get { return positionOffset; } set { positionOffset = value; OnCalculateRenderPosition(); } }
+        public Point PositionOffset
+        {
+            get => positionOffset;
+            set
+            {
+                positionOffset = value;
+                OnCalculateRenderPosition();
+            }
+        }
 
         /// <summary>
-        /// Creates a new GameObject with the default font.
+        /// Creates a new Entity with the default font.
         /// </summary>
         public Entity(int width, int height) : this(width, height, Global.FontDefault) { }
 
         /// <summary>
-        /// Creates a new GameObject.
+        /// Creates a new Entity.
         /// </summary>
         public Entity(int width, int height, Font font)
         {
@@ -93,7 +101,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new GameObject with a default animation/
+        /// Creates a new Entity with a default animation/
         /// </summary>
         /// <param name="animation">The default animation. The animation will have its <see cref="Surfaces.Animated.Name"/> property changesd to "default".</param>
         public Entity(Animated animation)
@@ -109,14 +117,30 @@ namespace SadConsole
             AnimationStateChanged?.Invoke(sender, e);
         }
 
+        /// <inheritdoc />
+        public override void OnCalculateRenderPosition()
+        {
+            CalculatedPosition = Position + PositionOffset + Parent?.CalculatedPosition ?? Point.Zero;
+
+            foreach (var child in Children)
+            {
+                child.OnCalculateRenderPosition();
+            }
+        }
+
+        public override void Draw(TimeSpan timeElapsed)
+        {
+            base.Draw(timeElapsed);
+        }
+
         /// <summary>
-        /// Saves the <see cref="GameObject"/> to a file.
+        /// Saves the <see cref="Entity"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
         public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
 
         /// <summary>
-        /// Loads a <see cref="GameObject"/> from a file.
+        /// Loads a <see cref="Entity"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>

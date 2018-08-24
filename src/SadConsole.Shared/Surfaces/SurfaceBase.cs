@@ -93,6 +93,7 @@ namespace SadConsole.Surfaces
             set
             {
                 _font = value;
+                SetRenderCells();
                 OnFontChanged();
             }
         }
@@ -154,6 +155,7 @@ namespace SadConsole.Surfaces
 
                 IsDirty = true;
                 SetRenderCells();
+                OnViewPortChanged();
             }
         }
 
@@ -302,7 +304,12 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Called when the <see cref="Font"/> property changes.
         /// </summary>
-        protected virtual void OnFontChanged() => SetRenderCells();
+        protected virtual void OnFontChanged() { }
+
+        /// <summary>
+        /// Called when the <see cref="ViewPort"/> property changes.
+        /// </summary>
+        protected virtual void OnViewPortChanged() { }
 
         /// <summary>
         /// Remaps the cells of this surface to a view of the <paramref name="surface"/>.

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
@@ -1231,22 +1233,27 @@ namespace SadConsole.Surfaces
             return cells;
         }
 
-        public void DrawBox(Rectangle area, Color? foreground = null, Color? background = null, int? glyph = null, int[] connectedLineStyle = null, bool fill = false)
+        /// <summary>
+        /// Draws a box.
+        /// </summary>
+        /// <param name="area">The area of the box.</param>
+        /// <param name="border">The border style.</param>
+        /// <param name="fill">The fill style. If null, the box is not filled.</param>
+        /// <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
+        public void DrawBox(Rectangle area, Cell border, Cell fill = null, int[] connectedLineStyle = null)
         {
-            if (glyph == null && connectedLineStyle == null)
-                throw new ArgumentNullException(nameof(glyph), $"Either parameter {nameof(glyph)} or {nameof(connectedLineStyle)} must be set to a value");
-
-            if (glyph != null)
-                connectedLineStyle = Enumerable.Range(0, Enum.GetValues(typeof(ConnectedLineIndex)).Length).Select(_ => glyph.Value).ToArray();
+            if (connectedLineStyle == null)
+                connectedLineStyle = Enumerable.Range(0, Enum.GetValues(typeof(ConnectedLineIndex)).Length)
+                    .Select(_ => border.Glyph).ToArray();
 
             if (!ValidateLinestyle(connectedLineStyle))
                 throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
 
             // Draw the major sides
-            DrawLine(area.Location, area.Location + new Point(area.Width - 1, 0), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Top]);
-            DrawLine(area.Location + new Point(0, area.Height - 1), area.Location + new Point(area.Width - 1, area.Height - 1), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Bottom]);
-            DrawLine(area.Location, area.Location + new Point(0, area.Height - 1), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Left]);
-            DrawLine(area.Location + new Point(area.Width - 1, 0), area.Location + new Point(area.Width - 1, area.Height - 1), foreground, background, connectedLineStyle[(int)ConnectedLineIndex.Right]);
+            DrawLine(area.Location, area.Location + new Point(area.Width - 1, 0), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Top]);
+            DrawLine(area.Location + new Point(0, area.Height - 1), area.Location + new Point(area.Width - 1, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Bottom]);
+            DrawLine(area.Location, area.Location + new Point(0, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Left]);
+            DrawLine(area.Location + new Point(area.Width - 1, 0), area.Location + new Point(area.Width - 1, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Right]);
 
             // Tweak the corners
             SetGlyph(area.Left, area.Top, connectedLineStyle[(int) ConnectedLineIndex.TopLeft]);
@@ -1255,9 +1262,52 @@ namespace SadConsole.Surfaces
             SetGlyph(area.Right - 1, area.Bottom - 1, connectedLineStyle[(int) ConnectedLineIndex.BottomRight]);
 
             // Fill
-            if (!fill) return;
+            if (fill == null) return;
             area.Inflate(-1, -1);
-            Fill(area, foreground, background, 0);
+            Fill(area, fill.Foreground, fill.Background, fill.Glyph);
+        }
+
+        /// <summary>
+        /// Draws an ellipse.
+        /// </summary>
+        /// <param name="area">The area the ellipse </param>
+        /// <param name="outer">The appearance of the outer line of the ellipse.</param>
+        /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
+        public void DrawCircle(Rectangle area, Cell outer, Cell inner = null)
+        {
+            List<Cell> cells = new List<Cell>(area.Width * area.Height);
+            List<Cell> masterCells = new List<Cell>(Cells);
+
+            Algorithms.Ellipse(area.X, area.Y, area.Right - 1, area.Bottom - 1, (x, y) => {
+                if (IsValidCell(x, y))
+                {
+                    SetCellAppearance(x, y, outer);
+                    cells.Add(this[x, y]);
+                }
+            });
+
+            if (inner != null)
+            {
+                Func<Cell, bool> isTargetCell = (c) => !cells.Contains(c);
+                Action<Cell> fillCell = (c) => { inner.CopyAppearanceTo(c);
+                    cells.Add(c);
+                };
+                Func<Cell, SadConsole.Algorithms.NodeConnections<Cell>> getConnectedCells = (c) =>
+                {
+                    Algorithms.NodeConnections<Cell> connections = new Algorithms.NodeConnections<Cell>();
+
+                    Point position = GetPointFromIndex(masterCells.IndexOf(c));
+
+                    connections.West = IsValidCell(position.X - 1, position.Y) ? this[position.X - 1, position.Y] : null;
+                    connections.East = IsValidCell(position.X + 1, position.Y) ? this[position.X + 1, position.Y] : null;
+                    connections.North = IsValidCell(position.X, position.Y - 1)  ? this[position.X, position.Y - 1] : null;
+                    connections.South = IsValidCell(position.X, position.Y + 1)  ? this[position.X, position.Y + 1] : null;
+
+                    return connections;
+                };
+
+                Algorithms.FloodFill(this[area.Center.X, area.Center.Y], isTargetCell, fillCell, getConnectedCells);
+            }
         }
 
         /// <summary>

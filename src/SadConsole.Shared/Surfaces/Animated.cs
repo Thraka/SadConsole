@@ -303,6 +303,17 @@ namespace SadConsole.Surfaces
             return Name;
         }
 
+        /// <inheritdoc />
+        public override void OnCalculateRenderPosition()
+        {
+            CalculatedPosition = Position - Center + Parent?.CalculatedPosition ?? Point.Zero;
+
+            foreach (var child in Children)
+            {
+                child.OnCalculateRenderPosition();
+            }
+        }
+
         #endregion
 
 

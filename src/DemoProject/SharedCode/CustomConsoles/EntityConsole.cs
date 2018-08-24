@@ -10,21 +10,21 @@ using SadConsole.Surfaces;
 
 namespace StarterProject.CustomConsoles
 {
-    class GameObjectConsole: Console
+    class EntityConsole: Console
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
-        private SadConsole.Entity player;
+        private SadConsole.Entities.Entity player;
         private Point playerPreviousPosition;
         
-        public GameObjectConsole()
+        public EntityConsole()
             : base(80, 23)
         {
             var animation = new Animated("default", 1, 1);
             var frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
 
-            player = new SadConsole.Entity(animation);
+            player = new SadConsole.Entities.Entity(animation);
             //player.RepositionRects = true;
             player.Position = new Point(Width / 2, Height / 2);
             playerPreviousPosition = player.Position;
@@ -34,11 +34,6 @@ namespace StarterProject.CustomConsoles
             IsVisible = false;
 
             Children.Add(player);
-        }
-
-        public override void Draw(TimeSpan timeElapsed)
-        {
-            base.Draw(timeElapsed);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)

@@ -88,7 +88,7 @@ namespace SadConsole.Themes
                 startingRow = 1;
                 columnOffset = 1;
                 columnEnd = control.Width - 2;
-                control.Surface.DrawBox(new Rectangle(0, 0, control.Width, control.Height), borderAppearance.Foreground, borderAppearance.Background, null, BorderLineStyle, true);
+                control.Surface.DrawBox(new Rectangle(0, 0, control.Width, control.Height), new Cell(borderAppearance.Foreground, borderAppearance.Background, 0), null, BorderLineStyle);
             }
             else
             {

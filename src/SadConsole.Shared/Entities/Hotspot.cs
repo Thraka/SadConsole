@@ -2,12 +2,12 @@
 
 using System.Collections.Generic;
 
-namespace SadConsole
+namespace SadConsole.Entities
 {
     /// <summary>
     /// A group of positions with a set of settings.
     /// </summary>
-    public class Hotspot
+    public class Hotspot: ScreenObject
     {
         /// <summary>
         /// The hotspot position on the map.

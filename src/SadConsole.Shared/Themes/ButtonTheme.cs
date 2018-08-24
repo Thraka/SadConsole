@@ -272,7 +272,7 @@ namespace SadConsole.Themes
 
             control.Surface.Print(0, middle, control.Text.Align(control.TextAlignment, control.Width), textColor);
                 
-            control.Surface.DrawBox(new Rectangle(0,0,control.Width, control.Height), topleftcolor, TopLeftLineColors.Background,
+            control.Surface.DrawBox(new Rectangle(0,0,control.Width, control.Height), new Cell(topleftcolor, TopLeftLineColors.Background, 0),
                 connectedLineStyle: control.Parent.Font.Master.IsSadExtended ? SurfaceBase.ConnectedLineThinExtended : SurfaceBase.ConnectedLineThin);
 
             control.Surface.DrawLine(Point.Zero, new Point(control.Width - 1, 0), topleftcolor, appearance.Background);

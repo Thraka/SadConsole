@@ -91,8 +91,8 @@ namespace SadConsole.Themes
 
             if (!(console is Window window)) return;
 
-            hostSurface.DrawBox(new Rectangle(0, 0, hostSurface.Width, hostSurface.Height), BorderStyle.Foreground,
-                BorderStyle.Background, null, BorderLineStyle);
+            hostSurface.DrawBox(new Rectangle(0, 0, hostSurface.Width, hostSurface.Height), new Cell(BorderStyle.Foreground,
+                BorderStyle.Background, 0), null, BorderLineStyle);
 
             // Draw title
             var adjustedText = "";

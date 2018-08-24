@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Linq;
 using Newtonsoft.Json;
+using SadConsole.Entities;
 using SadConsole.Surfaces;
 
 namespace SadConsole.SerializedTypes
@@ -39,44 +40,44 @@ namespace SadConsole.SerializedTypes
         [DataMember] public string Name;
 
         
-        public static implicit operator EntitySerialized(Entity gameObject)
+        public static implicit operator EntitySerialized(Entity entity)
         {
             var serializedObject = new EntitySerialized()
             {
-                AnimationName = gameObject.Animation != null ? gameObject.Animation.Name : "",
-                Animations = gameObject.Animations.Values.Select(a => (AnimatedSurfaceSerialized)a).ToList(),
-                IsVisible = gameObject.IsVisible,
-                Position = gameObject.Position,
-                PositionOffset = gameObject.PositionOffset,
-                UsePixelPositioning = gameObject.UsePixelPositioning,
-                Name = gameObject.Name,
+                AnimationName = entity.Animation != null ? entity.Animation.Name : "",
+                Animations = entity.Animations.Values.Select(a => (AnimatedSurfaceSerialized)a).ToList(),
+                IsVisible = entity.IsVisible,
+                Position = entity.Position,
+                PositionOffset = entity.PositionOffset,
+                UsePixelPositioning = entity.UsePixelPositioning,
+                Name = entity.Name,
             };
 
-            if (!gameObject.Animations.ContainsKey(serializedObject.AnimationName))
-                serializedObject.Animations.Add(gameObject.Animation);
+            if (!entity.Animations.ContainsKey(serializedObject.AnimationName))
+                serializedObject.Animations.Add(entity.Animation);
 
             return serializedObject;
         }
 
         public static implicit operator Entity(EntitySerialized serializedObject)
         {
-            var gameObject = new Entity(1, 1);
+            var entity = new Entity(1, 1);
 
             foreach (var item in serializedObject.Animations)
-                gameObject.Animations[item.Name] = item;
+                entity.Animations[item.Name] = item;
 
-            if (gameObject.Animations.ContainsKey(serializedObject.AnimationName))
-                gameObject.Animation = gameObject.Animations[serializedObject.AnimationName];
+            if (entity.Animations.ContainsKey(serializedObject.AnimationName))
+                entity.Animation = entity.Animations[serializedObject.AnimationName];
             else
-                gameObject.Animation = serializedObject.Animations[0];
+                entity.Animation = serializedObject.Animations[0];
 
-            gameObject.IsVisible = serializedObject.IsVisible;
-            gameObject.Position = serializedObject.Position;
-            gameObject.PositionOffset = serializedObject.PositionOffset;
-            gameObject.UsePixelPositioning = serializedObject.UsePixelPositioning;
-            gameObject.Name = serializedObject.Name;
+            entity.IsVisible = serializedObject.IsVisible;
+            entity.Position = serializedObject.Position;
+            entity.PositionOffset = serializedObject.PositionOffset;
+            entity.UsePixelPositioning = serializedObject.UsePixelPositioning;
+            entity.Name = serializedObject.Name;
 
-            return gameObject;
+            return entity;
         }
     }
 }

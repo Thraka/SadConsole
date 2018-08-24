@@ -61,6 +61,7 @@ namespace SadConsole
                     _parentScreen = value;
                     _parentScreen.Children.Add(this);
                     OnCalculateRenderPosition();
+                    OnParentChanged(null, _parentScreen);
                 }
                 else
                 {
@@ -72,6 +73,7 @@ namespace SadConsole
                     _parentScreen?.Children.Add(this);
 
                     OnCalculateRenderPosition();
+                    OnParentChanged(oldParent, _parentScreen);
                 }
             }
         }
@@ -149,15 +151,7 @@ namespace SadConsole
         /// </summary>
         public virtual void OnCalculateRenderPosition()
         {
-            CalculatedPosition = Position;
-            ScreenObject parent = Parent;
-
-            //TODO couldn't this just be parent.CalculatedPosition + this.Position and then skip the whole loop?
-            while (parent != null)
-            {
-                CalculatedPosition += parent.Position;
-                parent = parent.Parent;
-            }
+            CalculatedPosition = Position + Parent?.CalculatedPosition ?? Point.Zero;
 
             foreach (var child in Children)
             {

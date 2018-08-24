@@ -18,6 +18,8 @@
 - Surface.RenderArea changed to Surface.ViewPort
 - Readded Zone and HotSpot types.
 - Removed random level generation.
+- Added Entities.EntityManager which helps control visibility and offsets based on a parent console.
+
 
 ## 06/11/2018
 
