@@ -36,12 +36,12 @@ namespace SadConsole.Readers
         /// <summary>
         /// The total number of layers for this image.
         /// </summary>
-        public int LayerCount { get { return layers.Count; } }
+        public int LayerCount => layers.Count;
 
         /// <summary>
         /// A read-only collection of layers.
         /// </summary>
-        public System.Collections.ObjectModel.ReadOnlyCollection<Layer> Layers { get { return new System.Collections.ObjectModel.ReadOnlyCollection<Layer>(layers); } }
+        public System.Collections.ObjectModel.ReadOnlyCollection<Layer> Layers => new System.Collections.ObjectModel.ReadOnlyCollection<Layer>(layers);
 
         /// <summary>
         /// Creates a new RexPaint image.

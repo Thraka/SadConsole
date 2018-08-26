@@ -17,18 +17,15 @@ namespace StarterProject.CustomConsoles
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
         private SadConsole.Entities.Entity player;
         private Point playerPreviousPosition;
-        private SadConsole.Entities.Zone zone1;
         
         public EntityConsole()
-            : base(90, 24
-                , new Rectangle(1,1,80,23))
+            : base(80, 23)
         {
             var animation = new Animated("default", 1, 1);
             var frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
 
-            player = new SadConsole.Entities.Entity(animation);
-            //player.RepositionRects = true;
+            player = new Entity(animation);
             player.Position = new Point(Width / 2, Height / 2);
             playerPreviousPosition = player.Position;
 
@@ -36,24 +33,9 @@ namespace StarterProject.CustomConsoles
             UseKeyboard = true;
             IsVisible = false;
 
-            zone1 = new Zone(new Rectangle(1, 1, 10, 10));
-            zone1.DebugTitle = "Zone1";
-            zone1.DebugAppearance = new Cell(Color.White, Color.DarkGreen);
-            zone1.IsVisible = true;
-
-            var spot = new Hotspot();
-            spot.DebugAppearance = new Cell(Color.Green, Color.Yellow, 99);
-            spot.IsVisible = true;
-            spot.Positions.Add(new Point(1, 1));
-            spot.Positions.Add(new Point(25, 1));
-            spot.Positions.Add(new Point(25, 9));
-            spot.Positions.Add(new Point(14, 14));
-
             EntityManager manager = new EntityManager();
 
             manager.Entities.Add(player);
-            manager.Zones.Add(zone1);
-            manager.Hotspots.Add(spot);
 
             Children.Add(manager);
         }

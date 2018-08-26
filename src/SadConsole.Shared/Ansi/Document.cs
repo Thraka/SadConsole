@@ -14,7 +14,7 @@ namespace SadConsole.Ansi
 
         public byte[] AnsiBytes
         {
-            get { return _ansiBytes; }
+            get => _ansiBytes;
             set
             {
                 _ansiBytes = value;
@@ -28,7 +28,7 @@ namespace SadConsole.Ansi
             }
         }
 
-        public string AnsiString { get { return _ansiData; } }
+        public string AnsiString => _ansiData;
 
         public MemoryStream Stream { get; private set; }
 

@@ -25,8 +25,8 @@ namespace SadConsole
         /// <returns>A color.</returns>
         public Color this[int index]
         {
-            get { return colors[index]; }
-            set { colors[index] = value; }
+            get => colors[index];
+            set => colors[index] = value;
         }
 
         /// <summary>

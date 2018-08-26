@@ -54,7 +54,7 @@ namespace SadConsole
         /// </summary>
         public Point Position
         {
-            get { return position; }
+            get => position;
             set
             {
                 if (editor != null)
@@ -92,8 +92,8 @@ namespace SadConsole
         /// </summary>
         public int Row
         {
-            get { return position.Y; }
-            set { position.Y = value; }
+            get => position.Y;
+            set => position.Y = value;
         }
 
         /// <summary>
@@ -101,8 +101,8 @@ namespace SadConsole
         /// </summary>
         public int Column
         {
-            get { return position.X; }
-            set { position.X = value; }
+            get => position.X;
+            set => position.X = value;
         }
 
         /// <summary>

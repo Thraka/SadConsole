@@ -15,7 +15,7 @@ namespace SadConsole.Instructions
 
         public IEnumerable<InstructionBase> Instructions
         {
-            get { return _instructions; }
+            get => _instructions;
             set
             {
                 if (value == null)

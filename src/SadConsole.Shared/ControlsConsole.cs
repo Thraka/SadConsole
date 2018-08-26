@@ -62,25 +62,19 @@ namespace SadConsole
         /// <summary>
         /// Gets a read-only collection of the controls this console contains.
         /// </summary>
-        public System.Collections.ObjectModel.ReadOnlyCollection<ControlBase> Controls
-        {
-            get { return _controls.AsReadOnly(); }
-        }
+        public System.Collections.ObjectModel.ReadOnlyCollection<ControlBase> Controls => _controls.AsReadOnly();
 
         /// <summary>
         /// Gets the control currently capturing mouse events.
         /// </summary>
-        public ControlBase CapturedControl
-        {
-            get { return _capturedControl; }
-        }
+        public ControlBase CapturedControl => _capturedControl;
 
         /// <summary>
         /// Gets or sets the control that has keyboard focus.
         /// </summary>
         public ControlBase FocusedControl
         {
-            get { return _focusedControl; }
+            get => _focusedControl;
             set
             {
                 if (!DisableControlFocusing)
@@ -140,13 +134,6 @@ namespace SadConsole
             Invalidate();
         }
         #endregion
-
-        /// <summary>
-        /// Marks the text surface as dirty when a control changes appearance.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        //protected void ControlChanged(ControlBase control) => IsDirty = true;
-
 
         /// <summary>
         /// Adds an existing control to this console.

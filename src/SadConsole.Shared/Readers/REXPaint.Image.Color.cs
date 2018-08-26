@@ -56,7 +56,7 @@ namespace SadConsole.Readers
             /// <summary>
             /// Returns the transparent color used by RexPaint: rgb(255, 0, 255).
             /// </summary>
-            public static Color Transparent { get { return new Color(255, 0, 255); } }
+            public static Color Transparent => new Color(255, 0, 255);
         }
     }
 }

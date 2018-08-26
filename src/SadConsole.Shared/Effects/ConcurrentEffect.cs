@@ -19,7 +19,7 @@
         /// </summary>
         public IEnumerable<ICellEffect> Effects
         {
-            get { return _effects; }
+            get => _effects;
             set
             {
                 if (value == null)

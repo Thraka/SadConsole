@@ -3,6 +3,9 @@ using SadConsole.Input;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// Defines a console object.
+    /// </summary>
     public interface IConsole
     {
         /// <summary>
@@ -16,9 +19,8 @@ namespace SadConsole
         bool IsExclusiveMouse { get; set; }
 
         /// <summary>
-        /// Gets or sets this console as the <see cref="Global.InputTargets.Console"/> value.
+        /// Gets or sets this console as the active input target.
         /// </summary>
-        /// <remarks>If the <see cref="Console.ActiveConsoles.Console"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
         bool IsFocused { get; set; }
 
         /// <summary>

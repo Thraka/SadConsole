@@ -151,7 +151,7 @@ namespace SadConsole
         /// </summary>
         public virtual void OnCalculateRenderPosition()
         {
-            CalculatedPosition = Position + Parent?.CalculatedPosition ?? Point.Zero;
+            CalculatedPosition = Position + (Parent?.CalculatedPosition ?? Point.Zero);
 
             foreach (var child in Children)
             {

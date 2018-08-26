@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Effects;
 using SadConsole.Input;
+using SadConsole.Surfaces;
 
 namespace SadConsole
 {
@@ -53,7 +54,7 @@ namespace SadConsole
         public bool IsExclusiveMouse { get; set; }
 
         /// <summary>
-        /// Gets or sets this console as the <see cref="Global.InputTargets.Console"/> value.
+        /// Gets or sets this console as the focused console for input.
         /// </summary>
         /// <remarks>If the <see cref="Console.ActiveConsoles.Console"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
         [DataMember]
@@ -103,18 +104,10 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        public new Cell this[int x, int y]
-        {
-            get => base[x, y];
-            //set => base[x, y] = value;
-        }
+        public new Cell this[int x, int y] => base[x, y];
 
         /// <inheritdoc />
-        public new Cell this[int index]
-        {
-            get => base[index];
-            //set => base[index] = value;
-        }
+        public new Cell this[int index] => base[index];
 
         /// <summary>
         /// Creates a new text surface with the specified width and height.
@@ -131,7 +124,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
-        /// <param name="viewPort">Initial value for the <see cref="ViewPort"/> view.</param>
+        /// <param name="viewPort">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
         public Console(int width, int height, Rectangle viewPort) : this(width, height, Global.FontDefault, viewPort, null)
         {
 
@@ -154,7 +147,7 @@ namespace SadConsole
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        /// <param name="viewPort">Initial value for the <see cref="ViewPort"/> view.</param>
+        /// <param name="viewPort">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
         public Console(int width, int height, Font font, Rectangle viewPort) : this(width, height, font, viewPort, null)
         {
 
@@ -167,7 +160,7 @@ namespace SadConsole
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        /// <param name="viewPort">Initial value for the <see cref="ViewPort"/> view.</param>
+        /// <param name="viewPort">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
         public Console(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells): base (width, height, font, viewPort, initialCells)
         {
             Cursor = new Cursor(this);
@@ -204,7 +197,7 @@ namespace SadConsole
         /// </summary>
         protected virtual void OnFocusLost()
         {
-            if (AutoCursorOnFocus == true)
+            if (AutoCursorOnFocus)
                 Cursor.IsVisible = false;
         }
 
@@ -213,7 +206,7 @@ namespace SadConsole
         /// </summary>
         protected virtual void OnFocused()
         {
-            if (AutoCursorOnFocus == true)
+            if (AutoCursorOnFocus)
                 Cursor.IsVisible = true;
         }
 
@@ -222,7 +215,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="surface"></param>
         /// <returns>A new console.</returns>
-        public static Console FromSurface(Surfaces.SurfaceBase surface)
+        public static Console FromSurface(SurfaceBase surface)
         {
             return new Console(surface.Width, surface.Height, surface.Font, surface.ViewPort, surface.Cells);
         }

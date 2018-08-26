@@ -30,11 +30,11 @@ namespace SadConsole.Ansi
 
         public ICellEffect BlinkEffect { get; set; }
 
-        public Cursor Cursor { get { return _cursor; } }
+        public Cursor Cursor => _cursor;
 
         public int CharactersPerSecond
         {
-            get { return _charsPerSecond; }
+            get => _charsPerSecond;
             set
             {
                 if (value != 0)

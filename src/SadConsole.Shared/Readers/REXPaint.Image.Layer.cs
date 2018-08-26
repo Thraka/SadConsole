@@ -28,7 +28,7 @@ namespace SadConsole.Readers
             /// <summary>
             /// Represents all cells of the layer.
             /// </summary>
-            public System.Collections.ObjectModel.ReadOnlyCollection<Cell> Cells { get { return new System.Collections.ObjectModel.ReadOnlyCollection<Cell>(cells); } }
+            public System.Collections.ObjectModel.ReadOnlyCollection<Cell> Cells => new System.Collections.ObjectModel.ReadOnlyCollection<Cell>(cells);
 
             /// <summary>
             /// Gets a cell by coordinates.

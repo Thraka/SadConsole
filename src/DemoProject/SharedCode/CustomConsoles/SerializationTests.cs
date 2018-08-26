@@ -195,6 +195,12 @@ namespace StarterProject.CustomConsoles
             return false;
         }
 
+        public override bool ProcessKeyboard(Keyboard info)
+        {
+            return controlsConsole.ProcessKeyboard(info);
+        }
+
+
         private void MakeBasicSurface()
         {
             basicSurface.Print(0, 0, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890".Repeat(9));

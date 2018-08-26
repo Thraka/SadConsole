@@ -67,12 +67,13 @@ namespace SadConsole
         /// <summary>
         /// Which glyph index is considered completely solid. Used for shading.
         /// </summary>
-        public int SolidGlyphIndex { get { return solidGlyphIndex; } set { solidGlyphIndex = value; solidGlyphRect = GlyphRects[value]; } }
+        public int SolidGlyphIndex { get => solidGlyphIndex;
+            set { solidGlyphIndex = value; solidGlyphRect = GlyphRects[value]; } }
 
         /// <summary>
         /// The rectangle associated with the <see cref="SolidGlyphIndex"/>.
         /// </summary>
-        public Rectangle SolidGlyphRectangle { get { return solidGlyphRect; } }
+        public Rectangle SolidGlyphRectangle => solidGlyphRect;
 
         /// <summary>
         /// A cached array of rectangles of individual glyphs.

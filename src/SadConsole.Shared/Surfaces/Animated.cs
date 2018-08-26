@@ -89,7 +89,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         public float AnimationDuration
         {
-            get { return _animatedTime; }
+            get => _animatedTime;
             set { _animatedTime = value; CalculateFrameDuration(); }
         }
 
@@ -98,7 +98,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         public int CurrentFrameIndex
         {
-            get { return _currentFrameIndex; }
+            get => _currentFrameIndex;
             set
             {
                 if (value < 0 || value >= frames.Count)
@@ -113,7 +113,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Indicates the animation is empty.
         /// </summary>
-        public bool IsEmpty { get { return frames.Count == 0; } }
+        public bool IsEmpty => frames.Count == 0;
 
         /// <summary>
         /// Gets the name of this animation.
@@ -123,17 +123,14 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public BasicNoDraw CurrentFrame
-        {
-            get { return frames[_currentFrameIndex]; }
-        }
+        public BasicNoDraw CurrentFrame => frames[_currentFrameIndex];
 
         /// <summary>
         /// Gets the current animation state.
         /// </summary>
         public AnimationState State
         {
-            get { return state; }
+            get => state;
             set
             {
                 var oldState = state;

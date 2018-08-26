@@ -14,7 +14,7 @@ namespace SadConsole
         protected List<ScreenObject> screens;
         protected WeakReference<ScreenObject> owningScreen;
 
-        public int Count { get { return screens.Count; } }
+        public int Count => screens.Count;
 
         /// <summary>
         /// When true, the collection cannot be modified.
