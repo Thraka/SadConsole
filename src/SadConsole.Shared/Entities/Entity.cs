@@ -128,11 +128,6 @@ namespace SadConsole.Entities
             }
         }
 
-        public override void Draw(TimeSpan timeElapsed)
-        {
-            base.Draw(timeElapsed);
-        }
-
         /// <summary>
         /// Saves the <see cref="Entity"/> to a file.
         /// </summary>

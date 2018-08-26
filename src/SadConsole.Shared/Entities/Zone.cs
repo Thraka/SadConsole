@@ -16,8 +16,8 @@ namespace SadConsole.Entities
     [DataContract]
     public class Zone: ScreenObject
     {
-        private Surfaces.Basic _debugSurface;
-        private Surfaces.SurfaceBase _parentSurface;
+        private Basic _debugSurface;
+        private SurfaceBase _parentSurface;
         private string _title = "Zone";
         private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
 
@@ -56,18 +56,24 @@ namespace SadConsole.Entities
         /// Key-value pairs for the zone.
         /// </summary>
         [DataMember] public Dictionary<string, string> Settings = new Dictionary<string, string>();
-
+        
+        /// <summary>
+        /// Creates a new zone object with the specified area.
+        /// </summary>
+        /// <param name="area">The area of the zone.</param>
         public Zone(Rectangle area)
         {
             IsVisible = false;
             Area = area;
         }
 
+        /// <inheritdoc />
         protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
         {
             _parentSurface = newParent as SurfaceBase;
         }
 
+        /// <inheritdoc />
         protected override void OnVisibleChanged()
         {
             Rebuild();

@@ -10,6 +10,7 @@ namespace SadConsole.Entities
     /// <summary>
     /// A group of positions with a set of settings.
     /// </summary>
+    [DataContract]
     public class Hotspot: ScreenObject
     {
         private Surfaces.Basic _debugSurface;
@@ -19,6 +20,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// The hotspot position on the map.
         /// </summary>
+        [DataMember]
         public List<Point> Positions { get; } = new List<Point>();
 
         /// <summary>
@@ -38,8 +40,12 @@ namespace SadConsole.Entities
         /// <summary>
         /// Key-value pairs for the hotspot.
         /// </summary>
+        [DataMember]
         public Dictionary<string, string> Settings { get; } = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Creates a new hotspot object.
+        /// </summary>
         public Hotspot()
         {
             IsVisible = false;
@@ -55,11 +61,13 @@ namespace SadConsole.Entities
             return Positions.Contains(point);
         }
 
+        /// <inheritdoc />
         protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
         {
             _parentSurface = newParent as SurfaceBase;
         }
 
+        /// <inheritdoc />
         protected override void OnVisibleChanged()
         {
             Rebuild();
