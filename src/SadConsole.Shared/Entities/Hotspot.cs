@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using SadConsole.Surfaces;
 
 namespace SadConsole.Entities
 {
@@ -9,25 +12,38 @@ namespace SadConsole.Entities
     /// </summary>
     public class Hotspot: ScreenObject
     {
+        private Surfaces.Basic _debugSurface;
+        private Surfaces.SurfaceBase _parentSurface;
+        private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
+        
         /// <summary>
         /// The hotspot position on the map.
         /// </summary>
-        public List<Point> Positions = new List<Point>();
+        public List<Point> Positions { get; } = new List<Point>();
 
         /// <summary>
-        /// A title for the area.
+        /// A visual for the area to help debug.
         /// </summary>
-        public string DebugTitle;
-
-        /// <summary>
-        /// A visual for the hotspot to help debug.
-        /// </summary>
-        public Cell DebugAppearance = new Cell(Color.White, Color.Black, 0);
+        [DataMember]
+        public Cell DebugAppearance
+        {
+            get => _debugAppearance;
+            set
+            {
+                _debugAppearance = value;
+                Rebuild();
+            }
+        }
 
         /// <summary>
         /// Key-value pairs for the hotspot.
         /// </summary>
-        public Dictionary<string, string> Settings = new Dictionary<string, string>();
+        public Dictionary<string, string> Settings { get; } = new Dictionary<string, string>();
+
+        public Hotspot()
+        {
+            IsVisible = false;
+        }
 
         /// <summary>
         /// Return true when the specified point is in the list of <see cref="Positions"/>.
@@ -37,6 +53,48 @@ namespace SadConsole.Entities
         public bool Contains(Point point)
         {
             return Positions.Contains(point);
+        }
+
+        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        {
+            _parentSurface = newParent as SurfaceBase;
+        }
+
+        protected override void OnVisibleChanged()
+        {
+            Rebuild();
+        }
+
+        public override void Draw(TimeSpan timeElapsed)
+        {
+            if (IsVisible && _parentSurface != null)
+            {
+                foreach (var spot in Positions)
+                {
+                    if (!_parentSurface.ViewPort.Contains(spot)) continue;
+
+                    Global.DrawCalls.Add(new DrawCalls.DrawCallSurface(_debugSurface,
+                        spot - _parentSurface.ViewPort.Location + _parentSurface.CalculatedPosition,
+                        _parentSurface.UsePixelPositioning));
+                }
+            }
+
+            base.Draw(timeElapsed);
+        }
+
+
+        private void Rebuild()
+        {
+            if (IsVisible)
+            {
+                _debugSurface = new Basic(1, 1);
+                _debugSurface.DefaultBackground = _debugAppearance.Background;
+                _debugSurface.DefaultForeground = _debugAppearance.Foreground;
+                _debugSurface.SetCellAppearance(0, 0, _debugAppearance);
+                _debugSurface.Draw(TimeSpan.Zero);
+            }
+            else
+                _debugSurface = null;
         }
     }
 }

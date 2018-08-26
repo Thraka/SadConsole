@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using SadConsole.DrawCalls;
 using SadConsole.Surfaces;
+using SadConsole;
 
 namespace SadConsole.Entities
 {
@@ -16,6 +17,7 @@ namespace SadConsole.Entities
     public class Zone: ScreenObject
     {
         private Surfaces.Basic _debugSurface;
+        private Surfaces.SurfaceBase _parentSurface;
         private string _title = "Zone";
         private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
 
@@ -61,6 +63,11 @@ namespace SadConsole.Entities
             Area = area;
         }
 
+        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        {
+            _parentSurface = newParent as SurfaceBase;
+        }
+
         protected override void OnVisibleChanged()
         {
             Rebuild();
@@ -68,18 +75,28 @@ namespace SadConsole.Entities
 
         public override void Draw(TimeSpan timeElapsed)
         {
-            Global.DrawCalls.Add(new DrawCalls.DrawCallColoredRect(Area, DebugAppearance.Background));
+            if (IsVisible && _parentSurface != null)
+            {
+                if (_parentSurface.ViewPort.Intersects(Area))
+                {
+                    Global.DrawCalls.Add(new DrawCalls.DrawCallSurface(_debugSurface,
+                        Area.Location - _parentSurface.ViewPort.Location + _parentSurface.CalculatedPosition,
+                        _parentSurface.UsePixelPositioning));
+                }
+            }
 
             base.Draw(timeElapsed);
         }
+
         private void Rebuild()
         {
             if (IsVisible)
             {
-                //_debugSurface = new Basic(Area.Width, Area.Height);
-                //_debugSurface.
-                //_debugSurface.Print(0, 0, DebugTitle);
-                //_debugSurface.Draw(TimeSpan.Zero);
+                _debugSurface = new Basic(Area.Width, Area.Height);
+                _debugSurface.DefaultBackground = DebugAppearance.Background;
+                _debugSurface.Clear();
+                _debugSurface.Print(0, 0, DebugTitle, DebugAppearance);
+                _debugSurface.Draw(TimeSpan.Zero);
             }
             else
                 _debugSurface = null;

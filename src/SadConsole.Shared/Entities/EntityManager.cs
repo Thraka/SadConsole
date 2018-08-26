@@ -20,7 +20,18 @@ namespace SadConsole.Entities
         /// The entities this manager manages.
         /// </summary>
         public ObservableCollection<Entity> Entities { get; } = new ObservableCollection<Entity>();
-        
+
+        /// <summary>
+        /// The entities this manager manages.
+        /// </summary>
+        public ObservableCollection<Zone> Zones { get; } = new ObservableCollection<Zone>();
+
+        /// <summary>
+        /// The entities this manager manages.
+        /// </summary>
+        public ObservableCollection<Hotspot> Hotspots { get; } = new ObservableCollection<Hotspot>();
+
+
         /// <summary>
         /// Creates a new entity manager.
         /// </summary>
@@ -30,6 +41,9 @@ namespace SadConsole.Entities
             Children.IsLocked = true;
 
             Entities.CollectionChanged += EntitiesOnCollectionChanged;
+            Zones.CollectionChanged += EntitiesOnCollectionChanged;
+            Hotspots.CollectionChanged += EntitiesOnCollectionChanged;
+
         }
 
         private void EntitiesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -38,17 +52,17 @@ namespace SadConsole.Entities
             {
                 case NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
-                        ((Entity) item).Parent = Parent;
+                        ((ScreenObject) item).Parent = Parent;
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
-                        ((Entity)item).Parent = null;
+                        ((ScreenObject)item).Parent = null;
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var item in e.NewItems)
-                        ((Entity)item).Parent = Parent;
+                        ((ScreenObject)item).Parent = Parent;
                     foreach (var item in e.OldItems)
-                        ((Entity)item).Parent = null;
+                        ((ScreenObject)item).Parent = null;
 
                     break;
                 case NotifyCollectionChangedAction.Move:
@@ -71,6 +85,14 @@ namespace SadConsole.Entities
 
             if (_surfaceParent != null)
             {
+                foreach (var zone in Zones)
+                    if (zone.Parent != _surfaceParent)
+                        zone.Parent = _surfaceParent;
+
+                foreach (var spot in Hotspots)
+                    if (spot.Parent != _surfaceParent)
+                        spot.Parent = _surfaceParent;
+
                 foreach (var entity in Entities)
                     if (entity.Parent != _surfaceParent)
                         entity.Parent = _surfaceParent;
@@ -86,9 +108,14 @@ namespace SadConsole.Entities
 
             if (_cachedView != _surfaceParent.ViewPort)
                 Sync();
+
             else
+            {
                 foreach (var entity in Entities)
                     entity.IsVisible = _cachedView.Contains(entity.Position);
+            }
+
+
         }
 
         /// <summary>

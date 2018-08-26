@@ -6,6 +6,7 @@ using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using Console = SadConsole.Console;
 using SadConsole;
+using SadConsole.Entities;
 using SadConsole.Surfaces;
 
 namespace StarterProject.CustomConsoles
@@ -16,9 +17,11 @@ namespace StarterProject.CustomConsoles
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
         private SadConsole.Entities.Entity player;
         private Point playerPreviousPosition;
+        private SadConsole.Entities.Zone zone1;
         
         public EntityConsole()
-            : base(80, 23)
+            : base(90, 24
+                , new Rectangle(1,1,80,23))
         {
             var animation = new Animated("default", 1, 1);
             var frame = animation.CreateFrame();
@@ -33,7 +36,26 @@ namespace StarterProject.CustomConsoles
             UseKeyboard = true;
             IsVisible = false;
 
-            Children.Add(player);
+            zone1 = new Zone(new Rectangle(1, 1, 10, 10));
+            zone1.DebugTitle = "Zone1";
+            zone1.DebugAppearance = new Cell(Color.White, Color.DarkGreen);
+            zone1.IsVisible = true;
+
+            var spot = new Hotspot();
+            spot.DebugAppearance = new Cell(Color.Green, Color.Yellow, 99);
+            spot.IsVisible = true;
+            spot.Positions.Add(new Point(1, 1));
+            spot.Positions.Add(new Point(25, 1));
+            spot.Positions.Add(new Point(25, 9));
+            spot.Positions.Add(new Point(14, 14));
+
+            EntityManager manager = new EntityManager();
+
+            manager.Entities.Add(player);
+            manager.Zones.Add(zone1);
+            manager.Hotspots.Add(spot);
+
+            Children.Add(manager);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
