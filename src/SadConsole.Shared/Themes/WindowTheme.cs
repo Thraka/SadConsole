@@ -1,5 +1,4 @@
-﻿using System.Runtime.Remoting.Messaging;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 using System.Runtime.Serialization;
 using SadConsole.Surfaces;
