@@ -54,7 +54,7 @@ namespace SadConsole
         /// </summary>
         public EasingFunctions.EasingBase EasingFunction
         {
-            get { return _easingFunction; }
+            get => _easingFunction;
             set { _easingFunction = value; if (_easingFunction == null) _easingFunction = new EasingFunctions.Linear(); }
         }
 

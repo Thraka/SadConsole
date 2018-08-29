@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// Various settings for SadConsole.
+    /// </summary>
     public static class Settings
     {
         /// <summary>
@@ -59,6 +62,14 @@ namespace SadConsole
         /// </summary>
         public static Point WindowMinimumSize { get; set; } = Point.Zero;
 
+        /// <summary>
+        /// When set to true, all loading and saving performed by SadConsole uses GZIP. <see cref="Global.LoadFont(string)"/> does not use this setting and always runs uncompressed.
+        /// </summary>
+        public static bool SerializationIsCompressed { get; set; } = false;
+
+        /// <summary>
+        /// Toggles between windowed and fullscreen rendering for SadConsole.
+        /// </summary>
         public static void ToggleFullScreen()
         {
             Global.GraphicsDeviceManager.ApplyChanges();

@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using SadConsole.DrawCalls;
 
 namespace SadConsole
 {
@@ -35,11 +36,11 @@ namespace SadConsole
         /// A global reusable sprite batch.
         /// </summary>
         public static SpriteBatch SpriteBatch;
-        
+
         /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public static IScreen CurrentScreen = new Screen();
+        public static ScreenObject CurrentScreen = new ScreenObject();
 
         /// <summary>
         /// The stack of consoles that will receive keyboard and mouse input.
@@ -72,7 +73,6 @@ namespace SadConsole
         /// </summary>
         public static GameTime GameTimeRender;
 
-        #region Input
         /// <summary>
         /// Mouse state which is usually updated in the update pass.
         /// </summary>
@@ -82,7 +82,6 @@ namespace SadConsole
         /// Keyboard state which is usually updated in the update pass.
         /// </summary>
         public static Input.Keyboard KeyboardState = new Input.Keyboard();
-        #endregion
 
         #region Rendering
         /// <summary>
@@ -143,7 +142,7 @@ namespace SadConsole
             //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
             try
             {
-                var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
+                var masterFont = SadConsole.Serializer.Load<FontMaster>(font, false);
 
                 if (Fonts.ContainsKey(masterFont.Name))
                     Fonts.Remove(masterFont.Name);
@@ -153,10 +152,10 @@ namespace SadConsole
             }
             catch (System.Runtime.Serialization.SerializationException e)
             {
-                
+
                 throw;
             }
-            
+
         }
 
         /// <summary>

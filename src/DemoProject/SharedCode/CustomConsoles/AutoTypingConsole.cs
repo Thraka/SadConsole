@@ -11,7 +11,7 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class AutoTypingConsole : Console, IConsoleMetadata
+    class AutoTypingConsole : CustomConsole
     {
         SadConsole.Instructions.DrawString typingInstruction;
 
@@ -53,7 +53,7 @@ namespace StarterProject.CustomConsoles
             typingInstruction.Text = SadConsole.ColoredString.Parse(string.Join("\r\n", text));
             typingInstruction.TotalTimeToPrint = 8; // 0.5 seconds per line of text
 
-            //VirtualCursor.IsVisible = true;
+            //Cursor.IsVisible = true;
             IsVisible = false;
         }
 

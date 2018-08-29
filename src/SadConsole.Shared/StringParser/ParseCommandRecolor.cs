@@ -54,7 +54,7 @@ namespace SadConsole.StringParser
 
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ISurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, Surfaces.SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             Color newColor;
 

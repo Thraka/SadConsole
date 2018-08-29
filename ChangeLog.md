@@ -1,4 +1,26 @@
-﻿## 06/11/2018
+﻿## 08/29/2018 V7.0.0
+
+- Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
+- Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
+- CellDecorator class added that has a color, glyph, and mirror setting.
+- SadConsole.Serialization uses Newtonsoft.Json instead of the default .NET classes.
+- SadConsole.Serialization supports GZIP compression now.
+- Settings.SerializationIsCompressed can be set to true to set all internal save/load to use compression.
+- New SurfaceBase class which all Surface's inherit from.
+- SurfaceBase has an IRenderer on it directly now.
+- SurfaceEditor has been removed and is now implemented on SurfaceBase directly.
+- Console no longer combines Renderer and TextSurface for drawing.
+- Control themes completely rewritten. Themes control all drawing for a control now.
+- Windows/ControlsConsole use a theme for drawing.
+- InputBox renamed TextBox.
+- Removed GameHelpers namespace. Types moved to root namespace.
+- GameObject renamed to Entity.
+- Surface.RenderArea changed to Surface.ViewPort
+- Readded Zone and HotSpot types.
+- Removed random level generation.
+- Added Entities.EntityManager which helps control entity visibility and offsets based on a parent console. Also handles zones/hotspots.
+
+## 06/11/2018
 
 - Fix a stack overflow problem in the window object introduced by the previous mouse bug fix.
 - Cell states can be stored and restored with variables now. Each cell still has a backing cellstate that can be used.

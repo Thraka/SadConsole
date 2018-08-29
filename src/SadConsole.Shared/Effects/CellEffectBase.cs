@@ -21,7 +21,7 @@
         [DataMember]
         public double StartDelay
         {
-            get { return _startDelay; }
+            get => _startDelay;
             set { _startDelay = value; _delayFinished = _startDelay <= 0.0d; }
         }
 

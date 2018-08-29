@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+    <AssemblyName>SadConsole</AssemblyName>
+    <Version>7.0.0</Version>
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyTitle>SadConsole (.NET Standard) for MonoGame</AssemblyTitle>
+    <Description>A MonoGame library that emulates old-school console and command prompt style graphics.</Description>
+    <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="**\*.mgcb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.4" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
+    <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>

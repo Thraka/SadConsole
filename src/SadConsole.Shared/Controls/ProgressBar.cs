@@ -23,7 +23,7 @@ namespace SadConsole.Controls
         /// Overriding theme.
         /// </summary>
         [DataMember(Name = "Theme")]
-        protected ProgressBarTheme theme;
+        protected ProgressBarTheme _theme;
 
         private Cell _currentAppearanceForeground;
         private Cell _currentAppearanceBackground;
@@ -44,7 +44,7 @@ namespace SadConsole.Controls
         /// The size of the bar currently filled based on the <see cref="Progress"/> property.
         /// </summary>
         [DataMember]
-        protected int fillSize;
+        public int fillSize;
 
         /// <summary>
         /// Flag to indicate this bar was created horizontal.
@@ -56,44 +56,39 @@ namespace SadConsole.Controls
         /// The alignment if the bar is horizontal.
         /// </summary>
         [DataMember]
-        protected System.Windows.HorizontalAlignment horizontalAlignment;
+        protected HorizontalAlignment horizontalAlignment;
 
         /// <summary>
         /// The alignment if the bar is vertical.
         /// </summary>
         [DataMember]
-        protected System.Windows.VerticalAlignment verticalAlignment;
+        protected VerticalAlignment verticalAlignment;
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
         /// </summary>
-        public virtual ProgressBarTheme Theme
+        public ProgressBarTheme Theme
         {
-            get
-            {
-                if (theme == null)
-                    return Library.Default.ProgressBarTheme;
-                else
-                    return theme;
-            }
+            get => _theme;
             set
             {
-                theme = value;
-                DetermineAppearance();
-                Compose();
+                _theme = value;
+                _theme.Attached(this);
+                DetermineState();
+                IsDirty = true;
             }
         }
 
         /// <summary>
         /// The horizontal orientation used when <see cref="IsHorizontal"/> is set to true.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="System.Windows.HorizontalAlignment.Center"/> or <see cref="System.Windows.HorizontalAlignment.Stretch"/>.</exception>
-        public System.Windows.HorizontalAlignment HorizontalAlignment
+        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="HorizontalAlignment.Center"/> or <see cref="HorizontalAlignment.Stretch"/>.</exception>
+        public HorizontalAlignment HorizontalAlignment
         {
-            get { return horizontalAlignment; }
+            get => horizontalAlignment;
             set
             {
-                if (value == System.Windows.HorizontalAlignment.Center || value == System.Windows.HorizontalAlignment.Stretch)
+                if (value == HorizontalAlignment.Center || value == HorizontalAlignment.Stretch)
                     throw new InvalidOperationException("HorizontalAlignment.Center or HorizontalAlignment.Stretch is invalid for the progress bar control.");
 
                 horizontalAlignment = value;
@@ -104,13 +99,13 @@ namespace SadConsole.Controls
         /// <summary>
         /// The vertical orientation used when <see cref="IsHorizontal"/> is set to false.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="System.Windows.VerticalAlignment.Center"/> or <see cref="System.Windows.VerticalAlignment.Stretch"/>.</exception>
-        public System.Windows.VerticalAlignment VerticalAlignment
+        /// <exception cref="InvalidOperationException">Thrown when the value is set to either <see cref="VerticalAlignment.Center"/> or <see cref="VerticalAlignment.Stretch"/>.</exception>
+        public VerticalAlignment VerticalAlignment
         {
-            get { return verticalAlignment; }
+            get => verticalAlignment;
             set
             {
-                if (value == System.Windows.VerticalAlignment.Center || value == System.Windows.VerticalAlignment.Stretch)
+                if (value == VerticalAlignment.Center || value == VerticalAlignment.Stretch)
                     throw new InvalidOperationException("VerticalAlignment.Center or VerticalAlignment.Stretch is invalid for the progress bar control.");
 
                 verticalAlignment = value;
@@ -123,7 +118,7 @@ namespace SadConsole.Controls
         /// </summary>
         public bool IsHorizontal
         {
-            get { return isHorizontal; }
+            get => isHorizontal;
             set
             {
                 isHorizontal = value;
@@ -138,7 +133,7 @@ namespace SadConsole.Controls
         /// </summary>
         public float Progress
         {
-            get { return progressValue; }
+            get => progressValue;
             set
             {
                 if (progressValue != value)
@@ -172,10 +167,10 @@ namespace SadConsole.Controls
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
         /// <param name="horizontalAlignment">Sets the control to be horizontal, starting from the specified side. Center/Stretch is invalid.</param>
-        /// <exception cref="InvalidOperationException">Thrown when <paramref name="horizontalAlignment"/> is set to either <see cref="System.Windows.HorizontalAlignment.Center"/> or <see cref="System.Windows.HorizontalAlignment.Stretch"/>.</exception>
-        public ProgressBar(int width, int height, System.Windows.HorizontalAlignment horizontalAlignment) : base(width, height)
+        /// <exception cref="InvalidOperationException">Thrown when <paramref name="horizontalAlignment"/> is set to either <see cref="HorizontalAlignment.Center"/> or <see cref="HorizontalAlignment.Stretch"/>.</exception>
+        public ProgressBar(int width, int height, HorizontalAlignment horizontalAlignment) : base(width, height)
         {
-            if (horizontalAlignment == System.Windows.HorizontalAlignment.Center || horizontalAlignment == System.Windows.HorizontalAlignment.Stretch)
+            if (horizontalAlignment == HorizontalAlignment.Center || horizontalAlignment == HorizontalAlignment.Stretch)
                 throw new InvalidOperationException("HorizontalAlignment.Center or HorizontalAlignment.Stretch is invalid for the progress bar control.");
 
             this.horizontalAlignment = horizontalAlignment;
@@ -184,8 +179,7 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-
-            DetermineAppearance();
+            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -194,10 +188,10 @@ namespace SadConsole.Controls
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
         /// <param name="verticalAlignment">Sets the control to be vertical, starting from the specified side. Center/Stretch is invalid.</param>
-        /// <exception cref="InvalidOperationException">Thrown when <paramref name="verticalAlignment"/> is set to either <see cref="System.Windows.VerticalAlignment.Center"/> or <see cref="System.Windows.VerticalAlignment.Stretch"/>.</exception>
-        public ProgressBar(int width, int height, System.Windows.VerticalAlignment verticalAlignment) : base(width, height)
+        /// <exception cref="InvalidOperationException">Thrown when <paramref name="verticalAlignment"/> is set to either <see cref="VerticalAlignment.Center"/> or <see cref="VerticalAlignment.Stretch"/>.</exception>
+        public ProgressBar(int width, int height, VerticalAlignment verticalAlignment) : base(width, height)
         {
-            if (verticalAlignment == System.Windows.VerticalAlignment.Center || verticalAlignment == System.Windows.VerticalAlignment.Stretch)
+            if (verticalAlignment == VerticalAlignment.Center || verticalAlignment == VerticalAlignment.Stretch)
                 throw new InvalidOperationException("VerticalAlignment.Center or VerticalAlignment.Stretch is invalid for the progress bar control.");
 
             this.verticalAlignment = verticalAlignment;
@@ -206,59 +200,7 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-
-            DetermineAppearance();
-        }
-
-        /// <summary>
-        /// Determines the appearance of the control based on its current state.
-        /// </summary>
-        public override void DetermineAppearance()
-        {
-            Cell currentappearanceBackground = _currentAppearanceBackground;
-            Cell currentappearanceForeground = _currentAppearanceForeground;
-
-            if (!isEnabled)
-            {
-                _currentAppearanceBackground = Theme.Background.Disabled;
-                _currentAppearanceForeground = Theme.Foreground.Disabled;
-            }
-
-            else if (isMouseOver)
-            {
-                _currentAppearanceBackground = Theme.Background.MouseOver;
-                _currentAppearanceForeground = Theme.Foreground.MouseOver;
-            }
-
-            else
-            {
-                _currentAppearanceBackground = Theme.Background.Normal;
-                _currentAppearanceForeground = Theme.Foreground.Normal;
-            }
-
-            if (currentappearanceBackground != _currentAppearanceBackground ||
-                currentappearanceForeground != _currentAppearanceForeground)
-
-                this.IsDirty = true;
-        }
-
-        protected override void OnMouseIn(Input.MouseConsoleState state)
-        {
-            isMouseOver = true;
-
-            base.OnMouseIn(state);
-        }
-
-        protected override void OnMouseExit(Input.MouseConsoleState state)
-        {
-            isMouseOver = false;
-
-            base.OnMouseExit(state);
-        }
-
-        protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
-        {
-            base.OnLeftMouseClicked(state);
+            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -271,40 +213,9 @@ namespace SadConsole.Controls
             return false;
         }
 
-        public override void Compose()
+        public override void Update(TimeSpan time)
         {
-            if (this.IsDirty)
-            {
-                Fill(_currentAppearanceBackground.Foreground, _currentAppearanceBackground.Background, _currentAppearanceBackground.Glyph);
-
-                if (isHorizontal)
-                {
-                    Rectangle fillRect;
-
-                    if (horizontalAlignment == System.Windows.HorizontalAlignment.Left)
-                        fillRect = new Rectangle(0, 0, fillSize, Height);
-                    else
-                        fillRect = new Rectangle(Width - fillSize, 0, fillSize, Height);
-
-                    Fill(fillRect, _currentAppearanceForeground.Foreground, _currentAppearanceForeground.Background, _currentAppearanceForeground.Glyph);
-                }
-
-                else
-                {
-                    Rectangle fillRect;
-
-                    if (verticalAlignment == System.Windows.VerticalAlignment.Top)
-                        fillRect = new Rectangle(0, 0, Width, fillSize);
-                    else
-                        fillRect = new Rectangle(0, Height - fillSize, Width, fillSize);
-
-                    Fill(fillRect, _currentAppearanceForeground.Foreground, _currentAppearanceForeground.Background, _currentAppearanceForeground.Glyph);
-                }
-
-                OnComposed?.Invoke(this);
-
-                this.IsDirty = false;
-            }
+            Theme.UpdateAndDraw(this, time);
         }
 
         [OnDeserializedAttribute]
@@ -313,9 +224,8 @@ namespace SadConsole.Controls
             var temp = progressValue;
             progressValue = -1;
             Progress = temp;
-
-            DetermineAppearance();
-            Compose(true);
+            DetermineState();
+            IsDirty = true;
         }
     }
 }

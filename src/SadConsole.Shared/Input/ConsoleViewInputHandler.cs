@@ -80,13 +80,13 @@ namespace SadConsole.Input
 
                         if (currentLocation != _mouseLastLocation)
                         {
-                            Rectangle viewport = console.TextSurface.RenderArea;
+                            Rectangle viewport = console.ViewPort;
 
                             viewport.X += _mouseLastLocation.X - currentLocation.X;
                             viewport.Y += _mouseLastLocation.Y - currentLocation.Y;
                             _mouseLastLocation = currentLocation;
 
-                            console.TextSurface.RenderArea = viewport;
+                            console.ViewPort = viewport;
                         }
                     }
 
@@ -109,7 +109,7 @@ namespace SadConsole.Input
             bool handled = false;
             if (console.UseKeyboard && CanMoveWithKeyboard)
             {
-                var view = console.TextSurface.RenderArea;
+                var view = console.ViewPort;
 
                 if (info.IsKeyDown(MoveLeftKey))
                 {
@@ -132,7 +132,7 @@ namespace SadConsole.Input
                     handled = true;
                 }
 
-                console.TextSurface.RenderArea = view;
+                console.ViewPort = view;
             }
             return handled;
         }

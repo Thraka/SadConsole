@@ -61,7 +61,7 @@ namespace StarterProject
 
         //public static SadConsole.Cell Appearance_ControlTextBoxNormal = new SadConsole.Cell(Color_Text, ClearAlpha(new Color((byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), (byte)(Color_ControlBack.R * 0.7f), 255)));
 
-        public static SadConsole.Themes.RadioButtonTheme NoCheckRadioButtonTheme;
+        //public static SadConsole.Themes.RadioButtonTheme NoCheckRadioButtonTheme;
         #endregion
 
         private static Color ClearAlpha(Color color)
@@ -72,87 +72,87 @@ namespace StarterProject
 
         public static void SetupThemes()
         {
-            SadConsole.Themes.Library.Default.RadioButtonTheme.Button.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.RadioButtonTheme.Button.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.RadioButtonTheme.Button.Selected = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.RadioButtonTheme.Button.Focused = Appearance_ControlFocused;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.Button.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.Button.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.Button.Selected = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.Button.Focused = Appearance_ControlFocused;
 
-            SadConsole.Themes.Library.Default.RadioButtonTheme.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.RadioButtonTheme.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.RadioButtonTheme.Selected = Appearance_ListBoxItem_SelectedItem;
-            SadConsole.Themes.Library.Default.RadioButtonTheme.Focused = Appearance_ControlFocused;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.Selected = Appearance_ListBoxItem_SelectedItem;
+            //SadConsole.Themes.Library.Default.RadioButtonTheme.Focused = Appearance_ControlFocused;
 
-            SadConsole.Themes.Library.Default.CheckBoxTheme.Button.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.CheckBoxTheme.Button.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.CheckBoxTheme.Button.Selected = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.CheckBoxTheme.Button.Focused = Appearance_ControlFocused;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.Button.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.Button.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.Button.Selected = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.Button.Focused = Appearance_ControlFocused;
 
-            SadConsole.Themes.Library.Default.CheckBoxTheme.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.CheckBoxTheme.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.CheckBoxTheme.Selected = Appearance_ListBoxItem_SelectedItem;
-            SadConsole.Themes.Library.Default.CheckBoxTheme.Focused = Appearance_ControlFocused;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.Selected = Appearance_ListBoxItem_SelectedItem;
+            //SadConsole.Themes.Library.Default.CheckBoxTheme.Focused = Appearance_ControlFocused;
 
-            NoCheckRadioButtonTheme = (SadConsole.Themes.RadioButtonTheme)SadConsole.Themes.Library.Default.RadioButtonTheme.Clone();
-            NoCheckRadioButtonTheme.Button.Selected = Appearance_ControlSelected;
-            NoCheckRadioButtonTheme.Selected = Appearance_ControlFocused;
+            //NoCheckRadioButtonTheme = (SadConsole.Themes.RadioButtonTheme)SadConsole.Themes.Library.Default.RadioButtonTheme.Clone();
+            //NoCheckRadioButtonTheme.Button.Selected = Appearance_ControlSelected;
+            //NoCheckRadioButtonTheme.Selected = Appearance_ControlFocused;
 
-            SadConsole.Themes.Library.Default.ButtonTheme.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.ButtonTheme.Disabled = Appearance_ControlDisabled;
-            SadConsole.Themes.Library.Default.ButtonTheme.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.ButtonTheme.MouseClicking = Appearance_ControlMouseDown;
-            SadConsole.Themes.Library.Default.ButtonTheme.Focused = Appearance_ControlFocused;
+            //SadConsole.Themes.Library.Default.ButtonTheme.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ButtonTheme.Disabled = Appearance_ControlDisabled;
+            //SadConsole.Themes.Library.Default.ButtonTheme.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.ButtonTheme.MouseClicking = Appearance_ControlMouseDown;
+            //SadConsole.Themes.Library.Default.ButtonTheme.Focused = Appearance_ControlFocused;
 
-            SadConsole.Themes.Library.Default.InputBoxTheme.Normal = new SadConsole.Cell(Appearance_ControlNormal.Background, Appearance_ControlNormal.Foreground);
-            SadConsole.Themes.Library.Default.InputBoxTheme.Focused = Appearance_ControlFocused;
-            SadConsole.Themes.Library.Default.InputBoxTheme.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.InputBoxTheme.Normal = new SadConsole.Cell(Appearance_ControlNormal.Background, Appearance_ControlNormal.Foreground);
+            //SadConsole.Themes.Library.Default.InputBoxTheme.Focused = Appearance_ControlFocused;
+            //SadConsole.Themes.Library.Default.InputBoxTheme.MouseOver = Appearance_ControlOver;
 
-            SadConsole.Themes.Library.Default.ListBoxTheme.Border.Background = Color_ControlBack;
-            SadConsole.Themes.Library.Default.ListBoxTheme.Border.Foreground = Color_Text;
-            SadConsole.Themes.Library.Default.ListBoxTheme.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.ListBoxTheme.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.ListBoxTheme.Item.Selected = Appearance_ListBoxItem_SelectedItem;
-            SadConsole.Themes.Library.Default.ListBoxTheme.Item.Normal = Appearance_ListBoxItem_Normal;
-            SadConsole.Themes.Library.Default.ListBoxTheme.Item.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.ListBoxTheme.ScrollBarTheme.Bar.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.ListBoxTheme.ScrollBarTheme.Ends.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.ListBoxTheme.ScrollBarTheme.Slider.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.Border.Background = Color_ControlBack;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.Border.Foreground = Color_Text;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.Item.Selected = Appearance_ListBoxItem_SelectedItem;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.Item.Normal = Appearance_ListBoxItem_Normal;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.Item.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.ScrollBarTheme.Bar.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.ScrollBarTheme.Ends.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ListBoxTheme.ScrollBarTheme.Slider.Normal = Appearance_ControlNormal;
 
-            SadConsole.Themes.Library.Default.WindowTheme.BorderStyle.Background = Color_MenuBack;
-            SadConsole.Themes.Library.Default.WindowTheme.BorderStyle.Foreground = Color_Text;
-            SadConsole.Themes.Library.Default.WindowTheme.TitleStyle.Background = Color_MenuBack;
-            SadConsole.Themes.Library.Default.WindowTheme.TitleStyle.Foreground = Color_TitleText;
-            SadConsole.Themes.Library.Default.WindowTheme.FillStyle.Background = Color_MenuBack;
-            SadConsole.Themes.Library.Default.WindowTheme.FillStyle.Foreground = Color_Text;
+            //SadConsole.Themes.Library.Default.WindowTheme.BorderStyle.Background = Color_MenuBack;
+            //SadConsole.Themes.Library.Default.WindowTheme.BorderStyle.Foreground = Color_Text;
+            //SadConsole.Themes.Library.Default.WindowTheme.TitleStyle.Background = Color_MenuBack;
+            //SadConsole.Themes.Library.Default.WindowTheme.TitleStyle.Foreground = Color_TitleText;
+            //SadConsole.Themes.Library.Default.WindowTheme.FillStyle.Background = Color_MenuBack;
+            //SadConsole.Themes.Library.Default.WindowTheme.FillStyle.Foreground = Color_Text;
 
-            SadConsole.Themes.Library.Default.ControlsConsoleTheme.FillStyle.Background = Color_MenuBack;
-            SadConsole.Themes.Library.Default.ControlsConsoleTheme.FillStyle.Foreground = Color_Text;
+            //SadConsole.Themes.Library.Default.ControlsConsoleTheme.FillStyle.Background = Color_MenuBack;
+            //SadConsole.Themes.Library.Default.ControlsConsoleTheme.FillStyle.Foreground = Color_Text;
 
-            SadConsole.Themes.Library.Default.ScrollBarTheme.Bar.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.ScrollBarTheme.Ends.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.ScrollBarTheme.Slider.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ScrollBarTheme.Bar.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ScrollBarTheme.Ends.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.ScrollBarTheme.Slider.Normal = Appearance_ControlNormal;
 
-            SadConsole.Themes.Library.Default.SelectionButtonTheme.Normal = Appearance_ControlNormal;
-            SadConsole.Themes.Library.Default.SelectionButtonTheme.Disabled = Appearance_ControlDisabled;
-            SadConsole.Themes.Library.Default.SelectionButtonTheme.MouseOver = Appearance_ControlOver;
-            SadConsole.Themes.Library.Default.SelectionButtonTheme.MouseClicking = Appearance_ControlMouseDown;
-            SadConsole.Themes.Library.Default.SelectionButtonTheme.Focused = Appearance_ControlFocused;
+            //SadConsole.Themes.Library.Default.SelectionButtonTheme.Normal = Appearance_ControlNormal;
+            //SadConsole.Themes.Library.Default.SelectionButtonTheme.Disabled = Appearance_ControlDisabled;
+            //SadConsole.Themes.Library.Default.SelectionButtonTheme.MouseOver = Appearance_ControlOver;
+            //SadConsole.Themes.Library.Default.SelectionButtonTheme.MouseClicking = Appearance_ControlMouseDown;
+            //SadConsole.Themes.Library.Default.SelectionButtonTheme.Focused = Appearance_ControlFocused;
 
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Normal = Appearance_ControlNormal.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Normal.Glyph = 176;
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Focused = Appearance_ControlNormal.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Focused.Glyph = 176;
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Disabled = Appearance_ControlDisabled.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Disabled.Glyph = 176;
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.MouseOver = Appearance_ControlNormal.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Background.MouseOver.Glyph = 176;
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Normal = Appearance_ControlSelected.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Normal.Glyph = 219;
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Focused = Appearance_ControlSelected.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Focused.Glyph = 219;
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Disabled = Appearance_ControlDisabled.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Disabled.Glyph = 219;
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.MouseOver = Appearance_ControlSelected.Clone();
-            SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.MouseOver.Glyph = 219;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Normal = Appearance_ControlNormal.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Normal.Glyph = 176;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Focused = Appearance_ControlNormal.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Focused.Glyph = 176;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Disabled = Appearance_ControlDisabled.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.Disabled.Glyph = 176;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.MouseOver = Appearance_ControlNormal.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Background.MouseOver.Glyph = 176;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Normal = Appearance_ControlSelected.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Normal.Glyph = 219;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Focused = Appearance_ControlSelected.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Focused.Glyph = 219;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Disabled = Appearance_ControlDisabled.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.Disabled.Glyph = 219;
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.MouseOver = Appearance_ControlSelected.Clone();
+            //SadConsole.Themes.Library.Default.ProgressBarTheme.Foreground.MouseOver.Glyph = 219;
 
         }
     }

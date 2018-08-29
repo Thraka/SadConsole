@@ -1,34 +1,19 @@
-﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
-using FrameworkPoint = Microsoft.Xna.Framework.Point;
-using FrameworkRect = Microsoft.Xna.Framework.Rectangle;
-using FrameworkSpriteEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects;
-
+﻿using System.Diagnostics;
+using Newtonsoft.Json.Serialization;
 
 namespace SadConsole
 {
     using System;
-    using System.CodeDom;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
     using System.Text;
-    using System.Threading.Tasks;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Common serialization tasks for SadConsole.
     /// </summary>
     public static partial class Serializer
     {
-        /// <summary>
-        /// The types commonly used when sesrializing a basic console.
-        /// </summary>
-        public static IEnumerable<Type> KnownTypes { get; set; }
-
-        static Serializer()
-        {
-        }
+        public static Dictionary<Type, Type> ConversionMappings = new Dictionary<Type, Type>();
 
         /// <summary>
         /// Serializes the <paramref name="instance"/> instance to the specified file.
@@ -36,17 +21,30 @@ namespace SadConsole
         /// <typeparam name="T">Type of object to serialize</typeparam>
         /// <param name="instance">The object to serialize.</param>
         /// <param name="file">The file to save the object to.</param>
-        /// <param name="knownTypes">Optional list of known types for serialization.</param>
-        public static void Save<T>(T instance, string file, IEnumerable<Type> knownTypes = null)
+        /// <param name="compress">When true, uses GZIP compression on the json string saved to the <paramref name="file"/></param>
+        public static void Save<T>(T instance, string file, bool compress)
         {
             if (System.IO.File.Exists(file))
                 System.IO.File.Delete(file);
 
-            //var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
-            var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
-
             using (var stream = System.IO.File.OpenWrite(file))
-                serializer.WriteObject(stream, instance);
+            {
+                if (compress)
+                {
+                    using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
+                    {
+                        var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
+                        sw.Write(bytes, 0, bytes.Length);
+                    }
+                }
+                else
+                {
+                    using (var sw = new System.IO.StreamWriter(stream))
+                    {
+                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -54,23 +52,46 @@ namespace SadConsole
         /// </summary>
         /// <typeparam name="T">The type of object to deserialize.</typeparam>
         /// <param name="file">The file to load from.</param>
-        /// <param name="knownTypes">Known types used during deserialization.</param>
+        /// <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
         /// <returns>A new object instance.</returns>
-        public static T Load<T>(string file, IEnumerable<Type> knownTypes = null)
+        public static T Load<T>(string file, bool isCompressed)
         {
-            //if (System.IO.File.Exists(file))
-            //{
             Global.SerializerPathHint = System.IO.Path.GetDirectoryName(file);
+
             using (var fileObject = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
             {
-                //var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes, int.MaxValue, false, new SerializerSurrogate(), false);
-                var serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T), knownTypes);
-
-                return (T)serializer.ReadObject(fileObject);
+                if (isCompressed)
+                {
+                    using (var sw = new System.IO.Compression.GZipStream(fileObject, System.IO.Compression.CompressionMode.Decompress))
+                    {
+                        using (var sr = new System.IO.StreamReader(sw, Encoding.UTF32))
+                        {
+                            string value = sr.ReadToEnd();
+                            return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
+                        }
+                    }
+                }
+                else
+                    using (var sr = new System.IO.StreamReader(fileObject))
+                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
             }
-            //}
+        }
 
-            //throw new System.IO.FileNotFoundException("File not found.", file);
+        public static ITraceWriter LogWriter = new MemoryTraceWriter();
+
+        internal class LogTraceWriter : ITraceWriter
+        {
+            internal static readonly StringBuilder Log = new StringBuilder();
+
+            private TraceLevel _levelFilter;
+
+            public void Trace(TraceLevel level, string message, Exception ex)
+            {
+                _levelFilter = level;
+                LogTraceWriter.Log.AppendLine($"{Enum.GetName(typeof(TraceLevel), level)} :: {message}");
+            }
+
+            public TraceLevel LevelFilter => _levelFilter;
         }
     }
 }

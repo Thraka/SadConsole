@@ -48,7 +48,7 @@ namespace SadConsole.Input
         public readonly bool IsOnConsole;
 
         /// <summary>
-        /// Calculates a new <see cref="MouseConsoleState"/> based on an <see cref="IConsole"/> and <see cref="Mouse"/> state.
+        /// Calculates a new <see cref="MouseConsoleState"/> based on an <see cref="Console"/> and <see cref="Mouse"/> state.
         /// </summary>
         /// <param name="console">The console to process with the mouse state.</param>
         /// <param name="mouseData">The current mouse state.</param>
@@ -57,7 +57,7 @@ namespace SadConsole.Input
             this.Mouse = mouseData.Clone();
             this.Console = console;
 
-            if (console == null || console.TextSurface == null)
+            if (console == null || console == null)
             {
                 return;
             }
@@ -67,30 +67,30 @@ namespace SadConsole.Input
                 {
                     RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
                     WorldPosition = mouseData.ScreenPosition;
-                    ConsolePosition = RelativePixelPosition.PixelLocationToConsole(console.TextSurface.Font);
+                    ConsolePosition = RelativePixelPosition.PixelLocationToConsole(console.Font);
 
-                    var tempCellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
-                    IsOnConsole = Console.TextSurface.RenderArea.Contains(tempCellPosition);
+                    var tempCellPosition = ConsolePosition + Console.ViewPort.Location;
+                    IsOnConsole = Console.ViewPort.Contains(tempCellPosition);
 
                     if (IsOnConsole)
                     {
                         CellPosition = tempCellPosition;
-                        Cell = console.TextSurface[CellPosition.X, CellPosition.Y];
+                        Cell = console[CellPosition.X, CellPosition.Y];
                     }
                 }
                 else
                 {
-                    RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition.ConsoleLocationToPixel(console.TextSurface.Font);
-                    WorldPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.TextSurface.Font);
+                    RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition.ConsoleLocationToPixel(console.Font);
+                    WorldPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.Font);
                     ConsolePosition = WorldPosition - console.CalculatedPosition;
 
-                    var tempCellPosition = ConsolePosition + Console.TextSurface.RenderArea.Location;
-                    IsOnConsole = Console.TextSurface.RenderArea.Contains(tempCellPosition);
+                    var tempCellPosition = ConsolePosition + Console.ViewPort.Location;
+                    IsOnConsole = Console.ViewPort.Contains(tempCellPosition);
 
                     if (IsOnConsole)
                     {
                         CellPosition = tempCellPosition;
-                        Cell = console.TextSurface[CellPosition.X, CellPosition.Y];
+                        Cell = console[CellPosition.X, CellPosition.Y];
                     }
                 }
             }

@@ -13,7 +13,7 @@ namespace SadConsole
         /// <summary>
         /// Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
         /// </summary>
-        public static Func<string, string, ColoredGlyph[], ISurface, SurfaceEditor, ParseCommandStacks, ParseCommandBase> CustomProcessor;
+        public static Func<string, string, ColoredGlyph[], Surfaces.SurfaceBase, ParseCommandStacks, ParseCommandBase> CustomProcessor;
 
         /// <summary>
         /// Creates a colored string by parsing commands embedded in the string.
@@ -24,7 +24,7 @@ namespace SadConsole
         /// <param name="editor">A surface editor associated with the text surface.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
         /// <returns></returns>
-        public static ColoredString Parse(string value, int surfaceIndex = -1, Surfaces.ISurface surface = null, SurfaceEditor editor = null, ParseCommandStacks initialBehaviors = null)
+        public static ColoredString Parse(string value, int surfaceIndex = -1, Surfaces.SurfaceBase surface = null, ParseCommandStacks initialBehaviors = null)
         {
             var commandStacks = initialBehaviors != null ? initialBehaviors : new ParseCommandStacks();
             List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);
@@ -54,7 +54,7 @@ namespace SadConsole
                             }
 
                             // Check for custom command
-                            ParseCommandBase commandObject = CustomProcessor != null ? CustomProcessor(command, commandParams, existingGlyphs, surface, editor, commandStacks) : null;
+                            ParseCommandBase commandObject = CustomProcessor != null ? CustomProcessor(command, commandParams, existingGlyphs, surface, commandStacks) : null;
 
                             // No custom command found, run build in ones
                             if (commandObject == null)
@@ -78,7 +78,7 @@ namespace SadConsole
                                         break;
                                     case "blink":
                                     case "b":
-                                        commandObject = new ParseCommandBlink(commandParams, existingGlyphs, commandStacks, editor);
+                                        commandObject = new ParseCommandBlink(commandParams, existingGlyphs, commandStacks, surface);
                                         break;
                                     case "sglyph":
                                     case "sg":
@@ -124,22 +124,22 @@ namespace SadConsole
 
                 // Foreground
                 if (commandStacks.Foreground.Count != 0)
-                    commandStacks.Foreground.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
+                    commandStacks.Foreground.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
                 // Background
                 if (commandStacks.Background.Count != 0)
-                    commandStacks.Background.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
+                    commandStacks.Background.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
                 if (commandStacks.Glyph.Count != 0)
-                    commandStacks.Glyph.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
+                    commandStacks.Glyph.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
                 // SpriteEffect
                 if (commandStacks.Mirror.Count != 0)
-                    commandStacks.Mirror.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
+                    commandStacks.Mirror.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
                 // Effect
                 if (commandStacks.Effect.Count != 0)
-                    commandStacks.Effect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, editor, ref i, value, commandStacks);
+                    commandStacks.Effect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
                 glyphs.Add(newGlyph);
             }
