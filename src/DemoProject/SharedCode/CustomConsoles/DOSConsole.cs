@@ -78,7 +78,13 @@ namespace StarterProject.CustomConsoles
                 Cursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
 
             else if (value.ToLower() == "exit" || value.ToLower() == "quit")
+            {
+#if WINDOWS_UAP
+                //Windows.UI.Xaml.Application.Current.Exit();       Not working?
+#else
                 Environment.Exit(0);
+#endif
+            }
 
             else
                 Cursor.Print("  Unknown command").NewLine();

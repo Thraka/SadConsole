@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mime;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

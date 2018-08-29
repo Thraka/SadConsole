@@ -9,27 +9,27 @@
     <Import_RootNamespace>StarterProject</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Ansi\QS-SIERR.ANS">
+    <Content Include="$(MSBuildThisFileDirectory)Ansi\QS-SIERR.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-BTC1.ANS">
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Ansi\ROY-BTC1.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-CCU3.ANS">
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Ansi\ROY-CCU3.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)Ansi\ROY-DGZN.ANS">
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Ansi\ROY-DGZN.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus12.font">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM_ext.font">
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM_ext.font">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Ansi\files.json">

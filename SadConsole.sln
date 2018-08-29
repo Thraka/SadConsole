@@ -65,6 +65,7 @@ Global
 		src\DemoProject\SharedCode\DemoProject.projitems*{680ff2f5-ae1c-4ae7-92f2-62bee74f7a43}*SharedItemsImports = 4
 		src\DemoProject\SharedCode\DemoProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
 		SampleGames\Snake\Snake.projitems*{7a8507b4-db2c-453e-a72b-2384175bdff1}*SharedItemsImports = 13
+		src\DemoProject\SharedCode\DemoProject.projitems*{7b1f1dbf-f16c-4402-9cb0-6e035ba76c6d}*SharedItemsImports = 4
 		SampleGames\Castle\Castle.projitems*{99eb89b5-bab6-47cb-899d-55653fc2b8dc}*SharedItemsImports = 4
 		src\DemoProject\SharedCode\DemoProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
 		SampleGames\Castle\Castle.projitems*{bd5d2b21-2cd6-448d-acd7-5b90da247250}*SharedItemsImports = 13
