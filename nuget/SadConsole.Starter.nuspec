@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Starter</id>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <title>Starter kit for SadConsole. Use with a new project.</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -15,7 +15,7 @@
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
     <dependencies>
-      <dependency id="SadConsole" version="6.1.3" />
+      <dependency id="SadConsole" version="7.0.0" />
     </dependencies>
   </metadata>
   <files>

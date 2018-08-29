@@ -59,6 +59,9 @@
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="11.0.2" />
+    </dependencies>
   </metadata>
   <files>
 
