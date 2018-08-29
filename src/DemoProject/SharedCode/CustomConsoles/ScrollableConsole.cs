@@ -5,31 +5,25 @@ using System.Collections.Generic;
 using System.Text;
 using SadConsole.Surfaces;
 using SadConsole.Input;
+using SadConsole;
+using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
-    class ScrollableConsole : SadConsole.Console, IConsoleMetadata
+    class ScrollableConsole : Console
     {
         SadConsole.ControlsConsole controlsContainer;
         SadConsole.Controls.ScrollBar scrollBar;
 
         int scrollingCounter;
 
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Text scrolling", Summary = "Renders a tiny console with a cursor along with a scroll bar" };
-            }
-        }
-
-        public ScrollableConsole(int width, int height, int bufferHeight) : base(width - 1, bufferHeight)
+        public ScrollableConsole(int width, int height, int bufferHeight) : base(width - 1, bufferHeight, new Rectangle(0,0,width - 1,height))
         {
             controlsContainer = new SadConsole.ControlsConsole(1, height);
 
-            textSurface.RenderArea = new Rectangle(0, 0, width, height);
+            ViewPort = new Rectangle(0, 0, width, height);
 
-            scrollBar = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, height);
+            scrollBar = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, height);
             scrollBar.IsEnabled = false;
             scrollBar.ValueChanged += ScrollBar_ValueChanged;
 
@@ -37,8 +31,8 @@ namespace StarterProject.CustomConsoles
             controlsContainer.Position = new Point(Position.X + width - 1, Position.Y);
             controlsContainer.IsVisible = true;
 
-            virtualCursor.IsVisible = true;
-            virtualCursor.Print("Just start typing!");
+            Cursor.IsVisible = true;
+            Cursor.Print("Just start typing!");
             IsVisible = false;
 
             scrollingCounter = 0;
@@ -47,7 +41,7 @@ namespace StarterProject.CustomConsoles
         private void ScrollBar_ValueChanged(object sender, EventArgs e)
         {
             // Do our scroll according to where the scroll bar value is
-            textSurface.RenderArea = new Rectangle(0, scrollBar.Value, textSurface.Width, textSurface.RenderArea.Height);
+            ViewPort = new Rectangle(0, scrollBar.Value, Width, ViewPort.Height);
         }
 
         protected override void OnPositionChanged(Point oldLocation)
@@ -78,17 +72,17 @@ namespace StarterProject.CustomConsoles
             // If we detect that this console has shifted the data up for any reason (like the virtual cursor reached the
             // bottom of the entire text surface, OR we reached the bottom of the render area, we need to adjust the 
             // scroll bar and follow the cursor
-            if (TimesShiftedUp != 0 | virtualCursor.Position.Y == textSurface.RenderArea.Height + scrollingCounter)
+            if (TimesShiftedUp != 0 | Cursor.Position.Y == ViewPort.Height + scrollingCounter)
             {
                 // Once the buffer has finally been filled enough to need scrolling, turn on the scroll bar
                 scrollBar.IsEnabled = true;
 
                 // Make sure we've never scrolled the entire size of the buffer
-                if (scrollingCounter < textSurface.Height - textSurface.RenderArea.Height)
+                if (scrollingCounter < Height - ViewPort.Height)
                     // Record how much we've scrolled to enable how far back the bar can see
                     scrollingCounter += TimesShiftedUp != 0 ? TimesShiftedUp : 1;
 
-                scrollBar.Maximum = (textSurface.Height + scrollingCounter) - textSurface.Height;
+                scrollBar.Maximum = (Height + scrollingCounter) - Height;
 
                 // This will follow the cursor since we move the render area in the event.
                 scrollBar.Value = scrollingCounter;

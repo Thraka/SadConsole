@@ -13,15 +13,15 @@ namespace StarterProject
     {
         public HeaderConsole(): base(80, 2)
         {
-            textSurface.DefaultBackground = Color.Transparent;
-            textSurface.DefaultForeground = Theme.Yellow;
+            DefaultBackground = Color.Transparent;
+            DefaultForeground = Theme.Yellow;
         }
 
-        public void SetConsole(IConsoleMetadata console)
+        public void SetConsole(string title, string summary)
         {
             Fill(Theme.Yellow, Theme.GrayDark, 0);
-            Print(1, 0, console.Metadata.Title.ToUpper(), Theme.Yellow);
-            Print(1, 1, console.Metadata.Summary, Theme.Gray);
+            Print(1, 0, title.ToUpper(), Theme.Yellow);
+            Print(1, 1, summary, Theme.Gray);
             //Print(0, 2, new string((char)223, 80), Theme.GrayDark, Color.Transparent);
         }
     }

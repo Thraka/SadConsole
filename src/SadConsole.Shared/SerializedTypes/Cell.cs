@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Linq;
 
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
     public class CellSerialized
     {
+        [DataMember]
+        public CellDecorator[] Decorators;
+
         [DataMember]
         public ColorSerialized Foreground;
 
@@ -35,7 +39,8 @@ namespace SadConsole.SerializedTypes
                 Glyph = cell.Glyph,
                 IsVisible = cell.IsVisible,
                 Mirror = cell.Mirror,
-                CellState = cell.State == null ? null : cell.State
+                Decorators = cell.Decorators.ToArray(),
+                CellState = cell.State
             };
         }
 
@@ -43,7 +48,8 @@ namespace SadConsole.SerializedTypes
         {
             var newCell = new Cell(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
             {
-                IsVisible = cell.IsVisible
+                IsVisible = cell.IsVisible,
+                Decorators = cell.Decorators != null ? cell.Decorators.ToArray() : new CellDecorator[0]
             };
 
             if (cell.CellState != null)
@@ -57,6 +63,9 @@ namespace SadConsole.SerializedTypes
     [DataContract]
     public class CellStateSerialized
     {
+        [DataMember]
+        public CellDecorator[] Decorators;
+
         [DataMember]
         public ColorSerialized Foreground;
 
@@ -80,13 +89,14 @@ namespace SadConsole.SerializedTypes
                 Background = cell.Background,
                 Glyph = cell.Glyph,
                 IsVisible = cell.IsVisible,
-                Mirror = cell.Mirror
+                Mirror = cell.Mirror,
+                Decorators = cell.Decorators
             };
         }
 
         public static implicit operator CellState(CellStateSerialized cell)
         {
-            return new CellState(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror, cell.IsVisible);
+            return new CellState(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror, cell.IsVisible, cell.Decorators);
         }
 
     }

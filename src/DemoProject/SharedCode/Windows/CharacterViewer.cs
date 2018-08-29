@@ -34,24 +34,24 @@ namespace StarterProject.Windows
             //DefaultShowLocation = StartupLocation.CenterScreen;
             //Fill(Color.White, Color.Black, 0, null);
             Title = (char)198 + "Character" + (char)198;
-            TitleAlignment = System.Windows.HorizontalAlignment.Left;
-            //SetTitle(" Characters ", System.Windows.HorizontalAlignment.Center, Color.Blue, Color.LightGray);
+            TitleAlignment = HorizontalAlignment.Left;
+            //SetTitle(" Characters ", HorizontalAlignment.Center, Color.Blue, Color.LightGray);
             CloseOnESC = true;
             UsePixelPositioning = true;
 
             // CHARACTER SCROLL
-            _charScrollBar = ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 16);
+            _charScrollBar = ScrollBar.Create(Orientation.Vertical, 16);
             _charScrollBar.Position = new Point(17, 1);
             _charScrollBar.Name = "ScrollBar";
-            _charScrollBar.Maximum = textSurface.Font.Rows - 16;
+            _charScrollBar.Maximum = Font.Rows - 16;
             _charScrollBar.Value = 0;
             _charScrollBar.ValueChanged += new EventHandler(_charScrollBar_ValueChanged);
-            _charScrollBar.IsEnabled = textSurface.Font.Rows > 16;
+            _charScrollBar.IsEnabled = Font.Rows > 16;
 
             // Add all controls
             this.Add(_charScrollBar);
 
-            _closeButton = new Button(6) { Text = "Ok", Position = new Point(19, 1) }; Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
+            _closeButton = new Button(6, 1) { Text = "Ok", Position = new Point(19, 1) }; Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
 
             // Effects
             highlightedEffect = new Recolor();
@@ -73,7 +73,7 @@ namespace StarterProject.Windows
             };
 
             // The frame will have been drawn by the base class, so redraw and our close button will be put on top of it
-            Redraw();
+            //Invalidate();
         }
 
 #endregion
@@ -94,15 +94,16 @@ namespace StarterProject.Windows
             }
         }
 
-        public override void Redraw()
+        public override void Invalidate()
         {
-            base.Redraw();
+            base.Invalidate();
+
             // Draw the border between char sheet area and the text area
-            SetGlyph(0, textSurface.Height - 3, 204);
-            SetGlyph(textSurface.Width - 1, textSurface.Height - 3, 185);
-            for (int i = 1; i < textSurface.Width - 1; i++)
+            SetGlyph(0, Height - 3, 204);
+            SetGlyph(Width - 1, Height - 3, 185);
+            for (int i = 1; i < Width - 1; i++)
             {
-                SetGlyph(i, textSurface.Height - 3, 205);
+                SetGlyph(i, Height - 3, 205);
             }
             //SetCharacter(this.Width - 1, 0, 256);
 
@@ -123,7 +124,7 @@ namespace StarterProject.Windows
             {
                 SelectedCharacterIndex = state.Cell.Glyph;
             }
-            else if (state.ConsolePosition.X == textSurface.Width - 1 && state.ConsolePosition.Y == 0)
+            else if (state.ConsolePosition.X == Width - 1 && state.ConsolePosition.Y == 0)
                 Hide();
 
             base.OnMouseLeftClicked(state);
@@ -136,7 +137,7 @@ namespace StarterProject.Windows
                 // Draw the character index and value in the status area
                 string[] items = new string[] { "Index: ", state.Cell.Glyph.ToString() + " ", ((char)state.Cell.Glyph).ToString() };
 
-                items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
+                items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
 
                 var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
                            items[1].CreateColored(Color.LightCoral, Color.Black, null) +
@@ -145,7 +146,7 @@ namespace StarterProject.Windows
                 text.IgnoreBackground = true;
                 text.IgnoreEffect = true;
 
-                Print(1, textSurface.Height - 2, text);
+                Print(1, Height - 2, text);
 
                 // Set the special effect on the current known character and clear it on the last known
                 if (lastMouseState == null)
@@ -179,11 +180,11 @@ namespace StarterProject.Windows
         private void DrawSelectedItemString()
         {
             // Clear the information area and redraw
-            Print(1, textSurface.Height - 2, "".PadRight(textSurface.Width - 2));
+            Print(1, Height - 2, "".PadRight(Width - 2));
 
             //string[] items = new string[] { "Current Index:", SelectedCharacterIndex.ToString() + " ", ((char)SelectedCharacterIndex).ToString() };
             string[] items = new string[] { "Selected: ", ((char)SelectedCharacterIndex).ToString(), " (", SelectedCharacterIndex.ToString(), ")" };
-            items[4] = items[4].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
+            items[4] = items[4].PadRight(Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
 
             var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
                        items[1].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
@@ -194,7 +195,7 @@ namespace StarterProject.Windows
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;
 
-            Print(1, textSurface.Height - 2, text);
+            Print(1, Height - 2, text);
         }
 
         protected override void OnMouseExit(SadConsole.Input.MouseConsoleState state)
@@ -230,17 +231,20 @@ namespace StarterProject.Windows
                 }
             }
 
-            if (ColorsChanged != null)
-                ColorsChanged(this, EventArgs.Empty);
+            ColorsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public override void Show(bool modal)
         {
+            if (IsVisible)
+                return;
+
             UpdateCharSheetColors();
+
 
             string[] items = new string[] { "Current Index:", SelectedCharacterIndex.ToString() + " ", ((char)SelectedCharacterIndex).ToString() };
 
-            items[2] = items[2].PadRight(textSurface.Width - 2 - (items[0].Length + items[1].Length));
+            items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
 
             var text = items[0].CreateColored(Color.LightBlue, Color.Black, null) +
                        items[1].CreateColored(Color.LightCoral, Color.Black, null) +
@@ -249,7 +253,7 @@ namespace StarterProject.Windows
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;
 
-            Print(1, textSurface.Height - 2, text);
+            Print(1, Height - 2, text);
 
             Center();
 

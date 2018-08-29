@@ -8,66 +8,65 @@ using System.Collections.Generic;
 using SadConsole;
 using SadConsole.Input;
 using System.Linq;
+using SadConsole.Controls;
+using SadConsole.Themes;
 
 namespace StarterProject.CustomConsoles
 {
-    class ControlsTest: ControlsConsole, IConsoleMetadata
+    class ControlsTest: ControlsConsole
     {
         Color[] backgroundcycle;
         int backIndex = 0;
         SadConsole.Timer progressTimer;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Controls Test", Summary = "Interact with SadConsole controls" };
-            }
-        }
-
+        
         public ControlsTest():base(80, 23)
         {
-            var button1 = new SadConsole.Controls.Button(11);
-            button1.Text = "Click";
-            button1.Position = new Point(1, 1);
-            button1.Click += (s, e) => Window.Message("Clicked!", "OK");
-            Add(button1);
+            var button = new SadConsole.Controls.Button(11, 1)
+            {
+                Text = "Click",
+                Position = new Point(1, 3)
+            };
+            button.Click += (s, a) => Window.Message("This has been clicked!", "Close");
+            Add(button);
 
-            var radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            radioButton.Text = "Group 1 Option 1";
-            radioButton.Position = new Point(1, 3);
-            Add(radioButton);
+            button = new SadConsole.Controls.Button(11, 3)
+            {
+                Text = "Click",
+                Position = new Point(1, 5),
+                Theme = new Button3dTheme()
+            };
+            Add(button);
 
-            radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            radioButton.Text = "Group 1 Option 2";
-            radioButton.Position = new Point(1, 4);
-            Add(radioButton);
+            button = new SadConsole.Controls.Button(11, 3)
+            {
+                Text = "Click",
+                Position = new Point(1, 10),
+                Theme = new ButtonLinesTheme()
+            };
+            Add(button);
+            
+            var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left);
+            prog1.Position = new Point(16, 5);
+            Add(prog1);
 
-            radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            radioButton.Text = "Group 2 Option 1";
-            radioButton.Position = new Point(1, 6);
-            radioButton.GroupName = "group2";
-            Add(radioButton);
+            var prog2 = new ProgressBar(1, 6, VerticalAlignment.Bottom);
+            prog2.Position = new Point(18, 7);
+            Add(prog2);
 
-            radioButton = new SadConsole.Controls.RadioButton(20, 1);
-            radioButton.Text = "Group 2 Option 2";
-            radioButton.Position = new Point(1, 7);
-            radioButton.GroupName = "group2";
-            Add(radioButton);
+            var slider = SadConsole.Controls.ScrollBar.Create(Orientation.Horizontal, 10);
+            slider.Position = new Point(16, 3);
+            slider.Maximum = 18;
+            Add(slider);
 
-            var checkbox = new SadConsole.Controls.CheckBox(13, 1);
-            checkbox.Text = "Check box";
-            checkbox.Position = new Point(1, 9);
-            Add(checkbox);
+            slider = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, 6);
+            slider.Position = new Point(16, 7);
+            slider.Maximum = 6;
+            Add(slider);
 
-            var prog = new SadConsole.Controls.ProgressBar(10, 1, System.Windows.HorizontalAlignment.Left);
-            prog.Position = new Point(checkbox.Bounds.Left, checkbox.Bounds.Bottom + 1);
-            Add(prog);
-
-            progressTimer = new Timer(0.5, (timer, time) => { prog.Progress = prog.Progress >= 1f ? 0f : prog.Progress + 0.1f; });
+            progressTimer = new Timer(0.5, (timer, time) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; });
 
             var listbox = new SadConsole.Controls.ListBox(20, 6);
-            listbox.Position = new Point(25, 1);
+            listbox.Position = new Point(28, 3);
             listbox.HideBorder = false;
             listbox.Items.Add("item 1");
             listbox.Items.Add("item 2");
@@ -79,80 +78,73 @@ namespace StarterProject.CustomConsoles
             listbox.Items.Add("item 8");
             Add(listbox);
 
-            var slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Horizontal, 20);
-            slider.Position = new Point(25, 7);
-            slider.Maximum = 18;
-            Add(slider);
+            var radioButton = new RadioButton(20, 1);
+            radioButton.Text = "Group 1 Option 1";
+            radioButton.Position = new Point(28, 12);
+            Add(radioButton);
 
-            slider = SadConsole.Controls.ScrollBar.Create(System.Windows.Controls.Orientation.Vertical, 8);
-            slider.Position = new Point(47, 1);
-            slider.Maximum = 6;
-            Add(slider);
-
-            var input = new SadConsole.Controls.InputBox(20);
-            input.Position = new Point(25, 9);
-            Add(input);
-
-            var selButton = new SadConsole.Controls.SelectionButton(20);
+            radioButton = new RadioButton(20, 1);
+            radioButton.Text = "Group 1 Option 2";
+            radioButton.Position = new Point(28, 13);
+            Add(radioButton);
+            
+            var selButton = new SadConsole.Controls.SelectionButton(24, 1);
             selButton.Text = "Selection Button 1";
-            selButton.Position = new Point(55, 3);
+            selButton.Position = new Point(51, 3);
             Add(selButton);
 
-            var selButton1 = new SadConsole.Controls.SelectionButton(20);
+            var selButton1 = new SadConsole.Controls.SelectionButton(24, 1);
             selButton1.Text = "Selection Button 2";
-            selButton1.Position = new Point(55, 4);
+            selButton1.Position = new Point(51, 4);
             Add(selButton1);
 
-            var selButton2 = new SadConsole.Controls.SelectionButton(20);
+            var selButton2 = new SadConsole.Controls.SelectionButton(24, 1);
             selButton2.Text = "Selection Button 3";
-            selButton2.Position = new Point(55, 5);
+            selButton2.Position = new Point(51, 5);
             Add(selButton2);
 
-            var selButton3 = new SadConsole.Controls.SelectionButton(20);
-            selButton3.Text = "Selection Button 4";
-            selButton3.Position = new Point(55, 6);
-            Add(selButton3);
-
-            var selButton4 = new SadConsole.Controls.SelectionButton(20);
-            selButton4.Text = "Selection Button 5";
-            selButton4.Position = new Point(55, 7);
-            Add(selButton4);
-
-            selButton.PreviousSelection = selButton4;
+            selButton.PreviousSelection = selButton2;
             selButton.NextSelection = selButton1;
             selButton1.PreviousSelection = selButton;
             selButton1.NextSelection = selButton2;
             selButton2.PreviousSelection = selButton1;
-            selButton2.NextSelection = selButton3;
-            selButton3.PreviousSelection = selButton2;
-            selButton3.NextSelection = selButton4;
-            selButton4.PreviousSelection = selButton3;
-            selButton4.NextSelection = selButton;
+            selButton2.NextSelection = selButton;
+
+            var input = new TextBox(20);
+            input.Position = new Point(51, 9);
+            Add(input);
+
+            var checkbox = new SadConsole.Controls.CheckBox(13, 1)
+            {
+                Text = "Check box",
+                Position = new Point(51, 13)
+            };
+            Add(checkbox);
 
             FocusedControl = null;
             //DisableControlFocusing = true;
             
             List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>();
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Red, "Red"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.RedDark, "DRed"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Purple, "Prp"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.PurpleDark, "DPrp"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Blue, "Blu"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.BlueDark, "DBlu"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Cyan, "Cya"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.CyanDark, "DCya"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Green, "Gre"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.GreenDark, "DGre"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Yellow, "Yel"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.YellowDark, "DYel"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Orange, "Ora"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.OrangeDark, "DOra"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Brown, "Bro"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.BrownDark, "DBrow"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Gray, "Gray"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.GrayDark, "DGray"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.White, "White"));
-            colors.Add(new Tuple<Color, string>(StarterProject.Theme.Black, "Black"));
+            colors.Add(new Tuple<Color, string>(Colors.Red, "Red"));
+            colors.Add(new Tuple<Color, string>(Colors.RedDark, "DRed"));
+            colors.Add(new Tuple<Color, string>(Colors.Purple, "Prp"));
+            colors.Add(new Tuple<Color, string>(Colors.PurpleDark, "DPrp"));
+            colors.Add(new Tuple<Color, string>(Colors.Blue, "Blu"));
+            colors.Add(new Tuple<Color, string>(Colors.BlueDark, "DBlu"));
+            colors.Add(new Tuple<Color, string>(Colors.Cyan, "Cya"));
+            colors.Add(new Tuple<Color, string>(Colors.CyanDark, "DCya"));
+            colors.Add(new Tuple<Color, string>(Colors.Green, "Gre"));
+            colors.Add(new Tuple<Color, string>(Colors.GreenDark, "DGre"));
+            colors.Add(new Tuple<Color, string>(Colors.Yellow, "Yel"));
+            colors.Add(new Tuple<Color, string>(Colors.YellowDark, "DYel"));
+            colors.Add(new Tuple<Color, string>(Colors.Orange, "Ora"));
+            colors.Add(new Tuple<Color, string>(Colors.OrangeDark, "DOra"));
+            colors.Add(new Tuple<Color, string>(Colors.Brown, "Bro"));
+            colors.Add(new Tuple<Color, string>(Colors.BrownDark, "DBrow"));
+            colors.Add(new Tuple<Color, string>(Colors.Gray, "Gray"));
+            colors.Add(new Tuple<Color, string>(Colors.GrayDark, "DGray"));
+            colors.Add(new Tuple<Color, string>(Colors.White, "White"));
+            colors.Add(new Tuple<Color, string>(Colors.Black, "Black"));
 
             backgroundcycle = colors.Select(i => i.Item1).ToArray();
             backIndex = 5;
@@ -190,7 +182,7 @@ namespace StarterProject.CustomConsoles
                 var theme = Theme;
                 theme.FillStyle.Background = backgroundcycle[backIndex];
                 Theme = theme;
-                
+
             }
 
 
@@ -212,43 +204,50 @@ namespace StarterProject.CustomConsoles
         {
             base.Invalidate();
 
-            Print(50, 2, "CLICK BTN - USE UP/DOWN KEYS", StarterProject.Theme.YellowDark);
+            Print(1, 1, "BUTTONS", Colors.YellowDark);
+            Print(16, 1, "BARS", Colors.YellowDark);
+            Print(28, 1, "LISTBOX", Colors.YellowDark);
+            Print(28, 10, "RADIO BUTTON", Colors.YellowDark);
 
-            Print(2, 15, "RED ".CreateColored(StarterProject.Theme.Red, null) +
-                                      "PURPLE ".CreateColored(StarterProject.Theme.Purple, null) +
-                                      "BLUE ".CreateColored(StarterProject.Theme.Blue, null) +
-                                      "CYAN ".CreateColored(StarterProject.Theme.Cyan, null) +
-                                      "GREEN ".CreateColored(StarterProject.Theme.Green, null) +
-                                      "YELLOW ".CreateColored(StarterProject.Theme.Yellow, null) +
-                                      "ORANGE ".CreateColored(StarterProject.Theme.Orange, null) +
-                                      "BROWN ".CreateColored(StarterProject.Theme.Brown, null) +
-                                      "GRAY ".CreateColored(StarterProject.Theme.Gray, null) +
-                                      "WHITE ".CreateColored(StarterProject.Theme.White, null)
+            Print(51, 1, "SELECTION BUTTON (UP/DN KEYS)", Colors.YellowDark);
+            Print(51, 7, "TEXTBOX", Colors.YellowDark);
+            Print(51, 11, "CHECKBOX", Colors.YellowDark);
+
+            Print(2, 15, "RED ".CreateColored(Colors.Red, null) +
+                                      "PURPLE ".CreateColored(Colors.Purple, null) +
+                                      "BLUE ".CreateColored(Colors.Blue, null) +
+                                      "CYAN ".CreateColored(Colors.Cyan, null) +
+                                      "GREEN ".CreateColored(Colors.Green, null) +
+                                      "YELLOW ".CreateColored(Colors.Yellow, null) +
+                                      "ORANGE ".CreateColored(Colors.Orange, null) +
+                                      "BROWN ".CreateColored(Colors.Brown, null) +
+                                      "GRAY ".CreateColored(Colors.Gray, null) +
+                                      "WHITE ".CreateColored(Colors.White, null)
                                       );
 
-            Print(2, 16, "RED ".CreateColored(StarterProject.Theme.RedDark, null) +
-                                      "PURPLE ".CreateColored(StarterProject.Theme.PurpleDark, null) +
-                                      "BLUE ".CreateColored(StarterProject.Theme.BlueDark, null) +
-                                      "CYAN ".CreateColored(StarterProject.Theme.CyanDark, null) +
-                                      "GREEN ".CreateColored(StarterProject.Theme.GreenDark, null) +
-                                      "YELLOW ".CreateColored(StarterProject.Theme.YellowDark, null) +
-                                      "ORANGE ".CreateColored(StarterProject.Theme.OrangeDark, null) +
-                                      "BROWN ".CreateColored(StarterProject.Theme.BrownDark, null) +
-                                      "GRAY ".CreateColored(StarterProject.Theme.GrayDark, null) +
-                                      "BLACK ".CreateColored(StarterProject.Theme.Black, null)
+            Print(2, 16, "RED ".CreateColored(Colors.RedDark, null) +
+                                      "PURPLE ".CreateColored(Colors.PurpleDark, null) +
+                                      "BLUE ".CreateColored(Colors.BlueDark, null) +
+                                      "CYAN ".CreateColored(Colors.CyanDark, null) +
+                                      "GREEN ".CreateColored(Colors.GreenDark, null) +
+                                      "YELLOW ".CreateColored(Colors.YellowDark, null) +
+                                      "ORANGE ".CreateColored(Colors.OrangeDark, null) +
+                                      "BROWN ".CreateColored(Colors.BrownDark, null) +
+                                      "GRAY ".CreateColored(Colors.GrayDark, null) +
+                                      "BLACK ".CreateColored(Colors.Black, null)
                                       );
-            Print(2, 18, CreateGradientExample("RED", StarterProject.Theme.Red, StarterProject.Theme.RedDark));
-            Print(2, 19, CreateGradientExample("PURPLE", StarterProject.Theme.Purple, StarterProject.Theme.PurpleDark));
-            Print(2, 20, CreateGradientExample("BLUE", StarterProject.Theme.Blue, StarterProject.Theme.BlueDark));
-            Print(2, 21, CreateGradientExample("CYAN", StarterProject.Theme.Cyan, StarterProject.Theme.CyanDark));
-            Print(2, 22, CreateGradientExample("GREEN", StarterProject.Theme.Green, StarterProject.Theme.GreenDark));
-            Print(34, 18, CreateGradientExample("YELLOW", StarterProject.Theme.Yellow, StarterProject.Theme.YellowDark));
-            Print(34, 19, CreateGradientExample("ORANGE", StarterProject.Theme.Orange, StarterProject.Theme.OrangeDark));
-            Print(34, 20, CreateGradientExample("BROWN", StarterProject.Theme.Brown, StarterProject.Theme.BrownDark));
-            Print(34, 21, CreateGradientExample("GRAY", StarterProject.Theme.Gray, StarterProject.Theme.GrayDark));
-            Print(34, 22, CreateGradientExample("WHITE", StarterProject.Theme.White, StarterProject.Theme.Black));
+            Print(2, 18, CreateGradientExample("RED", Colors.Red, Colors.RedDark));
+            Print(2, 19, CreateGradientExample("PURPLE", Colors.Purple, Colors.PurpleDark));
+            Print(2, 20, CreateGradientExample("BLUE", Colors.Blue, Colors.BlueDark));
+            Print(2, 21, CreateGradientExample("CYAN", Colors.Cyan, Colors.CyanDark));
+            Print(2, 22, CreateGradientExample("GREEN", Colors.Green, Colors.GreenDark));
+            Print(34, 18, CreateGradientExample("YELLOW", Colors.Yellow, Colors.YellowDark));
+            Print(34, 19, CreateGradientExample("ORANGE", Colors.Orange, Colors.OrangeDark));
+            Print(34, 20, CreateGradientExample("BROWN", Colors.Brown, Colors.BrownDark));
+            Print(34, 21, CreateGradientExample("GRAY", Colors.Gray, Colors.GrayDark));
+            Print(34, 22, CreateGradientExample("WHITE", Colors.White, Colors.Black));
 
-            //Print(2, 23, CreateGradientExample("GOLD", StarterProject.Theme.Gold, StarterProject.Theme.GoldDark));
+            //Print(2, 23, CreateGradientExample("GOLD", Colors.Gold, Colors.GoldDark));
         }
 
         private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7)

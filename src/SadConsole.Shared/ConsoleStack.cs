@@ -22,13 +22,7 @@ namespace SadConsole
         /// <summary>
         /// Gets the current active console.
         /// </summary>
-        public IConsole Console
-        {
-            get
-            {
-                return activeConsole;
-            }
-        }
+        public IConsole Console => activeConsole;
 
         /// <summary>
         /// The stack of consoles for input processing.

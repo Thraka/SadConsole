@@ -8,7 +8,7 @@ namespace SadConsole.Instructions
     /// Draws a string to a console as if someone was typing.
     /// </summary>
     [DataContract]
-    public class DrawString : InstructionBase<Surfaces.SurfaceEditor>
+    public class DrawString : InstructionBase<Surfaces.SurfaceBase>
     {
         #region Settings
         /// <summary>
@@ -46,7 +46,7 @@ namespace SadConsole.Instructions
         private Cursor _cursor;
         
 
-        public DrawString(Surfaces.SurfaceEditor target)
+        public DrawString(Surfaces.SurfaceBase target)
             : base(target)
         {
             _cursor = new Cursor(target);

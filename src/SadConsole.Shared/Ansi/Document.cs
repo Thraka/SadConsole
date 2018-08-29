@@ -14,11 +14,11 @@ namespace SadConsole.Ansi
 
         public byte[] AnsiBytes
         {
-            get { return _ansiBytes; }
+            get => _ansiBytes;
             set
             {
                 _ansiBytes = value;
-                //_ansiData = Encoding.UTF8.GetString(_ansiBytes);
+                //_ansiData = Encoding.ASCII.GetString(_ansiBytes);
                 _ansiData = new string(_ansiBytes.Select(b => (char)b).ToArray());
 
                 if (Stream != null)
@@ -28,7 +28,7 @@ namespace SadConsole.Ansi
             }
         }
 
-        public string AnsiString { get { return _ansiData; } }
+        public string AnsiString => _ansiData;
 
         public MemoryStream Stream { get; private set; }
 

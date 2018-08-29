@@ -1,4 +1,6 @@
-﻿namespace SadConsole.Controls
+﻿using SadConsole.Surfaces;
+
+namespace SadConsole.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -20,22 +22,13 @@
         /// <param name="height">Height of the control.</param>
         public DrawingSurface(int width, int height) : base(width, height)
         {
+            Surface = new BasicNoDraw(width, height);
             base.TabStop = false;
         }
 
-        /// <summary>
-        /// Not used by this control.
-        /// </summary>
-        public override void DetermineAppearance()
+        public override void Update(TimeSpan time)
         {
-        }
-
-        /// <summary>
-        /// Not used by this control.
-        /// </summary>
-        public override void Compose()
-        {
-            OnComposed?.Invoke(this);
+            Surface.Update(time);
         }
 
         [OnDeserializedAttribute]

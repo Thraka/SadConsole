@@ -4,19 +4,12 @@ using System;
 
 namespace StarterProject.CustomConsoles
 {
-    class DOSConsole: SadConsole.Console, IConsoleMetadata
+    class DOSConsole: SadConsole.Console
     {
         public string Prompt { get; set; }
 
         private InputHandling.ClassicConsoleKeyboardHandler _keyboardHandlerObject;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Prompt Console", Summary = "Emulates a command prompt" };
-            }
-        }
+        
 
         // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
         public DOSConsole()
@@ -38,34 +31,34 @@ namespace StarterProject.CustomConsoles
 
             // Enable the keyboard and setup the prompt.
             UseKeyboard = true;
-            virtualCursor.IsVisible = true;
+            Cursor.IsVisible = true;
             Prompt = "Prompt> ";
 
 
             // Startup description
             ClearText();
-            VirtualCursor.Position = new Point(0, 24);
-            VirtualCursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
-            _keyboardHandlerObject.VirtualCursorLastY = 24;
+            Cursor.Position = new Point(0, 24);
+            Cursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
+            _keyboardHandlerObject.CursorLastY = 24;
             TimesShiftedUp = 0;
 
-            virtualCursor.DisableWordBreak = true;
-            virtualCursor.Print(Prompt);
-            virtualCursor.DisableWordBreak = false;
+            Cursor.DisableWordBreak = true;
+            Cursor.Print(Prompt);
+            Cursor.DisableWordBreak = false;
         }
 
         public void ClearText()
         {
             Clear();
-            VirtualCursor.Position = new Point(0, 24);
-            _keyboardHandlerObject.VirtualCursorLastY = 24;
+            Cursor.Position = new Point(0, 24);
+            _keyboardHandlerObject.CursorLastY = 24;
         }
 
         private void EnterPressedActionHandler(string value)
         {
             if (value.ToLower() == "help")
             {
-                VirtualCursor.NewLine().
+                Cursor.NewLine().
                               Print("  Advanced Example: Command Prompt - HELP").NewLine().
                               Print("  =======================================").NewLine().NewLine().
                               Print("  help      - Display this help info").NewLine().
@@ -76,19 +69,25 @@ namespace StarterProject.CustomConsoles
                               Print("  ").NewLine();
             }
             else if (value.ToLower() == "ver")
-                VirtualCursor.Print("  SadConsole for MonoGame").NewLine();
+                Cursor.Print("  SadConsole for MonoGame").NewLine();
 
             else if (value.ToLower() == "cls")
                 ClearText();
 
             else if (value.ToLower() == "look")
-                VirtualCursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
+                Cursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
 
             else if (value.ToLower() == "exit" || value.ToLower() == "quit")
+            {
+#if WINDOWS_UAP
+                //Windows.UI.Xaml.Application.Current.Exit();       Not working?
+#else
                 Environment.Exit(0);
+#endif
+            }
 
             else
-                VirtualCursor.Print("  Unknown command").NewLine();
+                Cursor.Print("  Unknown command").NewLine();
         }
     }
 }

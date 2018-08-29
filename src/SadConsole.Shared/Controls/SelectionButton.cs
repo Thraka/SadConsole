@@ -21,13 +21,13 @@ namespace SadConsole.Controls
         /// The selection button to focus when the UP key is pressed or the SelectNext() method is called.
         /// </summary>
         public SelectionButton NextSelection { get; set; }
-        
+
 
         /// <summary>
         /// Creates a new Selection Button with a specific width and height.
         /// </summary>
         /// <param name="width">The width of the selection button.</param>
-        public SelectionButton(int width) : base(width) { defaultTheme = Library.Default.SelectionButtonTheme; }
+        public SelectionButton(int width, int height) : base(width, height) => Theme = (ButtonTheme)Library.Default.SelectionButtonTheme.Clone();
 
         /// <summary>
         /// Sets the next selection button and optionally sets the previous of the referenced selection to this button.

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 using System;
 using System.Runtime.Serialization;
+using Microsoft.Xna.Framework.Input;
 using SadConsole.Surfaces;
 using SadConsole.Effects;
 using SadConsole;
@@ -13,7 +14,7 @@ namespace SadConsole
     //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
     public class Cursor
     {
-        private SurfaceEditor editor;
+        private SurfaceBase editor;
         private Point position = new Point();
 
         private int cursorCharacter = 219;
@@ -53,20 +54,20 @@ namespace SadConsole
         /// </summary>
         public Point Position
         {
-            get { return position; }
+            get => position;
             set
             {
                 if (editor != null)
                 {
                     var old = position;
 
-                    if (!(value.X < 0 || value.X >= editor.TextSurface.Width))
+                    if (!(value.X < 0 || value.X >= editor.Width))
                         position.X = value.X;
-                    if (!(value.Y < 0 || value.Y >= editor.TextSurface.Height))
+                    if (!(value.Y < 0 || value.Y >= editor.Height))
                         position.Y = value.Y;
 
                     if (position != null)
-                        editor.TextSurface.IsDirty = true;
+                        editor.IsDirty = true;
                 }
             }
         }
@@ -91,8 +92,8 @@ namespace SadConsole
         /// </summary>
         public int Row
         {
-            get { return position.Y; }
-            set { position.Y = value; }
+            get => position.Y;
+            set => position.Y = value;
         }
 
         /// <summary>
@@ -100,8 +101,8 @@ namespace SadConsole
         /// </summary>
         public int Column
         {
-            get { return position.X; }
-            set { position.X = value; }
+            get => position.X;
+            set => position.X = value;
         }
 
         /// <summary>
@@ -113,19 +114,13 @@ namespace SadConsole
         /// Creates a new instance of the cursor class that will work with the specified console.
         /// </summary>
         /// <param name="console">The console this cursor will print on.</param>
-        public Cursor(SurfaceEditor console)
+        public Cursor(SurfaceBase console)
         {
             editor = console;
 
             Constructor();
         }
 
-        public Cursor(ISurface surface)
-        {
-            editor = new SurfaceEditor(surface);
-
-            Constructor();
-        }
 
         private void Constructor()
         {
@@ -148,7 +143,7 @@ namespace SadConsole
         /// Sets the console this cursor is targetting.
         /// </summary>
         /// <param name="console">The console the cursor works with.</param>
-        internal void AttachConsole(SurfaceEditor console)
+        internal void AttachSurface(SurfaceBase console)
         {
             editor = console;
         }
@@ -170,18 +165,18 @@ namespace SadConsole
         /// <exception cref="Exception">Thrown when the backing console's CellData is null.</exception>
         public Cursor ResetAppearanceToConsole()
         {
-            if (editor.TextSurface != null)
-                PrintAppearance = new Cell(editor.TextSurface.DefaultForeground, editor.TextSurface.DefaultBackground, 0);
+            if (editor != null)
+                PrintAppearance = new Cell(editor.DefaultForeground, editor.DefaultBackground, 0);
             else
                 throw new Exception("CellData of the attached console is null. Cannot reset appearance.");
 
             return this;
         }
-        
+
 
         private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
         {
-            var cell = editor.TextSurface.Cells[position.Y * editor.TextSurface.Width + position.X];
+            var cell = editor.Cells[position.Y * editor.Width + position.X];
 
             if (!PrintOnlyCharacterData)
             {
@@ -201,12 +196,12 @@ namespace SadConsole
 
 
             position.X += 1;
-            if (position.X >= editor.TextSurface.Width)
+            if (position.X >= editor.Width)
             {
                 position.X = 0;
                 position.Y += 1;
 
-                if (position.Y >= editor.TextSurface.Height)
+                if (position.Y >= editor.Height)
                 {
                     position.Y -= 1;
 
@@ -217,7 +212,7 @@ namespace SadConsole
                 }
             }
 
-            editor.TextSurface.IsDirty = true;
+            editor.IsDirty = true;
         }
 
         /// <summary>
@@ -244,7 +239,7 @@ namespace SadConsole
 
             if (UseStringParser)
             {
-                coloredString = ColoredString.Parse(text, position.Y * editor.TextSurface.Width + position.X, editor.TextSurface, editor, new StringParser.ParseCommandStacks());
+                coloredString = ColoredString.Parse(text, position.Y * editor.Width + position.X, editor, new StringParser.ParseCommandStacks());
             }
             else
             {
@@ -283,13 +278,13 @@ namespace SadConsole
 
                 for (int i = 0; i < spaceCount; i++)
                     PrintGlyph(spaceGlyph, text);
-                    
+
                 if (spaceCount != 0)
                     text = text.SubString(spaceCount, text.Count - spaceCount);
 
                 stringText = newStringText;
                 string[] parts = stringText.Split(' ');
-                
+
                 // Start processing the string
                 int c = 0;
 
@@ -424,7 +419,7 @@ namespace SadConsole
         /// <returns>The current cursor object.</returns>
         public Cursor LineFeed()
         {
-            if (position.Y == editor.TextSurface.Height - 1)
+            if (position.Y == editor.Height - 1)
             {
                 editor.ShiftUp();
                 //if (((CustomConsole)_console.Target).Data.ResizeOnShift)
@@ -470,8 +465,8 @@ namespace SadConsole
         {
             int newY = position.Y + amount;
 
-            if (newY >= editor.TextSurface.Height)
-                newY = editor.TextSurface.Height - 1;
+            if (newY >= editor.Height)
+                newY = editor.Height - 1;
 
             Position = new Point(position.X, newY);
             return this;
@@ -500,12 +495,12 @@ namespace SadConsole
         /// <returns>This cursor object.</returns>
         public Cursor LeftWrap(int amount)
         {
-            int index = editor.TextSurface.GetIndexFromPoint(this.position) - amount;
+            int index = editor.GetIndexFromPoint(this.position) - amount;
 
             if (index < 0)
                 index = 0;
 
-            this.position = editor.TextSurface.GetPointFromIndex(index);
+            this.position = editor.GetPointFromIndex(index);
 
             return this;
         }
@@ -519,8 +514,8 @@ namespace SadConsole
         {
             int newX = position.X + amount;
 
-            if (newX >= editor.TextSurface.Width)
-                newX = editor.TextSurface.Width - 1;
+            if (newX >= editor.Width)
+                newX = editor.Width - 1;
 
             Position = new Point(newX, position.Y);
             return this;
@@ -533,16 +528,16 @@ namespace SadConsole
         /// <returns>This cursor object.</returns>
         public Cursor RightWrap(int amount)
         {
-            int index = editor.TextSurface.GetIndexFromPoint(this.position) + amount;
+            int index = editor.GetIndexFromPoint(this.position) + amount;
 
-            if (index > editor.TextSurface.Cells.Length)
-                index = editor.TextSurface.Cells.Length - 1;
+            if (index > editor.Cells.Length)
+                index = editor.Cells.Length - 1;
 
-            this.position = editor.TextSurface.GetPointFromIndex(index);
+            this.position = editor.GetPointFromIndex(index);
 
             return this;
         }
-        
+
         public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
         {
             batch.Draw(font.FontImage, renderArea, font.GlyphRects[font.SolidGlyphIndex], CursorRenderCell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
@@ -556,8 +551,105 @@ namespace SadConsole
                 CursorEffect.Update(elapsed.TotalSeconds);
 
                 if (CursorEffect.Apply(CursorRenderCell))
-                    editor.TextSurface.IsDirty = true;
+                    editor.IsDirty = true;
             }
+        }
+
+        /// <summary>
+        /// Automates the cursor based on keyboard input.
+        /// </summary>
+        /// <param name="info">The state of the keyboard</param>
+        /// <returns>Returns true when the keyboard caused the cursor to do something.</returns>
+        public virtual bool ProcessKeyboard(Input.Keyboard info)
+        {
+            var didSomething = false;
+            foreach (var key in info.KeysPressed)
+            {
+                if (key.Character == '\0')
+                {
+                    switch (key.Key)
+                    {
+                        case Keys.Space:
+                            Print(key.Character.ToString());
+                            didSomething = true;
+                            break;
+                        case Keys.Enter:
+                            CarriageReturn().LineFeed();
+                            didSomething = true;
+                            break;
+
+                        case Keys.Pause:
+                        case Keys.Escape:
+                        case Keys.F1:
+                        case Keys.F2:
+                        case Keys.F3:
+                        case Keys.F4:
+                        case Keys.F5:
+                        case Keys.F6:
+                        case Keys.F7:
+                        case Keys.F8:
+                        case Keys.F9:
+                        case Keys.F10:
+                        case Keys.F11:
+                        case Keys.F12:
+                        case Keys.LeftShift:
+                        case Keys.RightShift:
+                        case Keys.LeftAlt:
+                        case Keys.RightAlt:
+                        case Keys.LeftControl:
+                        case Keys.RightControl:
+                        case Keys.LeftWindows:
+                        case Keys.RightWindows:
+                        case Keys.F13:
+                        case Keys.F14:
+                        case Keys.F15:
+                        case Keys.F16:
+                        case Keys.F17:
+                        case Keys.F18:
+                        case Keys.F19:
+                        case Keys.F20:
+                        case Keys.F21:
+                        case Keys.F22:
+                        case Keys.F23:
+                        case Keys.F24:
+                            //this._virtualCursor.Print(key.Character.ToString());
+                            break;
+                        case Keys.Up:
+                            Up(1);
+                            didSomething = true;
+                            break;
+                        case Keys.Left:
+                            Left(1);
+                            didSomething = true;
+                            break;
+                        case Keys.Right:
+                            Right(1);
+                            didSomething = true;
+                            break;
+                        case Keys.Down:
+                            Down(1);
+                            didSomething = true;
+                            break;
+                        case Keys.None:
+                            break;
+                        case Keys.Back:
+                            Left(1).Print(" ").Left(1);
+                            didSomething = true;
+                            break;
+                        default:
+                            Print(key.Character.ToString());
+                            didSomething = true;
+                            break;
+                    }
+                }
+                else
+                {
+                    Print(key.Character.ToString());
+                    didSomething = true;
+                }
+            }
+
+            return didSomething;
         }
     }
 }

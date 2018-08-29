@@ -78,7 +78,7 @@ namespace SadConsole.Input
         /// <summary>
         /// Indicates that the mouse is currently within the bounds of the rendering area.
         /// </summary>
-        public bool IsOnScreen { get { return Global.RenderRect.Contains(ScreenPosition); } }
+        public bool IsOnScreen => Global.RenderRect.Contains(ScreenPosition);
 
         /// <summary>
         /// Updates the state of the mouse.
@@ -180,7 +180,7 @@ namespace SadConsole.Input
                 bool foundMouseTarget = false;
 
                 // Build a list of all consoles
-                var consoles = new List<IConsole>();
+                var consoles = new List<Console>();
                 GetConsoles(Global.CurrentScreen, ref consoles);
 
                 // Process top-most consoles first.
@@ -207,11 +207,11 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(IScreen screen, ref List<IConsole> list)
+        private void GetConsoles(ScreenObject screen, ref List<Console> list)
         {
-            if (screen is IConsole)
+            if (screen is Console)
             {
-                var console = screen as IConsole;
+                var console = screen as Console;
 
                 if (console.UseMouse)
                     list.Add(console);
@@ -228,7 +228,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="console">The console to check.</param>
         /// <returns>True or false indicating if the mouse is over the console.</returns>
-        public bool IsMouseOverConsole(IConsole console)
+        public bool IsMouseOverConsole(Console console)
         {
             return new MouseConsoleState(console, this).IsOnConsole;
         }

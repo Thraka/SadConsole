@@ -24,13 +24,7 @@
         /// <summary>
         /// Represents the current instruction if this set is currently executing.
         /// </summary>
-        public InstructionBase CurrentInstruction
-        {
-            get
-            {
-                return _currentInstructionNode != null ? _currentInstructionNode.Value : null;
-            }
-        }
+        public InstructionBase CurrentInstruction => _currentInstructionNode != null ? _currentInstructionNode.Value : null;
 
         protected LinkedListNode<InstructionBase> _currentInstructionNode;
 
