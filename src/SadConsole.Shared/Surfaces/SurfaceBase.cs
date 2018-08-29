@@ -25,6 +25,7 @@ namespace SadConsole.Surfaces
         protected Font _font;
         private Color _tint = Color.Transparent;
         private bool _isDirty = true;
+        private DrawCallSurface _drawCall;
 
         /// <summary>
         /// Sets the viewport without triggering <see cref="SetRenderCells"/>.
@@ -214,6 +215,7 @@ namespace SadConsole.Surfaces
                 SetRenderCells();
 
             Renderer = new Renderers.Basic();
+            _drawCall = new DrawCallSurface(this, Point.Zero, false);
         }
 
         /// <summary>
@@ -281,7 +283,10 @@ namespace SadConsole.Surfaces
                 if (LastRenderResult != null)
                 {
                     Renderer.Render(this);
-                    Global.DrawCalls.Add(new DrawCallSurface(this, CalculatedPosition, UsePixelPositioning));
+
+                    _drawCall.Position = UsePixelPositioning ? CalculatedPosition.ToVector2() : Font.GetWorldPosition(CalculatedPosition).ToVector2();
+
+                    Global.DrawCalls.Add(_drawCall);
                 }
 
                 base.Draw(timeElapsed);

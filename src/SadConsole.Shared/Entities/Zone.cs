@@ -20,6 +20,7 @@ namespace SadConsole.Entities
         private SurfaceBase _parentSurface;
         private string _title = "Zone";
         private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
+        private DrawCallSurface _drawCall;
 
         /// <summary>
         /// The area the zone covers.
@@ -79,15 +80,25 @@ namespace SadConsole.Entities
             Rebuild();
         }
 
+        /// <inheritdoc />
         public override void Draw(TimeSpan timeElapsed)
         {
             if (IsVisible && _parentSurface != null)
             {
                 if (_parentSurface.ViewPort.Intersects(Area))
                 {
-                    Global.DrawCalls.Add(new DrawCalls.DrawCallSurface(_debugSurface,
-                        Area.Location - _parentSurface.ViewPort.Location + _parentSurface.CalculatedPosition,
-                        _parentSurface.UsePixelPositioning));
+                    if (_parentSurface.UsePixelPositioning)
+                    {
+                        _drawCall.Position = (Area.Location - _parentSurface.ViewPort.Location +
+                                              _parentSurface.CalculatedPosition).ToVector2();
+                    }
+                    else
+                    {
+                        _drawCall.Position = _debugSurface.Font.GetWorldPosition((Area.Location - _parentSurface.ViewPort.Location +
+                                              _parentSurface.CalculatedPosition)).ToVector2();
+                    }
+                    
+                    Global.DrawCalls.Add(_drawCall);
                 }
             }
 
@@ -103,6 +114,7 @@ namespace SadConsole.Entities
                 _debugSurface.Clear();
                 _debugSurface.Print(0, 0, DebugTitle, DebugAppearance);
                 _debugSurface.Draw(TimeSpan.Zero);
+                _drawCall = new DrawCallSurface(_debugSurface, Point.Zero, _parentSurface.UsePixelPositioning);
             }
             else
                 _debugSurface = null;
