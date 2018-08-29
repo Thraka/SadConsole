@@ -1,4 +1,4 @@
-﻿## 08/26/2018 V7.0.0
+﻿## 08/29/2018 V7.0.0
 
 - Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
 - Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
