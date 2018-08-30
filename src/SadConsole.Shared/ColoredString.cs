@@ -225,10 +225,10 @@ namespace SadConsole
             for (int i = 0; i < string2.Count; i++)
                 returnString._characters[i + string1.Count] = string2._characters[i].Clone();
 
-            returnString.IgnoreGlyph = string1.IgnoreGlyph && string1.IgnoreGlyph;
-            returnString.IgnoreForeground = string1.IgnoreForeground && string1.IgnoreForeground;
-            returnString.IgnoreBackground = string1.IgnoreBackground && string1.IgnoreBackground;
-            returnString.IgnoreEffect = string1.IgnoreEffect && string1.IgnoreEffect;
+            returnString.IgnoreGlyph = string1.IgnoreGlyph && string2.IgnoreGlyph;
+            returnString.IgnoreForeground = string1.IgnoreForeground && string2.IgnoreForeground;
+            returnString.IgnoreBackground = string1.IgnoreBackground && string2.IgnoreBackground;
+            returnString.IgnoreEffect = string1.IgnoreEffect && string2.IgnoreEffect;
 
             return returnString;
         }
