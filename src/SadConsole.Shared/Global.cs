@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using SadConsole.DrawCalls;
@@ -157,6 +159,38 @@ namespace SadConsole
             }
 
         }
+        
+        internal static void LoadEmbeddedFont()
+        {
+            //var auxList = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceNameFont = "SadConsole.Resources.IBM_ext.font";
+            var resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceNameFont))
+            using (StreamReader sr = new StreamReader(stream))
+            {
+                Settings.LoadingEmbeddedFont = true;
+                Global.SerializerPathHint = "";
+                var masterFont = (FontMaster) Newtonsoft.Json.JsonConvert.DeserializeObject(
+                    sr.ReadToEnd(),
+                    typeof(FontMaster),
+                    new Newtonsoft.Json.JsonSerializerSettings()
+                    {
+                        TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
+                    });
+
+                using (Stream fontStream = assembly.GetManifestResourceStream(resourceNameImage))
+                    masterFont.Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+
+                masterFont.ConfigureRects();
+                Fonts.Add(masterFont.Name, masterFont);
+                FontDefault = masterFont.GetFont(Font.FontSizes.One);
+
+                Settings.LoadingEmbeddedFont = false;
+            }
+        }
+
 
         /// <summary>
         /// Resets the <see cref="RenderOutput"/> target and determines the appropriate <see cref="RenderRect"/> and <see cref="RenderScale"/> based on the window or fullscreen state.

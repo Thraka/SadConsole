@@ -10,6 +10,8 @@ namespace SadConsole
     /// </summary>
     public static class Settings
     {
+        internal static bool LoadingEmbeddedFont = false;
+
         /// <summary>
         /// The color to automatically clear the device with.
         /// </summary>

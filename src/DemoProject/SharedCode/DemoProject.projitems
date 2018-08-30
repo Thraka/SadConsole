@@ -21,29 +21,11 @@
     <Content Include="$(MSBuildThisFileDirectory)Ansi\ROY-DGZN.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus12.font">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM.font">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM_ext.font">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Ansi\files.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Fonts\Cheepicus_12x12.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="$(MSBuildThisFileDirectory)Fonts\IBM8x16_NoPadding_extended.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="$(MSBuildThisFileDirectory)Game.ico" />
     <Content Include="$(MSBuildThisFileDirectory)GameThumbnail.png" />
     <Content Include="$(MSBuildThisFileDirectory)sad.png">

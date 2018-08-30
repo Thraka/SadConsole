@@ -153,4 +153,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)WindowConsole.Static.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Zone.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\IBM8x16_NoPadding_extended.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\IBM_ext.font" />
+  </ItemGroup>
 </Project>

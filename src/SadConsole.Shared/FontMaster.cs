@@ -75,7 +75,7 @@ namespace SadConsole
         /// <summary>
         /// The texture used by the font.
         /// </summary>
-        public Texture2D Image { get; private set; }
+        public Texture2D Image { get; internal set; }
 
         /// <summary>
         /// A cached array of rectangles of individual glyphs.
@@ -181,11 +181,14 @@ namespace SadConsole
 
             LoadedFilePath = System.IO.Path.Combine(Global.SerializerPathHint, FilePath);
 
+            // I know.. bad way to do this.. yuck
+            if (!Settings.LoadingEmbeddedFont)
+            {
+                using (System.IO.Stream fontStream = TitleContainer.OpenStream(LoadedFilePath))
+                    Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
 
-            using (System.IO.Stream fontStream = TitleContainer.OpenStream(LoadedFilePath))
-                Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
-
-            ConfigureRects();
+                ConfigureRects();
+            }
         }
 
         /// <summary>
