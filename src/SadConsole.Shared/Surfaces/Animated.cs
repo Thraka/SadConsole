@@ -303,7 +303,7 @@ namespace SadConsole.Surfaces
         /// <inheritdoc />
         public override void OnCalculateRenderPosition()
         {
-            CalculatedPosition = Position - Center + Parent?.CalculatedPosition ?? Point.Zero;
+            CalculatedPosition = Position - Center + (Parent?.CalculatedPosition ?? Point.Zero);
 
             foreach (var child in Children)
             {

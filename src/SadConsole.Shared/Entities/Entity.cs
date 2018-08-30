@@ -120,7 +120,7 @@ namespace SadConsole.Entities
         /// <inheritdoc />
         public override void OnCalculateRenderPosition()
         {
-            CalculatedPosition = Position + PositionOffset + Parent?.CalculatedPosition ?? Point.Zero;
+            CalculatedPosition = Position + PositionOffset + (Parent?.CalculatedPosition ?? Point.Zero);
 
             foreach (var child in Children)
             {
