@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -68,6 +69,18 @@ namespace SadConsole.Surfaces
             LeftMiddleToRight, RightMiddleToLeft,
             BottomMiddleToTop,
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        }
+
+        /// <summary>
+        /// Gets the index of a location on the surface by coordinate.
+        /// </summary>
+        /// <param name="x">The x of the location.</param>
+        /// <param name="y">The y of the location.</param>
+        /// <returns>The cell index.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int GetIndexFromPoint(int x, int y, int width)
+        {
+            return y * width + x;
         }
     }
 }
