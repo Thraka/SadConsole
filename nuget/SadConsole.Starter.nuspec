@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.Starter</id>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
     <title>Starter kit for SadConsole. Use with a new project.</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -11,7 +11,10 @@
     <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Adds an example startup file and fonts for a SadConsole project.</description>
-    <releaseNotes>Updated to SadConsole 7.0.0; Added the SadConsole extended font; Fixed Fill call in the example.</releaseNotes>
+    <releaseNotes>- Updated to SadConsole 7.0.0
+- Added the SadConsole extended font.
+- Fixed Fill call in the example.
+- Fixed startup page that is shown.</releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
     <dependencies>
