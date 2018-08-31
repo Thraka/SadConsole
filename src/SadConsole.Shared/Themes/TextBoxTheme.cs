@@ -58,6 +58,7 @@ namespace SadConsole.Themes
                     _oldCaretPosition = control.CaretPosition;
                     _oldState = control.State;
                     _editingText = control.EditingText;
+                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
                     control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
                     control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
                     control.IsCaretVisible = true;
