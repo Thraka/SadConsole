@@ -10,7 +10,7 @@ namespace Game1
     {
         SpriteBatch spriteBatch;
 
-        public Game1(): base("Fonts/IBM.font", 80, 25, null)
+        public Game1(): base("", 80, 25, null)
         {
             Content.RootDirectory = "Content";
         }

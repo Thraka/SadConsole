@@ -163,7 +163,11 @@ namespace SadConsole
         internal static void LoadEmbeddedFont()
         {
             //var auxList = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
+#if WINDOWS_UWP || WINDOWS_UAP
+            var assembly = new ColoredString().GetType().GetTypeInfo().Assembly;
+#else
             var assembly = Assembly.GetExecutingAssembly();
+#endif
             var resourceNameFont = "SadConsole.Resources.IBM_ext.font";
             var resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
 
