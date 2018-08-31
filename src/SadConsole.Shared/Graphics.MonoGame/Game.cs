@@ -37,6 +37,11 @@ namespace SadConsole
         {
             Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
         }
+
+        public static void Create(int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null)
+        {
+            Instance = new Game("", consoleWidth, consoleHeight, ctorCallback);
+        }
         #endregion
 
         /// <summary>
@@ -144,7 +149,12 @@ namespace SadConsole
             Global.GraphicsDevice = GraphicsDevice;
             Global.GraphicsDeviceManager = GraphicsDeviceManager;
             Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
-            Global.FontDefault = Global.LoadFont(font).GetFont(Font.FontSizes.One);
+
+            if (string.IsNullOrEmpty(font))
+                Global.LoadEmbeddedFont();
+            else
+                Global.FontDefault = Global.LoadFont(font).GetFont(Font.FontSizes.One);
+
             Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
             Global.ResetRendering();
 

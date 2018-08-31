@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 Misc", "00 Misc", "{D011
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Shared", "src\SadConsole.Shared\SadConsole.Shared.shproj", "{111F8273-2EAD-47D3-88EC-CB0CD6122BE8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole", "src\SadConsole\SadConsole.csproj", "{F44A9E76-B19D-4219-AFAE-561089354280}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DemoProject", "src\DemoProject\SharedCode\DemoProject.shproj", "{B41A356C-4BA6-40CC-AC03-0E5D46B0B981}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.OpenGL", "src\DemoProject\DesktopGL\DemoProject.OpenGL.csproj", "{D6129AE5-B519-4368-B080-805A73405EDA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Shared", "src\SadConsole.Shared\SadConsole.Shared.shproj", "{111F8273-2EAD-47D3-88EC-CB0CD6122BE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole", "src\SadConsole\SadConsole.csproj", "{F44A9E76-B19D-4219-AFAE-561089354280}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -31,14 +31,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F44A9E76-B19D-4219-AFAE-561089354280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F44A9E76-B19D-4219-AFAE-561089354280}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F44A9E76-B19D-4219-AFAE-561089354280}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F44A9E76-B19D-4219-AFAE-561089354280}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6129AE5-B519-4368-B080-805A73405EDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F44A9E76-B19D-4219-AFAE-561089354280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F44A9E76-B19D-4219-AFAE-561089354280}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F44A9E76-B19D-4219-AFAE-561089354280}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F44A9E76-B19D-4219-AFAE-561089354280}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

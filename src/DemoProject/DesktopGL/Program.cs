@@ -17,9 +17,9 @@ namespace StarterProject
         {
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
-
+            
             // Setup the engine and creat the main window.
-            SadConsole.Game.Create("Fonts/IBM_ext.font", 80, 25);
+            SadConsole.Game.Create(80, 25);
             //SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
 
             // Hook the start event so we can add consoles to the system.

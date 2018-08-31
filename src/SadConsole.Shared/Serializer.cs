@@ -87,8 +87,10 @@ namespace SadConsole
 
             public void Trace(TraceLevel level, string message, Exception ex)
             {
+#if DEBUG
                 _levelFilter = level;
                 LogTraceWriter.Log.AppendLine($"{Enum.GetName(typeof(TraceLevel), level)} :: {message}");
+#endif
             }
 
             public TraceLevel LevelFilter => _levelFilter;
