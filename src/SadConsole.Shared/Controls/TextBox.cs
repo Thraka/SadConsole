@@ -98,7 +98,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// A temp holder for the text as it's being edited.
         /// </summary>
-        public string EditingText { get; protected set; }
+        public string EditingText { get; protected set; } = "";
 
         /// <summary>
         /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
@@ -218,8 +218,7 @@ namespace SadConsole.Controls
             {
                 if (_allowDecimalPoint)
                 {
-                    float value;
-                    if (_text != null & float.TryParse(_text, out value))
+                    if (_text != null & double.TryParse(_text, out var value))
                         _text = value.ToString();
                     else
                         _text = "0.0";

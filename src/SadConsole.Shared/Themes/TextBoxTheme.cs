@@ -66,7 +66,7 @@ namespace SadConsole.Themes
 
                 else if (_oldCaretPosition != control.CaretPosition || _oldState != control.State)
                 {
-                    control.Surface.Effects.Remove(CaretEffect);
+                    control.Surface.Effects.RemoveAll();
                     control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
                     control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
                     control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
@@ -76,6 +76,7 @@ namespace SadConsole.Themes
             }
             else
             {
+                control.Surface.Effects.RemoveAll();
                 control.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
                 control.IsCaretVisible = false;
                 control.Surface.Print(0, 0, control.Text.Align(control.TextAlignment, control.Width));
