@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>7.0.1</Version>
+    <Version>7.0.3-pre3</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -13,7 +13,57 @@
     <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Standard</PackageId>
-    <PackageReleaseNotes>First release of standard 2.0 library.</PackageReleaseNotes>
+    <PackageReleaseNotes>First release of standard 2.0 library.
+
+7.0.0 [BREAKING CHANGES]
+- New SurfaceBase class which all Surface's inherit from.
+- SurfaceBase has an IRenderer on it directly now.
+- SurfaceEditor has been removed and is now implemented on SurfaceBase directly.
+- Console no longer combines Renderer and TextSurface for drawing.
+- Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
+- Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
+- CellDecorator class added that has a color, glyph, and mirror setting.
+- SadConsole.Serialization uses Newtonsoft.Json instead of the default .NET classes.
+- SadConsole.Serialization supports GZIP compression now.
+- Settings.SerializationIsCompressed can be set to true to set all internal save/load to use compression.
+- Control themes completely rewritten. Themes control all drawing for a control now.
+- Windows/ControlsConsole use a theme for drawing.
+- InputBox renamed TextBox.
+- Removed GameHelpers namespace. Types moved to root namespace.
+- GameObject renamed to Entity.
+- Surface.RenderArea changed to Surface.ViewPort
+- Readded Zone and HotSpot types.
+- Removed random level generation.
+- Added Entities.EntityManager which helps control entity visibility and offsets based on a parent console. Also handles zones/hotspots.
+
+7.0.2
+
+- Fixed render bug with Entity/Animation if no parent was attached.
+- Fixed ColoredString + operator.
+- SadConsole IBM Extended font embedded in library now.
+
+7.0.3
+
+- TextBox had a double caret in some cases.
+- If TextBox was first control in console, rendering was wrong.</PackageReleaseNotes>
+    <AssemblyVersion>7.0.3.0</AssemblyVersion>
+    <PackageIconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Thraka/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</PackageLicenseUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>C:\Code\Fun\SadConsole\src\SadConsole.Shared\SadConsole.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Code\Fun\SadConsole\src\SadConsole.Shared\SadConsole.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
