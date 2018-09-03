@@ -230,27 +230,27 @@ namespace Castle
             }
         }
 
-        public int GetNextRoom(Direction roomDirection)
+        public int GetNextRoom(CastleDirection roomDirection)
         {
             Char targetChat;
             switch(roomDirection)
             {
-                case Direction.Up:
+                case CastleDirection.Up:
                     targetChat = 'N';
                     break;
-                case Direction.Down:
+                case CastleDirection.Down:
                     targetChat = 'S';
                     break;
-                case Direction.Left:
+                case CastleDirection.Left:
                     targetChat = 'W';
                     break;
-                case Direction.Right:
+                case CastleDirection.Right:
                     targetChat = 'E';
                     break;
-                case Direction.UpStairs:
+                case CastleDirection.UpStairs:
                     targetChat = 'U';
                     break;
-                case Direction.DownStairs:
+                case CastleDirection.DownStairs:
                     targetChat = 'D';
                     break;
                 default:
