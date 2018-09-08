@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>SadConsole.FNA</id>
-    <version>7.0.2</version>
+    <version>7.0.3</version>
     <title>SadConsole for FNA</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
     <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An FNA library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>[BREAKING CHANGES]
@@ -37,6 +37,12 @@
 - Fixed render bug with Entity/Animation if no parent was attached.
 - Fixed ColoredString + operator.
 - SadConsole IBM Extended font embedded in library now.
+
+7.0.3
+
+- TextBox had a double caret in some cases.
+- If TextBox was first control in console, rendering was wrong.
+- Added int overload for Helpers.*Flag related methods.
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

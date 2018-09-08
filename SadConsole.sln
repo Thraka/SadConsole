@@ -33,6 +33,9 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DemoProject", "src\DemoProj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 NuGet", "02 NuGet", "{28040764-063C-4686-9933-222C83EF71F4}"
 	ProjectSection(SolutionItems) = preProject
+		src\SadConsoleFNA\Properties\AssemblyInfo.cs = src\SadConsoleFNA\Properties\AssemblyInfo.cs
+		src\SadConsole.Universal\Properties\AssemblyInfo.cs = src\SadConsole.Universal\Properties\AssemblyInfo.cs
+		src\SadConsole\Properties\AssemblyInfo.cs = src\SadConsole\Properties\AssemblyInfo.cs
 		nuget\SadConsole-debug.nuspec = nuget\SadConsole-debug.nuspec
 		nuget\SadConsole.nuspec = nuget\SadConsole.nuspec
 		nuget\SadConsole.Starter.nuspec = nuget\SadConsole.Starter.nuspec
@@ -56,6 +59,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsoleFNA", "src\SadConsoleFNA\SadConsoleFNA.csproj", "{364C730B-B238-4ED2-A3E3-427A8A5D5F07}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.FNA", "src\DemoProject\DemoProject.FNA\DemoProject.FNA.csproj", "{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole", "src\SadConsole.Shared\SadConsole.csproj", "{1B55342F-95BE-41AE-803A-BBF86A94B51F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Libraries - Standard", "01 Libraries - Standard", "{954ACD74-B52B-4F26-B6A0-F9C99832C1EE}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -385,6 +392,34 @@ Global
 		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}.Release|x64.Build.0 = Release|Any CPU
 		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}.Release|x86.ActiveCfg = Release|Any CPU
 		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}.Release|x86.Build.0 = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|ARM.Build.0 = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|Linux.ActiveCfg = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|Linux.Build.0 = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|MacOS.ActiveCfg = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|MacOS.Build.0 = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|Windows.ActiveCfg = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|Windows.Build.0 = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|x64.Build.0 = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|ARM.Build.0 = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|Linux.ActiveCfg = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|Linux.Build.0 = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|MacOS.ActiveCfg = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|MacOS.Build.0 = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|Windows.ActiveCfg = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|Windows.Build.0 = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|x64.ActiveCfg = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|x64.Build.0 = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -406,6 +441,7 @@ Global
 		{D6129AE5-B519-4368-B080-805A73405EDA} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
 		{364C730B-B238-4ED2-A3E3-427A8A5D5F07} = {4EACED7C-3BF4-488D-813F-7D481122A21C}
 		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43} = {8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}
+		{1B55342F-95BE-41AE-803A-BBF86A94B51F} = {954ACD74-B52B-4F26-B6A0-F9C99832C1EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C1CA938-1EDB-46DC-972B-D4B04232C39A}

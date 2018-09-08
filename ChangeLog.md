@@ -1,4 +1,10 @@
-﻿## 08/30/2018 V7.0.2
+﻿## 09/08/2018 V7.0.3
+
+- Fixed bug with textbox displaying two carets.
+- If TextBox was first control in console, rendering was wrong.
+- Added int overload for Helpers.*Flag related methods.
+
+## 08/30/2018 V7.0.2
 
 - Fixed render bug with Entity/Animation if no parent was attached.
 - Fixed ColoredString + operator.

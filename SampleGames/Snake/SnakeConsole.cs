@@ -203,7 +203,7 @@ namespace Snake
             {
                 for (int y = phoneButtonRow4; y < phoneButtonRow4 + 3; y++)
                 {
-                    cells.Add(textSurface[x, y]);
+                    cells.Add(this[x, y]);
                 }
             }
             SetEffect(cells, fadeEffect);
@@ -216,7 +216,7 @@ namespace Snake
             {
                 for (int y = phoneButtonRow1; y < phoneButtonRow1 + 3; y++)
                 {
-                    cells.Add(textSurface[x, y]);
+                    cells.Add(this[x, y]);
                 }
             }
             SetEffect(cells, fadeEffect);
@@ -229,7 +229,7 @@ namespace Snake
             {
                 for (int y = phoneButtonRow3; y < phoneButtonRow3 + 3; y++)
                 {
-                    cells.Add(textSurface[x, y]);
+                    cells.Add(this[x, y]);
                 }
             }
             SetEffect(cells, fadeEffect);
@@ -242,7 +242,7 @@ namespace Snake
             {
                 for (int y = phoneButtonRow2; y < phoneButtonRow2 + 3; y++)
                 {
-                    cells.Add(textSurface[x, y]);
+                    cells.Add(this[x, y]);
                 }
             }
             SetEffect(cells, fadeEffect);
@@ -255,7 +255,7 @@ namespace Snake
             {
                 for (int y = phoneButtonRow2; y < phoneButtonRow2 + 3; y++)
                 {
-                    cells.Add(textSurface[x, y]);
+                    cells.Add(this[x, y]);
                 }
             }
             SetEffect(cells, fadeEffect);

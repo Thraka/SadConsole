@@ -60,27 +60,26 @@ namespace Castle
             this.firstRelease = true;
             RunTick = false;
             keyboardHandlerObject = new ClassicConsoleKeyboardHandler();
-            VirtualCursor.Position = new Point(Room.MapWidth + 1, Room.MapHeight + 4);
+            Cursor.Position = new Point(Room.MapWidth + 1, Room.MapHeight + 4);
             KeyboardHandler = keyboardHandlerObject.HandleKeyboard;
 
             keyboardHandlerObject.EnterPressedAction = EnterPressedActionHandler;
 
             // Enable the keyboard and setup the prompt.
             UseKeyboard = true;
-            VirtualCursor.IsVisible = true;
+            Cursor.IsVisible = true;
             String Prompt = "?";
 
 
             // Startup description
             Clear();
             TimesShiftedUp = 0;
-            VirtualCursor.Print(Prompt);
+            Cursor.Print(Prompt);
 
 
             currentRoomIndex = 1;
             player = new Player();
             player.Position = new Microsoft.Xna.Framework.Point(Width / 2, Height / 2);
-
             DrawBorder();
             DrawRoom();
         }
@@ -136,10 +135,11 @@ namespace Castle
                 {
                     currentTurnCount = 0;
                 }
-
+                
                 RunTick = false;
                 MovePlayer();
                 player.Update(delta);
+
                 foreach (Monster monster in ItemManager.CurrentRoomMonsters)
                 {
                     if (currentTurnCount == MonsterTurn)
@@ -165,7 +165,7 @@ namespace Castle
         public override void Draw(TimeSpan delta)
         {
             base.Draw(delta);
-
+            
             player.Draw(delta);
 
             foreach (Monster monster in ItemManager.CurrentRoomMonsters)
@@ -235,17 +235,17 @@ namespace Castle
                     break;
 
                 case ObjectType.UpStairs:
-                    currentRoomIndex = currentRoom.GetNextRoom(Direction.UpStairs);
+                    currentRoomIndex = currentRoom.GetNextRoom(CastleDirection.UpStairs);
                     DrawRoom();
                     break;
 
                 case ObjectType.DownStairs:
-                    testRoomIndex = currentRoom.GetNextRoom(Direction.DownStairs);
+                    testRoomIndex = currentRoom.GetNextRoom(CastleDirection.DownStairs);
                     if (mapReader.FindRoom(testRoomIndex).Dark)
                     {
                         if (ItemManager.FindItemInInventory("Lamp") != null)
                         {
-                            currentRoomIndex = currentRoom.GetNextRoom(Direction.DownStairs);
+                            currentRoomIndex = currentRoom.GetNextRoom(CastleDirection.DownStairs);
                             DrawRoom();
                         }
                         else
@@ -258,7 +258,7 @@ namespace Castle
                     }
                     else
                     {
-                        currentRoomIndex = currentRoom.GetNextRoom(Direction.DownStairs);
+                        currentRoomIndex = currentRoom.GetNextRoom(CastleDirection.DownStairs);
                         DrawRoom();
                     }
                     break;
@@ -350,16 +350,16 @@ namespace Castle
         {
             switch(player.CurrentDirection)
             {
-                case Direction.Up:
+                case CastleDirection.Up:
                     previewMove.Y = Room.MapHeight - 1;
                     break;
-                case Direction.Down:
+                case CastleDirection.Down:
                     previewMove.Y = 0;
                     break;
-                case Direction.Left:
+                case CastleDirection.Left:
                     previewMove.X = Room.MapWidth - 1;
                     break;
-                case Direction.Right:
+                case CastleDirection.Right:
                     previewMove.X = 0;
                     break;
             }
@@ -541,10 +541,10 @@ namespace Castle
             {
                 SetGlyph(x, Room.MapHeight + 4, 0, Color.White);
             }
-            VirtualCursor.Position = new Point(Room.MapWidth + 1, Room.MapHeight + 4);
-            VirtualCursor.Print("?");
+            Cursor.Position = new Point(Room.MapWidth + 1, Room.MapHeight + 4);
+            Cursor.Print("?");
 
-            keyboardHandlerObject.VirtualCursorLastY = Room.MapHeight + 4;
+            keyboardHandlerObject.CursorLastY = Room.MapHeight + 4;
         }
         private void ClearItemList()
         {
@@ -840,7 +840,7 @@ namespace Castle
 
         private void EndGame()
         {
-            VirtualCursor.IsVisible = false;
+            Cursor.IsVisible = false;
 
 
             for (int x = 0; x < 40 ; x++)

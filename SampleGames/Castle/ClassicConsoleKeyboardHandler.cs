@@ -13,7 +13,7 @@ namespace Castle
         private const string prompt = "?";
 
         // This holds the row that the virtual cursor is starting from when someone is typing.
-        public int VirtualCursorLastY;
+        public int CursorLastY;
 
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public Action<string> EnterPressedAction = (s) => { int i = s.Length; };
@@ -27,11 +27,11 @@ namespace Castle
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
                 {
-                    int startingIndex = BasicSurface.GetIndexFromPoint(new Point(Room.MapWidth + 2, Room.MapHeight + 4), console.TextSurface.Width);
-                    String data = realConsole.GetString(startingIndex, BasicSurface.GetIndexFromPoint(console.VirtualCursor.Position, console.TextSurface.Width) - startingIndex);
+                    int startingIndex = realConsole.GetIndexFromPoint(Room.MapWidth + 2, Room.MapHeight + 4);
+                    String data = realConsole.GetString(startingIndex, realConsole.GetIndexFromPoint(console.Cursor.Position) - startingIndex);
                     if (data.Length < 14)
                     {
-                        console.VirtualCursor.Print(key.Character.ToString().ToUpper());
+                        console.Cursor.Print(key.Character.ToString().ToUpper());
                     }
                 }
 
@@ -46,9 +46,9 @@ namespace Castle
                     }
 
                     // Do not let them backspace into the prompt
-                    if (console.VirtualCursor.Position.Y != Room.MapHeight + 4 || console.VirtualCursor.Position.X > Room.MapWidth + 2)
+                    if (console.Cursor.Position.Y != Room.MapHeight + 4 || console.Cursor.Position.X > Room.MapWidth + 2)
                     {
-                        console.VirtualCursor.LeftWrap(1).Print(" ").LeftWrap(1);
+                        console.Cursor.LeftWrap(1).Print(" ").LeftWrap(1);
                     }
                 }
 
@@ -58,13 +58,13 @@ namespace Castle
                     // If the console has scrolled since the user started typing, adjust the starting row of the virtual cursor by that much.
                     if (realConsole.TimesShiftedUp != 0)
                     {
-                        VirtualCursorLastY -= realConsole.TimesShiftedUp;
+                        CursorLastY -= realConsole.TimesShiftedUp;
                         realConsole.TimesShiftedUp = 0;
                     }
 
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
-                    int startingIndex = BasicSurface.GetIndexFromPoint(new Point(Room.MapWidth + 2, Room.MapHeight + 4), console.TextSurface.Width);
-                    String data = realConsole.GetString(startingIndex, BasicSurface.GetIndexFromPoint(console.VirtualCursor.Position, console.TextSurface.Width) - startingIndex);
+                    int startingIndex = realConsole.GetIndexFromPoint(Room.MapWidth + 2, Room.MapHeight + 4);
+                    String data = realConsole.GetString(startingIndex, realConsole.GetIndexFromPoint(console.Cursor.Position) - startingIndex);
 
                     // Move the cursor to the next line before we send the string data to the processor
 
@@ -72,7 +72,7 @@ namespace Castle
                     EnterPressedAction(data);
 
                     // After they have processed the string, we will create a new line and display the prompt.
-                    VirtualCursorLastY = console.VirtualCursor.Position.Y;
+                    CursorLastY = console.Cursor.Position.Y;
 
                     // Preparing the next lines could have scrolled the console, reset the counter
                     realConsole.TimesShiftedUp = 0;

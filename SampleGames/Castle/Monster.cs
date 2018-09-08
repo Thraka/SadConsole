@@ -11,7 +11,7 @@ using SadConsole.Surfaces;
 
 namespace Castle
 {
-    internal class Monster : SadConsole.GameHelpers.GameObject
+    internal class Monster : SadConsole.Entities.Entity
     {
         public int RoomId { get; private set; }
         public bool IsAlive { get; private set; }
@@ -29,8 +29,7 @@ namespace Castle
             this.Name = inventoryName;
             this.InventoryName = name;
             this.RoomId = roomId;
-            position.X = x;
-            position.Y = y;
+            this.Position = new Point(x, y);
             this.Character = character;
             this.Health = health;
             this.Description = description;
@@ -44,7 +43,7 @@ namespace Castle
 
         public virtual Point PreviewMove(Point playerLocation)
         {
-            Point preview = new Point(position.X, position.Y);
+            Point preview = new Point(Position.X, Position.Y);
 
             int xDistance = Math.Abs(playerLocation.X - preview.X);
             int yDistance = Math.Abs(playerLocation.Y - preview.Y);
@@ -146,7 +145,7 @@ namespace Castle
 
         public override Point PreviewMove(Point playerLocation)
         {
-            return position;
+            return Position;
         }
 
         public override UserMessage Hit(CastleItem sword)
