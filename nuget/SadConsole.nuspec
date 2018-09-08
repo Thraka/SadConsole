@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>7.0.3</version>
+    <version>7.0.4</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -38,7 +38,7 @@
 - Fixed ColoredString + operator.
 - SadConsole IBM Extended font embedded in library now.
 
-7.0.3
+7.0.3 / 7.0.4
 
 - TextBox had a double caret in some cases.
 - If TextBox was first control in console, rendering was wrong.
