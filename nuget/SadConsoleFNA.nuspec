@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.FNA</id>
-    <version>7.0.2</version>
+    <version>7.0.3</version>
     <title>SadConsole for FNA</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -37,6 +37,12 @@
 - Fixed render bug with Entity/Animation if no parent was attached.
 - Fixed ColoredString + operator.
 - SadConsole IBM Extended font embedded in library now.
+
+7.0.3
+
+- TextBox had a double caret in some cases.
+- If TextBox was first control in console, rendering was wrong.
+- Added int overload for Helpers.*Flag related methods.
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
