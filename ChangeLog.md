@@ -1,4 +1,4 @@
-﻿## 09/08/2018 V7.0.3
+﻿## 09/08/2018 V7.0.3 / 7.0.4
 
 - Fixed bug with textbox displaying two carets.
 - If TextBox was first control in console, rendering was wrong.

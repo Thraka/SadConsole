@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>7.0.3</Version>
+    <Version>7.0.4</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -42,12 +42,12 @@
 - Fixed ColoredString + operator.
 - SadConsole IBM Extended font embedded in library now.
 
-7.0.3
+7.0.3 / 7.0.4
 
 - TextBox had a double caret in some cases.
 - If TextBox was first control in console, rendering was wrong.
 - Added int overload for Helpers.*Flag related methods.</PackageReleaseNotes>
-    <AssemblyVersion>7.0.3.0</AssemblyVersion>
+    <AssemblyVersion>7.0.4.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Thraka/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
