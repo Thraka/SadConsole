@@ -25,5 +25,23 @@ namespace SadConsole
         {
             state = state & ~flag;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool HasFlag(in int state, int flag)
+        {
+            return (state & flag) == flag;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetFlag(ref int state, int flag)
+        {
+            state = state | flag;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void UnsetFlag(ref int state, int flag)
+        {
+            state = state & ~flag;
+        }
     }
 }
