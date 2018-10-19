@@ -2628,6 +2628,12 @@
         <member name="M:SadConsole.Entities.Zone.Draw(System.TimeSpan)">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.IListExtensions.RemoveAll(System.Collections.IList)">
+            <summary>
+            Removes each item from a list one-by-one.
+            </summary>
+            <param name="list">The list collection to remove from.</param>
+        </member>
         <member name="T:SadConsole.Font">
             <summary>
             Represents a specific font size from a <see cref="T:SadConsole.FontMaster"/>.
@@ -3037,6 +3043,23 @@
             <summary>
             Raised when the window is resized and the render area has been calculated.
             </summary>
+        </member>
+        <member name="M:SadConsole.Helpers.GetPointFromIndex(System.Int32,System.Int32)">
+            <summary>
+            Gets the x,y of an index on the surface.
+            </summary>
+            <param name="index">The index to get.</param>
+            <param name="width">Width that includes the index.</param>
+            <returns>The x,y as a <see cref="T:Microsoft.Xna.Framework.Point"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Helpers.GetIndexFromPoint(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets the index of a location on the surface by coordinate.
+            </summary>
+            <param name="x">The x of the location.</param>
+            <param name="y">The y of the location.</param>
+            <param name="width">Width that includes the point.</param>
+            <returns>The cell index.</returns>
         </member>
         <member name="T:SadConsole.IConsole">
             <summary>
@@ -5609,14 +5632,6 @@
             <summary>
             Array index enum for line glyphs.
             </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetIndexFromPoint(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Gets the index of a location on the surface by coordinate.
-            </summary>
-            <param name="x">The x of the location.</param>
-            <param name="y">The y of the location.</param>
-            <returns>The cell index.</returns>
         </member>
         <member name="T:SadConsole.Themes.ButtonTheme">
             <summary>

@@ -66,7 +66,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Entities\EntityManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\RectangleExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SurfaceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />

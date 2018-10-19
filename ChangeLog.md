@@ -1,4 +1,12 @@
-﻿## 09/08/2018 V7.0.3 / 7.0.4
+﻿## 10/18/2018 V7.1.0
+
+- Moved SurfaceBase.GetIndexFromPoint to Helpers class.
+- Fixed bug in EntityManager that did not remove entity/hotspot/zone parents when the EntityManager's parent was cleared.
+- EntityManager does not support .Clear calls on collections. Instead, use the RemoveAll extension method.
+- An extension method was added: SurfaceBase.CenterViewPortOnPoint
+- An extension method was added: Rectangle.CenterOnPoint
+
+## 09/08/2018 V7.0.3 / 7.0.4
 
 - Fixed bug with textbox displaying two carets.
 - If TextBox was first control in console, rendering was wrong.
