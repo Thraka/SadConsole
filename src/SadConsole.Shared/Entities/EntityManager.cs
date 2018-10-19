@@ -43,7 +43,6 @@ namespace SadConsole.Entities
             Entities.CollectionChanged += EntitiesOnCollectionChanged;
             Zones.CollectionChanged += EntitiesOnCollectionChanged;
             Hotspots.CollectionChanged += EntitiesOnCollectionChanged;
-
         }
 
         private void EntitiesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -68,8 +67,7 @@ namespace SadConsole.Entities
                 case NotifyCollectionChangedAction.Move:
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    
-                    break;
+                    throw new NotSupportedException("Calling Clear in this object is not supported. Please use the RemoveAll extension method.");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -83,22 +81,19 @@ namespace SadConsole.Entities
             _surfaceParent = newParent as SurfaceBase;
             IsPaused = _surfaceParent == null;
 
-            if (_surfaceParent != null)
-            {
-                foreach (var zone in Zones)
-                    if (zone.Parent != _surfaceParent)
-                        zone.Parent = _surfaceParent;
+            foreach (var zone in Zones)
+                if (zone.Parent != _surfaceParent)
+                    zone.Parent = _surfaceParent;
 
-                foreach (var spot in Hotspots)
-                    if (spot.Parent != _surfaceParent)
-                        spot.Parent = _surfaceParent;
+            foreach (var spot in Hotspots)
+                if (spot.Parent != _surfaceParent)
+                    spot.Parent = _surfaceParent;
 
-                foreach (var entity in Entities)
-                    if (entity.Parent != _surfaceParent)
-                        entity.Parent = _surfaceParent;
+            foreach (var entity in Entities)
+                if (entity.Parent != _surfaceParent)
+                    entity.Parent = _surfaceParent;
 
-                Sync();
-            }
+            Sync();
         }
 
         /// <inheritdoc />

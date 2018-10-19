@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Microsoft.Xna.Framework;
 using SadConsole.Controls;
 
 namespace SadConsole
@@ -42,6 +43,31 @@ namespace SadConsole
         public static int UnsetFlag(int state, int flag)
         {
             return state & ~flag;
+        }
+
+        /// <summary>
+        /// Gets the x,y of an index on the surface.
+        /// </summary>
+        /// <param name="index">The index to get.</param>
+        /// <param name="width">Width that includes the index.</param>
+        /// <returns>The x,y as a <see cref="Point"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point GetPointFromIndex(int index, int width)
+        {
+            return new Point(index % width, index / width);
+        }
+
+        /// <summary>
+        /// Gets the index of a location on the surface by coordinate.
+        /// </summary>
+        /// <param name="x">The x of the location.</param>
+        /// <param name="y">The y of the location.</param>
+        /// <param name="width">Width that includes the point.</param>
+        /// <returns>The cell index.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int GetIndexFromPoint(int x, int y, int width)
+        {
+            return y * width + x;
         }
     }
 }

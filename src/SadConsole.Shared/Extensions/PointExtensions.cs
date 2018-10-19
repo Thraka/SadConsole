@@ -56,10 +56,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="point">The position.</param>
         /// <param name="rowWidth">How many columns in a row.</param>
         /// <returns></returns>
-        public static int ToIndex(this Point point, int rowWidth)
-        {
-            return point.Y * rowWidth + point.X;
-        }
+        public static int ToIndex(this Point point, int rowWidth) => Helpers.GetIndexFromPoint(point.X, point.Y, rowWidth);
 
         /// <summary>
         /// Gets the cell coordinates of the <paramref name="targetFont"/> based on a cell in the <paramref name="sourceFont"/>.
