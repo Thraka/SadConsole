@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GoRogue, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\BasicTutorial\packages\GoRogue.1.5.0\lib\netstandard2.0\GoRogue.dll</HintPath>
+      <HintPath>..\BasicTutorial\packages\GoRogue.1.5.2\lib\netstandard2.0\GoRogue.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\BasicTutorial\packages\MonoGame.Framework.DesktopGL.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
@@ -44,8 +44,8 @@
     <Reference Include="Priority Queue, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\BasicTutorial\packages\OptimizedPriorityQueue.4.1.1\lib\net45\Priority Queue.dll</HintPath>
     </Reference>
-    <Reference Include="SadConsole, Version=7.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\BasicTutorial\packages\SadConsole.7.0.4\lib\net\SadConsole.dll</HintPath>
+    <Reference Include="SadConsole, Version=7.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\BasicTutorial\packages\SadConsole.7.1.0\lib\net\SadConsole.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,9 +62,12 @@
   <ItemGroup>
     <Compile Include="Actions\ActionBase.cs" />
     <Compile Include="Actions\ActionResult.cs" />
+    <Compile Include="Actions\ActionStack.cs" />
     <Compile Include="Conversions\Coord_Point.cs" />
     <Compile Include="Conversions\Rect_Rect.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="GameObjects\GameObjectBase.cs" />
+    <Compile Include="GoRogueIntegration.cs" />
     <Compile Include="IFactoryBlueprint.cs" />
     <Compile Include="IFactoryObject.cs" />
     <Compile Include="Maps\Generators\AccidentalNoise\Cache.cs" />
@@ -120,6 +123,7 @@
     <Compile Include="Maps\Generators\World\WorldGenerator.cs" />
     <Compile Include="Maps\Generators\World\WrappingWorldGenerator.cs" />
     <Compile Include="Maps\Map.cs" />
+    <Compile Include="Maps\Region.cs" />
     <Compile Include="Maps\Tile.Factory.cs" />
     <Compile Include="Maps\Tile.cs" />
     <Compile Include="Maps\FlagsAndStates.cs" />

@@ -58,6 +58,8 @@ namespace BasicTutorial
 
         private static void Init()
         {
+            SadConsole.Maps.Tile.Factory.Add(new BasicTutorial.Maps.TileBlueprints.Door());
+
             // Any custom loading and prep. We will use a sample console for now
 
             //Console startingConsole = new Console(Width, Height);
@@ -67,7 +69,10 @@ namespace BasicTutorial
 
             SadConsole.Maps.SimpleMap map = new SadConsole.Maps.SimpleMap(80, 25, new Rectangle(0, 0, 80, 25));
             SadConsole.Maps.Generators.DungeonMaze gen = new SadConsole.Maps.Generators.DungeonMaze();
+            //Maps.Generators.DoorGenerator gen = new Maps.Generators.DoorGenerator();
             gen.Build(ref map);
+
+            
 
             foreach (var tile in map.Tiles)
             {

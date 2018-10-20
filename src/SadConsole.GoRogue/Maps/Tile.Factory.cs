@@ -10,13 +10,10 @@ namespace SadConsole.Maps
     public partial class Tile: IFactoryObject
     {
         /// <summary>Represents a floor tile type.</summary>
-        public const int TileTypeFloor = 0;
+        internal const int TileTypeFloor = 0;
 
         /// <summary>Represents a wall tile type.</summary>
-        public const int TileTypeWall = 1;
-
-        /// <summary>Represents a door tile type.</summary>
-        public const int TileTypeDoor = 2;
+        internal const int TileTypeWall = 1;
 
         /// <summary>
         /// The factory instance to generate tiles from.
@@ -42,9 +39,7 @@ namespace SadConsole.Maps
                     Type = TileTypeFloor,
                     Title = "Floor",
                     Description = "Ancient rock and dirt."
-                },
-
-                new TileDoorBlueprint()
+                }
             };
 
         }
@@ -89,48 +84,5 @@ namespace SadConsole.Maps
                 return tile;
             }
         }
-
-        /// <summary>
-        /// The blueprint for a door tile.
-        /// </summary>
-        public class TileDoorBlueprint : TileBlueprint
-        {
-            public bool StartClosed { get; set; } = true;
-
-            public TileDoorBlueprint() : base("door")
-            {
-                Appearance = new Cell(Color.SaddleBrown, Color.Black, '-');
-                Type = TileTypeDoor;
-                Title = "Door";
-                Description = "An old wooden door.";
-
-                OnTileStateChanged = (tile, oldState) =>
-                {
-                    if (tile.TileState == (int)StateDoor.Opened)
-                    {
-                        tile.ChangeGlyph('\'');
-                        tile.Flags = Helpers.UnsetFlag(tile.Flags, (int)(TileFlags.BlockLOS | TileFlags.BlockMove));
-                    }
-                    else if (tile.TileState == (int)StateDoor.Closed)
-                    {
-                        tile.ChangeGlyph('+');
-                        tile.Flags = Helpers.SetFlag(tile.Flags, (int) (TileFlags.BlockLOS | TileFlags.BlockMove));
-                    }
-                };
-            }
-
-            public override Tile Create()
-            {
-                var tile = base.Create();
-
-                if (StartClosed)
-                    tile.TileState = (int)StateDoor.Closed;
-                else
-                    tile.TileState = (int)StateDoor.Opened;
-
-                return tile;
-            }
-        }
-
     }
 }

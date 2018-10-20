@@ -20,14 +20,12 @@ namespace SadConsole.Maps.Generators
             public int ChanceStopRooms = 15;
             public int CrawlerChangeDirectionImprovement = 30;
             public int CrawlerSaveDeadEndsPercent = 10;
-            public int CancelDoorPlacementPercent = 50;
-
-            //public float 
+            
             public Point FontRatio = new Point(1, 2);
             public bool SquareFont = false;
         }
 
-        private class Crawler
+        protected class Crawler
         {
             public Stack<Point> Path = new Stack<Point>();
             public List<Point> AllPositions = new List<Point>();
@@ -51,24 +49,27 @@ namespace SadConsole.Maps.Generators
 
         public GenerationSettings Settings = new GenerationSettings();
 
-        //private Map map;
+        protected SimpleMap map;
 
-        private SimpleMap map;
+        protected List<Crawler> Crawlers;
 
-        private List<Crawler> Crawlers;
+        protected List<(Region Region, Point[] Connections)> RoomHallwayConnections;
 
-        public void Build(ref SimpleMap map)
+        public virtual void Build(ref SimpleMap map)
         {
             this.map = map;
             Crawlers = new List<Crawler>();
-
+            
             BuildRooms();
+
+            RoomHallwayConnections = new List<(Region Region, Point[] Connections)>(map.Regions.Count);
+
             StartMazeGenerator();
             ConnectRooms();
             TrimDeadPaths();
         }
 
-        private void BuildRooms()
+        protected void BuildRooms()
         {
             int failedTriesMax = 50;
             int failedTries = 0;
@@ -104,7 +105,7 @@ namespace SadConsole.Maps.Generators
                 height = Math.Max(Settings.MinRoomSize, height);
 
 
-                SimpleMap.Region room = new SimpleMap.Region();
+                Region room = new Region();
                 room.InnerRect = new Rectangle(0, 0, width, height);
                 bool isPlaced = false;
 
@@ -190,7 +191,7 @@ namespace SadConsole.Maps.Generators
 
         }
 
-        private void StartMazeGenerator()
+        protected void StartMazeGenerator()
         {
             var empty = FindEmptySquare();
             int randomCounter = 0;
@@ -263,7 +264,76 @@ namespace SadConsole.Maps.Generators
             }
         }
 
-        private void TrimDeadPaths()
+        private void ConnectRooms()
+        {
+            bool[] regionsFinished = new bool[map.Regions.Count];
+
+            while (regionsFinished.Contains(false))
+            {
+                int selectedIndex = SadConsole.Global.Random.Next(map.Regions.Count);
+
+                if (regionsFinished[selectedIndex])
+                    continue;
+
+                regionsFinished[selectedIndex] = true;
+
+                var region = map.Regions[selectedIndex];
+
+                List<Point> validSpots = new List<Point>(region.OuterRect.Width * 2 + region.OuterRect.Height * 2);
+
+                // Along top/bottom edges
+                for (int x = 1; x < region.OuterRect.Width - 1; x++)
+                {
+                    var point = region.OuterRect.Location;
+                    point.X += x;
+                    var testPoint = point + Directions.North;
+
+                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
+                        validSpots.Add(point);
+
+                    point = region.OuterRect.Location;
+                    point.Y += region.OuterRect.Height - 1;
+                    point.X += x;
+                    testPoint = point + Directions.South;
+
+                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
+                        validSpots.Add(point);
+                }
+
+                // Along the left/right edges
+                for (int y = 1; y < region.OuterRect.Height - 1; y++)
+                {
+                    var point = region.OuterRect.Location;
+                    point.Y += y;
+                    var testPoint = point + Directions.West;
+
+                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
+                        validSpots.Add(point);
+
+                    point = region.OuterRect.Location;
+                    point.X += region.OuterRect.Width - 1;
+                    point.Y += y;
+                    testPoint = point + Directions.East;
+
+                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
+                        validSpots.Add(point);
+                }
+
+                // Connect the room to the hallway.
+
+                // TODO: Do connections between room and halway, need to place some empty spots.
+                // Maybe take door code from game project and place empty tiles instead?
+                // Then the RoomhallwayConnections list would be populated with only floor tiles
+                // added to the collection.
+
+                //foreach (var spot in validSpots)
+                //    map[spot] = Tile.Factory.Create("floor");
+
+                RoomHallwayConnections.Add((region, validSpots.ToArray()));
+            }
+        }
+
+        protected void TrimDeadPaths()
         {
 
             foreach (var crawler in Crawlers)
@@ -352,7 +422,7 @@ namespace SadConsole.Maps.Generators
         }
 
 
-        private int GetDirectionIndex(bool[] valids)
+        protected int GetDirectionIndex(bool[] valids)
         {
             // 10 tries to find random ok valid
             bool randomSuccess = false;
@@ -384,89 +454,7 @@ namespace SadConsole.Maps.Generators
             return tempDirectionIndex;
         }
 
-        private void ConnectRooms()
-        {
-            bool[] regionsFinished = new bool[map.Regions.Count];
-
-            while (regionsFinished.Contains(false))
-            {
-                int selectedIndex = SadConsole.Global.Random.Next(map.Regions.Count);
-
-                if (regionsFinished[selectedIndex])
-                    continue;
-
-                regionsFinished[selectedIndex] = true;
-
-                var region = map.Regions[selectedIndex];
-
-                List<Point> validSpots = new List<Point>(region.OuterRect.Width * 2 + region.OuterRect.Height * 2);
-
-                // Along top/bottom edges
-                for (int x = 1; x < region.OuterRect.Width - 1; x++)
-                {
-                    var point = region.OuterRect.Location;
-                    point.X += x;
-                    var testPoint = point + Directions.North;
-
-                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
-
-                    point = region.OuterRect.Location;
-                    point.Y += region.OuterRect.Height - 1;
-                    point.X += x;
-                    testPoint = point + Directions.South;
-
-                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
-                }
-
-                // Along the left/right edges
-                for (int y = 1; y < region.OuterRect.Height - 1; y++)
-                {
-                    var point = region.OuterRect.Location;
-                    point.Y += y;
-                    var testPoint = point + Directions.West;
-
-                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
-
-                    point = region.OuterRect.Location;
-                    point.X += region.OuterRect.Width - 1;
-                    point.Y += y;
-                    testPoint = point + Directions.East;
-
-                    if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
-                }
-
-                int doorCount = SadConsole.Global.Random.Next(1, 6);
-                bool placedDoor = false;
-
-                if (validSpots.Count != 0)
-                    //System.Diagnostics.Debugger.Break();
-                    //else
-                    for (int i = 0; i < doorCount; i++)
-                    {
-                        for (int tryCount = 0; tryCount < 3; tryCount++)
-                        {
-                            Point spot = validSpots[SadConsole.Global.Random.Next(0, validSpots.Count)];
-
-                            if (!IsPointNearType(spot, Tile.TileTypeDoor))
-                            {
-                                placedDoor = true;
-                                map[spot] = Tile.Factory.Create("door");
-
-                                break;
-                            }
-                        }
-
-                        if (placedDoor && PercentageCheck(Settings.CancelDoorPlacementPercent))
-                            break;
-                    }
-            }
-        }
-
-        private Point? FindEmptySquare()
+        protected Point? FindEmptySquare()
         {
             // we want a square that is odd.
             for (int i = 0; i < map.Width * map.Height; i++)
@@ -482,7 +470,7 @@ namespace SadConsole.Maps.Generators
             return null;
         }
 
-        private bool IsPointWallsExceptSource(Point location, Directions.DirectionEnum sourceDir)
+        protected bool IsPointWallsExceptSource(Point location, Directions.DirectionEnum sourceDir)
         {
             // Shortcut out if this location is part of the map edge.
             if (IsPointMapEdge(location) || IsPointPartOfRegion(location, true))
@@ -517,7 +505,7 @@ namespace SadConsole.Maps.Generators
             return true;
         }
 
-        private bool IsPointConsideredEmpty(Point location)
+        protected bool IsPointConsideredEmpty(Point location)
         {
             return  !IsPointMapEdge(location) &&  // exclude outer ridge of map
                     IsPointOdd(location) && // check is odd numer position
@@ -526,12 +514,12 @@ namespace SadConsole.Maps.Generators
                     IsPointWall(location); // The location is a wall
         }
 
-        private bool IsPointOdd(Point location)
+        protected bool IsPointOdd(Point location)
         {
             return location.X % 2 != 0 && location.Y % 2 != 0;
         }
 
-        private bool IsPointMapEdge(Point location, bool onlyEdgeTest = false)
+        protected bool IsPointMapEdge(Point location, bool onlyEdgeTest = false)
         {
             if (onlyEdgeTest)
                 return location.X == 0 || location.X == map.Width - 1 || location.Y == 0 || location.Y == map.Height - 1;
@@ -540,7 +528,7 @@ namespace SadConsole.Maps.Generators
 
         }
 
-        private bool IsPointPartOfRegion(Point location, bool includeOuterEdge)
+        protected bool IsPointPartOfRegion(Point location, bool includeOuterEdge)
         {
             Rectangle outerEdge;
 
@@ -561,7 +549,7 @@ namespace SadConsole.Maps.Generators
             return false;
         }
 
-        private bool IsPointSurroundedByWall(Point location)
+        protected bool IsPointSurroundedByWall(Point location)
         {
             var index = location.GetDirectionIndexes(map.Width, map.Height);
 
@@ -576,13 +564,13 @@ namespace SadConsole.Maps.Generators
 
             return true;
         }
-        
-        private bool IsPointWall(Point location)
+
+        protected bool IsPointWall(Point location)
         {
             return map[location].Type == Tile.TileTypeWall;
         }
 
-        private bool IsPointNearType(Point location, int type, bool includeDiagonal = false)
+        protected bool IsPointNearType(Point location, int type, bool includeDiagonal = false)
         {
             Point[] points = location.GetDirectionPoints();
             bool[] validPoints = location.GetValidDirections(map.Width, map.Height);
@@ -607,11 +595,9 @@ namespace SadConsole.Maps.Generators
             }
         }
 
-        private bool PercentageCheck(int outOfHundred)
+        protected bool PercentageCheck(int outOfHundred)
         {
             return SadConsole.Global.Random.Next(101) < outOfHundred;
         }
-
-
     }
 }

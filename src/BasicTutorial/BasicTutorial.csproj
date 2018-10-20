@@ -41,21 +41,35 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="GoRogue, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GoRogue.1.5.2\lib\netstandard2.0\GoRogue.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MonoGame.Framework.WindowsDX.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SadConsole, Version=7.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\SadConsole.7.0.4\lib\net\SadConsole.dll</HintPath>
+    <Reference Include="Priority Queue, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\OptimizedPriorityQueue.4.1.1\lib\net45\Priority Queue.dll</HintPath>
+    </Reference>
+    <Reference Include="SadConsole, Version=7.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SadConsole.7.1.0\lib\net\SadConsole.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="Troschuetz.Random, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>packages\Troschuetz.Random.4.3.0\lib\net461\Troschuetz.Random.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Move.cs" />
     <Compile Include="DungeonScreen.cs" />
+    <Compile Include="GameObjects\GameObjectBase.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="Maps\Generators\Generator.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Maps\TileBlueprints.cs" />
+    <Compile Include="Maps\TileStatesAndTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SadConsole.GoRogue\SadConsole.GoRogue.csproj">

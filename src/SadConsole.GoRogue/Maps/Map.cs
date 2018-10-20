@@ -4,12 +4,13 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using GoRogue;
 using Microsoft.Xna.Framework;
-using SadConsole;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using GoRogue.MapViews;
+using SadConsole;
 
 namespace SadConsole.Maps
 {
-    public class SimpleMap: ScreenObject, GoRogue.MapViews.ISettableMapView<Tile>
+    public class SimpleMap: ScreenObject, ISettableMapView<Tile>
     {
         public Surfaces.Basic Surface;
         public Entities.EntityManager EntityManager;
@@ -45,11 +46,11 @@ namespace SadConsole.Maps
 
         public Tile this[int x, int y]
         {
-            get => Tiles[SadConsole.Surfaces.SurfaceBase.GetIndexFromPoint(x, y, Width)];
+            get => Tiles[Surface.GetIndexFromPoint(x, y)];
             set
             {
                 value.Position = new Point(x, y);
-                Tiles[SadConsole.Surfaces.SurfaceBase.GetIndexFromPoint(x, y, Width)] = value;
+                Tiles[Surface.GetIndexFromPoint(x, y)] = value;
             }
         }
 
@@ -88,9 +89,12 @@ namespace SadConsole.Maps
             Tiles = new Tile[width * height];
             Regions = new List<Region>();
 
+            // Be efficient by not using factory.Create each tile below. Instead, get the blueprint and use that to create each tile.
+            var defaultTile = Tile.Factory.GetDefintion("wall");
+
             // Fill the map with walls.
             for (var i = 0; i < Tiles.Length; i++)
-                this[i] = Tile.Factory.Create("wall");
+                this[i] = defaultTile.Create();
             
             // Instance of the FOV translator.
             MapToFOV = new TranslationFOV(this);
@@ -112,6 +116,7 @@ namespace SadConsole.Maps
         /// <returns>The entity at the position, otherwise null.</returns>
         public Entities.Entity GetEntity(Point position)
         {
+            
             // GoRogue.SpatialMap?
             foreach (var ent in EntityManager.Entities)
             {
@@ -179,14 +184,13 @@ namespace SadConsole.Maps
         /// <returns>A tile that is not a wall.</returns>
         public Tile FindEmptyTile()
         {
-            var foundTile = Tiles[SadConsole.Global.Random.Next(Tiles.Length)];
-
-            while (Helpers.HasFlag(foundTile.Flags, (int)TileFlags.BlockMove))
+            while (true)
             {
-                foundTile = Tiles[SadConsole.Global.Random.Next(Tiles.Length)];
-            }
+                var foundTile = this[this.RandomPosition(GoRogueIntegration.Random)];
 
-            return foundTile;
+                if (!Helpers.HasFlag(foundTile.Flags, (int)TileFlags.BlockMove))
+                    return foundTile;
+            }
         }
 
         /// <summary>
@@ -201,20 +205,6 @@ namespace SadConsole.Maps
                 // 1 = blocked; 0 = see thru
                 return Helpers.HasFlag(value.Flags, (int)TileFlags.BlockLOS)  ? 1.0 : 0.0;
             }
-        }
-
-        /// <summary>
-        /// Region of a map.
-        /// </summary>
-        public class Region
-        {
-            public bool IsRectangle;
-            public Rectangle InnerRect;
-            public Rectangle OuterRect;
-            public List<Point> InnerPoints = new List<Point>();
-            public List<Point> OuterPoints = new List<Point>();
-            public bool IsLit = true;
-            public bool IsVisited;
         }
     }
 }

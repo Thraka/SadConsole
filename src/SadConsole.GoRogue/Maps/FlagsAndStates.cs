@@ -19,10 +19,4 @@ namespace SadConsole.Maps
         PermaInLOS = 1 << 6,
         RegionLighted = 1 << 7
     }
-
-    public enum StateDoor
-    {
-        Opened = 0,
-        Closed = 1
-    }
 }
