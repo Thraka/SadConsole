@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{43F5A8F0-7FAE-4B8A-A90B-9B21A3DA0969}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SadConsole</RootNamespace>
+    <AssemblyName>SadConsole.GoRogue</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GoRogue, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\BasicTutorial\packages\GoRogue.1.5.0\lib\netstandard2.0\GoRogue.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\BasicTutorial\packages\MonoGame.Framework.DesktopGL.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\BasicTutorial\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Priority Queue, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\BasicTutorial\packages\OptimizedPriorityQueue.4.1.1\lib\net45\Priority Queue.dll</HintPath>
+    </Reference>
+    <Reference Include="SadConsole, Version=7.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\BasicTutorial\packages\SadConsole.7.0.4\lib\net\SadConsole.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Troschuetz.Random, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>..\BasicTutorial\packages\Troschuetz.Random.4.3.0\lib\net461\Troschuetz.Random.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\ActionBase.cs" />
+    <Compile Include="Actions\ActionResult.cs" />
+    <Compile Include="Conversions\Coord_Point.cs" />
+    <Compile Include="Conversions\Rect_Rect.cs" />
+    <Compile Include="Factory.cs" />
+    <Compile Include="IFactoryBlueprint.cs" />
+    <Compile Include="IFactoryObject.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Cache.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\CellularCache.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\CellularGenerator.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Enums\BasisType.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Enums\CombinerType.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Enums\FractalType.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Enums\InterpolationType.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Enums\MappingMode.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitAutoCorrect.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitBasisFunction.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitBias.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitBlend.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitBrightContrast.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitCache.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitCeiling.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitCellular.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitClamp.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitCombiner.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitConstant.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitCos.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitFloor.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitFractal.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitGain.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitGradient.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitInvert.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitLog.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitModuleBase.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitPow.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitRotateDomain.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitScaleDomain.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitScaleOffset.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitSelect.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitSin.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitSphere.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitTan.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitTiers.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitTranslateDomain.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Implicit\ImplicitXmlChain.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Mapping.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\MappingRanges.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Noise.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\NoiseLookupTable.cs" />
+    <Compile Include="Maps\Generators\AccidentalNoise\Utilities.cs" />
+    <Compile Include="Maps\Generators\DungeonMaze.cs" />
+    <Compile Include="Maps\Generators\World\Generator.cs" />
+    <Compile Include="Maps\Generators\World\MapData.cs" />
+    <Compile Include="Maps\Generators\World\River.cs" />
+    <Compile Include="Maps\Generators\World\SurfaceMapConverter.cs" />
+    <Compile Include="Maps\Generators\World\Tile.cs" />
+    <Compile Include="Maps\Generators\World\TileGroup.cs" />
+    <Compile Include="Maps\Generators\World\WorldGenerator.cs" />
+    <Compile Include="Maps\Generators\World\WrappingWorldGenerator.cs" />
+    <Compile Include="Maps\Map.cs" />
+    <Compile Include="Maps\Tile.Factory.cs" />
+    <Compile Include="Maps\Tile.cs" />
+    <Compile Include="Maps\FlagsAndStates.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Maps\Generators\AccidentalNoise\LICENSE" />
+    <None Include="Maps\Generators\AccidentalNoise\README.md" />
+    <None Include="MonoGame.Framework.dll.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
