@@ -18,7 +18,7 @@ namespace BasicTutorial.Maps.TileBlueprints
 
         public Door() : base("door")
         {
-            Appearance = new Cell(Color.SaddleBrown, Color.Black, '-');
+            Appearance = new Cell(Color.Brown, Color.Black, '-');
             Type = TileTypes.Door;
             Title = "Door";
             Description = "An old wooden door.";

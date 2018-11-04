@@ -5,22 +5,501 @@ using System.ComponentModel;
 using System.Linq;
 using SadConsole;
 using System.Threading.Tasks;
+using GoRogue.MapViews;
+using GoRogue.Random;
+
+// Implemented the logic from http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/
 
 namespace SadConsole.Maps.Generators
 {
+    public static class Rooms
+    {
+        public static IEnumerable<GoRogue.Rectangle> Generate(ISettableMapView<bool> map, int minRooms, int maxRooms, 
+                                                               int roomMinSize, int roomMaxSize,
+                                                               float roomSizeRatioX, float roomSizeRatioY)
+        {
+            if (minRooms > maxRooms)
+                throw new ArgumentOutOfRangeException(nameof(minRooms), "The minimum amount of rooms must be less than or equal to the maximum amount of rooms.");
+
+            if (roomMinSize > roomMaxSize)
+                throw new ArgumentOutOfRangeException(nameof(roomMinSize), "The minimum size of a room must be less than or equal to the maximum size of a room.");
+
+            if (roomSizeRatioX == 0f)
+                throw new ArgumentOutOfRangeException(nameof(roomSizeRatioX), "Ratio cannot be zero.");
+
+            if (roomSizeRatioY == 0f)
+                throw new ArgumentOutOfRangeException(nameof(roomSizeRatioX), "Ratio cannot be zero.");
+
+
+            var roomCounter = GoRogue.Random.SingletonRandom.DefaultRNG.Next(minRooms, maxRooms + 1);
+            var rooms = new List<GoRogue.Rectangle>(roomCounter);
+
+            while(roomCounter != 0)
+            {
+                var tryCounterCreate = 10;
+                var placed = false;
+
+                while (tryCounterCreate != 0)
+                {
+                    var roomSize = SingletonRandom.DefaultRNG.Next(roomMinSize, roomMaxSize + 1);
+                    var width = (int)(roomSize * roomSizeRatioX);  // this helps with non square fonts. So rooms dont look odd
+                    var height = (int)(roomSize * roomSizeRatioY);
+
+
+                    // When accounting for font ratios, these adjustments help prevent all rooms having the same looking square format
+                    var adjustmentBase = roomSize / 4;
+
+                    if (adjustmentBase != 0)
+                    {
+                        var adjustment = SingletonRandom.DefaultRNG.Next(-adjustmentBase, adjustmentBase + 1);
+                        var adjustmentChance = SingletonRandom.DefaultRNG.Next(0, 2);
+
+                        if (adjustmentChance == 0)
+                            width += (int)(adjustment * roomSizeRatioX);
+                        else if (adjustmentChance == 1)
+                            height += (int)(adjustment * roomSizeRatioY);
+                    }
+
+                    width = Math.Max(roomMinSize, width);
+                    height = Math.Max(roomMinSize, height);
+
+                    // Keep room interior odd, helps with placement + tunnels around the outside.
+                    if (width % 2 == 0)
+                        width += 1;
+
+                    if (height % 2 == 0)
+                        height += 1;
+
+                    var roomInnerRect = new GoRogue.Rectangle(0, 0, width, height);
+
+                    var tryCounterPlace = 10;
+
+                    while (tryCounterPlace != 0)
+                    {
+                        bool intersected = false;
+
+                        roomInnerRect = roomInnerRect.Move(GoRogue.Coord.Get(SingletonRandom.DefaultRNG.Next(3, map.Width - roomInnerRect.Width - 3), SingletonRandom.DefaultRNG.Next(3, map.Height - roomInnerRect.Height - 3)));
+
+                        // 
+                        var roomBounds = roomInnerRect.Expand(3, 3);
+
+                        foreach (var point in roomBounds.Positions())
+                        {
+                            if (map[point])
+                            {
+                                intersected = true;
+                                break;
+                            }
+                        }
+
+                        if (intersected)
+                        {
+                            tryCounterPlace--;
+                            continue;
+                        }
+
+                        foreach (var point in roomInnerRect.Positions())
+                            map[point] = true;
+
+                        placed = true;
+                        rooms.Add(roomInnerRect);
+                        break;
+                    }
+
+                    if (placed)
+                        break;
+
+                    tryCounterCreate--;
+                }
+
+                roomCounter--;
+            }
+
+            return rooms;
+        }
+
+        
+    }
+
+    public static class Maze
+    {
+        static bool PercentageCheck(int outOfHundred) => outOfHundred != 0 && SingletonRandom.DefaultRNG.Next(101) < outOfHundred;
+        static bool PercentageCheck(double outOfHundred) => outOfHundred != 0d && SingletonRandom.DefaultRNG.NextDouble() < outOfHundred;
+
+        class Crawler
+        {
+            public Stack<GoRogue.Coord> Path = new Stack<GoRogue.Coord>();
+            public List<GoRogue.Coord> AllPositions = new List<GoRogue.Coord>();
+            public GoRogue.Coord CurrentPosition = GoRogue.Coord.Get(0, 0);
+            public bool IsActive = true;
+            public GoRogue.Direction Facing = GoRogue.Direction.UP;
+
+            public void MoveTo(GoRogue.Coord position)
+            {
+                Path.Push(position);
+                AllPositions.Add(position);
+                CurrentPosition = position;
+            }
+
+            public void Backtrack()
+            {
+                if (Path.Count != 0)
+                    CurrentPosition = Path.Pop();
+            }
+        }
+
+        public static void Generate(ISettableMapView<bool> map, int crawlerChangeDirectionImprovement, int saveDeadEndChance)
+        {
+            List<Crawler> Crawlers = new List<Crawler>();
+
+            var empty = FindEmptySquare(map);
+            var randomCounter = 0;
+            var randomSuccess = false;
+
+            while (empty != null)
+            {
+                Crawler crawler = new Crawler();
+                Crawlers.Add(crawler);
+                crawler.MoveTo(empty);
+                var startedCrawler = true;
+                var percentChangeDirection = 0;
+                //Color randomCrawlerColor = Color.AliceBlue.GetRandomColor(SadConsole.Global.Random);
+
+                while (crawler.Path.Count != 0)
+                {
+                    // Dig this position
+                    map[crawler.CurrentPosition] = true;
+                    //map[crawler.CurrentPosition.X, crawler.CurrentPosition.Y].Background = randomCrawlerColor;
+
+                    // Get valid directions (basically is any position outside the map or not?)
+                    var points = GoRogue.AdjacencyRule.CARDINALS.NeighborsClockwise(crawler.CurrentPosition).ToArray();
+                    var directions = GoRogue.AdjacencyRule.CARDINALS.DirectionsOfNeighborsClockwise(GoRogue.Direction.NONE).ToList();
+                    var valids = new bool[4];
+
+
+                    // Rule out any valids based on their position.
+                    // Only process NSEW, do not use diagonals
+                    for (var i = 0; i < 4; i++)
+                        valids[i] = IsPointWallsExceptSource(map, points[i], directions[i] + 4);
+
+                    // If not a new crawler, exclude where we came from
+                    if (!startedCrawler)
+                        valids[directions.IndexOf(crawler.Facing + 4)] = false;
+
+                    // Do we have any valid direction to go?
+                    if (valids[0] || valids[1] || valids[2] || valids[3])
+                    {
+                        var index = 0;
+
+                        // Are we just starting this crawler? OR Is the current crawler facing direction invalid?
+                        if (startedCrawler || valids[directions.IndexOf(crawler.Facing)] == false)
+                        {
+                            // Just get anything
+                            index = GetDirectionIndex(valids);
+                            crawler.Facing = directions[index];
+                            percentChangeDirection = 0;
+                            startedCrawler = false;
+                        }
+                        else
+                        {
+                            // Increase probablity we change direction
+                            percentChangeDirection += crawlerChangeDirectionImprovement;
+
+                            if (PercentageCheck(percentChangeDirection))
+                            {
+                                index = GetDirectionIndex(valids);
+                                crawler.Facing = directions[index];
+                                percentChangeDirection = 0;
+                            }
+                            else
+                                index = directions.IndexOf(crawler.Facing);
+                        }
+
+                        crawler.MoveTo(points[index]);
+                    }
+                    else
+                        crawler.Backtrack();
+                }
+
+                empty = FindEmptySquare(map);
+            }
+
+            TrimDeadPaths(map, Crawlers, saveDeadEndChance);
+        }
+
+        static void TrimDeadPaths(ISettableMapView<bool> map, IEnumerable<Crawler> Crawlers, int saveDeadEndChance)
+        {
+            foreach (var crawler in Crawlers)
+            {
+                List<GoRogue.Coord> safeDeadEnds = new List<GoRogue.Coord>();
+                List<GoRogue.Coord> deadEnds = new List<GoRogue.Coord>();
+
+                while (true)
+                {
+                    foreach (var point in crawler.AllPositions)
+                    {
+                        var points = GoRogue.AdjacencyRule.EIGHT_WAY.NeighborsClockwise(point).ToArray();
+                        var directions = GoRogue.AdjacencyRule.EIGHT_WAY.DirectionsOfNeighborsClockwise(GoRogue.Direction.NONE).ToList();
+
+                        for (int i = 0; i < 8; i += 2)
+                        {
+                            if (map[points[i]])
+                            {
+                                var oppDir = directions[i] + 4;
+                                bool found = false;
+
+                                // If we get here, source direction is a floor, opposite direction should be wall
+                                if (!map[points[(int) oppDir.Type]])
+                                {
+                                    switch (oppDir.Type)
+                                    {
+                                        // Check for a wall pattern in the map. In this case something like where X is a wall
+                                        // XXX
+                                        // X X
+                                        case GoRogue.Direction.Types.UP:
+                                            found = !map[points[(int) GoRogue.Direction.Types.UP_LEFT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.UP_RIGHT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.LEFT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.RIGHT]];
+                                            break;
+
+                                        case GoRogue.Direction.Types.DOWN:
+                                            found = !map[points[(int) GoRogue.Direction.Types.DOWN_LEFT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.DOWN_RIGHT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.LEFT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.RIGHT]];
+                                            break;
+
+                                        case GoRogue.Direction.Types.RIGHT:
+                                            found = !map[points[(int) GoRogue.Direction.Types.UP_RIGHT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.DOWN_RIGHT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.UP]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.DOWN]];
+                                            break;
+
+                                        case GoRogue.Direction.Types.LEFT:
+                                            found = !map[points[(int) GoRogue.Direction.Types.UP_LEFT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.DOWN_LEFT]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.UP]] &&
+                                                    !map[points[(int) GoRogue.Direction.Types.DOWN]];
+                                            break;
+                                    }
+                                }
+
+
+                                if (found)
+                                    deadEnds.Add(point);
+
+                                break;
+                            }
+                        }
+
+                    }
+
+                    deadEnds = new List<GoRogue.Coord>(deadEnds.Except(safeDeadEnds));
+                    crawler.AllPositions = new List<GoRogue.Coord>(crawler.AllPositions.Except(deadEnds));
+
+                    if (deadEnds.Count == 0)
+                        break;
+
+                    foreach (var point in deadEnds)
+                    {
+                        if (PercentageCheck(saveDeadEndChance))
+                        {
+                            safeDeadEnds.Add(point);
+                        }
+                        else
+                            map[point] = false;
+                    }
+
+                    deadEnds.Clear();
+                    break; // For now we only do 1 pass. Have to design this differently
+                           // the sadconsole version didn't need to quit like this, unsure
+                           // what the difference is...
+                }
+            }
+        }
+
+
+        static bool IsPointSurroundedByWall(IMapView<bool> map, GoRogue.Coord location)
+        {
+            var points = GoRogue.AdjacencyRule.EIGHT_WAY.Neighbors(location);
+
+            var index = location.ToPoint().GetDirectionIndexes(map.Width, map.Height);
+            var mapBounds = map.Bounds();
+            foreach (var point in points)
+            {
+                if (!mapBounds.Contains(point))
+                    return false;
+
+                if (map[point])
+                    return false;
+            }
+
+            return true;
+        }
+
+        static bool IsPointConsideredEmpty(IMapView<bool> map, GoRogue.Coord location)
+        {
+            return !IsPointMapEdge(map, location) &&  // exclude outer ridge of map
+                   IsPointOdd(location) && // check is odd numer position
+                   //!IsPointPartOfRegion(map, location, true) && // check if not part of a room region
+                   IsPointSurroundedByWall(map, location) && // make sure is surrounded by a wall.
+                   IsPointWall(map, location); // The location is a wall
+        }
+
+        static bool IsPointWall(IMapView<bool> map, GoRogue.Coord location)
+        {
+            return !map[location];
+        }
+
+        static bool IsPointPartOfRegion(IMapView<bool> map, GoRogue.Coord location, bool includeOuterEdge)
+        {
+            //Rectangle outerEdge;
+
+            //foreach (var region in map.Regions)
+            //{
+            //    if (includeOuterEdge)
+            //    {
+            //        outerEdge = region.InnerRect;
+            //        outerEdge.Inflate(1, 1);
+
+            //        if (outerEdge.Contains(location))
+            //            return true;
+            //    }
+            //    else if (region.InnerRect.Contains(location))
+            //        return true;
+            //}
+
+            return false;
+        }
+
+        static bool IsPointOdd(GoRogue.Coord location)
+        {
+            return location.X % 2 != 0 && location.Y % 2 != 0;
+        }
+
+        static bool IsPointMapEdge(IMapView<bool> map, GoRogue.Coord location, bool onlyEdgeTest = false)
+        {
+            if (onlyEdgeTest)
+                return location.X == 0 || location.X == map.Width - 1 || location.Y == 0 || location.Y == map.Height - 1;
+            else
+                return location.X <= 0 || location.X >= map.Width - 1 || location.Y <= 0 || location.Y >= map.Height - 1;
+
+        }
+
+        static bool IsPointWallsExceptSource(IMapView<bool> map, GoRogue.Coord location, GoRogue.Direction sourceDirection)
+        {
+            // exclude the outside of the map
+            var mapInner = map.Bounds().Expand(-1, -1);
+
+            if (!mapInner.Contains(location))
+            // Shortcut out if this location is part of the map edge.
+            //if (IsPointMapEdge(location) || IsPointPartOfRegion(location, true))
+                return false;
+
+            // Get map indexes for all surrounding locations
+            var index = GoRogue.AdjacencyRule.EIGHT_WAY.DirectionsOfNeighborsClockwise().ToArray();
+
+            GoRogue.Direction[] skipped;
+
+            if (sourceDirection == GoRogue.Direction.RIGHT)
+                skipped = new GoRogue.Direction[] { sourceDirection, GoRogue.Direction.UP_RIGHT, GoRogue.Direction.DOWN_RIGHT };
+            else if (sourceDirection == GoRogue.Direction.LEFT)
+                skipped = new GoRogue.Direction[] { sourceDirection, GoRogue.Direction.UP_LEFT, GoRogue.Direction.DOWN_LEFT };
+            else if (sourceDirection == GoRogue.Direction.UP)
+                skipped = new GoRogue.Direction[] { sourceDirection, GoRogue.Direction.UP_RIGHT, GoRogue.Direction.UP_LEFT };
+            else
+                skipped = new GoRogue.Direction[] { sourceDirection, GoRogue.Direction.DOWN_RIGHT, GoRogue.Direction.DOWN_LEFT };
+
+            for (int i = 0; i < index.Length; i++)
+            {
+                if (skipped[0] == index[i] || skipped[1] == index[i] || skipped[2] == index[i])
+                    continue;
+
+                //if (index[i] == -1)
+                //    return false;
+
+                if (!map.Bounds().Contains(location + index[i]) || map[location + index[i]])
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static GoRogue.Coord FindEmptySquare(IMapView<bool> map)
+        {
+            // Try random positions first
+            for (int i = 0; i < 100; i++)
+            {
+                var location = map.RandomPosition(false);
+
+                if (IsPointConsideredEmpty(map, location))
+                    return location;
+            }
+
+            // Start looping through every single one
+            for (int i = 0; i < map.Width * map.Height; i++)
+            {
+                var location = GoRogue.Coord.Get(i % map.Width, i / map.Width);
+
+                if (IsPointConsideredEmpty(map, location))
+                    return location;
+            }
+
+            return null;
+        }
+
+        static int GetDirectionIndex(bool[] valids)
+        {
+            // 10 tries to find random ok valid
+            bool randomSuccess = false;
+            int tempDirectionIndex = 0;
+
+            for (int randomCounter = 0; randomCounter < 10; randomCounter++)
+            {
+                tempDirectionIndex = GoRogue.Random.SingletonRandom.DefaultRNG.Next(4);
+                if (valids[tempDirectionIndex])
+                {
+                    randomSuccess = true;
+                    break;
+                }
+            }
+
+            // Couldn't find an active valid, so just run through each
+            if (!randomSuccess)
+            {
+                if (valids[0])
+                    tempDirectionIndex = 0;
+                else if (valids[1])
+                    tempDirectionIndex = 1;
+                else if (valids[2])
+                    tempDirectionIndex = 2;
+                else
+                    tempDirectionIndex = 3;
+            }
+
+            return tempDirectionIndex;
+        }
+    }
+
     public class DungeonMaze
     {
         public class GenerationSettings
         {
-            public int MaxRooms = 50;
-            public int MinRooms = 20;
+            public int MaxRooms = 15;
+            public int MinRooms = 10;
             public int ChanceRemoveRooms = 20;
             public int MinRoomSize = 3;
             public int MaxRoomSize = 11;
             public int ChanceStopRooms = 15;
             public int CrawlerChangeDirectionImprovement = 30;
-            public int CrawlerSaveDeadEndsPercent = 10;
-            
+            public int CrawlerSaveDeadEndsPercent = 20;
+            public int RoomConnectionMaxSides = 4;
+            public int RoomConnectionMinSides = 1;
+            public int RoomConnectionSideCancelPercent = 50;
+            public int RoomConnectionSidePlacementPercent = 20;
+
             public Point FontRatio = new Point(1, 2);
             public bool SquareFont = false;
         }
@@ -53,7 +532,7 @@ namespace SadConsole.Maps.Generators
 
         protected List<Crawler> Crawlers;
 
-        protected List<(Region Region, Point[] Connections)> RoomHallwayConnections;
+        protected List<(Region Region, Point[][] Connections)> RoomHallwayConnections;
 
         public virtual void Build(ref SimpleMap map)
         {
@@ -62,7 +541,7 @@ namespace SadConsole.Maps.Generators
             
             BuildRooms();
 
-            RoomHallwayConnections = new List<(Region Region, Point[] Connections)>(map.Regions.Count);
+            RoomHallwayConnections = new List<(Region Region, Point[][] Connections)>(map.Regions.Count);
 
             StartMazeGenerator();
             ConnectRooms();
@@ -266,20 +745,37 @@ namespace SadConsole.Maps.Generators
 
         private void ConnectRooms()
         {
-            bool[] regionsFinished = new bool[map.Regions.Count];
+            /*
+            - Get all points along a side
+            - if point count for side is > 0
+              - mark side for placement
+            - if total sides marked > max
+              - loop total sides > max
+                - randomly remove side
+            - if total sides marked > min
+              - loop sides
+                - CHECK side placement cancel check OK
+                  - unmark side
+                - if total sides marked == min
+                  -break loop
+            - Loop sides
+              - Loop points
+                - If point passes availability (no already chosen point next to point)
+                  - CHECK point placement OK
+                    - Add point to list
+            */
 
-            while (regionsFinished.Contains(false))
+            for (int r = 0; r < map.Regions.Count; r++)
             {
-                int selectedIndex = SadConsole.Global.Random.Next(map.Regions.Count);
+                var region = map.Regions[r];
 
-                if (regionsFinished[selectedIndex])
-                    continue;
+                // Get all points along each side
+                List<Point>[] validPoints = new List<Point>[4];
 
-                regionsFinished[selectedIndex] = true;
-
-                var region = map.Regions[selectedIndex];
-
-                List<Point> validSpots = new List<Point>(region.OuterRect.Width * 2 + region.OuterRect.Height * 2);
+                validPoints[0] = new List<Point>();
+                validPoints[1] = new List<Point>();
+                validPoints[2] = new List<Point>();
+                validPoints[3] = new List<Point>();
 
                 // Along top/bottom edges
                 for (int x = 1; x < region.OuterRect.Width - 1; x++)
@@ -288,16 +784,18 @@ namespace SadConsole.Maps.Generators
                     point.X += x;
                     var testPoint = point + Directions.North;
 
+                    // Top
                     if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
+                        validPoints[(int) SadConsole.Directions.DirectionEnum.North].Add(point);
 
                     point = region.OuterRect.Location;
                     point.Y += region.OuterRect.Height - 1;
                     point.X += x;
                     testPoint = point + Directions.South;
 
+                    // Bottom
                     if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
+                        validPoints[(int) SadConsole.Directions.DirectionEnum.South].Add(point);
                 }
 
                 // Along the left/right edges
@@ -307,30 +805,140 @@ namespace SadConsole.Maps.Generators
                     point.Y += y;
                     var testPoint = point + Directions.West;
 
+                    // Left
                     if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
+                        validPoints[(int) SadConsole.Directions.DirectionEnum.East].Add(point);
 
                     point = region.OuterRect.Location;
                     point.X += region.OuterRect.Width - 1;
                     point.Y += y;
                     testPoint = point + Directions.East;
 
+                    // Right
                     if (!IsPointMapEdge(testPoint) && !IsPointWall(testPoint))
-                        validSpots.Add(point);
+                        validPoints[(int) SadConsole.Directions.DirectionEnum.West].Add(point);
                 }
 
-                // Connect the room to the hallway.
+                // - if point count for side is > 0, it's a valid side.
+                bool[] validSides = new bool[4];
+                var sidesTotal = 0;
 
-                // TODO: Do connections between room and halway, need to place some empty spots.
-                // Maybe take door code from game project and place empty tiles instead?
-                // Then the RoomhallwayConnections list would be populated with only floor tiles
-                // added to the collection.
+                for (int i = 0; i < 4; i++)
+                {
+                    // - mark side for placement
+                    validSides[i] = validPoints[i].Count != 0;
+                    if (validSides[i])
+                        sidesTotal++;
+                }
 
-                //foreach (var spot in validSpots)
-                //    map[spot] = Tile.Factory.Create("floor");
 
-                RoomHallwayConnections.Add((region, validSpots.ToArray()));
+                // - if total sides marked > max
+                if (sidesTotal > Settings.RoomConnectionMaxSides)
+                {
+                    var sides = new List<int>(sidesTotal);
+
+                    for (var i = 0; i < 4; i++)
+                    {
+                        if (validSides[i])
+                            sides.Add(i);
+                    }
+
+                    // - loop total sides > max
+                    while (sidesTotal > Settings.RoomConnectionMaxSides)
+                    {
+                        // - randomly remove side
+                        var index = sides[SingletonRandom.DefaultRNG.Next(sides.Count)];
+                        sides.RemoveAt(index);
+                        validSides[index] = false;
+                        sidesTotal--;
+                    }
+                }
+
+                // - if total sides marked > min
+                if (sidesTotal > Settings.RoomConnectionMinSides)
+                {
+                    // - loop sides
+                    for (var i = 0; i < 4; i++)
+                    {
+                        if (validSides[i])
+                        {
+                            // - CHECK side placement cancel check OK
+                            if (PercentageCheck(Settings.RoomConnectionSideCancelPercent))
+                            {
+                                validSides[i] = false;
+                                sidesTotal--;
+                            }
+                        }
+
+                        // - if total sides marked == min
+                        if (sidesTotal == Settings.RoomConnectionMinSides)
+                            break;
+                    }
+                }
+
+                List<Point>[] finalConnectionPoints = new List<Point>[4];
+                finalConnectionPoints[0] = new List<Point>();
+                finalConnectionPoints[1] = new List<Point>();
+                finalConnectionPoints[2] = new List<Point>();
+                finalConnectionPoints[3] = new List<Point>();
+
+                // - loop sides
+                for (var i = 0; i < 4; i++)
+                {
+                    if (validSides[i])
+                    {
+                        // FORNOW just randomly choose one from the side to become a connection point
+                        var randomPoint = SingletonRandom.DefaultRNG.Next(validPoints[i].Count);
+
+                        finalConnectionPoints[i].Add(validPoints[i][randomPoint]);
+
+                        map[finalConnectionPoints[i][0]] = Tile.Factory.Create("floor");
+
+                        // - Loop points
+                        foreach (var point in validPoints[i])
+                        {
+                            //// - If point passes availability (no already chosen point next to point)
+                            ////   - CHECK point placement OK
+                            ////     - Add point to list
+
+
+                            //int doorCount = SadConsole.Global.Random.Next(1, 6);
+                            //bool placedDoor = false;
+
+                            //if (room.Connections.Length != 0)
+                            //    //System.Diagnostics.Debugger.Break();
+                            //    //else
+                            //    for (int i = 0; i < doorCount; i++)
+                            //    {
+                            //        for (int tryCount = 0; tryCount < 3; tryCount++)
+                            //        {
+                            //            Point spot = room.Connections[SadConsole.Global.Random.Next(0, room.Connections.Length)];
+
+                            //            if (!IsPointNearType(spot, BasicTutorial.Maps.TileTypes.Door))
+                            //            {
+                            //                placedDoor = true;
+                            //                map[spot] = Tile.Factory.Create("door");
+
+                            //                break;
+                            //            }
+                            //        }
+
+                            //        if (placedDoor && PercentageCheck(CancelDoorPlacementPercent))
+                            //            break;
+                            //    }
+                        }
+                    }
+                }
+
+                if (finalConnectionPoints[0].Count == 0
+                    && finalConnectionPoints[1].Count == 0
+                    && finalConnectionPoints[2].Count == 0
+                    && finalConnectionPoints[3].Count == 0)
+                System.Diagnostics.Debugger.Break();
+
+                RoomHallwayConnections.Add((region, finalConnectionPoints.Select(l => l.ToArray()).ToArray()));
             }
+
         }
 
         protected void TrimDeadPaths()
@@ -397,8 +1005,6 @@ namespace SadConsole.Maps.Generators
                         }
 
                     }
-
-                    
 
                     deadEnds = new List<Point>(deadEnds.Except(safeDeadEnds));
                     crawler.AllPositions = new List<Point>(crawler.AllPositions.Except(deadEnds));
@@ -595,9 +1201,7 @@ namespace SadConsole.Maps.Generators
             }
         }
 
-        protected bool PercentageCheck(int outOfHundred)
-        {
-            return SadConsole.Global.Random.Next(101) < outOfHundred;
-        }
+        protected bool PercentageCheck(int outOfHundred) => outOfHundred != 0 && SingletonRandom.DefaultRNG.Next(101) < outOfHundred;
+        protected bool PercentageCheck(double outOfHundred) => outOfHundred != 0d && SingletonRandom.DefaultRNG.NextDouble() < outOfHundred;
     }
 }

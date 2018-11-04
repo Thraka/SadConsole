@@ -22,7 +22,7 @@ namespace SadConsole.Maps
         public static Cell AppearanceNeverSeen = new Cell(Color.Black, Color.Black, '.');
         public static float DimAmount = 0.2f;
 
-        public EventHandler TileChanged;
+        public event EventHandler TileChanged;
 
         public string Title { get; set; }
         public string Description { get; set; }

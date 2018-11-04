@@ -67,7 +67,7 @@
     <Compile Include="Conversions\Rect_Rect.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
-    <Compile Include="GoRogueIntegration.cs" />
+    <Compile Include="GoRogueRandom.cs" />
     <Compile Include="IFactoryBlueprint.cs" />
     <Compile Include="IFactoryObject.cs" />
     <Compile Include="Maps\Generators\AccidentalNoise\Cache.cs" />
@@ -130,8 +130,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Maps\Generators\AccidentalNoise\LICENSE" />
-    <None Include="Maps\Generators\AccidentalNoise\README.md" />
     <None Include="MonoGame.Framework.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>

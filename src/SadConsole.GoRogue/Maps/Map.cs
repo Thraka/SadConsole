@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -10,10 +11,63 @@ using SadConsole;
 
 namespace SadConsole.Maps
 {
-    public class SimpleMap: ScreenObject, ISettableMapView<Tile>
+    public class GameObjectManager: SpatialMap<GameObjects.GameObjectBase>
+    {
+        WeakReference<SimpleMap> mapReference;
+        Rectangle cachedViewPort;
+
+        public GameObjectManager(SimpleMap map)
+        {
+            this.mapReference = new WeakReference<SimpleMap>(map);
+            this.cachedViewPort = map.Surface.ViewPort;
+            this.ItemAdded += GameObjectManager_ItemAdded;
+            this.ItemRemoved += GameObjectManager_ItemRemoved;
+            this.ItemMoved += GameObjectManager_ItemMoved;
+        }
+
+        private void GameObjectManager_ItemMoved(object sender, ItemMovedEventArgs<GameObjects.GameObjectBase> e)
+        {
+            mapReference.TryGetTarget(out SimpleMap map);
+            if (map == null) return;
+
+            e.Item.MoveTo(e.NewPosition.ToPoint(), map);
+            e.Item.IsVisible = map.Surface.ViewPort.Contains(e.Item.Position);
+        }
+
+        private void GameObjectManager_ItemRemoved(object sender, ItemEventArgs<GameObjects.GameObjectBase> e)
+        {
+        }
+
+        private void GameObjectManager_ItemAdded(object sender, ItemEventArgs<GameObjects.GameObjectBase> e)
+        {
+            mapReference.TryGetTarget(out SimpleMap map);
+            if (map == null) return;
+
+            e.Item.MoveTo(e.Position.ToPoint(), map);
+            e.Item.IsVisible = map.Surface.ViewPort.Contains(e.Item.Position);
+        }
+
+        public void SyncView()
+        {
+            mapReference.TryGetTarget(out SimpleMap map);
+            if (map == null) return;
+            if (cachedViewPort == map.Surface.ViewPort) return;
+
+            cachedViewPort = map.Surface.ViewPort;
+
+            foreach (var item in Items)
+            {
+                item.PositionOffset = map.Surface.ViewPort.Location;
+                item.IsVisible = map.Surface.ViewPort.Contains(item.Position);
+            }
+        }
+    }
+
+    public class SimpleMap: ScreenObject, ISettableMapView<Tile>, IEnumerable<Tile>
     {
         public Surfaces.Basic Surface;
-        public Entities.EntityManager EntityManager;
+        //public Entities.EntityManager EntityManager;
+        protected GoRogue.SpatialMap<GameObjects.GameObjectBase> EntityManager;
 
         /// <summary>
         /// The width of the map.
@@ -30,48 +84,32 @@ namespace SadConsole.Maps
         /// </summary>
         public TranslationFOV MapToFOV { get; private set; }
         
-        public Tile[] Tiles;
+        private Tile[] Tiles;
 
         public List<Region> Regions;
 
         public Tile this[int index]
         {
             get => Tiles[index];
-            set
-            {
-                value.Position = new Point(index % Width, index / Width);
-                Tiles[index] = value;
-            }
+            set => SetupTile(value, new Point(index % Width, index / Width));
         }
 
         public Tile this[int x, int y]
         {
             get => Tiles[Surface.GetIndexFromPoint(x, y)];
-            set
-            {
-                value.Position = new Point(x, y);
-                Tiles[Surface.GetIndexFromPoint(x, y)] = value;
-            }
+            set => SetupTile(value, new Point(x, y));
         }
 
         public Tile this[Coord position]
         {
             get => Tiles[position.ToIndex(Width)];
-            set
-            {
-                value.Position = position.ToPoint();
-                Tiles[position.ToIndex(Width)] = value;
-            }
+            set => SetupTile(value, position.ToPoint());
         }
 
         public Tile this[Point position]
         {
             get => Tiles[position.ToIndex(Width)];
-            set
-            {
-                value.Position = position;
-                Tiles[position.ToIndex(Width)] = value;
-            }
+            set => SetupTile(value, position);
         }
 
         /// <summary>
@@ -84,30 +122,49 @@ namespace SadConsole.Maps
         {
             Width = width;
             Height = height;
-
+            
             // Create our tiles for the map
             Tiles = new Tile[width * height];
             Regions = new List<Region>();
 
             // Be efficient by not using factory.Create each tile below. Instead, get the blueprint and use that to create each tile.
-            var defaultTile = Tile.Factory.GetDefintion("wall");
+            var defaultTile = Tile.Factory.GetBlueprint("wall");
 
             // Fill the map with walls.
             for (var i = 0; i < Tiles.Length; i++)
-                this[i] = defaultTile.Create();
-            
+            {
+                Tiles[i] = defaultTile.Create();
+                Tiles[i].Position = new Point(i % Width, i / Width);
+                Tiles[i].TileChanged += SimpleMap_TileChanged;
+            }
+
             // Instance of the FOV translator.
             MapToFOV = new TranslationFOV(this);
 
             Surface = new SadConsole.Surfaces.Basic(width, height, SadConsole.Global.FontDefault, viewPort, Tiles);
-            EntityManager = new Entities.EntityManager();
-
+            //EntityManager = new Entities.EntityManager();
+            
             // Parent the entity manager to the view surface of the map.
-            Surface.Children.Add(EntityManager);
+            //Surface.Children.Add(EntityManager);
+
+            EntityManager = new GameObjectManager(this);
 
             // Parent the surface to the map.
             Children.Add(Surface);
         }
+
+        private void SetupTile(Tile tile, Point position)
+        {
+            // Dehook
+            this[position].TileChanged -= SimpleMap_TileChanged;
+
+            tile.Position = position;
+            tile.TileChanged += SimpleMap_TileChanged;
+            Tiles[position.ToIndex(Width)] = tile;
+            Surface.SetRenderCells();
+        }
+
+        private void SimpleMap_TileChanged(object sender, EventArgs e) => Surface.IsDirty = true;
 
         /// <summary>
         /// Returns an entity by position.
@@ -116,15 +173,15 @@ namespace SadConsole.Maps
         /// <returns>The entity at the position, otherwise null.</returns>
         public Entities.Entity GetEntity(Point position)
         {
-            
-            // GoRogue.SpatialMap?
-            foreach (var ent in EntityManager.Entities)
-            {
-                if (ent.Position == position)
-                    return ent;
-            }
+            return EntityManager.GetItem(position.ToCoord());
 
-            return null;
+            //foreach (var ent in EntityManager.Entities)
+            //{
+            //    if (ent.Position == position)
+            //        return ent;
+            //}
+
+            //return null;
         }
 
         /// <summary>
@@ -186,7 +243,7 @@ namespace SadConsole.Maps
         {
             while (true)
             {
-                var foundTile = this[this.RandomPosition(GoRogueIntegration.Random)];
+                var foundTile = this[this.RandomPosition(GoRogue.Random.SingletonRandom.DefaultRNG)];
 
                 if (!Helpers.HasFlag(foundTile.Flags, (int)TileFlags.BlockMove))
                     return foundTile;
@@ -205,6 +262,16 @@ namespace SadConsole.Maps
                 // 1 = blocked; 0 = see thru
                 return Helpers.HasFlag(value.Flags, (int)TileFlags.BlockLOS)  ? 1.0 : 0.0;
             }
+        }
+
+        public IEnumerator<Tile> GetEnumerator()
+        {
+            return new List<Tile>(Tiles).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

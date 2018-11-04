@@ -11,12 +11,14 @@ using SadConsole.Actions;
 
 namespace SadConsole.GameObjects
 {
-    class GameObjectBase: Entity
+    public class GameObjectBase: Entity, GoRogue.IHasID
     {
         public string Title;
         public string Description;
 
         public bool BlockMove = false;
+
+        public uint ID { get; } = GoRogue.Random.SingletonRandom.DefaultRNG.NextUInt();
 
         public new Point Position => base.Position;
 
