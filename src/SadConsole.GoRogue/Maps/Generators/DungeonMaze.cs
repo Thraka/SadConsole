@@ -122,12 +122,16 @@ namespace SadConsole.Maps.Generators
         }
 
         public static IEnumerable<(GoRogue.Rectangle Room, GoRogue.Coord[][] Connections)> ConnectRooms(ISettableMapView<bool> map, IEnumerable<GoRogue.Rectangle> rooms,
-                                   int roomConnectionMaxSides,
-                                   int roomConnectionMinSides,
-                                   int roomConnectionSideCancelChance,
-                                   int roomConnectionCancelPlacementChance,
-                                   int roomConnectionCancelPlacementChanceIncrease)
+                                   int minSidesToConnect,
+                                   int maxSidesToConnect,
+                                   int cancelSideConnectionSelectChance,
+                                   int cancelConnectionPlacementChance,
+                                   int cancelConnectionPlacementChanceIncrease)
         {
+            if (minSidesToConnect > maxSidesToConnect)
+                throw new ArgumentOutOfRangeException(nameof(minSidesToConnect), "The minimum sides with connections must be less than or equal to the maximum amount of sides with connections.");
+
+
             var roomHallwayConnections = new List<(GoRogue.Rectangle Room, GoRogue.Coord[][] Connections)>();
 
             /*
@@ -218,7 +222,7 @@ namespace SadConsole.Maps.Generators
 
 
                 // - if total sides marked > max
-                if (sidesTotal > roomConnectionMaxSides)
+                if (sidesTotal > maxSidesToConnect)
                 {
                     var sides = new List<int>(sidesTotal);
 
@@ -229,7 +233,7 @@ namespace SadConsole.Maps.Generators
                     }
 
                     // - loop total sides > max
-                    while (sidesTotal > roomConnectionMaxSides)
+                    while (sidesTotal > maxSidesToConnect)
                     {
                         // - randomly remove side
                         var index = sides[SingletonRandom.DefaultRNG.Next(sides.Count)];
@@ -240,7 +244,7 @@ namespace SadConsole.Maps.Generators
                 }
 
                 // - if total sides marked > min
-                if (sidesTotal > roomConnectionMinSides)
+                if (sidesTotal > minSidesToConnect)
                 {
                     // - loop sides
                     for (var i = 0; i < 4; i++)
@@ -248,7 +252,7 @@ namespace SadConsole.Maps.Generators
                         if (validSides[i])
                         {
                             // - CHECK side placement cancel check OK
-                            if (PercentageCheck(roomConnectionSideCancelChance))
+                            if (PercentageCheck(cancelSideConnectionSelectChance))
                             {
                                 validSides[i] = false;
                                 sidesTotal--;
@@ -256,7 +260,7 @@ namespace SadConsole.Maps.Generators
                         }
 
                         // - if total sides marked == min
-                        if (sidesTotal == roomConnectionMinSides)
+                        if (sidesTotal == minSidesToConnect)
                             break;
                     }
                 }
@@ -272,7 +276,7 @@ namespace SadConsole.Maps.Generators
                 {
                     if (validSides[i])
                     {
-                        var currentChance = roomConnectionCancelPlacementChance;
+                        var currentChance = cancelConnectionPlacementChance;
                         var loopMax = 100;
 
                         // - Loop points
@@ -299,7 +303,7 @@ namespace SadConsole.Maps.Generators
                                     break;
                                 }
 
-                                currentChance += roomConnectionCancelPlacementChanceIncrease;
+                                currentChance += cancelConnectionPlacementChanceIncrease;
                             }
 
                             loopMax--;
@@ -326,7 +330,6 @@ namespace SadConsole.Maps.Generators
 
             return roomHallwayConnections;
         }
-
 
         static bool IsPointByTwoWalls(IMapView<bool> map, GoRogue.Coord location)
         {
