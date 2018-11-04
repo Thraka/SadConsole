@@ -70,7 +70,7 @@ namespace SadConsole.Themes
                 appearance.Background,
                 appearance.Glyph, null);
 
-            if (ShowEnds)
+            if (ShowEnds && control.Width >= 3)
             {
                 control.Surface.Print(1, middle, (control.Text).Align(control.TextAlignment, control.Width - 2));
                 control.Surface.SetGlyph(0, middle, EndCharacterLeft);
@@ -218,10 +218,14 @@ namespace SadConsole.Themes
         [DataMember]
         public Cell BottomRightLineColors;
 
+        [DataMember]
+        public bool UseExtended;
+
         public ButtonLinesTheme()
         {
             TopLeftLineColors = new Cell(Themes.Colors.Gray, Color.Transparent);
             BottomRightLineColors = new Cell(Themes.Colors.GrayDark, Color.Transparent);
+            UseExtended = true;
         }
 
         public override void Attached(Button control)
@@ -279,7 +283,7 @@ namespace SadConsole.Themes
             control.Surface.DrawLine(new Point(control.Width - 1, 0), new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
             control.Surface.DrawLine(new Point(1, control.Height - 1), new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
 
-            if (control.Parent.Font.Master.IsSadExtended)
+            if (control.Parent.Font.Master.IsSadExtended && UseExtended)
             {
                 // Tweak the corners
                 //hostSurface.SetGlyph(0, 0, 0);
