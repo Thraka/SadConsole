@@ -16,8 +16,8 @@ namespace BasicTutorial
         {
             // Temp 100x100 for now.
             SadConsole.Maps.SimpleMap map = new SadConsole.Maps.SimpleMap(100, 100, new Rectangle(0, 0, 80, 25));
-            SadConsole.Maps.Generators.DungeonMaze gen = new SadConsole.Maps.Generators.DungeonMaze();
-            gen.Build(ref map);
+            //SadConsole.Maps.Generators.DungeonMaze gen = new SadConsole.Maps.Generators.DungeonMaze();
+            //gen.Build(ref map);
 
         }
 

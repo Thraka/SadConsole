@@ -46,6 +46,7 @@ namespace BasicTutorial
 
         static SadConsole.Maps.SimpleMap map;
         static GoRogue.MapViews.ArrayMap<bool> tempMap;
+        static IEnumerable<GoRogue.Rectangle> mapRooms;
         static Queue<Action> MapBuildSteps;
         static Timer mapbuildtimer;
 
@@ -63,7 +64,7 @@ namespace BasicTutorial
                     MapBuildSteps.Dequeue().Invoke();
             }
 
-            mapbuildtimer.Update(Global.GameTimeElapsedUpdate);
+            //mapbuildtimer.Update(Global.GameTimeElapsedUpdate);
         }
 
         private static void BuildMaze()
@@ -90,7 +91,7 @@ namespace BasicTutorial
             //SadConsole.Maps.Generators.DungeonMaze gen = new SadConsole.Maps.Generators.DungeonMaze();
             //Maps.Generators.DoorGenerator gen = new Maps.Generators.DoorGenerator();
             //gen.Build(ref map);
-            var mapRooms = SadConsole.Maps.Generators.Rooms.Generate(tempMap, 4, 10, 3, 15, 1f, 0.5f);
+            mapRooms = SadConsole.Maps.Generators.Rooms.Generate(tempMap, 4, 10, 3, 15, 1f, 0.5f);
 
             foreach (var room in mapRooms)
             {
@@ -102,7 +103,56 @@ namespace BasicTutorial
 
             foreach (var tile in map)
                 tile.Flags = SadConsole.Helpers.SetFlag(tile.Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
+        }
 
+        private static void ConnectRooms()
+        {
+            var RoomHallwayConnections = SadConsole.Maps.Generators.Rooms.ConnectRooms(tempMap, mapRooms, 4, 1, 50, 70, 10);
+            //var RoomHallwayConnections = SadConsole.Maps.Generators.Rooms.ConnectRooms(tempMap, mapRooms, 4, 1, 50);
+
+            bool PercentageCheck(int outOfHundred) => outOfHundred != 0 && GoRogue.Random.SingletonRandom.DefaultRNG.Next(101) < outOfHundred;
+
+            int TurnDoorIntoWallChance = 20;
+
+            foreach (var room in RoomHallwayConnections)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (room.Connections[i].Length != 0)
+                    {
+                        foreach (var point in room.Connections[i])
+                        {
+                            //if (!IsPointByTwoWalls(tempMap, point))
+                            //{
+                            //    // fill in this point because it's invalid
+                            //    map[point] = SadConsole.Maps.Tile.Factory.Create("wall");
+                            //    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
+                            //}
+                            //else
+                            {
+                                if (!PercentageCheck(TurnDoorIntoWallChance))
+                                {
+                                    map[point] = SadConsole.Maps.Tile.Factory.Create("door");
+                                    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
+                                }
+                                else
+                                //{
+                                //    map[point] = SadConsole.Maps.Tile.Factory.Create("floor");
+                                //    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
+                                //}
+                                {
+                                    map[point] = SadConsole.Maps.Tile.Factory.Create("wall");
+                                    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+
+            
         }
 
         private static void Redo()
@@ -111,6 +161,7 @@ namespace BasicTutorial
             tempMap = new GoRogue.MapViews.ArrayMap<bool>(map.Width, map.Height);
 
             MapBuildSteps.Enqueue(BuildMaze);
+            MapBuildSteps.Enqueue(ConnectRooms);
             MapBuildSteps.Enqueue(Redo);
 
             SadConsole.Global.CurrentScreen = map;
@@ -132,6 +183,7 @@ namespace BasicTutorial
             MapBuildSteps = new Queue<Action>();
             MapBuildSteps.Enqueue(BuildRooms);
             MapBuildSteps.Enqueue(BuildMaze);
+            MapBuildSteps.Enqueue(ConnectRooms);
             MapBuildSteps.Enqueue(Redo);
 
             SadConsole.Maps.Tile.Factory.Add(new BasicTutorial.Maps.TileBlueprints.Door());
