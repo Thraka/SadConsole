@@ -64,8 +64,26 @@ namespace BasicTutorial
                     MapBuildSteps.Dequeue().Invoke();
             }
 
-            //mapbuildtimer.Update(Global.GameTimeElapsedUpdate);
+            mapbuildtimer.Update(Global.GameTimeElapsedUpdate);
         }
+
+
+        private static void Init()
+        {
+            mapbuildtimer = new Timer(1, (t, d) => {
+
+                if (MapBuildSteps.Count != 0)
+                    MapBuildSteps.Dequeue().Invoke();
+            });
+            mapbuildtimer.Repeat = true;
+
+            MapBuildSteps = new Queue<Action>();
+            MapBuildSteps.Enqueue(Redo);
+
+            SadConsole.Maps.Tile.Factory.Add(new BasicTutorial.Maps.TileBlueprints.Door());
+
+        }
+
 
         private static void BuildMaze()
         {
@@ -108,11 +126,10 @@ namespace BasicTutorial
         private static void ConnectRooms()
         {
             var RoomHallwayConnections = SadConsole.Maps.Generators.Rooms.ConnectRooms(tempMap, mapRooms, 1, 4, 50, 70, 10);
-            //var RoomHallwayConnections = SadConsole.Maps.Generators.Rooms.ConnectRooms(tempMap, mapRooms, 4, 1, 50);
 
             bool PercentageCheck(int outOfHundred) => outOfHundred != 0 && GoRogue.Random.SingletonRandom.DefaultRNG.Next(101) < outOfHundred;
 
-            int TurnDoorIntoWallChance = 20;
+            int leaveFloorAloneChance = 20;
 
             foreach (var room in RoomHallwayConnections)
             {
@@ -122,28 +139,10 @@ namespace BasicTutorial
                     {
                         foreach (var point in room.Connections[i])
                         {
-                            //if (!IsPointByTwoWalls(tempMap, point))
-                            //{
-                            //    // fill in this point because it's invalid
-                            //    map[point] = SadConsole.Maps.Tile.Factory.Create("wall");
-                            //    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
-                            //}
-                            //else
+                            if (!PercentageCheck(leaveFloorAloneChance))
                             {
-                                if (!PercentageCheck(TurnDoorIntoWallChance))
-                                {
-                                    map[point] = SadConsole.Maps.Tile.Factory.Create("door");
-                                    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
-                                }
-                                else
-                                //{
-                                //    map[point] = SadConsole.Maps.Tile.Factory.Create("floor");
-                                //    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
-                                //}
-                                {
-                                    map[point] = SadConsole.Maps.Tile.Factory.Create("wall");
-                                    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
-                                }
+                                map[point] = SadConsole.Maps.Tile.Factory.Create("door");
+                                map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
                             }
                         }
 
@@ -169,92 +168,6 @@ namespace BasicTutorial
             BuildRooms();
         }
 
-
-        private static void Init()
-        {
-            mapbuildtimer = new Timer(1, (t, d) => {
-
-                if (MapBuildSteps.Count != 0)
-                    MapBuildSteps.Dequeue().Invoke();
-            });
-            mapbuildtimer.Repeat = true;
-
-            MapBuildSteps = new Queue<Action>();
-            MapBuildSteps.Enqueue(Redo);
-
-            SadConsole.Maps.Tile.Factory.Add(new BasicTutorial.Maps.TileBlueprints.Door());
-            
-            var mapWidth = 80;
-            var mapHeight = 25;
-
-            // Hold the GoRogue map data
-            var mapSource = new GoRogue.MapViews.ArrayMap<bool>(mapWidth, mapHeight);
-
-            // Generate rooms on map
-            var rooms = SadConsole.Maps.Generators.Rooms.Generate(mapSource, 4, 10, 3, 15, 1f, 0.5f);
-
-            // Generate maze around map
-            SadConsole.Maps.Generators.Maze.Generate(mapSource, 10, 0);
-
-            // Create connections between rooms and any halway around it
-            var roomConnectionPoints = SadConsole.Maps.Generators.Rooms.ConnectRooms(mapSource, rooms, 1, 4, 50, 70, 10);
-
-            
-            // Create a SadConsole map (all tiles default to "wall")
-            map = new SadConsole.Maps.SimpleMap(mapWidth, mapHeight, new Rectangle(0, 0, 80, 25));
-
-            for (int y = 0; y < mapSource.Height; y++)
-            for (int x = 0; x < mapSource.Width; x++)
-            {
-                // If the generated map was marked as TRUE, it means it's a floor
-                if (mapSource[x, y])
-                    map[x, y] = SadConsole.Maps.Tile.Factory.Create("floor");
-            }
-
-            // LOCAL FUNCTION scan connection points and create doors
-            void CreateDoors()
-            {
-                // temp LOCAL FUNCTION
-                bool PercentageCheck(int outOfHundred) => outOfHundred != 0 && GoRogue.Random.SingletonRandom.DefaultRNG.Next(101) < outOfHundred;
-
-                int leaveFloorAloneChance = 20;
-
-                foreach (var room in roomConnectionPoints)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        if (room.Connections[i].Length != 0)
-                        {
-                            foreach (var point in room.Connections[i])
-                            {
-                                if (!PercentageCheck(leaveFloorAloneChance))
-                                {
-                                    map[point] = SadConsole.Maps.Tile.Factory.Create("door");
-                                    map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int) SadConsole.Maps.TileFlags.Seen | (int) SadConsole.Maps.TileFlags.InLOS | (int) SadConsole.Maps.TileFlags.Lighted);
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-
-            };
-
-            CreateDoors();
-            
-            // Make sure each tile is visible and seen. For debug purposes
-            foreach (var tile in map)
-                tile.Flags = SadConsole.Helpers.SetFlag(tile.Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
-            
-
-
-            // Set our new console as the thing to render and process
-            SadConsole.Global.CurrentScreen = map;
-
-            map.Surface.SetRenderCells();
-        }   
-        
 
 
     }
