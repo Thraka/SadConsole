@@ -68,6 +68,8 @@
     <Compile Include="Factory.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
     <Compile Include="GoRogueRandom.cs" />
+    <Compile Include="GoRogue\MapGeneration\Generators\MazeGenerator.cs" />
+    <Compile Include="GoRogue\MapGeneration\Generators\RoomsGenerator.cs" />
     <Compile Include="IFactoryBlueprint.cs" />
     <Compile Include="IFactoryObject.cs" />
     <Compile Include="Maps\Generators\AccidentalNoise\Cache.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="Maps\Generators\AccidentalNoise\Noise.cs" />
     <Compile Include="Maps\Generators\AccidentalNoise\NoiseLookupTable.cs" />
     <Compile Include="Maps\Generators\AccidentalNoise\Utilities.cs" />
-    <Compile Include="Maps\Generators\DungeonMaze.cs" />
+    <Compile Include="Maps\Generators\DungeonMazeGenerator.cs" />
     <Compile Include="Maps\Generators\World\Generator.cs" />
     <Compile Include="Maps\Generators\World\MapData.cs" />
     <Compile Include="Maps\Generators\World\River.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="Maps\Tile.cs" />
     <Compile Include="Maps\FlagsAndStates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RectangleExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MonoGame.Framework.dll.config" />

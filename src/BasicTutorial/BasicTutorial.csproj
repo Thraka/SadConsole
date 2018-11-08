@@ -66,7 +66,7 @@
     <Compile Include="DungeonScreen.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
     <Compile Include="GameState.cs" />
-    <Compile Include="Maps\Generators\Generator.cs" />
+    <Compile Include="Maps\Generators\DoorGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Maps\TileBlueprints.cs" />
     <Compile Include="Maps\TileStatesAndTypes.cs" />

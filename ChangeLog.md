@@ -1,4 +1,9 @@
-﻿## 10/18/2018 V7.1.0
+﻿## 11/XX/2018 V7.1.1
+
+- ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
+- Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
+
+## 10/18/2018 V7.1.0
 
 - Moved SurfaceBase.GetIndexFromPoint to Helpers class.
 - Fixed bug in EntityManager that did not remove entity/hotspot/zone parents when the EntityManager's parent was cleared.

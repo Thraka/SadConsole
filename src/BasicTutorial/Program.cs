@@ -60,11 +60,25 @@ namespace BasicTutorial
 
             if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space))
             {
+                MapBuildSteps.Clear();
+                MapBuildSteps.Enqueue(() =>
+                {
+                    var gen = SadConsole.Maps.Generators.DungeonMazeGenerator.Create(80, 25, 80, 25);
+
+                    Maps.Generators.DoorGenerator.Generate(gen.SadConsoleMap, gen.Rooms, "door", 20);
+                    
+                    for (int x = 0; x < gen.SadConsoleMap.Width; x++)
+                        for (int y = 0; y < gen.SadConsoleMap.Height; y++)
+                            gen.SadConsoleMap[x, y].Flags = SadConsole.Helpers.SetFlag(gen.SadConsoleMap[x, y].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
+
+                    SadConsole.Global.CurrentScreen = gen.SadConsoleMap;
+                });
+
                 if (MapBuildSteps.Count != 0)
                     MapBuildSteps.Dequeue().Invoke();
             }
 
-            mapbuildtimer.Update(Global.GameTimeElapsedUpdate);
+            //mapbuildtimer.Update(Global.GameTimeElapsedUpdate);
         }
 
 
@@ -90,7 +104,10 @@ namespace BasicTutorial
             //SadConsole.Maps.Generators.DungeonMaze gen = new SadConsole.Maps.Generators.DungeonMaze();
             //Maps.Generators.DoorGenerator gen = new Maps.Generators.DoorGenerator();
             //gen.Build(ref map);
-            SadConsole.Maps.Generators.Maze.Generate(tempMap, 10, 0);
+            GoRogue.MapGeneration.Generators.MazeGenerator.Generate(tempMap, 10, 0);
+            
+
+
 
             for (int y = 0; y < tempMap.Height; y++)
             for (int x = 0; x < tempMap.Width; x++)
@@ -109,7 +126,7 @@ namespace BasicTutorial
             //SadConsole.Maps.Generators.DungeonMaze gen = new SadConsole.Maps.Generators.DungeonMaze();
             //Maps.Generators.DoorGenerator gen = new Maps.Generators.DoorGenerator();
             //gen.Build(ref map);
-            mapRooms = SadConsole.Maps.Generators.Rooms.Generate(tempMap, 4, 10, 3, 15, 1f, 0.5f);
+            mapRooms = GoRogue.MapGeneration.Generators.RoomsGenerator.Generate(tempMap, 4, 10, 3, 15, 1f, 0.5f);
 
             foreach (var room in mapRooms)
             {
@@ -125,7 +142,7 @@ namespace BasicTutorial
 
         private static void ConnectRooms()
         {
-            var RoomHallwayConnections = SadConsole.Maps.Generators.Rooms.ConnectRooms(tempMap, mapRooms, 1, 4, 50, 70, 10);
+            var RoomHallwayConnections = GoRogue.MapGeneration.Generators.RoomsGenerator.ConnectRooms(tempMap, mapRooms, 1, 4, 50, 70, 10);
 
             bool PercentageCheck(int outOfHundred) => outOfHundred != 0 && GoRogue.Random.SingletonRandom.DefaultRNG.Next(101) < outOfHundred;
 
@@ -142,16 +159,18 @@ namespace BasicTutorial
                             if (!PercentageCheck(leaveFloorAloneChance))
                             {
                                 map[point] = SadConsole.Maps.Tile.Factory.Create("door");
+                                map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int) SadConsole.Maps.TileFlags.Seen | (int) SadConsole.Maps.TileFlags.InLOS | (int) SadConsole.Maps.TileFlags.Lighted);
+                            }
+                            else
+                            {
+                                map[point] = SadConsole.Maps.Tile.Factory.Create("floor");
                                 map[point].Flags = SadConsole.Helpers.SetFlag(map[point].Flags, (int)SadConsole.Maps.TileFlags.Seen | (int)SadConsole.Maps.TileFlags.InLOS | (int)SadConsole.Maps.TileFlags.Lighted);
                             }
                         }
-
+                        
                     }
                 }
             }
-
-
-            
         }
 
         private static void Redo()

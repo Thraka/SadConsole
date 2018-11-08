@@ -19,5 +19,6 @@ namespace SadConsole.Maps
         public List<Point> OuterPoints = new List<Point>();
         public bool IsLit = true;
         public bool IsVisited;
+        public List<Point> Connections = new List<Point>();
     }
 }

@@ -118,19 +118,24 @@ namespace SadConsole.Maps
         /// <param name="width">The total width of the map.</param>
         /// <param name="height">The total height of the map.</param>
         /// <param name="viewPort">A view of the map that is displayed on the screen.</param>
-        public SimpleMap(int width, int height, Rectangle viewPort)
+        /// <param name="defaultTileBlueprint">The tile blueprint used to fill the map.</param>
+        /// <param name="font">The font used with the map. Defaults to <see cref="SadConsole.Global.FontDefault"/>.</param>
+        public SimpleMap(int width, int height, Rectangle viewPort, string defaultTileBlueprint = "wall", Font font = null)
         {
             Width = width;
             Height = height;
-            
+
+            if (font == null)
+                font = SadConsole.Global.FontDefault;
+
             // Create our tiles for the map
             Tiles = new Tile[width * height];
             Regions = new List<Region>();
 
             // Be efficient by not using factory.Create each tile below. Instead, get the blueprint and use that to create each tile.
-            var defaultTile = Tile.Factory.GetBlueprint("wall");
+            var defaultTile = Tile.Factory.GetBlueprint(defaultTileBlueprint);
 
-            // Fill the map with walls.
+            // Fill the map with walls
             for (var i = 0; i < Tiles.Length; i++)
             {
                 Tiles[i] = defaultTile.Create();
@@ -141,7 +146,7 @@ namespace SadConsole.Maps
             // Instance of the FOV translator.
             MapToFOV = new TranslationFOV(this);
 
-            Surface = new SadConsole.Surfaces.Basic(width, height, SadConsole.Global.FontDefault, viewPort, Tiles);
+            Surface = new SadConsole.Surfaces.Basic(width, height, font, viewPort, Tiles);
             //EntityManager = new Entities.EntityManager();
             
             // Parent the entity manager to the view surface of the map.
