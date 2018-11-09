@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SadConsole.GoRogue\SadConsole.GoRogue.csproj">
-      <Project>{43f5a8f0-7fae-4b8a-a90b-9b21a3da0969}</Project>
+      <Project>{7b436aec-b541-4197-900a-30e9c830ee7e}</Project>
       <Name>SadConsole.GoRogue</Name>
     </ProjectReference>
   </ItemGroup>
