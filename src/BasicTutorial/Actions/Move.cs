@@ -36,18 +36,18 @@ namespace SadConsole.Actions
                 {
                     Source.MoveBy(PositionChange, Map);
 
-                    //if (Source == Program.AdventureScreen.Player)
-                    //{
-                    //    if (PositionChange == Directions.West)
-                    //        Program.AdventureScreen.MessageScreen.Print("You move west.", Screens.Messages.MessageTypes.Status);
-                    //    else if (PositionChange == Directions.East)
-                    //        Program.AdventureScreen.MessageScreen.Print("You move east.", Screens.Messages.MessageTypes.Status);
-                    //    else if (PositionChange == Directions.North)
-                    //        Program.AdventureScreen.MessageScreen.Print("You move north.", Screens.Messages.MessageTypes.Status);
-                    //    else if (PositionChange == Directions.South)
-                    //        Program.AdventureScreen.MessageScreen.Print("You move south.", Screens.Messages.MessageTypes.Status);
+                    if (Source == Map.ControlledGameObject)
+                    {
+                        if (PositionChange == Directions.West)
+                            BasicTutorial.GameState.Dungeon.Messages.Print("You move west.", BasicTutorial.MessageConsole.MessageTypes.Status);
+                        else if (PositionChange == Directions.East)
+                            BasicTutorial.GameState.Dungeon.Messages.Print("You move east.", BasicTutorial.MessageConsole.MessageTypes.Status);
+                        else if (PositionChange == Directions.North)
+                            BasicTutorial.GameState.Dungeon.Messages.Print("You move north.", BasicTutorial.MessageConsole.MessageTypes.Status);
+                        else if (PositionChange == Directions.South)
+                            BasicTutorial.GameState.Dungeon.Messages.Print("You move south.", BasicTutorial.MessageConsole.MessageTypes.Status);
 
-                    //}
+                    }
                 }
                 else
                 {

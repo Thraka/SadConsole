@@ -67,6 +67,7 @@
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Maps\Generators\DoorGenerator.cs" />
+    <Compile Include="MessageConsole.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Maps\TileBlueprints.cs" />
     <Compile Include="Maps\TileStatesAndTypes.cs" />

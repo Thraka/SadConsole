@@ -7,28 +7,38 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Actions;
+using Console = SadConsole.Console;
 
 namespace BasicTutorial
 {
     class DungeonScreen : ScreenObject
     {
         public static readonly Rectangle ScreenRegionMap = new Rectangle(0, 0, Program.ScreenWidth - 10, Program.ScreenHeight - 5);
-
+        public static readonly Rectangle ScreenRegionMessages = new Rectangle(0, ScreenRegionMap.Bottom + 1, Program.ScreenWidth - 10, Program.ScreenHeight - ScreenRegionMap.Height - 1);
         public SadConsole.Actions.ActionStack ActionProcessor;
 
         public bool RunLogicFrame;
 
         public SadConsole.Maps.SimpleMap Map { get; }
 
+        public MessageConsole Messages { get; }
+
         public DungeonScreen(SadConsole.Maps.SimpleMap map)
         {
+            // Setup map
             Map = map;
-            
+            Children.Add(Map);
+
             // Setup actions
             ActionProcessor = new SadConsole.Actions.ActionStack();
             ActionProcessor.Push(new SadConsole.Actions.ActionDelegate(ActionKeyboardProcessor));
 
-            Children.Add(Map);
+            // Setup messages
+            Messages = new MessageConsole(ScreenRegionMessages.Width, ScreenRegionMessages.Height);
+            Messages.Position = ScreenRegionMessages.Location;
+            Messages.FillWithRandomGarbage();
+            Children.Add(Messages);
+
         }
 
         public override void Update(TimeSpan timeElapsed)
