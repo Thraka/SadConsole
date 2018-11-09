@@ -9,7 +9,7 @@ namespace SadConsole.Actions
     /// <summary>
     /// A stack of <see cref="ActionBase"/> objects. As each <see cref="ActionBase.IsFinished"/> boolean is set, the action will be automatically removed from the stack.
     /// </summary>
-    class ActionStack : Stack<ActionBase>
+    public class ActionStack : Stack<ActionBase>
     {
         /// <summary>
         /// Pushes the action to the stack and immediently calls <see cref="ActionBase.Run(TimeSpan)"/>. Removes it if it finishes.

@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GoRogue, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\BasicTutorial\packages\GoRogue.1.5.2\lib\netstandard2.0\GoRogue.dll</HintPath>
+      <HintPath>..\BasicTutorial\packages\GoRogue.1.6.1\lib\netstandard2.0\GoRogue.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\BasicTutorial\packages\MonoGame.Framework.DesktopGL.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
@@ -61,12 +61,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionBase.cs" />
+    <Compile Include="Actions\ActionDelegate.cs" />
     <Compile Include="Actions\ActionResult.cs" />
     <Compile Include="Actions\ActionStack.cs" />
     <Compile Include="Conversions\Coord_Point.cs" />
     <Compile Include="Conversions\Rect_Rect.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
+    <Compile Include="GameObjects\GameObjectManager.cs" />
     <Compile Include="GoRogueRandom.cs" />
     <Compile Include="GoRogue\MapGeneration\Generators\MazeGenerator.cs" />
     <Compile Include="GoRogue\MapGeneration\Generators\RoomsGenerator.cs" />

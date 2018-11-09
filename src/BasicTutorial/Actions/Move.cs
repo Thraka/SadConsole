@@ -11,12 +11,13 @@ namespace SadConsole.Actions
     class Move : ActionBase
     {
 
-        public static Move MoveBy(Entity source, Point change)
+        public static Move MoveBy(GameObjects.GameObjectBase source, Point change, Maps.SimpleMap map)
         {
-            return new Move() { Source = source, PositionChange = change };
+            return new Move() { Source = source, PositionChange = change, Map = map };
         }
 
-        public Entity Source;
+        public Maps.SimpleMap Map;
+        public GameObjects.GameObjectBase Source;
         public Point PositionChange;
         public Point TargetPosition;
 
@@ -27,39 +28,38 @@ namespace SadConsole.Actions
             if (TargetPosition == Source.Position)
                 return;
 
-            //if (Program.AdventureScreen.Map.IsTileWalkable(TargetPosition.X, TargetPosition.Y))
-            //{
-            //    var ent = Program.AdventureScreen.Map.GetEntity(TargetPosition);
+            if (Map.IsTileWalkable(TargetPosition.X, TargetPosition.Y))
+            {
+                var ent = Map.GetGameObject(TargetPosition);
 
-            //    if (ent == null)
-            //    {
-            //        Source.MoveBy(PositionChange, Program.AdventureScreen.Map);
+                if (ent == null)
+                {
+                    Source.MoveBy(PositionChange, Map);
 
-            //        if (Source == Program.AdventureScreen.Player)
-            //        {
-            //            if (PositionChange == Directions.West)
-            //                Program.AdventureScreen.MessageScreen.Print("You move west.", Screens.Messages.MessageTypes.Status);
-            //            else if (PositionChange == Directions.East)
-            //                Program.AdventureScreen.MessageScreen.Print("You move east.", Screens.Messages.MessageTypes.Status);
-            //            else if (PositionChange == Directions.North)
-            //                Program.AdventureScreen.MessageScreen.Print("You move north.", Screens.Messages.MessageTypes.Status);
-            //            else if (PositionChange == Directions.South)
-            //                Program.AdventureScreen.MessageScreen.Print("You move south.", Screens.Messages.MessageTypes.Status);
+                    //if (Source == Program.AdventureScreen.Player)
+                    //{
+                    //    if (PositionChange == Directions.West)
+                    //        Program.AdventureScreen.MessageScreen.Print("You move west.", Screens.Messages.MessageTypes.Status);
+                    //    else if (PositionChange == Directions.East)
+                    //        Program.AdventureScreen.MessageScreen.Print("You move east.", Screens.Messages.MessageTypes.Status);
+                    //    else if (PositionChange == Directions.North)
+                    //        Program.AdventureScreen.MessageScreen.Print("You move north.", Screens.Messages.MessageTypes.Status);
+                    //    else if (PositionChange == Directions.South)
+                    //        Program.AdventureScreen.MessageScreen.Print("You move south.", Screens.Messages.MessageTypes.Status);
 
-            //        }
-            //    }
-            //    else
-            //    {
-            //        BumpEntity bump = new BumpEntity(Source, ent);
-            //        Program.AdventureScreen.RunCommand(bump);
-            //    }
-            //}
-            //else
-            //{
-
-            //    BumpTile bump = new BumpTile(Source, Program.AdventureScreen.Map[TargetPosition]);
-            //    Program.AdventureScreen.RunCommand(bump);
-            //}
+                    //}
+                }
+                else
+                {
+                    //BumpEntity bump = new BumpEntity(Source, ent);
+                    //Program.AdventureScreen.RunCommand(bump);
+                }
+            }
+            else
+            {
+                //BumpTile bump = new BumpTile(Source, Program.AdventureScreen.Map[TargetPosition]);
+                //Program.AdventureScreen.RunCommand(bump);
+            }
 
             Finish(ActionResult.Success);
         }

@@ -11,80 +11,30 @@ using SadConsole;
 
 namespace SadConsole.Maps
 {
-    public class GameObjectManager: SpatialMap<GameObjects.GameObjectBase>
-    {
-        WeakReference<SimpleMap> mapReference;
-        Rectangle cachedViewPort;
-
-        public GameObjectManager(SimpleMap map)
-        {
-            this.mapReference = new WeakReference<SimpleMap>(map);
-            this.cachedViewPort = map.Surface.ViewPort;
-            this.ItemAdded += GameObjectManager_ItemAdded;
-            this.ItemRemoved += GameObjectManager_ItemRemoved;
-            this.ItemMoved += GameObjectManager_ItemMoved;
-        }
-
-        private void GameObjectManager_ItemMoved(object sender, ItemMovedEventArgs<GameObjects.GameObjectBase> e)
-        {
-            mapReference.TryGetTarget(out SimpleMap map);
-            if (map == null) return;
-
-            e.Item.MoveTo(e.NewPosition.ToPoint(), map);
-            e.Item.IsVisible = map.Surface.ViewPort.Contains(e.Item.Position);
-        }
-
-        private void GameObjectManager_ItemRemoved(object sender, ItemEventArgs<GameObjects.GameObjectBase> e)
-        {
-        }
-
-        private void GameObjectManager_ItemAdded(object sender, ItemEventArgs<GameObjects.GameObjectBase> e)
-        {
-            mapReference.TryGetTarget(out SimpleMap map);
-            if (map == null) return;
-
-            e.Item.MoveTo(e.Position.ToPoint(), map);
-            e.Item.IsVisible = map.Surface.ViewPort.Contains(e.Item.Position);
-        }
-
-        public void SyncView()
-        {
-            mapReference.TryGetTarget(out SimpleMap map);
-            if (map == null) return;
-            if (cachedViewPort == map.Surface.ViewPort) return;
-
-            cachedViewPort = map.Surface.ViewPort;
-
-            foreach (var item in Items)
-            {
-                item.PositionOffset = map.Surface.ViewPort.Location;
-                item.IsVisible = map.Surface.ViewPort.Contains(item.Position);
-            }
-        }
-    }
-
     public class SimpleMap: ScreenObject, ISettableMapView<Tile>, IEnumerable<Tile>
     {
-        public Surfaces.Basic Surface;
-        //public Entities.EntityManager EntityManager;
-        protected GoRogue.SpatialMap<GameObjects.GameObjectBase> EntityManager;
+        public Surfaces.Basic Surface { get; set; }
+        
+        public GameObjects.GameObjectManager GameObjects { get; protected set; }
+
+        public GameObjects.GameObjectBase ControlledGameObject { get; set; }
 
         /// <summary>
         /// The width of the map.
         /// </summary>
-        public int Width { get; private set; }
+        public int Width { get; }
 
         /// <summary>
         /// The height of the map.
         /// </summary>
-        public int Height { get; private set; }
+        public int Height { get; }
 
         /// <summary>
         /// Instance of the FOV translator
         /// </summary>
-        public TranslationFOV MapToFOV { get; private set; }
+        public TranslationFOV MapToFOV { get; }
         
-        private Tile[] Tiles;
+        protected Tile[] Tiles;
 
         public List<Region> Regions;
 
@@ -145,15 +95,10 @@ namespace SadConsole.Maps
 
             // Instance of the FOV translator.
             MapToFOV = new TranslationFOV(this);
-
-            Surface = new SadConsole.Surfaces.Basic(width, height, font, viewPort, Tiles);
-            //EntityManager = new Entities.EntityManager();
             
-            // Parent the entity manager to the view surface of the map.
-            //Surface.Children.Add(EntityManager);
-
-            EntityManager = new GameObjectManager(this);
-
+            Surface = new SadConsole.Surfaces.Basic(width, height, font, viewPort, Tiles);
+            GameObjects = new GameObjects.GameObjectManager(this);
+            
             // Parent the surface to the map.
             Children.Add(Surface);
         }
@@ -172,35 +117,18 @@ namespace SadConsole.Maps
         private void SimpleMap_TileChanged(object sender, EventArgs e) => Surface.IsDirty = true;
 
         /// <summary>
-        /// Returns an entity by position.
+        /// Returns <see cref="SadConsole.GameObjects.GameObjectBase"/> by position.
         /// </summary>
-        /// <param name="position">The position of the entity.</param>
-        /// <returns>The entity at the position, otherwise null.</returns>
-        public Entities.Entity GetEntity(Point position)
-        {
-            return EntityManager.GetItem(position.ToCoord());
-
-            //foreach (var ent in EntityManager.Entities)
-            //{
-            //    if (ent.Position == position)
-            //        return ent;
-            //}
-
-            //return null;
-        }
+        /// <param name="position">The position of the <see cref="SadConsole.GameObjects.GameObjectBase"/>.</param>
+        /// <returns>The <see cref="SadConsole.GameObjects.GameObjectBase"/> at the position, otherwise null.</returns>
+        public Entities.Entity GetGameObject(Point position) => GameObjects.GetItem(position.ToCoord());
 
         /// <summary>
         /// Gets a tile from the map.
         /// </summary>
         /// <param name="position">The map position of the tile.</param>
         /// <returns>The tile if it exists, otherwise null.</returns>
-        public Tile GetTile(Point position)
-        {
-            if (IsTileValid(position.X, position.Y))
-                return this[position];
-            else
-                return null;
-        }
+        public Tile GetTile(Point position) => IsTileValid(position.X, position.Y) ? this[position] : null;
 
         /// <summary>
         /// Test if a tile blocks movement.
@@ -214,8 +142,6 @@ namespace SadConsole.Maps
                 return false;
 
             return ! Helpers.HasFlag(Tiles[y * Width + x].Flags, (int)TileFlags.BlockMove);
-
-
         }
 
         /// <summary>
@@ -253,6 +179,24 @@ namespace SadConsole.Maps
                 if (!Helpers.HasFlag(foundTile.Flags, (int)TileFlags.BlockMove))
                     return foundTile;
             }
+        }
+
+        public override void Draw(TimeSpan timeElapsed)
+        {
+            base.Draw(timeElapsed);
+
+            foreach (var gameObject in GameObjects)
+                gameObject.Item.Draw(timeElapsed);
+        }
+
+        public override void Update(TimeSpan timeElapsed)
+        {
+            base.Update(timeElapsed);
+
+            foreach (var gameObject in GameObjects)
+                gameObject.Item.Update(timeElapsed);
+
+            GameObjects.SyncView();
         }
 
         /// <summary>
