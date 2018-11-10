@@ -36,9 +36,7 @@ namespace BasicTutorial
             // Setup messages
             Messages = new MessageConsole(ScreenRegionMessages.Width, ScreenRegionMessages.Height);
             Messages.Position = ScreenRegionMessages.Location;
-            Messages.FillWithRandomGarbage();
             Children.Add(Messages);
-
         }
 
         public override void Update(TimeSpan timeElapsed)
