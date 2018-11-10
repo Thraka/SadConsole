@@ -64,6 +64,7 @@ namespace SadConsole.Maps
             public Cell Appearance { get; set; }
             public Action<Tile, int> OnTileStateChanged { get; set; }
             public Action<Tile, int> OnTileFlagsChanged { get; set; }
+            public Action<Tile, SadConsole.Actions.ActionBase> OnProcessAction { get; set; }
 
             public TileBlueprint(string id) => Id = id;
 
@@ -78,7 +79,8 @@ namespace SadConsole.Maps
                     TileState = State,
                     DefinitionId = Id,
                     OnTileStateChanged = OnTileStateChanged,
-                    OnTileFlagsChanged = OnTileFlagsChanged
+                    OnTileFlagsChanged = OnTileFlagsChanged,
+                    OnProcessAction = OnProcessAction
                 };
 
                 return tile;

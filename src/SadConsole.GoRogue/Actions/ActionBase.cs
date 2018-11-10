@@ -15,7 +15,7 @@ namespace SadConsole.Actions
         public bool IsFinished { get; private set; }
 
         public ActionResult Result { get; private set; } = ActionResult.Empty;
-
+        
         public void Finish(ActionResult result)
         {
             Result = result;
@@ -52,7 +52,7 @@ namespace SadConsole.Actions
         public void OnFailure(Func<ActionBase, bool> action) => OnFailureMethod = action;
     }
 
-    abstract class ActionBase<TSource, TTarget> : ActionBase
+    public abstract class ActionBase<TSource, TTarget> : ActionBase
     {
         public TSource Source { get; protected set; }
         public TTarget Target { get; protected set; }

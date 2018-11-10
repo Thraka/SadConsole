@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using SadConsole.Actions;
 
 namespace SadConsole.Maps
 {
@@ -29,6 +30,7 @@ namespace SadConsole.Maps
 
         public Action<Tile, int> OnTileStateChanged { get; set; }
         public Action<Tile, int> OnTileFlagsChanged { get; set; }
+        public Action<Tile, ActionBase> OnProcessAction { get; set; }
 
 
         public string DefinitionId { get; protected set; }
@@ -123,10 +125,7 @@ namespace SadConsole.Maps
             UpdateAppearance();
         }
 
-        //public void ProcessCommand(Actions.ActionBase command)
-        //{
-        //    CommandInvoked?.Invoke(command);
-        //}
+        public void ProcessAction(Actions.ActionBase action) => OnProcessAction?.Invoke(this, action);
 
         protected virtual void UpdateAppearance()
         {
