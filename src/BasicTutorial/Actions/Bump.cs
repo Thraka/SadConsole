@@ -7,9 +7,9 @@ using SadConsole.Entities;
 
 namespace SadConsole.Actions
 {
-    class BumpTile : ActionBase<Entity, Maps.Tile>
+    class BumpTile : ActionBase<GameObjects.GameObjectBase, Maps.Tile>
     {
-        public BumpTile(Entity source, Maps.Tile target): base (source, target) { }
+        public BumpTile(GameObjects.GameObjectBase source, Maps.Tile target): base (source, target) { }
 
         public override void Run(TimeSpan timeElapsed)
         {
@@ -17,13 +17,13 @@ namespace SadConsole.Actions
             Finish(ActionResult.Failure);
 
             // Tell the tile to process this bump. The tile may set Finish to success or failure.
-            Target.ProcessCommand(this);
+            Target.ProcessAction(this);
         }
     }
 
-    class BumpEntity : ActionBase<Entity, Entity>
+    class BumpEntity : ActionBase<GameObjects.GameObjectBase, GameObjects.GameObjectBase>
     {
-        public BumpEntity(Entity source, Entity target): base (source, target) { }
+        public BumpEntity(GameObjects.GameObjectBase source, GameObjects.GameObjectBase target): base (source, target) { }
 
         public override void Run(TimeSpan timeElapsed)
         {

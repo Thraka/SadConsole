@@ -36,6 +36,18 @@ namespace BasicTutorial.Maps.TileBlueprints
                     tile.Flags = Helpers.SetFlag(tile.Flags, (int)(TileFlags.BlockLOS | TileFlags.BlockMove));
                 }
             };
+
+            OnProcessAction = (tile, action) => 
+            {
+                if (action is SadConsole.Actions.BumpTile)
+                {
+                    if (tile.TileState == (int)TileStates.Door.Closed)
+                    {
+                        tile.TileState = (int)TileStates.Door.Opened;
+                    }
+                }
+            };
+
         }
 
         public override Tile Create()

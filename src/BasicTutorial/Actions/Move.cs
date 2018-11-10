@@ -46,19 +46,18 @@ namespace SadConsole.Actions
                             BasicTutorial.GameState.Dungeon.Messages.Print("You move north.", BasicTutorial.MessageConsole.MessageTypes.Status);
                         else if (PositionChange == Directions.South)
                             BasicTutorial.GameState.Dungeon.Messages.Print("You move south.", BasicTutorial.MessageConsole.MessageTypes.Status);
-
                     }
                 }
                 else
                 {
-                    //BumpEntity bump = new BumpEntity(Source, ent);
-                    //Program.AdventureScreen.RunCommand(bump);
+                    BumpEntity bump = new BumpEntity(Source, ent);
+                    BasicTutorial.GameState.Dungeon.ActionProcessor.PushAndRun(bump);
                 }
             }
             else
             {
-                //BumpTile bump = new BumpTile(Source, Program.AdventureScreen.Map[TargetPosition]);
-                //Program.AdventureScreen.RunCommand(bump);
+                BumpTile bump = new BumpTile(Source, Map[TargetPosition]);
+                BasicTutorial.GameState.Dungeon.ActionProcessor.PushAndRun(bump);
             }
 
             Finish(ActionResult.Success);

@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\Bump.cs" />
     <Compile Include="Actions\Move.cs" />
     <Compile Include="DungeonScreen.cs" />
     <Compile Include="GameObjects\Player.cs" />
