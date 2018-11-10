@@ -121,7 +121,7 @@ namespace SadConsole.Maps
         /// </summary>
         /// <param name="position">The position of the <see cref="SadConsole.GameObjects.GameObjectBase"/>.</param>
         /// <returns>The <see cref="SadConsole.GameObjects.GameObjectBase"/> at the position, otherwise null.</returns>
-        public Entities.Entity GetGameObject(Point position) => GameObjects.GetItem(position.ToCoord());
+        public GameObjects.GameObjectBase GetGameObject(Point position) => GameObjects.GetItem(position.ToCoord());
 
         /// <summary>
         /// Gets a tile from the map.
