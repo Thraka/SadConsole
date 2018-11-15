@@ -11,8 +11,8 @@ using SadConsole.Actions;
 
 namespace BasicTutorial.GameObjects
 {
-    public class Player : SadConsole.GameObjects.GameObjectBase
+    class Player : GameObjects.LivingCharacter
     {
-        public Player(): base(Color.Green, Color.Black, 1) { }
+        public Player(SimpleMap map): base(map, Color.Green, Color.Black, 1) { }
     }
 }

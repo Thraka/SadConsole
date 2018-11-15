@@ -125,6 +125,33 @@ namespace SadConsole.Maps
             UpdateAppearance();
         }
 
+        /// <summary>
+        /// Adds the specified flags to the <see cref="flags"/> property.
+        /// </summary>
+        /// <param name="flags">The flags to set.</param>
+        public void SetFlag(params TileFlags[] flags)
+        {
+            var total = 0;
+
+            foreach (var flag in flags)
+                total = total | (int)flag;
+
+            Flags = Helpers.SetFlag(this.flags, total);
+        }
+        /// <summary>
+        /// Removes the specified flags to the <see cref="flags"/> property.
+        /// </summary>
+        /// <param name="flags">The flags to remove.</param>
+        public void UnsetFlag(params TileFlags[] flags)
+        {
+            var total = 0;
+
+            foreach (var flag in flags)
+                total = total | (int)flag;
+
+            Flags = Helpers.UnsetFlag(this.flags, total);
+        }
+
         public void ProcessAction(Actions.ActionBase action) => OnProcessAction?.Invoke(this, action);
 
         protected virtual void UpdateAppearance()

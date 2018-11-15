@@ -10,7 +10,6 @@ namespace SadConsole.Actions
 {
     class Move : ActionBase
     {
-
         public static Move MoveBy(GameObjects.GameObjectBase source, Point change, Maps.SimpleMap map)
         {
             return new Move() { Source = source, PositionChange = change, Map = map };
@@ -34,7 +33,7 @@ namespace SadConsole.Actions
 
                 if (ent == null)
                 {
-                    Source.MoveBy(PositionChange, Map);
+                    Source.MoveBy(PositionChange);
 
                     if (Source == Map.ControlledGameObject)
                     {

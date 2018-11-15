@@ -215,6 +215,9 @@ namespace SadConsole.Maps.Generators
                         Connections = c.Connections.SelectMany(a => a).Select(a => a.ToPoint()).ToList()
                     }).ToList();
 
+            // Copy regions to map
+            SadConsoleMap.Regions = new List<Region>(Rooms);
+
             // Create tiles in the SadConsole map
             foreach (var position in GoRogueMap.Positions())
             {

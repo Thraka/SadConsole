@@ -17,6 +17,11 @@ namespace SadConsole.GameObjects
     public abstract class GameObjectBase: Entity, GoRogue.IHasID
     {
         /// <summary>
+        /// The map this object is associated with.
+        /// </summary>
+        protected SimpleMap map { get; set; }
+
+        /// <summary>
         /// Gets or sets a friendly short title for the object.
         /// </summary>
         public string Title { get; set; }
@@ -51,8 +56,9 @@ namespace SadConsole.GameObjects
         /// <param name="foreground"></param>
         /// <param name="background"></param>
         /// <param name="glyph"></param>
-        protected GameObjectBase(Color foreground, Color background, int glyph) : base(1, 1)
+        protected GameObjectBase(SimpleMap map, Color foreground, Color background, int glyph) : base(1, 1)
         {
+            this.map = map;
             Animation.CurrentFrame[0].Foreground = foreground;
             Animation.CurrentFrame[0].Background = background;
             Animation.CurrentFrame[0].Glyph = glyph;
@@ -61,14 +67,16 @@ namespace SadConsole.GameObjects
             Description = "Not much is known about this object.";
         }
 
-        public void MoveTo(Point newPosition, SimpleMap map)
+        public void MoveTo(Point newPosition)
         {
+            if (newPosition == Position) return;
+
             // Check the map if we can move to this new position
             if (map.IsTileWalkable(newPosition.X, newPosition.Y))
             {
                 if (map.GameObjects.Move(this, newPosition.ToCoord()))
                 {
-                    this.Position = newPosition;
+                    //this.Position = newPosition;
 
                 }
             }
@@ -77,14 +85,12 @@ namespace SadConsole.GameObjects
             //map.SignalEntityMoved(this);
         }
 
-        public void MoveBy(Point change, SimpleMap map) => MoveTo(Position + change, map);
+        public void MoveBy(Point change) => MoveTo(Position + change);
 
         public virtual void ProcessAction(ActionBase command) { }
 
         public virtual void ProcessGameFrame() { }
 
         public virtual void OnDestroy() { }
-
-        public virtual void SetMap() { }
     }
 }

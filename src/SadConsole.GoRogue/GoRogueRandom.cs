@@ -13,7 +13,7 @@ namespace GoRogue.Random
     {
         private byte[] _uintBuffer;
 
-        public SadConsoleRandomGenerator(uint seed) : base(seed)
+        public SadConsoleRandomGenerator() : base(0)
         {
             _uintBuffer = new byte[4];
         }
@@ -34,6 +34,6 @@ namespace GoRogue.Random
             return BitConverter.ToUInt32(_uintBuffer, 0);
         }
 
-        public override bool CanReset { get; } = false;
+        public override bool CanReset => false;
     }
 }

@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GoRogue, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\GoRogue.1.6.1\lib\netstandard2.0\GoRogue.dll</HintPath>
+      <HintPath>packages\GoRogue.1.6.2\lib\netstandard2.0\GoRogue.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MonoGame.Framework.WindowsDX.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
@@ -65,8 +65,12 @@
     <Compile Include="Actions\Bump.cs" />
     <Compile Include="Actions\Move.cs" />
     <Compile Include="DungeonScreen.cs" />
+    <Compile Include="GameObjects\LivingCharacter.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameState.cs" />
+    <Compile Include="Items\Inventory.cs" />
+    <Compile Include="Items\InventorySpot.cs" />
+    <Compile Include="Items\Item.cs" />
     <Compile Include="Maps\Generators\DoorGenerator.cs" />
     <Compile Include="MessageConsole.cs" />
     <Compile Include="Program.cs" />

@@ -26,9 +26,9 @@ namespace SadConsole.GameObjects
 
         private void GameObjectManager_ItemMoved(object sender, ItemMovedEventArgs<GameObjects.GameObjectBase> e)
         {
-            //e.Item.Position = e.NewPosition.ToPoint();
-            //e.Item.MoveTo(e.NewPosition.ToPoint(), map);
-            //e.Item.IsVisible = map.Surface.ViewPort.Contains(e.Item.Position);
+            e.Item.Position = e.NewPosition.ToPoint();
+            e.Item.MoveTo(e.NewPosition.ToPoint());
+            e.Item.IsVisible = map.Surface.ViewPort.Contains(e.Item.Position);
         }
 
         private void GameObjectManager_ItemRemoved(object sender, ItemEventArgs<GameObjects.GameObjectBase> e)
