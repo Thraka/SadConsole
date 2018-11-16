@@ -8,7 +8,7 @@ namespace Editor
 {
     public interface IDocument
     {
-        SadConsole.IScreen DrawingScreen { get; }
+        SadConsole.ScreenObject DrawingScreen { get; }
 
         string Title { get; set; }
 

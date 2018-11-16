@@ -20,7 +20,7 @@ namespace Editor
 
         public EditorTypes EditorType => EditorTypes.SingleSurface;
 
-        public IScreen DrawingScreen => surface;
+        public ScreenObject DrawingScreen => surface;
 
         public void OnHide()
         {

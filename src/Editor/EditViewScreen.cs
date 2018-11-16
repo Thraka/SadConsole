@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    class EditViewScreen : Screen
+    class EditViewScreen : ScreenObject
     {
-        private IScreen _brush;
-        private IScreen _editorConsole;
+        private ScreenObject _brush;
+        private ScreenObject _editorConsole;
 
-        public IScreen Brush
+        public ScreenObject Brush
         {
             get => _brush;
             set
@@ -26,7 +26,7 @@ namespace Editor
             }
         }
 
-        public IScreen EditorConsole
+        public ScreenObject EditorConsole
         {
             get => _editorConsole;
             set

@@ -39,11 +39,17 @@
       <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NoesisGUI.MonoGameWrapper">
       <HintPath>..\..\..\NoesisGUI.MonoGameWrapper\NoesisGUI.MonoGameWrapper\bin\Debug\NoesisGUI.MonoGameWrapper.dll</HintPath>
     </Reference>
     <Reference Include="NoesisManaged">
       <HintPath>..\..\..\NoesisGUI.MonoGameWrapper\NoesisGUI-CSharpSDK\Bin\NoesisManaged.dll</HintPath>
+    </Reference>
+    <Reference Include="SadConsole, Version=7.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SadConsole.7.1.0\lib\net\SadConsole.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -138,6 +144,7 @@
     <None Include="IBM.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="IBM_ext.font" />
     <None Include="libopenal.1.dylib">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -165,6 +172,10 @@
     <Content Include="IBM8x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="IBM8x16_NoPadding_extended.png" />
+    <Content Include="Yayo_c64.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Noesis.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -180,15 +191,6 @@
     <Content Include="x86\soft_oal.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Yayo_c64.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SadConsole\SadConsole.csproj">
-      <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
-      <Name>SadConsole</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Editor.Xaml\MainWindow.xaml">
