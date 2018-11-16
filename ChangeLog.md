@@ -1,4 +1,57 @@
-﻿## 04/06/2018
+﻿## 11/XX/2018 V7.1.1
+
+- ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
+- Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
+
+## 10/18/2018 V7.1.0
+
+- Moved SurfaceBase.GetIndexFromPoint to Helpers class.
+- Fixed bug in EntityManager that did not remove entity/hotspot/zone parents when the EntityManager's parent was cleared.
+- EntityManager does not support .Clear calls on collections. Instead, use the RemoveAll extension method.
+- An extension method was added: SurfaceBase.CenterViewPortOnPoint
+- An extension method was added: Rectangle.CenterOnPoint
+
+## 09/08/2018 V7.0.3 / 7.0.4
+
+- Fixed bug with textbox displaying two carets.
+- If TextBox was first control in console, rendering was wrong.
+- Added int overload for Helpers.*Flag related methods.
+
+## 08/30/2018 V7.0.2
+
+- Fixed render bug with Entity/Animation if no parent was attached.
+- Fixed ColoredString + operator.
+- SadConsole IBM Extended font embedded in library now.
+
+## 08/29/2018 V7.0.0
+
+- Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
+- Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
+- CellDecorator class added that has a color, glyph, and mirror setting.
+- SadConsole.Serialization uses Newtonsoft.Json instead of the default .NET classes.
+- SadConsole.Serialization supports GZIP compression now.
+- Settings.SerializationIsCompressed can be set to true to set all internal save/load to use compression.
+- New SurfaceBase class which all Surface's inherit from.
+- SurfaceBase has an IRenderer on it directly now.
+- SurfaceEditor has been removed and is now implemented on SurfaceBase directly.
+- Console no longer combines Renderer and TextSurface for drawing.
+- Control themes completely rewritten. Themes control all drawing for a control now.
+- Windows/ControlsConsole use a theme for drawing.
+- InputBox renamed TextBox.
+- Removed GameHelpers namespace. Types moved to root namespace.
+- GameObject renamed to Entity.
+- Surface.RenderArea changed to Surface.ViewPort
+- Readded Zone and HotSpot types.
+- Removed random level generation.
+- Added Entities.EntityManager which helps control entity visibility and offsets based on a parent console. Also handles zones/hotspots.
+
+## 06/11/2018
+
+- Fix a stack overflow problem in the window object introduced by the previous mouse bug fix.
+- Cell states can be stored and restored with variables now. Each cell still has a backing cellstate that can be used.
+- NoDrawSurface.FromSurface is now static. (as it should have been)
+
+## 04/06/2018
 
 - Fixed bug in Mouse processing. (Thanks VGA256)
 

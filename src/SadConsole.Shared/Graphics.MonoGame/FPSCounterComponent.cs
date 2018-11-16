@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Renderers;
 using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
@@ -15,9 +14,7 @@ namespace SadConsole
         /// </summary>
         public class FPSCounterComponent : DrawableGameComponent
         {
-            SurfaceRenderer consoleRender;
-            BasicSurface surface;
-            SurfaceEditor editor;
+            Basic surface;
 
             int frameRate = 0;
             int frameCounter = 0;
@@ -27,11 +24,8 @@ namespace SadConsole
             public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
                 : base(game)
             {
-                surface = new BasicSurface(30, 1);
-                editor = new SurfaceEditor(surface);
-                surface.DefaultBackground = Color.Black;
-                editor.Clear();
-                consoleRender = new SurfaceRenderer();
+                surface = new Basic(30, 1) {DefaultBackground = Color.Black};
+                surface.Clear();
                 DrawOrder = 8;
                 Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
             }
@@ -53,10 +47,9 @@ namespace SadConsole
             public override void Draw(GameTime gameTime)
             {
                 frameCounter++;
-                string fps = string.Format("fps: {0}", frameRate);
-                editor.Clear();
-                editor.Print(0, 0, fps);
-                consoleRender.Render(surface);
+                surface.Clear();
+                surface.Print(0, 0, $"fps: {this.frameRate}", Color.White, Color.Black);
+                surface.Draw(gameTime.ElapsedGameTime);
 
                 Global.GraphicsDevice.SetRenderTarget(null);
                 Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);

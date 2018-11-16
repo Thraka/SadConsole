@@ -69,7 +69,7 @@
         /// <summary>
         /// Resets the Done flag.
         /// </summary>
-        /// <remarks>On the base class, resets the <paramref name="Done"/> to false. Override this method to reset the derived class' counters and status flags for the instruction.</remarks>
+        /// <remarks>On the base class, resets the <see cref="IsFinished"/> to false. Override this method to reset the derived class' counters and status flags for the instruction.</remarks>
         public virtual void Reset()
         {
             IsFinished = false;

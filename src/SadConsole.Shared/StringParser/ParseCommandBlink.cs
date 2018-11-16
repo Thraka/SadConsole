@@ -14,7 +14,7 @@ namespace SadConsole.StringParser
         public double Speed = 0.35d;
         CustomBlinkEffect BlinkEffect;
 
-        public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, SurfaceEditor surfaceEditor)
+        public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, SurfaceBase surfaceEditor)
         {
             string[] parametersArray = parameters.Split(':');
 
@@ -68,7 +68,7 @@ namespace SadConsole.StringParser
             CommandType = CommandTypes.Effect;
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ISurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, Surfaces.SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             glyphState.Effect = BlinkEffect;
 

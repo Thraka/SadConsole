@@ -1,87 +1,56 @@
-﻿using FrameworkPoint = Microsoft.Xna.Framework.Point;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SadConsole.Surfaces;
 
 namespace SadConsole.SerializedTypes
 {
-    [DataContract]
-    public class LayeredSurfaceSerialized
+    public class LayeredJsonConverter : JsonConverter<Layered>
     {
-        [DataContract]
-        public class Layer
+        public override void WriteJson(JsonWriter writer, Layered value, JsonSerializer serializer)
         {
-            [DataMember]
-            public CellSerialized[] Cells;
-
-            [DataMember]
-            public bool IsVisible;
-
-            [DataMember]
-            public object Metadata;
-
-            [DataMember]
-            public int Index;
+            serializer.Serialize(writer, (LayeredSurfaceSerialized)value);
         }
 
-        [DataMember]
-        public FontSerialized Font;
-        [DataMember]
-        public RectangleSerialized RenderArea;
-        [DataMember]
-        public int Width;
-        [DataMember]
-        public int Height;
-        [DataMember]
-        public ColorSerialized DefaultForeground;
-        [DataMember]
-        public ColorSerialized DefaultBackground;
-        [DataMember]
-        public ColorSerialized Tint;
-        [DataMember]
-        public Layer[] Layers;
-        [DataMember]
-        public int ActiveLayer;
+        public override Layered ReadJson(JsonReader reader, Type objectType, Layered existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            return serializer.Deserialize<LayeredSurfaceSerialized>(reader);
+        }
+    }
 
-        public static implicit operator LayeredSurfaceSerialized(Surfaces.LayeredSurface surface)
+    [DataContract]
+    public class LayeredSurfaceSerialized: ScreenObjectSerialized
+    {
+        [DataMember] public Basic[] Layers;
+
+        public static implicit operator LayeredSurfaceSerialized(Layered screen)
         {
             return new LayeredSurfaceSerialized()
             {
-                Font = surface.Font,
-                RenderArea = surface.RenderArea,
-                Width = surface.Width,
-                Height = surface.Height,
-                DefaultForeground = surface.DefaultForeground,
-                DefaultBackground = surface.DefaultBackground,
-                Tint = surface.Tint,
-                Layers = surface.GetLayers().Select(l => new LayeredSurfaceSerialized.Layer() { Cells = l.Cells.Select(c => (CellSerialized)c).ToArray(), Index = l.Index, IsVisible = l.IsVisible, Metadata = l.Metadata }).ToArray(),
-                ActiveLayer = surface.ActiveLayerIndex
+                Position = screen.Position,
+                IsVisible = screen.IsVisible,
+                IsPaused = screen.IsPaused,
+                Layers = screen.ToArray()
             };
         }
 
-        public static implicit operator Surfaces.LayeredSurface(LayeredSurfaceSerialized surface)
+        public static implicit operator Layered(LayeredSurfaceSerialized screen)
         {
-            var returnSurface = new Surfaces.LayeredSurface(surface.Width, surface.Height, surface.Font, surface.RenderArea, surface.Layers.Length)
+            var returnObject = new Layered()
             {
-                Tint = surface.Tint,
-                DefaultForeground = surface.DefaultForeground,
-                DefaultBackground = surface.DefaultBackground,
+                Position = screen.Position,
+                IsVisible = screen.IsVisible,
+                IsPaused = screen.IsPaused
             };
+            foreach (var screenLayer in screen.Layers)
+                returnObject.Add(screenLayer);
 
-            foreach (var layer in surface.Layers)
-            {
-                var orgLayer = returnSurface.GetLayer(layer.Index);
-                orgLayer.Cells = orgLayer.RenderCells = layer.Cells.Select(c => (Cell)c).ToArray();
-                orgLayer.IsVisible = layer.IsVisible;
-                orgLayer.Metadata = layer.Metadata;
-            }
-
-            returnSurface.SetActiveLayer(surface.ActiveLayer);
-
-            return returnSurface;
+            return returnObject;
         }
     }
 }

@@ -4,7 +4,7 @@ using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
-    class CursorConsole: Console, IConsoleMetadata
+    class CursorConsole: CustomConsole
     {
         public ConsoleMetadata Metadata
         {
@@ -18,8 +18,8 @@ namespace StarterProject.CustomConsoles
             : base(80, 23)
         {
             // This console demonstrates the virtual cursor.
-            VirtualCursor.IsVisible = true;
-            VirtualCursor.Position = new Point(0, 2);
+            Cursor.IsVisible = true;
+            Cursor.Position = new Point(0, 2);
             UseKeyboard = true;
 
             // Print some intro text

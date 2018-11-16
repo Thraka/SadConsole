@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Castle
 {
-    internal enum Direction
+    internal enum CastleDirection
     {
         None,
         Up,

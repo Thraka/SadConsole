@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 using Console = SadConsole.Console;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-using SadConsole.GameHelpers;
+using SadConsole.Entities;
 using SadConsole.Surfaces;
 
 namespace Castle
 {
-    internal class Player : GameObject
+    internal class Player : Entity
     {
-        public Direction CurrentDirection { get; private set; }
-        public Direction Facing { get; private set; }
+        public CastleDirection CurrentDirection { get; private set; }
+        public CastleDirection Facing { get; private set; }
         public int Health { get; private set; }
         public Player() : base(1, 1)
         {
             Animation.CurrentFrame[0].Glyph = 5;
             Animation.IsDirty = true;
-
-            this.CurrentDirection = Direction.None;
+            Animation.Start();
+            this.CurrentDirection = CastleDirection.None;
             Health = 70;
         }
 
@@ -33,53 +33,53 @@ namespace Castle
 
             if (info.IsKeyDown(Keys.Up))
             {
-                this.CurrentDirection = Direction.Up;
+                this.CurrentDirection = CastleDirection.Up;
                 keyHit = true;
             }
             else if (info.IsKeyDown(Keys.Down))
             {
-                this.CurrentDirection = Direction.Down;
+                this.CurrentDirection = CastleDirection.Down;
                 keyHit = true;
             }
 
             if (info.IsKeyDown(Keys.Left))
             {
-                this.CurrentDirection = Direction.Left;
+                this.CurrentDirection = CastleDirection.Left;
                 keyHit = true;
             }
             else if (info.IsKeyDown(Keys.Right))
             {
-                this.CurrentDirection = Direction.Right;
+                this.CurrentDirection = CastleDirection.Right;
                 keyHit = true;
             }
 
             switch(CurrentDirection)
             {
-                case Direction.Up:
+                case CastleDirection.Up:
                     if(info.IsKeyReleased(Keys.Up))
                     {
-                        this.CurrentDirection = Direction.None;
+                        this.CurrentDirection = CastleDirection.None;
                         keyHit = true;
                     }
                     break;
-                case Direction.Down:
+                case CastleDirection.Down:
                     if (info.IsKeyReleased(Keys.Down))
                     {
-                        this.CurrentDirection = Direction.None;
+                        this.CurrentDirection = CastleDirection.None;
                         keyHit = true;
                     }
                     break;
-                case Direction.Left:
+                case CastleDirection.Left:
                     if (info.IsKeyReleased(Keys.Left))
                     {
-                        this.CurrentDirection = Direction.None;
+                        this.CurrentDirection = CastleDirection.None;
                         keyHit = true;
                     }
                     break;
-                case Direction.Right:
+                case CastleDirection.Right:
                     if (info.IsKeyReleased(Keys.Right))
                     {
-                        this.CurrentDirection = Direction.None;
+                        this.CurrentDirection = CastleDirection.None;
                         keyHit = true;
                     }
                     break;
@@ -96,48 +96,54 @@ namespace Castle
                 Position = location;
             }
         }
-        public Point PreviewMove(Direction direction)
+
+        public override void OnCalculateRenderPosition()
         {
-            Point preview = new Point(position.X, position.Y);
+            base.OnCalculateRenderPosition();
+        }
+
+        public Point PreviewMove(CastleDirection direction)
+        {
+            Point preview = new Point(Position.X, Position.Y);
 
             switch (direction)
             {
-                case Direction.Up:
-                    this.Facing = Direction.Up;
+                case CastleDirection.Up:
+                    this.Facing = CastleDirection.Up;
                     preview.Y -= 1;
                     break;
-                case Direction.Down:
-                    this.Facing = Direction.Down;
+                case CastleDirection.Down:
+                    this.Facing = CastleDirection.Down;
                     preview.Y += 1;
                     break;
-                case Direction.Left:
-                    this.Facing = Direction.Left;
+                case CastleDirection.Left:
+                    this.Facing = CastleDirection.Left;
                     preview.X -= 1;
                     break;
-                case Direction.Right:
-                    this.Facing = Direction.Right;
+                case CastleDirection.Right:
+                    this.Facing = CastleDirection.Right;
                     preview.X += 1;
                     break;
             }
 
             return preview;
         }
-        public Point GetFacingPoint(Direction direction)
+        public Point GetFacingPoint(CastleDirection direction)
         {
-            Point preview = new Point(position.X, position.Y);
+            Point preview = new Point(Position.X, Position.Y);
 
             switch (Facing)
             {
-                case Direction.Up:
+                case CastleDirection.Up:
                     preview.Y -= 1;
                     break;
-                case Direction.Down:
+                case CastleDirection.Down:
                     preview.Y += 1;
                     break;
-                case Direction.Left:
+                case CastleDirection.Left:
                     preview.X -= 1;
                     break;
-                case Direction.Right:
+                case CastleDirection.Right:
                     preview.X += 1;
                     break;
             }

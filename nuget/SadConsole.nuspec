@@ -2,59 +2,26 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>6.4.11</version>
+    <version>7.1.0</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
     <licenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/Thraka/SadConsole</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/gh-pages/images/oD8yyro5.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
-    <releaseNotes>
-## 6.4.11
-- Fixed bug in mouse processing (thanks VGA256)
-## 6.4.10
-- Fixed WindowResized event to actually be event!
-## 6.4.9
-- Added WindowResized event to the Game class.
-- Added some new color extension methods (clear channel, alpha only).
-## 6.4.8
-- Added Settings.WindowMinimumSize.
-## 6.4.7
-- Fixed keyboard problem with selection button.
-- Font class now has a link back to the FontMaster instance.
-- Added SadConsole.Settings.GraphicsProfile for monogame hidef vs reach.
-- Added a Mouse.Clear to clear state (like keyboard has)
-- Game has a OnDestroy callback now for when the game starts to shut down.
-- VirtualCursor bugs fixed. Also supports print effects again.
-- DrawString instruction uses a VirtualCursor all the time (.Cursor property) to fix issues with printing. (thanks vga256)
-- VirtualCursor uses the solid square character as default now instead of underscore.
-- FontMaster caches Font objects created with GetFont. The same instance is passed around now instead of a new one.
-- Fade effect has UseCellDestinationReverse to reverse the logic of the of using the back/fore cell color.
-## 6.4.6
-- Fixed logic for TabStop with ControlsConsole. It was stopping a focused control from being tabbed off of, not stopping a control from being tabbed to.
-- Keyboard input was reversing '[' with '{' and ']' with '}'
-- Controls now refresh when you change the theme with Control.Theme = variable.
-## 6.4.5
-- Added SadConsole.GameHelpers.Directions class and helpers.
-- SurfaceEditor now supports basic shape functions. Easier to draw shapes than previous model. (Line only supported for now, more to come)
-- Lines can be auto connected through static SurfaceEditor.ConnectLines method.
-- Promoted a bunch of private members for the Window class to protected.
-- Window title row can be positioned by the class now. Use the protected titleLocationY variable.
-- ListBox.HideBorder instantly redraws instead of waiting for a `IsDirty` flag.
-## 6.4.4
-- Added new Palette and Timer classes.
-- Added extension method to ColorGradient that returns a Color[] based on the stops.
-- Fixed a bug in InputBox that happened when you clicked twice on the control. Thanks arxae and naknode!
-- Fixed effect manager remove methods.
-- Fixed mouse processing other consoles after it was found over the top-most
-- Created a LayeredSurface.Load single param overload to block accidentally calling BasicSurface.Load
-- MouseHandler for a Console has changed. If it assigned, the normal mouse processing logic will no longer run.
-- Fixed rendering problem with consoles created after initialization. (thanks kingvitamin103)
+    <releaseNotes>- Moved SurfaceBase.GetIndexFromPoint to Helpers class.
+- Fixed bug in EntityManager that did not remove entity/hotspot/zone parents when the EntityManager's parent was cleared.
+- EntityManager does not support .Clear calls on collections. Instead, use the RemoveAll extension method.
+- An extension method was added: SurfaceBase.CenterViewPortOnPoint
+- An extension method was added: Rectangle.CenterOnPoint
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="11.0.2" />
+    </dependencies>
   </metadata>
   <files>
 

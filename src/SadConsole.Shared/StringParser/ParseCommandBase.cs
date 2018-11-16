@@ -58,10 +58,9 @@ namespace SadConsole.StringParser
         /// <param name="glyphString">The current string of glyphs that has been processed until now.</param>
         /// <param name="surfaceIndex">Where on the surface this flyph will appear.</param>
         /// <param name="surface">The surface associated with the glyph.</param>
-        /// <param name="editor">The editor associated with the surface.</param>
         /// <param name="stringIndex">Where in the original string this glyph is from.</param>
         /// <param name="processedString">The entire string being processed.</param>
         /// <param name="commandStack">The state of commands.</param>
-        public abstract void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, ISurface surface, SurfaceEditor editor, ref int stringIndex, string processedString, ParseCommandStacks commandStack);
+        public abstract void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, Surfaces.SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack);
     }
 }

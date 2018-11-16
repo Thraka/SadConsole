@@ -18,8 +18,8 @@ namespace SadConsole
 
         public ColoredGlyph this[int index]
         {
-            get { return _characters[index]; }
-            set { _characters[index] = value; }
+            get => _characters[index];
+            set => _characters[index] = value;
         }
 
         /// <summary>
@@ -39,14 +39,11 @@ namespace SadConsole
 
                 return sb.ToString();
             }
-            set
-            {
-                _characters = ColoredString.Parse(value)._characters;
-            }
+            set => _characters = ColoredString.Parse(value)._characters;
         }
 
-        public int Count { get { return _characters.Count; } }
-        
+        public int Count => _characters.Count;
+
         /// <summary>
         /// When true, instructs a caller to not render the glyphs of the string.
         /// </summary>
@@ -228,10 +225,10 @@ namespace SadConsole
             for (int i = 0; i < string2.Count; i++)
                 returnString._characters[i + string1.Count] = string2._characters[i].Clone();
 
-            returnString.IgnoreGlyph = string1.IgnoreGlyph && string1.IgnoreGlyph;
-            returnString.IgnoreForeground = string1.IgnoreForeground && string1.IgnoreForeground;
-            returnString.IgnoreBackground = string1.IgnoreBackground && string1.IgnoreBackground;
-            returnString.IgnoreEffect = string1.IgnoreEffect && string1.IgnoreEffect;
+            returnString.IgnoreGlyph = string1.IgnoreGlyph && string2.IgnoreGlyph;
+            returnString.IgnoreForeground = string1.IgnoreForeground && string2.IgnoreForeground;
+            returnString.IgnoreBackground = string1.IgnoreBackground && string2.IgnoreBackground;
+            returnString.IgnoreEffect = string1.IgnoreEffect && string2.IgnoreEffect;
 
             return returnString;
         }

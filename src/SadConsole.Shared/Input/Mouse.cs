@@ -21,6 +21,21 @@ namespace SadConsole.Input
         public Point ScreenPosition { get; set; }
 
         /// <summary>
+        /// Indicates the middle mouse button is currently being pressed.
+        /// </summary>
+        public bool MiddleButtonDown { get; set; }
+
+        /// <summary>
+        /// Indicates the middle mouse button was clicked. (Held and then released)
+        /// </summary>
+        public bool MiddleClicked { get; set; }
+
+        /// <summary>
+        /// Inidcates the middle mouse button was double-clicked within one second.
+        /// </summary>
+        public bool MiddleDoubleClicked { get; set; }
+
+        /// <summary>
         /// Indicates the left mouse button is currently being pressed.
         /// </summary>
         public bool LeftButtonDown { get; set; }
@@ -63,7 +78,7 @@ namespace SadConsole.Input
         /// <summary>
         /// Indicates that the mouse is currently within the bounds of the rendering area.
         /// </summary>
-        public bool IsOnScreen { get { return Global.RenderRect.Contains(ScreenPosition); } }
+        public bool IsOnScreen => Global.RenderRect.Contains(ScreenPosition);
 
         /// <summary>
         /// Updates the state of the mouse.
@@ -76,6 +91,7 @@ namespace SadConsole.Input
             // Update local state
             bool leftDown = currentState.LeftButton == ButtonState.Pressed;
             bool rightDown = currentState.RightButton == ButtonState.Pressed;
+            bool middleDown = currentState.MiddleButton == ButtonState.Pressed;
 
             ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
             ScrollWheelValue = currentState.ScrollWheelValue;
@@ -83,23 +99,30 @@ namespace SadConsole.Input
             ScreenPosition = new Point((int)(currentState.X * Global.RenderScale.X), (int)(currentState.Y * Global.RenderScale.Y)) - new Point((int)(Global.RenderRect.X * Global.RenderScale.X), (int)(Global.RenderRect.Y * Global.RenderScale.Y));
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
+            bool newMiddleClicked = MiddleButtonDown && !middleDown;
 
             if (!newLeftClicked)
                 LeftDoubleClicked = false;
             if (!newRightClicked)
                 RightDoubleClicked = false;
+            if (!newMiddleClicked)
+                MiddleDoubleClicked = false;
 
             if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
                 LeftDoubleClicked = true;
             if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
                 RightDoubleClicked = true;
+            if (MiddleClicked && newMiddleClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+                MiddleDoubleClicked = true;
 
             LeftClicked = newLeftClicked;
             RightClicked = newRightClicked;
+            MiddleClicked = newMiddleClicked;
             _leftLastClickedTime = gameTime.ElapsedGameTime;
             _rightLastClickedTime = gameTime.ElapsedGameTime;
             LeftButtonDown = leftDown;
             RightButtonDown = rightDown;
+            MiddleButtonDown = middleDown;
         }
 
         /// <summary>
@@ -113,6 +136,9 @@ namespace SadConsole.Input
             LeftDoubleClicked = false;
             LeftClicked = false;
             LeftButtonDown = false;
+            MiddleDoubleClicked = false;
+            MiddleClicked = false;
+            MiddleButtonDown = false;
             ScrollWheelValue = 0;
             ScrollWheelValueChange = 0;
             ScreenPosition = Point.Zero;
@@ -154,7 +180,7 @@ namespace SadConsole.Input
                 bool foundMouseTarget = false;
 
                 // Build a list of all consoles
-                var consoles = new List<IConsole>();
+                var consoles = new List<Console>();
                 GetConsoles(Global.CurrentScreen, ref consoles);
 
                 // Process top-most consoles first.
@@ -181,11 +207,11 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(IScreen screen, ref List<IConsole> list)
+        private void GetConsoles(ScreenObject screen, ref List<Console> list)
         {
-            if (screen is IConsole)
+            if (screen is Console)
             {
-                var console = screen as IConsole;
+                var console = screen as Console;
 
                 if (console.UseMouse)
                     list.Add(console);
@@ -202,7 +228,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="console">The console to check.</param>
         /// <returns>True or false indicating if the mouse is over the console.</returns>
-        public bool IsMouseOverConsole(IConsole console)
+        public bool IsMouseOverConsole(Console console)
         {
             return new MouseConsoleState(console, this).IsOnConsole;
         }
@@ -222,6 +248,9 @@ namespace SadConsole.Input
                 RightButtonDown = this.RightButtonDown,
                 RightClicked = this.RightClicked,
                 RightDoubleClicked = this.RightDoubleClicked,
+                MiddleButtonDown = this.MiddleButtonDown,
+                MiddleClicked = this.MiddleClicked,
+                MiddleDoubleClicked = this.MiddleDoubleClicked,
                 ScrollWheelValue = this.ScrollWheelValue,
                 ScrollWheelValueChange = this.ScrollWheelValueChange
             };

@@ -4,17 +4,16 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public static class TextureExtensions
     {
-        public static BasicSurface ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
+        public static Basic ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
         {
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             Color[] pixels = new Color[imageWidth * imageHeight];
             image.GetData<Color>(pixels);
 
-            BasicSurface surface = new BasicSurface(imageWidth / font.Size.X, imageHeight / font.Size.Y, font);
-            SurfaceEditor editor = new SurfaceEditor(surface);
+            Basic surface = new Basic(imageWidth / font.Size.X, imageHeight / font.Size.Y, font);
 
-            global::System.Threading.Tasks.Parallel.For(0, imageHeight / surface.Font.Size.Y, (h) =>
+            global::System.Threading.Tasks.Parallel.For((int) 0, (int)(imageHeight / surface.Font.Size.Y), (h) =>
             //for (int h = 0; h < imageHeight / surface.Font.Size.Y; h++)
             {
                 int startY = (h * surface.Font.Size.Y);
@@ -53,36 +52,36 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (blockMode)
                     {
                         if (sbri > 204)
-                            editor.SetGlyph(w, h, 219, newColor); //█
+                            surface.SetGlyph(w, h, 219, newColor); //█
                         else if (sbri > 152)
-                            editor.SetGlyph(w, h, 178, newColor); //▓
+                            surface.SetGlyph(w, h, 178, newColor); //▓
                         else if (sbri > 100)
-                            editor.SetGlyph(w, h, 177, newColor); //▒
+                            surface.SetGlyph(w, h, 177, newColor); //▒
                         else if (sbri > 48)
-                            editor.SetGlyph(w, h, 176, newColor); //░
+                            surface.SetGlyph(w, h, 176, newColor); //░
                     }
                     else
                     {
                         if (sbri > 230)
-                            editor.SetGlyph(w, h, (int)'#', newColor);
+                            surface.SetGlyph(w, h, (int)'#', newColor);
                         else if (sbri > 207)
-                            editor.SetGlyph(w, h, (int)'&', newColor);
+                            surface.SetGlyph(w, h, (int)'&', newColor);
                         else if (sbri > 184)
-                            editor.SetGlyph(w, h, (int)'$', newColor);
+                            surface.SetGlyph(w, h, (int)'$', newColor);
                         else if (sbri > 161)
-                            editor.SetGlyph(w, h, (int)'X', newColor);
+                            surface.SetGlyph(w, h, (int)'X', newColor);
                         else if (sbri > 138)
-                            editor.SetGlyph(w, h, (int)'x', newColor);
+                            surface.SetGlyph(w, h, (int)'x', newColor);
                         else if (sbri > 115)
-                            editor.SetGlyph(w, h, (int)'=', newColor);
+                            surface.SetGlyph(w, h, (int)'=', newColor);
                         else if (sbri > 92)
-                            editor.SetGlyph(w, h, (int)'+', newColor);
+                            surface.SetGlyph(w, h, (int)'+', newColor);
                         else if (sbri > 69)
-                            editor.SetGlyph(w, h, (int)';', newColor);
+                            surface.SetGlyph(w, h, (int)';', newColor);
                         else if (sbri > 46)
-                            editor.SetGlyph(w, h, (int)':', newColor);
+                            surface.SetGlyph(w, h, (int)':', newColor);
                         else if (sbri > 23)
-                            editor.SetGlyph(w, h, (int)'.', newColor);
+                            surface.SetGlyph(w, h, (int)'.', newColor);
                     }
                 }
             }
@@ -91,14 +90,13 @@ namespace Microsoft.Xna.Framework.Graphics
             return surface;
         }
 
-        public static void ToSurface(this Texture2D image, BasicSurface surface, Color[] cachedColorArray, bool blockMode = false)
+        public static void ToSurface(this Texture2D image, Basic surface, Color[] cachedColorArray, bool blockMode = false)
         {
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             image.GetData<Color>(cachedColorArray);
 
-            SurfaceEditor editor = new SurfaceEditor(surface);
-            editor.Clear();
+            surface.Clear();
             global::System.Threading.Tasks.Parallel.For(0, imageHeight / surface.Font.Size.Y, (h) =>
             //for (int h = 0; h < imageHeight / surface.Font.Size.Y; h++)
             {
@@ -138,36 +136,36 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (blockMode)
                     {
                         if (sbri > 204)
-                            editor.SetGlyph(w, h, 219, newColor); //█
+                            surface.SetGlyph(w, h, 219, newColor); //█
                         else if (sbri > 152)
-                            editor.SetGlyph(w, h, 178, newColor); //▓
+                            surface.SetGlyph(w, h, 178, newColor); //▓
                         else if (sbri > 100)
-                            editor.SetGlyph(w, h, 177, newColor); //▒
+                            surface.SetGlyph(w, h, 177, newColor); //▒
                         else if (sbri > 48)
-                            editor.SetGlyph(w, h, 176, newColor); //░
+                            surface.SetGlyph(w, h, 176, newColor); //░
                     }
                     else
                     {
                         if (sbri > 230)
-                            editor.SetGlyph(w, h, (int)'#', newColor);
+                            surface.SetGlyph(w, h, (int)'#', newColor);
                         else if (sbri > 207)
-                            editor.SetGlyph(w, h, (int)'&', newColor);
+                            surface.SetGlyph(w, h, (int)'&', newColor);
                         else if (sbri > 184)
-                            editor.SetGlyph(w, h, (int)'$', newColor);
+                            surface.SetGlyph(w, h, (int)'$', newColor);
                         else if (sbri > 161)
-                            editor.SetGlyph(w, h, (int)'X', newColor);
+                            surface.SetGlyph(w, h, (int)'X', newColor);
                         else if (sbri > 138)
-                            editor.SetGlyph(w, h, (int)'x', newColor);
+                            surface.SetGlyph(w, h, (int)'x', newColor);
                         else if (sbri > 115)
-                            editor.SetGlyph(w, h, (int)'=', newColor);
+                            surface.SetGlyph(w, h, (int)'=', newColor);
                         else if (sbri > 92)
-                            editor.SetGlyph(w, h, (int)'+', newColor);
+                            surface.SetGlyph(w, h, (int)'+', newColor);
                         else if (sbri > 69)
-                            editor.SetGlyph(w, h, (int)';', newColor);
+                            surface.SetGlyph(w, h, (int)';', newColor);
                         else if (sbri > 46)
-                            editor.SetGlyph(w, h, (int)':', newColor);
+                            surface.SetGlyph(w, h, (int)':', newColor);
                         else if (sbri > 23)
-                            editor.SetGlyph(w, h, (int)'.', newColor);
+                            surface.SetGlyph(w, h, (int)'.', newColor);
                     }
                 }
             }

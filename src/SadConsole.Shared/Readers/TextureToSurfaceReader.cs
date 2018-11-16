@@ -12,11 +12,10 @@ namespace SadConsole.Readers
     {
         int width;
         int height;
-        BasicSurface surface;
+        Basic surface;
         Color[] pixels;
         int[] indexes;
         int fontPixels;
-        SurfaceEditor editor;
 
         /// <summary>
         /// Renders the cells as blocks instead of characters.
@@ -35,9 +34,8 @@ namespace SadConsole.Readers
             this.height = pixelHeight;
             pixels = new Color[pixelWidth * pixelHeight];
             indexes = new int[pixelWidth * pixelHeight];
-            surface = new BasicSurface(pixelWidth / font.Size.X, pixelHeight / font.Size.Y, font);
+            surface = new Basic(pixelWidth / font.Size.X, pixelHeight / font.Size.Y, font);
             fontPixels = font.Size.X * font.Size.Y;
-            editor = new SurfaceEditor(surface);
 
             // build the indexes
             int currentIndex = 0;
@@ -70,9 +68,9 @@ namespace SadConsole.Readers
         /// </summary>
         /// <param name="image">The image to render.</param>
         /// <returns>The surface.</returns>
-        public BasicSurface GetSurface(Texture2D image)
+        public Basic GetSurface(Texture2D image)
         {
-            editor.Clear();
+            surface.Clear();
 
             image.GetData<Color>(pixels);
 
@@ -108,40 +106,40 @@ namespace SadConsole.Readers
                 if (UseBlockMode)
                 {
                     if (sbri > 204)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
                     else if (sbri > 152)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
                     else if (sbri > 100)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
                     else if (sbri > 48)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
                     else
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
                 }
                 else
                 {
                     if (sbri > 230)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'#', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'#', newColor);
                     else if (sbri > 207)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'&', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'&', newColor);
                     else if (sbri > 184)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'$', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'$', newColor);
                     else if (sbri > 161)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'X', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'X', newColor);
                     else if (sbri > 138)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'x', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'x', newColor);
                     else if (sbri > 115)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'=', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'=', newColor);
                     else if (sbri > 92)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'+', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'+', newColor);
                     else if (sbri > 69)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)';', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)';', newColor);
                     else if (sbri > 46)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)':', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)':', newColor);
                     else if (sbri > 23)
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'.', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'.', newColor);
                     else
-                        editor.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
                 }
             }
             );

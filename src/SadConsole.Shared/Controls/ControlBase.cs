@@ -11,15 +11,22 @@ namespace SadConsole.Controls
     /// Base class for all controls.
     /// </summary>
     [DataContract]
-    public abstract class ControlBase: SurfaceEditor
+    public abstract class ControlBase
     {
         protected Point position;
-        protected Rectangle bounds;
         protected bool isMouseOver = false;
         protected bool isEnabled = true;
         protected ControlsConsole parent;
+        protected ControlStates state;
 
-        public Action<ControlBase> OnComposed;
+        /// <summary>
+        /// True when the mouse is down.
+        /// </summary>
+        protected bool isMouseLeftDown;
+        protected bool isMouseRightDown;
+        private bool _isDirty;
+
+        public event EventHandler<EventArgs> IsDirtyChanged;
 
         [DataMember]
         public bool UseKeyboard { get; set; }
@@ -37,10 +44,25 @@ namespace SadConsole.Controls
         public Font AlternateFont { get; set; }
 
         /// <summary>
-        /// Indicates he rendering location of this control.
+        /// The cell data to render the control. Controlled by a theme.
         /// </summary>
         [DataMember]
-        public Point Position { get { return position; } set { position = value; bounds = new Rectangle(position.X, position.Y, Width, Height); OnPositionChanged(); } }
+        public BasicNoDraw Surface { get; set; }
+
+        /// <summary>
+        /// Indicates the rendering location of this control.
+        /// </summary>
+        [DataMember]
+        public Point Position
+        {
+            get => position;
+            set
+            {
+                position = value;
+                Bounds = new Rectangle(position.X, position.Y, Width, Height);
+                OnPositionChanged();
+            }
+        }
 
         /// <summary>
         /// Indicates weather or not this control is visible.
@@ -63,7 +85,17 @@ namespace SadConsole.Controls
         /// <summary>
         /// Indicates weather or not this control is dirty and should be redrawn.
         /// </summary>
-        public bool IsDirty { get; set; }
+        public bool IsDirty
+        {
+            get => _isDirty;
+            set
+            {
+                if (value == _isDirty) return;
+
+                _isDirty = value;
+                IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         /// <summary>
         /// Represents a name to identify a control by.
@@ -76,6 +108,17 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember]
         public bool FocusOnClick { get; set; }
+
+        /// <summary>
+        /// The width of the control.
+        /// </summary>
+        public int Width { get; }
+
+        /// <summary>
+        /// The height of the control.
+        /// </summary>
+        public int Height { get; }
+
 
         /// <summary>
         /// Gets or sets weather or not this control is focused.
@@ -106,7 +149,7 @@ namespace SadConsole.Controls
                             Parent.FocusedControl = null;
                     }
 
-                    DetermineAppearance();
+                    DetermineState();
                 }
 
             }
@@ -118,65 +161,62 @@ namespace SadConsole.Controls
         [DataMember]
         public bool IsEnabled
         {
-            get { return isEnabled; }
+            get => isEnabled;
             set
             {
                 isEnabled = value;
-                DetermineAppearance();
+                DetermineState();
             }
         }
 
         /// <summary>
-        /// The width of the control.
-        /// </summary>
-        public int Width { get { return textSurface.Width; } }
-
-        /// <summary>
-        /// The height of the control.
-        /// </summary>
-        public int Height { get { return textSurface.Height; } }
-
-        /// <summary>
         /// The area this control covers.
         /// </summary>
-        public Rectangle Bounds { get { return bounds; } }
-        
+        public Rectangle Bounds { get; private set; }
+
         /// <summary>
         /// Gets or sets the parent console of this control.
         /// </summary>
         public ControlsConsole Parent
         {
-            get { return parent; }
+            get => parent;
             set { parent = value; OnParentChanged(); }
         }
 
         /// <summary>
+        /// The state of the control.
+        /// </summary>
+        public ControlStates State => state;
+
+        /// <summary>
         /// Raised when the mouse enters this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseEnter;
+        public event EventHandler<MouseEventArgs> MouseEnter;
 
         /// <summary>
         /// Raised when the mouse exits this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseExit;
+        public event EventHandler<MouseEventArgs> MouseExit;
 
         /// <summary>
         /// Raised when the mouse is moved over this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseMove;
+        public event EventHandler<MouseEventArgs> MouseMove;
 
         /// <summary>
         /// Raised when a mouse button is clicked while the mouse is over this control.
         /// </summary>
-        public event System.EventHandler<MouseEventArgs> MouseButtonClicked;
+        public event EventHandler<MouseEventArgs> MouseButtonClicked;
 
         #region Constructors
+        /// <inheritdoc />
         /// <summary>
-        /// Default constructor of the control.
+        /// Creates a control.
         /// </summary>
-        public ControlBase(int width, int height)
-            : base(new NoDrawSurface(width, height))
+        protected ControlBase(int width, int height)
         {
+            Width = width;
+            Height = height;
             IsDirty = true;
             TabStop = true;
             IsVisible = true;
@@ -185,19 +225,19 @@ namespace SadConsole.Controls
             position = new Point();
             UseMouse = true;
             UseKeyboard = true;
-            bounds = new Rectangle(0, 0, width, height);
+            Bounds = new Rectangle(0, 0, width, height);
         }
         #endregion
 
         /// <summary>
         /// Called when the control loses focus. Calls DetermineAppearance.
         /// </summary>
-        public virtual void FocusLost() { DetermineAppearance(); }
+        public virtual void FocusLost() { DetermineState(); }
 
         /// <summary>
         /// Called when the control is focused. Calls DetermineAppearance.
         /// </summary>
-        public virtual void Focused() { DetermineAppearance(); }
+        public virtual void Focused() { DetermineState(); }
 
         #region Input
         /// <summary>
@@ -215,7 +255,7 @@ namespace SadConsole.Controls
         {
             if (IsEnabled && UseMouse)
             {
-                if (bounds.Contains(state.CellPosition))
+                if (Bounds.Contains(state.CellPosition))
                 {
                     if (isMouseOver != true)
                     {
@@ -268,10 +308,54 @@ namespace SadConsole.Controls
         /// Sets the appropriate theme for the control based on the current state of the control.
         /// </summary>
         /// <remarks>Called by the control as the mouse state changes, like when the mouse is clicked on top of the control or leaves the area of the control. This method is implemented by each derived control.</remarks>
-        public abstract void DetermineAppearance();
+        public virtual void DetermineState()
+        {
+            ControlStates oldState = state;
+
+            if (!isEnabled)
+                Helpers.SetFlag(ref state, ControlStates.Disabled);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.Disabled);
+
+            if (isMouseOver)
+                Helpers.SetFlag(ref state, ControlStates.MouseOver);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.MouseOver);
+
+            if (IsFocused)
+                Helpers.SetFlag(ref state, ControlStates.Focused);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.Focused);
+
+            if (isMouseLeftDown)
+                Helpers.SetFlag(ref state, ControlStates.MouseLeftButtonDown);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.MouseLeftButtonDown);
+
+            if (isMouseRightDown)
+                Helpers.SetFlag(ref state, ControlStates.MouseRightButtonDown);
+            else
+                Helpers.UnsetFlag(ref state, ControlStates.MouseRightButtonDown);
+
+            if (oldState != state)
+            {
+                OnStateChanged(oldState, state);
+                IsDirty = true;
+            }
+        }
 
         /// <summary>
-        /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the <see cref="State"/> changes. Sets the <see cref="IsDirty"/> to true.
+        /// </summary>
+        /// <param name="oldState">The original state.</param>
+        /// <param name="newState">The new state.</param>
+        protected virtual void OnStateChanged(ControlStates oldState, ControlStates newState)
+        {
+            IsDirty = true;
+        }
+        
+        /// <summary>
+        /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseEnter(Input.MouseConsoleState state)
@@ -279,58 +363,60 @@ namespace SadConsole.Controls
             isMouseOver = true;
             MouseEnter?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
-        /// Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseExit(Input.MouseConsoleState state)
         {
+            isMouseLeftDown = false;
+            isMouseRightDown = false;
             isMouseOver = false;
             MouseExit?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
-        /// Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseIn(Input.MouseConsoleState state)
         {
-            if (MouseMove != null)
-                MouseMove(this, new MouseEventArgs(state));
+            MouseMove?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            isMouseLeftDown = state.Mouse.LeftButtonDown;
+            isMouseRightDown = state.Mouse.RightButtonDown;
+
+            DetermineState();
         }
 
         /// <summary>
-        /// Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
-            if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(state));
+            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
 
             if (FocusOnClick)
                 this.IsFocused = true;
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
-        /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineAppearance"/> method.
+        /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnRightMouseClicked(Input.MouseConsoleState state)
         {
-            if (MouseButtonClicked != null)
-                MouseButtonClicked(this, new MouseEventArgs(state));
+            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
 
-            DetermineAppearance();
+            DetermineState();
         }
 
         /// <summary>
@@ -344,42 +430,15 @@ namespace SadConsole.Controls
         }
 
         /// <summary>
-        /// Redraw the lastest appearance of the control.
+        /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.
         /// </summary>
-        /// <remarks>This method is implemented by each derived control.</remarks>
-        public abstract void Compose();
-
-        /// <summary>
-        /// Redraw the latest appearance of the control if <see cref="IsDirty"/> is set to true.
-        /// </summary>
-        /// <param name="force">Force the draw to happen by setting IsDirty as true.</param>
-        public virtual void Compose(bool force)
-        {
-            if (force)
-            {
-                IsDirty = true;
-                Compose();
-            }
-            else
-                Compose();
-        }
-
-        /// <summary>
-        /// Update the control. Calls Compose() and then updates each cell effect if needed.
-        /// </summary>
-        public virtual void Update()
-        {
-            Compose();
-            
-            //TODO: Effects
-            //UpdateEffects(Engine.GameTimeElapsedUpdate);
-        }
+        public abstract void Update(TimeSpan time);
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
             IsDirty = true;
-            bounds = new Rectangle(position.X, position.Y, Width, Height);
+            Bounds = new Rectangle(position.X, position.Y, Width, Height);
         }
     }
 }

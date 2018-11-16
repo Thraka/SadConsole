@@ -9,7 +9,7 @@ using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    class SceneProjectionConsole : Console, IConsoleMetadata
+    class SceneProjectionConsole : Console
     {
         private RenderTarget2D _renderTexture;
         private Vector3 _boxPosition;
@@ -23,16 +23,7 @@ namespace StarterProject.CustomConsoles
         private bool blockMode = false;
         Color[] pixels;
         SadConsole.Readers.TextureToSurfaceReader reader1;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "Scene Projection", Summary = "Translating a 3D scene to a TextSurface T=Toggle B=Block Mode" };
-            }
-        }
-
-
+        
         public SceneProjectionConsole() : base(80, 25)
         {
             PresentationParameters pp = SadConsole.Global.GraphicsDevice.PresentationParameters;
@@ -84,7 +75,7 @@ namespace StarterProject.CustomConsoles
 
         public override void Draw(TimeSpan time)
         {
-            if (isVisible)
+            if (IsVisible)
             {
                 // Grab rendering
                 SadConsole.Global.GraphicsDevice.SetRenderTarget(_renderTexture);
@@ -120,11 +111,11 @@ namespace StarterProject.CustomConsoles
 
                 if (toggle)
                 {
-                    textSurface = reader1.GetSurface(_renderTexture);
+                    reader1.GetSurface(_renderTexture).Copy(this);
                     base.Draw(time);
                 }
                 else
-                    SadConsole.Global.DrawCalls.Add(new SadConsole.DrawCallTexture(_renderTexture, position.ToVector2()));
+                    SadConsole.Global.DrawCalls.Add(new SadConsole.DrawCalls.DrawCallTexture(_renderTexture, Position.ToVector2()));
 
             }
         }

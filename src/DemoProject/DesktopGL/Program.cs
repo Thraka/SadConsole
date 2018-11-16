@@ -1,7 +1,9 @@
 ﻿using System;
 using SadConsole;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Input;
+using SadConsole.Surfaces;
 using Console = SadConsole.Console;
 
 namespace StarterProject
@@ -15,9 +17,9 @@ namespace StarterProject
         {
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
-
+            
             // Setup the engine and creat the main window.
-            SadConsole.Game.Create("Fonts/IBM.font", 80, 25);
+            SadConsole.Game.Create(80, 25);
             //SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
 
             // Hook the start event so we can add consoles to the system.
@@ -86,11 +88,13 @@ namespace StarterProject
 
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
 
+            Console ctx = new Console(10, 10);
+
             MainConsole = new Container();
 
             // We'll instead use our demo consoles that show various features of SadConsole.
             Global.CurrentScreen = MainConsole;
-
+            
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 

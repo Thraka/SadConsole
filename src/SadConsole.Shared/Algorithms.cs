@@ -19,7 +19,7 @@ namespace SadConsole
         /// <typeparam name="T">The type being swapped.</typeparam>
         /// <param name="lhs">Left value.</param>
         /// <param name="rhs">Right value.</param>
-        private static void Swap<T>(ref T lhs, ref T rhs) { T temp; temp = lhs; lhs = rhs; rhs = temp; }
+        private static void Swap<T>(ref T lhs, ref T rhs) {var temp = lhs; lhs = rhs; rhs = temp; }
 
         /// <summary>
         /// Plot the line from (x0, y0) to (x1, y1) using steep.
@@ -28,7 +28,7 @@ namespace SadConsole
         /// <param name="y0">The start y</param>
         /// <param name="x1">The end x</param>
         /// <param name="y1">The end y</param>
-        /// <param name="plot">The plotting function (if this returns false, the algorithm stops early)</param>
+        /// <param name="plot">The plotting function, taking x and y. (if this returns false, the algorithm stops early)</param>
         public static void Line(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
         {
             bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);

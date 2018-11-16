@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using SadConsole.DrawCalls;
 
 namespace SadConsole
 {
@@ -35,11 +38,11 @@ namespace SadConsole
         /// A global reusable sprite batch.
         /// </summary>
         public static SpriteBatch SpriteBatch;
-        
+
         /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public static IScreen CurrentScreen = new Screen();
+        public static ScreenObject CurrentScreen = new ScreenObject();
 
         /// <summary>
         /// The stack of consoles that will receive keyboard and mouse input.
@@ -72,7 +75,6 @@ namespace SadConsole
         /// </summary>
         public static GameTime GameTimeRender;
 
-        #region Input
         /// <summary>
         /// Mouse state which is usually updated in the update pass.
         /// </summary>
@@ -82,7 +84,6 @@ namespace SadConsole
         /// Keyboard state which is usually updated in the update pass.
         /// </summary>
         public static Input.Keyboard KeyboardState = new Input.Keyboard();
-        #endregion
 
         #region Rendering
         /// <summary>
@@ -143,7 +144,7 @@ namespace SadConsole
             //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
             try
             {
-                var masterFont = SadConsole.Serializer.Load<FontMaster>(font);
+                var masterFont = SadConsole.Serializer.Load<FontMaster>(font, false);
 
                 if (Fonts.ContainsKey(masterFont.Name))
                     Fonts.Remove(masterFont.Name);
@@ -153,11 +154,47 @@ namespace SadConsole
             }
             catch (System.Runtime.Serialization.SerializationException e)
             {
-                
+
                 throw;
             }
-            
+
         }
+        
+        internal static void LoadEmbeddedFont()
+        {
+            //var auxList = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
+#if WINDOWS_UWP || WINDOWS_UAP
+            var assembly = new ColoredString().GetType().GetTypeInfo().Assembly;
+#else
+            var assembly = Assembly.GetExecutingAssembly();
+#endif
+            var resourceNameFont = "SadConsole.Resources.IBM_ext.font";
+            var resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceNameFont))
+            using (StreamReader sr = new StreamReader(stream))
+            {
+                Settings.LoadingEmbeddedFont = true;
+                Global.SerializerPathHint = "";
+                var masterFont = (FontMaster) Newtonsoft.Json.JsonConvert.DeserializeObject(
+                    sr.ReadToEnd(),
+                    typeof(FontMaster),
+                    new Newtonsoft.Json.JsonSerializerSettings()
+                    {
+                        TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
+                    });
+
+                using (Stream fontStream = assembly.GetManifestResourceStream(resourceNameImage))
+                    masterFont.Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+
+                masterFont.ConfigureRects();
+                Fonts.Add(masterFont.Name, masterFont);
+                FontDefault = masterFont.GetFont(Font.FontSizes.One);
+
+                Settings.LoadingEmbeddedFont = false;
+            }
+        }
+
 
         /// <summary>
         /// Resets the <see cref="RenderOutput"/> target and determines the appropriate <see cref="RenderRect"/> and <see cref="RenderScale"/> based on the window or fullscreen state.

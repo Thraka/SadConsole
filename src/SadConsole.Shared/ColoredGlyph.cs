@@ -19,7 +19,7 @@ namespace SadConsole
         /// </summary>
         public char GlyphCharacter
         {
-            get { return _character; }
+            get => _character;
             set
             {
                 _character = value;
@@ -32,8 +32,8 @@ namespace SadConsole
         /// </summary>
         public new int Glyph
         {
-            get { return base.Glyph; }
-            set { GlyphCharacter = (char)value; }
+            get => base.Glyph;
+            set => GlyphCharacter = (char)value;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SadConsole
         /// Creates a new colored glyph based on the provided cell.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        public ColoredGlyph(Cell cell) : base(cell.Foreground, cell.Background, cell.Glyph)
+        public ColoredGlyph(Cell cell) : base(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
         {
             GlyphCharacter = (char)cell.Glyph;
         }

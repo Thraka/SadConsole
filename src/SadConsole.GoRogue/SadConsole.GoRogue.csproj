@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>SadConsole</RootNamespace>
+    <Version>1.0.0-alpha1</Version>
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
+    <Description>A game helpers library for SadConsole built with GoRogue.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GoRogue" Version="1.6.1" />
+    <PackageReference Include="SadConsole.Standard" Version="7.1.0" />
+  </ItemGroup>
+
+</Project>
