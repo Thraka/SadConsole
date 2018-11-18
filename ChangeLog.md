@@ -2,6 +2,7 @@
 
 - ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
 - Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
+- Renamed and promoted the method that forwarded entity animation states to the entity: OnAnimationStateChanged. Override this on custom entities to detect the state changes.
 
 ## 10/18/2018 V7.1.0
 

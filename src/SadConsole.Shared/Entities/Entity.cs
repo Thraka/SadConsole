@@ -53,14 +53,14 @@ namespace SadConsole.Entities
                 if (animation != null)
                 {
                     animation.State = Animated.AnimationState.Deactivated;
-                    animation.AnimationStateChanged -= ForwardAnimationStateChanged;
+                    animation.AnimationStateChanged -= OnAnimationStateChanged;
                     Children.Remove(animation);
                 }
 
                 animation = value;
                 animation.Font = font;
 
-                animation.AnimationStateChanged += ForwardAnimationStateChanged;
+                animation.AnimationStateChanged += OnAnimationStateChanged;
                 animation.State = Animated.AnimationState.Activated;
                 Children.Add(animation);
             }
@@ -112,7 +112,7 @@ namespace SadConsole.Entities
             Animations.Add("default", animation);
         }
         
-        private void ForwardAnimationStateChanged(object sender, Animated.AnimationStateChangedEventArgs e)
+        protected void OnAnimationStateChanged(object sender, Animated.AnimationStateChangedEventArgs e)
         {
             AnimationStateChanged?.Invoke(sender, e);
         }
@@ -126,6 +126,11 @@ namespace SadConsole.Entities
             {
                 child.OnCalculateRenderPosition();
             }
+        }
+
+        protected virtual void ()
+        {
+
         }
 
         /// <summary>
