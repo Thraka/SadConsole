@@ -26,9 +26,8 @@ namespace BasicTutorial
             // Create player
             gen.SadConsoleMap.ControlledGameObject = new GameObjects.Player(gen.SadConsoleMap);
             gen.SadConsoleMap.GameObjects.Add(gen.SadConsoleMap.ControlledGameObject, gen.Rooms[0].InnerRect.Center.ToCoord());
-
             gen.SadConsoleMap.Surface.CenterViewPortOnPoint(gen.SadConsoleMap.ControlledGameObject.Position);
-
+            ((GameObjects.Player)gen.SadConsoleMap.ControlledGameObject).RefreshVisibilityTiles();
             Dungeon = new DungeonScreen(gen.SadConsoleMap);
         }
     }

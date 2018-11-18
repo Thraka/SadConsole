@@ -226,6 +226,14 @@ namespace SadConsole.Maps.Generators
                 else
                     SadConsoleMap[position] = Tile.Factory.Create(Settings.TileBlueprintWall);
             }
+
+            foreach (var region in Rooms)
+            {
+                foreach (var point in region.InnerPoints)
+                {
+                    SadConsoleMap[point].SetFlag(TileFlags.RegionLighted);
+                }
+            }
         }
     }
 }

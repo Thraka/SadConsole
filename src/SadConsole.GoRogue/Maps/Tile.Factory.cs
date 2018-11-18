@@ -35,7 +35,7 @@ namespace SadConsole.Maps
 
                 new TileBlueprint("floor")
                 {
-                    Appearance = new Cell(new Color(60, 60, 60), Color.Black, 46),
+                    Appearance = new Cell(new Color(120, 120, 120), Color.Black, 46),
                     Type = TileTypeFloor,
                     Title = "Floor",
                     Description = "Ancient rock and dirt."

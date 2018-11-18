@@ -18,6 +18,7 @@ namespace BasicTutorial
         public SadConsole.Actions.ActionStack ActionProcessor;
 
         public bool RunLogicFrame;
+        public bool RedrawMap;
 
         public SadConsole.Maps.SimpleMap Map { get; }
 
@@ -59,11 +60,11 @@ namespace BasicTutorial
             if (RunLogicFrame)
                 RunGameLogicFrame();
 
-            //if (RedrawMap)
-            //{
-            //    DungeonScreen.RedrawMap = true;
-            //    RedrawMap = false;
-            //}
+            if (RedrawMap)
+            {
+                Map.Surface.IsDirty = true;
+                RedrawMap = false;
+            }
             //point.X = Math.Max(0, point.X);
             //point.Y = Math.Max(0, point.Y);
             //point.X = Math.Min(point.X, map.Width - DungeonScreen.Width);
@@ -110,7 +111,7 @@ namespace BasicTutorial
             Map.ControlledGameObject.ProcessGameFrame();
 
             // Redraw the map
-            //RedrawMap = true;
+            RedrawMap = true;
 
             RunLogicFrame = false;
         }

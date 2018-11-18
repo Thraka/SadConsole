@@ -142,10 +142,10 @@ namespace BasicTutorial.GameObjects
             if (this == map.ControlledGameObject)
             {
                 foreach (var tile in FOVSight.NewlyUnseen)
-                    map[tile].UnsetFlag(TileFlags.Lighted, TileFlags.InLOS);
+                    map[tile].UnsetFlag(TileFlags.InLOS);
 
                 foreach (var tile in FOVSight.NewlySeen)
-                    map[tile].SetFlag(TileFlags.Lighted, TileFlags.InLOS);
+                    map[tile].SetFlag(TileFlags.InLOS);
             }
 
             // Lighting
@@ -154,7 +154,7 @@ namespace BasicTutorial.GameObjects
             if (this == map.ControlledGameObject)
             {
                 foreach (var tile in FOVLighted.NewlyUnseen)
-                    map[tile].UnsetFlag(TileFlags.Lighted, TileFlags.Lighted);
+                    map[tile].UnsetFlag(TileFlags.Lighted);
 
                 foreach (var tile in FOVLighted.NewlySeen)
                     map[tile].SetFlag(TileFlags.Lighted, TileFlags.Seen);
@@ -173,7 +173,7 @@ namespace BasicTutorial.GameObjects
 
                     // If player, handle room lighting
                     if (this == map.ControlledGameObject)
-                        tile.SetFlag(TileFlags.Lighted | TileFlags.InLOS | TileFlags.Seen);
+                        tile.SetFlag(TileFlags.Lighted, TileFlags.InLOS, TileFlags.Seen);
 
                     // Add tile to visible list, for calculating if the player can see.
                     VisibleTiles.Add(tile);
@@ -185,7 +185,7 @@ namespace BasicTutorial.GameObjects
 
                     // If player, handle room lighting
                     if (this == map.ControlledGameObject)
-                        tile.SetFlag(TileFlags.Lighted | TileFlags.InLOS | TileFlags.Seen);
+                        tile.SetFlag(TileFlags.Lighted, TileFlags.InLOS, TileFlags.Seen);
 
                     // Add tile to visible list, for calculating if the player can see.
                     VisibleTiles.Add(tile);
