@@ -112,9 +112,14 @@ namespace SadConsole.Entities
             Animations.Add("default", animation);
         }
         
+        /// <summary>
+        /// Called when the current <see cref="Animation"/> raises the <see cref="Surfaces.Animated.AnimationStateChanged"/> event and then raises the <see cref="AnimationStateChanged"/> event for the entity.
+        /// </summary>
+        /// <param name="sender">The animation calling this method.</param>
+        /// <param name="e">The state of the animation.</param>
         protected void OnAnimationStateChanged(object sender, Animated.AnimationStateChangedEventArgs e)
         {
-            AnimationStateChanged?.Invoke(sender, e);
+            AnimationStateChanged?.Invoke(this, e);
         }
 
         /// <inheritdoc />
@@ -128,11 +133,6 @@ namespace SadConsole.Entities
             }
         }
 
-        protected virtual void ()
-        {
-
-        }
-
         /// <summary>
         /// Saves the <see cref="Entity"/> to a file.
         /// </summary>
@@ -143,7 +143,7 @@ namespace SadConsole.Entities
         /// Loads a <see cref="Entity"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
-        /// <returns></returns>
+        /// <returns>The entity.</returns>
         public static Entity Load(string file) => Serializer.Load<Entity>(file, Settings.SerializationIsCompressed);
     }
 
