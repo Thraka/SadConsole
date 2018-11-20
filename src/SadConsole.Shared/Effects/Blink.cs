@@ -86,10 +86,10 @@ namespace SadConsole.Effects
                 {
                     _isOn = !_isOn;
                     _timeElapsed = 0.0d;
+                    _blinkCounter += 1;
 
-                    if (BlinkCount != -1 && _blinkCounter > BlinkCount)
+                    if (BlinkCount != -1 && _blinkCounter > (BlinkCount * 2))
                     {
-                        _blinkCounter += 1;
                         IsFinished = true;
                     }
                 }
