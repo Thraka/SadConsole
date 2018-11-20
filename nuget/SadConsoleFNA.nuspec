@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole.FNA</id>
-    <version>7.1.0</version>
+    <version>7.2.0</version>
     <title>SadConsole for FNA</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -11,11 +11,12 @@
     <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An FNA library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
-    <releaseNotes>- Moved SurfaceBase.GetIndexFromPoint to Helpers class.
-- Fixed bug in EntityManager that did not remove entity/hotspot/zone parents when the EntityManager's parent was cleared.
-- EntityManager does not support .Clear calls on collections. Instead, use the RemoveAll extension method.
-- An extension method was added: SurfaceBase.CenterViewPortOnPoint
-- An extension method was added: Rectangle.CenterOnPoint
+    <releaseNotes>- ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
+- Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
+- Renamed and promoted the method that forwarded entity animation states to the entity: OnAnimationStateChanged. Override this on custom entities to detect the state changes.
+- Blink event did not respect the BlinkCounter property. (reported by Hoonius)
+- Default font is now a non-extended IBM 8x16 font.
+- Added SadConsole.Settings.UseDefaultExtendedFont setting and when set to true, loads the IBM 8x16 extended font instead of the normal font. Must be set before creating the game.
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>fna roguelike cli xna game development console ansi ascii</tags>

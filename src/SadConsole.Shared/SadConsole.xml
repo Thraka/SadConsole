@@ -982,7 +982,6 @@
             <summary>
             Base class for creating a button type control.
             </summary>
-            <typeparam name="TTheme"></typeparam>
         </member>
         <member name="E:SadConsole.Controls.ButtonBase.Click">
             <summary>
@@ -5342,6 +5341,23 @@
             <param name="index">The index of the cell to start applying.</param>
             <param name="count">The count of cells to use from the index (inclusive).</param>
             <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.Surfaces.SurfaceBase.AddDecorator(System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y cooridnate (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.Surfaces.SurfaceBase.AddDecorator(System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
+            <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,System.String)">
             <summary>
