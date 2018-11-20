@@ -441,6 +441,37 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
+        /// Appends the decorators to one or more cells
+        /// </summary>
+        /// <param name="x">The x coordinate of the cell.</param>
+        /// <param name="y">The y coordinate of the cell.</param>
+        /// <param name="count">The count of cells to use from the x,y cooridnate (inclusive).</param>
+        /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        public void AddDecorator(int x, int y, int count, CellDecorator[] decorators)
+        {
+            if (!IsValidCell(x, y, out int index) || index + count >= Cells.Length) return;
+
+            AddDecorator(index, count, decorators);
+        }
+
+        /// <summary>
+        /// Appends the decorators to one or more cells
+        /// </summary>
+        /// <param name="index">The index of the cell to start applying.</param>
+        /// <param name="count">The count of cells to use from the index (inclusive).</param>
+        /// <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
+        public void AddDecorator(int index, int count, CellDecorator[] decorators)
+        {
+            if (!IsValidCell(index) || index + count >= Cells.Length) return;
+
+            if (decorators == null || decorators.Length == 0)
+                return;
+
+            for (var i = index; i < index + count; i++)
+                Cells[i].Decorators = Cells[i].Decorators.Union(decorators).Distinct().ToArray();
+        }
+
+        /// <summary>
         /// Draws the string on the console at the specified location, wrapping if needed.
         /// </summary>
         /// <param name="x">X location of the text.</param>
@@ -1087,8 +1118,6 @@ namespace SadConsole.Surfaces
             cell.Clear();
             cell.Foreground = DefaultForeground;
             cell.Background = DefaultBackground;
-            cell.Mirror = SpriteEffects.None;
-            cell.Decorators = new CellDecorator[0];
             IsDirty = true;
         }
 
