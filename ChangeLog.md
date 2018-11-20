@@ -1,4 +1,13 @@
-﻿## 10/18/2018 V7.1.0
+﻿## 11/19/2018 V7.2.0
+
+- ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
+- Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
+- Renamed and promoted the method that forwarded entity animation states to the entity: OnAnimationStateChanged. Override this on custom entities to detect the state changes.
+- Blink event did not respect the BlinkCounter property. (reported by Hoonius)
+- Default font is now a non-extended IBM 8x16 font.
+- Added SadConsole.Settings.UseDefaultExtendedFont setting and when set to true, loads the IBM 8x16 extended font instead of the normal font. Must be set before creating the game.
+
+## 10/18/2018 V7.1.0
 
 - Moved SurfaceBase.GetIndexFromPoint to Helpers class.
 - Fixed bug in EntityManager that did not remove entity/hotspot/zone parents when the EntityManager's parent was cleared.

@@ -168,8 +168,20 @@ namespace SadConsole
 #else
             var assembly = Assembly.GetExecutingAssembly();
 #endif
-            var resourceNameFont = "SadConsole.Resources.IBM_ext.font";
-            var resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
+            string resourceNameFont;
+            string resourceNameImage;
+
+            if (Settings.UseDefaultExtendedFont)
+            {
+                resourceNameFont = "SadConsole.Resources.IBM_ext.font";
+                resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
+            }
+            else
+            {
+                resourceNameFont = "SadConsole.Resources.IBM.font";
+                resourceNameImage = "SadConsole.Resources.IBM8x16.png";
+            }
+
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceNameFont))
             using (StreamReader sr = new StreamReader(stream))

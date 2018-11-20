@@ -87,9 +87,7 @@ namespace StarterProject
             // We don't want to use that for the sample project so we'll remove it.
 
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
-
-            Console ctx = new Console(10, 10);
-
+            
             MainConsole = new Container();
 
             // We'll instead use our demo consoles that show various features of SadConsole.
