@@ -70,6 +70,11 @@ namespace SadConsole
         public static bool SerializationIsCompressed { get; set; } = false;
 
         /// <summary>
+        /// When set to true, and a font is not specified with the <see cref="Game.Create(string, int, int, Action{Game})"/> overload, the IBM 8x16 extended SadConsole font will be used.
+        /// </summary>
+        public static bool UseDefaultExtendedFont { get; set; } = false;
+
+        /// <summary>
         /// Toggles between windowed and fullscreen rendering for SadConsole.
         /// </summary>
         public static void ToggleFullScreen()
