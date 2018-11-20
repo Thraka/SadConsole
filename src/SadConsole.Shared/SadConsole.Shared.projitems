@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ScrollBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SelectionButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debug\CurrentScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Direction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DoubleAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawCalls\DrawCallColoredRect.cs" />
@@ -160,5 +161,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\IBM_ext.font" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\IBM8x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\IBM.font" />
   </ItemGroup>
 </Project>

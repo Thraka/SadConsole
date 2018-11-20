@@ -1,12 +1,12 @@
 {
-  "Name": "IBM-extended",
+  "Name": "IBM_16x8_ext",
   "FilePath": "IBM8x16_NoPadding_extended.png",
   "GlyphHeight": 16,
   "GlyphWidth": 8,
   "GlyphPadding": 0,
   "SolidGlyphIndex": 219,
   "Columns": 16,
-  "IsSadExtended": false,
+  "IsSadExtended": true,
   "GlyphDefinitions": {
     "underline": {
       "Glyph": 95,

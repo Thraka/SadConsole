@@ -1,0 +1,9 @@
+{
+  "Name": "IBM_16x8",
+  "FilePath": "IBM8x16.png",
+  "GlyphHeight": 16,
+  "GlyphPadding": 1,
+  "GlyphWidth": 8,
+  "SolidGlyphIndex": 219,
+  "Columns": 16
+}
