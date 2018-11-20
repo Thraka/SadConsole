@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
     <releaseNotes>- ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
-- Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
+- Button theme would crash if ShowEnds was on and the width of the button was less than 3. (reported by Hoonius)
 - Renamed and promoted the method that forwarded entity animation states to the entity: OnAnimationStateChanged. Override this on custom entities to detect the state changes.
 - Blink event did not respect the BlinkCounter property. (reported by Hoonius)
 - Default font is now a non-extended IBM 8x16 font.
