@@ -2498,6 +2498,13 @@
             </summary>
             <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.Surfaces.Animated.Name"/> property changesd to "default".</param>
         </member>
+        <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.Surfaces.Animated.AnimationStateChangedEventArgs)">
+            <summary>
+            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.Surfaces.Animated.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
+            </summary>
+            <param name="sender">The animation calling this method.</param>
+            <param name="e">The state of the animation.</param>
+        </member>
         <member name="M:SadConsole.Entities.Entity.OnCalculateRenderPosition">
             <inheritdoc />
         </member>
@@ -2512,7 +2519,7 @@
             Loads a <see cref="T:SadConsole.Entities.Entity"/> from a file.
             </summary>
             <param name="file">The source file.</param>
-            <returns></returns>
+            <returns>The entity.</returns>
         </member>
         <member name="T:SadConsole.Entities.EntityManager">
             <summary>
@@ -4373,6 +4380,11 @@
         <member name="P:SadConsole.Settings.SerializationIsCompressed">
             <summary>
             When set to true, all loading and saving performed by SadConsole uses GZIP. <see cref="M:SadConsole.Global.LoadFont(System.String)"/> does not use this setting and always runs uncompressed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Settings.UseDefaultExtendedFont">
+            <summary>
+            When set to true, and a font is not specified with the <see cref="M:SadConsole.Game.Create(System.String,System.Int32,System.Int32,System.Action{SadConsole.Game})"/> overload, the IBM 8x16 extended SadConsole font will be used.
             </summary>
         </member>
         <member name="M:SadConsole.Settings.ToggleFullScreen">

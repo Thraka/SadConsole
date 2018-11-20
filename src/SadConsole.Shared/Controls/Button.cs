@@ -9,7 +9,6 @@ namespace SadConsole.Controls
     /// <summary>
     /// Base class for creating a button type control.
     /// </summary>
-    /// <typeparam name="TTheme"></typeparam>
     [DataContract]
     public abstract class ButtonBase: ControlBase
     {

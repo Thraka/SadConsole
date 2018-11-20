@@ -29,17 +29,19 @@ namespace SadConsole
         /// <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
         public static void Prompt(ColoredString message, string yesPrompt, string noPrompt, Action<bool> resultCallback)
         {
-            Window window = new Window(message.ToString().Length + 4, 6);
-
             message.IgnoreBackground = true;
 
-            window.Print(2, 2, message);
+            Themes.Library.Default.ButtonTheme = new Themes.ButtonLinesTheme();
 
             Button yesButton = new Button(yesPrompt.Length + 2, 1);
             Button noButton = new Button(noPrompt.Length + 2, 1);
 
-            yesButton.Position = new Point(2, window.Height - 2);
-            noButton.Position = new Point(window.Width - noButton.Width - 2, window.Height - 2);
+            Window window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
+
+            window.Print(2, 2, message);
+            
+            yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.Height);
+            noButton.Position = new Point(window.Width - noButton.Width - 2, window.Height - 1 - yesButton.Surface.Height);
 
             yesButton.Text = yesPrompt;
             noButton.Text = noPrompt;
@@ -52,7 +54,7 @@ namespace SadConsole
 
             window.Closed += (o, e) =>
                 {
-                    resultCallback(window.DialogResult);
+                    resultCallback?.Invoke(window.DialogResult);
                 };
 
             window.Show(true);
@@ -87,18 +89,19 @@ namespace SadConsole
             if (width < buttonWidth + 4)
                 width = buttonWidth + 4;
 
-            Window window = new Window(width, 6);
+            Button closeButton = new Button(buttonWidth, 1)
+            {
+                Text = closeButtonText
+            };
+
+
+            Window window = new Window(width, 5 + closeButton.Surface.Height);
             
             message.IgnoreBackground = true;
 
             window.Print(2, 2, message);
-
-            Button closeButton = new Button(buttonWidth, 1);
-
-            closeButton.Position = new Point(2, window.Height - 2);
-
-            closeButton.Text = closeButtonText;
-
+            
+            closeButton.Position = new Point(2, window.Height - 1 - closeButton.Surface.Height);
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
 
             window.Add(closeButton);

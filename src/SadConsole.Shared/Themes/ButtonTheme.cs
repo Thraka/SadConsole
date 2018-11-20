@@ -259,7 +259,7 @@ namespace SadConsole.Themes
 
 
             // Middle part of the button for text.
-            var middle = control.Height != 1 ? control.Height / 2 : 0;
+            var middle = control.Surface.Height != 1 ? control.Surface.Height / 2 : 0;
             var topleftcolor = !mouseDown ? TopLeftLineColors.Foreground : BottomRightLineColors.Foreground;
             var bottomrightcolor = !mouseDown ? BottomRightLineColors.Foreground : TopLeftLineColors.Foreground;
             Color textColor = Normal.Foreground;
@@ -275,24 +275,24 @@ namespace SadConsole.Themes
 
             control.Surface.Print(0, middle, control.Text.Align(control.TextAlignment, control.Width), textColor);
                 
-            control.Surface.DrawBox(new Rectangle(0,0,control.Width, control.Height), new Cell(topleftcolor, TopLeftLineColors.Background, 0),
+            control.Surface.DrawBox(new Rectangle(0,0,control.Width, control.Surface.Height), new Cell(topleftcolor, TopLeftLineColors.Background, 0),
                 connectedLineStyle: control.Parent.Font.Master.IsSadExtended ? SurfaceBase.ConnectedLineThinExtended : SurfaceBase.ConnectedLineThin);
 
             control.Surface.DrawLine(Point.Zero, new Point(control.Width - 1, 0), topleftcolor, appearance.Background);
-            control.Surface.DrawLine(Point.Zero, new Point(0, control.Height - 1), topleftcolor, appearance.Background);
-            control.Surface.DrawLine(new Point(control.Width - 1, 0), new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
-            control.Surface.DrawLine(new Point(1, control.Height - 1), new Point(control.Width - 1, control.Height - 1), bottomrightcolor, appearance.Background);
+            control.Surface.DrawLine(Point.Zero, new Point(0, control.Surface.Height - 1), topleftcolor, appearance.Background);
+            control.Surface.DrawLine(new Point(control.Width - 1, 0), new Point(control.Width - 1, control.Surface.Height - 1), bottomrightcolor, appearance.Background);
+            control.Surface.DrawLine(new Point(1, control.Surface.Height - 1), new Point(control.Width - 1, control.Surface.Height - 1), bottomrightcolor, appearance.Background);
 
             if (control.Parent.Font.Master.IsSadExtended && UseExtended)
             {
                 // Tweak the corners
                 //hostSurface.SetGlyph(0, 0, 0);
                 control.Surface.SetGlyph(control.Width - 1, 0, 0);
-                control.Surface.SetGlyph(0, control.Height - 1, 0);
-                //hostSurface.SetGlyph(control.Width - 1, control.Height - 1, 0);
+                control.Surface.SetGlyph(0, control.Surface.Height - 1, 0);
+                //hostSurface.SetGlyph(control.Width - 1, control.Surface.Height - 1, 0);
 
                 control.Surface.SetDecorator(
-                    new Point(0, control.Height - 1).ToIndex(control.Width), 1, new[]
+                    new Point(0, control.Surface.Height - 1).ToIndex(control.Width), 1, new[]
                     {
                         control.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor),
                         control.Parent.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor)
@@ -310,7 +310,7 @@ namespace SadConsole.Themes
                         control.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
                     });
 
-                //hostSurface.SetDecorator(new Point(control.Width - 1, control.Height - 1).ToIndex(hostSurface.Width), 1, new[] {
+                //hostSurface.SetDecorator(new Point(control.Width - 1, control.Surface.Height - 1).ToIndex(hostSurface.Width), 1, new[] {
                 //    hostSurface.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor),
                 //    hostSurface.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
                 //});
