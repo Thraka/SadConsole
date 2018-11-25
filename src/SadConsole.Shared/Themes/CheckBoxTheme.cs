@@ -10,7 +10,7 @@ namespace SadConsole.Themes
     /// The theme of a checkbox control.
     /// </summary>
     [DataContract]
-    public class CheckBoxTheme : ThemeBase<CheckBox>
+    public class CheckBoxTheme : ThemeBase
     {
         /// <summary>
         /// The icon displayed when the radio button is checked.
@@ -22,16 +22,40 @@ namespace SadConsole.Themes
         /// </summary>
         [DataMember] public ThemeStates UncheckedIcon;
 
+        /// <summary>
+        /// The icon displayed for the brack left of the check icon.
+        /// </summary>
         [DataMember] public ThemeStates LeftBracket;
 
+        /// <summary>
+        /// The icon displayed for the brack right of the check icon.
+        /// </summary>
         [DataMember] public ThemeStates RightBracket;
 
+        /// <summary>
+        /// Creates a new theme used by the <see cref="CheckBox"/>.
+        /// </summary>
         public CheckBoxTheme()
         {
-            CheckedIcon = new ThemeStates();
-            UncheckedIcon = new ThemeStates();
-            LeftBracket = new ThemeStates();
-            RightBracket = new ThemeStates();
+            
+        }
+
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
+        {
+            control.Surface = new BasicNoDraw(control.Width, control.Height);
+
+            base.Attached(control);
+        }
+
+        public override void RefreshTheme(Colors themeColors)
+        {
+            base.RefreshTheme(themeColors);
+
+            CheckedIcon = new ThemeStates(themeColors);
+            UncheckedIcon = new ThemeStates(themeColors);
+            LeftBracket = new ThemeStates(themeColors);
+            RightBracket = new ThemeStates(themeColors);
 
             CheckedIcon.SetGlyph(251);
             UncheckedIcon.SetGlyph(0);
@@ -39,78 +63,73 @@ namespace SadConsole.Themes
             RightBracket.SetGlyph(']');
         }
 
-        public override void Attached(CheckBox control)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
-        }
+            if (!(control is CheckBox checkbox)) return;
+            
+            if (!control.IsDirty) return;
 
-        public override void UpdateAndDraw(CheckBox control, TimeSpan time)
-        {
-            if (control.IsDirty)
+            Cell appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
+                
+            if (Helpers.HasFlag(checkbox.State, ControlStates.Disabled))
             {
-                Cell appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
-
-                if (Helpers.HasFlag(control.State, ControlStates.Disabled))
-                {
-                    appearance = Disabled;
-                    iconAppearance = control.IsSelected ? CheckedIcon.Disabled : UncheckedIcon.Disabled;
-                    leftBracketAppearance = LeftBracket.Disabled;
-                    rightBracketAppearance = RightBracket.Disabled;
-                }
-
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) ||
-                         Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
-                {
-                    appearance = MouseDown;
-                    iconAppearance = control.IsSelected ? CheckedIcon.MouseDown : UncheckedIcon.MouseDown;
-                    leftBracketAppearance = LeftBracket.MouseDown;
-                    rightBracketAppearance = RightBracket.MouseDown;
-                }
-
-                else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
-                {
-                    appearance = MouseOver;
-                    iconAppearance = control.IsSelected ? CheckedIcon.MouseOver : UncheckedIcon.MouseOver;
-                    leftBracketAppearance = LeftBracket.MouseOver;
-                    rightBracketAppearance = RightBracket.MouseOver;
-                }
-
-                else if (Helpers.HasFlag(control.State, ControlStates.Focused))
-                {
-                    appearance = Focused;
-                    iconAppearance = control.IsSelected ? CheckedIcon.Focused : UncheckedIcon.Focused;
-                    leftBracketAppearance = LeftBracket.Focused;
-                    rightBracketAppearance = RightBracket.Focused;
-                }
-
-                else
-                {
-                    appearance = Normal;
-                    iconAppearance = control.IsSelected ? CheckedIcon.Normal : UncheckedIcon.Normal;
-                    leftBracketAppearance = LeftBracket.Normal;
-                    rightBracketAppearance = RightBracket.Normal;
-                }
-
-                control.Surface.Fill(appearance.Foreground, appearance.Background, null);
-
-                // If we are doing text, then print it otherwise we're just displaying the button part
-                if (control.Width >= 5)
-                {
-                    leftBracketAppearance.CopyAppearanceTo(control.Surface[0, 0]);
-                    iconAppearance.CopyAppearanceTo(control.Surface[1, 0]);
-                    rightBracketAppearance.CopyAppearanceTo(control.Surface[2, 0]);
-
-                    control.Surface.Print(4, 0, control.Text.Align(control.TextAlignment, control.Width - 4));
-                }
-                else
-                {
-                }
-
-                control.IsDirty = false;
+                appearance = Disabled;
+                iconAppearance = checkbox.IsSelected ? CheckedIcon.Disabled : UncheckedIcon.Disabled;
+                leftBracketAppearance = LeftBracket.Disabled;
+                rightBracketAppearance = RightBracket.Disabled;
             }
+
+            else if (Helpers.HasFlag(checkbox.State, ControlStates.MouseLeftButtonDown) ||
+                     Helpers.HasFlag(checkbox.State, ControlStates.MouseRightButtonDown))
+            {
+                appearance = MouseDown;
+                iconAppearance = checkbox.IsSelected ? CheckedIcon.MouseDown : UncheckedIcon.MouseDown;
+                leftBracketAppearance = LeftBracket.MouseDown;
+                rightBracketAppearance = RightBracket.MouseDown;
+            }
+
+            else if (Helpers.HasFlag(checkbox.State, ControlStates.MouseOver))
+            {
+                appearance = MouseOver;
+                iconAppearance = checkbox.IsSelected ? CheckedIcon.MouseOver : UncheckedIcon.MouseOver;
+                leftBracketAppearance = LeftBracket.MouseOver;
+                rightBracketAppearance = RightBracket.MouseOver;
+            }
+
+            else if (Helpers.HasFlag(checkbox.State, ControlStates.Focused))
+            {
+                appearance = Focused;
+                iconAppearance = checkbox.IsSelected ? CheckedIcon.Focused : UncheckedIcon.Focused;
+                leftBracketAppearance = LeftBracket.Focused;
+                rightBracketAppearance = RightBracket.Focused;
+            }
+
+            else
+            {
+                appearance = Normal;
+                iconAppearance = checkbox.IsSelected ? CheckedIcon.Normal : UncheckedIcon.Normal;
+                leftBracketAppearance = LeftBracket.Normal;
+                rightBracketAppearance = RightBracket.Normal;
+            }
+
+            checkbox.Surface.Fill(appearance.Foreground, appearance.Background, null);
+
+            // If we are doing text, then print it otherwise we're just displaying the button part
+            if (checkbox.Width >= 5)
+            {
+                leftBracketAppearance.CopyAppearanceTo(checkbox.Surface[0, 0]);
+                iconAppearance.CopyAppearanceTo(checkbox.Surface[1, 0]);
+                rightBracketAppearance.CopyAppearanceTo(checkbox.Surface[2, 0]);
+
+                checkbox.Surface.Print(4, 0, checkbox.Text.Align(checkbox.TextAlignment, checkbox.Width - 4));
+            }
+
+            checkbox.IsDirty = false;
         }
 
-        public override object Clone()
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
             return new CheckBoxTheme()
             {

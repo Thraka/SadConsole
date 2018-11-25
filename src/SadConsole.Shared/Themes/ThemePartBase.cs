@@ -52,14 +52,11 @@ namespace SadConsole.Themes
         /// <summary>
         /// Creates a new instance of the theme states object.
         /// </summary>
-        public ThemeStates()
+        public ThemeStates(Colors themeColors = null)
         {
-            Normal = Library.Default.Appearance_ControlNormal.Clone();
-            Disabled = Library.Default.Appearance_ControlDisabled.Clone();
-            MouseOver = Library.Default.Appearance_ControlOver.Clone();
-            MouseDown = Library.Default.Appearance_ControlMouseDown.Clone();
-            Selected = Library.Default.Appearance_ControlSelected.Clone();
-            Focused = Library.Default.Appearance_ControlFocused.Clone();
+            themeColors = themeColors ?? Library.Default.Colors;
+
+            RefreshTheme(themeColors);
         }
 
         /// <summary>
@@ -159,6 +156,20 @@ namespace SadConsole.Themes
                 Focused = Focused.Clone(),
             };
         }
+
+        /// <summary>
+        /// Reloads the theme values based on the colors provided.
+        /// </summary>
+        /// <param name="themeColors">The colors to create the theme with.</param>
+        public virtual void RefreshTheme(Colors themeColors)
+        {
+            Normal = themeColors.Appearance_ControlNormal.Clone();
+            Disabled = themeColors.Appearance_ControlDisabled.Clone();
+            MouseOver = themeColors.Appearance_ControlOver.Clone();
+            MouseDown = themeColors.Appearance_ControlMouseDown.Clone();
+            Selected = themeColors.Appearance_ControlSelected.Clone();
+            Focused = themeColors.Appearance_ControlFocused.Clone();
+        }
     }
 
 
@@ -166,32 +177,35 @@ namespace SadConsole.Themes
     /// The base class for a theme.
     /// </summary>
     [DataContract]
-    public abstract class ThemeBase<T> : ThemeStates
-        where T : ControlBase
+    public abstract class ThemeBase : ThemeStates
     {
+        /// <summary>
+        /// The colors to set for the theme. If <see langword="null"/>, then colors are pulled from the parent control or <see cref="Themes.Library.Default"/>.
+        /// </summary>
+        public Colors Colors { get; set; }
+
         /// <summary>
         /// Draws the control state to the control.
         /// </summary>
         /// <param name="control">The control to draw.</param>
-        /// <param name="hostSurface">The surface the control renders to.</param>
         /// <param name="time">The time since the last update frame call.</param>
-        public abstract void UpdateAndDraw(T control, System.TimeSpan time);
+        public abstract void UpdateAndDraw(ControlBase control, System.TimeSpan time);
 
         /// <summary>
         /// Called when the theme is attached to a control.
         /// </summary>
         /// <param name="control">The control that will use this theme instance.</param>
-        public abstract void Attached(T control);
+        public virtual void Attached(ControlBase control)
+        {
+            var colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
+
+            RefreshTheme(colors);
+        }
 
         /// <summary>
         /// Creates a new theme instance based on the current instance.
         /// </summary>
         /// <returns>A new theme instance.</returns>
-        public abstract object Clone();
-
-        /// <summary>
-        /// Defaults the base properties to the library.
-        /// </summary>
-        protected ThemeBase() { }
+        public new abstract ThemeBase Clone();
     }
 }

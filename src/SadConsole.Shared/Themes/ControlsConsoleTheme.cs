@@ -15,16 +15,18 @@ namespace SadConsole.Themes
         [DataMember]
         public Cell FillStyle;
 
-        public ControlsConsoleTheme()
+        public ControlsConsoleTheme(Colors themeColors)
         {
-            FillStyle = new Cell(Colors.ControlHostFore, Colors.ControlHostBack);
+            Refresh(themeColors);
         }
+
+        protected ControlsConsoleTheme() { }
 
         /// <summary>
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>The cloned object.</returns>
-        public object Clone()
+        public ControlsConsoleTheme Clone()
         {
             var newItem = new ControlsConsoleTheme();
             newItem.FillStyle = this.FillStyle.Clone();
@@ -36,6 +38,11 @@ namespace SadConsole.Themes
             hostSurface.DefaultForeground = FillStyle.Foreground;
             hostSurface.DefaultBackground = FillStyle.Background;
             hostSurface.Fill(hostSurface.DefaultForeground, hostSurface.DefaultBackground, FillStyle.Glyph, null);
+        }
+
+        public virtual void Refresh(Colors themeColors)
+        {
+            FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
         }
     }
 }

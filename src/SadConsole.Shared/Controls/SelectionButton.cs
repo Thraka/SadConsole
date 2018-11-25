@@ -27,7 +27,9 @@ namespace SadConsole.Controls
         /// Creates a new Selection Button with a specific width and height.
         /// </summary>
         /// <param name="width">The width of the selection button.</param>
-        public SelectionButton(int width, int height) : base(width, height) => Theme = (ButtonTheme)Library.Default.SelectionButtonTheme.Clone();
+        public SelectionButton(int width, int height) : base(width, height)
+        {
+        }
 
         /// <summary>
         /// Sets the next selection button and optionally sets the previous of the referenced selection to this button.

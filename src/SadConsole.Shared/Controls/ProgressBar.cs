@@ -19,12 +19,6 @@ namespace SadConsole.Controls
         /// </summary>
         public event EventHandler ProgressChanged;
 
-        /// <summary>
-        /// Overriding theme.
-        /// </summary>
-        [DataMember(Name = "Theme")]
-        protected ProgressBarTheme _theme;
-
         private Cell _currentAppearanceForeground;
         private Cell _currentAppearanceBackground;
 
@@ -63,21 +57,6 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember]
         protected VerticalAlignment verticalAlignment;
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public ProgressBarTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
 
         /// <summary>
         /// The horizontal orientation used when <see cref="IsHorizontal"/> is set to true.
@@ -179,7 +158,6 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -200,7 +178,6 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -212,12 +189,7 @@ namespace SadConsole.Controls
         {
             return false;
         }
-
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
+        
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {

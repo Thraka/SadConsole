@@ -22,13 +22,13 @@ namespace SadConsole.Controls
         /// <param name="height">Height of the control.</param>
         public DrawingSurface(int width, int height) : base(width, height)
         {
-            Surface = new BasicNoDraw(width, height);
             base.TabStop = false;
         }
 
         public override void Update(TimeSpan time)
         {
-            Surface.Update(time);
+            base.Update(time);
+            //Surface.Update(time);
         }
 
         [OnDeserializedAttribute]

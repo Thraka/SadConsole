@@ -28,12 +28,6 @@ namespace SadConsole.Controls
         protected static char[] _validNumbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
         /// <summary>
-        /// The theme of the control.
-        /// </summary>
-        [DataMember(Name="Theme")]
-        protected TextBoxTheme _theme;
-
-        /// <summary>
         /// The alignment of the text.
         /// </summary>
         [DataMember(Name = "TextAlignment")]
@@ -99,21 +93,6 @@ namespace SadConsole.Controls
         /// A temp holder for the text as it's being edited.
         /// </summary>
         public string EditingText { get; protected set; } = "";
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public  TextBoxTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
 
         /// <summary>
         /// The alignment of the caret.
@@ -205,7 +184,6 @@ namespace SadConsole.Controls
         public TextBox(int width)
             : base(width, 1)
         {
-            Theme = (TextBoxTheme) Library.Default.TextBoxTheme.Clone();
         }
         #endregion
 
@@ -480,13 +458,7 @@ namespace SadConsole.Controls
                 IsDirty = true;    
             }
         }
-
-        /// <inheritdoc />
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
+        
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {

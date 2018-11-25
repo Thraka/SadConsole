@@ -10,12 +10,11 @@ namespace SadConsole.Themes
     /// A theme for the input box control.
     /// </summary>
     [DataContract]
-    public class TextBoxTheme: ThemeBase<TextBox>
+    public class TextBoxTheme: ThemeBase
     {
         private int _oldCaretPosition;
         private ControlStates _oldState;
         private string _editingText;
-        private Cell _oldAppearance;
 
         /// <summary>
         /// The style to use for the carrot.
@@ -23,6 +22,9 @@ namespace SadConsole.Themes
         [DataMember]
         public SadConsole.Effects.ICellEffect CaretEffect;
 
+        /// <summary>
+        /// Creates a new theme used by the <see cref="TextBox"/>.
+        /// </summary>
         public TextBoxTheme()
         {
             CaretEffect = new Effects.BlinkGlyph()
@@ -30,61 +32,76 @@ namespace SadConsole.Themes
                 GlyphIndex = 95,
                 BlinkSpeed = 0.4f
             };
-
-            Normal = new SadConsole.Cell(Colors.Text, Colors.GrayDark);
         }
 
-        public override void Attached(TextBox control)
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
         {
             control.Surface = new BasicNoDraw(control.Width, control.Height);
+
+            base.Attached(control);
         }
 
-        public override void UpdateAndDraw(TextBox control, TimeSpan time)
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
         {
-            if (control.Surface.Effects.Count != 0)
+            base.RefreshTheme(themeColors);
+
+            Normal = new SadConsole.Cell(themeColors.Text, themeColors.GrayDark);
+        }
+
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
+        {
+            if (!(control is TextBox textbox)) return;
+
+            if (textbox.Surface.Effects.Count != 0)
             {
-                control.Surface.Update(time);
-                control.IsDirty = true;
+                textbox.Surface.Update(time);
+                textbox.IsDirty = true;
             }
 
-            if (!control.IsDirty) return;
+            if (!textbox.IsDirty) return;
 
-            Cell appearance = GetStateAppearance(control.State);
+            Cell appearance = GetStateAppearance(textbox.State);
 
-            if (control.IsFocused && !control.DisableKeyboard)
+            if (textbox.IsFocused && !textbox.DisableKeyboard)
             {
-                if (!control.IsCaretVisible)
+                if (!textbox.IsCaretVisible)
                 {
-                    _oldCaretPosition = control.CaretPosition;
-                    _oldState = control.State;
-                    _editingText = control.EditingText;
-                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
-                    control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
-                    control.IsCaretVisible = true;
+                    _oldCaretPosition = textbox.CaretPosition;
+                    _oldState = textbox.State;
+                    _editingText = textbox.EditingText;
+                    textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
+                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    textbox.Surface.SetEffect(textbox.Surface[textbox.CaretPosition - textbox.LeftDrawOffset, 0], CaretEffect);
+                    textbox.IsCaretVisible = true;
                 }
 
-                else if (_oldCaretPosition != control.CaretPosition || _oldState != control.State)
+                else if (_oldCaretPosition != textbox.CaretPosition || _oldState != textbox.State)
                 {
-                    control.Surface.Effects.RemoveAll();
-                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
-                    control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
-                    _oldCaretPosition = control.CaretPosition;
-                    _oldState = control.State;
+                    textbox.Surface.Effects.RemoveAll();
+                    textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
+                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    textbox.Surface.SetEffect(textbox.Surface[textbox.CaretPosition - textbox.LeftDrawOffset, 0], CaretEffect);
+                    _oldCaretPosition = textbox.CaretPosition;
+                    _oldState = textbox.State;
                 }
             }
             else
             {
-                control.Surface.Effects.RemoveAll();
-                control.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
-                control.IsCaretVisible = false;
-                control.Surface.Print(0, 0, control.Text.Align(control.TextAlignment, control.Width));
+                textbox.Surface.Effects.RemoveAll();
+                textbox.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
+                textbox.IsCaretVisible = false;
+                textbox.Surface.Print(0, 0, textbox.Text.Align(textbox.TextAlignment, textbox.Width));
             }
 
-            control.IsDirty = false;
+            textbox.IsDirty = false;
         }
-        public override object Clone()
+
+
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
             return new TextBoxTheme()
             {

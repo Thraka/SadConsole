@@ -36,7 +36,8 @@ namespace SadConsole
         private bool wasFocusedBeforeCapture;
         private bool exclusiveBeforeCapture;
 
-        private SadConsole.Themes.ControlsConsoleTheme _theme;
+        //private SadConsole.Themes.ControlsConsoleTheme _theme;
+        private Library _theme; 
 
         /// <summary>
         /// When set to false, uses the static <see cref="ControlsConsole.KeyboardState"/> keyboard instead of <see cref="Global.KeyboardState"/>
@@ -48,12 +49,18 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the theme of the window.
         /// </summary>
-        public SadConsole.Themes.ControlsConsoleTheme Theme
+        public Library Theme
         {
-            get => _theme;
+            get => _theme ?? Themes.Library.Default;
             set
             {
+                if (value == null) throw new ArgumentNullException(nameof(Theme), "Theme cannot be set to null.");
+
                 _theme = value;
+
+                foreach (var control in Controls)
+                    control.RefreshParentTheme();
+
                 IsDirty = true;
                 Invalidate();
             }
@@ -130,7 +137,6 @@ namespace SadConsole
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
             Renderer = new Renderers.ControlsConsole();
-            _theme = (ControlsConsoleTheme)Library.Default.ControlsConsoleTheme.Clone();
             Invalidate();
         }
         #endregion
@@ -146,6 +152,7 @@ namespace SadConsole
 
             control.Parent = this;
             control.TabIndex = _controls.Count - 1;
+
 
             if (_controls.Count == 1)
                 FocusedControl = control;
@@ -402,7 +409,7 @@ namespace SadConsole
 
         public virtual void Invalidate()
         {
-            Theme.Draw(this, this);
+            Theme.ControlsConsoleTheme.Draw(this, this);
 
             IsDirty = true;
 
@@ -512,7 +519,8 @@ namespace SadConsole
 
             return false;
         }
-
+        
+        /// <inheritdoc />
         protected override void OnMouseExit(Input.MouseConsoleState state)
         {
             base.OnMouseExit(state);

@@ -96,24 +96,6 @@ namespace SadConsole.Controls
     [DataContract]
     public class Button: ButtonBase
     {
-        private ButtonTheme _theme;
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public ButtonTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
-
-
         /// <summary>
         /// Creates an instance of the button control with the specified width.
         /// </summary>
@@ -122,18 +104,8 @@ namespace SadConsole.Controls
         public Button(int width, int height)
             : base(width, height)
         {
-            Theme = (ButtonTheme)Library.Default.ButtonTheme.Clone();
         }
         
-        /// <summary>
-        /// Redraws the control if it is dirty.
-        /// </summary>
-        /// <param name="time">The duration of this update frame.</param>
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {

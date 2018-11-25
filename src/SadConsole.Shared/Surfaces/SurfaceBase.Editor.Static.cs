@@ -45,6 +45,18 @@ namespace SadConsole.Surfaces
             001,      001,
                  001};
 
+        /// <summary>
+        /// Glyph indexes for an empty line 0. 
+        /// </summary>
+        public static readonly int[] ConnectedLineEmpty =
+          { 0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+
+               0,
+            0,    0,
+               0};
+
 
         /// <summary>
         /// Returns a value that indicates a line style array is not null and contains the required number of elements.

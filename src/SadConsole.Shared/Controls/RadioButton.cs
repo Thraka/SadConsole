@@ -20,8 +20,6 @@ namespace SadConsole.Controls
 
         [DataMember(Name="Group")]
         protected string _groupName = "";
-        [DataMember(Name = "Theme")]
-        protected RadioButtonTheme _theme;
         [DataMember(Name = "Text")]
         protected string _text;
         [DataMember(Name = "TextAlignment")]
@@ -31,21 +29,6 @@ namespace SadConsole.Controls
         protected bool _isMouseDown;
         protected Cell _currentAppearanceButton;
         protected Cell _currentAppearanceText;
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public RadioButtonTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
 
         /// <summary>
         /// The text displayed on the control.
@@ -138,7 +121,6 @@ namespace SadConsole.Controls
         /// <param name="height">Height of the control.</param>
         public RadioButton(int width, int height): base(width, height)
         {
-            Theme = (RadioButtonTheme)Library.Default.RadioButtonTheme.Clone();
         }
         
         protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
@@ -177,12 +159,7 @@ namespace SadConsole.Controls
 
             return false;
         }
-
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
+        
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
