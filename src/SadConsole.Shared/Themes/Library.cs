@@ -9,7 +9,6 @@ using SadConsole.Surfaces;
 
 namespace SadConsole.Themes
 {
-
     /// <summary>
     /// The library of themes. Holds the themes of all controls.
     /// </summary>
@@ -20,6 +19,12 @@ namespace SadConsole.Themes
         /// If a control does not specify its own theme, the theme from this property will be used.
         /// </summary>
         public static Library Default { get; set; }
+
+        /// <summary>
+        /// Colors for the theme library.
+        /// </summary>
+        [DataMember]
+        public Colors Colors { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="SadConsole.Controls.Button"/> control.
@@ -68,6 +73,12 @@ namespace SadConsole.Themes
         /// </summary>
         [DataMember]
         public ProgressBarTheme ProgressBarTheme;
+        
+        /// <summary>
+        /// Theme for <see cref="DrawingSurface"/>.
+        /// </summary>
+        [DataMember]
+        public DrawingSurfaceTheme DrawingSurfaceTheme;
 
         /// <summary>
         /// Theme for <see cref="Consoles.ControlsConsole"/>.
@@ -75,21 +86,13 @@ namespace SadConsole.Themes
         [DataMember]
         public ControlsConsoleTheme ControlsConsoleTheme;
 
-
         /// <summary>
         /// Theme for the <see cref="SadConsole.Consoles.Window"/> control.
         /// </summary>
         [DataMember]
         public WindowTheme WindowTheme;
 
-        public Cell Appearance_ControlNormal;
-        public Cell Appearance_ControlDisabled;
-        public Cell Appearance_ControlOver;
-        public Cell Appearance_ControlSelected;
-        public Cell Appearance_ControlMouseDown;
-        public Cell Appearance_ControlFocused;
-
-
+        
         static Library()
         {
             if (Default == null)
@@ -101,17 +104,18 @@ namespace SadConsole.Themes
 
         private void Init()
         {
-            ControlsConsoleTheme = new ControlsConsoleTheme();
-            WindowTheme = new WindowTheme();
+            ControlsConsoleTheme = new ControlsConsoleTheme(Colors);
+            WindowTheme = new WindowTheme(Colors);
 
             ScrollBarTheme = new ScrollBarTheme();
             ButtonTheme = new ButtonTheme();
             CheckBoxTheme = new CheckBoxTheme();
-            ListBoxTheme = new ListBoxTheme();
+            ListBoxTheme = new ListBoxTheme(new ScrollBarTheme(), new ListBoxItemTheme(Colors));
             ProgressBarTheme = new ProgressBarTheme();
             RadioButtonTheme = new RadioButtonTheme();
             TextBoxTheme = new TextBoxTheme();
             SelectionButtonTheme = new ButtonTheme();
+            DrawingSurfaceTheme = new DrawingSurfaceTheme();
         }
 
 
@@ -120,12 +124,74 @@ namespace SadConsole.Themes
         /// </summary>
         public Library()
         {
-            Appearance_ControlNormal = new Cell(Colors.Text, Colors.ControlBack);
-            Appearance_ControlDisabled = new Cell(Colors.TextLight, Colors.ControlBackDark);
-            Appearance_ControlOver = new Cell(Colors.TextSelectedDark, Colors.ControlBackSelected);
-            Appearance_ControlSelected = new Cell(Colors.TextSelected, Colors.ControlBackSelected);
-            Appearance_ControlMouseDown = new Cell(Appearance_ControlSelected.Background, Appearance_ControlSelected.Foreground);
-            Appearance_ControlFocused = new Cell(Colors.Cyan, Colors.ControlBackLight);
+            Colors = new Colors();
+        }
+
+        /// <summary>
+        /// Gets a new control theme based on the control passed.
+        /// </summary>
+        /// <param name="control">The control instance</param>
+        /// <returns>A theme that is associated with the control.</returns>
+        public virtual ThemeBase GetControlTheme(ControlBase control)
+        {
+            switch (control)
+            {
+                case SelectionButton c:
+                    return SelectionButtonTheme.Clone();
+                    
+                case ScrollBar c:
+                    return ScrollBarTheme.Clone();
+
+                case RadioButton c:
+                    return RadioButtonTheme.Clone();
+
+                case ListBox c:
+                    return ListBoxTheme.Clone();
+
+                case CheckBox c:
+                    return CheckBoxTheme.Clone();
+
+                case TextBox c:
+                    return TextBoxTheme.Clone();
+
+                case ProgressBar c:
+                    return ProgressBarTheme.Clone();
+
+                case DrawingSurface c:
+                    return DrawingSurfaceTheme.Clone();
+
+                case Button c:
+                    return ButtonTheme.Clone();
+
+                default:
+                    throw new System.Exception("Control does not have associated theme.");
+            }
+        }
+
+        /// <summary>
+        /// Clonse this library.
+        /// </summary>
+        /// <returns>A new instance of a library.</returns>
+        public virtual Library Clone()
+        {
+            return new Library()
+            {
+                Colors = Colors.Clone(),
+
+                ButtonTheme = (ButtonTheme) ButtonTheme.Clone(),
+                SelectionButtonTheme = (ButtonTheme) SelectionButtonTheme.Clone(),
+                ScrollBarTheme = (ScrollBarTheme) ScrollBarTheme.Clone(),
+                RadioButtonTheme = (RadioButtonTheme) RadioButtonTheme.Clone(),
+                ListBoxTheme = (ListBoxTheme) ListBoxTheme.Clone(),
+                CheckBoxTheme = (CheckBoxTheme) CheckBoxTheme.Clone(),
+                TextBoxTheme = (TextBoxTheme) TextBoxTheme.Clone(),
+                ProgressBarTheme = (ProgressBarTheme) ProgressBarTheme.Clone(),
+                DrawingSurfaceTheme = (DrawingSurfaceTheme) DrawingSurfaceTheme.Clone(),
+
+                ControlsConsoleTheme = ControlsConsoleTheme.Clone(),
+                WindowTheme = WindowTheme.Clone(),
+            };
         }
     }
 }
+

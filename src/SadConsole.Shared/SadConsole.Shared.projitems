@@ -143,6 +143,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Colors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ControlsConsoleTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Themes\DrawingSurfaceTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\TextBoxTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\Library.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ListBoxTheme.cs" />

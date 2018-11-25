@@ -17,12 +17,6 @@ namespace SadConsole.Controls
 
         private bool _initialized;
 
-        [DataMember(Name = "Theme")]
-        protected ScrollBarTheme _theme;
-        //protected Cell _currentAppearanceEnds;
-        //protected Cell _currentAppearanceBar;
-        //protected Cell _currentAppearanceSlider;
-
         protected int _topOrLeftCharacter;
         protected int _bottomOrRightCharacter;
         protected int _sliderCharacter;
@@ -117,21 +111,6 @@ namespace SadConsole.Controls
             get => _valueStep;
             set => _valueStep = value;
         }
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public ScrollBarTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
         
         public static ScrollBar Create(Orientation orientation, int size)
         {
@@ -147,8 +126,6 @@ namespace SadConsole.Controls
 
         private ScrollBar(Orientation orientation, int width, int height): base(width, height)
         {
-            Theme = (ScrollBarTheme) Library.Default.ScrollBarTheme.Clone();
-
             _initialized = true;
             Orientation = orientation;
 
@@ -367,13 +344,7 @@ namespace SadConsole.Controls
                 }
             }
         }
-
-        /// <inheritdoc />
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
+        
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {

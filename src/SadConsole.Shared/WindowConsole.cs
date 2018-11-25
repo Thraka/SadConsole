@@ -30,7 +30,7 @@ namespace SadConsole
         protected string title;
 
         [DataMember(Name="Theme")]
-        protected SadConsole.Themes.WindowTheme _theme;
+        protected Library _theme;
         
         [DataMember(Name="TitleAlignment")]
         protected HorizontalAlignment titleAlignment;
@@ -102,9 +102,9 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the theme of the window.
         /// </summary>
-        public new SadConsole.Themes.WindowTheme Theme
+        public new Library Theme
         {
-            get => _theme;
+            get => _theme ?? Library.Default;
             set
             {
                 _theme = value;
@@ -118,7 +118,6 @@ namespace SadConsole
             : base(width, height)
         {
             IsVisible = false;
-            _theme = (WindowTheme)Themes.Library.Default.WindowTheme.Clone();
             Renderer = new SadConsole.Renderers.Window();
         }
         #endregion
@@ -138,10 +137,10 @@ namespace SadConsole
         {
             //TODO: Perf - cache reference?
             ((SadConsole.Renderers.Window)Renderer).IsModal = isModal;
-            ((SadConsole.Renderers.Window)Renderer).ModalTint = Theme.ModalTint;
+            ((SadConsole.Renderers.Window)Renderer).ModalTint = Theme.WindowTheme.ModalTint;
 
-            if (IsModal && Theme.ModalTint.A != 0)
-                Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), Theme.ModalTint));
+            if (IsModal && Theme.WindowTheme.ModalTint.A != 0)
+                Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), Theme.WindowTheme.ModalTint));
 
             base.Draw(drawTime);
         }
@@ -149,7 +148,7 @@ namespace SadConsole
         /// <inheritdoc />
         public new virtual void Invalidate()
         {
-            Theme.Draw(this, this);
+            Theme.WindowTheme.Draw(this, this);
             IsDirty = true;
 
             foreach (var control in _controls)
@@ -163,8 +162,7 @@ namespace SadConsole
         /// <returns></returns>
         public override bool ProcessMouse(Input.MouseConsoleState state)
         { 
-            
-            if (Theme.TitleAreaLength != 0 && IsVisible)
+            if (Theme.WindowTheme.TitleAreaLength != 0 && IsVisible)
             {
                 if (isDragging && state.Mouse.LeftButtonDown)
                 {
@@ -187,7 +185,7 @@ namespace SadConsole
                 // Left button freshly down and we're not already dragging, check to see if in title
                 if (state.IsOnConsole && !isDragging && !previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
                 {
-                    if (state.CellPosition.Y == Theme.TitleAreaY && state.CellPosition.X >= Theme.TitleAreaX && state.CellPosition.X < Theme.TitleAreaX + Theme.TitleAreaLength)
+                    if (state.CellPosition.Y == Theme.WindowTheme.TitleAreaY && state.CellPosition.X >= Theme.WindowTheme.TitleAreaX && state.CellPosition.X < Theme.WindowTheme.TitleAreaX + Theme.WindowTheme.TitleAreaLength)
                     {
                         prevousMouseExclusiveDrag = IsExclusiveMouse;
 
@@ -223,8 +221,8 @@ namespace SadConsole
                 this.Hide();
                 return true;
             }
-            else
-                return base.ProcessKeyboard(info);
+            
+            return base.ProcessKeyboard(info);
         }
         #endregion
 

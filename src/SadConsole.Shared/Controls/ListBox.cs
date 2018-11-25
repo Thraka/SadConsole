@@ -31,8 +31,6 @@ namespace SadConsole.Controls
         [DataMember(Name="SelectedIndex")]
         protected int selectedIndex;
 
-        [DataMember(Name="Theme")]
-        protected ListBoxTheme _theme;
         protected object selectedItem;
         [DataMember(Name = "ShowSlider")]
         //[DataMember(Name = "BorderLines")]
@@ -55,8 +53,8 @@ namespace SadConsole.Controls
         /// <summary>
         /// Used in rendering.
         /// </summary>
-        [DataMember(Name = "Slider")]
-        public ScrollBar Slider { get; private set; }
+        [DataMember(Name = "ScrollBar")]
+        public ScrollBar ScrollBar { get; private set; }
 
         /// <summary>
         /// Used in rendering.
@@ -88,21 +86,7 @@ namespace SadConsole.Controls
                 IsDirty = true;
             }
         }
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public virtual ListBoxTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
+        
 
         [DataMember]
         public ObservableCollection<object> Items { get; private set; }
@@ -194,7 +178,7 @@ namespace SadConsole.Controls
         }
         #endregion
 
-        protected override void OnParentChanged() => Slider.Parent = this.Parent;
+        protected override void OnParentChanged() => ScrollBar.Parent = this.Parent;
 
         private void _slider_ValueChanged(object sender, EventArgs e) => this.IsDirty = true;
 
@@ -202,22 +186,28 @@ namespace SadConsole.Controls
 
         protected virtual void OnItemAction() => SelectedItemExecuted?.Invoke(this, new SelectedItemEventArgs(selectedItem));
 
-        protected override void OnPositionChanged() => Slider.Position = Position + new Point(Width - 1, 0);
+        protected override void OnPositionChanged() => ScrollBar.Position = Position + new Point(Width - 1, 0);
 
         protected void SetupSlider()
         {
             if (!initialized) return;
-            Theme = (ListBoxTheme)Library.Default.ListBoxTheme.Clone();
             //_slider.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-            Slider = ScrollBar.Create(Orientation.Vertical, Height);
-            Slider.ValueChanged += new EventHandler(_slider_ValueChanged);
-            Slider.IsVisible = false;
-            Slider.Theme = this.Theme.ScrollBarTheme;
-            Slider.Position = Position + new Point(Width - 1, 0);
-
+            ScrollBar = ScrollBar.Create(Orientation.Vertical, Height);
+            ScrollBar.ValueChanged += new EventHandler(_slider_ValueChanged);
+            ScrollBar.IsVisible = false;
+            ScrollBar.Position = Position + new Point(Width - 1, 0);
+            
             DetermineState();
         }
-        
+
+        protected override void OnThemeChanged()
+        {
+            if (ActiveTheme is ListBoxTheme theme)
+                ScrollBar.Theme = theme.ScrollBarTheme;
+            else
+                ScrollBar.Theme = null;
+        }
+
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
@@ -231,7 +221,7 @@ namespace SadConsole.Controls
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
             {
-                Slider.Value = 0;
+                ScrollBar.Value = 0;
             }
 
             if (SelectedItem != null && !Items.Contains(selectedItem))
@@ -251,12 +241,12 @@ namespace SadConsole.Controls
 
             if (sliderItems > 0)
             {
-                Slider.Maximum = sliderItems;
+                ScrollBar.Maximum = sliderItems;
                 IsSliderVisible = true;
             }
             else
             {
-                Slider.Maximum = 0;
+                ScrollBar.Maximum = 0;
                 IsSliderVisible = false;
             }
         }
@@ -273,8 +263,8 @@ namespace SadConsole.Controls
                     {
                         SelectedItem = Items[index - 1];
 
-                        if (index <= Slider.Value)
-                            Slider.Value -= 1;
+                        if (index <= ScrollBar.Value)
+                            ScrollBar.Value -= 1;
 
                     }
                 }
@@ -289,8 +279,8 @@ namespace SadConsole.Controls
                     {
                         SelectedItem = Items[index + 1];
 
-                        if (index + 1 >= Slider.Value + (Height - 2))
-                            Slider.Value += 1;
+                        if (index + 1 >= ScrollBar.Value + (Height - 2))
+                            ScrollBar.Value += 1;
 
                     }
                 }
@@ -324,7 +314,7 @@ namespace SadConsole.Controls
             {
                 if (IsSliderVisible)
                 {
-                    RelativeIndexMouseOver = mouseControlPosition.Y - rowOffset + Slider.Value;
+                    RelativeIndexMouseOver = mouseControlPosition.Y - rowOffset + ScrollBar.Value;
                 }
                 else if (mouseControlPosition.Y <= Items.Count - rowOffsetReverse)
                 {
@@ -359,7 +349,7 @@ namespace SadConsole.Controls
 
                 if (IsSliderVisible)
                 {
-                    selectedIndex = mouseControlPosition.Y - rowOffset + Slider.Value;
+                    selectedIndex = mouseControlPosition.Y - rowOffset + ScrollBar.Value;
                     SelectedItem = Items[selectedIndex];
                 }
                 else if (mouseControlPosition.Y <= Items.Count - rowOffsetReverse)
@@ -389,7 +379,7 @@ namespace SadConsole.Controls
 
                     if (mouseControlPosition.X == SliderRenderLocation.X && IsSliderVisible)
                     {
-                        Slider.ProcessMouse(state);
+                        ScrollBar.ProcessMouse(state);
                     }
                 }
             }
@@ -405,18 +395,13 @@ namespace SadConsole.Controls
             else
                 selectedIndex = -1;
         }
-
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
+        
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
             initialized = true;
 
-            Slider.ValueChanged += new EventHandler(_slider_ValueChanged);
+            ScrollBar.ValueChanged += new EventHandler(_slider_ValueChanged);
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
 
             if (selectedIndex != -1)
