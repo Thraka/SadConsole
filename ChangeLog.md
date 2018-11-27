@@ -1,4 +1,11 @@
-﻿## 11/19/2018 V7.2.0
+﻿## 11/XX/2018 V8.0
+- Overhaul of the theme system.
+- Changed Listbox.Slider to Listbox.Scrollbar. Also changed any property that used the word Slider to ScrollBar
+- Window messagebox and prompts have a library parameter to theme. If not specified, uses the default theme.
+- [Fixed #165] Window stealing mouse focus from scrollbar (thanks VGA256)
+- [Fixed #164] Controls should be aware of what theme is being used 
+
+## 11/19/2018 V7.2.0
 
 - ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
 - Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
