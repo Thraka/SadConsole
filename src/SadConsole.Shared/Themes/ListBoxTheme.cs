@@ -59,6 +59,8 @@ namespace SadConsole.Themes
         {
             control.Surface = new BasicNoDraw(control.Width, control.Height);
 
+            ((ListBox) control).ScrollBar.Theme = ScrollBarTheme;
+
             base.Attached(control);
         }
 
@@ -67,14 +69,12 @@ namespace SadConsole.Themes
         {
             base.RefreshTheme(themeColors);
 
-            ItemTheme = new ListBoxItemTheme(themeColors);
-
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
 
             DrawBorder = true;
-            ScrollBarTheme = (ScrollBarTheme)Library.Default.ScrollBarTheme?.Clone() ?? new ScrollBarTheme();
-            ItemTheme = new ListBoxItemTheme(themeColors);
+            ScrollBarTheme?.RefreshTheme(themeColors);
+            ItemTheme?.RefreshTheme(themeColors);
             BorderTheme = new ThemeStates(themeColors);
             BorderTheme.SetForeground(Normal.Foreground);
             BorderTheme.SetBackground(Normal.Background);
@@ -121,7 +121,7 @@ namespace SadConsole.Themes
                 listbox.Surface.Fill(borderAppearance.Foreground, borderAppearance.Background, 0, null);
             }
 
-            int offset = listbox.IsSliderVisible ? listbox.ScrollBar.Value : 0;
+            int offset = listbox.IsScrollBarVisible ? listbox.ScrollBar.Value : 0;
             for (int i = 0; i < endingRow; i++)
             {
                 var itemIndexRelative = i + offset;
@@ -148,16 +148,16 @@ namespace SadConsole.Themes
                 }
             }
 
-            if (listbox.IsSliderVisible)
+            if (listbox.IsScrollBarVisible)
             {
                 listbox.ScrollBar.IsDirty = true;
                 listbox.ScrollBar.Update(time);
-                var y = listbox.SliderRenderLocation.Y;
+                var y = listbox.ScrollBarRenderLocation.Y;
 
                 for (var ycell = 0; ycell < listbox.ScrollBar.Height; ycell++)
                 {
-                    listbox.Surface.SetGlyph(listbox.SliderRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell].Glyph);
-                    listbox.Surface.SetCellAppearance(listbox.SliderRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell]);
+                    listbox.Surface.SetGlyph(listbox.ScrollBarRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell].Glyph);
+                    listbox.Surface.SetCellAppearance(listbox.ScrollBarRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell]);
                     y++;
                 }
             }
@@ -171,7 +171,7 @@ namespace SadConsole.Themes
         {
             return new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone(), (ListBoxItemTheme)ItemTheme.Clone())
             {
-                Colors = Colors.Clone(),
+                Colors = Colors?.Clone(),
                 Normal = Normal.Clone(),
                 Disabled = Disabled.Clone(),
                 MouseOver = MouseOver.Clone(),

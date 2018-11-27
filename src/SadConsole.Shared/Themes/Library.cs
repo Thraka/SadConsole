@@ -81,13 +81,13 @@ namespace SadConsole.Themes
         public DrawingSurfaceTheme DrawingSurfaceTheme;
 
         /// <summary>
-        /// Theme for <see cref="Consoles.ControlsConsole"/>.
+        /// Theme for <see cref="ControlsConsole"/>.
         /// </summary>
         [DataMember]
         public ControlsConsoleTheme ControlsConsoleTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Consoles.Window"/> control.
+        /// Theme for the <see cref="Window"/> control.
         /// </summary>
         [DataMember]
         public WindowTheme WindowTheme;

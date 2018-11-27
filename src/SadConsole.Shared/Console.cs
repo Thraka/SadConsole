@@ -56,7 +56,6 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets this console as the focused console for input.
         /// </summary>
-        /// <remarks>If the <see cref="Console.ActiveConsoles.Console"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
         [DataMember]
         public bool IsFocused
         {

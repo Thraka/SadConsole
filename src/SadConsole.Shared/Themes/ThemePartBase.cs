@@ -2,11 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Controls;
 using SadConsole.Surfaces;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Themes
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Has the basic appearances of each control state.
     /// </summary>
