@@ -37,7 +37,10 @@ namespace SadConsole.Themes
         public override void Attached(ControlBase control)
         {
             control.Surface = new BasicNoDraw(control.Width, control.Height);
+
+            base.Attached(control);
         }
+
 
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors)

@@ -30,9 +30,6 @@ namespace SadConsole
 
         [DataMember]
         private ControlBase _focusedControl;
-
-        private ControlBase _capturedControl;
-
         private bool wasFocusedBeforeCapture;
         private bool exclusiveBeforeCapture;
 
@@ -74,7 +71,7 @@ namespace SadConsole
         /// <summary>
         /// Gets the control currently capturing mouse events.
         /// </summary>
-        public ControlBase CapturedControl => _capturedControl;
+        public ControlBase CapturedControl { get; private set; }
 
         /// <summary>
         /// Gets or sets the control that has keyboard focus.
@@ -409,6 +406,7 @@ namespace SadConsole
 
         public virtual void Invalidate()
         {
+            Theme.ControlsConsoleTheme.Refresh(Theme.Colors);
             Theme.ControlsConsoleTheme.Draw(this, this);
 
             IsDirty = true;
@@ -502,8 +500,8 @@ namespace SadConsole
         {
             if (base.ProcessMouse(state) || IsExclusiveMouse)
             {
-                if (_capturedControl != null)
-                    _capturedControl.ProcessMouse(state);
+                if (CapturedControl != null)
+                    CapturedControl.ProcessMouse(state);
 
                 else
                 {
@@ -550,7 +548,7 @@ namespace SadConsole
 
             exclusiveBeforeCapture = IsExclusiveMouse;
             IsExclusiveMouse = true;
-            _capturedControl = control;
+            CapturedControl = control;
         }
 
         /// <summary>
@@ -562,7 +560,7 @@ namespace SadConsole
                 Global.FocusedConsoles.Pop(this);
 
             IsExclusiveMouse = exclusiveBeforeCapture;
-            _capturedControl = null;
+            CapturedControl = null;
         }
 
         /// <summary>

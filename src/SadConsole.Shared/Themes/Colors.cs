@@ -81,6 +81,11 @@ namespace SadConsole.Themes
             TextLight = Gray;
             TextDark = Green;
 
+            RebuildAppearances();
+        }
+
+        public void RebuildAppearances()
+        {
             ControlBack = MenuBack;
             ControlBackLight = (ControlBack * 1.3f).FillAlpha();
             ControlBackSelected = GreenDark;

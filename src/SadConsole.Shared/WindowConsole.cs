@@ -148,6 +148,7 @@ namespace SadConsole
         /// <inheritdoc />
         public new virtual void Invalidate()
         {
+            Theme.WindowTheme.Refresh(Theme.Colors);
             Theme.WindowTheme.Draw(this, this);
             IsDirty = true;
 

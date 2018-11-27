@@ -264,7 +264,6 @@ namespace SadConsole.Controls
             UseMouse = true;
             UseKeyboard = true;
             Bounds = new Rectangle(0, 0, width, height);
-            //ActiveTheme = Themes.Library.Default.GetControlTheme(this);
         }
         #endregion
 
@@ -284,13 +283,24 @@ namespace SadConsole.Controls
         /// </summary>
         protected virtual void OnThemeChanged() { }
 
+        /// <summary>
+        /// Gets the latest theme from the parent's library unless a theme has been explicitly set.
+        /// </summary>
         public void RefreshParentTheme()
         {
             if (parent == null) return;
-            if (IsCustomTheme) return;
 
-            ActiveTheme = parent.Theme.GetControlTheme(this);
-            ActiveTheme?.Attached(this);
+            if (IsCustomTheme && ActiveTheme != null)
+            {
+                var colors = ActiveTheme.Colors ?? Parent?.Theme.Colors ?? Themes.Library.Default.Colors;
+
+                ActiveTheme.RefreshTheme(colors);
+            }
+            else
+            {
+                ActiveTheme = parent.Theme.GetControlTheme(this);
+                ActiveTheme?.Attached(this);
+            }
         }
 
 
