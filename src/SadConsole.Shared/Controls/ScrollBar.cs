@@ -221,61 +221,60 @@ namespace SadConsole.Controls
                 }
                 else if (Parent.CapturedControl == this)
                 {
+                    if (!state.Mouse.LeftButtonDown)
+                    {
+                        Parent.ReleaseControl();
+                        return false;
+                    }
+
                     if (state.CellPosition.X >= this.Position.X - 2 && state.CellPosition.X < this.Position.X + Width + 2 &&
                         state.CellPosition.Y >= this.Position.Y - 3 && state.CellPosition.Y < this.Position.Y + Height + 3)
                     {
-                        if (state.Mouse.LeftButtonDown)
+
+                        if (Orientation == Orientation.Horizontal)
                         {
-                            if (Orientation == Orientation.Horizontal)
+                            //if (mouseControlPosition.Y == 0)
+                            //{
+                            //    if (mouseControlPosition.X == _currentSliderPosition + 1)
+                            //        Value -= Step;
+                            //}
+
+
+                            if (mouseControlPosition.X >= 1 && mouseControlPosition.X <= SliderBarSize)
                             {
-                                //if (mouseControlPosition.Y == 0)
-                                //{
-                                //    if (mouseControlPosition.X == _currentSliderPosition + 1)
-                                //        Value -= Step;
-                                //}
 
+                                CurrentSliderPosition = mouseControlPosition.X - 1;
 
-                                if (mouseControlPosition.X >= 1 && mouseControlPosition.X <= SliderBarSize)
+                                if (_sliderPositionValues[CurrentSliderPosition] != -1)
                                 {
+                                    _value = _sliderPositionValues[CurrentSliderPosition];
+                                    if (ValueChanged != null)
+                                        ValueChanged.Invoke(this, EventArgs.Empty);
 
-                                    CurrentSliderPosition = mouseControlPosition.X - 1;
-
-                                    if (_sliderPositionValues[CurrentSliderPosition] != -1)
-                                    {
-                                        _value = _sliderPositionValues[CurrentSliderPosition];
-                                        if (ValueChanged != null)
-                                            ValueChanged.Invoke(this, EventArgs.Empty);
-
-                                        this.IsDirty = true;
-                                    }
-                                }
-
-                            }
-                            else
-                            {
-                                if (mouseControlPosition.Y >= 1 && mouseControlPosition.Y <= SliderBarSize)
-                                {
-
-                                    CurrentSliderPosition = mouseControlPosition.Y - 1;
-
-                                    if (_sliderPositionValues[CurrentSliderPosition] != -1)
-                                    {
-                                        _value = _sliderPositionValues[CurrentSliderPosition];
-                                        if (ValueChanged != null)
-                                            ValueChanged.Invoke(this, EventArgs.Empty);
-
-                                        this.IsDirty = true;
-                                    }
+                                    this.IsDirty = true;
                                 }
                             }
 
-                            return true;
                         }
                         else
-                            Parent.ReleaseControl();
+                        {
+                            if (mouseControlPosition.Y >= 1 && mouseControlPosition.Y <= SliderBarSize)
+                            {
 
-                        return false;
+                                CurrentSliderPosition = mouseControlPosition.Y - 1;
 
+                                if (_sliderPositionValues[CurrentSliderPosition] != -1)
+                                {
+                                    _value = _sliderPositionValues[CurrentSliderPosition];
+                                    if (ValueChanged != null)
+                                        ValueChanged.Invoke(this, EventArgs.Empty);
+
+                                    this.IsDirty = true;
+                                }
+                            }
+                        }
+
+                        return true;
                     }
                 }
                 
