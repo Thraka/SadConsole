@@ -112,20 +112,18 @@ namespace SadConsole.Controls
             set => _valueStep = value;
         }
         
-        public static ScrollBar Create(Orientation orientation, int size)
+        /// <summary>
+        /// Creates a new ScrollBar control.
+        /// </summary>
+        /// <param name="orientation">Sets the control to either horizontal or vertical.</param>
+        /// <param name="size">The height or width of the control.</param>
+        /// <returns>The new control instance.</returns>
+        public ScrollBar(Orientation orientation, int size): base(orientation == Orientation.Horizontal ? size : 1,
+                                                                  orientation == Orientation.Vertical ? size : 1)
         {
             if (size <= 2)
                 throw new Exception("The scroll bar must be 4 or more in size.");
-
-            if (orientation == Orientation.Vertical)
-                return new ScrollBar(orientation, 1, size);
-            else
-                return new ScrollBar(orientation, size, 1);
-        }
-
-
-        private ScrollBar(Orientation orientation, int width, int height): base(width, height)
-        {
+            
             _initialized = true;
             Orientation = orientation;
 
@@ -144,10 +142,10 @@ namespace SadConsole.Controls
                 _bottomOrRightCharacter = 31;
             }
 
-            if (width > height)
-                SliderBarSize = width - 2;
+            if (Width > Height)
+                SliderBarSize = Width - 2;
             else
-                SliderBarSize = height - 2;
+                SliderBarSize = Height - 2;
 
             _sliderPositionValues = new int[SliderBarSize];
             DetermineSliderPositions();
@@ -215,7 +213,7 @@ namespace SadConsole.Controls
 
                             Parent.FocusedControl = this;
                         }
-
+                        
                         return true;
                     }
                 }

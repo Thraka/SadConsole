@@ -53,12 +53,12 @@ namespace StarterProject.CustomConsoles
             prog2.Position = new Point(18, 7);
             Add(prog2);
 
-            var slider = SadConsole.Controls.ScrollBar.Create(Orientation.Horizontal, 10);
+            var slider = new ScrollBar(Orientation.Horizontal, 10);
             slider.Position = new Point(16, 3);
             slider.Maximum = 18;
             Add(slider);
 
-            slider = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, 6);
+            slider = new ScrollBar( Orientation.Vertical, 6);
             slider.Position = new Point(16, 7);
             slider.Maximum = 6;
             Add(slider);
@@ -180,7 +180,8 @@ namespace StarterProject.CustomConsoles
                     backIndex = 0;
 
                 var theme = Theme.Clone();
-                theme.ControlsConsoleTheme.FillStyle.Background = backgroundcycle[backIndex];
+                theme.Colors.MenuBack = backgroundcycle[backIndex];
+                theme.Colors.RebuildAppearances();
                 Theme = theme;
 
             }
