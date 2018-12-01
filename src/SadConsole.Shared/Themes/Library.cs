@@ -97,7 +97,7 @@ namespace SadConsole.Themes
         {
             if (Default == null)
             {
-                Default = new Library();
+                Default = new Library(false);
                 Default.Init();
             }
         }
@@ -123,6 +123,16 @@ namespace SadConsole.Themes
         /// Creates a new instance of the theme library with default themes.
         /// </summary>
         public Library()
+        {
+            Colors = new Colors();
+            Init();
+        }
+
+        /// <summary>
+        /// Create the instance for the singleton.
+        /// </summary>
+        /// <param name="_">Not used.</param>
+        private Library(bool _)
         {
             Colors = new Colors();
         }
@@ -164,7 +174,7 @@ namespace SadConsole.Themes
                     return ButtonTheme.Clone();
 
                 default:
-                    throw new System.Exception("Control does not have associated theme.");
+                    throw new System.Exception("Control does not have an associated theme.");
             }
         }
 
