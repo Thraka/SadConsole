@@ -181,7 +181,7 @@ namespace SadConsole.Controls
         {
             if (!initialized) return;
             //_scrollBar.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-            ScrollBar = ScrollBar.Create(Orientation.Vertical, Height);
+            ScrollBar = new ScrollBar(Orientation.Vertical, Height);
             ScrollBar.ValueChanged += new EventHandler(_scrollbar_ValueChanged);
             ScrollBar.IsVisible = false;
             ScrollBar.Position = Position + new Point(Width - 1, 0);
