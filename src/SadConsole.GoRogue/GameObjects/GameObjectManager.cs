@@ -12,10 +12,10 @@ namespace SadConsole.GameObjects
 {
     public class GameObjectManager : SpatialMap<GameObjects.GameObjectBase>
     {
-        SimpleMap map;
+        Map map;
         Rectangle cachedViewPort;
 
-        protected internal GameObjectManager(SimpleMap map)
+        protected internal GameObjectManager(Map map)
         {
             this.map = map;
             this.cachedViewPort = map.Surface.ViewPort;
@@ -27,7 +27,6 @@ namespace SadConsole.GameObjects
         private void GameObjectManager_ItemMoved(object sender, ItemMovedEventArgs<GameObjects.GameObjectBase> e)
         {
             e.Item.Position = e.NewPosition.ToPoint();
-            e.Item.MoveTo(e.NewPosition.ToPoint());
             e.Item.IsVisible = map.Surface.ViewPort.Contains(e.Item.Position);
         }
 

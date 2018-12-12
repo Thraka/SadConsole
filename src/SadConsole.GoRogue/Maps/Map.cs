@@ -11,7 +11,7 @@ using SadConsole;
 
 namespace SadConsole.Maps
 {
-    public class SimpleMap: ScreenObject, ISettableMapView<Tile>, IEnumerable<Tile>
+    public class Map: ScreenObject, ISettableMapView<Tile>, IEnumerable<Tile>
     {
         public Surfaces.Basic Surface { get; set; }
         
@@ -70,7 +70,7 @@ namespace SadConsole.Maps
         /// <param name="viewPort">A view of the map that is displayed on the screen.</param>
         /// <param name="defaultTileBlueprint">The tile blueprint used to fill the map.</param>
         /// <param name="font">The font used with the map. Defaults to <see cref="SadConsole.Global.FontDefault"/>.</param>
-        public SimpleMap(int width, int height, Rectangle viewPort, string defaultTileBlueprint = "wall", Font font = null)
+        public Map(int width, int height, Rectangle viewPort, string defaultTileBlueprint = "wall", Font font = null)
         {
             Width = width;
             Height = height;
