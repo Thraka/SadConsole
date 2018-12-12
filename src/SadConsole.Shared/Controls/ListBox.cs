@@ -139,24 +139,34 @@ namespace SadConsole.Controls
             }
         }
 
-        public object SelectedItem
-        {
-            get => selectedItem;
-            set
-            {
-                var index = Items.IndexOf(value);
+	    public object SelectedItem
+	    {
+		    get => selectedItem;
+		    set
+		    {
+			    if (value == null)
+			    {
+				    selectedIndex = -1;
+				    selectedItem = null;
+				    IsDirty = true;
+				    OnSelectedItemChanged();
+			    }
+			    else
+			    {
+				    var index = Items.IndexOf(value);
 
-                if (index == -1)
-                    throw new ArgumentOutOfRangeException("Item does not exist in collection.");
+				    if (index == -1)
+					    throw new ArgumentOutOfRangeException("Item does not exist in collection.");
 
-                selectedIndex = index;
-                selectedItem = Items[index];
-                IsDirty = true;
-                OnSelectedItemChanged();
-            }
-        }
+				    selectedIndex = index;
+				    selectedItem = Items[index];
+				    IsDirty = true;
+				    OnSelectedItemChanged();
+			    }
+		    }
+	    }
 
-        public Point ScrollBarOffset
+		public Point ScrollBarOffset
         {
             get => scrollBarOffset;
             set { scrollBarOffset = value; SetupSlider();  }
