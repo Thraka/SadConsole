@@ -20,11 +20,11 @@ namespace BasicTutorial
         public bool RunLogicFrame;
         public bool RedrawMap;
 
-        public SadConsole.Maps.SimpleMap Map { get; }
+        public SadConsole.Maps.Map Map { get; }
 
         public MessageConsole Messages { get; }
 
-        public DungeonScreen(SadConsole.Maps.SimpleMap map)
+        public DungeonScreen(SadConsole.Maps.Map map)
         {
             // Setup map
             Map = map;

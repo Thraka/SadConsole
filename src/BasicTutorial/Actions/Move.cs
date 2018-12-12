@@ -10,12 +10,12 @@ namespace SadConsole.Actions
 {
     class Move : ActionBase
     {
-        public static Move MoveBy(GameObjects.GameObjectBase source, Point change, Maps.SimpleMap map)
+        public static Move MoveBy(GameObjects.GameObjectBase source, Point change, Maps.Map map)
         {
             return new Move() { Source = source, PositionChange = change, Map = map };
         }
 
-        public Maps.SimpleMap Map;
+        public Maps.Map Map;
         public GameObjects.GameObjectBase Source;
         public Point PositionChange;
         public Point TargetPosition;

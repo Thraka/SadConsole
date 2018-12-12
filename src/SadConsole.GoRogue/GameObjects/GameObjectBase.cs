@@ -19,7 +19,7 @@ namespace SadConsole.GameObjects
         /// <summary>
         /// The map this object is associated with.
         /// </summary>
-        protected SimpleMap map { get; set; }
+        protected Map map { get; set; }
 
         /// <summary>
         /// Gets or sets a friendly short title for the object.
@@ -56,7 +56,7 @@ namespace SadConsole.GameObjects
         /// <param name="foreground"></param>
         /// <param name="background"></param>
         /// <param name="glyph"></param>
-        protected GameObjectBase(SimpleMap map, Color foreground, Color background, int glyph) : base(1, 1)
+        protected GameObjectBase(Map map, Color foreground, Color background, int glyph) : base(1, 1)
         {
             this.map = map;
             Animation.CurrentFrame[0].Foreground = foreground;
