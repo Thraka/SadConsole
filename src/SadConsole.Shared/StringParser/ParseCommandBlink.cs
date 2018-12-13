@@ -1,6 +1,7 @@
 ﻿using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace SadConsole.StringParser
@@ -19,10 +20,10 @@ namespace SadConsole.StringParser
             string[] parametersArray = parameters.Split(':');
 
             if (parametersArray.Length == 2)
-                Speed = double.Parse(parametersArray[1]);
+                Speed = double.Parse(parametersArray[1], CultureInfo.InvariantCulture);
 
             if (parametersArray.Length >= 1 && parametersArray[0] != "")
-                Counter = int.Parse(parametersArray[0]);
+                Counter = int.Parse(parametersArray[0], CultureInfo.InvariantCulture);
             else
                 Counter = -1;
 
