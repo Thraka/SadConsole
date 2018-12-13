@@ -1,6 +1,7 @@
 ﻿using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace SadConsole.StringParser
@@ -48,7 +49,7 @@ namespace SadConsole.StringParser
             }
 
             if (parts.Length >= 1 && parts[0] != "")
-                times = int.Parse(parts[0]);
+                times = int.Parse(parts[0], CultureInfo.InvariantCulture);
 
 
             for (int i = 0; i < times; i++)

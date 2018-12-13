@@ -2,6 +2,7 @@
 using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace SadConsole.StringParser
@@ -28,10 +29,10 @@ namespace SadConsole.StringParser
                 if (parts[0] == "*")
                     Counter = -1;
                 else
-                    Counter = int.Parse(parts[0]);
+                    Counter = int.Parse(parts[0], CultureInfo.InvariantCulture);
 
-                RandomGlyphMin = int.Parse(parts[1]);
-                RandomGlyphMax = int.Parse(parts[2]);
+                RandomGlyphMin = int.Parse(parts[1], CultureInfo.InvariantCulture);
+                RandomGlyphMax = int.Parse(parts[2], CultureInfo.InvariantCulture);
             }
             // Count and glyph type provided
             else if (parts.Length == 2)
@@ -39,14 +40,14 @@ namespace SadConsole.StringParser
                 if (parts[1] == "*")
                     Counter = -1;
                 else
-                    Counter = int.Parse(parts[1]);
+                    Counter = int.Parse(parts[1], CultureInfo.InvariantCulture);
 
-                Glyph = (char)int.Parse(parts[0]);
+                Glyph = (char)int.Parse(parts[0], CultureInfo.InvariantCulture);
             }
             else
             {
                 Counter = 1;
-                Glyph = (char)int.Parse(parts[0]);
+                Glyph = (char)int.Parse(parts[0], CultureInfo.InvariantCulture);
             }
 
 

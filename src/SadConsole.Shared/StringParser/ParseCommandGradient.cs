@@ -2,6 +2,7 @@
 using SadConsole.Surfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace SadConsole.StringParser
@@ -25,7 +26,7 @@ namespace SadConsole.StringParser
             if (parametersArray.Length > 3)
             {
                 CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
-                Counter = Length = int.Parse(parametersArray[parametersArray.Length - 1]);
+                Counter = Length = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
 
                 bool keep;
                 bool useDefault;

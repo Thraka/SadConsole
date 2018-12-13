@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole.Surfaces;
 using System;
+using System.Globalization;
 
 namespace SadConsole.StringParser
 {
@@ -29,7 +30,7 @@ namespace SadConsole.StringParser
             string[] parametersArray = parameters.Split(':');
 
             if (parametersArray.Length == 3)
-                Counter = int.Parse(parametersArray[2]);
+                Counter = int.Parse(parametersArray[2], CultureInfo.InvariantCulture);
             else
                 Counter = -1;
 
