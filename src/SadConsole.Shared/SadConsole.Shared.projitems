@@ -65,6 +65,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Recolor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\EntityManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\CellExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IListExtensions.cs" />
