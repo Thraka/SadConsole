@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="**\*.mgcb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="CustomConsoles\AutoTypingConsole.cs" />
+    <Compile Remove="CustomConsoles\BorderedConsole.cs" />
+    <Compile Remove="CustomConsoles\CursorConsole.cs" />
+    <Compile Remove="CustomConsoles\FadeConsole.cs" />
+    <Compile Remove="CustomConsoles\HexConsole.cs" />
+    <Compile Remove="CustomConsoles\ScrollableConsole.cs" />
+    <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
+    <Compile Remove="ShaderRendererTesting.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.4" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SadConsole.Shared\SadConsole.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Ansi\files.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\QS-SIERR.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\ROY-BTC1.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\ROY-CCU3.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\ROY-DGZN.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="sad.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

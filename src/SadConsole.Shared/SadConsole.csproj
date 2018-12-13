@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -46,11 +46,15 @@
   <ItemGroup>
     <None Remove="Resources\IBM8x16_NoPadding_extended.png" />
     <None Remove="Resources\IBM_ext.font" />
+    <None Remove="SadConsole.Shared.projitems" />
+    <None Remove="SadConsole.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\IBM8x16_NoPadding_extended.png" />
     <EmbeddedResource Include="Resources\IBM_ext.font" />
+    <EmbeddedResource Include="Resources\IBM8x16.png" />
+    <EmbeddedResource Include="Resources\IBM.font" />
   </ItemGroup>
 
   <ItemGroup>
