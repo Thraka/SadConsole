@@ -1,9 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-
-using SadConsole.Surfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using SadConsole.StringParser;
 
 namespace SadConsole
@@ -21,12 +17,11 @@ namespace SadConsole
         /// <param name="value">The string to parse.</param>
         /// <param name="surfaceIndex">Index of where this string will be printed.</param>
         /// <param name="surface">The surface the string will be printed to.</param>
-        /// <param name="editor">A surface editor associated with the text surface.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
         /// <returns></returns>
         public static ColoredString Parse(string value, int surfaceIndex = -1, Surfaces.SurfaceBase surface = null, ParseCommandStacks initialBehaviors = null)
         {
-            var commandStacks = initialBehaviors != null ? initialBehaviors : new ParseCommandStacks();
+            var commandStacks = initialBehaviors ?? new ParseCommandStacks();
             List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);
 
             for (int i = 0; i < value.Length; i++)
