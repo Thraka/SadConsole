@@ -201,7 +201,7 @@ namespace SadConsole.Effects
 
             if (_effectCells.TryGetValue(cell, out oldEffectData))
             {
-                oldEffectData.Effect.Clear(cell);
+                oldEffectData.Effect.ClearCell(cell);
                 oldEffectData.Cells.Remove(cell);
                 _effectCells.Remove(cell);
 
@@ -228,7 +228,7 @@ namespace SadConsole.Effects
 
                 foreach (var cell in effectData.Cells)
                 {
-                    if (effectData.Effect.Apply(cell))
+                    if (effectData.Effect.UpdateCell(cell))
                         backingSurface.IsDirty = true;
 
                     if (effectData.Effect.IsFinished && effectData.Effect.RemoveOnFinished)
@@ -237,7 +237,7 @@ namespace SadConsole.Effects
 
                 foreach (var cell in cellsToRemove)
                 {
-                    effectData.Effect.Clear(cell);
+                    effectData.Effect.ClearCell(cell);
                     effectData.Cells.Remove(cell);
                     _effectCells.Remove(cell);
                     backingSurface.IsDirty = true;
