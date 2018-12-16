@@ -40,7 +40,7 @@ namespace StarterProject.Windows
             UsePixelPositioning = true;
 
             // CHARACTER SCROLL
-            _charScrollBar = ScrollBar.Create(Orientation.Vertical, 16);
+            _charScrollBar = new ScrollBar(Orientation.Vertical, 16);
             _charScrollBar.Position = new Point(17, 1);
             _charScrollBar.Name = "ScrollBar";
             _charScrollBar.Maximum = Font.Rows - 16;
