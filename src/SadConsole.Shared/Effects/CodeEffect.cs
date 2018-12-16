@@ -26,12 +26,12 @@ namespace SadConsole.Effects
             Id = id;
         }
 
-        public override bool Apply(Cell cell)
+        public override bool UpdateCell(Cell cell)
         {
             return applyAction(this, cell);
         }
 
-        public override void Clear(Cell cell)
+        public override void ClearCell(Cell cell)
         {
             clearAction(this, cell);
         }

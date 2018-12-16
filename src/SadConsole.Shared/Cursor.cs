@@ -550,7 +550,7 @@ namespace SadConsole
             {
                 CursorEffect.Update(elapsed.TotalSeconds);
 
-                if (CursorEffect.Apply(CursorRenderCell))
+                if (CursorEffect.UpdateCell(CursorRenderCell))
                     editor.IsDirty = true;
             }
         }

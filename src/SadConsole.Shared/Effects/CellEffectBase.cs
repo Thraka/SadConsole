@@ -9,15 +9,29 @@
     [DataContract]
     public abstract class CellEffectBase : ICellEffect
     {
-        protected bool _delayFinished = true;
-        protected double _startDelay;
+        private double _startDelay;
 
+        /// <summary>
+        /// A flag to indidcate that the delay timer has finished.
+        /// </summary>
+        [DataMember]
+        protected bool _delayFinished = true;
+
+        /// <summary>
+        /// The total time elapsed while processing the effect.
+        /// </summary>
+        [DataMember]
+        protected double _timeElapsed;
+
+        /// <inheritdoc />
         [DataMember]
         public bool IsFinished { get; protected set; }
 
+        /// <inheritdoc />
         [DataMember]
         public bool CloneOnApply { get; set; }
 
+        /// <inheritdoc />
         [DataMember]
         public double StartDelay
         {
@@ -25,34 +39,71 @@
             set { _startDelay = value; _delayFinished = _startDelay <= 0.0d; }
         }
 
+        /// <inheritdoc />
         [DataMember]
         public bool RemoveOnFinished { get; set; }
 
-        /// <summary>
-        /// When true, the effect should not call <see cref="Cell.RestoreState"/> when it has finished processing.
-        /// </summary>
+        /// <inheritdoc />
         [DataMember]
-        public bool KeepStateOnFinished { get; set; }
+        public bool DiscardCellState { get; set; }
 
+        /// <inheritdoc />
         [DataMember]
         public bool Permanent { get; set; }
 
-        public abstract bool Apply(Cell cell);
-
-        public abstract void Update(double timeElapsed);
-
-        public virtual void Clear(Cell cell)
+        protected CellEffectBase()
         {
-            if (!KeepStateOnFinished)
+            RemoveOnFinished = false;
+            Permanent = false;
+            StartDelay = 0d;
+            IsFinished = false;
+            _timeElapsed = 0d;
+        }
+
+        /// <inheritdoc />
+        public virtual void AddCell(Cell cell)
+        {
+            if (cell.State == null)
+                cell.SaveState();
+        }
+
+        /// <inheritdoc />
+        public abstract bool UpdateCell(Cell cell);
+
+        /// <inheritdoc />
+        public virtual void Update(double gameTimeSeconds)
+        {
+            if (!IsFinished)
+            {
+                _timeElapsed += gameTimeSeconds;
+
+                if (!_delayFinished)
+                {
+                    if (_timeElapsed >= _startDelay)
+                    {
+                        _delayFinished = true;
+                        _timeElapsed = 0.0d;
+                    }
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual void ClearCell(Cell cell)
+        {
+            if (!DiscardCellState)
                 cell.RestoreState();
         }
 
+        /// <inheritdoc />
         public virtual void Restart()
         {
+            _timeElapsed = 0d;
             IsFinished = false;
             StartDelay = _startDelay;
         }
 
+        /// <inheritdoc />
         public abstract ICellEffect Clone();
 
         ///// <summary>

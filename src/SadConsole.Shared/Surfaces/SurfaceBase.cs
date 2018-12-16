@@ -293,9 +293,6 @@ namespace SadConsole.Surfaces
             }
         }
 
-        /// <summary>
-        /// Updates the effects of the surface.
-        /// </summary>
         /// <inheritdoc />
         public override void Update(TimeSpan timeElapsed)
         {

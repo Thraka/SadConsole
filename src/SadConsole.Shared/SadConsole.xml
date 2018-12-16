@@ -400,11 +400,6 @@
             The glyph.
             </summary>
         </member>
-        <member name="P:SadConsole.ColoredGlyph.Glyph">
-            <summary>
-            Sets the glyph by index.
-            </summary>
-        </member>
         <member name="F:SadConsole.ColoredGlyph.Effect">
             <summary>
             The effect for the glyph.
@@ -444,13 +439,24 @@
             <param name="value">The string to parse.</param>
             <param name="surfaceIndex">Index of where this string will be printed.</param>
             <param name="surface">The surface the string will be printed to.</param>
-            <param name="editor">A surface editor associated with the text surface.</param>
             <param name="initialBehaviors">Any initial defaults.</param>
             <returns></returns>
         </member>
+        <member name="P:SadConsole.ColoredString.Item(System.Int32)">
+            <summary>
+            Gets a <see cref="T:SadConsole.ColoredGlyph"/> from the string.
+            </summary>
+            <param name="index">The index in the string of the <see cref="T:SadConsole.ColoredGlyph"/>.</param>
+            <returns>The colored glyph representing the character in the string.</returns>
+        </member>
         <member name="P:SadConsole.ColoredString.String">
             <summary>
-            Gets or sets the string. When Set, the colors for each character default to the <see cref="!:SadConsole.ColoredString.Foreground"/> and <see cref="!:SadConsole.ColoredString.Background"/> property values.
+            Gets or sets the characters represneting this string. When set, first processes the string through <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.Surfaces.SurfaceBase,SadConsole.StringParser.ParseCommandStacks)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredString.Count">
+            <summary>
+            The total number of <see cref="T:SadConsole.ColoredGlyph"/> characters in the string.
             </summary>
         </member>
         <member name="F:SadConsole.ColoredString.IgnoreGlyph">
@@ -491,7 +497,7 @@
         </member>
         <member name="M:SadConsole.ColoredString.#ctor(System.String)">
             <summary>
-            Creates a new instance of the ColoredString class with the specified string value.
+            Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.Surfaces.SurfaceBase,SadConsole.StringParser.ParseCommandStacks)"/> first to process the string.
             </summary>
             <param name="value">The backing string.</param>
         </member>
@@ -542,6 +548,24 @@
             Applies the referenced color to every character background in the colored string.
             </summary>
             <param name="color">The color to apply.</param>
+        </member>
+        <member name="M:SadConsole.ColoredString.ToString">
+            <summary>
+            Returns a string representing the glyphs in this object.
+            </summary>
+            <returns>A string composed of each glyph in this object.</returns>
+        </member>
+        <member name="M:SadConsole.ColoredString.GetEnumerator">
+            <summary>
+            Gets an enumerator for the <see cref="T:SadConsole.ColoredGlyph"/> objects in this string.
+            </summary>
+            <returns>The enumerator in the string.</returns>
+        </member>
+        <member name="M:SadConsole.ColoredString.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets an enumerator for the <see cref="T:SadConsole.ColoredGlyph"/> objects in this string.
+            </summary>
+            <returns>The enumerator in the string.</returns>
         </member>
         <member name="M:SadConsole.ColoredString.op_Addition(SadConsole.ColoredString,SadConsole.ColoredString)">
             <summary>
@@ -2133,35 +2157,82 @@
             Restarts the cell effect but does not reset it.
             </summary>
         </member>
+        <member name="M:SadConsole.Effects.BlinkGlyph.ToString">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Effects.CellEffectBase">
             <summary>
             A base class for cell effects.
             </summary>
         </member>
-        <member name="P:SadConsole.Effects.CellEffectBase.KeepStateOnFinished">
+        <member name="F:SadConsole.Effects.CellEffectBase._delayFinished">
             <summary>
-            When true, the effect should not call <see cref="M:SadConsole.Cell.RestoreState"/> when it has finished processing.
+            A flag to indidcate that the delay timer has finished.
             </summary>
         </member>
-        <member name="T:SadConsole.Effects.ConcurrentEffect">
+        <member name="F:SadConsole.Effects.CellEffectBase._timeElapsed">
             <summary>
-            Allows more than one effect to be processed and applied to a cell at the same time.
+            The total time elapsed while processing the effect.
             </summary>
         </member>
-        <member name="P:SadConsole.Effects.ConcurrentEffect.Effects">
-            <summary>
-            The effects to be processed at the same time. Cannot be set to null.
-            </summary>
+        <member name="P:SadConsole.Effects.CellEffectBase.IsFinished">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.CloneOnApply">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.StartDelay">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.RemoveOnFinished">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.DiscardCellState">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.Permanent">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.AddCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.UpdateCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.Update(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.ClearCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.Restart">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.Clone">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Effects.Delay">
             <summary>
-            An effect that doesn't do anything but delays. Usually used by the ChainEffect effect.
+            An effect that doesn't do anything but delays. Usually used with the <see cref="T:SadConsole.Effects.EffectsChain"/> effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Delay.Restart">
-            <summary>
-            Restarts the cell effect but does not reset it.
-            </summary>
+        <member name="M:SadConsole.Effects.Delay.Update(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.AddCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.UpdateCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.ClearCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.ToString">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Effects.EffectsChain">
             <summary>
@@ -2302,10 +2373,20 @@
             When <see cref="P:SadConsole.Effects.Fade.UseCellForeground"/> or <see cref="P:SadConsole.Effects.Fade.UseCellBackground"/> is set, and this is true, the last color in the fade will be set to the cell instead of the first.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Fade.Restart">
-            <summary>
-            Restarts the cell effect but does not reset it.
-            </summary>
+        <member name="M:SadConsole.Effects.Fade.UpdateCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.Update(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.ClearCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.ToString">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Effects.ICellEffect">
             <summary>
@@ -2314,7 +2395,7 @@
         </member>
         <member name="P:SadConsole.Effects.ICellEffect.IsFinished">
             <summary>
-            True when the effect is finished but attached to the cell.
+            True when the effect is finished.
             </summary>
         </member>
         <member name="P:SadConsole.Effects.ICellEffect.CloneOnApply">
@@ -2332,7 +2413,7 @@
             When true, the effect should be disassociated with cells when it has finished processing.
             </summary>
         </member>
-        <member name="P:SadConsole.Effects.ICellEffect.KeepStateOnFinished">
+        <member name="P:SadConsole.Effects.ICellEffect.DiscardCellState">
             <summary>
             When true, the effect should not call <see cref="M:SadConsole.Cell.RestoreState"/> when it has finished processing.
             </summary>
@@ -2342,11 +2423,17 @@
             When true, indicates the effect this effect has on a cell should remain after this effect is cleared from the cell.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.ICellEffect.Apply(SadConsole.Cell)">
+        <member name="M:SadConsole.Effects.ICellEffect.AddCell(SadConsole.Cell)">
+            <summary>
+            Cell is first associated with the effect.
+            </summary>
+            <param name="cell">The surface cell using this effect.</param>
+        </member>
+        <member name="M:SadConsole.Effects.ICellEffect.UpdateCell(SadConsole.Cell)">
             <summary>
             Applies the state of the effect to a cell.
             </summary>
-            <param name="callingCell">The console cell using this effect.</param>
+            <param name="cell">The surface cell using this effect.</param>
         </member>
         <member name="M:SadConsole.Effects.ICellEffect.Update(System.Double)">
             <summary>
@@ -2354,15 +2441,15 @@
             </summary>
             <param name="gameTimeSeconds">Time since the last call to this effect.</param>
         </member>
-        <member name="M:SadConsole.Effects.ICellEffect.Clear(SadConsole.Cell)">
+        <member name="M:SadConsole.Effects.ICellEffect.ClearCell(SadConsole.Cell)">
             <summary>
             Clears the effect from the cell.
             </summary>
-            <param name="cell">The console cell that will no longer use this effect.</param>
+            <param name="cell">The surface cell that will no longer use this effect.</param>
         </member>
         <member name="M:SadConsole.Effects.ICellEffect.Restart">
             <summary>
-            Restarts the cell effect but does not reset it.
+            Restarts the cell effect.
             </summary>
         </member>
         <member name="M:SadConsole.Effects.ICellEffect.Clone">
@@ -2396,10 +2483,11 @@
             /// When true, the <see cref="P:SadConsole.Effects.Recolor.Background"/> color will be applied to the cell.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Recolor.Restart">
-            <summary>
-            Restarts the cell effect but does not reset it.
-            </summary>
+        <member name="M:SadConsole.Effects.Recolor.UpdateCell(SadConsole.Cell)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Recolor.ClearCell(SadConsole.Cell)">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Entities.Entity">
             <summary>
@@ -5027,9 +5115,6 @@
             </summary>
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.Update(System.TimeSpan)">
-            <summary>
-            Updates the effects of the surface.
-            </summary>
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.OnFontChanged">
