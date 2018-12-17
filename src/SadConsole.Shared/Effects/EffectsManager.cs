@@ -75,6 +75,7 @@ namespace SadConsole.Effects
                 // Add the cell to the effects by cell key and to list of known cells for the effect
                 _effectCells.Add(cell, workingEffect);
                 workingEffect.Cells.Add(cell);
+                workingEffect.Effect.AddCell(cell);
             }
             else
                 ClearCellEffect(cell);
@@ -122,6 +123,7 @@ namespace SadConsole.Effects
                         // Add the cell to the effects by cell key and to list of known cells for the effect
                         _effectCells.Add(cell, workingEffect);
                         workingEffect.Cells.Add(cell);
+                        workingEffect.Effect.AddCell(cell);
                     }
                 }
             }
