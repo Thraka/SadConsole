@@ -425,12 +425,9 @@ namespace SadConsole.Controls
 						}
 
 					}
+	                EditingText = newText.ToString();
 
-                    string newString = newText.ToString();
-                    if (newString != EditingText)
-                        EditingText = newString;
-
-                    ValidateEdit();
+					ValidateEdit();
                 }
 
                 return true;
