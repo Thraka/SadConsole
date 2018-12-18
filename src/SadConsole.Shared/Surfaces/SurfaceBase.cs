@@ -42,10 +42,10 @@ namespace SadConsole.Surfaces
         /// </summary>
         public Color DefaultForeground { get; set; } = Color.White;
 
-		/// <summary>
-		/// The default background for glyphs on this surface.
-		/// </summary>
-		public Color DefaultBackground { get; set; } = Color.Transparent;
+        /// <summary>
+        /// The default background for glyphs on this surface.
+        /// </summary>
+        public Color DefaultBackground { get; set; } = Color.Transparent;
 
         /// <summary>
         /// How many cells wide the surface is.
