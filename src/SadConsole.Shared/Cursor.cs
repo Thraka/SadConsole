@@ -156,6 +156,7 @@ namespace SadConsole
             SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
             blinkEffect.BlinkSpeed = 0.35f;
             CursorEffect = blinkEffect;
+            CursorEffect.AddCell(CursorRenderCell);
         }
 
         /// <summary>
