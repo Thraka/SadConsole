@@ -29,11 +29,6 @@ namespace SadConsole.Entities
         protected AnimatedScreenObject animation;
 
         /// <summary>
-        /// Font for the game object.
-        /// </summary>
-        protected Font font;
-
-        /// <summary>
         /// The offset to render this object at.
         /// </summary>
         protected Point positionOffset;
@@ -59,7 +54,7 @@ namespace SadConsole.Entities
                 }
 
                 animation = value;
-                animation.Font = font;
+                animation.Font = _font;
 
                 animation.AnimationStateChanged += OnAnimationStateChanged;
                 animation.State = AnimatedScreenObject.AnimationState.Activated;
