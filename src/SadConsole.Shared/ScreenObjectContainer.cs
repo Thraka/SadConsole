@@ -15,10 +15,10 @@ namespace SadConsole
     /// <summary>
     /// A <see cref="ScreenObject"/> that only processes children and does not render anything.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Console (Container Only)")]
-    public partial class ScreenContainer : ScreenObject
+    [System.Diagnostics.DebuggerDisplay("Container")]
+    public class ScreenObjectContainer : ScreenObject
     {
-        public ScreenContainer() : base(1, 1)
+        public ScreenObjectContainer() : base()
         {
         }
 

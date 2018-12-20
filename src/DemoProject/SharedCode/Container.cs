@@ -10,7 +10,7 @@ using StarterProject.CustomConsoles;
 namespace StarterProject
 {
     [System.Diagnostics.DebuggerDisplay("Demo Container")]
-    class Container : ScreenObject
+    class Container : ScreenObjectContainer
     {
         private int currentConsoleIndex = -1;
         private Console selectedConsole;
@@ -18,11 +18,8 @@ namespace StarterProject
 
         CustomConsole[] consoles;
 
-        public Container(): base(1, 1)
+        public Container()
         {
-            LastRenderResult.Dispose();
-            LastRenderResult = null;
-
             headerConsole = new HeaderConsole();
 
             //var console1 = new Console(10, 10, Serializer.Load<FontMaster>("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.Two));
@@ -35,6 +32,9 @@ namespace StarterProject
                 //new CustomConsoles.MouseRenderingDebug(),
                 //new CustomConsoles.AutoTypingConsole(),
                 //new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
+                new CustomConsole(new CustomConsoles.ViewsAndSubViews(), "Sub Views", "Single text surface with two views into it. Click on either view."),
+                new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
+                new CustomConsole(new CustomConsoles.TextCursorConsole(), "Text Mouse Cursor", "Draws a game object where ever the mouse cursor is."),
                 new CustomConsole(new CustomConsoles.StringParsingConsole(), "String Parser", "Examples of using the string parser"),
                 new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
                 new CustomConsole(new CustomConsoles.ShapesConsole(), "Shape Drawing", "Examples of drawing shapes"),
@@ -46,11 +46,8 @@ namespace StarterProject
                 ////new CustomConsole(new CustomConsoles.ScrollableConsole(20, 10, 60), "Text scrolling", "Renders a tiny console with a cursor along with a scroll bar"),
                 new CustomConsole(new CustomConsoles.StretchedConsole(), "Font Zoom", "Console where font has been zoomed x2"),
                 ////new CustomConsole(new CustomConsoles.SerializationTests(), "Serialization Tests", "Test serializing various types from SadConsole"),
-                //new CustomConsole(new CustomConsoles.TextCursorConsole(), "Text Mouse Cursor", "Draws a game object where ever the mouse cursor is."),
-                //new CustomConsole(new CustomConsoles.ViewsAndSubViews(), "Sub Views", "Single text surface with two views into it. Click on either view."),
-                //new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
                 new CustomConsole(new CustomConsoles.SceneProjectionConsole(), "Scene Projection", "Translating a 3D scene to a TextSurface T=Toggle B=Block Mode"),
-                new CustomConsole(new CustomConsoles.RandomScrollingConsole(), "Scrolling", "2000x2000 scrollable console. Use the cursor keys."),
+                new CustomConsole(new CustomConsoles.RandomScrollingConsole(), "Scrolling", "2000x2000 scrollable console. Use the cursor keys."), 
             };
 
             MoveNextConsole();

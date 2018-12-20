@@ -263,11 +263,6 @@ namespace SadConsole
 
             AbsoluteArea = new Rectangle(0, 0, Width * _font.Size.X, Height * _font.Size.Y);
         }
-
-        public static ScreenObject CreateContainer()
-        {
-            return new ScreenObject();
-        }
         
         ///// <summary>
         ///// Initialization is left to the derived class.
