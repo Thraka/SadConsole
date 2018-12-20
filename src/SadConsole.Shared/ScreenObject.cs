@@ -276,7 +276,6 @@ namespace SadConsole
 
         protected override void OnCellsReset()
         {
-            //ViewPortRectangle = viewPort;
             SetRenderCells();
         }
 

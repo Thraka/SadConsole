@@ -191,6 +191,15 @@ namespace SadConsole
             }
         }
 
+        /// <inheritdoc />
+        protected override void OnCellsReset()
+        {
+            // Resize the viewport to make sure it's OK with the new cells
+            ViewPort = ViewPortRectangle;
+
+            base.OnCellsReset();
+        }
+
         /// <summary>
         /// Resizes the surface to the specified width and height.
         /// </summary>
