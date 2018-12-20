@@ -1618,11 +1618,11 @@ namespace SadConsole
 
             var index = 0;
 
-            for (var y = 0; y < Height; y++)
+            for (var y = 0; y < view.Height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (var x = 0; x < view.Width; x++)
                 {
-                    cells[index] = this[x, y];
+                    cells[index] = this[x + view.Left, y + view.Top];
                     index++;
                 }
             }
