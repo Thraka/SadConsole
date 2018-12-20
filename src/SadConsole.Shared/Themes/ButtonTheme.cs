@@ -35,7 +35,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
+            control.Surface = new CellSurface(control.Width, control.Height);
 
             base.Attached(control);
         }
@@ -115,7 +115,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new BasicNoDraw(control.Width + 2, control.Height + 1);
+            control.Surface = new CellSurface(control.Width + 2, control.Height + 1);
 
             var colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
 
@@ -297,7 +297,7 @@ namespace SadConsole.Themes
             button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), textColor);
                 
             button.Surface.DrawBox(new Rectangle(0,0,button.Width, button.Surface.Height), new Cell(topleftcolor, TopLeftLineColors.Background, 0),
-                connectedLineStyle: button.Parent.Font.Master.IsSadExtended ? SurfaceBase.ConnectedLineThinExtended : SurfaceBase.ConnectedLineThin);
+                connectedLineStyle: button.Parent.Font.Master.IsSadExtended ? CellSurface.ConnectedLineThinExtended : CellSurface.ConnectedLineThin);
 
             //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
 

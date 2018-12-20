@@ -28,18 +28,5 @@ namespace SadConsole.Renderers
         /// The color of the modal background.
         /// </summary>
         public Color ModalTint { get; set; } = new Color((byte)0, (byte)0, (byte)0, (byte)(255f * 0.25f));
-
-        /// <summary>
-        /// Renders a 
-        /// </summary>
-        /// <param name="surface"></param>
-        /// <param name="renderingMatrix"></param>
-
-        public override void Render(SurfaceBase surface, bool force = false)
-        {
-            
-
-            base.Render(surface, force);
-        }
     }
 }

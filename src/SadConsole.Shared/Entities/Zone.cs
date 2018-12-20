@@ -16,12 +16,12 @@ namespace SadConsole.Entities
     [DataContract]
     public class Zone: ScreenObject
     {
-        private Basic _debugSurface;
-        private SurfaceBase _parentSurface;
+        private const string DefaultDebugTitle = "Zone";
+
         private string _title = "Zone";
         private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
-        private DrawCallSurface _drawCall;
-
+        private DrawCallScreenObject _drawCallScreenObject;
+        private DrawCallColoredRect _drawCallZone;
         /// <summary>
         /// The area the zone covers.
         /// </summary>
@@ -36,6 +36,10 @@ namespace SadConsole.Entities
             set
             {
                 _title = value;
+
+                if (string.IsNullOrWhiteSpace(_title))
+                    _title = DefaultDebugTitle;
+
                 Rebuild();
             }
         }
@@ -62,18 +66,15 @@ namespace SadConsole.Entities
         /// Creates a new zone object with the specified area.
         /// </summary>
         /// <param name="area">The area of the zone.</param>
-        public Zone(Rectangle area)
+        public Zone(Rectangle area): base(DefaultDebugTitle.Length, 1)
         {
             IsVisible = false;
+            UseMouse = false;
+            UseKeyboard = false;
+
             Area = area;
         }
-
-        /// <inheritdoc />
-        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
-        {
-            _parentSurface = newParent as SurfaceBase;
-        }
-
+        
         /// <inheritdoc />
         protected override void OnVisibleChanged()
         {
@@ -83,23 +84,45 @@ namespace SadConsole.Entities
         /// <inheritdoc />
         public override void Draw(TimeSpan timeElapsed)
         {
-            if (IsVisible && _parentSurface != null)
+            // TODO verify zone works.
+            if (IsVisible && Parent != null)
             {
-                if (_parentSurface.ViewPort.Intersects(Area))
+                if (Parent is IScreenObjectViewPort parent)
                 {
-                    if (_parentSurface.UsePixelPositioning)
+                    _drawCallScreenObject.Position = (Area.Location - parent.ViewPort.Location + Parent.CalculatedPosition).ToVector2();
+                    _drawCallZone.Rectangle = new Rectangle(Font.GetWorldPosition(Area.Location), Area.Size * Font.Size);
+
+                    if (parent.ViewPort.Intersects(Area))
                     {
-                        _drawCall.Position = (Area.Location - _parentSurface.ViewPort.Location +
-                                              _parentSurface.CalculatedPosition).ToVector2();
+                        Global.DrawCalls.Add(_drawCallZone);
+                        Global.DrawCalls.Add(_drawCallScreenObject);
                     }
-                    else
-                    {
-                        _drawCall.Position = _debugSurface.Font.GetWorldPosition((Area.Location - _parentSurface.ViewPort.Location +
-                                              _parentSurface.CalculatedPosition)).ToVector2();
-                    }
-                    
-                    Global.DrawCalls.Add(_drawCall);
+
+                    //if (_parentSurface.ViewPort.Intersects(Area))
+                    //{
+                    //    if (_parentSurface.UsePixelPositioning)
+                    //    {
+                    //        _drawCallScreenObject.Position = (Area.Location - _parentSurface.ViewPort.Location +
+                    //                                          _parentSurface.CalculatedPosition).ToVector2();
+                    //    }
+                    //    else
+                    //    {
+                    //        _drawCallScreenObject.Position = _debugSurface.Font.GetWorldPosition((Area.Location - _parentSurface.ViewPort.Location +
+                    //                                                                              _parentSurface.CalculatedPosition)).ToVector2();
+                    //    }
+
+                    //    Global.DrawCalls.Add(_drawCallScreenObject);
+                    //}
                 }
+                else
+                {
+                    _drawCallScreenObject.Position = (Area.Location + Parent.CalculatedPosition).ToVector2();
+                    _drawCallZone.Rectangle = new Rectangle(Font.GetWorldPosition(Area.Location), Area.Size * Font.Size);
+
+                    Global.DrawCalls.Add(_drawCallZone);
+                    Global.DrawCalls.Add(_drawCallScreenObject);
+                }
+
             }
 
             base.Draw(timeElapsed);
@@ -109,16 +132,21 @@ namespace SadConsole.Entities
         {
             if (IsVisible)
             {
-                _debugSurface = new Basic(Area.Width, Area.Height);
-                _debugSurface.DefaultBackground = DebugAppearance.Background;
-                _debugSurface.Clear();
-                _debugSurface.Print(0, 0, DebugTitle, DebugAppearance);
-                _debugSurface.Draw(TimeSpan.Zero);
-                _drawCall = new DrawCallSurface(_debugSurface, Point.Zero, _parentSurface.UsePixelPositioning);
+                Font = Parent?.Font ?? SadConsole.Global.FontDefault;
+                DefaultBackground = DebugAppearance.Background;
+                DefaultForeground = DebugAppearance.Foreground;
+                Resize(_title.Length, 1, true);
+                Print(0, 0, _title);
+                
+                _drawCallScreenObject = new DrawCallScreenObject(this, Point.Zero, UsePixelPositioning);
+                _drawCallZone = new DrawCallColoredRect(Area, DebugAppearance.Background);
             }
-            else
-                _debugSurface = null;
         }
 
+        /// <inheritdoc />
+        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        {
+            Font = newParent?.Font ?? SadConsole.Global.FontDefault;
+        }
     }
 }

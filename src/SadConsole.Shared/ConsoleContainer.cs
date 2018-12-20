@@ -13,32 +13,43 @@ using Keyboard = SadConsole.Input.Keyboard;
 namespace SadConsole
 {
     /// <summary>
-    /// An <see cref="IConsole" implementation that only processes the <see cref="IScreenObject.Children"/>.
+    /// A <see cref="ScreenObject"/> that only processes children and does not render anything.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Console (Container Only)")]
-    public partial class ConsoleContainer : BasicNoDraw, IConsole
+    public partial class ScreenContainer : ScreenObject
     {
-        public ConsoleContainer() : base(1, 1)
+        public ScreenContainer() : base(1, 1)
         {
         }
 
-        public Cursor Cursor { get; }
-        public bool IsExclusiveMouse { get; set; }
-        public bool IsFocused { get; set; }
-        public bool UseKeyboard { get; set; }
-        public bool UseMouse { get; set; }
-        public virtual bool ProcessMouse(MouseConsoleState state)
+        public override void Draw(TimeSpan timeElapsed)
+        {
+            if (!IsVisible) return;
+            
+            var copyList = new List<ScreenObject>(Children);
+
+            foreach (var child in copyList)
+                child.Draw(timeElapsed);
+        }
+
+        public override void Update(TimeSpan timeElapsed)
+        {
+            if (IsPaused) return;
+
+            var copyList = new List<ScreenObject>(Children);
+
+            foreach (var child in copyList)
+                child.Update(timeElapsed);
+        }
+
+        public override bool ProcessMouse(MouseConsoleState state)
         {
             return false;
         }
 
-        public virtual bool ProcessKeyboard(Keyboard info)
+        public override bool ProcessKeyboard(Keyboard info)
         {
             return false;
-        }
-
-        public void LostMouse(MouseConsoleState state)
-        {
         }
     }
 }

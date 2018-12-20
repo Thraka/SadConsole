@@ -12,7 +12,7 @@ namespace StarterProject.CustomConsoles
     {
         int fileIndex = -1;
         string[] files;
-        private Basic ansiSurface;
+        private Console ansiSurface;
         
         public AnsiConsole(): base(80, 23)
         {
@@ -24,8 +24,9 @@ namespace StarterProject.CustomConsoles
             NextAnsi();
             LoadAnsi();
 
-            KeyboardHandler = (cons, info) =>
+            KeyboardHandler = (surface, info) =>
             {
+                var cons = surface as Console;
 
                 if (info.IsKeyDown(Keys.Left))
                     cons.ViewPort = new Rectangle(cons.ViewPort.Left - 1, cons.ViewPort.Top, 80, 23);
@@ -87,7 +88,7 @@ namespace StarterProject.CustomConsoles
         {
             Clear();
 
-            ansiSurface = new Basic(80, 25);
+            ansiSurface = new Console(80, 25);
             writer = new SadConsole.Ansi.AnsiWriter(doc, ansiSurface);
             writer.ReadEntireDocument();
 

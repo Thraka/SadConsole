@@ -20,7 +20,7 @@ namespace StarterProject.CustomConsoles
         public ViewsAndSubViews(): base(1,1)
         {
             mainView = new Console(60, 23);
-            subView = Console.FromSurface(mainView.GetViewSurface(new Rectangle(0, 0, 20, 23)));
+            subView = Console.FromSurface(mainView.GetSubSurface(new Rectangle(0, 0, 20, 23)), Font);
 
             IsVisible = false;
             UseMouse = true;

@@ -107,39 +107,40 @@ namespace SadConsole.Readers
             layers.Remove(layer);
         }
 
+        // todo Fix rex layer
         /// <summary>
         /// Converts this REXPaint image to a <see cref="Consoles.LayeredTextSurface"/>.
         /// </summary>
         /// <returns></returns>
-        public Surfaces.Layered ToLayeredSurface()
-        {
-            var surface = new Surfaces.Layered();
+        //public Surfaces.Layered ToLayeredSurface()
+        //{
+        //    var surface = new Surfaces.Layered();
             
-            for (int i = 0; i < LayerCount; i++)
-            {
-                var layer = new Surfaces.Basic(Width, Height);
+        //    for (int i = 0; i < LayerCount; i++)
+        //    {
+        //        var layer = new Surfaces.Basic(Width, Height);
 
-                for (int y = 0; y < Height; y++)
-                {
-                    for (int x = 0; x < Width; x++)
-                    {
-                        var rexCell = layers[i][x, y];
-                        if (!rexCell.IsTransparent())
-                        {
-                            var newCell = layer[x, y];
-                            newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
-                            newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
-                            newCell.Glyph = rexCell.Character;
-                        }
-                    }
-                }
+        //        for (int y = 0; y < Height; y++)
+        //        {
+        //            for (int x = 0; x < Width; x++)
+        //            {
+        //                var rexCell = layers[i][x, y];
+        //                if (!rexCell.IsTransparent())
+        //                {
+        //                    var newCell = layer[x, y];
+        //                    newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
+        //                    newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
+        //                    newCell.Glyph = rexCell.Character;
+        //                }
+        //            }
+        //        }
 
-                layer.IsDirty = true;
-                surface.Add(layer);
-            }
+        //        layer.IsDirty = true;
+        //        surface.Add(layer);
+        //    }
 
-            return surface;
-        }
+        //    return surface;
+        //}
 
         /// <summary>
         /// Loads a .xp RexPaint image from a GZip compressed stream.

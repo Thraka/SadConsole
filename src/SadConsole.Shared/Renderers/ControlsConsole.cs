@@ -23,7 +23,7 @@ namespace SadConsole.Renderers
         /// Renders a surface to the screen.
         /// </summary>
         /// <param name="surface">The surface to render.</param>
-        public override void Render(Surfaces.SurfaceBase surface, bool force = false)
+        public override void Render(ScreenObject surface, bool force = false)
         {
             RenderBegin(surface, force);
             RenderCells(surface, force);
@@ -39,19 +39,19 @@ namespace SadConsole.Renderers
         public void RenderControlCells(ControlBase control, bool draw = false)
         {
             if (!draw) return;
-            if (control.Surface.Tint.A == 255) return;
+            //if (control.Surface.Tint.A == 255) return;
 
             if (control.Surface.DefaultBackground.A != 0)
-                Global.SpriteBatch.Draw(control.Parent.Font.FontImage, control.Surface.AbsoluteArea, control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                Global.SpriteBatch.Draw(control.Parent.Font.FontImage, new Rectangle(control.Position.ConsoleLocationToPixel(control.Parent.Font), new Point(control.Width, control.Height) * control.Parent.Font.Size), control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
-            for (var i = 0; i < control.Surface.RenderCells.Length; i++)
+            for (var i = 0; i < control.Surface.Cells.Length; i++)
             {
-                ref var cell = ref control.Surface.RenderCells[i];
+                ref var cell = ref control.Surface.Cells[i];
 
                 if (!cell.IsVisible) continue;
 
-                Rectangle renderRect = control.Surface.RenderRects[i];
-                renderRect.Location += control.Position.ConsoleLocationToPixel(control.Parent.Font);
+                Rectangle renderRect = control.Parent.RenderRects[control.Position.ToIndex(control.Parent.Width)];
+                renderRect.Location += control.Surface.GetPointFromIndex(i).ConsoleLocationToPixel(control.Parent.Font);
 
                 if (cell.Background != Color.Transparent && cell.Background != control.Surface.DefaultBackground)
                     Global.SpriteBatch.Draw(control.Parent.Font.FontImage, renderRect, control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
@@ -67,7 +67,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        //public virtual void RenderControls(Surfaces.SurfaceBase surface, bool force = false)
+        //public virtual void RenderControls(CellSurface surface, bool force = false)
         //{
         //    if ((surface.IsDirty || force) && surface.Tint.A != 255)
         //    {

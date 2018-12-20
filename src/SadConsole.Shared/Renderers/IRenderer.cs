@@ -27,6 +27,6 @@ namespace SadConsole.Renderers
         /// <summary>
         /// Renders the cell data to the screen.
         /// </summary>
-        void Render(Surfaces.SurfaceBase cells, bool force = false);
+        void Render(ScreenObject cells, bool force = false);
     }
 }

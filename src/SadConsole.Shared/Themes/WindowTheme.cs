@@ -78,7 +78,7 @@ namespace SadConsole.Themes
             };
         }
 
-        public override void Draw(ControlsConsole console, SurfaceBase hostSurface)
+        public override void Draw(ControlsConsole console, CellSurface hostSurface)
         {
             hostSurface.DefaultForeground = FillStyle.Foreground;
             hostSurface.DefaultBackground = FillStyle.Background;
@@ -126,7 +126,7 @@ namespace SadConsole.Themes
             FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
             TitleStyle = new Cell(themeColors.TitleText, FillStyle.Background, FillStyle.Glyph);
             BorderStyle = new Cell(themeColors.MenuLines, FillStyle.Background, 0);
-            BorderLineStyle = (int[])SurfaceBase.ConnectedLineEmpty.Clone();
+            BorderLineStyle = (int[])CellSurface.ConnectedLineEmpty.Clone();
             ModalTint = themeColors.ModalBackground;
         }
     }

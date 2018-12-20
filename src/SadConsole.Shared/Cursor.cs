@@ -14,7 +14,7 @@ namespace SadConsole
     //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
     public class Cursor
     {
-        private SurfaceBase editor;
+        private CellSurface editor;
         private Point position = new Point();
 
         private int cursorCharacter = 219;
@@ -114,7 +114,7 @@ namespace SadConsole
         /// Creates a new instance of the cursor class that will work with the specified console.
         /// </summary>
         /// <param name="console">The console this cursor will print on.</param>
-        public Cursor(SurfaceBase console)
+        public Cursor(CellSurface console)
         {
             editor = console;
 
@@ -143,7 +143,7 @@ namespace SadConsole
         /// Sets the console this cursor is targetting.
         /// </summary>
         /// <param name="console">The console the cursor works with.</param>
-        internal void AttachSurface(SurfaceBase console)
+        internal void AttachSurface(CellSurface console)
         {
             editor = console;
         }

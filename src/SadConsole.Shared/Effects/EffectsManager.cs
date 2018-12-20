@@ -15,7 +15,7 @@ namespace SadConsole.Effects
         protected Dictionary<ICellEffect, CellEffectData> _effects;
         protected Dictionary<Cell, CellEffectData> _effectCells;
 
-        protected SurfaceBase backingSurface;
+        protected CellSurface backingSurface;
 
         /// <summary>
         /// Gets the number of effects.
@@ -26,7 +26,7 @@ namespace SadConsole.Effects
         /// Creates a new effects manager associated with a text surface.
         /// </summary>
         /// <param name="surface">Text surface to manage.</param>
-        public EffectsManager(SurfaceBase surface)
+        public EffectsManager(CellSurface surface)
         {
             _effects = new Dictionary<ICellEffect, CellEffectData>(20);
             _effectCells = new Dictionary<Cell, CellEffectData>(50);
@@ -269,7 +269,7 @@ namespace SadConsole.Effects
         /// <param name="file">The file to load from.</param>
         /// <param name="backingSurface">The surface the effects were originally (or will be) associated with.</param>
         /// <returns></returns>
-        public static EffectsManager Load(string file, SurfaceBase backingSurface)
+        public static EffectsManager Load(string file, CellSurface backingSurface)
         {
             return EffectsManagerSerialized.Load(file, backingSurface);
         }
@@ -299,7 +299,7 @@ namespace SadConsole.Effects
             Dictionary<ICellEffect, int[]> Effects;
 
 
-            public static void Save(EffectsManager effectsManager, SurfaceBase surface, string file)
+            public static void Save(EffectsManager effectsManager, CellSurface surface, string file)
             {
                 EffectsManagerSerialized data = new EffectsManagerSerialized();
 
@@ -319,7 +319,7 @@ namespace SadConsole.Effects
                 SadConsole.Serializer.Save(data, file, Settings.SerializationIsCompressed);
             }
 
-            public static EffectsManager Load(string file, SurfaceBase surface)
+            public static EffectsManager Load(string file, CellSurface surface)
             {
                 EffectsManagerSerialized data = Serializer.Load<EffectsManagerSerialized>(file, Settings.SerializationIsCompressed);
                 EffectsManager manager = new EffectsManager(surface);

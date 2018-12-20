@@ -10,14 +10,14 @@ using SadConsole.Surfaces;
 
 namespace SadConsole.SerializedTypes
 {
-    public class AnimatedSurfaceConverterJson : JsonConverter<Surfaces.Animated>
+    public class AnimatedSurfaceConverterJson : JsonConverter<Surfaces.AnimatedScreenObject>
     {
-        public override void WriteJson(JsonWriter writer, Animated value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, AnimatedScreenObject value, JsonSerializer serializer)
         {
             serializer.Serialize(writer, (AnimatedSurfaceSerialized)value);
         }
 
-        public override Animated ReadJson(JsonReader reader, Type objectType, Animated existingValue, bool hasExistingValue,
+        public override AnimatedScreenObject ReadJson(JsonReader reader, Type objectType, AnimatedScreenObject existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
             return serializer.Deserialize<AnimatedSurfaceSerialized>(reader);
@@ -36,7 +36,7 @@ namespace SadConsole.SerializedTypes
         [DataMember] public bool Repeat;
         [DataMember] public FrameworkPoint Center;
 
-        public static implicit operator AnimatedSurfaceSerialized(Surfaces.Animated surface)
+        public static implicit operator AnimatedSurfaceSerialized(Surfaces.AnimatedScreenObject surface)
         {
             return new AnimatedSurfaceSerialized()
             {
@@ -54,12 +54,12 @@ namespace SadConsole.SerializedTypes
             };
         }
 
-        public static implicit operator Surfaces.Animated(AnimatedSurfaceSerialized serializedObject)
+        public static implicit operator Surfaces.AnimatedScreenObject(AnimatedSurfaceSerialized serializedObject)
         {
-            return new Surfaces.Animated(serializedObject.Name, serializedObject.Width,
+            return new Surfaces.AnimatedScreenObject(serializedObject.Name, serializedObject.Width,
                                          serializedObject.Height, serializedObject.Font)
             {
-                frames = new List<Surfaces.BasicNoDraw>(serializedObject.Frames.Select(s => (Surfaces.BasicNoDraw) s).ToArray()),
+                frames = new List<Surfaces.CellSurface>(serializedObject.Frames.Select(s => (Surfaces.CellSurface) s).ToArray()),
                 CurrentFrameIndex = 0,
                 AnimationDuration = serializedObject.AnimationDuration,
                 Repeat = serializedObject.Repeat,

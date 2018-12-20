@@ -9,7 +9,7 @@ namespace SadConsole
         /// <summary>
         /// Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
         /// </summary>
-        public static Func<string, string, ColoredGlyph[], Surfaces.SurfaceBase, ParseCommandStacks, ParseCommandBase> CustomProcessor;
+        public static Func<string, string, ColoredGlyph[], CellSurface, ParseCommandStacks, ParseCommandBase> CustomProcessor;
 
         /// <summary>
         /// Creates a colored string by parsing commands embedded in the string.
@@ -19,7 +19,7 @@ namespace SadConsole
         /// <param name="surface">The surface the string will be printed to.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
         /// <returns></returns>
-        public static ColoredString Parse(string value, int surfaceIndex = -1, Surfaces.SurfaceBase surface = null, ParseCommandStacks initialBehaviors = null)
+        public static ColoredString Parse(string value, int surfaceIndex = -1, CellSurface surface = null, ParseCommandStacks initialBehaviors = null)
         {
             var commandStacks = initialBehaviors ?? new ParseCommandStacks();
             List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);

@@ -17,21 +17,21 @@ namespace SadConsole
     /// </summary>
     public class ConsoleStack
     {
-        private IConsole activeConsole;
+        private ScreenObject activeConsole;
 
         /// <summary>
         /// Gets the current active console.
         /// </summary>
-        public IConsole Console => activeConsole;
+        public ScreenObject Console => activeConsole;
 
         /// <summary>
         /// The stack of consoles for input processing.
         /// </summary>
-        List<IConsole> consoles;
+        List<ScreenObject> consoles;
 
         internal ConsoleStack()
         {
-            consoles = new List<IConsole>();
+            consoles = new List<ScreenObject>();
             activeConsole = null;
         }
 
@@ -48,7 +48,7 @@ namespace SadConsole
         /// Adds another console to active stack, setting it as the active (top most in the stack) console.
         /// </summary>
         /// <param name="console"></param>
-        public void Push(IConsole console)
+        public void Push(ScreenObject console)
         {
             if (console != activeConsole && console != null)
             {
@@ -64,7 +64,7 @@ namespace SadConsole
         /// Replaces the top console (active console) with the provided instance. Sets <see cref="Console"/> to this instance.
         /// </summary>
         /// <param name="console">The console to make active.</param>
-        public void Set(IConsole console)
+        public void Set(ScreenObject console)
         {
             if (activeConsole == console)
                 return;
@@ -79,7 +79,7 @@ namespace SadConsole
         /// Removes the console from the active stack. If the instance is the current active console, the active console is set to the last console in the previous console.
         /// </summary>
         /// <param name="console">The console to remove.</param>
-        public void Pop(IConsole console)
+        public void Pop(ScreenObject console)
         {
             if (console == activeConsole)
             {
@@ -94,12 +94,12 @@ namespace SadConsole
                 consoles.Remove(console);
         }
 
-        public static bool operator !=(ConsoleStack left, IConsole right)
+        public static bool operator !=(ConsoleStack left, ScreenObject right)
         {
             return left.activeConsole != right;
         }
 
-        public static bool operator ==(ConsoleStack left, IConsole right)
+        public static bool operator ==(ConsoleStack left, ScreenObject right)
         {
             return left.activeConsole == right;
         }

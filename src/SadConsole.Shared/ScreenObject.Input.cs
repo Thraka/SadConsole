@@ -6,10 +6,10 @@ using SadConsole.Input;
 
 namespace SadConsole
 {
-    public partial class Console
+    public partial class ScreenObject
     {
         /// <summary>
-        /// Raised when the a mosue button is clicked on this console.
+        /// Raised when the a mouse button is clicked on this console.
         /// </summary>
         public event EventHandler<MouseEventArgs> MouseButtonClicked;
 
@@ -56,12 +56,12 @@ namespace SadConsole
         /// <summary>
         /// An alternative method handler for handling the mouse logic.
         /// </summary>
-        public Func<Console, SadConsole.Input.MouseConsoleState, bool> MouseHandler { get; set; }
+        public Func<ScreenObject, SadConsole.Input.MouseConsoleState, bool> MouseHandler { get; set; }
 
         /// <summary>
         /// An alternative method handler for handling the keyboard logic.
         /// </summary>
-        public Func<Console, Input.Keyboard, bool> KeyboardHandler { get; set; }
+        public Func<ScreenObject, Input.Keyboard, bool> KeyboardHandler { get; set; }
 
         /// <summary>
         /// Raises the <see cref="MouseEnter"/> event.
@@ -177,21 +177,31 @@ namespace SadConsole
         }
 
         /// <summary>
-    /// Called by the engine to process the keyboard. If the <see cref="KeyboardHandler"/> has been set, that will be called instead of this method.
-    /// </summary>
-    /// <param name="info">Keyboard information.</param>
-    /// <returns>True when the keyboard had data and this console did something with it.</returns>
-    public virtual bool ProcessKeyboard(Input.Keyboard info)
+        /// Called by the engine to process the keyboard. If the <see cref="KeyboardHandler"/> has been set, that will be called instead of this method.
+        /// </summary>
+        /// <param name="info">Keyboard information.</param>
+        /// <returns>True when the keyboard had data and this console did something with it.</returns>
+        public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
-            var handlerResult = KeyboardHandler?.Invoke(this, info) ?? false;
-
-            if (!handlerResult && this.UseKeyboard)
-            {
-                return Cursor.ProcessKeyboard(info);
-            }
-
-            return handlerResult;
+            return KeyboardHandler?.Invoke(this, info) ?? false;
+            
         }
 
+
+        /// <summary>
+        /// How the console handles becoming <see cref="Global.InputTargets.Console"/>.
+        /// </summary>
+        public enum ActiveBehavior
+        {
+            /// <summary>
+            /// Becomes the only active input object when focused.
+            /// </summary>
+            Set,
+
+            /// <summary>
+            /// Pushes to the top of the stack when it becomes the active input object.
+            /// </summary>
+            Push
+        }
     }
 }

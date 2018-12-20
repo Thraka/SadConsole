@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using SadConsole.DrawCalls;
+using SadConsole.Effects;
 using SadConsole.SerializedTypes;
 
 namespace SadConsole
@@ -9,7 +12,7 @@ namespace SadConsole
     /// <summary>
     /// An object that can be positioned on the screen and receive updates.
     /// </summary>
-    public class ScreenObject
+    public partial class ScreenObject: CellSurface
     {
         private ScreenObject _parentScreen;
         private Point _position;
@@ -17,7 +20,12 @@ namespace SadConsole
         private bool _isPaused;
 
         /// <summary>
-        /// The poistion of the screen object.
+        /// How the console should handle becoming active.
+        /// </summary>
+        public ActiveBehavior FocusedMode { get; set; }
+
+        /// <summary>
+        /// The position of the screen object.
         /// </summary>
         /// <remarks>This position has no substance.</remarks>
         public Point Position
@@ -107,43 +115,169 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new screen.
+        /// Gets or sets whether or not this console has exclusive access to the mouse events.
         /// </summary>
-        public ScreenObject()
+        public bool IsExclusiveMouse { get; set; }
+
+        /// <summary>
+        /// Gets or sets this console as the focused console for input.
+        /// </summary>
+        public bool IsFocused
+        {
+            get => Global.FocusedConsoles.Console == this;
+            set
+            {
+                if (Global.FocusedConsoles.Console != null)
+                {
+                    if (value && Global.FocusedConsoles.Console != this)
+                    {
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedConsoles.Push(this);
+                        else
+                            Global.FocusedConsoles.Set(this);
+
+                        OnFocused();
+                    }
+
+                    else if (value && Global.FocusedConsoles.Console == this)
+                        OnFocused();
+
+                    else if (!value)
+                    {
+                        if (Global.FocusedConsoles.Console == this)
+                            Global.FocusedConsoles.Pop(this);
+
+                        OnFocusLost();
+                    }
+                }
+                else
+                {
+                    if (value)
+                    {
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedConsoles.Push(this);
+                        else
+                            Global.FocusedConsoles.Set(this);
+
+                        OnFocused();
+                    }
+                    else
+                        OnFocusLost();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a new text surface with the specified width and height. Uses <see cref="Global.FontDefault"/> as the font.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        public ScreenObject(int width, int height): this(width, height, SadConsole.Global.FontDefault)
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new text surface with the specified width, height, and font.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="font">The font used with rendering.</param>
+        public ScreenObject(int width, int height, Font font): base(width, height)
         {
             Children = new ScreenObjectCollection(this);
+            _font = font;
+            RenderCells = new Cell[Cells.Length];
+            RenderRects = new Rectangle[Cells.Length];
+            Renderer = new Renderers.Basic();
+            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
+
+            var index = 0;
+
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    RenderRects[index] = _font.GetRenderRect(x, y);
+                    RenderCells[index] = this[x, y];
+                    index++;
+                }
+            }
+
+            AbsoluteArea = new Rectangle(0, 0, Width * _font.Size.X, Height * _font.Size.Y);
+            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
 
         /// <summary>
-        /// Draws all <see cref="Children"/>.
+        /// Creates a new text surface with the specified width, height, and initial set of cell data.
         /// </summary>
-        /// <param name="timeElapsed">Time since the last call.</param>
-        /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
-        public virtual void Draw(TimeSpan timeElapsed)
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="font">The font used with rendering.</param>
+        /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        public ScreenObject(int width, int height, Font font, Cell[] cells) : base(width, height, cells)
         {
-            if (IsVisible)
-            {
-                var copyList = new List<ScreenObject>(Children);
+            Children = new ScreenObjectCollection(this);
+            _font = font;
+            RenderCells = new Cell[Cells.Length];
+            RenderRects = new Rectangle[Cells.Length];
+            Renderer = new Renderers.Basic();
+            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
-                foreach (var child in copyList)
-                    child.Draw(timeElapsed);
+            var index = 0;
+
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    RenderRects[index] = _font.GetRenderRect(x, y);
+                    RenderCells[index] = this[x, y];
+                    index++;
+                }
             }
+
+            AbsoluteArea = new Rectangle(0, 0, Width * _font.Size.X, Height * _font.Size.Y);
+            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
 
-        /// <summary>
-        /// Updates all <see cref="Children"/>.
-        /// </summary>
-        /// <param name="timeElapsed">Time since the last call.</param>
-        /// <remarks>Only processes if <see cref="IsPaused"/> is <see langword="false"/>.</remarks>
-        public virtual void Update(TimeSpan timeElapsed)
+        internal ScreenObject(): base(1, 1)
         {
-            if (!IsPaused)
-            {
-                var copyList = new List<ScreenObject>(Children);
+            Children = new ScreenObjectCollection(this);
+            _font = Global.FontDefault;
+            RenderCells = new Cell[Cells.Length];
+            RenderRects = new Rectangle[Cells.Length];
+            Renderer = new Renderers.Basic();
+            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
-                foreach (var child in copyList)
-                    child.Update(timeElapsed);
+            var index = 0;
+
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    RenderRects[index] = _font.GetRenderRect(x, y);
+                    RenderCells[index] = this[x, y];
+                    index++;
+                }
             }
+
+            AbsoluteArea = new Rectangle(0, 0, Width * _font.Size.X, Height * _font.Size.Y);
+        }
+
+        public static ScreenObject CreateContainer()
+        {
+            return new ScreenObject();
+        }
+        
+        ///// <summary>
+        ///// Initialization is left to the derived class.
+        ///// </summary>
+        //protected ScreenObject() { }
+
+        protected override void OnCellsReset()
+        {
+            //ViewPortRectangle = viewPort;
+            SetRenderCells();
         }
 
         /// <summary>
@@ -181,5 +315,15 @@ namespace SadConsole
         /// Called when the paused status of the object changes.
         /// </summary>
         protected virtual void OnPausedChanged() { }
+
+        /// <summary>
+        /// Called when this console's focus has been lost.
+        /// </summary>
+        protected virtual void OnFocusLost() { }
+
+        /// <summary>
+        /// Called when this console is focused.
+        /// </summary>
+        protected virtual void OnFocused() { }
     }
 }

@@ -27,7 +27,7 @@ namespace StarterProject.CustomConsoles
         SadConsole.Controls.RadioButton optionButtonAnimated;
 
         SadConsole.Surfaces.Basic basicSurface;
-        SadConsole.Surfaces.Animated animatedSurface;
+        SadConsole.Surfaces.AnimatedScreenObject animatedSurface;
         SadConsole.Surfaces.Basic viewSurface;
         SadConsole.Surfaces.Layered layeredSurface;
         SadConsole.Surfaces.Basic emptySurface;
@@ -101,7 +101,7 @@ namespace StarterProject.CustomConsoles
 
             basicSurface = new SadConsole.Surfaces.Basic(34, 15);
             
-            animatedSurface = SadConsole.Surfaces.Animated.CreateStatic(34, 15, 15, 0.3d);
+            animatedSurface = SadConsole.Surfaces.AnimatedScreenObject.CreateStatic(34, 15, 15, 0.3d);
             viewSurface = new Basic(1, 1);
             viewSurface.SetViewFromSurface(new Rectangle(5, 2, 34 - 10, 15 - 4), basicSurface);
             //emptySurface = (SadConsole.Surfaces.BasicSurface)loadedView.TextSurface;
@@ -143,7 +143,7 @@ namespace StarterProject.CustomConsoles
             else if (optionButtonAnimated.IsSelected)
             {
                 animatedSurface.Save("animatedsurface.animation");
-                var animation = SadConsole.Surfaces.Animated.Load("animatedsurface.animation");
+                var animation = SadConsole.Surfaces.AnimatedScreenObject.Load("animatedsurface.animation");
                 animation.Start();
                 loadedView.Children.Add(animation);
             }

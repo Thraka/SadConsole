@@ -21,7 +21,7 @@ namespace StarterProject.CustomConsoles
         public EntityConsole()
             : base(80, 23)
         {
-            var animation = new Animated("default", 1, 1);
+            var animation = new AnimatedScreenObject("default", 1, 1);
             var frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
 
@@ -33,11 +33,9 @@ namespace StarterProject.CustomConsoles
             UseKeyboard = true;
             IsVisible = false;
 
-            EntityManager manager = new EntityManager();
+            EntityManager manager = new EntityManager(this);
 
             manager.Entities.Add(player);
-
-            Children.Add(manager);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)

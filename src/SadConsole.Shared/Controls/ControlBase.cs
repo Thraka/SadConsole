@@ -50,7 +50,7 @@ namespace SadConsole.Controls
         /// The cell data to render the control. Controlled by a theme.
         /// </summary>
         [DataMember]
-        public BasicNoDraw Surface { get; set; }
+        public CellSurface Surface { get; set; }
 
         /// <summary>
         /// Indicates the rendering location of this control.

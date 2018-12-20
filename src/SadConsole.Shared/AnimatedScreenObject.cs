@@ -9,12 +9,13 @@ using SadConsole.SerializedTypes;
 
 namespace SadConsole.Surfaces
 {
+    // TODO serialization
     /// <summary>
     /// Animates a list of frames.
     /// </summary>
-    [JsonConverter(typeof(AnimatedSurfaceConverterJson))]
+    //[JsonConverter(typeof(AnimatedSurfaceConverterJson))]
     [System.Diagnostics.DebuggerDisplay("Animated Surface")]
-    public class Animated: SurfaceBase
+    public class AnimatedScreenObject: ScreenObject
     {
         /// <summary>
         /// Raised when the <see cref="AnimationState"/> changes.
@@ -23,7 +24,7 @@ namespace SadConsole.Surfaces
 
         #region Variables
 
-        protected internal List<BasicNoDraw> frames = new List<BasicNoDraw>();
+        protected internal List<CellSurface> frames = new List<CellSurface>();
 
         /// <summary>
         /// Time counter for the naimation
@@ -51,14 +52,9 @@ namespace SadConsole.Surfaces
         protected bool _isPlaying;
 
         /// <summary>
-        /// The font to use with all frames.
-        /// </summary>
-        protected Font _font = Global.FontDefault;
-
-        /// <summary>
         /// All frames of the animation
         /// </summary>
-        public ReadOnlyCollection<BasicNoDraw> Frames => frames.AsReadOnly();
+        public ReadOnlyCollection<CellSurface> Frames => frames.AsReadOnly();
 
         /// <summary>
         /// The state of the animation.
@@ -123,7 +119,7 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public BasicNoDraw CurrentFrame => frames[_currentFrameIndex];
+        public CellSurface CurrentFrame => frames[_currentFrameIndex];
 
         /// <summary>
         /// Gets the current animation state.
@@ -152,7 +148,7 @@ namespace SadConsole.Surfaces
         /// <param name="name">The name of the animation.</param>
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
-        public Animated(string name, int width, int height) : this(name, width, height, Global.FontDefault)
+        public AnimatedScreenObject(string name, int width, int height) : this(name, width, height, Global.FontDefault)
         {
         }
 
@@ -163,7 +159,7 @@ namespace SadConsole.Surfaces
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
         /// <param name="font">The font used with this animation.</param>
-        public Animated(string name, int width, int height, Font font): base(width, height, font,new Rectangle(0,0,width,height), null)
+        public AnimatedScreenObject(string name, int width, int height, Font font): base(width, height, font)
         {
             Name = name;
         }
@@ -175,9 +171,6 @@ namespace SadConsole.Surfaces
         /// </summary>
         public override void SetRenderCells()
         {
-            // Sub views are not allowed on animated text surfaces. Enforce full view.
-            ViewPortRectangle = new Rectangle(0, 0, Width, Height);
-
             base.SetRenderCells();
 
             if (frames.Count > 0)
@@ -200,14 +193,12 @@ namespace SadConsole.Surfaces
         /// Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
         /// </summary>
         /// <returns>The created frame.</returns>
-        public BasicNoDraw CreateFrame()
+        public CellSurface CreateFrame()
         {
             if (frames == null)
-                frames = new List<BasicNoDraw>();
+                frames = new List<CellSurface>();
 
-            var frame = new BasicNoDraw(Width, Height);
-            frame.DefaultBackground = DefaultBackground;
-            frame.DefaultForeground = DefaultForeground;
+            var frame = new CellSurface(Width, Height) {DefaultBackground = DefaultBackground, DefaultForeground = DefaultForeground};
             frame.Clear();
             frames.Add(frame);
             UpdateFrameReferences();
@@ -323,9 +314,9 @@ namespace SadConsole.Surfaces
         /// <param name="frames">How many frames the animation should have.</param>
         /// <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="System.Random.NextDouble"/>.</param>
         /// <returns>An animation.</returns>
-        public static Animated CreateStatic(int width, int height, int frames, double blankChance)
+        public static AnimatedScreenObject CreateStatic(int width, int height, int frames, double blankChance)
         {
-            var animation = new Animated("default", width, height, Global.FontDefault);
+            var animation = new AnimatedScreenObject("default", width, height, Global.FontDefault);
             animation.DefaultBackground = Color.Black;
             for (int f = 0; f < frames; f++)
             {
@@ -361,7 +352,7 @@ namespace SadConsole.Surfaces
         /// <param name="file">The destination file.</param>
         public void Save(string file)
         {
-            Serializer.Save((SerializedTypes.AnimatedSurfaceSerialized)this, file, Settings.SerializationIsCompressed);
+            //Serializer.Save((SerializedTypes.AnimatedSurfaceSerialized)this, file, Settings.SerializationIsCompressed);
         }
 
         /// <summary>
@@ -369,9 +360,10 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static Animated Load(string file)
+        public static AnimatedScreenObject Load(string file)
         {
-            return Serializer.Load<SerializedTypes.AnimatedSurfaceSerialized>(file, Settings.SerializationIsCompressed);
+            throw new Exception();
+            //return Serializer.Load<SerializedTypes.AnimatedSurfaceSerialized>(file, Settings.SerializationIsCompressed);
         }
 
 

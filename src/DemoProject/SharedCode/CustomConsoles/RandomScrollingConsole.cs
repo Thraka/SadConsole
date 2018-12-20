@@ -12,17 +12,17 @@ namespace StarterProject.CustomConsoles
 {
     class RandomScrollingConsole : Console
     {
-        private Basic mainData;
-        private Basic messageData;
+        private Console mainData;
+        private Console messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
         
         public RandomScrollingConsole() : base(80, 23)
         {
-            messageData = new Basic(80, 1);
+            messageData = new Console(80, 1);
             messageData.Print(0, 0, "Generating random console data, please wait...");
-            mainData = new Basic(1, 1);
+            mainData = new Console(1, 1);
             IsVisible = false;
             mainData.IsVisible = false;
             

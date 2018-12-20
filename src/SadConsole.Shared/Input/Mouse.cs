@@ -13,7 +13,7 @@ namespace SadConsole.Input
     {
         private System.TimeSpan _leftLastClickedTime;
         private System.TimeSpan _rightLastClickedTime;
-        private IConsole lastMouseConsole;
+        private ScreenObject lastMouseConsole;
 
         /// <summary>
         /// The pixel position of the mouse on the screen.

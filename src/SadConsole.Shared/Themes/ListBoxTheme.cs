@@ -57,7 +57,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
+            control.Surface = new CellSurface(control.Width, control.Height);
 
             ((ListBox) control).ScrollBar.Theme = ScrollBarTheme;
 
@@ -78,7 +78,7 @@ namespace SadConsole.Themes
             BorderTheme = new ThemeStates(themeColors);
             BorderTheme.SetForeground(Normal.Foreground);
             BorderTheme.SetBackground(Normal.Background);
-            BorderLineStyle = (int[])SurfaceBase.ConnectedLineThick.Clone();
+            BorderLineStyle = (int[])CellSurface.ConnectedLineThick.Clone();
         }
 
         /// <inheritdoc />
@@ -206,7 +206,7 @@ namespace SadConsole.Themes
 
         protected ListBoxItemTheme() { }
 
-        public virtual void Draw(Surfaces.SurfaceBase surface, Rectangle area, object item, ControlStates itemState)
+        public virtual void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             string value = item.ToString();
             if (value.Length < area.Width)
@@ -242,7 +242,7 @@ namespace SadConsole.Themes
 
         public ListBoxItemColorTheme() { }
         
-        public virtual void Draw(Surfaces.SurfaceBase surface, Rectangle area, object item, ControlStates itemState)
+        public virtual void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             if (item is Color || item is Tuple<Color, Color, string>)
             {

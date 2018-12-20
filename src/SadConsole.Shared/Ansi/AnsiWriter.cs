@@ -24,7 +24,7 @@ namespace SadConsole.Ansi
         private int _charsPerSecond;
         private int _readerIndex;
         private byte[] _bytes;
-        private SurfaceBase _editor;
+        private CellSurface _editor;
         private State _ansiState;
         private Point _storedCursorLocation;
 
@@ -44,7 +44,7 @@ namespace SadConsole.Ansi
             }
         }
 
-        public AnsiWriter(Document ansiDocument, SurfaceBase editor)
+        public AnsiWriter(Document ansiDocument, CellSurface editor)
         {
             _ansiDoc = ansiDocument;
             _editor = editor;

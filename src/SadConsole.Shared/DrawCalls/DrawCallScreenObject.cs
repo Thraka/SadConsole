@@ -3,12 +3,12 @@ using SadConsole.Surfaces;
 
 namespace SadConsole.DrawCalls
 {
-    public class DrawCallSurface : IDrawCall
+    public class DrawCallScreenObject : IDrawCall
     {
-        public SurfaceBase Surface;
+        public ScreenObject Surface;
         public Vector2 Position;
 
-        public DrawCallSurface(SurfaceBase surface, Point position, bool pixelPositioned)
+        public DrawCallScreenObject(ScreenObject surface, Point position, bool pixelPositioned)
         {
             if (pixelPositioned)
                 Position = position.ToVector2();

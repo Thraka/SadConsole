@@ -12,7 +12,7 @@ namespace SadConsole.Readers
     {
         int width;
         int height;
-        Basic surface;
+        ScreenObject surface;
         Color[] pixels;
         int[] indexes;
         int fontPixels;
@@ -34,7 +34,7 @@ namespace SadConsole.Readers
             this.height = pixelHeight;
             pixels = new Color[pixelWidth * pixelHeight];
             indexes = new int[pixelWidth * pixelHeight];
-            surface = new Basic(pixelWidth / font.Size.X, pixelHeight / font.Size.Y, font);
+            surface = new ScreenObject(pixelWidth / font.Size.X, pixelHeight / font.Size.Y, font);
             fontPixels = font.Size.X * font.Size.Y;
 
             // build the indexes
@@ -68,7 +68,7 @@ namespace SadConsole.Readers
         /// </summary>
         /// <param name="image">The image to render.</param>
         /// <returns>The surface.</returns>
-        public Basic GetSurface(Texture2D image)
+        public ScreenObject GetSurface(Texture2D image)
         {
             surface.Clear();
 

@@ -11,10 +11,10 @@ namespace SadConsole.Entities
     /// <summary>
     /// Keeps a list of entities in sync with the parent <see cref="SurfaceBase"/>.
     /// </summary>
-    public class EntityManager: ScreenObject
+    public class EntityManager
     {
-        private SurfaceBase _surfaceParent;
         private Rectangle _cachedView;
+        private Console _parent;
 
         /// <summary>
         /// The entities this manager manages.
@@ -35,10 +35,10 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new entity manager.
         /// </summary>
-        public EntityManager()
+        public EntityManager(Console parent)
         {
             _cachedView = default;
-            Children.IsLocked = true;
+            _parent = parent;
 
             Entities.CollectionChanged += EntitiesOnCollectionChanged;
             Zones.CollectionChanged += EntitiesOnCollectionChanged;
@@ -51,7 +51,7 @@ namespace SadConsole.Entities
             {
                 case NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
-                        ((ScreenObject) item).Parent = Parent;
+                        ((ScreenObject) item).Parent = _parent;
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
@@ -59,7 +59,7 @@ namespace SadConsole.Entities
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var item in e.NewItems)
-                        ((ScreenObject)item).Parent = Parent;
+                        ((ScreenObject)item).Parent = _parent;
                     foreach (var item in e.OldItems)
                         ((ScreenObject)item).Parent = null;
 
@@ -75,33 +75,12 @@ namespace SadConsole.Entities
             Sync();
         }
 
-        /// <inheritdoc />
-        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        /// <summary>
+        /// Syncs the visibility of all objects with the viewport of the parent surface.
+        /// </summary>
+        public void Update()
         {
-            _surfaceParent = newParent as SurfaceBase;
-            IsPaused = _surfaceParent == null;
-
-            foreach (var zone in Zones)
-                if (zone.Parent != _surfaceParent)
-                    zone.Parent = _surfaceParent;
-
-            foreach (var spot in Hotspots)
-                if (spot.Parent != _surfaceParent)
-                    spot.Parent = _surfaceParent;
-
-            foreach (var entity in Entities)
-                if (entity.Parent != _surfaceParent)
-                    entity.Parent = _surfaceParent;
-
-            Sync();
-        }
-
-        /// <inheritdoc />
-        public override void Update(TimeSpan timeElapsed)
-        {
-            if (IsPaused) return;
-
-            if (_cachedView != _surfaceParent.ViewPort)
+            if (_cachedView != _parent.ViewPort)
                 Sync();
 
             else
@@ -109,8 +88,6 @@ namespace SadConsole.Entities
                 foreach (var entity in Entities)
                     entity.IsVisible = _cachedView.Contains(entity.Position);
             }
-
-
         }
 
         /// <summary>
@@ -118,9 +95,7 @@ namespace SadConsole.Entities
         /// </summary>
         public void Sync()
         {
-            if (_surfaceParent == null) return;
-
-            _cachedView = _surfaceParent.ViewPort;
+            _cachedView = _parent.ViewPort;
             foreach (var entity in Entities)
             {
                 entity.PositionOffset = new Point(-_cachedView.Location.X, -_cachedView.Location.Y);

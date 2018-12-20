@@ -81,7 +81,7 @@ namespace StarterProject.CustomConsoles
         }
 
         ParseCommandBase CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
-                                                          SurfaceBase surface, ParseCommandStacks commandStacks)
+                                                          CellSurface surface, ParseCommandStacks commandStacks)
         {
             switch (command)
             {
@@ -114,7 +114,7 @@ namespace StarterProject.CustomConsoles
                 CommandType = CommandTypes.Glyph;
             }
 
-            public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
             {
                 glyphState.Glyph = Glyph;
 

@@ -10,7 +10,7 @@ namespace SadConsole
 {
     public static class SurfaceBaseExtensions
     {
-        public static Matrix GetPositionTransform(this SurfaceBase surface, Point position, bool usePixelPositioning = false)
+        public static Matrix GetPositionTransform(this ScreenObject surface, Point position, bool usePixelPositioning = false)
         {
             Point worldLocation;
 

@@ -1,34 +1,34 @@
-﻿using SadConsole.Surfaces;
+﻿using SadConsole;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     public static class TextureExtensions
     {
-        public static Basic ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
+        public static CellSurface ToSurface(this Texture2D image, SadConsole.Font font, bool blockMode = false)
         {
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             Color[] pixels = new Color[imageWidth * imageHeight];
             image.GetData<Color>(pixels);
 
-            Basic surface = new Basic(imageWidth / font.Size.X, imageHeight / font.Size.Y, font);
+            CellSurface surface = new CellSurface(imageWidth / font.Size.X, imageHeight / font.Size.Y);
 
-            global::System.Threading.Tasks.Parallel.For((int) 0, (int)(imageHeight / surface.Font.Size.Y), (h) =>
-            //for (int h = 0; h < imageHeight / surface.Font.Size.Y; h++)
+            global::System.Threading.Tasks.Parallel.For((int) 0, (int)(imageHeight / font.Size.Y), (h) =>
+            //for (int h = 0; h < imageHeight / font.Size.Y; h++)
             {
-                int startY = (h * surface.Font.Size.Y);
-                //System.Threading.Tasks.Parallel.For(0, imageWidth / surface.Font.Size.X, (w) =>
-                for (int w = 0; w < imageWidth / surface.Font.Size.X; w++)
+                int startY = (h * font.Size.Y);
+                //System.Threading.Tasks.Parallel.For(0, imageWidth / font.Size.X, (w) =>
+                for (int w = 0; w < imageWidth / font.Size.X; w++)
                 {
-                    int startX = (w * surface.Font.Size.X);
+                    int startX = (w * font.Size.X);
 
                     float allR = 0;
                     float allG = 0;
                     float allB = 0;
 
-                    for (int y = 0; y < surface.Font.Size.Y; y++)
+                    for (int y = 0; y < font.Size.Y; y++)
                     {
-                        for (int x = 0; x < surface.Font.Size.X; x++)
+                        for (int x = 0; x < font.Size.X; x++)
                         {
                             int cY = y + startY;
                             int cX = x + startX;
@@ -41,9 +41,9 @@ namespace Microsoft.Xna.Framework.Graphics
                         }
                     }
 
-                    byte sr = (byte)(allR / (surface.Font.Size.X * surface.Font.Size.Y));
-                    byte sg = (byte)(allG / (surface.Font.Size.X * surface.Font.Size.Y));
-                    byte sb = (byte)(allB / (surface.Font.Size.X * surface.Font.Size.Y));
+                    byte sr = (byte)(allR / (font.Size.X * font.Size.Y));
+                    byte sg = (byte)(allG / (font.Size.X * font.Size.Y));
+                    byte sb = (byte)(allB / (font.Size.X * font.Size.Y));
 
                     var newColor = new Color(sr, sg, sb);
 
@@ -90,29 +90,29 @@ namespace Microsoft.Xna.Framework.Graphics
             return surface;
         }
 
-        public static void ToSurface(this Texture2D image, Basic surface, Color[] cachedColorArray, bool blockMode = false)
+        public static void ToSurface(this Texture2D image, CellSurface surface, Color[] cachedColorArray, Font font, bool blockMode = false)
         {
             int imageWidth = image.Width;
             int imageHeight = image.Height;
             image.GetData<Color>(cachedColorArray);
 
             surface.Clear();
-            global::System.Threading.Tasks.Parallel.For(0, imageHeight / surface.Font.Size.Y, (h) =>
-            //for (int h = 0; h < imageHeight / surface.Font.Size.Y; h++)
+            global::System.Threading.Tasks.Parallel.For(0, imageHeight / font.Size.Y, (h) =>
+            //for (int h = 0; h < imageHeight / font.Size.Y; h++)
             {
-                int startY = (h * surface.Font.Size.Y);
-                //System.Threading.Tasks.Parallel.For(0, imageWidth / surface.Font.Size.X, (w) =>
-                for (int w = 0; w < imageWidth / surface.Font.Size.X; w++)
+                int startY = (h * font.Size.Y);
+                //System.Threading.Tasks.Parallel.For(0, imageWidth / font.Size.X, (w) =>
+                for (int w = 0; w < imageWidth / font.Size.X; w++)
                 {
-                    int startX = (w * surface.Font.Size.X);
+                    int startX = (w * font.Size.X);
 
                     float allR = 0;
                     float allG = 0;
                     float allB = 0;
 
-                    for (int y = 0; y < surface.Font.Size.Y; y++)
+                    for (int y = 0; y < font.Size.Y; y++)
                     {
-                        for (int x = 0; x < surface.Font.Size.X; x++)
+                        for (int x = 0; x < font.Size.X; x++)
                         {
                             int cY = y + startY;
                             int cX = x + startX;
@@ -125,9 +125,9 @@ namespace Microsoft.Xna.Framework.Graphics
                         }
                     }
 
-                    byte sr = (byte)(allR / (surface.Font.Size.X * surface.Font.Size.Y));
-                    byte sg = (byte)(allG / (surface.Font.Size.X * surface.Font.Size.Y));
-                    byte sb = (byte)(allB / (surface.Font.Size.X * surface.Font.Size.Y));
+                    byte sr = (byte)(allR / (font.Size.X * font.Size.Y));
+                    byte sg = (byte)(allG / (font.Size.X * font.Size.Y));
+                    byte sb = (byte)(allB / (font.Size.X * font.Size.Y));
 
                     var newColor = new Color(sr, sg, sb);
 
@@ -172,7 +172,7 @@ namespace Microsoft.Xna.Framework.Graphics
             );
         }
 
-        public static void Save(this RenderTarget2D target, string path)
+        public static void Save(this Texture2D target, string path)
         {
             using (var stream = System.IO.File.OpenWrite(path))
                 target.SaveAsPng(stream, target.Bounds.Width, target.Bounds.Height);

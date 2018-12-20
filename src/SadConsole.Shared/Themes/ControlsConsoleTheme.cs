@@ -33,7 +33,7 @@ namespace SadConsole.Themes
             return newItem;
         }
 
-        public virtual void Draw(ControlsConsole console, SurfaceBase hostSurface)
+        public virtual void Draw(ControlsConsole console, CellSurface hostSurface)
         {
             hostSurface.DefaultForeground = FillStyle.Foreground;
             hostSurface.DefaultBackground = FillStyle.Background;

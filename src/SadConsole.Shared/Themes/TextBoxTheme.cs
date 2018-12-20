@@ -37,7 +37,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
+            control.Surface = new CellSurface(control.Width, control.Height);
 
             base.Attached(control);
         }
@@ -57,7 +57,7 @@ namespace SadConsole.Themes
 
             if (textbox.Surface.Effects.Count != 0)
             {
-                textbox.Surface.Update(time);
+                textbox.Surface.Effects.UpdateEffects(time.TotalSeconds);
                 textbox.IsDirty = true;
             }
 

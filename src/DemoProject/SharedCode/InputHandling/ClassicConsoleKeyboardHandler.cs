@@ -17,7 +17,7 @@ namespace StarterProject.InputHandling
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public Action<string> EnterPressedAction = (s) => { int i = s.Length; };
 
-        public bool HandleKeyboard(Console consoleObject, SadConsole.Input.Keyboard info)
+        public bool HandleKeyboard(ScreenObject consoleObject, SadConsole.Input.Keyboard info)
         {
             // Upcast this because we know we're only using it with a Console type.
             var console = (Console)consoleObject;

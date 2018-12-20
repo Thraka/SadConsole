@@ -7,18 +7,18 @@ namespace SadConsole.Debug
 {
     static class CurrentScreen
     {
-        private class DebugSurface: SurfaceBase
-        {
-            public override void Draw(TimeSpan timeElapsed)
-            {
-                base.Draw(timeElapsed);
-            }
-        }
+        //private class DebugSurface: ScreenObject
+        //{
+        //    public override void Draw(TimeSpan timeElapsed)
+        //    {
+        //        base.Draw(timeElapsed);
+        //    }
+        //}
 
-        public static void Show()
-        {
+        //public static void Show()
+        //{
 
-        }
+        //}
 
     }
 }

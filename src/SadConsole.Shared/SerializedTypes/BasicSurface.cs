@@ -39,7 +39,7 @@ namespace SadConsole.SerializedTypes
         [DataMember] public ColorSerialized DefaultBackground;
         [DataMember] public ColorSerialized Tint;
 
-        public static implicit operator BasicSurfaceSerialized(Surfaces.SurfaceBase surface)
+        public static implicit operator BasicSurfaceSerialized(CellSurface surface)
         {
             return new BasicSurfaceSerialized()
             {
@@ -57,7 +57,7 @@ namespace SadConsole.SerializedTypes
             };
         }
 
-        public static implicit operator BasicSurfaceSerialized(Surfaces.BasicNoDraw surface)
+        public static implicit operator BasicSurfaceSerialized(Surfaces.CellSurface surface)
         {
             return new BasicSurfaceSerialized()
             {
@@ -89,9 +89,9 @@ namespace SadConsole.SerializedTypes
             };
         }
 
-        public static implicit operator Surfaces.BasicNoDraw(BasicSurfaceSerialized surface)
+        public static implicit operator Surfaces.CellSurface(BasicSurfaceSerialized surface)
         {
-            return new Surfaces.BasicNoDraw(surface.Width, surface.Height, surface.Font ?? Global.FontDefault, surface.ViewPort,
+            return new Surfaces.CellSurface(surface.Width, surface.Height, surface.Font ?? Global.FontDefault, surface.ViewPort,
                 surface.Cells.Select(c => (Cell) c).ToArray())
             {
                 Tint = surface.Tint,

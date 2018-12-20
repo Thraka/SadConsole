@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SadConsole.Surfaces
+namespace SadConsole
 {
-    public partial class SurfaceBase
+    public partial class CellSurface
     {
         /// <summary>
         /// Glyph indexes for a thin line.

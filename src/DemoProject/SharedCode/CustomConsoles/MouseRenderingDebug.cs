@@ -27,7 +27,7 @@ namespace StarterProject.CustomConsoles
         }
     }
 
-    public class PaletteSurface: Basic
+    public class PaletteSurface: Console
     {
         private Palette palette;
 
@@ -45,9 +45,9 @@ namespace StarterProject.CustomConsoles
             Renderer = new PaletteSurfaceRenderer() {palette = palette};
 
         }
-        
 
-        protected override void InitializeCells()
+
+        protected override void OnCellsReset()
         {
             Cells = new Cell[Width * Height];
 
@@ -75,12 +75,12 @@ namespace StarterProject.CustomConsoles
     {
         public Palette palette;
 
-        public override void Render(SurfaceBase surface, bool force = false)
+        public override void Render(ScreenObject surface, bool force = false)
         {
             base.Render(surface, true);
         }
 
-        public override void RenderCells(SurfaceBase surfacePreCast, bool force = false)
+        public override void RenderCells(ScreenObject surfacePreCast, bool force = false)
         {
             PaletteSurface surface = (PaletteSurface)surfacePreCast;
             if (surface.IsDirty || force)

@@ -50,7 +50,7 @@ namespace SadConsole.StringParser
 
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, Surfaces.SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             if (CommandType == CommandTypes.Background)
                 glyphState.Background = GradientString[Length - Counter].Foreground;

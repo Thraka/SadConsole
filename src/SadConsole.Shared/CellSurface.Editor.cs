@@ -12,9 +12,9 @@ using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Effects;
 using SadConsole.StringParser;
 
-namespace SadConsole.Surfaces
+namespace SadConsole
 {
-    public partial class SurfaceBase
+    public partial class CellSurface
     {
         /// <summary>
         /// A variable that tracks how many times this editor shifted the surface down.
@@ -45,7 +45,7 @@ namespace SadConsole.Surfaces
         /// The effects manager associated with the <see cref="TextSurface"/>.
         /// </summary>
         [IgnoreDataMember]
-        public EffectsManager Effects { get; set; }
+        public EffectsManager Effects { get; protected set; }
 
         /// <summary>
         /// Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
@@ -1488,7 +1488,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
         /// <param name="destination">The destination surface.</param>
-        public void Copy(SurfaceBase destination)
+        public void Copy(CellSurface destination)
         {
             int maxX = Width >= destination.Width ? destination.Width : Width;
             int maxY = Height >= destination.Height ? destination.Height : Height;
@@ -1515,7 +1515,7 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x coordinate of the destination.</param>
         /// <param name="y">The y coordinate of the destination.</param>
         /// <param name="destination">The destination surface.</param>
-        public void Copy(SurfaceBase destination, int x, int y)
+        public void Copy(CellSurface destination, int x, int y)
         {
             for (int curx = 0; curx < Width; curx++)
             {
@@ -1543,7 +1543,7 @@ namespace SadConsole.Surfaces
         /// <param name="destination">The destination surface.</param>
         /// <param name="destinationX">The x coordinate to copy to.</param>
         /// <param name="destinationY">The y coordinate to copy to.</param>
-        public void Copy(int x, int y, int width, int height, SurfaceBase destination, int destinationX, int destinationY)
+        public void Copy(int x, int y, int width, int height, CellSurface destination, int destinationX, int destinationY)
         {
             int destX = destinationX;
             int destY = destinationY;
@@ -1566,10 +1566,101 @@ namespace SadConsole.Surfaces
 
             destination.IsDirty = true;
         }
+        
+        /// <summary>
+        /// Resizes the surface to the specified width and height.
+        /// </summary>
+        /// <param name="width">The new width.</param>
+        /// <param name="height">The new height.</param>
+        /// <param name="clear">When true, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        public void Resize(int width, int height, bool clear)
+        {
+            var newCells = new Cell[width * height];
+
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    if (IsValidCell(x, y))
+                    {
+                        newCells[new Point(x, y).ToIndex(width)] = this[x, y];
+
+                        if (clear)
+                        {
+                            newCells[new Point(x, y).ToIndex(width)].Foreground = DefaultForeground;
+                            newCells[new Point(x, y).ToIndex(width)].Background = DefaultBackground;
+                            newCells[new Point(x, y).ToIndex(width)].Glyph = 0;
+                            newCells[new Point(x, y).ToIndex(width)].ClearState();
+                        }
+                    }
+                    else
+                        newCells[new Point(x, y).ToIndex(width)] = new Cell(DefaultForeground, DefaultBackground, 0);
+                }
+            }
+
+            Cells = newCells;
+            Width = width;
+            Height = height;
+            Effects = new EffectsManager(this);
+            OnCellsReset();
+        }
+
+        /// <summary>
+        /// Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+        /// </summary>
+        /// <param name="view">An area of the surface to create a view of.</param>
+        /// <returns>A new surface</returns>
+        public CellSurface GetSubSurface(Rectangle view)
+        {
+            if (!new Rectangle(0, 0, Width, Height).Contains(view)) throw new Exception("View is outside of surface bounds.");
+
+            var cells = new Cell[view.Width * view.Height];
+
+            var index = 0;
+
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    cells[index] = this[x, y];
+                    index++;
+                }
+            }
+
+            return new CellSurface(view.Width, view.Height, cells);
+        }
+
+        /// <summary>
+        /// Remaps the cells of this surface to a view of the <paramref name="surface"/>.
+        /// </summary>
+        /// <typeparam name="T">The surface type.</typeparam>
+        /// <param name="view">A view rectangle of the target surface.</param>
+        /// <param name="surface">The target surface to map cells from.</param>
+        public void SetSurface<T>(in T surface, Rectangle view = default) where T : CellSurface
+        {
+            var rect = view == default ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
+
+            if (!new Rectangle(0, 0, surface.Width, surface.Height).Contains(rect))
+                throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
 
 
+            Width = rect.Width;
+            Height = rect.Height;
+            Cells = new Cell[rect.Width * rect.Height];
 
+            var index = 0;
 
+            for (var y = 0; y < rect.Height; y++)
+            {
+                for (var x = 0; x < rect.Width; x++)
+                {
+                    Cells[index] = surface.Cells[(y + rect.Top) * surface.Width + (x + rect.Left)];
+                    index++;
+                }
+            }
+
+            OnCellsReset();
+        }
 
 
 
@@ -1625,10 +1716,7 @@ namespace SadConsole.Surfaces
         /// </summary>
         /// <param name="location">The location of the index to get.</param>
         /// <returns>The cell index.</returns>
-        public int GetIndexFromPoint(Point location)
-        {
-            return location.Y * Width + location.X;
-        }
+        public int GetIndexFromPoint(Point location) => Helpers.GetIndexFromPoint(location.X, location.Y, Width);
 
         /// <summary>
         /// Gets the index of a location on the surface by coordinate.
@@ -1636,19 +1724,13 @@ namespace SadConsole.Surfaces
         /// <param name="x">The x of the location.</param>
         /// <param name="y">The y of the location.</param>
         /// <returns>The cell index.</returns>
-        public int GetIndexFromPoint(int x, int y)
-        {
-            return y * Width + x;
-        }
+        public int GetIndexFromPoint(int x, int y) => Helpers.GetIndexFromPoint(x, y, Width);
 
         /// <summary>
         /// Gets the x,y of an index on the surface.
         /// </summary>
         /// <param name="index">The index to get.</param>
         /// <returns>The x,y as a <see cref="Point"/>.</returns>
-        public Point GetPointFromIndex(int index)
-        {
-            return new Point(index % Width, index / Width);
-        }
+        public Point GetPointFromIndex(int index) => Helpers.GetPointFromIndex(index, Width);
     }
 }

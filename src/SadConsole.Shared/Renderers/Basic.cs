@@ -31,7 +31,7 @@ namespace SadConsole.Renderers
         /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ISurfaceRendered)"/> method.
         /// </summary>
         /// <param name="surface">Used only for tinting.</param>
-        public virtual void Render(Surfaces.SurfaceBase surface, bool force = false)
+        public virtual void Render(ScreenObject surface, bool force = false)
         {
             RenderBegin(surface, force);
             RenderCells(surface, force);
@@ -39,7 +39,7 @@ namespace SadConsole.Renderers
             RenderEnd(surface, force);
         }
 
-        public virtual void RenderBegin(Surfaces.SurfaceBase surface, bool force = false)
+        public virtual void RenderBegin(ScreenObject surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -52,7 +52,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        public virtual void RenderEnd(Surfaces.SurfaceBase surface, bool force = false)
+        public virtual void RenderEnd(ScreenObject surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -66,7 +66,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        public virtual void RenderCells(Surfaces.SurfaceBase surface, bool force = false)
+        public virtual void RenderCells(ScreenObject surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -97,7 +97,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        public virtual void RenderTint(Surfaces.SurfaceBase surface, bool force = false)
+        public virtual void RenderTint(ScreenObject surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {

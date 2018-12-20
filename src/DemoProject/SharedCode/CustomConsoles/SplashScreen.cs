@@ -17,7 +17,7 @@ namespace StarterProject.CustomConsoles
         public Action SplashCompleted { get; set; }
 
         private InstructionSet _animation;
-        private Basic _consoleImage;
+        private ScreenObject _consoleImage;
         private Point _consoleImagePosition;
         //private EffectsManager effectsManager;
         int _x = -50;
@@ -45,7 +45,9 @@ namespace StarterProject.CustomConsoles
             imageStream.Dispose();
 
             // Configure the logo
-            _consoleImage = image.ToSurface(Global.FontDefault, false);
+            var logo = image.ToSurface(Global.FontDefault, false);
+            
+            _consoleImage = new ScreenObject(logo.Width, logo.Height, Global.FontDefault, logo.Cells);
             _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, -1);
             _consoleImage.Tint = Color.Black;
 
@@ -139,7 +141,7 @@ namespace StarterProject.CustomConsoles
             if (IsVisible)
             {
                 Renderer.Render(_consoleImage);
-                Global.DrawCalls.Add(new DrawCallSurface(_consoleImage, _consoleImagePosition, false));
+                Global.DrawCalls.Add(new DrawCallScreenObject(_consoleImage, _consoleImagePosition, false));
 
                 base.Draw(delta);
             }

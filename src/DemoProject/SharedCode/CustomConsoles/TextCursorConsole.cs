@@ -12,12 +12,12 @@ namespace StarterProject.CustomConsoles
 {
     class TextCursorConsole : Console
     {
-        Basic mouseCursor;
+        ScreenObject mouseCursor;
         
         public TextCursorConsole()
             : base(80, 23)
         {
-            mouseCursor = new Basic(1, 1);
+            mouseCursor = new ScreenObject(1, 1);
             mouseCursor.SetGlyph(0,0, 178);
 
             Children.Add(mouseCursor);

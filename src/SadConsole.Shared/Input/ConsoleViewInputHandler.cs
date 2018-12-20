@@ -58,13 +58,13 @@ namespace SadConsole.Input
             _mouseLastLocation = new Point();
         }
 
-        public bool HandlerMouse(IConsole console, MouseConsoleState state)
+        public bool HandlerMouse(ScreenObject console, MouseConsoleState state)
         {
-            if (console.IsVisible && console.UseMouse)
+            if (console is IScreenObjectViewPort viewPortObject && console.IsVisible && console.UseMouse)
             {
                 bool doDrag = (state.Mouse.LeftButtonDown && CanMoveWithLeftButton) || (state.Mouse.RightButtonDown && CanMoveWithRightButton);
 
-                if (state.Console == console && doDrag)
+                if (state.ScreenObject == console && doDrag)
                 {
                     // Mouse just went down.
                     if (!_mouseDown)
@@ -80,13 +80,13 @@ namespace SadConsole.Input
 
                         if (currentLocation != _mouseLastLocation)
                         {
-                            Rectangle viewport = console.ViewPort;
+                            Rectangle viewport = viewPortObject.ViewPort;
 
                             viewport.X += _mouseLastLocation.X - currentLocation.X;
                             viewport.Y += _mouseLastLocation.Y - currentLocation.Y;
                             _mouseLastLocation = currentLocation;
 
-                            console.ViewPort = viewport;
+                            viewPortObject.ViewPort = viewport;
                         }
                     }
 
@@ -103,13 +103,13 @@ namespace SadConsole.Input
             return false;
         }
 
-        public bool HandlerKeyboard(IConsole console, Keyboard info)
+        public bool HandlerKeyboard(ScreenObject console, Keyboard info)
         {
             //TODO: This is dependent on how fast update is working... Make independent
             bool handled = false;
-            if (console.UseKeyboard && CanMoveWithKeyboard)
+            if (console is IScreenObjectViewPort viewPortObject && console.IsVisible && console.UseKeyboard && CanMoveWithKeyboard)
             {
-                var view = console.ViewPort;
+                var view = viewPortObject.ViewPort;
 
                 if (info.IsKeyDown(MoveLeftKey))
                 {
@@ -132,7 +132,7 @@ namespace SadConsole.Input
                     handled = true;
                 }
 
-                console.ViewPort = view;
+                viewPortObject.ViewPort = view;
             }
             return handled;
         }

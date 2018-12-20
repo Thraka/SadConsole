@@ -65,7 +65,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
+            control.Surface = new CellSurface(control.Width, control.Height);
 
             base.Attached(control);
         }
