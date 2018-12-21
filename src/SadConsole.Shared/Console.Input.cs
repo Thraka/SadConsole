@@ -183,7 +183,7 @@ namespace SadConsole
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
         public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
-            if (KeyboardHandler?.Invoke(this, info) ?? false)
+            if (KeyboardHandler?.Invoke(this, info) ?? true)
             {
                 if (!UseKeyboard) return false;
 
