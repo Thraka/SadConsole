@@ -72,7 +72,7 @@ namespace SadConsole.Input
                     ConsolePosition = WorldPosition - screenObject.CalculatedPosition;
                 }
 
-                if (screenObject is IScreenObjectViewPort viewObject)
+                if (screenObject is IConsoleViewPort viewObject)
                 {
                     var tempCellPosition = ConsolePosition + viewObject.ViewPort.Location;
                     IsOnConsole = viewObject.ViewPort.Contains(tempCellPosition);

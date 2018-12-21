@@ -60,7 +60,7 @@ namespace SadConsole.Input
 
         public bool HandlerMouse(Console console, MouseConsoleState state)
         {
-            if (console is IScreenObjectViewPort viewPortObject && console.IsVisible && console.UseMouse)
+            if (console is IConsoleViewPort viewPortObject && console.IsVisible && console.UseMouse)
             {
                 bool doDrag = (state.Mouse.LeftButtonDown && CanMoveWithLeftButton) || (state.Mouse.RightButtonDown && CanMoveWithRightButton);
 
@@ -107,7 +107,7 @@ namespace SadConsole.Input
         {
             //TODO: This is dependent on how fast update is working... Make independent
             bool handled = false;
-            if (console is IScreenObjectViewPort viewPortObject && console.IsVisible && console.UseKeyboard && CanMoveWithKeyboard)
+            if (console is IConsoleViewPort viewPortObject && console.IsVisible && console.UseKeyboard && CanMoveWithKeyboard)
             {
                 var view = viewPortObject.ViewPort;
 

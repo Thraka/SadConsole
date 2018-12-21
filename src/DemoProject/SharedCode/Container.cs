@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Input;
 using StarterProject.CustomConsoles;
+using Console = SadConsole.Console;
 
 namespace StarterProject
 {
@@ -13,7 +14,7 @@ namespace StarterProject
     class Container : ContainerConsole
     {
         private int currentConsoleIndex = -1;
-        private ScrollingConsole selectedConsole;
+        private Console selectedConsole;
         private HeaderConsole headerConsole;
 
         CustomConsole[] consoles;
@@ -32,6 +33,7 @@ namespace StarterProject
                 //new CustomConsoles.MouseRenderingDebug(),
                 //new CustomConsoles.AutoTypingConsole(),
                 //new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
+                new CustomConsole(new CustomConsoles.SerializationTests(), "Serialization Tests", "Test serializing various types from SadConsole"),
                 new CustomConsole(new CustomConsoles.ViewsAndSubViews(), "Sub Views", "Single text surface with two views into it. Click on either view."),
                 new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
                 new CustomConsole(new CustomConsoles.TextCursorConsole(), "Text Mouse Cursor", "Draws a game object where ever the mouse cursor is."),
@@ -45,7 +47,6 @@ namespace StarterProject
                 new CustomConsole(new CustomConsoles.AnsiConsole(), "Ansi parsing", "Read in old DOS ANSI files."),
                 ////new CustomConsole(new CustomConsoles.ScrollableConsole(20, 10, 60), "Text scrolling", "Renders a tiny console with a cursor along with a scroll bar"),
                 new CustomConsole(new CustomConsoles.StretchedConsole(), "Font Zoom", "Console where font has been zoomed x2"),
-                ////new CustomConsole(new CustomConsoles.SerializationTests(), "Serialization Tests", "Test serializing various types from SadConsole"),
                 new CustomConsole(new CustomConsoles.SceneProjectionConsole(), "Scene Projection", "Translating a 3D scene to a TextSurface T=Toggle B=Block Mode"),
                 new CustomConsole(new CustomConsoles.RandomScrollingConsole(), "Scrolling", "2000x2000 scrollable console. Use the cursor keys."), 
             };

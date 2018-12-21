@@ -6,14 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using SadConsole.Effects;
 using SadConsole.Input;
 
 
 namespace SadConsole
 {
+    /// <summary>
+    /// A <see cref="Console"/> that implements <see cref="IConsoleViewPort"/> to provide a scrolling capability.
+    /// </summary>
+    [JsonConverter(typeof(SerializedTypes.ScrollingConsoleJsonConverter))]
     [System.Diagnostics.DebuggerDisplay("Console")]
-    public class ScrollingConsole: Console, IScreenObjectViewPort
+    public class ScrollingConsole: Console, IConsoleViewPort
     {
         /// <summary>
         /// Sets the viewport without triggering <see cref="SetRenderCells"/>.
@@ -244,6 +249,7 @@ namespace SadConsole
         /// Creates a new console from an existing surface.
         /// </summary>
         /// <param name="surface"></param>
+        /// <param name="font">The font to associate with the new console.</param>
         /// <returns>A new console.</returns>
         public static ScrollingConsole FromSurface(CellSurface surface, Font font)
         {

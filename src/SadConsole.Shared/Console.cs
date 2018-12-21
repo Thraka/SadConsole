@@ -11,9 +11,10 @@ using Console = SadConsole.Console;
 namespace SadConsole
 {
     /// <summary>
-    /// An object that can be positioned on the screen and receive updates.
+    /// A <see cref="CellSurface"/> that has a font and can be drawn to the screen.
     /// </summary>
-    public partial class Console: CellSurface
+    [JsonConverter(typeof(SerializedTypes.ConsoleJsonConverter))]
+    public partial class Console : CellSurface
     {
         private Console _parentScreen;
         private Point _position;
@@ -316,5 +317,18 @@ namespace SadConsole
         /// Called when the paused status of the object changes.
         /// </summary>
         protected virtual void OnPausedChanged() { }
+
+        /// <summary>
+        /// Saves the <see cref="Console"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
+
+        /// <summary>
+        /// Loads a <see cref="Console"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static Console Load(string file) => Serializer.Load<Console>(file, Settings.SerializationIsCompressed);
     }
 }

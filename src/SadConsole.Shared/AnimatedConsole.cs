@@ -15,6 +15,7 @@ namespace SadConsole
     /// </summary>
     //[JsonConverter(typeof(AnimatedSurfaceConverterJson))]
     [System.Diagnostics.DebuggerDisplay("Animated Surface")]
+    [JsonConverter(typeof(SerializedTypes.AnimatedConsoleConverterJson))]
     public class AnimatedConsole: Console
     {
         /// <summary>
@@ -347,24 +348,17 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Saves the animated text surface to a file.
+        /// Saves the <see cref="AnimatedConsole"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
-        public void Save(string file)
-        {
-            //Serializer.Save((SerializedTypes.AnimatedSurfaceSerialized)this, file, Settings.SerializationIsCompressed);
-        }
+        public new void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
 
         /// <summary>
-        /// Loads an animated text surface from a file.
+        /// Loads a <see cref="AnimatedConsole"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static AnimatedConsole Load(string file)
-        {
-            throw new Exception();
-            //return Serializer.Load<SerializedTypes.AnimatedSurfaceSerialized>(file, Settings.SerializationIsCompressed);
-        }
+        public static new AnimatedConsole Load(string file) => Serializer.Load<AnimatedConsole>(file, Settings.SerializationIsCompressed);
 
 
         /// <summary>

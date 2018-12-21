@@ -5,7 +5,7 @@ namespace SadConsole
 {
     public static class RectangleExtensions
     {
-        public static void CenterViewPortOnPoint(this IScreenObjectViewPort surface, Point target)
+        public static void CenterViewPortOnPoint(this IConsoleViewPort surface, Point target)
         {
             surface.ViewPort = surface.ViewPort.CenterOnPoint(target, surface.Width, surface.Height);
         }

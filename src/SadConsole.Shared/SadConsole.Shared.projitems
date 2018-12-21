@@ -23,7 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSurface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IScreenObjectViewPort.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IConsoleViewPort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.Surface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.Input.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContainerConsole.cs" />
@@ -114,8 +114,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\AnimatedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\CellSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\ScrollingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\ISerialize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Point.cs" />
@@ -131,7 +135,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandStacks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParser\ParseCommandUndo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSurface.Editor.Static.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layered.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LayeredConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSurface.Editor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\ButtonTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Themes\CheckBoxTheme.cs" />

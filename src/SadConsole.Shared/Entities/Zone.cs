@@ -87,7 +87,7 @@ namespace SadConsole.Entities
             // TODO verify zone works.
             if (IsVisible && Parent != null)
             {
-                if (Parent is IScreenObjectViewPort parent)
+                if (Parent is IConsoleViewPort parent)
                 {
                     _drawCallScreenObject.Position = (Area.Location - parent.ViewPort.Location + Parent.CalculatedPosition).ToVector2();
                     _drawCallZone.Rectangle = new Rectangle(Font.GetWorldPosition(Area.Location), Area.Size * Font.Size);

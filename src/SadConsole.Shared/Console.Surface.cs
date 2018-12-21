@@ -178,24 +178,21 @@ namespace SadConsole
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             }
         }
-
-        ///// <summary>
-        ///// Creates the initial <see cref="Cells"/> array and sets each cell to a new instance.
-        ///// </summary>
-        //protected virtual void InitializeCells()
-        //{
-        //    Cells = new Cell[Width * Height];
-
-        //    for (int i = 0; i < Cells.Length; i++)
-        //        Cells[i] = new Cell(this.DefaultForeground, this.DefaultBackground, 0);
-
-        //    RenderCells = (Cell[])Cells.Clone();
-        //    RenderRects = new Rectangle[Cells.Length];
-        //}
-
+        
         /// <summary>
         /// Called when the <see cref="Font"/> property changes.
         /// </summary>
         protected virtual void OnFontChanged() { }
+
+        /// <summary>
+        /// Creates a new console from an existing surface.
+        /// </summary>
+        /// <param name="surface"></param>
+        /// <param name="font">The font to associate with the new console.</param>
+        /// <returns>A new console.</returns>
+        public static Console FromSurface(CellSurface surface, Font font)
+        {
+            return new Console(surface.Width, surface.Height, font, surface.Cells);
+        }
     }
 }
