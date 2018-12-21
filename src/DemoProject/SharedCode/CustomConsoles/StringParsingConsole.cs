@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 
 using SadConsole;
-using SadConsole.Surfaces;
+
 using SadConsole.StringParser;
 
 namespace StarterProject.CustomConsoles
 {
-    class StringParsingConsole: Console
+    class StringParsingConsole: ScrollingConsole
     {
         public StringParsingConsole():base(80, 23)
         {

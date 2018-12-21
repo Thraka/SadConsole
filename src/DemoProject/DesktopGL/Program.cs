@@ -3,8 +3,8 @@ using SadConsole;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Input;
-using SadConsole.Surfaces;
-using Console = SadConsole.Console;
+
+using Console = SadConsole.ScrollingConsole;
 
 namespace StarterProject
 {

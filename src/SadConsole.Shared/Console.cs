@@ -1,91 +1,193 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
+using SadConsole.DrawCalls;
 using SadConsole.Effects;
-using SadConsole.Input;
-using SadConsole.Surfaces;
+using SadConsole.SerializedTypes;
+using Console = SadConsole.Console;
 
 namespace SadConsole
 {
-    [System.Diagnostics.DebuggerDisplay("Console")]
-    public class Console: ScreenObject, IScreenObjectViewPort
+    /// <summary>
+    /// An object that can be positioned on the screen and receive updates.
+    /// </summary>
+    public partial class Console: CellSurface
     {
-        /// <summary>
-        /// The private virtual cursor reference.
-        /// </summary>
-        public Cursor Cursor { get; private set; }
+        private Console _parentScreen;
+        private Point _position;
+        private bool _isVisible = true;
+        private bool _isPaused;
 
         /// <summary>
-        /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+        /// How the console should handle becoming active.
         /// </summary>
-        public bool AutoCursorOnFocus { get; set; }
+        public ActiveBehavior FocusedMode { get; set; }
 
         /// <summary>
-        /// Sets the viewport without triggering <see cref="SetRenderCells"/>.
+        /// The position of the screen object.
         /// </summary>
-        protected Rectangle ViewPortRectangle;
-
-        /// <summary>
-        /// Sets the area of the text surface that should be rendered.
-        /// </summary>
-        public Rectangle ViewPort
+        /// <remarks>This position has no substance.</remarks>
+        public Point Position
         {
-            get => ViewPortRectangle;
+            get => _position;
             set
             {
-                ViewPortRectangle = value;
-
-                if (ViewPortRectangle == default)
-                    ViewPortRectangle = new Rectangle(0, 0, Width, Height);
-                if (ViewPortRectangle.Width > Width)
-                    ViewPortRectangle.Width = Width;
-                if (ViewPortRectangle.Height > Height)
-                    ViewPortRectangle.Height = Height;
-
-                if (ViewPortRectangle.X < 0)
-                    ViewPortRectangle.X = 0;
-                if (ViewPortRectangle.Y < 0)
-                    ViewPortRectangle.Y = 0;
-
-                if (ViewPortRectangle.X + ViewPortRectangle.Width > Width)
-                    ViewPortRectangle.X = Width - ViewPortRectangle.Width;
-                if (ViewPortRectangle.Y + ViewPortRectangle.Height > Height)
-                    ViewPortRectangle.Y = Height - ViewPortRectangle.Height;
-
-                IsDirty = true;
-                SetRenderCells();
-                OnViewPortChanged();
+                var oldPosition = _position;
+                _position = value;
+                OnCalculateRenderPosition();
+                OnPositionChanged(oldPosition);
             }
         }
 
+        /// <summary>
+        /// A position that is based on the <see cref="Parent"/> position.
+        /// </summary>
+        public Point CalculatedPosition { get; protected set; }
 
-        /// <inheritdoc />
-        public Console(int width, int height) : this(width, height, Global.FontDefault, new Rectangle(0, 0, width, height), null)
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get; set; } = false;
+
+        /// <summary>
+        /// The child objects of this instance.
+        /// </summary>
+        public ConsoleCollection Children { get; }
+
+        /// <summary>
+        /// The parent object that this instance is a child of.
+        /// </summary>
+        public Console Parent
         {
+            get => _parentScreen;
+            set
+            {
+                if (value == this) throw new Exception("Cannot set parent to itself.");
+                if (_parentScreen == value) return;
+                if (_parentScreen == null)
+                {
+                    _parentScreen = value;
+                    _parentScreen.Children.Add(this);
+                    OnCalculateRenderPosition();
+                    OnParentChanged(null, _parentScreen);
+                }
+                else
+                {
+                    var oldParent = _parentScreen;
+                    _parentScreen = value;
 
-        }
-        
-        /// <inheritdoc />
-        public Console(int width, int height, Font font) : this(width, height, font, new Rectangle(0, 0, width, height), null)
-        {
+                    oldParent.Children.Remove(this);
 
+                    _parentScreen?.Children.Add(this);
+
+                    OnCalculateRenderPosition();
+                    OnParentChanged(oldParent, _parentScreen);
+                }
+            }
         }
 
         /// <summary>
-        /// Creates a new text surface with the specified width and height.
+        /// Gets or sets the visibility of this object.
+        /// </summary>
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                if (_isVisible == value) return;
+                _isVisible = value;
+                OnVisibleChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the paused status of this object.
+        /// </summary>
+        public bool IsPaused
+        {
+            get => _isPaused;
+            set
+            {
+                if (_isPaused == value) return;
+                _isPaused = value;
+                OnPausedChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether or not this console has exclusive access to the mouse events.
+        /// </summary>
+        public bool IsExclusiveMouse { get; set; }
+
+        /// <summary>
+        /// Gets or sets this console as the focused console for input.
+        /// </summary>
+        public bool IsFocused
+        {
+            get => Global.FocusedConsoles.Console == this;
+            set
+            {
+                if (Global.FocusedConsoles.Console != null)
+                {
+                    if (value && Global.FocusedConsoles.Console != this)
+                    {
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedConsoles.Push(this);
+                        else
+                            Global.FocusedConsoles.Set(this);
+
+                        OnFocused();
+                    }
+
+                    else if (value && Global.FocusedConsoles.Console == this)
+                        OnFocused();
+
+                    else if (!value)
+                    {
+                        if (Global.FocusedConsoles.Console == this)
+                            Global.FocusedConsoles.Pop(this);
+
+                        OnFocusLost();
+                    }
+                }
+                else
+                {
+                    if (value)
+                    {
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedConsoles.Push(this);
+                        else
+                            Global.FocusedConsoles.Set(this);
+
+                        OnFocused();
+                    }
+                    else
+                        OnFocusLost();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Creates a new text surface with the specified width and height. Uses <see cref="Global.FontDefault"/> as the font.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        public Console(int width, int height): this(width, height, SadConsole.Global.FontDefault)
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new text surface with the specified width, height, and font.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        /// <param name="viewPort">Initial value for the viewport if this console will scroll.</param>
-        public Console(int width, int height, Font font, Rectangle viewPort) : this(width, height, font, viewPort, null)
+        public Console(int width, int height, Font font): this(width, height, font, null)
         {
-
+            
         }
 
         /// <summary>
@@ -94,210 +196,125 @@ namespace SadConsole
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
         /// <param name="font">The font used with rendering.</param>
-        /// <param name="viewPort">Initial value for the viewport if this console will scroll.</param>
-        /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        public Console(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells): base (width, height, font, initialCells)
+        /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        public Console(int width, int height, Font font, Cell[] cells) : base(width, height, cells)
         {
-            Cursor = new Cursor(this);
-            Renderer.BeforeRenderTintCallback = OnBeforeRender;
-
-            ViewPortRectangle = viewPort;
-
-            if (ViewPortRectangle == default)
-                ViewPortRectangle = new Rectangle(0, 0, Width, Height);
-            if (ViewPortRectangle.Width > Width)
-                ViewPortRectangle.Width = Width;
-            if (ViewPortRectangle.Height > Height)
-                ViewPortRectangle.Height = Height;
-
-            if (ViewPortRectangle.X < 0)
-                ViewPortRectangle.X = 0;
-            if (ViewPortRectangle.Y < 0)
-                ViewPortRectangle.Y = 0;
-
-            if (ViewPortRectangle.X + ViewPortRectangle.Width > Width)
-                ViewPortRectangle.X = Width - ViewPortRectangle.Width;
-            if (ViewPortRectangle.Y + ViewPortRectangle.Height > Height)
-                ViewPortRectangle.Y = Height - ViewPortRectangle.Height;
-
-
-            if (RenderCells.Length != ViewPortRectangle.Width * ViewPortRectangle.Height)
-            {
-                RenderRects = new Rectangle[ViewPortRectangle.Width * ViewPortRectangle.Height];
-                RenderCells = new Cell[ViewPortRectangle.Width * ViewPortRectangle.Height];
-            }
+            Children = new ConsoleCollection(this);
+            RenderCells = new Cell[Cells.Length];
+            RenderRects = new Rectangle[Cells.Length];
+            Renderer = new Renderers.Basic();
+            _font = font;
+            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
             var index = 0;
 
-            for (var y = 0; y < ViewPortRectangle.Height; y++)
+            for (var y = 0; y < Height; y++)
             {
-                for (var x = 0; x < ViewPortRectangle.Width; x++)
+                for (var x = 0; x < Width; x++)
                 {
-                    RenderRects[index] = _font.GetRenderRect(x, y);
-                    RenderCells[index] = Cells[(y + ViewPortRectangle.Top) * Width + (x + ViewPortRectangle.Left)];
+                    RenderRects[index] = Font.GetRenderRect(x, y);
+                    RenderCells[index] = this[x, y];
                     index++;
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, ViewPortRectangle.Width * _font.Size.X, ViewPortRectangle.Height * _font.Size.Y);
+            AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
+            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+            Cursor = new Cursor(this);
+        }
 
-            if (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
+        internal Console(): base(1, 1)
+        {
+            IsCursorDisabled = true;
+            Children = new ConsoleCollection(this);
+            RenderCells = new Cell[Cells.Length];
+            RenderRects = new Rectangle[Cells.Length];
+            Renderer = new Renderers.Basic();
+            _font = Global.FontDefault;
+            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
+
+            var index = 0;
+
+            for (var y = 0; y < Height; y++)
             {
-                LastRenderResult.Dispose();
-                LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                for (var x = 0; x < Width; x++)
+                {
+                    RenderRects[index] = Font.GetRenderRect(x, y);
+                    RenderCells[index] = this[x, y];
+                    index++;
+                }
             }
+
+            AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
         }
         
-        /// <inheritdoc />
-        public override void Update(TimeSpan delta)
-        {
-            if (IsPaused) return;
-
-            if (Cursor.IsVisible)
-                Cursor.Update(delta);
-
-            base.Update(delta);
-        }
-
-        /// <summary>
-        /// Calculates which cells to draw based on <see cref="ViewPort"/>.
-        /// </summary>
-        public override void SetRenderCells()
-        {
-            if (RenderCells.Length != ViewPortRectangle.Width * ViewPortRectangle.Height)
-            {
-                RenderRects = new Rectangle[ViewPortRectangle.Width * ViewPortRectangle.Height];
-                RenderCells = new Cell[ViewPortRectangle.Width * ViewPortRectangle.Height];
-            }
-
-            var index = 0;
-
-            for (var y = 0; y < ViewPortRectangle.Height; y++)
-            {
-                for (var x = 0; x < ViewPortRectangle.Width; x++)
-                {
-                    RenderRects[index] = _font.GetRenderRect(x, y);
-                    RenderCells[index] = Cells[(y + ViewPortRectangle.Top) * Width + (x + ViewPortRectangle.Left)];
-                    index++;
-                }
-            }
-
-            AbsoluteArea = new Rectangle(0, 0, ViewPortRectangle.Width * _font.Size.X, ViewPortRectangle.Height * _font.Size.Y);
-
-            if (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
-            {
-                LastRenderResult.Dispose();
-                LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
-            }
-        }
-
-        /// <inheritdoc />
         protected override void OnCellsReset()
         {
-            // Resize the viewport to make sure it's OK with the new cells
-            ViewPort = ViewPortRectangle;
-
-            base.OnCellsReset();
+            SetRenderCells();
         }
 
         /// <summary>
-        /// Resizes the surface to the specified width and height.
+        /// Sets a value for <see cref="CalculatedPosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
         /// </summary>
-        /// <param name="width">The new width.</param>
-        /// <param name="height">The new height.</param>
-        /// <param name="clear">When true, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
-        public void Resize(int width, int height, bool clear, Rectangle viewPort)
+        public virtual void OnCalculateRenderPosition()
         {
-            var newCells = new Cell[width * height];
+            CalculatedPosition = Position + (Parent?.CalculatedPosition ?? Point.Zero);
 
-            for (var y = 0; y < height; y++)
+            foreach (var child in Children)
             {
-                for (var x = 0; x < width; x++)
-                {
-                    if (IsValidCell(x, y))
-                    {
-                        newCells[new Point(x, y).ToIndex(width)] = this[x, y];
-
-                        if (clear)
-                        {
-                            newCells[new Point(x, y).ToIndex(width)].Foreground = DefaultForeground;
-                            newCells[new Point(x, y).ToIndex(width)].Background = DefaultBackground;
-                            newCells[new Point(x, y).ToIndex(width)].Glyph = 0;
-                            newCells[new Point(x, y).ToIndex(width)].ClearState();
-                        }
-                    }
-                    else
-                        newCells[new Point(x, y).ToIndex(width)] = new Cell(DefaultForeground, DefaultBackground, 0);
-                }
+                child.OnCalculateRenderPosition();
             }
-
-            Cells = newCells;
-            Width = width;
-            Height = height;
-            Effects = new EffectsManager(this);
-            ViewPortRectangle = viewPort;
-            OnCellsReset();
         }
 
         /// <summary>
-        /// Called by the engine to process the keyboard. If assigned, invokes the <see cref="ScreenObject.KeyboardHandler"/>; otherwise invokes the <see cref="Cursor.ProcessKeyboard(Keyboard)"/> method.
+        /// Called when this console's focus has been lost. Hides the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
-        /// <param name="info">Keyboard information.</param>
-        /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        public override bool ProcessKeyboard(Input.Keyboard info)
-        {
-            if (!UseKeyboard) return false;
-
-            return KeyboardHandler?.Invoke(this, info) 
-                   ?? Cursor.ProcessKeyboard(info);
-        }
-
-        /// <inheritdoc />
-        protected override void OnFocusLost()
+        protected virtual void OnFocusLost()
         {
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = false;
         }
 
-        /// <inheritdoc />
-        protected override void OnFocused()
+        /// <summary>
+        /// Called when this console is focused. Shows the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
+        /// </summary>
+        protected virtual void OnFocused()
         {
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = true;
         }
-
-        /// <summary>
-        /// Called when the <see cref="ViewPort"/> property changes.
-        /// </summary>
-        protected virtual void OnViewPortChanged() { }
-
+        
         /// <summary>
         /// Called when the renderer renders the text view.
         /// </summary>
         /// <param name="batch">The batch used in rendering.</param>
         protected virtual void OnBeforeRender(SpriteBatch batch)
         {
-            if (Cursor.IsVisible && ViewPort.Contains(Cursor.Position))
-                Cursor.Render(batch, Font, Font.GetRenderRect(Cursor.Position.X - ViewPort.Location.X, Cursor.Position.Y - ViewPort.Location.Y));
-        }
-        /// <summary>
-        /// Creates a new console from an existing surface.
-        /// </summary>
-        /// <param name="surface"></param>
-        /// <returns>A new console.</returns>
-        public static Console FromSurface(ScreenObject surface)
-        {
-            return new Console(surface.Width, surface.Height, surface.Font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
+            if (Cursor.IsVisible && IsValidCell(Cursor.Position.X, Cursor.Position.Y))
+                Cursor.Render(batch, Font, Font.GetRenderRect(Cursor.Position.X, Cursor.Position.Y));
         }
 
         /// <summary>
-        /// Creates a new console from an existing surface.
+        /// Called when the parent console changes for this console.
         /// </summary>
-        /// <param name="surface"></param>
-        /// <returns>A new console.</returns>
-        public static Console FromSurface(CellSurface surface, Font font)
-        {
-            return new Console(surface.Width, surface.Height, font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
-        }
+        /// <param name="oldParent">The previous parent.</param>
+        /// <param name="newParent">The new parent.</param>
+        protected virtual void OnParentChanged(Console oldParent, Console newParent) { }
+
+        /// <summary>
+        /// Called when the <see cref="Position" /> property changes.
+        /// </summary>
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
+
+        /// <summary>
+        /// Called when the visibility of the object changes.
+        /// </summary>
+        protected virtual void OnVisibleChanged() { }
+
+        /// <summary>
+        /// Called when the paused status of the object changes.
+        /// </summary>
+        protected virtual void OnPausedChanged() { }
     }
 }

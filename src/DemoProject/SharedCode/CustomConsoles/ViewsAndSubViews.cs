@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
-using SadConsole.Surfaces;
+
 using System;
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole;
 using SadConsole.Input;
 
@@ -12,15 +12,15 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class ViewsAndSubViews: Console
+    class ViewsAndSubViews: ScrollingConsole
     {
-        Console mainView;
-        Console subView;
+        ScrollingConsole mainView;
+        ScrollingConsole subView;
         
         public ViewsAndSubViews(): base(1,1)
         {
-            mainView = new Console(60, 23);
-            subView = Console.FromSurface(mainView.GetSubSurface(new Rectangle(0, 0, 20, 23)), Font);
+            mainView = new ScrollingConsole(60, 23);
+            subView = ScrollingConsole.FromSurface(mainView.GetSubSurface(new Rectangle(0, 0, 20, 23)), Font);
 
             IsVisible = false;
             UseMouse = true;
@@ -28,12 +28,12 @@ namespace StarterProject.CustomConsoles
             mainView.DrawLine(new Point(59, 0), new Point(59, 22), Color.White, glyph: ConnectedLineThin[(int)ConnectedLineIndex.Left]);
 
             // Setup main view
-            mainView.Position = new Point(0, 2);
+            mainView.Position = new Point(0, 0);
             mainView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) { e.MouseState.Cell.Background = Color.Blue; mainView.IsDirty = true; } };
             mainView.DirtyChanged += (s, e) => subView.IsDirty = true;
 
             // Setup sub view
-            subView.Position = new Point(60, 2);
+            subView.Position = new Point(60, 0);
             //subView.SetViewFromSurface(new Rectangle(0, 0, 20, 23), mainView);
             subView.MouseMove += (s, e) => { if (e.MouseState.Mouse.LeftButtonDown) { e.MouseState.Cell.Background = Color.Red; subView.IsDirty = true; } };
             subView.DirtyChanged += (s, e) => mainView.IsDirty = true;

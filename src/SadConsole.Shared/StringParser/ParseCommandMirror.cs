@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-using SadConsole.Surfaces;
+
 using System;
 using System.Globalization;
 

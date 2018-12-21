@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Surfaces;
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -23,7 +23,7 @@ namespace SadConsole.Renderers
         /// Renders a surface to the screen.
         /// </summary>
         /// <param name="surface">The surface to render.</param>
-        public override void Render(ScreenObject surface, bool force = false)
+        public override void Render(Console surface, bool force = false)
         {
             RenderBegin(surface, force);
             RenderCells(surface, force);

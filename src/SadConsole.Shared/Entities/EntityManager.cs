@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Text;
 using Microsoft.Xna.Framework;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Entities
 {
@@ -14,7 +14,7 @@ namespace SadConsole.Entities
     public class EntityManager
     {
         private Rectangle _cachedView;
-        private Console _parent;
+        private ScrollingConsole _parent;
 
         /// <summary>
         /// The entities this manager manages.
@@ -35,7 +35,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new entity manager.
         /// </summary>
-        public EntityManager(Console parent)
+        public EntityManager(ScrollingConsole parent)
         {
             _cachedView = default;
             _parent = parent;
@@ -51,17 +51,17 @@ namespace SadConsole.Entities
             {
                 case NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
-                        ((ScreenObject) item).Parent = _parent;
+                        ((Console) item).Parent = _parent;
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
-                        ((ScreenObject)item).Parent = null;
+                        ((Console)item).Parent = null;
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var item in e.NewItems)
-                        ((ScreenObject)item).Parent = _parent;
+                        ((Console)item).Parent = _parent;
                     foreach (var item in e.OldItems)
-                        ((ScreenObject)item).Parent = null;
+                        ((Console)item).Parent = null;
 
                     break;
                 case NotifyCollectionChangedAction.Move:

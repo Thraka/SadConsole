@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surfaces;
+
 using System;
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole.Input;
 using SadConsole;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace StarterProject.CustomConsoles
         }
     }
 
-    public class PaletteSurface: Console
+    public class PaletteSurface: ScrollingConsole
     {
         private Palette palette;
 
@@ -75,12 +75,12 @@ namespace StarterProject.CustomConsoles
     {
         public Palette palette;
 
-        public override void Render(ScreenObject surface, bool force = false)
+        public override void Render(SadConsole.Console surface, bool force = false)
         {
             base.Render(surface, true);
         }
 
-        public override void RenderCells(ScreenObject surfacePreCast, bool force = false)
+        public override void RenderCells(SadConsole.Console surfacePreCast, bool force = false)
         {
             PaletteSurface surface = (PaletteSurface)surfacePreCast;
             if (surface.IsDirty || force)
@@ -119,7 +119,7 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class MouseRenderingDebug : Console
+    class MouseRenderingDebug : ScrollingConsole
     {
         SadConsole.Instructions.DrawString typingInstruction;
         

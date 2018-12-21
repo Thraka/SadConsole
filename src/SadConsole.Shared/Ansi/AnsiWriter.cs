@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 
-using SadConsole.Surfaces;
 using SadConsole.Effects;
 using System;
 using System.Linq;
 using System.Text;
-using Console = SadConsole.Console;
+using Console = SadConsole.ScrollingConsole;
 
 namespace SadConsole.Ansi
 {

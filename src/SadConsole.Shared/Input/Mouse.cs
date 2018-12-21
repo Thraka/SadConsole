@@ -13,7 +13,7 @@ namespace SadConsole.Input
     {
         private System.TimeSpan _leftLastClickedTime;
         private System.TimeSpan _rightLastClickedTime;
-        private ScreenObject lastMouseConsole;
+        private Console lastMouseConsole;
 
         /// <summary>
         /// The pixel position of the mouse on the screen.
@@ -180,7 +180,7 @@ namespace SadConsole.Input
                 bool foundMouseTarget = false;
 
                 // Build a list of all consoles
-                var consoles = new List<Console>();
+                var consoles = new List<ScrollingConsole>();
                 GetConsoles(Global.CurrentScreen, ref consoles);
 
                 // Process top-most consoles first.
@@ -207,11 +207,11 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(ScreenObject screen, ref List<Console> list)
+        private void GetConsoles(Console screen, ref List<ScrollingConsole> list)
         {
-            if (screen is Console)
+            if (screen is ScrollingConsole)
             {
-                var console = screen as Console;
+                var console = screen as ScrollingConsole;
 
                 if (console.UseMouse)
                     list.Add(console);
@@ -228,7 +228,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="console">The console to check.</param>
         /// <returns>True or false indicating if the mouse is over the console.</returns>
-        public bool IsMouseOverConsole(Console console)
+        public bool IsMouseOverConsole(ScrollingConsole console)
         {
             return new MouseConsoleState(console, this).IsOnConsole;
         }

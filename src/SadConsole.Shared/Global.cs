@@ -42,7 +42,7 @@ namespace SadConsole
         /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public static ScreenObject CurrentScreen;
+        public static Console CurrentScreen;
 
         /// <summary>
         /// The stack of consoles that will receive keyboard and mouse input.

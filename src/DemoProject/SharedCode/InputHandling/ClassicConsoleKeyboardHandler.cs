@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Input;
 
 using SadConsole.Input;
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole;
 using System;
-using SadConsole.Surfaces;
+
 
 namespace StarterProject.InputHandling
 {
@@ -17,10 +17,10 @@ namespace StarterProject.InputHandling
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public Action<string> EnterPressedAction = (s) => { int i = s.Length; };
 
-        public bool HandleKeyboard(ScreenObject consoleObject, SadConsole.Input.Keyboard info)
+        public bool HandleKeyboard(SadConsole.Console consoleObject, SadConsole.Input.Keyboard info)
         {
             // Upcast this because we know we're only using it with a Console type.
-            var console = (Console)consoleObject;
+            var console = (ScrollingConsole)consoleObject;
             // Check each key pressed.
             foreach (var key in info.KeysPressed)
             {
@@ -59,7 +59,7 @@ namespace StarterProject.InputHandling
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
                     int startingIndex = console.GetIndexFromPoint(new Point(prompt.Length, CursorLastY));
-                    string data = ((Console)console).GetString(startingIndex, console.GetIndexFromPoint(console.Cursor.Position) - startingIndex);
+                    string data = ((ScrollingConsole)console).GetString(startingIndex, console.GetIndexFromPoint(console.Cursor.Position) - startingIndex);
 
                     // Move the cursor to the next line before we send the string data to the processor
                     console.Cursor.CarriageReturn().LineFeed();

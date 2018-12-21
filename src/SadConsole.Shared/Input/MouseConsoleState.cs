@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Input
 {
@@ -10,7 +10,7 @@ namespace SadConsole.Input
         /// <summary>
         /// The console used to create this object.
         /// </summary>
-        public readonly ScreenObject ScreenObject;
+        public readonly Console Console;
 
         /// <summary>
         /// The mouse state.
@@ -18,12 +18,12 @@ namespace SadConsole.Input
         public readonly Mouse Mouse;
 
         /// <summary>
-        /// The cell the mouse is over, from <see cref="ScreenObject"/>.
+        /// The cell the mouse is over, from <see cref="Console"/>.
         /// </summary>
         public readonly Cell Cell;
 
         /// <summary>
-        /// The position of the mouse on the <see cref="ScreenObject"/>, based on the <see cref="WorldPosition"/>.
+        /// The position of the mouse on the <see cref="Console"/>, based on the <see cref="WorldPosition"/>.
         /// </summary>
         public readonly Point ConsolePosition;
 
@@ -43,19 +43,19 @@ namespace SadConsole.Input
         public readonly Point RelativePixelPosition;
 
         /// <summary>
-        /// Indicates that the mouse is within the bounds of <see cref="ScreenObject"/>.
+        /// Indicates that the mouse is within the bounds of <see cref="Console"/>.
         /// </summary>
         public readonly bool IsOnConsole;
 
         /// <summary>
-        /// Calculates a new <see cref="MouseConsoleState"/> based on an <see cref="ScreenObject"/> and <see cref="Mouse"/> state.
+        /// Calculates a new <see cref="MouseConsoleState"/> based on an <see cref="Console"/> and <see cref="Mouse"/> state.
         /// </summary>
         /// <param name="screenObject">The console to process with the mouse state.</param>
         /// <param name="mouseData">The current mouse state.</param>
-        public MouseConsoleState(ScreenObject screenObject, Mouse mouseData)
+        public MouseConsoleState(Console screenObject, Mouse mouseData)
         {
             this.Mouse = mouseData.Clone();
-            this.ScreenObject = screenObject;
+            this.Console = screenObject;
 
             if (screenObject != null)
             {
@@ -89,7 +89,7 @@ namespace SadConsole.Input
                     {
                         IsOnConsole = true;
                         CellPosition = ConsolePosition;
-                        Cell = ScreenObject[ConsolePosition.X, ConsolePosition.Y];
+                        Cell = Console[ConsolePosition.X, ConsolePosition.Y];
                     }
                 }
             }
@@ -97,7 +97,7 @@ namespace SadConsole.Input
 
         private MouseConsoleState(MouseConsoleState clonedCopy)
         {
-            ScreenObject = clonedCopy.ScreenObject;
+            Console = clonedCopy.Console;
             Mouse = clonedCopy.Mouse.Clone();
             Cell = clonedCopy.Cell;
             ConsolePosition = clonedCopy.ConsolePosition;

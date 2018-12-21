@@ -6,7 +6,7 @@ using SadConsole.Input;
 
 namespace SadConsole
 {
-    public partial class ScreenObject
+    public partial class Console
     {
         /// <summary>
         /// Raised when the a mouse button is clicked on this console.
@@ -56,12 +56,12 @@ namespace SadConsole
         /// <summary>
         /// An alternative method handler for handling the mouse logic.
         /// </summary>
-        public Func<ScreenObject, SadConsole.Input.MouseConsoleState, bool> MouseHandler { get; set; }
+        public Func<Console, SadConsole.Input.MouseConsoleState, bool> MouseHandler { get; set; }
 
         /// <summary>
         /// An alternative method handler for handling the keyboard logic.
         /// </summary>
-        public Func<ScreenObject, Input.Keyboard, bool> KeyboardHandler { get; set; }
+        public Func<Console, Input.Keyboard, bool> KeyboardHandler { get; set; }
 
         /// <summary>
         /// Raises the <see cref="MouseEnter"/> event.
@@ -177,14 +177,20 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Called by the engine to process the keyboard. If the <see cref="KeyboardHandler"/> has been set, that will be called instead of this method.
+        /// Called by the engine to process the keyboard. If assigned, invokes the <see cref="KeyboardHandler"/>; otherwise invokes the <see cref="Cursor.ProcessKeyboard(Keyboard)"/> method.
         /// </summary>
         /// <param name="info">Keyboard information.</param>
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
         public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
-            return KeyboardHandler?.Invoke(this, info) ?? false;
-            
+            if (KeyboardHandler?.Invoke(this, info) ?? false)
+            {
+                if (!UseKeyboard) return false;
+
+                return Cursor.IsEnabled ? Cursor.ProcessKeyboard(info) : false;
+            }
+
+            return false;
         }
 
 

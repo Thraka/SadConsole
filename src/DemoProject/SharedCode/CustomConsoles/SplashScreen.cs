@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 using System;
 using SadConsole;
-using SadConsole.Surfaces;
-using Console = SadConsole.Console;
+
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using System.Collections.Generic;
 using SadConsole.DrawCalls;
 using SadConsole.Instructions;
@@ -12,12 +12,12 @@ using SadConsole.Effects;
 
 namespace StarterProject.CustomConsoles
 {
-    class SplashScreen : Console
+    class SplashScreen : ScrollingConsole
     {
         public Action SplashCompleted { get; set; }
 
         private InstructionSet _animation;
-        private ScreenObject _consoleImage;
+        private SadConsole.Console _consoleImage;
         private Point _consoleImagePosition;
         //private EffectsManager effectsManager;
         int _x = -50;
@@ -27,6 +27,7 @@ namespace StarterProject.CustomConsoles
         public SplashScreen()
             : base(80, 23)
         {
+            Cursor.IsEnabled = false;
             IsVisible = false;
             //effectsManager = new EffectsManager(this.TextSurface);
             // Setup the console text background
@@ -46,8 +47,8 @@ namespace StarterProject.CustomConsoles
 
             // Configure the logo
             var logo = image.ToSurface(Global.FontDefault, false);
-            
-            _consoleImage = new ScreenObject(logo.Width, logo.Height, Global.FontDefault, logo.Cells);
+
+            _consoleImage = new SadConsole.Console(logo.Width, logo.Height, Global.FontDefault, logo.Cells);
             _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, -1);
             _consoleImage.Tint = Color.Black;
 

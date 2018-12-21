@@ -4,7 +4,7 @@ using System;
 
 namespace StarterProject.CustomConsoles
 {
-    class DOSConsole: SadConsole.Console
+    class DOSConsole: SadConsole.ScrollingConsole
     {
         public string Prompt { get; set; }
 

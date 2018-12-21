@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Debug
 {
     static class CurrentScreen
     {
-        //private class DebugSurface: ScreenObject
+        //private class DebugSurface: Console
         //{
         //    public override void Draw(TimeSpan timeElapsed)
         //    {

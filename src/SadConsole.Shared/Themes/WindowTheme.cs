@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 using System.Runtime.Serialization;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Themes
 {

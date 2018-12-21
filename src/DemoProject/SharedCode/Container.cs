@@ -1,5 +1,5 @@
 ﻿using System;
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -10,10 +10,10 @@ using StarterProject.CustomConsoles;
 namespace StarterProject
 {
     [System.Diagnostics.DebuggerDisplay("Demo Container")]
-    class Container : ScreenObjectContainer
+    class Container : ContainerConsole
     {
         private int currentConsoleIndex = -1;
-        private Console selectedConsole;
+        private ScrollingConsole selectedConsole;
         private HeaderConsole headerConsole;
 
         CustomConsole[] consoles;
@@ -63,7 +63,7 @@ namespace StarterProject
             selectedConsole = consoles[currentConsoleIndex].Console;
 
             Children.Clear();
-            Children.Add((ScreenObject)selectedConsole);
+            Children.Add((SadConsole.Console)selectedConsole);
             Children.Add(headerConsole);
 
             selectedConsole.IsVisible = true;

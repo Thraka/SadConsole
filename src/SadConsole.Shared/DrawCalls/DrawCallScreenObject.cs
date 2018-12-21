@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.DrawCalls
 {
     public class DrawCallScreenObject : IDrawCall
     {
-        public ScreenObject Surface;
+        public Console Surface;
         public Vector2 Position;
 
-        public DrawCallScreenObject(ScreenObject surface, Point position, bool pixelPositioned)
+        public DrawCallScreenObject(Console surface, Point position, bool pixelPositioned)
         {
             if (pixelPositioned)
                 Position = position.ToVector2();

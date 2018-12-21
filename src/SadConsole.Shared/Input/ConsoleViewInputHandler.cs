@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Input
 {
@@ -58,13 +58,13 @@ namespace SadConsole.Input
             _mouseLastLocation = new Point();
         }
 
-        public bool HandlerMouse(ScreenObject console, MouseConsoleState state)
+        public bool HandlerMouse(Console console, MouseConsoleState state)
         {
             if (console is IScreenObjectViewPort viewPortObject && console.IsVisible && console.UseMouse)
             {
                 bool doDrag = (state.Mouse.LeftButtonDown && CanMoveWithLeftButton) || (state.Mouse.RightButtonDown && CanMoveWithRightButton);
 
-                if (state.ScreenObject == console && doDrag)
+                if (state.Console == console && doDrag)
                 {
                     // Mouse just went down.
                     if (!_mouseDown)
@@ -103,7 +103,7 @@ namespace SadConsole.Input
             return false;
         }
 
-        public bool HandlerKeyboard(ScreenObject console, Keyboard info)
+        public bool HandlerKeyboard(Console console, Keyboard info)
         {
             //TODO: This is dependent on how fast update is working... Make independent
             bool handled = false;

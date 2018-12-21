@@ -6,13 +6,13 @@ using System.Collections.Generic;
 namespace SadConsole
 {
     /// <summary>
-    /// Manages the parent and children relationship for <see cref="ScreenObject"/>.
+    /// Manages the parent and children relationship for <see cref="Console"/>.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("IScreen Collection")]
-    public class ScreenObjectCollection : IEnumerable<ScreenObject>, System.Collections.IEnumerable
+    public class ConsoleCollection : IEnumerable<Console>, System.Collections.IEnumerable
     {
-        protected List<ScreenObject> screens;
-        protected WeakReference<ScreenObject> owningScreen;
+        protected List<Console> screens;
+        protected Console owningScreen;
 
         public int Count => screens.Count;
 
@@ -26,7 +26,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="index">The index of the child object.</param>
         /// <returns></returns>
-        public ScreenObject this[int index]
+        public Console this[int index]
         {
             get => screens[index];
             set
@@ -45,10 +45,10 @@ namespace SadConsole
         /// Creates a new screen object collection and parents it to the <paramref name="owner"/> object.
         /// </summary>
         /// <param name="owner">The owning object of this collection.</param>
-        public ScreenObjectCollection(ScreenObject owner)
+        public ConsoleCollection(Console owner)
         {
-            screens = new List<ScreenObject>();
-            owningScreen = new WeakReference<ScreenObject>(owner);
+            screens = new List<Console>();
+            owningScreen = owner;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="screen">The console to search for.</param>
         /// <returns></returns>
-        public bool Contains(ScreenObject screen)
+        public bool Contains(Console screen)
         {
             return screens.Contains(screen);
         }
@@ -75,7 +75,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="screen">The screen object to check.</param>
         /// <returns>True when the object is on top.</returns>
-        public bool IsTop(ScreenObject screen)
+        public bool IsTop(Console screen)
         {
             if (screens.Contains(screen))
                 return screens.IndexOf(screen) == screens.Count - 1;
@@ -88,7 +88,7 @@ namespace SadConsole
         /// </summary>
         /// <exception cref="Exception">Thrown when the <see cref="IsLocked"/> property is set to true.</exception>
         /// <param name="screen">The child object.</param>
-        public void Add(ScreenObject screen)
+        public void Add(Console screen)
         {
             if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
 
@@ -104,7 +104,7 @@ namespace SadConsole
         /// <exception cref="Exception">Thrown when the <see cref="IsLocked"/> property is set to true.</exception>
         /// <param name="index">The 0-based index to insert the object at.</param>
         /// <param name="screen">The child object.</param>
-        public void Insert(int index, ScreenObject screen)
+        public void Insert(int index, Console screen)
         {
             if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
 
@@ -119,7 +119,7 @@ namespace SadConsole
         /// </summary>
         /// <exception cref="Exception">Thrown when the <see cref="IsLocked"/> property is set to true.</exception>
         /// <param name="screen">The child object.</param>
-        public void Remove(ScreenObject screen)
+        public void Remove(Console screen)
         {
             if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
 
@@ -133,7 +133,7 @@ namespace SadConsole
         /// Moves the specified <paramref name="screen"/>  to the top of the collection.
         /// </summary>
         /// <param name="screen">The child object.</param>
-        public void MoveToTop(ScreenObject screen)
+        public void MoveToTop(Console screen)
         {
             if (screens.Contains(screen))
             {
@@ -146,7 +146,7 @@ namespace SadConsole
         /// Moves the specified <paramref name="screen"/>  to the bottom of the collection.
         /// </summary>
         /// <param name="screen">The child object.</param>
-        public void MoveToBottom(ScreenObject screen)
+        public void MoveToBottom(Console screen)
         {
             if (screens.Contains(screen))
             {
@@ -159,7 +159,7 @@ namespace SadConsole
         /// Gets the 0-based index of the <paramref name="screen"/>.
         /// </summary>
         /// <param name="screen">The child object.</param>
-        public int IndexOf(ScreenObject screen)
+        public int IndexOf(Console screen)
         {
             return screens.IndexOf(screen);
         }
@@ -214,16 +214,14 @@ namespace SadConsole
         //    return null;
         //}
 
-        private void SetScreenParent(ScreenObject screen)
+        private void SetScreenParent(Console screen)
         {
-            if (owningScreen.TryGetTarget(out ScreenObject owner) && screen != owner)
-                screen.Parent = owner;
+            screen.Parent = owningScreen;
         }
 
-        private void RemoveScreenParent(ScreenObject screen)
+        private void RemoveScreenParent(Console screen)
         {
-            if (owningScreen.TryGetTarget(out ScreenObject owner) && screen == owner)
-                screen.Parent = null;
+            screen.Parent = null;
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -232,7 +230,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        public IEnumerator<ScreenObject> GetEnumerator()
+        public IEnumerator<Console> GetEnumerator()
         {
             return screens.GetEnumerator();
         }

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surfaces;
+
 using SadConsole.Renderers;
 using SadConsole.Input;
 using System;
@@ -17,21 +17,21 @@ namespace SadConsole
     /// </summary>
     public class ConsoleStack
     {
-        private ScreenObject activeConsole;
+        private Console activeConsole;
 
         /// <summary>
         /// Gets the current active console.
         /// </summary>
-        public ScreenObject Console => activeConsole;
+        public Console Console => activeConsole;
 
         /// <summary>
         /// The stack of consoles for input processing.
         /// </summary>
-        List<ScreenObject> consoles;
+        List<Console> consoles;
 
         internal ConsoleStack()
         {
-            consoles = new List<ScreenObject>();
+            consoles = new List<Console>();
             activeConsole = null;
         }
 
@@ -48,7 +48,7 @@ namespace SadConsole
         /// Adds another console to active stack, setting it as the active (top most in the stack) console.
         /// </summary>
         /// <param name="console"></param>
-        public void Push(ScreenObject console)
+        public void Push(Console console)
         {
             if (console != activeConsole && console != null)
             {
@@ -64,7 +64,7 @@ namespace SadConsole
         /// Replaces the top console (active console) with the provided instance. Sets <see cref="Console"/> to this instance.
         /// </summary>
         /// <param name="console">The console to make active.</param>
-        public void Set(ScreenObject console)
+        public void Set(Console console)
         {
             if (activeConsole == console)
                 return;
@@ -79,7 +79,7 @@ namespace SadConsole
         /// Removes the console from the active stack. If the instance is the current active console, the active console is set to the last console in the previous console.
         /// </summary>
         /// <param name="console">The console to remove.</param>
-        public void Pop(ScreenObject console)
+        public void Pop(Console console)
         {
             if (console == activeConsole)
             {
@@ -94,12 +94,12 @@ namespace SadConsole
                 consoles.Remove(console);
         }
 
-        public static bool operator !=(ConsoleStack left, ScreenObject right)
+        public static bool operator !=(ConsoleStack left, Console right)
         {
             return left.activeConsole != right;
         }
 
-        public static bool operator ==(ConsoleStack left, ScreenObject right)
+        public static bool operator ==(ConsoleStack left, Console right)
         {
             return left.activeConsole == right;
         }

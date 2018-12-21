@@ -81,7 +81,7 @@ namespace SadConsole
         public bool DialogResult { get; set; }
         
         /// <summary>
-        /// Indicates that when this window is shown by the <see cref="Show()"/> method or by setting the <see cref="ScreenObject.IsVisible"/> property to true, the window will be shown as modal.
+        /// Indicates that when this window is shown by the <see cref="Show()"/> method or by setting the <see cref="Console.IsVisible"/> property to true, the window will be shown as modal.
         /// </summary>
         [DataMember]
         public bool ModalIsDefault { get; set; }

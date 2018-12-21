@@ -7,7 +7,7 @@ using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
 using System.Windows;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Controls
 {

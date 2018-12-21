@@ -7,18 +7,37 @@ using SadConsole.DrawCalls;
 
 namespace SadConsole
 {
-    public partial class ScreenObject
+    public partial class Console
     {
         private Color _tint = Color.Transparent;
         private bool _isDirty = true;
         private DrawCallScreenObject _drawCall;
 
-        protected Font _font;
-        
+        private Font _font;
+        private Renderers.IRenderer _renderer;
+
+        /// <summary>
+        /// When <see langword="true"/>, indicates that the <see cref="Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
+        /// </summary>
+        public bool IsCursorDisabled { get; protected set; }
+
         /// <summary>
         /// The renderer used to draw this surface.
         /// </summary>
-        public Renderers.IRenderer Renderer { get; protected set; }
+        public Renderers.IRenderer Renderer
+        {
+            get => _renderer;
+            set
+            {
+                if (_renderer?.BeforeRenderTintCallback == OnBeforeRender)
+                    _renderer.BeforeRenderTintCallback = null;
+
+                _renderer = value;
+
+                if (!IsCursorDisabled)
+                    _renderer.BeforeRenderTintCallback = OnBeforeRender;
+            }
+        }
 
         /// <summary>
         /// Font used with rendering.
@@ -28,9 +47,11 @@ namespace SadConsole
             get => _font;
             set
             {
+                if (_font == value) return;
                 _font = value;
-                SetRenderCells();
                 OnFontChanged();
+                SetRenderCells();
+                IsDirty = true;
             }
         }
 
@@ -66,11 +87,21 @@ namespace SadConsole
         /// The last texture render pass for this surface.
         /// </summary>
         public RenderTarget2D LastRenderResult { get; protected set; }
-        
+
+        /// <summary>
+        /// The private virtual cursor reference.
+        /// </summary>
+        public Cursor Cursor { get; private set; }
+
+        /// <summary>
+        /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+        /// </summary>
+        public bool AutoCursorOnFocus { get; set; }
+
         /// <summary>
         /// Disposes <see cref="LastRenderResult"/>.
         /// </summary>
-        ~ScreenObject() => LastRenderResult?.Dispose();
+        ~Console() => LastRenderResult?.Dispose();
         
         /// <summary>
         /// Draws all <see cref="Children"/>.
@@ -90,7 +121,7 @@ namespace SadConsole
                 Global.DrawCalls.Add(_drawCall);
             }
 
-            var copyList = new List<ScreenObject>(Children);
+            var copyList = new List<Console>(Children);
 
             foreach (var child in copyList)
                 child.Draw(timeElapsed);
@@ -104,10 +135,13 @@ namespace SadConsole
         public virtual void Update(TimeSpan timeElapsed)
         {
             if (IsPaused) return;
-
+            
             Effects.UpdateEffects(timeElapsed.TotalSeconds);
 
-            var copyList = new List<ScreenObject>(Children);
+            if (!IsCursorDisabled && Cursor.IsVisible)
+                Cursor.Update(timeElapsed);
+
+            var copyList = new List<Console>(Children);
 
             foreach (var child in copyList)
                 child.Update(timeElapsed);
@@ -130,15 +164,15 @@ namespace SadConsole
             {
                 for (var x = 0; x < Width; x++)
                 {
-                    RenderRects[index] = _font.GetRenderRect(x, y);
+                    RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = this[x, y];
                     index++;
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, Width * _font.Size.X, Height * _font.Size.Y);
+            AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
 
-            if (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
+            if (LastRenderResult == null && LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
             {
                 LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);

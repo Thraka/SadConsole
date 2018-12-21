@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surfaces;
+
 using SadConsole.Renderers;
 using SadConsole.Input;
 using System;
@@ -13,12 +13,12 @@ using Keyboard = SadConsole.Input.Keyboard;
 namespace SadConsole
 {
     /// <summary>
-    /// A <see cref="ScreenObject"/> that only processes children and does not render anything.
+    /// A <see cref="Console"/> that only processes children and does not render anything.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Container")]
-    public class ScreenObjectContainer : ScreenObject
+    public class ContainerConsole : Console
     {
-        public ScreenObjectContainer() : base()
+        public ContainerConsole() : base()
         {
         }
 
@@ -26,7 +26,7 @@ namespace SadConsole
         {
             if (!IsVisible) return;
             
-            var copyList = new List<ScreenObject>(Children);
+            var copyList = new List<Console>(Children);
 
             foreach (var child in copyList)
                 child.Draw(timeElapsed);
@@ -36,7 +36,7 @@ namespace SadConsole
         {
             if (IsPaused) return;
 
-            var copyList = new List<ScreenObject>(Children);
+            var copyList = new List<Console>(Children);
 
             foreach (var child in copyList)
                 child.Update(timeElapsed);

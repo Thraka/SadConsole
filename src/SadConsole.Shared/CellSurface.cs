@@ -79,19 +79,22 @@ namespace SadConsole
             protected set => Cells[index] = value;
         }
         
-        public CellSurface(int width, int height)
+        /// <summary>
+        /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// </summary>
+        /// <param name="width">The width of the surface in cells.</param>
+        /// <param name="height">The height of the surface in cells.</param>
+        public CellSurface(int width, int height): this(width, height, null)
         {
-            Width = width;
-            Height = height;
-
-            Cells = new Cell[width * height];
-
-            for (var i = 0; i < Cells.Length; i++)
-                Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
-
-            Effects = new Effects.EffectsManager(this);
+            
         }
 
+        /// <summary>
+        /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// </summary>
+        /// <param name="width">The width of the surface in cells.</param>
+        /// <param name="height">The height of the surface in cells.</param>
+        /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         public CellSurface(int width, int height, Cell[] initialCells)
         {
             Width = width;
@@ -118,6 +121,9 @@ namespace SadConsole
         /// </summary>
         protected virtual void OnDirtyChanged() => DirtyChanged?.Invoke(this, EventArgs.Empty);
 
+        /// <summary>
+        /// Called when the <see cref="Cells"/> property is reset.
+        /// </summary>
         protected virtual void OnCellsReset() { }
 
         /// <summary>

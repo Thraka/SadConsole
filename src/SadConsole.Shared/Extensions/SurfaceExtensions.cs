@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole.Renderers;
-using SadConsole.Surfaces;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace SadConsole
 {
     public static class SurfaceBaseExtensions
     {
-        public static Matrix GetPositionTransform(this ScreenObject surface, Point position, bool usePixelPositioning = false)
+        public static Matrix GetPositionTransform(this Console surface, Point position, bool usePixelPositioning = false)
         {
             Point worldLocation;
 

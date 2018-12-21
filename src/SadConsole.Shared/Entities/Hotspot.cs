@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Entities
 {
@@ -13,7 +13,7 @@ namespace SadConsole.Entities
     /// A group of positions with a set of settings.
     /// </summary>
     [DataContract]
-    public class Hotspot: ScreenObject
+    public class Hotspot: Console
     {
         private CellSurface _debugSurface;
         private CellSurface _parentSurface;
@@ -64,7 +64,7 @@ namespace SadConsole.Entities
         }
 
         /// <inheritdoc />
-        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        protected override void OnParentChanged(Console oldParent, Console newParent)
         {
             //_parentSurface = newParent as SurfaceBase;
         }

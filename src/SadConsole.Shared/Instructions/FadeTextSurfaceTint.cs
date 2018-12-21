@@ -9,7 +9,7 @@ namespace SadConsole.Instructions
     /// Animates the change to the tint of a <see cref="SadConsole.Consoles.ITextSurfaceRendered"/>.
     /// </summary>
     [DataContract]
-    public class FadeTextSurfaceTint : InstructionBase<ScreenObject>
+    public class FadeTextSurfaceTint : InstructionBase<Console>
     {
         /// <summary>
         /// The color to fade the tint to.
@@ -29,7 +29,7 @@ namespace SadConsole.Instructions
         /// <param name="textSurface">The <see cref="Consoles.ITextSurfaceRendered.Tint"/> to fade.</param>
         /// <param name="colors">The gradient pattern to fade through.</param>
         /// <param name="duration">How long the fade takes.</param>
-        public FadeTextSurfaceTint(ScreenObject textSurface, ColorGradient colors, TimeSpan duration)
+        public FadeTextSurfaceTint(Console textSurface, ColorGradient colors, TimeSpan duration)
             : base(textSurface)
         {
             Colors = colors;

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework.Input;
-using SadConsole.Surfaces;
+
 using SadConsole.Effects;
 using SadConsole;
 //using SadConsole.Effects;
@@ -48,6 +48,11 @@ namespace SadConsole
         /// Shows or hides the cursor. This does not affect how the cursor operates.
         /// </summary>
         public bool IsVisible { get; set; }
+
+        /// <summary>
+        /// When true, allows the <see cref="ProcessKeyboard(Input.Keyboard)"/> method to run.
+        /// </summary>
+        public bool IsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets the location of the cursor on the console.
@@ -124,6 +129,7 @@ namespace SadConsole
 
         private void Constructor()
         {
+            IsEnabled = true;
             IsVisible = false;
             AutomaticallyShiftRowsUp = true;
 
@@ -563,7 +569,10 @@ namespace SadConsole
         /// <returns>Returns true when the keyboard caused the cursor to do something.</returns>
         public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
+            if (!IsEnabled) return false;
+
             var didSomething = false;
+
             foreach (var key in info.KeysPressed)
             {
                 if (key.Character == '\0')

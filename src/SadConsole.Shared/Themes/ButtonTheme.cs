@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Controls;
-using SadConsole.Surfaces;
+
 
 namespace SadConsole.Themes
 {

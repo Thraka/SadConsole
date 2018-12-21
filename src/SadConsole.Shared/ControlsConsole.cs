@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using SadConsole.Renderers;
-using SadConsole.Surfaces;
+
 using SadConsole.Themes;
 
 namespace SadConsole
@@ -18,7 +18,7 @@ namespace SadConsole
     /// </summary>
     [DataContract]
     [System.Diagnostics.DebuggerDisplay("Console (Controls)")]
-    public class ControlsConsole: Console, IEnumerable<ControlBase>
+    public class ControlsConsole: ScrollingConsole, IEnumerable<ControlBase>
     {
         /// <summary>
         /// Keyboard processor shared by all Controls Consoles.

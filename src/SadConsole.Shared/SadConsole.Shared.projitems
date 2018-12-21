@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Algorithms.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AnimatedScreenObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimatedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ansi\AnsiWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ansi\Document.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ansi\Helpers.cs" />
@@ -21,12 +21,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IScreenObjectViewPort.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ScreenObject.Surface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ScreenObject.Input.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ScreenObjectContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console.Surface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console.Input.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ContainerConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
@@ -112,8 +112,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\IRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ScreenObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ScreenObjectCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Color.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\Font.cs" />
@@ -162,8 +162,5 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\IBM.font" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Surfaces\" />
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 namespace SadConsole
 {
     /// <summary>
-    /// A <see cref="Rectangle"/> for viewing a subset of cells from a <see cref="ScreenObject"/>.
+    /// A <see cref="Rectangle"/> for viewing a subset of cells from a <see cref="Console"/>.
     /// </summary>
     public interface IScreenObjectViewPort
     {

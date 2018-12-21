@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Surfaces;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +14,7 @@ namespace SadConsole
         /// </summary>
         public class FPSCounterComponent : DrawableGameComponent
         {
-            ScreenObject surface;
+            Console surface;
 
             int frameRate = 0;
             int frameCounter = 0;
@@ -24,7 +24,7 @@ namespace SadConsole
             public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
                 : base(game)
             {
-                surface = new ScreenObject(30, 1) {DefaultBackground = Color.Black};
+                surface = new Console(30, 1) {DefaultBackground = Color.Black};
                 surface.Clear();
                 DrawOrder = 8;
                 Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;

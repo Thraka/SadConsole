@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Controls;
-using SadConsole.Surfaces;
+
 using System.Runtime.Serialization;
 
 namespace SadConsole.Themes

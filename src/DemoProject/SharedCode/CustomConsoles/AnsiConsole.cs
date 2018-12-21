@@ -1,18 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surfaces;
-using Console = SadConsole.Console;
+
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole.Input;
 using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class AnsiConsole: Console
+    class AnsiConsole: ScrollingConsole
     {
         int fileIndex = -1;
         string[] files;
-        private Console ansiSurface;
+        private ScrollingConsole ansiSurface;
         
         public AnsiConsole(): base(80, 23)
         {
@@ -26,7 +26,7 @@ namespace StarterProject.CustomConsoles
 
             KeyboardHandler = (surface, info) =>
             {
-                var cons = surface as Console;
+                var cons = surface as ScrollingConsole;
 
                 if (info.IsKeyDown(Keys.Left))
                     cons.ViewPort = new Rectangle(cons.ViewPort.Left - 1, cons.ViewPort.Top, 80, 23);
@@ -88,7 +88,7 @@ namespace StarterProject.CustomConsoles
         {
             Clear();
 
-            ansiSurface = new Console(80, 25);
+            ansiSurface = new ScrollingConsole(80, 25);
             writer = new SadConsole.Ansi.AnsiWriter(doc, ansiSurface);
             writer.ReadEntireDocument();
 

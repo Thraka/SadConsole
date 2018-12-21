@@ -4,25 +4,25 @@ using Microsoft.Xna.Framework.Graphics;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using SadConsole;
-using SadConsole.Surfaces;
-using Console = SadConsole.Console;
+
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using System;
 
 namespace StarterProject.CustomConsoles
 {
-    class RandomScrollingConsole : Console
+    class RandomScrollingConsole : ScrollingConsole
     {
-        private Console mainData;
-        private Console messageData;
+        private ScrollingConsole mainData;
+        private ScrollingConsole messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
         
         public RandomScrollingConsole() : base(80, 23)
         {
-            messageData = new Console(80, 1);
+            messageData = new ScrollingConsole(80, 1);
             messageData.Print(0, 0, "Generating random console data, please wait...");
-            mainData = new Console(1, 1);
+            mainData = new ScrollingConsole(1, 1);
             IsVisible = false;
             mainData.IsVisible = false;
             

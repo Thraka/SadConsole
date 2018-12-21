@@ -158,7 +158,7 @@ namespace SadConsole
             Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
             Global.ResetRendering();
 
-            Global.CurrentScreen = new ScreenObjectContainer();
+            Global.CurrentScreen = new ContainerConsole();
 
             // Tell the main engine we're ready
             OnInitialize?.Invoke();

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using SadConsole.DrawCalls;
-using SadConsole.Surfaces;
+
 using SadConsole;
 
 namespace SadConsole.Entities
@@ -14,7 +14,7 @@ namespace SadConsole.Entities
     /// Defines an area for a scene.
     /// </summary>
     [DataContract]
-    public class Zone: ScreenObject
+    public class Zone: Console
     {
         private const string DefaultDebugTitle = "Zone";
 
@@ -144,7 +144,7 @@ namespace SadConsole.Entities
         }
 
         /// <inheritdoc />
-        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        protected override void OnParentChanged(Console oldParent, Console newParent)
         {
             Font = newParent?.Font ?? SadConsole.Global.FontDefault;
         }

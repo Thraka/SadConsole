@@ -20,7 +20,7 @@
 //    /// <inheritdoc cref="IList"/>
 //    [JsonConverter(typeof(LayeredJsonConverter))]
 //    [System.Diagnostics.DebuggerDisplay("Layered Surface")]
-//    public class Layered : ScreenObject, IList<Basic>
+//    public class Layered : Console, IList<Basic>
 //    {
 //        private readonly IList<Basic> _backingList;
 //        public Basic this[int index]
