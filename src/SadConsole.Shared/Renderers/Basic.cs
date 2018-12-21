@@ -28,9 +28,10 @@ namespace SadConsole.Renderers
         public Action<SpriteBatch> AfterRenderCallback { get; set; }
 
         /// <summary>
-        /// Renders the cached surface from a previous call to the constructor or the <see cref="Update(ISurfaceRendered)"/> method.
+        /// When <see cref="CellSurface.IsDirty"/> is <see langword="true"/>, draws the surface to the <see cref="Console.LastRenderResult"/> and tints it.
         /// </summary>
-        /// <param name="surface">Used only for tinting.</param>
+        /// <param name="surface">The surface to draw.</param>
+        /// <param name="force">When <see langword="true"/>, draws the surface even if <see cref="CellSurface.IsDirty"/> is <see langword="false"/>.</param>
         public virtual void Render(Console surface, bool force = false)
         {
             RenderBegin(surface, force);
@@ -39,7 +40,8 @@ namespace SadConsole.Renderers
             RenderEnd(surface, force);
         }
 
-        public virtual void RenderBegin(Console surface, bool force = false)
+
+        protected virtual void RenderBegin(Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -52,7 +54,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        public virtual void RenderEnd(Console surface, bool force = false)
+        protected virtual void RenderEnd(Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -66,7 +68,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        public virtual void RenderCells(Console surface, bool force = false)
+        protected virtual void RenderCells(Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -97,7 +99,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        public virtual void RenderTint(Console surface, bool force = false)
+        protected virtual void RenderTint(Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {

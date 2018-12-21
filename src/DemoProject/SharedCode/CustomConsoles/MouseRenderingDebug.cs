@@ -80,7 +80,7 @@ namespace StarterProject.CustomConsoles
             base.Render(surface, true);
         }
 
-        public override void RenderCells(SadConsole.Console surfacePreCast, bool force = false)
+        protected override void RenderCells(SadConsole.Console surfacePreCast, bool force = false)
         {
             PaletteSurface surface = (PaletteSurface)surfacePreCast;
             if (surface.IsDirty || force)
