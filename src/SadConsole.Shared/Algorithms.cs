@@ -31,16 +31,17 @@ namespace SadConsole
         /// <param name="plot">The plotting function, taking x and y. (if this returns false, the algorithm stops early)</param>
         public static void Line(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
         {
-            bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
+            var steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
             if (steep) { Swap<int>(ref x0, ref y0); Swap<int>(ref x1, ref y1); }
             if (x0 > x1) { Swap<int>(ref x0, ref x1); Swap<int>(ref y0, ref y1); }
             int dX = (x1 - x0), dY = Math.Abs(y1 - y0), err = (dX / 2), ystep = (y0 < y1 ? 1 : -1), y = y0;
 
-            for (int x = x0; x <= x1; ++x)
+            for (var x = x0; x <= x1; ++x)
             {
                 if (!(steep ? plot(y, x) : plot(x, y))) return;
                 err = err - dY;
-                if (err < 0) { y += ystep; err += dX; }
+                if (err >= 0) continue;
+                y += ystep; err += dX;
             }
 
         }
@@ -56,21 +57,8 @@ namespace SadConsole
         /// <param name="plot">The plotting function (if this returns false, the algorithm stops early)</param>
         public static void Line2(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
         {
-            //bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
-            //if (steep) { Swap<int>(ref x0, ref y0); Swap<int>(ref x1, ref y1); }
-            //if (x0 > x1) { Swap<int>(ref x0, ref x1); Swap<int>(ref y0, ref y1); }
-            //int dX = (x1 - x0), dY = Math.Abs(y1 - y0), err = (dX / 2), ystep = (y0 < y1 ? 1 : -1), y = y0;
-
-            //for (int x = x0; x <= x1; ++x)
-            //{
-            //    if (!(steep ? plot(y, x) : plot(x, y))) return;
-            //    err = err - dY;
-            //    if (err < 0) { y += ystep; err += dX; }
-            //}
-
-
             var len = Math.Max(Math.Abs(x1 - x0), Math.Abs(y1 - y0));
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 var t = (float)i / len;
                 var x = Math.Round(x0 * (1.0 - t) + x1 * t);
@@ -90,57 +78,58 @@ namespace SadConsole
         public static void FloodFill<TNode>(TNode node, Func<TNode, bool> shouldNodeChange, Action<TNode> changeNode, Func<TNode, NodeConnections<TNode>> getNodeConnections)
             where TNode: class
         {
-            Queue<TNode> queue = new Queue<TNode>();
+            var queue = new Queue<TNode>();
 
-            TNode workingNode = node;
+            var workingNode = node;
 
-            if (shouldNodeChange(workingNode))
+            if (!shouldNodeChange(workingNode)) return;
+
+            queue.Enqueue(workingNode);
+
+            while (true)
             {
-                queue.Enqueue(workingNode);
+                workingNode = queue.Dequeue();
 
-                while (true)
+                if (shouldNodeChange(workingNode))
                 {
-                    workingNode = queue.Dequeue();
+                    changeNode(workingNode);
 
-                    if (shouldNodeChange(workingNode))
-                    {
-                        changeNode(workingNode);
+                    var connections = getNodeConnections(workingNode);
 
-                        var connections = getNodeConnections(workingNode);
+                    if (connections.West != null)
+                        queue.Enqueue(connections.West);
 
-                        if (connections.West != null)
-                            queue.Enqueue(connections.West);
+                    if (connections.East != null)
+                        queue.Enqueue(connections.East);
 
-                        if (connections.East != null)
-                            queue.Enqueue(connections.East);
+                    if (connections.North != null)
+                        queue.Enqueue(connections.North);
 
-                        if (connections.North != null)
-                            queue.Enqueue(connections.North);
-
-                        if (connections.South != null)
-                            queue.Enqueue(connections.South);
-                    }
-
-                    if (queue.Count == 0)
-                        break;
+                    if (connections.South != null)
+                        queue.Enqueue(connections.South);
                 }
+
+                if (queue.Count == 0)
+                    break;
             }
         }
 
         /// <summary>
         /// Processes an area and applies a gradient calculation to each part of the area.
         /// </summary>
+        /// <param name="cellSize">The size of an individual cell. Makes the angle uniform.</param>
         /// <param name="position">The center of the gradient.</param>
         /// <param name="strength">The width of the gradient spread.</param>
         /// <param name="angle">The angle to apply the gradient.</param>
         /// <param name="area">The area to calculate.</param>
+        /// <param name="gradient">The color gradient to fill with.</param>
         /// <param name="applyAction">The callback called for each part of the area.</param>
         public static void GradientFill(Point cellSize, Point position, int strength, int angle, Rectangle area, ColorGradient gradient, Action<int, int, Color> applyAction)
         {
             double radians = angle * Math.PI / 180; // = Math.Atan2(x1 - x2, y1 - y2);
             
-            Vector2 angleVector = new Vector2((float)(Math.Sin(radians) * strength), (float)(Math.Cos(radians) * strength)) / 2;
-            Vector2 location = new Vector2(position.X, position.Y);
+            var angleVector = new Vector2((float)(Math.Sin(radians) * strength), (float)(Math.Cos(radians) * strength)) / 2;
+            var location = new Vector2(position.X, position.Y);
 
             if (cellSize.X > cellSize.Y)
                 angleVector.Y *= cellSize.X / cellSize.Y;
@@ -148,8 +137,8 @@ namespace SadConsole
             else if (cellSize.X < cellSize.Y)
                 angleVector.X *= cellSize.Y / cellSize.X;
 
-            Vector2 endingPoint = location + angleVector;
-            Vector2 startingPoint = location - angleVector;
+            var endingPoint = location + angleVector;
+            var startingPoint = location - angleVector;
 
             double x1 = (startingPoint.X / (double)area.Width) * 2.0f - 1.0f;
             double y1 = (startingPoint.Y / (double)area.Height) * 2.0f - 1.0f;
@@ -189,6 +178,13 @@ namespace SadConsole
             }
         }
 
+        /// <summary>
+        /// Plots the outside of the circle, passing the x,y to <paramref name="plot"/>.
+        /// </summary>
+        /// <param name="centerX">The X coordinate of the center of the circle.</param>
+        /// <param name="centerY">The Y coordinate of the center of the circle.</param>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="plot">A method to call on each x,y coordinate of the outside of the circle.</param>
         public static void Circle(int centerX, int centerY, int radius, Action<int, int> plot)
         {
             int xi = -radius, yi = 0, err = 2 - 2 * radius; /* II. Quadrant */
@@ -204,6 +200,14 @@ namespace SadConsole
             } while (xi < 0);
         }
 
+        /// <summary>
+        /// Plots the outside of an ellipse, passing the x,y to <paramref name="plot"/>.
+        /// </summary>
+        /// <param name="x0">The X coordinate of the first corner of the ellipse.</param>
+        /// <param name="y0">The Y coordinate of the first corner of the ellipse.</param>
+        /// <param name="x1">The X coordinate of the second corner of the ellipse.</param>
+        /// <param name="y1">The Y coordinate of the second corner of the ellipse.</param>
+        /// <param name="plot">A method to call on each x,y coordinate of the outside of the ellipse.</param>
         public static void Ellipse(int x0, int y0, int x1, int y1, Action<int, int> plot)
         {
             int a = Math.Abs(x1 - x0), b = Math.Abs(y1 - y0), b1 = b & 1; /* values of diameter */
@@ -247,6 +251,13 @@ namespace SadConsole
             public TNode North;
             public TNode South;
 
+            /// <summary>
+            /// Creates a new instance of this object with the specified connections.
+            /// </summary>
+            /// <param name="west">The west connection.</param>
+            /// <param name="east">The east connection.</param>
+            /// <param name="north">The north connection.</param>
+            /// <param name="south">The south connection.</param>
             public NodeConnections(TNode west, TNode east, TNode north, TNode south)
             {
                 West = west;
@@ -255,6 +266,9 @@ namespace SadConsole
                 South = south;
             }
 
+            /// <summary>
+            /// Creates a new instance of this object with all connections set to <see langword="null"/>.
+            /// </summary>
             public NodeConnections()
             {
                 West = null;
