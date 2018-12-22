@@ -177,6 +177,8 @@ namespace SadConsole
                 LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             }
+
+            IsDirty = true;
         }
         
         /// <summary>

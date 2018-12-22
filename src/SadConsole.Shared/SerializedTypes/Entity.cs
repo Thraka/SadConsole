@@ -7,7 +7,6 @@ using System.Text;
 using System.Linq;
 using Newtonsoft.Json;
 using SadConsole.Entities;
-using SadConsole.Surfaces;
 
 namespace SadConsole.SerializedTypes
 {
@@ -29,10 +28,10 @@ namespace SadConsole.SerializedTypes
     /// Serialized instance of a <see cref="Entity"/>.
     /// </summary>
     [DataContract]
-    public class EntitySerialized
+    public class EntitySerialized: ConsoleSerialized
     {
         [DataMember] public string AnimationName;
-        [DataMember] public List<AnimatedSurfaceSerialized> Animations;
+        [DataMember] public List<AnimatedConsoleSerialized> Animations;
         [DataMember] public bool IsVisible;
         [DataMember] public PointSerialized Position;
         [DataMember] public PointSerialized PositionOffset;
@@ -45,7 +44,7 @@ namespace SadConsole.SerializedTypes
             var serializedObject = new EntitySerialized()
             {
                 AnimationName = entity.Animation != null ? entity.Animation.Name : "",
-                Animations = entity.Animations.Values.Select(a => (AnimatedSurfaceSerialized)a).ToList(),
+                Animations = entity.Animations.Values.Select(a => (AnimatedConsoleSerialized)a).ToList(),
                 IsVisible = entity.IsVisible,
                 Position = entity.Position,
                 PositionOffset = entity.PositionOffset,

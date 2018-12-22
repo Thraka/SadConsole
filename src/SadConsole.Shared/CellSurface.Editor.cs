@@ -37,9 +37,9 @@ namespace SadConsole
         public int TimesShiftedUp;
 
         /// <summary>
-        /// When true, the <see cref="ColoredString.Parse(string, int, ISurface, SurfaceEditor, ParseCommandStacks)"/> command is used to print strings.
+        /// When true, the <see cref="ColoredString.Parse(string, int, CellSurface, ParseCommandStacks)"/> command is used to print strings.
         /// </summary>
-        public bool UsePrintProcessor = true;
+        public bool UsePrintProcessor = false;
 
         /// <summary>
         /// The effects manager associated with the <see cref="TextSurface"/>.
@@ -426,6 +426,7 @@ namespace SadConsole
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         public void SetDecorator(int index, int count, CellDecorator[] decorators)
         {
+            // TODO: Setting decorators to an empty array causes a lot of GC when you FILL/CLEAR a surface. Need a better way
             if (!IsValidCell(index) || index + count >= Cells.Length) return;
 
             if (decorators == null)

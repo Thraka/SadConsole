@@ -22,19 +22,10 @@ namespace SadConsole.SerializedTypes
 
 
     [DataContract]
-    public class ScrollingConsoleSerialized
+    public class ScrollingConsoleSerialized: ConsoleSerialized
     {
-        [DataMember] public int Width;
-        [DataMember] public int Height;
-        [DataMember] public bool IsVisible;
-        [DataMember] public bool IsPaused;
-        [DataMember] public PointSerialized Position;
-        [DataMember] public FontSerialized Font;
         [DataMember] public RectangleSerialized ViewPort;
-        [DataMember] public ColorSerialized Tint;
-        [DataMember] public ColorSerialized DefaultForeground;
-        [DataMember] public ColorSerialized DefaultBackground;
-        [DataMember] public CellSerialized[] Cells;
+
 
         public static implicit operator ScrollingConsoleSerialized(ScrollingConsole surface)
         {
@@ -49,6 +40,9 @@ namespace SadConsole.SerializedTypes
                 DefaultForeground = surface.DefaultForeground,
                 DefaultBackground = surface.DefaultBackground,
                 Tint = surface.Tint,
+                UsePixelPositioning = surface.UsePixelPositioning,
+                UseMouse = surface.UseMouse,
+                UseKeyboard = surface.UseKeyboard,
                 Position = surface.Position,
                 IsVisible = surface.IsVisible,
                 IsPaused = surface.IsPaused
@@ -65,7 +59,10 @@ namespace SadConsole.SerializedTypes
                 DefaultBackground = surface.DefaultBackground,
                 Position = surface.Position,
                 IsVisible = surface.IsVisible,
-                IsPaused = surface.IsPaused
+                IsPaused = surface.IsPaused,
+                UsePixelPositioning = surface.UsePixelPositioning,
+                UseMouse = surface.UseMouse,
+                UseKeyboard = surface.UseKeyboard,
             };
         }
     }

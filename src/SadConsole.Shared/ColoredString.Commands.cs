@@ -49,7 +49,7 @@ namespace SadConsole
                             }
 
                             // Check for custom command
-                            ParseCommandBase commandObject = CustomProcessor != null ? CustomProcessor(command, commandParams, existingGlyphs, surface, commandStacks) : null;
+                            ParseCommandBase commandObject = CustomProcessor?.Invoke(command, commandParams, existingGlyphs, surface, commandStacks);
 
                             // No custom command found, run build in ones
                             if (commandObject == null)

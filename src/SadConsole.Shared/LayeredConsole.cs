@@ -1,115 +1,190 @@
-﻿//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Runtime.Serialization;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Microsoft.Xna.Framework;
-//using Newtonsoft.Json;
-//using Newtonsoft.Json.Serialization;
-//using SadConsole.SerializedTypes;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using SadConsole.SerializedTypes;
 
-// TODO finish layered
+namespace SadConsole
+{
+    public class CellSurfaceLayer: CellSurface
+    {
+        public CellSurfaceLayer(int width, int height): base(width, height) { }
 
-//namespace SadConsole.Surfaces
-//{
-//    /// <summary>
-//    /// Represents mutliple surfaces grouped together and rendered at the same time.
-//    /// </summary>
-//    /// <inheritdoc cref="IList"/>
-//    [JsonConverter(typeof(LayeredJsonConverter))]
-//    [System.Diagnostics.DebuggerDisplay("Layered Surface")]
-//    public class Layered : Console, IList<Basic>
-//    {
-//        private readonly IList<Basic> _backingList;
-//        public Basic this[int index]
-//        {
-//            get => _backingList[index];
-//            set => _backingList[index] = value;
-//        }
+        public CellSurfaceLayer(int width, int height, Cell[] initialCells) : base(width, height, initialCells) { }
 
-//        public Layered()
-//        {
-//            _backingList = new List<Basic>();
-//        }
+        public bool IsVisible { get; set; } = true;
 
-//        public IEnumerator<Basic> GetEnumerator()
-//        {
-//            return _backingList.GetEnumerator();
-//        }
+        public string Name { get; set; }
 
-//        IEnumerator IEnumerable.GetEnumerator()
-//        {
-//            return GetEnumerator();
-//        }
+        protected override void OnCellsReset()
+        {
+            throw new Exception("This surface cannot be resized");
+        }
+    }
 
-//        public override void Draw(TimeSpan timeElapsed)
-//        {
-//            foreach (var surface in _backingList)
-//            {
-//                surface.Position = this.CalculatedPosition;
-//                surface.Draw(timeElapsed);
-//            }
+    /// <summary>
+    /// Represents mutliple surfaces grouped together and rendered at the same time.
+    /// </summary>
+    [JsonConverter(typeof(LayeredJsonConverter))]
+    [System.Diagnostics.DebuggerDisplay("Layered Surface")]
+    public class LayeredConsole : ScrollingConsole
+    {
+        internal List<CellSurfaceLayer> _layers;
 
-//            base.Draw(timeElapsed);
-//        }
+        public LayeredConsole(int width, int height, int layers) : this(width, height, layers, SadConsole.Global.FontDefault, new Rectangle(0, 0, width, height)) { }
 
-//        public void Add(Basic item)
-//        {
-//            _backingList.Add(item);
-//        }
+        public LayeredConsole(int width, int height, int layers, Font font) : this(width, height, layers, font, new Rectangle(0, 0, width, height)) { }
 
-//        public void Clear()
-//        {
-//            _backingList.Clear();
-//        }
+        public LayeredConsole(int width, int height, int layers, Font font, Rectangle viewPort) : base(width, height, font, viewPort)
+        {
+            IsCursorDisabled = true;
+            
+            if (layers <= 0)
+                throw new ArgumentOutOfRangeException(nameof(layers), "Layer count must be 1 or more.");
 
-//        public bool Contains(Basic item)
-//        {
-//            return _backingList.Contains(item);
-//        }
+            _layers = new List<CellSurfaceLayer>(layers);
 
-//        public void CopyTo(Basic[] array, int arrayIndex)
-//        {
-//            _backingList.CopyTo(array, arrayIndex);
-//        }
+            for (int i = 0; i < layers; i++)
+                AddLayer(new CellSurfaceLayer(width, height));
 
-//        public bool Remove(Basic item)
-//        {
-//            return _backingList.Remove(item);
-//        }
+            Renderer = new Renderers.LayeredConsole() { Layers = _layers };
 
-//        public int IndexOf(Basic item)
-//        {
-//            return _backingList.IndexOf(item);
-//        }
+            Cells = _layers[0].Cells;
+        }
 
-//        public void Insert(int index, Basic item)
-//        {
-//            _backingList.Insert(index, item);
-//        }
+        public LayeredConsole(int width, int height, IEnumerable<CellSurfaceLayer> layers) : base(width, height, SadConsole.Global.FontDefault, new Rectangle(0, 0, width, height)) { }
 
-//        public void RemoveAt(int index)
-//        {
-//            _backingList.RemoveAt(index);
-//        }
+        public LayeredConsole(int width, int height, IEnumerable<CellSurfaceLayer> layers, Font font) : base(width, height, font, new Rectangle(0, 0, width, height)) { }
 
-//        public int Count => _backingList.Count;
+        public LayeredConsole(int width, int height, IEnumerable<CellSurfaceLayer> layers, Font font, Rectangle viewPort) : base(width, height, font, viewPort)
+        {
+            IsCursorDisabled = true;
 
-//        public bool IsReadOnly => _backingList.IsReadOnly;
+            if (layers == null)
+                _layers = new List<CellSurfaceLayer>();
+            else
+                _layers = new List<CellSurfaceLayer>(layers);
 
-//        /// <summary>
-//        /// Saves the <see cref="SurfaceBase"/> to a file.
-//        /// </summary>
-//        /// <param name="file">The destination file.</param>
-//        public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
+            foreach (var layer in layers)
+            {
+                if (layer.Width != width || layer.Height != height)
+                    throw new ArgumentException(nameof(layers), "One of the layers in the array does not match the size of the layered console.");
+            }
+            
+            Renderer = new Renderers.LayeredConsole() { Layers = _layers };
+        }
 
-//        /// <summary>
-//        /// Loads a <see cref="SurfaceBase"/> from a file.
-//        /// </summary>
-//        /// <param name="file">The source file.</param>
-//        /// <returns></returns>
-//        public static Layered Load(string file) => Serializer.Load<Layered>(file, Settings.SerializationIsCompressed);
-//    }
-//}
+
+        public override void Update(TimeSpan timeElapsed)
+        {
+            if (IsPaused) return;
+
+            foreach (var layer in _layers)
+                layer.Effects.UpdateEffects(timeElapsed.TotalSeconds);
+
+            var copyList = new List<Console>(Children);
+
+            foreach (var child in copyList)
+                child.Update(timeElapsed);
+        }
+
+        public CellSurfaceLayer GetLayer(int index) => _layers[index];
+
+        public void AddLayer(CellSurfaceLayer item)
+        {
+            _layers.Add(item);
+            Cells = _layers[0].Cells;
+            IsDirty = true;
+        }
+
+        public void ClearLayers()
+        {
+            _layers.Clear();
+
+            Cells = new Cell[Width * Height];
+
+            for (var i = 0; i < Cells.Length; i++)
+                Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+
+            OnCellsReset();
+
+            IsDirty = true;
+        }
+
+        public bool ContainsLayer(CellSurfaceLayer item) =>_layers.Contains(item);
+
+        public bool RemoveLayer(CellSurfaceLayer item)
+        {
+            var result = _layers.Remove(item);
+
+            if (_layers.Count == 0)
+            {
+                Cells = new Cell[Width * Height];
+
+                for (var i = 0; i < Cells.Length; i++)
+                    Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+
+                OnCellsReset();
+            }
+            else
+                Cells = _layers[0].Cells;
+
+            IsDirty = true;
+
+            return result;
+        }
+
+        public int IndexOf(CellSurfaceLayer item)
+        {
+            return _layers.IndexOf(item);
+        }
+
+        public void InsertLayer(int index, CellSurfaceLayer item)
+        {
+            _layers.Insert(index, item);
+            Cells = _layers[0].Cells;
+            IsDirty = true;
+        }
+
+        public void RemoveLayerAt(int index)
+        {
+            _layers.RemoveAt(index);
+
+            if (_layers.Count == 0)
+            {
+                Cells = new Cell[Width * Height];
+
+                for (var i = 0; i < Cells.Length; i++)
+                    Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+
+                OnCellsReset();
+            }
+            else
+                Cells = _layers[0].Cells;
+
+            IsDirty = true;
+        }
+
+        public int LayerCount => _layers.Count;
+
+        /// <summary>
+        /// Saves the <see cref="SurfaceBase"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
+
+        /// <summary>
+        /// Loads a <see cref="SurfaceBase"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static LayeredConsole Load(string file) => Serializer.Load<LayeredConsole>(file, Settings.SerializationIsCompressed);
+    }
+}

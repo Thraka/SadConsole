@@ -118,7 +118,7 @@ namespace SadConsole
             : base(width, height)
         {
             IsVisible = false;
-            Renderer = new SadConsole.Renderers.Window();
+            Renderer = new SadConsole.Renderers.Window() { Controls = _controls };
         }
         #endregion
 

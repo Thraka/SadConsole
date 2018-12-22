@@ -15,7 +15,7 @@ namespace SadConsole.Entities
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
-    //[JsonConverter(typeof(EntityJsonConverter))]
+    [JsonConverter(typeof(EntityJsonConverter))]
     public class Entity : Console
     {
         /// <summary>

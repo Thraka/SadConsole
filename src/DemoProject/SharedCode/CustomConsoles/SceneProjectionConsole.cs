@@ -9,6 +9,7 @@ using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
+    // TODO: Something in here causes a lot of GC when this is toggled on.
     class SceneProjectionConsole : ScrollingConsole
     {
         private RenderTarget2D _renderTexture;

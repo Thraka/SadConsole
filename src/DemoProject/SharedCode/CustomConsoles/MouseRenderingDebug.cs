@@ -44,6 +44,10 @@ namespace StarterProject.CustomConsoles
             this.palette = palette;
             Renderer = new PaletteSurfaceRenderer() {palette = palette};
 
+            for (int i = 0; i < Cells.Length; i++)
+            {
+                Cells[i] = RenderCells[i] = new CellPalette(0, 1, 0);
+            }
         }
 
 
@@ -71,7 +75,7 @@ namespace StarterProject.CustomConsoles
         }
     }
 
-    public class PaletteSurfaceRenderer: SadConsole.Renderers.Basic
+    public class PaletteSurfaceRenderer: SadConsole.Renderers.Console
     {
         public Palette palette;
 
@@ -149,31 +153,46 @@ namespace StarterProject.CustomConsoles
         public override void Update(TimeSpan delta)
         {
             base.Update(delta);
-
             //pal.ShiftLeft(0, 5);
             timer.Update(delta.TotalMilliseconds);
             timer5.Update(delta.TotalMilliseconds);
         }
 
+        bool showMouse = false;
+        bool DoClear = false;
+
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
+            if (info.IsKeyReleased(Keys.Space))
+                showMouse = !showMouse;
+            if (info.IsKeyReleased(Keys.Enter))
+                UsePrintProcessor = !UsePrintProcessor;
+            if (info.IsKeyReleased(Keys.C))
+                DoClear = !DoClear;
+
+
             return true;
         }
 
         public override bool ProcessMouse(SadConsole.Input.MouseConsoleState state)
         {
-            Clear();
-            Print(0, 0, $"mouse:           {state.Mouse.ScreenPosition}");
-            Print(0, 1, $"adapter:         {SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width},{SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height}");
-            Print(0, 2, $"window:          {SadConsole.Game.Instance.Window.ClientBounds}");
-            Print(0, 3, $"pref:            {SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferWidth},{SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferHeight}");
-            Print(0, 4, $"pparams:         {SadConsole.Global.GraphicsDevice.PresentationParameters.BackBufferWidth},{SadConsole.Global.GraphicsDevice.PresentationParameters.BackBufferHeight}");
-            Print(0, 5, $"viewport:        {SadConsole.Global.GraphicsDevice.Viewport}");
-            Print(0, 6, $"viewport.bounds: {SadConsole.Global.GraphicsDevice.Viewport.Bounds}");
-            Print(0, 7, $"scale:           {SadConsole.Global.RenderScale}");
-            Print(0, 8, $"renderrect:      {SadConsole.Global.RenderRect}");
-            Print(0, 9, $"");
+            if (showMouse)
+            {
+                if (DoClear)
+                    Clear();
 
+                Print(0, 0, $"mouse:           {state.Mouse.ScreenPosition}");
+                Print(0, 1, $"adapter:         {SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width},{SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height}");
+                Print(0, 2, $"window:          {SadConsole.Game.Instance.Window.ClientBounds}");
+                Print(0, 3, $"pref:            {SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferWidth},{SadConsole.Global.GraphicsDeviceManager.PreferredBackBufferHeight}");
+                Print(0, 4, $"pparams:         {SadConsole.Global.GraphicsDevice.PresentationParameters.BackBufferWidth},{SadConsole.Global.GraphicsDevice.PresentationParameters.BackBufferHeight}");
+                Print(0, 5, $"viewport:        {SadConsole.Global.GraphicsDevice.Viewport}");
+                Print(0, 6, $"viewport.bounds: {SadConsole.Global.GraphicsDevice.Viewport.Bounds}");
+                Print(0, 7, $"scale:           {SadConsole.Global.RenderScale}");
+                Print(0, 8, $"renderrect:      {SadConsole.Global.RenderRect}");
+                Print(0, 9, $"UsePrintProcessor: {UsePrintProcessor}");
+                Print(0, 10, $"DoClear: {DoClear}");
+            }
             return base.ProcessMouse(state);
         }
     }

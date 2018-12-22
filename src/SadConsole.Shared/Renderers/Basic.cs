@@ -10,7 +10,7 @@ namespace SadConsole.Renderers
     /// Caches a text surface by rendering to a texture. That texture is then rendered at draw time. Reduces draw calls for a non-changing console.
     /// </summary>
     [DataContract]
-    public class Basic : IRenderer
+    public class Console : IRenderer
     {
         /// <summary>
         /// A method called when the <see cref="SpriteBatch"/> has been created and transformed, but before any text is drawn.
@@ -28,11 +28,11 @@ namespace SadConsole.Renderers
         public Action<SpriteBatch> AfterRenderCallback { get; set; }
 
         /// <summary>
-        /// When <see cref="CellSurface.IsDirty"/> is <see langword="true"/>, draws the surface to the <see cref="Console.LastRenderResult"/> and tints it.
+        /// When <see cref="CellSurface.IsDirty"/> is <see langword="true"/>, draws the surface to the <see cref="SadConsole.Console.LastRenderResult"/> and tints it.
         /// </summary>
         /// <param name="surface">The surface to draw.</param>
         /// <param name="force">When <see langword="true"/>, draws the surface even if <see cref="CellSurface.IsDirty"/> is <see langword="false"/>.</param>
-        public virtual void Render(Console surface, bool force = false)
+        public virtual void Render(SadConsole.Console surface, bool force = false)
         {
             RenderBegin(surface, force);
             RenderCells(surface, force);
@@ -41,7 +41,7 @@ namespace SadConsole.Renderers
         }
 
 
-        protected virtual void RenderBegin(Console surface, bool force = false)
+        protected virtual void RenderBegin(SadConsole.Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -54,7 +54,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RenderEnd(Console surface, bool force = false)
+        protected virtual void RenderEnd(SadConsole.Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -68,7 +68,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RenderCells(Console surface, bool force = false)
+        protected virtual void RenderCells(SadConsole.Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {
@@ -99,7 +99,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RenderTint(Console surface, bool force = false)
+        protected virtual void RenderTint(SadConsole.Console surface, bool force = false)
         {
             if (surface.IsDirty || force)
             {

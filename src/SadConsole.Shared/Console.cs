@@ -203,7 +203,7 @@ namespace SadConsole
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
             RenderRects = new Rectangle[Cells.Length];
-            Renderer = new Renderers.Basic();
+            Renderer = new Renderers.Console();
             _font = font;
             _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
@@ -230,7 +230,7 @@ namespace SadConsole
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
             RenderRects = new Rectangle[Cells.Length];
-            Renderer = new Renderers.Basic();
+            Renderer = new Renderers.Console();
             _font = Global.FontDefault;
             _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 

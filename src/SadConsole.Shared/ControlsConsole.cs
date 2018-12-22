@@ -133,7 +133,7 @@ namespace SadConsole
             UseMouse = true;
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
-            Renderer = new Renderers.ControlsConsole();
+            Renderer = new Renderers.ControlsConsole() { Controls = _controls };
             Invalidate();
         }
         #endregion
@@ -432,8 +432,6 @@ namespace SadConsole
 
         public override void Draw(System.TimeSpan update)
         {
-            ((Renderers.ControlsConsole) Renderer).Controls = _controls;
-
             if (!IsDirty)
                 foreach (var control in _controls)
                 {

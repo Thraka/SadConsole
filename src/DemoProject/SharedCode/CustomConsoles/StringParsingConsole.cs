@@ -10,6 +10,7 @@ namespace StarterProject.CustomConsoles
     {
         public StringParsingConsole():base(80, 23)
         {
+            UsePrintProcessor = true;
             IsVisible = false;
             UseKeyboard = false;
             DefaultForeground = ColorAnsi.White;

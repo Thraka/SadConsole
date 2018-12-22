@@ -1,9 +1,17 @@
-﻿## 11/XX/2018 V8.0
+﻿## XX/XX/XXXX V8.0
 - Overhaul of the theme system.
 - Changed Listbox.Slider to Listbox.Scrollbar. Also changed any property that used the word Slider to ScrollBar
 - Window messagebox and prompts have a library parameter to theme. If not specified, uses the default theme.
 - [Fixed #165] Window stealing mouse focus from scrollbar (thanks VGA256)
 - [Fixed #164] Controls should be aware of what theme is being used 
+- Upgraded to MonoGame 3.7
+- Renamed base types and removed some others
+- SurfaceBase is now CellSurface and not abstract
+- ScreenObject is now Console and inherits from SurfaceBase
+- Console is now ScrollingConsole.
+- AnimatedSurface is now AnimatedConsole.
+- LayeredSurface is now LayeredConsole and has a new subtype, CellSurfaceLayer.
+- Mouse input works on all objects that inherit from Console, which is everything besodes CellSurface.
 
 ## 11/19/2018 V7.2.0
 
