@@ -654,6 +654,24 @@ namespace SadConsole.Surfaces
             IsDirty = true;
         }
 
+		/// <summary>
+		/// Draws a single glyph on the console at the specified location.
+		/// </summary>
+		/// <param name="x">X location of the text.</param>
+		/// <param name="y">Y location of the text.</param>
+		/// <param name="glyph">The glyph to display.</param>
+		public void Print(int x, int y, ColoredGlyph glyph) {
+			if (glyph == null)
+				return;
+
+			if (!IsValidCell(x, y, out int index)) return;
+
+			Cell cell = Cells[index];
+			cell.CopyAppearanceFrom(glyph);
+			cell.Glyph = glyph.Glyph;
+			IsDirty = true;
+		}
+
         /// <summary>
         /// Draws the string on the console at the specified location, wrapping if needed.
         /// </summary>
