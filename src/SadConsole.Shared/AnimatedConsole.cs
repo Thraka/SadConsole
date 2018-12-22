@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
-using SadConsole.SerializedTypes;
 
 namespace SadConsole
 {
@@ -18,54 +16,41 @@ namespace SadConsole
     [JsonConverter(typeof(SerializedTypes.AnimatedConsoleConverterJson))]
     public class AnimatedConsole: Console
     {
+        private float _animatedTime;
+        private AnimationState _state;
+
         /// <summary>
         /// Raised when the <see cref="AnimationState"/> changes.
         /// </summary>
-        public event System.EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
-
-        #region Variables
-
-        protected internal List<CellSurface> frames = new List<CellSurface>();
+        public event EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
 
         /// <summary>
-        /// Time counter for the naimation
+        /// The frames of animation.
         /// </summary>
-        protected double _addedTime;
+        /// <remarks>If this collection changes, <see cref="CurrentFrameIndexValue"/>, <see cref="UpdateFrameReferences"/>, and <see cref="TimePerFrame"/> should all be recalculated.</remarks>
+        protected internal List<CellSurface> FramesList = new List<CellSurface>();
+
+        /// <summary>
+        /// Time counter for the animation
+        /// </summary>
+        protected double AddedTime;
         
         /// <summary>
         /// The current frame index being animated.
         /// </summary>
-        protected int _currentFrameIndex;
-
-        /// <summary>
-        /// The length of the animation
-        /// </summary>
-        protected float _animatedTime;
-
+        protected int CurrentFrameIndexValue;
+        
         /// <summary>
         /// How much time per animated frame should be used.
         /// </summary>
-        protected float _timePerFrame;
-
-        /// <summary>
-        /// Indicates the animation is currently animating.
-        /// </summary>
-        protected bool _isPlaying;
-
+        protected float TimePerFrame;
+        
         /// <summary>
         /// All frames of the animation
         /// </summary>
-        public ReadOnlyCollection<CellSurface> Frames => frames.AsReadOnly();
+        public ReadOnlyCollection<CellSurface> Frames => FramesList.AsReadOnly();
 
-        /// <summary>
-        /// The state of the animation.
-        /// </summary>
-        protected AnimationState state;
         
-
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Center of the animation used in positioning.
         /// </summary>
@@ -77,9 +62,9 @@ namespace SadConsole
         public bool Repeat { get; set; }
 
         /// <summary>
-        /// When true, the <see cref="Update"/> method will advance the frames.
+        /// When true, Indicates the animation is currently animating. The <see cref="Update"/> method will advance the frames.
         /// </summary>
-        public bool IsPlaying => _isPlaying;
+        public bool IsPlaying { get; protected set; }
 
         /// <summary>
         /// The length of the animation.
@@ -95,13 +80,13 @@ namespace SadConsole
         /// </summary>
         public int CurrentFrameIndex
         {
-            get => _currentFrameIndex;
+            get => CurrentFrameIndexValue;
             set
             {
-                if (value < 0 || value >= frames.Count)
-                    _currentFrameIndex = 0;
+                if (value < 0 || value >= FramesList.Count)
+                    CurrentFrameIndexValue = 0;
                 else
-                    _currentFrameIndex = value;
+                    CurrentFrameIndexValue = value;
 
                 UpdateFrameReferences();
             }
@@ -110,7 +95,7 @@ namespace SadConsole
         /// <summary>
         /// Indicates the animation is empty.
         /// </summary>
-        public bool IsEmpty => frames.Count == 0;
+        public bool IsEmpty => FramesList.Count == 0;
 
         /// <summary>
         /// Gets the name of this animation.
@@ -120,27 +105,25 @@ namespace SadConsole
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public CellSurface CurrentFrame => frames[_currentFrameIndex];
+        public CellSurface CurrentFrame => FramesList[CurrentFrameIndexValue];
 
         /// <summary>
         /// Gets the current animation state.
         /// </summary>
         public AnimationState State
         {
-            get => state;
+            get => _state;
             set
             {
-                var oldState = state;
+                var oldState = _state;
 
-                if (value != state)
+                if (value != _state)
                 {
-                    state = value;
-                    AnimationStateChanged?.Invoke(this, new AnimationStateChangedEventArgs(oldState, state));
+                    _state = value;
+                    AnimationStateChanged?.Invoke(this, new AnimationStateChangedEventArgs(oldState, _state));
                 }
             }
         }
-
-        #endregion
 
         #region Constructors
         /// <summary>
@@ -166,7 +149,6 @@ namespace SadConsole
         }
         #endregion
 
-        #region Methods
         /// <summary>
         /// Forces the area of this text surface to always be the full width and height.
         /// </summary>
@@ -174,16 +156,16 @@ namespace SadConsole
         {
             base.SetRenderCells();
 
-            if (frames.Count > 0)
+            if (FramesList.Count > 0)
                 UpdateFrameReferences();
         }
 
         /// <summary>
-        /// Updates the base <see cref="TextSurface"/> render references to the current frame.
+        /// Updates the base <see cref="CellSurface.Cells"/> references to the current frame.
         /// </summary>
         protected void UpdateFrameReferences()
         {
-            var frame = frames[_currentFrameIndex];
+            var frame = FramesList[CurrentFrameIndexValue];
             Cells = RenderCells = frame.Cells;
             DefaultBackground = frame.DefaultBackground;
             DefaultForeground = frame.DefaultForeground;
@@ -196,12 +178,12 @@ namespace SadConsole
         /// <returns>The created frame.</returns>
         public CellSurface CreateFrame()
         {
-            if (frames == null)
-                frames = new List<CellSurface>();
+            if (FramesList == null)
+                FramesList = new List<CellSurface>();
 
             var frame = new CellSurface(Width, Height) {DefaultBackground = DefaultBackground, DefaultForeground = DefaultForeground};
             frame.Clear();
-            frames.Add(frame);
+            FramesList.Add(frame);
             UpdateFrameReferences();
             return frame;
         }
@@ -211,10 +193,10 @@ namespace SadConsole
         /// </summary>
         private void CalculateFrameDuration()
         {
-            if (IsEmpty || _animatedTime == 0f)
-                _timePerFrame = 0f;
+            if (IsEmpty || (int)_animatedTime == 0)
+                TimePerFrame = 0f;
             else
-                _timePerFrame = _animatedTime / frames.Count;
+                TimePerFrame = _animatedTime / FramesList.Count;
         }
         
         /// <summary>
@@ -222,7 +204,7 @@ namespace SadConsole
         /// </summary>
         public void Stop()
         {
-            _isPlaying = false;
+            IsPlaying = false;
             State = AnimationState.Stopped;
         }
 
@@ -232,7 +214,7 @@ namespace SadConsole
         public void Start()
         {
             CalculateFrameDuration();
-            _isPlaying = true;
+            IsPlaying = true;
             State = AnimationState.Playing;
         }
 
@@ -242,36 +224,40 @@ namespace SadConsole
         public void Restart()
         {
             CalculateFrameDuration();
-            _isPlaying = true;
+            IsPlaying = true;
             CurrentFrameIndex = 0;
             State = AnimationState.Restarted;
             State = AnimationState.Playing;
         }
 
+        /// <summary>
+        /// Updates the animation frames and calls update on the base class.
+        /// </summary>
+        /// <param name="timeElapsed">The time elapsed since the last call in seconds.</param>
         public override void Update(TimeSpan timeElapsed)
         {
-            if (_isPlaying && _timePerFrame != 0f)
+            if (IsPlaying && (int)TimePerFrame != 0)
             {
                 // TODO: Evaluate if we should change this to calculate current frame based on total time passed, \\not calculate frame based on individual frame duration on screen.
-                _addedTime += timeElapsed.TotalSeconds;
+                AddedTime += timeElapsed.TotalSeconds;
 
-                if (_addedTime > _timePerFrame)
+                if (AddedTime > TimePerFrame)
                 {
-                    _addedTime = 0f;
-                    _currentFrameIndex++;
+                    AddedTime = 0f;
+                    CurrentFrameIndexValue++;
 
-                    if (_currentFrameIndex >= frames.Count)
+                    if (CurrentFrameIndexValue >= FramesList.Count)
                     {
                         if (Repeat)
                         {
-                            _currentFrameIndex = 0;
+                            CurrentFrameIndexValue = 0;
                             State = AnimationState.Restarted;
                             State = AnimationState.Playing;
                         }
                         else
                         {
-                            _isPlaying = false;
-                            _currentFrameIndex--;
+                            IsPlaying = false;
+                            CurrentFrameIndexValue--;
                             State = AnimationState.Finished;
                         }
                     }
@@ -302,9 +288,6 @@ namespace SadConsole
                 child.OnCalculateRenderPosition();
             }
         }
-
-        #endregion
-
 
 
         /// <summary>
@@ -361,10 +344,11 @@ namespace SadConsole
         public static new AnimatedConsole Load(string file) => Serializer.Load<AnimatedConsole>(file, Settings.SerializationIsCompressed);
 
 
+        /// <inheritdoc />
         /// <summary>
         /// Event args for when the animation state changes
         /// </summary>
-        public class AnimationStateChangedEventArgs : System.EventArgs
+        public class AnimationStateChangedEventArgs : EventArgs
         {
             /// <summary>
             /// The previous state.

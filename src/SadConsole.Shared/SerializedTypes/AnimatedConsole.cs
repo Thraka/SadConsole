@@ -62,7 +62,7 @@ namespace SadConsole.SerializedTypes
         {
             return new AnimatedConsole(serializedObject.Name, serializedObject.Width, serializedObject.Height, serializedObject.Font)
             {
-                frames = new List<CellSurface>(serializedObject.Frames.Select(s => (CellSurface) s).ToArray()),
+                FramesList = new List<CellSurface>(serializedObject.Frames.Select(s => (CellSurface) s).ToArray()),
                 CurrentFrameIndex = 0,
                 AnimationDuration = serializedObject.AnimationDuration,
                 Repeat = serializedObject.Repeat,
