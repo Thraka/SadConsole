@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SadConsole.DrawCalls;
-using SadConsole.Effects;
-using SadConsole.SerializedTypes;
-using Console = SadConsole.Console;
 
 namespace SadConsole
 {
@@ -175,7 +171,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
-        public Console(int width, int height): this(width, height, SadConsole.Global.FontDefault)
+        public Console(int width, int height): this(width, height, Global.FontDefault)
         {
             
         }
@@ -249,6 +245,9 @@ namespace SadConsole
             AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
         }
         
+        /// <summary>
+        /// Calls <see cref="SetRenderCells"/>.
+        /// </summary>
         protected override void OnCellsReset()
         {
             SetRenderCells();

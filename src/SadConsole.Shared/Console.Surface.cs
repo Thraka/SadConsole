@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.DrawCalls;
@@ -10,8 +9,7 @@ namespace SadConsole
     public partial class Console
     {
         private Color _tint = Color.Transparent;
-        private bool _isDirty = true;
-        private DrawCallScreenObject _drawCall;
+        private readonly DrawCallScreenObject _drawCall;
 
         private Font _font;
         private Renderers.IRenderer _renderer;
@@ -91,7 +89,7 @@ namespace SadConsole
         /// <summary>
         /// The private virtual cursor reference.
         /// </summary>
-        public Cursor Cursor { get; private set; }
+        public Cursor Cursor { get; }
 
         /// <summary>
         /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
@@ -172,7 +170,7 @@ namespace SadConsole
 
             AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
 
-            if (LastRenderResult == null && LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
+            if (LastRenderResult != null && (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height))
             {
                 LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);

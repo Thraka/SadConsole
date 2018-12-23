@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework.Input;
 using SadConsole.Input;
 
 namespace SadConsole
@@ -31,7 +28,7 @@ namespace SadConsole
         /// <summary>
         /// Indicates that the mouse is currently over this console.
         /// </summary>
-        protected bool isMouseOver = false;
+        protected bool IsMouseOver;
 
         /// <summary>
         /// When true, this console will move to the front of its parent console when the mouse is clicked.
@@ -56,12 +53,12 @@ namespace SadConsole
         /// <summary>
         /// An alternative method handler for handling the mouse logic.
         /// </summary>
-        public Func<Console, SadConsole.Input.MouseConsoleState, bool> MouseHandler { get; set; }
+        public Func<Console, MouseConsoleState, bool> MouseHandler { get; set; }
 
         /// <summary>
         /// An alternative method handler for handling the keyboard logic.
         /// </summary>
-        public Func<Console, Input.Keyboard, bool> KeyboardHandler { get; set; }
+        public Func<Console, Keyboard, bool> KeyboardHandler { get; set; }
 
         /// <summary>
         /// Raises the <see cref="MouseEnter"/> event.
@@ -78,8 +75,8 @@ namespace SadConsole
         /// <param name="state">Current mouse state in relation to this console.</param>
         protected virtual void OnMouseExit(MouseConsoleState state)
         {
-            // Force mouse off just incase
-            isMouseOver = false;
+            // Force mouse off just in case
+            IsMouseOver = false;
 
             MouseExit?.Invoke(this, new MouseEventArgs(state));
         }
@@ -123,7 +120,7 @@ namespace SadConsole
         /// <param name="state"></param>
         public void LostMouse(MouseConsoleState state)
         {
-            if (isMouseOver)
+            if (IsMouseOver)
                 OnMouseExit(state);
         }
 
@@ -150,9 +147,9 @@ namespace SadConsole
 
             if (state.IsOnConsole)
             {
-                if (isMouseOver != true)
+                if (IsMouseOver != true)
                 {
-                    isMouseOver = true;
+                    IsMouseOver = true;
                     OnMouseEnter(state);
                 }
 
@@ -167,9 +164,9 @@ namespace SadConsole
                 return true;
             }
 
-            if (isMouseOver)
+            if (IsMouseOver)
             {
-                isMouseOver = false;
+                IsMouseOver = false;
                 OnMouseExit(state);
             }
 
@@ -177,17 +174,17 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Called by the engine to process the keyboard. If assigned, invokes the <see cref="KeyboardHandler"/>; otherwise invokes the <see cref="Cursor.ProcessKeyboard(Keyboard)"/> method.
+        /// Called by the engine to process the keyboard. If called, invokes the <see cref="KeyboardHandler"/>; otherwise invokes the <see cref="SadConsole.Cursor.ProcessKeyboard(Input.Keyboard)"/> method.
         /// </summary>
         /// <param name="info">Keyboard information.</param>
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        public virtual bool ProcessKeyboard(Input.Keyboard info)
+        public virtual bool ProcessKeyboard(Keyboard info)
         {
             if (KeyboardHandler?.Invoke(this, info) ?? true)
             {
                 if (!UseKeyboard) return false;
 
-                return Cursor.IsEnabled ? Cursor.ProcessKeyboard(info) : false;
+                return Cursor.IsEnabled && Cursor.ProcessKeyboard(info);
             }
 
             return false;
@@ -195,7 +192,7 @@ namespace SadConsole
 
 
         /// <summary>
-        /// How the console handles becoming <see cref="Global.InputTargets.Console"/>.
+        /// How the console handles becoming focused and added to the <see cref="Global.FocusedConsoles"/> collection.
         /// </summary>
         public enum ActiveBehavior
         {
