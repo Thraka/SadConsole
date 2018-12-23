@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
 namespace SadConsole
 {
     /// <summary>
     /// An array of <see cref="Cell"/> objects used to represent a 2D surface.
     /// </summary>
+    [JsonConverter(typeof(SerializedTypes.CellSurfaceSerialized))]
     public partial class CellSurface: IEnumerable<Cell>
     {
         private bool _isDirty;
