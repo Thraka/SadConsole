@@ -36,13 +36,13 @@ namespace SadConsole
             if (library == null)
                 library = Themes.Library.Default;
             
-            Button yesButton = new Button(yesPrompt.Length + 2, 1);
-            Button noButton = new Button(noPrompt.Length + 2, 1);
+            var yesButton = new Button(yesPrompt.Length + 2, 1);
+            var noButton = new Button(noPrompt.Length + 2, 1);
 
             yesButton.Theme = library.ButtonTheme.Clone();
             noButton.Theme = library.ButtonTheme.Clone();
 
-            Window window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
+            var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
             window.Theme = library;
 
             window.Print(2, 2, message);
@@ -101,14 +101,14 @@ namespace SadConsole
             if (width < buttonWidth + 4)
                 width = buttonWidth + 4;
 
-            Button closeButton = new Button(buttonWidth, 1)
+            var closeButton = new Button(buttonWidth, 1)
             {
                 Text = closeButtonText,
                 Theme = library.ButtonTheme.Clone()
             };
 
 
-            Window window = new Window(width, 5 + closeButton.Surface.Height);
+            var window = new Window(width, 5 + closeButton.Surface.Height);
             window.Theme = library;
 
             message.IgnoreBackground = true;
@@ -119,7 +119,7 @@ namespace SadConsole
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
 
             window.Add(closeButton);
-            window.CloseOnESC = true;
+            window.CloseOnEscKey = true;
             window.Show(true);
             window.Center();
         }

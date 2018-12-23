@@ -36,7 +36,7 @@ namespace StarterProject.Windows
             Title = (char)198 + "Character" + (char)198;
             TitleAlignment = HorizontalAlignment.Left;
             //SetTitle(" Characters ", HorizontalAlignment.Center, Color.Blue, Color.LightGray);
-            CloseOnESC = true;
+            CloseOnEscKey = true;
             UsePixelPositioning = true;
 
             // CHARACTER SCROLL
