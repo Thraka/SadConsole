@@ -158,6 +158,15 @@ namespace SadConsole
             }
             return returnObject;
         }
+        /// <summary>
+        /// Returns a new <see cref="ColoredString"/> object using a substring of this instance from the index to the end.
+        /// </summary>
+        /// <param name="index">The index to copy the contents from.</param>
+        /// <returns>A new <see cref="ColoredString"/> object.</returns>
+        public ColoredString SubString(int index)
+        {
+            return SubString(index, _characters.Length - index);
+        }
 
         /// <summary>
         /// Returns a new <see cref="ColoredString"/> object using a substring of this instance.
