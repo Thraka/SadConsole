@@ -2,16 +2,35 @@
 
 namespace SadConsole.Ansi
 {
+    /// <summary>
+    /// Represents the state of an ANSI.SYS processor.
+    /// </summary>
     public class State
     {
+        /// <summary>
+        /// Indicates that the state is using bold colors.
+        /// </summary>
         public bool Bold { get; set; }
+
+        /// <summary>
+        /// Indicates that the state is printing reverse colors.
+        /// </summary>
         public bool Reverse { get; set; }
-        public bool Conceled { get; set; }
 
+        /// <summary>
+        /// Not supported.
+        /// </summary>
+        public bool Concealed { get; set; }
+
+        /// <summary>
+        /// Foreground color for the state of the ANSI.SYS processor.
+        /// </summary>
         public Color Foreground { get; set; }
-        public Color Background { get; set; }
 
-        public int Character { get; set; }
+        /// <summary>
+        /// Background color for the state of the ANSI.SYS processor.
+        /// </summary>
+        public Color Background { get; set; }
 
         /// <summary>
         /// Creates a new object to track the state of the ansi cursor.
@@ -22,7 +41,7 @@ namespace SadConsole.Ansi
         }
 
         /// <summary>
-        /// Forces the Background of the print appearance to be the darkened color and the foreground to be bright or not based on the <see cref="Attribute_Bold"/> property.
+        /// Forces the Background of the print appearance to be the darkened color and the foreground to be bright or not based on the <see cref="Bold"/> property.
         /// </summary>
         public void AnsiCorrectPrintColor()
         {
@@ -36,7 +55,7 @@ namespace SadConsole.Ansi
         public void AnsiResetVideo()
         {
             Bold = false;
-            Conceled = false;
+            Concealed = false;
             Reverse = false;
             Foreground = ColorAnsi.White;
             Background = ColorAnsi.Black;
