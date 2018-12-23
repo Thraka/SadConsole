@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SadConsole.Effects;
-using SadConsole.Input;
 
 
 namespace SadConsole
@@ -133,7 +126,7 @@ namespace SadConsole
 
             AbsoluteArea = new Rectangle(0, 0, ViewPortRectangle.Width * Font.Size.X, ViewPortRectangle.Height * Font.Size.Y);
 
-            if (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
+            if (LastRenderResult != null && (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height))
             {
                 LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
@@ -165,7 +158,7 @@ namespace SadConsole
 
             AbsoluteArea = new Rectangle(0, 0, ViewPortRectangle.Width * Font.Size.X, ViewPortRectangle.Height * Font.Size.Y);
 
-            if (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height)
+            if (LastRenderResult != null && (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height))
             {
                 LastRenderResult.Dispose();
                 LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
@@ -186,7 +179,8 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The new width.</param>
         /// <param name="height">The new height.</param>
-        /// <param name="clear">When true, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        /// <param name="clear">When true, resets every cell to the <see cref="CellSurface.DefaultForeground"/>, <see cref="CellSurface.DefaultBackground"/> and glyph 0.</param>
+        /// <param name="viewPort">The view port to apply after resizing.</param>
         public void Resize(int width, int height, bool clear, Rectangle viewPort)
         {
             var newCells = new Cell[width * height];
@@ -238,9 +232,10 @@ namespace SadConsole
         /// <summary>
         /// Creates a new console from an existing surface.
         /// </summary>
-        /// <param name="surface"></param>
-        /// <returns>A new console.</returns>
-        public static ScrollingConsole FromSurface(Console surface)
+        /// <param name="surface">The source console to convert to a scrolling console.</param>
+        /// <param name="viewPort">The view port to apply to the new scrolling console.</param>
+        /// <returns>A new scrolling console.</returns>
+        public static ScrollingConsole FromSurface(Console surface, Rectangle viewPort)
         {
             return new ScrollingConsole(surface.Width, surface.Height, surface.Font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
         }
@@ -248,10 +243,10 @@ namespace SadConsole
         /// <summary>
         /// Creates a new console from an existing surface.
         /// </summary>
-        /// <param name="surface"></param>
+        /// <param name="surface">The source console to convert to a scrolling console.</param>
         /// <param name="font">The font to associate with the new console.</param>
-        /// <returns>A new console.</returns>
-        public static ScrollingConsole FromSurface(CellSurface surface, Font font)
+        /// <returns>A new scrolling console.</returns>
+        public new static ScrollingConsole FromSurface(CellSurface surface, Font font)
         {
             return new ScrollingConsole(surface.Width, surface.Height, font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
         }
