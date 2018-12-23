@@ -6,6 +6,7 @@ using System.Text;
 namespace SadConsole.SerializedTypes
 {
     [DataContract]
+#pragma warning disable 1591
     public class FontSerialized
     {
         [DataMember]
@@ -32,4 +33,5 @@ namespace SadConsole.SerializedTypes
             return newFont;
         }
     }
+#pragma warning restore 1591
 }

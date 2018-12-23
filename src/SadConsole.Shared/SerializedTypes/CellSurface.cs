@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
 
     public class CellSurfaceJson : JsonConverter<CellSurface>
     {
@@ -50,4 +51,5 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
+#pragma warning restore 1591
 }

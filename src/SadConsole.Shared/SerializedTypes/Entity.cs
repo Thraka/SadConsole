@@ -10,6 +10,7 @@ using SadConsole.Entities;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     public class EntityJsonConverter : JsonConverter<Entity>
     {
         public override void WriteJson(JsonWriter writer, Entity value, JsonSerializer serializer)
@@ -79,4 +80,5 @@ namespace SadConsole.SerializedTypes
             return entity;
         }
     }
+#pragma warning restore 1591
 }

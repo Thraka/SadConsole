@@ -3,12 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Linq;
 using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     public class AnimatedConsoleConverterJson : JsonConverter<AnimatedConsole>
     {
         public override void WriteJson(JsonWriter writer, AnimatedConsole value, JsonSerializer serializer)
@@ -81,4 +81,6 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
+#pragma warning restore 1591
+
 }

@@ -6,6 +6,7 @@ using SadConsole;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     public class ScrollingConsoleJsonConverter: JsonConverter<ScrollingConsole>
     {
         public override void WriteJson(JsonWriter writer, ScrollingConsole value, JsonSerializer serializer)
@@ -66,4 +67,5 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
+#pragma warning restore 1591
 }

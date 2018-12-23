@@ -7,6 +7,7 @@ using System.Text;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     [DataContract]
     public struct RectangleSerialized
     {
@@ -29,4 +30,5 @@ namespace SadConsole.SerializedTypes
             return new FrameworkRect(rect.X, rect.Y, rect.Width, rect.Height);
         }
     }
+#pragma warning restore 1591
 }

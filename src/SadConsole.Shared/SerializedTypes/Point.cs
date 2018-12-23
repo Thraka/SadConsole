@@ -7,6 +7,7 @@ using System.Text;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     [DataContract]
     public struct PointSerialized
     {
@@ -25,4 +26,5 @@ namespace SadConsole.SerializedTypes
             return new FrameworkPoint(point.X, point.Y);
         }
     }
+#pragma warning restore 1591
 }

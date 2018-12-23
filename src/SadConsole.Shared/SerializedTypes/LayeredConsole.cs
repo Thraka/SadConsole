@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     public class LayeredJsonConverter : JsonConverter<LayeredConsole>
     {
         public override void WriteJson(JsonWriter writer, LayeredConsole value, JsonSerializer serializer)
@@ -67,4 +68,5 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
+#pragma warning restore 1591
 }

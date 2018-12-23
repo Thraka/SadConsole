@@ -2,10 +2,10 @@
 using System.Runtime.Serialization;
 using System.Linq;
 using Newtonsoft.Json;
-using Console = SadConsole.Console;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     public class ConsoleJsonConverter: JsonConverter<Console>
     {
         public override void WriteJson(JsonWriter writer, Console value, JsonSerializer serializer)
@@ -75,4 +75,5 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
+#pragma warning restore 1591
 }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
 using System.Linq;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     [DataContract]
     public class CellSerialized
     {
@@ -100,4 +98,5 @@ namespace SadConsole.SerializedTypes
         }
 
     }
+#pragma warning restore 1591
 }

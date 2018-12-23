@@ -1,12 +1,9 @@
 ﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
-
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace SadConsole.SerializedTypes
 {
+#pragma warning disable 1591
     [DataContract]
     public struct ColorSerialized
     {
@@ -29,4 +26,5 @@ namespace SadConsole.SerializedTypes
             return new FrameworkColor(color.R, color.G, color.B, color.A);
         }
     }
+#pragma warning restore 1591
 }
