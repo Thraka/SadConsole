@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SadConsole.DrawCalls;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// An array of <see cref="Cell"/> objects used to represent a 2D surface.
+    /// </summary>
     public partial class CellSurface: IEnumerable<Cell>
     {
         private bool _isDirty;

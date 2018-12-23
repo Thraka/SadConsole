@@ -11,7 +11,6 @@ using SadConsole.StringParser;
 
 namespace SadConsole
 {
-    /// <inheritdoc />
     public partial class CellSurface
     {
         /// <summary>
@@ -1277,7 +1276,7 @@ namespace SadConsole
                 connectedLineStyle = Enumerable.Range(0, Enum.GetValues(typeof(ConnectedLineIndex)).Length)
                     .Select(_ => border.Glyph).ToArray();
 
-            if (!ValidateLinestyle(connectedLineStyle))
+            if (!ValidateLineStyle(connectedLineStyle))
                 throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
 
             // Draw the major sides

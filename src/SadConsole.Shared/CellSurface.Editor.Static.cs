@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SadConsole
 {
@@ -63,7 +58,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="connectedLineStyle">The array to check based on the <see cref="ConnectedLineIndex"/> enum.</param>
         /// <returns>True when the line style is correct.</returns>
-        public static bool ValidateLinestyle(in int[] connectedLineStyle)
+        public static bool ValidateLineStyle(in int[] connectedLineStyle)
         {
             return connectedLineStyle != null && connectedLineStyle.Length == Enum.GetValues(typeof(ConnectedLineIndex)).Length;
         }
@@ -71,7 +66,7 @@ namespace SadConsole
         /// <summary>
         /// Array index enum for line glyphs.
         /// </summary>
-        public enum ConnectedLineIndex : int
+        public enum ConnectedLineIndex
         {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             TopLeft, Top, TopRight,
