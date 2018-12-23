@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace SadConsole.Themes
 {
@@ -10,6 +7,7 @@ namespace SadConsole.Themes
     /// </summary>
     public class Colors
     {
+#pragma warning disable 1591
         public Color White = Color.White;
         public Color Black = Color.Black;
         public Color Gray = new Color(176, 196, 222);
@@ -40,7 +38,11 @@ namespace SadConsole.Themes
         public Color SilverDark = new Color(169, 169, 169);
         public Color Bronze = new Color(205, 127, 50);
         public Color BronzeDark = new Color(144, 89, 35);
+#pragma warning restore 1591
 
+        /// <summary>
+        /// The color used to darken the background when <see cref="o:Window.Show"/> is called and <see cref="Window.IsModal"/> is <see langword="true"/>.
+        /// </summary>
         public Color ModalBackground = new Color(20, 20, 20, 200);
 
         public Color MenuBack;
