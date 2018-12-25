@@ -112,7 +112,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\Basic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\IRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Renderers\Window.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SerializedTypes\AnimatedConsole.cs" />

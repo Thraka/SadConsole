@@ -75,13 +75,13 @@ namespace SadConsole
         /// <summary>
         /// Gets the whether or not the console is being shown as modal. 
         /// </summary>
-        public bool IsModal { get; protected set; }
+        public bool IsModal { get; private set; }
 
         /// <summary>
         /// Gets or sets whether or not this window can be moved with the mouse.
         /// </summary>
         [DataMember]
-        public bool Dragable { get; set; }
+        public bool CanDrag { get; set; }
         
         /// <summary>
         /// Gets or sets whether or not this window can be closed when the escape key is pressed.
@@ -99,7 +99,7 @@ namespace SadConsole
         /// Indicates that when this window is shown by the <see cref="Show()"/> method or by setting the <see cref="Console.IsVisible"/> property to true, the window will be shown as modal.
         /// </summary>
         [DataMember]
-        public bool ModalIsDefault { get; set; }
+        public bool IsModalDefault { get; set; }
 
         /// <summary>
         /// Gets or sets the title displayed on the window.
@@ -133,11 +133,18 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The width of the window in cells.</param>
         /// <param name="height">The height of the window in cells.</param>
-        public Window(int width, int height)
-            : base(width, height)
+        public Window(int width, int height): this(width, height, Global.FontDefault) { }
+
+        /// <summary>
+        /// Creates a new window with the specified with and height in cells.
+        /// </summary>
+        /// <param name="width">The width of the window in cells.</param>
+        /// <param name="height">The height of the window in cells.</param>
+        /// <param name="font">THe font to use with the window.</param>
+        public Window(int width, int height, Font font): base(width, height, font)
         {
             IsVisible = false;
-            Renderer = new Renderers.Window { Controls = _controls };
+            CanDrag = true;
         }
 
         /// <summary>
@@ -148,7 +155,7 @@ namespace SadConsole
             base.OnVisibleChanged();
 
             if (IsVisible)
-                Show(ModalIsDefault);
+                Show(IsModalDefault);
             else
                 Hide();
         }
@@ -156,10 +163,6 @@ namespace SadConsole
         /// <inheritdoc />
         public override void Draw(TimeSpan drawTime)
         {
-            //TODO: Perf - cache reference?
-            ((Renderers.Window)Renderer).IsModal = IsModal;
-            ((Renderers.Window)Renderer).ModalTint = Theme.WindowTheme.ModalTint;
-
             if (IsModal && Theme.WindowTheme.ModalTint.A != 0)
                 Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), Theme.WindowTheme.ModalTint));
 
@@ -175,57 +178,62 @@ namespace SadConsole
             Theme.WindowTheme.Draw(this, this);
             IsDirty = true;
 
-            foreach (var control in _controls)
+            foreach (var control in ControlsList)
                 control.IsDirty = true;
         }
 
         /// <inheritdoc />
         public override bool ProcessMouse(MouseConsoleState state)
-        { 
-            if (Theme.WindowTheme.TitleAreaLength != 0 && IsVisible)
+        {
+            if (!CanDrag || Theme.WindowTheme.TitleAreaLength == 0 || !IsVisible)
             {
-                if (IsDragging && state.Mouse.LeftButtonDown)
-                {
-                    if (state.Mouse.IsOnScreen)
-                    {
-                        Position = state.WorldPosition - CellAtDragPosition;
+                PreviousMouseInfo = state;
+                return base.ProcessMouse(state);
+            }
 
-                        return true;
-                    }
-                }
-
-                // Stopped dragging
-                if (IsDragging && !state.Mouse.LeftButtonDown)
+            if (IsDragging && state.Mouse.LeftButtonDown)
+            {
+                if (state.Mouse.IsOnScreen)
                 {
-                    IsDragging = false;
-                    IsExclusiveMouse = PreviousMouseExclusiveDrag;
+                    Position = state.WorldPosition - CellAtDragPosition;
+                    PreviousMouseInfo = state;
                     return true;
                 }
+            }
 
-                // Left button freshly down and we're not already dragging, check to see if in title
-                if (CapturedControl == null && state.IsOnConsole && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
+            // Stopped dragging
+            if (IsDragging && !state.Mouse.LeftButtonDown)
+            {
+                IsDragging = false;
+                IsExclusiveMouse = PreviousMouseExclusiveDrag;
+                PreviousMouseInfo = state;
+                return true;
+            }
+
+            // Left button freshly down and we're not already dragging, check to see if in title
+            if (CapturedControl == null && state.IsOnConsole && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
+            {
+                if (state.CellPosition.Y == Theme.WindowTheme.TitleAreaY && state.CellPosition.X >= Theme.WindowTheme.TitleAreaX && state.CellPosition.X < Theme.WindowTheme.TitleAreaX + Theme.WindowTheme.TitleAreaLength)
                 {
-                    if (state.CellPosition.Y == Theme.WindowTheme.TitleAreaY && state.CellPosition.X >= Theme.WindowTheme.TitleAreaX && state.CellPosition.X < Theme.WindowTheme.TitleAreaX + Theme.WindowTheme.TitleAreaLength)
+                    PreviousMouseExclusiveDrag = IsExclusiveMouse;
+
+                    // Mouse is in the title bar
+                    IsExclusiveMouse = true;
+                    IsDragging = true;
+
+                    if (UsePixelPositioning)
+                        CellAtDragPosition = state.RelativePixelPosition;
+                    else
+                        CellAtDragPosition = state.ConsolePosition;
+
+                    if (MoveToFrontOnMouseClick)
                     {
-                        PreviousMouseExclusiveDrag = IsExclusiveMouse;
-
-                        // Mouse is in the title bar
-                        IsExclusiveMouse = true;
-                        IsDragging = true;
-
-                        if (UsePixelPositioning)
-                            CellAtDragPosition = state.RelativePixelPosition;
-                        else
-                            CellAtDragPosition = state.ConsolePosition;
-
-                        if (MoveToFrontOnMouseClick)
-                        {
-                            IsFocused = true;
-                        }
+                        IsFocused = true;
                     }
                 }
             }
 
+            PreviousMouseInfo = state;
             return base.ProcessMouse(state);
         }
 
@@ -245,11 +253,11 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Displays this window using the modal value of the <see cref="ModalIsDefault"/> property.
+        /// Displays this window using the modal value of the <see cref="IsModalDefault"/> property.
         /// </summary>
         public void Show()
         {
-            Show(ModalIsDefault);
+            Show(IsModalDefault);
         }
 
         /// <summary>
@@ -308,8 +316,8 @@ namespace SadConsole
         /// </summary>
         public void Center()
         {
-            int screenWidth = Global.RenderWidth;
-            int screenHeight = Global.RenderHeight;
+            var screenWidth = Global.RenderWidth;
+            var screenHeight = Global.RenderHeight;
 
             if (UsePixelPositioning)
                 Position = new Point((screenWidth / 2) - ((Width * Font.Size.X) / 2), (screenHeight / 2) - ((Height * Font.Size.Y) / 2));

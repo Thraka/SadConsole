@@ -1,15 +1,15 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
-
-using SadConsole.Controls;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
-using SadConsole.Renderers;
-
+using Microsoft.Xna.Framework.Input;
+using SadConsole.Controls;
+using SadConsole.Input;
 using SadConsole.Themes;
+using Keyboard = SadConsole.Input.Keyboard;
 
 namespace SadConsole
 {
@@ -17,23 +17,25 @@ namespace SadConsole
     /// A basic console that can contain controls.
     /// </summary>
     [DataContract]
-    [System.Diagnostics.DebuggerDisplay("Console (Controls)")]
+    [DebuggerDisplay("Console (Controls)")]
     public class ControlsConsole: ScrollingConsole, IEnumerable<ControlBase>
     {
         /// <summary>
         /// Keyboard processor shared by all Controls Consoles.
         /// </summary>
-        public static Input.Keyboard KeyboardState = new Input.Keyboard();
+        public static Keyboard KeyboardState = new Keyboard();
 
+        /// <summary>
+        /// The collection of controls.
+        /// </summary>
         [DataMember]
-        protected List<ControlBase> _controls;
+        protected List<ControlBase> ControlsList;
 
         [DataMember]
         private ControlBase _focusedControl;
-        private bool wasFocusedBeforeCapture;
-        private bool exclusiveBeforeCapture;
+        private bool _wasFocusedBeforeCapture;
+        private bool _exclusiveBeforeCapture;
 
-        //private SadConsole.Themes.ControlsConsoleTheme _theme;
         private Library _theme; 
 
         /// <summary>
@@ -48,12 +50,10 @@ namespace SadConsole
         /// </summary>
         public Library Theme
         {
-            get => _theme ?? Themes.Library.Default;
+            get => _theme ?? Library.Default;
             set
             {
-                if (value == null) throw new ArgumentNullException(nameof(Theme), "Theme cannot be set to null.");
-
-                _theme = value;
+                _theme = value ?? throw new ArgumentNullException(nameof(Theme), "Theme cannot be set to null.");
 
                 foreach (var control in Controls)
                     control.RefreshParentTheme();
@@ -66,7 +66,7 @@ namespace SadConsole
         /// <summary>
         /// Gets a read-only collection of the controls this console contains.
         /// </summary>
-        public System.Collections.ObjectModel.ReadOnlyCollection<ControlBase> Controls => _controls.AsReadOnly();
+        public ReadOnlyCollection<ControlBase> Controls => ControlsList.AsReadOnly();
 
         /// <summary>
         /// Gets the control currently capturing mouse events.
@@ -116,27 +116,32 @@ namespace SadConsole
         public bool DisableControlFocusing { get; set; }
         #endregion
 
-        #region Constructors
         /// <summary>
         ///  Creates a new instance of the controls console with the specified width and height.
         /// </summary>
         /// <param name="width">The width of the console.</param>
         /// <param name="height">The height of the console.</param>
-        /// <param name="device">The graphics device to render this console on.</param>
-        public ControlsConsole(int width, int height)
-            : base(width, height)
+        public ControlsConsole(int width, int height) : this(width, height, Global.FontDefault) { }
+
+        /// <summary>
+        ///  Creates a new instance of the controls console with the specified width, height, and font.
+        /// </summary>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
+        /// <param name="font">The font used with the console.</param>
+        public ControlsConsole(int width, int height, Font font) : base(width, height, font)
         {
-            _controls = new List<ControlBase>();
+            ControlsList = new List<ControlBase>();
             Cursor.IsVisible = false;
             AutoCursorOnFocus = false;
             UseKeyboard = true;
             UseMouse = true;
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
-            Renderer = new Renderers.ControlsConsole() { Controls = _controls };
+            Renderer = new Renderers.ControlsConsole { Controls = ControlsList };
+            // ReSharper disable once VirtualMemberCallInConstructor
             Invalidate();
         }
-        #endregion
 
         /// <summary>
         /// Adds an existing control to this console.
@@ -144,14 +149,14 @@ namespace SadConsole
         /// <param name="control">The control to add.</param>
         public void Add(ControlBase control)
         {
-            if (!_controls.Contains(control))
-                _controls.Add(control);
+            if (!ControlsList.Contains(control))
+                ControlsList.Add(control);
 
             control.Parent = this;
-            control.TabIndex = _controls.Count - 1;
+            control.TabIndex = ControlsList.Count - 1;
 
 
-            if (_controls.Count == 1)
+            if (ControlsList.Count == 1)
                 FocusedControl = control;
 
             control.IsDirtyChanged += ControlOnIsDirtyChanged;
@@ -163,7 +168,7 @@ namespace SadConsole
 
         private void ControlOnIsDirtyChanged(object sender, EventArgs e)
         {
-            this.IsDirty = true;
+            IsDirty = true;
         }
 
 
@@ -173,25 +178,25 @@ namespace SadConsole
         /// <param name="control">The control to remove.</param>
         public void Remove(ControlBase control)
         {
-            if (_controls.Contains(control))
+            if (ControlsList.Contains(control))
             {
                 control.TabIndex = -1;
                 control.Parent = null;
 
                 if (FocusedControl == control)
                 {
-                    var index = _controls.IndexOf(control);
-                    _controls.Remove(control);
+                    var index = ControlsList.IndexOf(control);
+                    ControlsList.Remove(control);
 
-                    if (_controls.Count == 0)
+                    if (ControlsList.Count == 0)
                         FocusedControl = null;
-                    else if (index > _controls.Count - 1)
-                        FocusedControl = _controls[_controls.Count - 1];
+                    else if (index > ControlsList.Count - 1)
+                        FocusedControl = ControlsList[ControlsList.Count - 1];
                     else
-                        FocusedControl = _controls[index];
+                        FocusedControl = ControlsList[index];
                 }
                 else
-                    _controls.Remove(control);
+                    ControlsList.Remove(control);
 
                 //control.OnComposed = null;
 
@@ -208,30 +213,29 @@ namespace SadConsole
         {
             if (_focusedControl == null)
             {
-                if (_controls.Count != 0)
-                {
-                    for (var i = 0; i < _controls.Count; i++)
-                    {
-                        if (_controls[i].TabStop)
-                        {
-                            FocusedControl = _controls[i];
-                            break;
-                        }
-                    }
+                if (ControlsList.Count == 0) return;
 
-                    // Still couldn't find one, try moving previous console if we can
-                    if (FocusedControl == null)
-                        TryTabNextConsole();
+                foreach (var control in ControlsList)
+                {
+                    if (control.TabStop)
+                    {
+                        FocusedControl = control;
+                        break;
+                    }
                 }
+
+                // Still couldn't find one, try moving previous console if we can
+                if (FocusedControl == null)
+                    TryTabNextConsole();
             }
             else
             {
-                var index = _controls.IndexOf(_focusedControl);
+                var index = ControlsList.IndexOf(_focusedControl);
 
-                if (index == _controls.Count - 1 && !TryTabNextConsole())
-                    FocusedControl = _controls[0];
+                if (index == ControlsList.Count - 1 && !TryTabNextConsole())
+                    FocusedControl = ControlsList[0];
                 else
-                    FocusedControl = _controls[index + 1];
+                    FocusedControl = ControlsList[index + 1];
             }
         }
 
@@ -242,13 +246,13 @@ namespace SadConsole
         {
             if (_focusedControl == null)
             {
-                if (_controls.Count != 0)
+                if (ControlsList.Count != 0)
                 {
-                    for (var i = _controls.Count - 1; i > 0; i--)
+                    for (var i = ControlsList.Count - 1; i > 0; i--)
                     {
-                        if (_controls[i].TabStop)
+                        if (ControlsList[i].TabStop)
                         {
-                            FocusedControl = _controls[i];
+                            FocusedControl = ControlsList[i];
                             break;
                         }
                     }
@@ -260,87 +264,89 @@ namespace SadConsole
             }
             else
             {
-                var index = _controls.IndexOf(_focusedControl);
+                var index = ControlsList.IndexOf(_focusedControl);
 
                 if (index == 0 && !TryTabPreviousConsole())
-                    FocusedControl = _controls[_controls.Count - 1];
+                    FocusedControl = ControlsList[ControlsList.Count - 1];
                 else
-                    FocusedControl = _controls[index - 1];
+                    FocusedControl = ControlsList[index - 1];
             }
         }
 
+        /// <summary>
+        /// Tries to tab to the console that comes before this one in the <see cref="Console.Parent"/> collection of <see cref="Console.Children"/>. Sets focus to the target console if found.
+        /// </summary>
+        /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
         protected bool TryTabPreviousConsole()
         {
-            if (CanTabToNextConsole && Parent != null)
+            if (!CanTabToNextConsole || Parent == null) return false;
+
+            ControlsConsole newConsole;
+            var consoles = Parent.Children.OfType<ControlsConsole>().ToList();
+
+            // If no consoles found, get out
+            if (consoles.Count == 0)
+                return false;
+
+            // If a previous console has not be explicitly set, find the previous console.
+            if (PreviousTabConsole == null || !consoles.Contains(PreviousTabConsole))
             {
-                ControlsConsole newConsole;
-                var consoles = Parent.Children.OfType<ControlsConsole>().ToList();
-
-                // If no consoles found, get out
-                if (consoles.Count == 0)
-                    return false;
-
-                // If a previous console has not be explicitly set, find the previous console.
-                else if (PreviousTabConsole == null || !consoles.Contains(PreviousTabConsole))
-                {
-                    var parentIndex = consoles.IndexOf(this);
-                    if (parentIndex == 0)
-                        parentIndex = consoles.Count - 1;
-                    else
-                        parentIndex -= 1;
-
-                    // Get the new focused console
-                    newConsole = consoles[parentIndex];
-                }
+                var parentIndex = consoles.IndexOf(this);
+                if (parentIndex == 0)
+                    parentIndex = consoles.Count - 1;
                 else
-                    newConsole = PreviousTabConsole;
+                    parentIndex -= 1;
 
-                // Set focus to this new console
-                Global.FocusedConsoles.Set(newConsole);
-                newConsole.FocusedControl = null;
-                newConsole.TabPreviousControl();
-
-                return true;
+                // Get the new focused console
+                newConsole = consoles[parentIndex];
             }
+            else
+                newConsole = PreviousTabConsole;
 
-            return false;
+            // Set focus to this new console
+            Global.FocusedConsoles.Set(newConsole);
+            newConsole.FocusedControl = null;
+            newConsole.TabPreviousControl();
+
+            return true;
         }
 
+        /// <summary>
+        /// Tries to tab to the console that comes after this one in the <see cref="Console.Parent"/> collection of <see cref="Console.Children"/>. Sets focus to the target console if found.
+        /// </summary>
+        /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
         protected bool TryTabNextConsole()
         {
-            if (CanTabToNextConsole && Parent != null)
+            if (!CanTabToNextConsole || Parent == null) return false;
+
+            ControlsConsole newConsole;
+            var consoles = Parent.Children.OfType<ControlsConsole>().ToList();
+
+            // If no consoles found, get out
+            if (consoles.Count == 0)
+                return false;
+
+            // If a previous console has not be explicitly set, find the previous console.
+            if (NextTabConsole == null || !consoles.Contains(NextTabConsole))
             {
-                ControlsConsole newConsole;
-                var consoles = Parent.Children.OfType<ControlsConsole>().ToList();
-
-                // If no consoles found, get out
-                if (consoles.Count == 0)
-                    return false;
-
-                // If a previous console has not be explicitly set, find the previous console.
-                else if (NextTabConsole == null || !consoles.Contains(NextTabConsole))
-                {
-                    var parentIndex = consoles.IndexOf(this);
-                    if (parentIndex == consoles.Count - 1)
-                        parentIndex = 0;
-                    else
-                        parentIndex += 1;
-
-                    // Get the new focused console
-                    newConsole = consoles[parentIndex];
-                }
+                var parentIndex = consoles.IndexOf(this);
+                if (parentIndex == consoles.Count - 1)
+                    parentIndex = 0;
                 else
-                    newConsole = NextTabConsole;
+                    parentIndex += 1;
 
-                // Set focus to this new console
-                Global.FocusedConsoles.Set(newConsole);
-                newConsole.FocusedControl = null;
-                newConsole.TabNextControl();
-
-                return true;
+                // Get the new focused console
+                newConsole = consoles[parentIndex];
             }
+            else
+                newConsole = NextTabConsole;
 
-            return false;
+            // Set focus to this new console
+            Global.FocusedConsoles.Set(newConsole);
+            newConsole.FocusedControl = null;
+            newConsole.TabNextControl();
+
+            return true;
         }
 
         /// <summary>
@@ -350,10 +356,10 @@ namespace SadConsole
         {
             FocusedControl = null;
 
-            foreach (var control in _controls)
+            foreach (var control in ControlsList)
                 control.Parent = null;
 
-            _controls.Clear();
+            ControlsList.Clear();
         }
 
         /// <summary>
@@ -363,7 +369,7 @@ namespace SadConsole
         /// <returns>True when the control exists in this console; otherwise false.</returns>
         public bool Contains(ControlBase control)
         {
-            return _controls.Contains(control);
+            return ControlsList.Contains(control);
         }
 
         /// <summary>
@@ -393,17 +399,19 @@ namespace SadConsole
         /// </summary>
         public void ReOrderControls()
         {
-            _controls.Sort((x, y) =>
+            ControlsList.Sort((x, y) =>
             {
                 if (x.TabIndex == y.TabIndex)
                     return 0;
-                else if (x.TabIndex < y.TabIndex)
+                if (x.TabIndex < y.TabIndex)
                     return -1;
-                else
-                    return 1;
+                return 1;
             });
         }
 
+        /// <summary>
+        /// Signals that the console should be considered dirty and reapplies the <see cref="Theme"/>.
+        /// </summary>
         public virtual void Invalidate()
         {
             Theme.ControlsConsoleTheme.Refresh(Theme.Colors);
@@ -411,29 +419,30 @@ namespace SadConsole
 
             IsDirty = true;
 
-            foreach (var control in _controls)
+            foreach (var control in ControlsList)
                 control.IsDirty = true;
         }
 
         /// <summary>
         /// Calls the Update method of the base class and then Update on each control.
         /// </summary>
-        public override void Update(System.TimeSpan time)
+        public override void Update(TimeSpan time)
         {
             if (IsPaused) return;
 
             base.Update(time);
 
-            foreach (var control in _controls)
+            foreach (var control in ControlsList)
                 control.Update(time);
 
             
         }
 
-        public override void Draw(System.TimeSpan update)
+        /// <inheritdoc />
+        public override void Draw(TimeSpan update)
         {
             if (!IsDirty)
-                foreach (var control in _controls)
+                foreach (var control in ControlsList)
                 {
                     if (control.IsDirty)
                     {
@@ -449,7 +458,7 @@ namespace SadConsole
         /// Processes the keyboard for the console.
         /// </summary>
         /// <param name="info">Keyboard information sent by the engine.</param>
-        public override bool ProcessKeyboard(Input.Keyboard info)
+        public override bool ProcessKeyboard(Keyboard info)
         {
             if (!UseGlobalKeyboardInput)
             {
@@ -457,9 +466,9 @@ namespace SadConsole
                 info = KeyboardState;
             }
 
-            var handlerResult = KeyboardHandler == null ? false : KeyboardHandler(this, info);
+            var handlerResult = KeyboardHandler != null && KeyboardHandler(this, info);
 
-            if (!handlerResult && this.UseKeyboard)
+            if (!handlerResult && UseKeyboard)
             {
                 if (
                     ((info.IsKeyDown(Keys.LeftShift)  ||
@@ -471,13 +480,12 @@ namespace SadConsole
                     &&
                     info.IsKeyReleased(Keys.Tab))
                 {
-                    // TODO: Handle tab by changing focused control unless existing control doesn't support tab
                     TabPreviousControl();
                     return true;
                 }
-                else if (info.IsKeyReleased(Keys.Tab))
+
+                if (info.IsKeyReleased(Keys.Tab))
                 {
-                    // TODO: Handle tab by changing focused control unless existing control doesn't support tab
                     TabNextControl();
                     return false;
                 }
@@ -494,7 +502,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="state">Mouse information sent by the engine.</param>
         /// <returns>True when the mouse is over this console and it is the active console; otherwise false.</returns>
-        public override bool ProcessMouse(Input.MouseConsoleState state)
+        public override bool ProcessMouse(MouseConsoleState state)
         {
             if (base.ProcessMouse(state) || IsExclusiveMouse)
             {
@@ -503,7 +511,7 @@ namespace SadConsole
 
                 else
                 {
-                    foreach (var control in _controls)
+                    foreach (var control in ControlsList)
                     {
                         if (control.IsVisible && control.ProcessMouse(state))
                             break;
@@ -517,11 +525,11 @@ namespace SadConsole
         }
         
         /// <inheritdoc />
-        protected override void OnMouseExit(Input.MouseConsoleState state)
+        protected override void OnMouseExit(MouseConsoleState state)
         {
             base.OnMouseExit(state);
 
-            foreach (var control in _controls)
+            foreach (var control in ControlsList)
                 control.LostMouse(state);
 
             //if (_focusedControl != null)
@@ -537,14 +545,14 @@ namespace SadConsole
             if (Global.FocusedConsoles.Console != this)
             {
                 Global.FocusedConsoles.Push(this);
-                wasFocusedBeforeCapture = false;
+                _wasFocusedBeforeCapture = false;
             }
             else
             {
-                wasFocusedBeforeCapture = true;
+                _wasFocusedBeforeCapture = true;
             }
 
-            exclusiveBeforeCapture = IsExclusiveMouse;
+            _exclusiveBeforeCapture = IsExclusiveMouse;
             IsExclusiveMouse = true;
             CapturedControl = control;
         }
@@ -554,10 +562,10 @@ namespace SadConsole
         /// </summary>
         public void ReleaseControl()
         {
-            if (!wasFocusedBeforeCapture)
+            if (!_wasFocusedBeforeCapture)
                 Global.FocusedConsoles.Pop(this);
 
-            IsExclusiveMouse = exclusiveBeforeCapture;
+            IsExclusiveMouse = _exclusiveBeforeCapture;
             CapturedControl = null;
         }
 
@@ -565,20 +573,21 @@ namespace SadConsole
         /// Gets an enumerator of the controls collection.
         /// </summary>
         /// <returns>The enumerator of the controls collection.</returns>
-        public IEnumerator<ControlBase> GetEnumerator()
+        public new IEnumerator<ControlBase> GetEnumerator()
         {
-            return _controls.GetEnumerator();
+            return ControlsList.GetEnumerator();
         }
 
         /// <summary>
         /// Gets an enumerator of the controls collection.
         /// </summary>
         /// <returns>The enumerator of the controls collection.</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return _controls.GetEnumerator();
+            return ControlsList.GetEnumerator();
         }
-        
+
+        /// <inheritdoc />
         protected override void OnFocused()
         {
             base.OnFocused();
@@ -586,6 +595,7 @@ namespace SadConsole
             FocusedControl?.DetermineState();
         }
 
+        /// <inheritdoc />
         protected override void OnFocusLost()
         {
             base.OnFocusLost();
@@ -593,12 +603,12 @@ namespace SadConsole
             FocusedControl?.DetermineState();
         }
 
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             Cursor.IsVisible = false;
 
-            foreach (var control in _controls)
+            foreach (var control in ControlsList)
             {
                 control.Parent = this;
             }
