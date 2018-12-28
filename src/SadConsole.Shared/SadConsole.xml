@@ -51,17 +51,320 @@
             <summary>
             Processes an area and applies a gradient calculation to each part of the area.
             </summary>
+            <param name="cellSize">The size of an individual cell. Makes the angle uniform.</param>
             <param name="position">The center of the gradient.</param>
             <param name="strength">The width of the gradient spread.</param>
             <param name="angle">The angle to apply the gradient.</param>
             <param name="area">The area to calculate.</param>
+            <param name="gradient">The color gradient to fill with.</param>
             <param name="applyAction">The callback called for each part of the area.</param>
+        </member>
+        <member name="M:SadConsole.Algorithms.Circle(System.Int32,System.Int32,System.Int32,System.Action{System.Int32,System.Int32})">
+            <summary>
+            Plots the outside of the circle, passing the x,y to <paramref name="plot"/>.
+            </summary>
+            <param name="centerX">The X coordinate of the center of the circle.</param>
+            <param name="centerY">The Y coordinate of the center of the circle.</param>
+            <param name="radius">The radius of the circle.</param>
+            <param name="plot">A method to call on each x,y coordinate of the outside of the circle.</param>
+        </member>
+        <member name="M:SadConsole.Algorithms.Ellipse(System.Int32,System.Int32,System.Int32,System.Int32,System.Action{System.Int32,System.Int32})">
+            <summary>
+            Plots the outside of an ellipse, passing the x,y to <paramref name="plot"/>.
+            </summary>
+            <param name="x0">The X coordinate of the first corner of the ellipse.</param>
+            <param name="y0">The Y coordinate of the first corner of the ellipse.</param>
+            <param name="x1">The X coordinate of the second corner of the ellipse.</param>
+            <param name="y1">The Y coordinate of the second corner of the ellipse.</param>
+            <param name="plot">A method to call on each x,y coordinate of the outside of the ellipse.</param>
         </member>
         <member name="T:SadConsole.Algorithms.NodeConnections`1">
             <summary>
             Describes the 4-way connections of a node.
             </summary>
             <typeparam name="TNode">The type of object the node and its connections are.</typeparam>
+        </member>
+        <member name="M:SadConsole.Algorithms.NodeConnections`1.#ctor(`0,`0,`0,`0)">
+            <summary>
+            Creates a new instance of this object with the specified connections.
+            </summary>
+            <param name="west">The west connection.</param>
+            <param name="east">The east connection.</param>
+            <param name="north">The north connection.</param>
+            <param name="south">The south connection.</param>
+        </member>
+        <member name="M:SadConsole.Algorithms.NodeConnections`1.#ctor">
+            <summary>
+            Creates a new instance of this object with all connections set to <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="T:SadConsole.AnimatedConsole">
+            <summary>
+            Animates a list of frames.
+            </summary>
+        </member>
+        <member name="E:SadConsole.AnimatedConsole.AnimationStateChanged">
+            <summary>
+            Raised when the <see cref="T:SadConsole.AnimatedConsole.AnimationState"/> changes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.FramesList">
+            <summary>
+            The frames of animation.
+            </summary>
+            <remarks>If this collection changes, <see cref="F:SadConsole.AnimatedConsole.CurrentFrameIndexValue"/>, <see cref="M:SadConsole.AnimatedConsole.UpdateFrameReferences"/>, and <see cref="F:SadConsole.AnimatedConsole.TimePerFrame"/> should all be recalculated.</remarks>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AddedTime">
+            <summary>
+            Time counter for the animation
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.CurrentFrameIndexValue">
+            <summary>
+            The current frame index being animated.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.TimePerFrame">
+            <summary>
+            How much time per animated frame should be used.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.Frames">
+            <summary>
+            All frames of the animation
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.Center">
+            <summary>
+            Center of the animation used in positioning.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.Repeat">
+            <summary>
+            Indicates whether or not this animation will repeat once it has finished animating.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.IsPlaying">
+            <summary>
+            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedConsole.Update(System.TimeSpan)"/> method will advance the frames.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.AnimationDuration">
+            <summary>
+            The length of the animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.CurrentFrameIndex">
+            <summary>
+            Gets or sets the current frame index to animate.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.IsEmpty">
+            <summary>
+            Indicates the animation is empty.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.Name">
+            <summary>
+            Gets the name of this animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.CurrentFrame">
+            <summary>
+            Gets the currently frame being animated.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedConsole.State">
+            <summary>
+            Gets the current animation state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Creates a new animation with the specified name, width, and height.
+            </summary>
+            <param name="name">The name of the animation.</param>
+            <param name="width">The width of each frame this animation will have.</param>
+            <param name="height">The height of each frame this animation will have.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.#ctor(System.String,System.Int32,System.Int32,SadConsole.Font)">
+            <summary>
+            Creates a new animation with the specified name, width, and height.
+            </summary>
+            <param name="name">The name of the animation.</param>
+            <param name="width">The width of each frame this animation will have.</param>
+            <param name="height">The height of each frame this animation will have.</param>
+            <param name="font">The font used with this animation.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.SetRenderCells">
+            <summary>
+            Forces the area of this text surface to always be the full width and height.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.UpdateFrameReferences">
+            <summary>
+            Updates the base <see cref="P:SadConsole.CellSurface.Cells"/> references to the current frame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.CreateFrame">
+            <summary>
+            Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
+            </summary>
+            <returns>The created frame.</returns>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.CalculateFrameDuration">
+            <summary>
+            Calculates the time needed per frame for rendering.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.Stop">
+            <summary>
+            Stops animating.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.Start">
+            <summary>
+            Starts animating the frames.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.Restart">
+            <summary>
+            Restarts the animation from the first frame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.Update(System.TimeSpan)">
+            <summary>
+            Updates the animation frames and calls update on the base class.
+            </summary>
+            <param name="timeElapsed">The time elapsed since the last call in seconds.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.ToString">
+            <summary>
+            Returns the name of the animation.
+            </summary>
+            <returns>The name.</returns>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.OnCalculateRenderPosition">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double)">
+            <summary>
+            Creates an animated surface that looks like static.
+            </summary>
+            <param name="width">The width of the surface.</param>
+            <param name="height">The height of the surface.</param>
+            <param name="frames">How many frames the animation should have.</param>
+            <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="M:System.Random.NextDouble"/>.</param>
+            <returns>An animation.</returns>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.Save(System.String)">
+            <summary>
+            Saves the <see cref="T:SadConsole.AnimatedConsole"/> to a file.
+            </summary>
+            <param name="file">The destination file.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.Load(System.String)">
+            <summary>
+            Loads a <see cref="T:SadConsole.AnimatedConsole"/> from a file.
+            </summary>
+            <param name="file">The source file.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SadConsole.AnimatedConsole.AnimationStateChangedEventArgs">
+            <inheritdoc />
+            <summary>
+            Event args for when the animation state changes
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationStateChangedEventArgs.PreviousState">
+            <summary>
+            The previous state.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationStateChangedEventArgs.NewState">
+            <summary>
+            The new state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedConsole.AnimationStateChangedEventArgs.#ctor(SadConsole.AnimatedConsole.AnimationState,SadConsole.AnimatedConsole.AnimationState)">
+            <summary>
+            Creates a new instance of the event args.
+            </summary>
+            <param name="previousState">The previous state.</param>
+            <param name="newState">The new state.</param>
+        </member>
+        <member name="T:SadConsole.AnimatedConsole.AnimationState">
+            <summary>
+            Represents what state the animation is in.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationState.Stopped">
+            <summary>
+            The animation has never been played or was forcibly stopped.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationState.Playing">
+            <summary>
+            The animation is currently playing.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationState.Restarted">
+            <summary>
+            The animation was either manually restarted or repeated.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationState.Finished">
+            <summary>
+            The animation was played and completed.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationState.Activated">
+            <summary>
+            The animation is now the current animation for an entity.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedConsole.AnimationState.Deactivated">
+            <summary>
+            The animation is no longer the current animation for an entity.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Ansi.AnsiWriter">
+            <summary>
+            Writes a <see cref="T:SadConsole.Ansi.Document"/> to a <see cref="T:SadConsole.CellSurface"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.AnsiDocument">
+            <summary>
+            The document used to create this writer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.BlinkEffect">
+            <summary>
+            The blink effect to apply when the ansi document provides the ANSI blink command.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.Cursor">
+            <summary>
+            The cursor used to write to the target <see cref="T:SadConsole.CellSurface"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.CharactersPerSecond">
+            <summary>
+            How many characters to process a second. When set to 0 reads the entire document at once.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.#ctor(SadConsole.Ansi.Document,SadConsole.CellSurface)">
+            <summary>
+            Creates a new instance with the source document and target surface.
+            </summary>
+            <param name="ansiDocument">The source document containing ANSI commands.</param>
+            <param name="editor">The surface to parse the ANSI to.</param>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.Process(System.Double)">
+            <summary>
+            Processes the document by the amount of time that has elapsed. If <see cref="P:SadConsole.Ansi.AnsiWriter.CharactersPerSecond"/> is 0, time elapsed has no affect.
+            </summary>
+            <param name="timeElapsed">The time in seconds.</param>
         </member>
         <member name="M:SadConsole.Ansi.AnsiWriter.AnsiInterpret(System.String)">
             <summary>
@@ -74,13 +377,71 @@
             Reads a line of ANSI.SYS code.
             </summary>
             <param name="line">The line to read.</param>
+            <param name="moreLines">When <see langword="true"/>, calls <see cref="M:SadConsole.Cursor.LineFeed"/>; otherwise does nothing.</param>
             <returns>Returns false when character 26 is encountered; otherwise true.</returns>
         </member>
         <member name="M:SadConsole.Ansi.AnsiWriter.ReadEntireDocument">
             <summary>
             Loads an ansi file and parses it.
             </summary>
-            <param name="path">The paath to the ansi file.</param>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.Restart">
+            <summary>
+            Moves the reader back to the start of the file so that the source can .
+            </summary>
+        </member>
+        <member name="T:SadConsole.Ansi.Document">
+            <summary>
+            Represents an ANSI.SYS formatted document.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.Document.AnsiBytes">
+            <summary>
+            Gets or sets the ANSI.SYS bytes that make up the document.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.Document.AnsiString">
+            <summary>
+            A string representing the <see cref="P:SadConsole.Ansi.Document.AnsiBytes"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.Document.Stream">
+            <summary>
+            A stream that points to the <see cref="P:SadConsole.Ansi.Document.AnsiBytes"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.#ctor(System.String)">
+            <summary>
+            Creates a new document from the provided file name.
+            </summary>
+            <param name="file">The file to load.</param>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.Finalize">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Ansi.Document.FromAsciiString(System.String)">
+            <summary>
+            Creates a new document from an existing string representing ANSI.SYS codes and characters.
+            </summary>
+            <param name="ansiContent">The ANSI.SYS encoded string.</param>
+            <returns>A new document.</returns>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.FromBytes(System.Byte[])">
+            <summary>
+            Creates a new document from an existing byte array representing ANSI.SYS codes and characters.
+            </summary>
+            <param name="bytes">The ANSI.SYS encoded byte array.</param>
+            <returns>A new document.</returns>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.System#IDisposable#Dispose">
+            <summary>
+            Disposes the <see cref="P:SadConsole.Ansi.Document.Stream"/>.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Ansi.Helpers">
+            <summary>
+            Helpers related to ANSI processing.
+            </summary>
         </member>
         <member name="M:SadConsole.Ansi.Helpers.AnsiJustNormalColor(Microsoft.Xna.Framework.Color)">
             <summary>
@@ -92,7 +453,7 @@
         </member>
         <member name="M:SadConsole.Ansi.Helpers.AnsiAdjustColor(Microsoft.Xna.Framework.Color,System.Boolean)">
             <summary>
-            Adjusts the provided color based on the <see cref="!:Attribute_Bold"/> value.
+            Adjusts the provided color based on the <paramref name="bold"/> value.
             </summary>
             <param name="input">The ansi color to adjust.</param>
             <returns>The adjusted color.</returns>
@@ -104,6 +465,37 @@
             </summary>
             <param name="isBackground">When true, changes the background color instead of the foreground.</param>
             <param name="code">The 0-7 color code.</param>
+            <param name="ansiState">The current state of the ANSI settings.</param>
+        </member>
+        <member name="T:SadConsole.Ansi.State">
+            <summary>
+            Represents the state of an ANSI.SYS processor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Bold">
+            <summary>
+            Indicates that the state is using bold colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Reverse">
+            <summary>
+            Indicates that the state is printing reverse colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Concealed">
+            <summary>
+            Not supported.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Foreground">
+            <summary>
+            Foreground color for the state of the ANSI.SYS processor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Background">
+            <summary>
+            Background color for the state of the ANSI.SYS processor.
+            </summary>
         </member>
         <member name="M:SadConsole.Ansi.State.#ctor">
             <summary>
@@ -112,7 +504,7 @@
         </member>
         <member name="M:SadConsole.Ansi.State.AnsiCorrectPrintColor">
             <summary>
-            Forces the Background of the print appearance to be the darkened color and the foreground to be bright or not based on the <see cref="!:Attribute_Bold"/> property.
+            Forces the Background of the print appearance to be the darkened color and the foreground to be bright or not based on the <see cref="P:SadConsole.Ansi.State.Bold"/> property.
             </summary>
         </member>
         <member name="M:SadConsole.Ansi.State.AnsiResetVideo">
@@ -390,6 +782,702 @@
             </summary>
             <param name="source">The source cell to create a state from.</param>
         </member>
+        <member name="T:SadConsole.CellSurface">
+            <summary>
+            An array of <see cref="T:SadConsole.Cell"/> objects used to represent a 2D surface.
+            </summary>
+        </member>
+        <member name="E:SadConsole.CellSurface.DirtyChanged">
+            <summary>
+            An event that is raised when <see cref="P:SadConsole.CellSurface.IsDirty"/> is set to true.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.IsDirty">
+            <summary>
+            Indicates the surface has changed and needs to be rendered.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.DefaultForeground">
+            <summary>
+            The default foreground for glyphs on this surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.DefaultBackground">
+            <summary>
+            The default background for glyphs on this surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.Width">
+            <summary>
+            How many cells wide the surface is.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.Height">
+            <summary>
+            How many cells high the surface is.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.Cells">
+            <summary>
+            All cells of the surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets a cell based on its coordinates on the surface.
+            </summary>
+            <param name="x">The X coordinate.</param>
+            <param name="y">The Y coordinate.</param>
+            <returns>The indicated cell.</returns>
+        </member>
+        <member name="P:SadConsole.CellSurface.Item(System.Int32)">
+            <summary>
+            Gets a cell by index.
+            </summary>
+            <param name="index">The index of the cell.</param>
+            <returns>The indicated cell.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:Microsoft.Xna.Framework.Color.Transparent"/> for the background and <see cref="P:Microsoft.Xna.Framework.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,SadConsole.Cell[])">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:Microsoft.Xna.Framework.Color.Transparent"/> for the background and <see cref="P:Microsoft.Xna.Framework.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.OnDirtyChanged">
+            <summary>
+            Called when the <see cref="P:SadConsole.CellSurface.IsDirty"/> property changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.OnCellsReset">
+            <summary>
+            Called when the <see cref="P:SadConsole.CellSurface.Cells"/> property is reset.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetEnumerator">
+            <summary>
+            Gets an enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.
+            </summary>
+            <returns>An enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets an enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.
+            </summary>
+            <returns>An enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.</returns>
+        </member>
+        <member name="F:SadConsole.CellSurface.TimesShiftedDown">
+            <summary>
+            A variable that tracks how many times this editor shifted the surface down.
+            </summary>
+        </member>
+        <member name="F:SadConsole.CellSurface.TimesShiftedRight">
+            <summary>
+            A variable that tracks how many times this editor shifted the surface right.
+            </summary>
+        </member>
+        <member name="F:SadConsole.CellSurface.TimesShiftedLeft">
+            <summary>
+            A variable that tracks how many times this editor shifted the surface left.
+            </summary>
+        </member>
+        <member name="F:SadConsole.CellSurface.TimesShiftedUp">
+            <summary>
+            A variable that tracks how many times this editor shifted the surface up.
+            </summary>
+        </member>
+        <member name="F:SadConsole.CellSurface.UsePrintProcessor">
+            <summary>
+            When true, the <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)"/> command is used to print strings.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.Effects">
+            <summary>
+            Processes the effects added to cells with <see cref="o:SetEffect"/>
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetPixels(Microsoft.Xna.Framework.Color[])">
+            <summary>
+            Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
+            </summary>
+            <param name="pixels">The colors to place.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetPixels(Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color[])">
+            <summary>
+            Sets each background of a cell to the array of colors.
+            </summary>
+            <param name="area">An area to fill with pixels.</param>
+            <param name="pixels"></param>
+        </member>
+        <member name="M:SadConsole.CellSurface.IsValidCell(System.Int32,System.Int32)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="x">The x coordinate of the cell to test.</param>
+            <param name="y">The y coordinate of the cell to test.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.IsValidCell(System.Int32,System.Int32,System.Int32@)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="x">The x coordinate of the cell to test.</param>
+            <param name="y">The y coordinate of the cell to test.</param>
+            <param name="index">If the cell is valid, the index of the cell when found.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.IsValidCell(System.Int32)">
+            <summary>
+            Tests if a cell is valid based on its index.
+            </summary>
+            <param name="index">The index to test.</param>
+            <returns>A true value indicating the cell index is in this cell surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetGlyph(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Changes the glyph of a specified cell to a new value.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Changes the glyph and foreground of a cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Changes the glyph, foreground, and background of a cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+            <param name="background">The desired background.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
+            <summary>
+            Changes the glyph, foreground, background, and effect of a cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+            <param name="background">The desired background.</param>
+            <param name="mirror">Sets how the glyph will be mirrored.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Collections.Generic.IEnumerable{SadConsole.CellDecorator})">
+            <summary>
+            Changes the glyph, foreground, background, and effect of a cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+            <param name="background">The desired background.</param>
+            <param name="mirror">Sets how the glyph will be mirrored.</param>
+            <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetGlyph(System.Int32,System.Int32)">
+            <summary>
+            Gets the glyph of a specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The glyph index.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetForeground(System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Changes the foreground of a specified cell to a new color.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="color">The desired color of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetForeground(System.Int32,System.Int32)">
+            <summary>
+            Gets the foreground of a specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The color.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetBackground(System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Changes the background of a cell to the specified color.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="color">The desired color of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetBackground(System.Int32,System.Int32)">
+            <summary>
+            Gets the background of a specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The color.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(System.Int32,System.Int32,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(System.Int32,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="index">Index of the cell.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.Cell},SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a list of cells to the specified effect.
+            </summary>
+            <param name="cells">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(SadConsole.Cell,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="cell">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetEffect(System.Int32,System.Int32)">
+            <summary>
+            Gets the effect of the specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The effect.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetCellAppearance(System.Int32,System.Int32,SadConsole.Cell)">
+            <summary>
+            Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetCellAppearance(System.Int32,System.Int32)">
+            <summary>
+            Gets the appearance of a cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The appearance.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetCells(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Gets an enumerable of cells over a specific area.
+            </summary>
+            <param name="area">The area to get cells from.</param>
+            <returns>A new array with references to each cell in the area.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetMirror(System.Int32,System.Int32)">
+            <summary>
+            Gets the sprite effect of a specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The color.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetMirror(System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
+            <summary>
+            Sets the sprite effect of a specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="mirror">The mirror of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetDecorator(System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Sets the decorator of one or more cells.
+            </summary>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetDecorator(System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Sets the decorator of one or more cells.
+            </summary>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.AddDecorator(System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.AddDecorator(System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
+            <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String)">
+            <summary>
+            Draws the string on the console at the specified location, wrapping if needed.
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws the string on the console at the specified location and color, wrapping if needed.
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="foreground">Sets the foreground of all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws the string on the console at the specified location with the specified foreground and background color, wrapping if needed.
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="foreground">Sets the foreground of all characters in the text.</param>
+            <param name="background">Sets the background of all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
+            <summary>
+            Draws the string on the console at the specified location with the specified settings. 
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="foreground">Sets the foreground of all characters in the text.</param>
+            <param name="background">Sets the background of all characters in the text.</param>
+            <param name="mirror">The mirror to set on all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
+            <summary>
+            Draws the string on the console at the specified location with the specified settings. 
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="mirror">The mirror to set on all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,SadConsole.Cell,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Draws the string on the console at the specified location, wrapping if needed.
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="appearance">The appearance of the cell</param>
+            <param name="effect">An optional effect to apply to the printed cells.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,SadConsole.ColoredString)">
+            <summary>
+            Draws the string on the console at the specified location, wrapping if needed.
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetString(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface from the specified coordinates.
+            </summary>
+            <param name="x">The x position of the surface to start at.</param>
+            <param name="y">The y position of the surface to start at.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetString(System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface.
+            </summary>
+            <param name="index">Where to start getting characters from.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetStringColored(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface from the specified coordinates.
+            </summary>
+            <param name="x">The x position of the surface to start at.</param>
+            <param name="y">The y position of the surface to start at.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetStringColored(System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface.
+            </summary>
+            <param name="index">Where to start getting characters from.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.ClearShiftValues">
+            <summary>
+            Resets the shifted amounts to 0, as if the surface has never shifted.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftUp">
+            <summary>
+            Scrolls all the console data up by one.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftUp(System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data up by the specified amount of rows.
+            </summary>
+            <param name="amount">How many rows to shift.</param>
+            <param name="wrap">When false, a blank line appears at the bottom. When true, the top line appears at the bottom.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftDown">
+            <summary>
+            Scrolls all the console data down by one.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftDown(System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data down by the specified amount of rows.
+            </summary>
+            <param name="amount">How many rows to shift.</param>
+            <param name="wrap">When false, a blank line appears at the top. When true, the bottom line appears at the top.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftRight">
+            <summary>
+            Scrolls all the console data right by one.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftRight(System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data right by the specified amount.
+            </summary>
+            <param name="amount">How much to scroll.</param>
+            <param name="wrap">When false, a blank line appears at the left. When true, the right line appears at the left.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftLeft">
+            <summary>
+            Scrolls all the console data left by one.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.ShiftLeft(System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data left by the specified amount.
+            </summary>
+            <param name="amount">How much to scroll.</param>
+            <param name="wrap">When false, a blank line appears at the right. When true, the left line appears at the right.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Clear">
+            <summary>
+            Clears the console data. Characters are reset to 0, the forground and background are set to default, and effect set to none. Clears cell decorators.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.Clear(System.Int32,System.Int32)">
+            <summary>
+            Clears a cell. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Clear(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
+            </summary>
+            <param name="area"></param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Fill(System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
+            <summary>
+            Fills the console. Clears cell decorators.
+            </summary>
+            <param name="foreground">foreground of every cell. If null, skips.</param>
+            <param name="background">foreground of every cell. If null, skips.</param>
+            <param name="glyph">Glyph of every cell. If null, skips.</param>
+            <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Fill(Microsoft.Xna.Framework.Rectangle,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
+            <summary>
+            Fills the specified area. Clears cell decorators.
+            </summary>
+            <param name="area">The area to fill.</param>
+            <param name="foreground">Foreground of every cell. If null, skips.</param>
+            <param name="background">Foreground of every cell. If null, skips.</param>
+            <param name="glyph">Glyph of every cell. If null, skips.</param>
+            <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.DrawLine(Microsoft.Xna.Framework.Point,Microsoft.Xna.Framework.Point,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32})">
+            <summary>
+            Draws a line from <paramref name="start"/> to <paramref name="end"/>.
+            </summary>
+            <param name="start">Starting point of the line.</param>
+            <param name="end">Ending point of the line.</param>
+            <param name="foreground">Foreground to set. If null, skipped.</param>
+            <param name="background">Background to set. If null, skipped.</param>
+            <param name="glyph">Glyph to set. If null, skipped.</param>
+            <returns>A list of cells the line touched; ordered from first to last.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.DrawBox(Microsoft.Xna.Framework.Rectangle,SadConsole.Cell,SadConsole.Cell,System.Int32[])">
+            <summary>
+            Draws a box.
+            </summary>
+            <param name="area">The area of the box.</param>
+            <param name="border">The border style.</param>
+            <param name="fill">The fill style. If null, the box is not filled.</param>
+            <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.DrawCircle(Microsoft.Xna.Framework.Rectangle,SadConsole.Cell,SadConsole.Cell)">
+            <summary>
+            Draws an ellipse.
+            </summary>
+            <param name="area">The area the ellipse </param>
+            <param name="outer">The appearance of the outer line of the ellipse.</param>
+            <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.ConnectLines">
+            <summary>
+            Connects all lines in a surface for both <see cref="F:SadConsole.CellSurface.ConnectedLineThin"/> and <see cref="F:SadConsole.CellSurface.ConnectedLineThick"/> styles.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.ConnectLines(System.Int32[])">
+            <summary>
+            Connects all lines in a surface based on the <paramref name="lineStyle"/> style provided.
+            </summary>
+            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.CellSurface.ConnectedLineIndex"/>.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Copy(SadConsole.CellSurface)">
+            <summary>
+            Copies the contents of the cell surface to the destination.
+            </summary>
+            <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
+            <param name="destination">The destination surface.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Copy(SadConsole.CellSurface,System.Int32,System.Int32)">
+            <summary>
+            Copies the contents of the cell surface to the destination at the specified x,y.
+            </summary>
+            <param name="x">The x coordinate of the destination.</param>
+            <param name="y">The y coordinate of the destination.</param>
+            <param name="destination">The destination surface.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Copy(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.CellSurface,System.Int32,System.Int32)">
+            <summary>
+            Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
+            </summary>
+            <param name="x">The x coordinate to start from.</param>
+            <param name="y">The y coordinate to start from.</param>
+            <param name="width">The width to copy from.</param>
+            <param name="height">The height to copy from.</param>
+            <param name="destination">The destination surface.</param>
+            <param name="destinationX">The x coordinate to copy to.</param>
+            <param name="destinationY">The y coordinate to copy to.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface to the specified width and height.
+            </summary>
+            <param name="width">The new width.</param>
+            <param name="height">The new height.</param>
+            <param name="clear">When true, resets every cell to the <see cref="P:SadConsole.CellSurface.DefaultForeground"/>, <see cref="P:SadConsole.CellSurface.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetSubSurface(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+            </summary>
+            <param name="view">An area of the surface to create a view of.</param>
+            <returns>A new surface</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetSurface``1(``0@,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Remaps the cells of this surface to a view of the <paramref name="surface"/>.
+            </summary>
+            <typeparam name="T">The surface type.</typeparam>
+            <param name="view">A view rectangle of the target surface.</param>
+            <param name="surface">The target surface to map cells from.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.FillWithRandomGarbage(System.Boolean)">
+            <summary>
+            Fills a console with random colors and glyphs.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetIndexFromPoint(Microsoft.Xna.Framework.Point)">
+            <summary>
+            Gets the index of a location on the surface by point.
+            </summary>
+            <param name="location">The location of the index to get.</param>
+            <returns>The cell index.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetIndexFromPoint(System.Int32,System.Int32)">
+            <summary>
+            Gets the index of a location on the surface by coordinate.
+            </summary>
+            <param name="x">The x of the location.</param>
+            <param name="y">The y of the location.</param>
+            <returns>The cell index.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetPointFromIndex(System.Int32)">
+            <summary>
+            Gets the x,y of an index on the surface.
+            </summary>
+            <param name="index">The index to get.</param>
+            <returns>The x,y as a <see cref="T:Microsoft.Xna.Framework.Point"/>.</returns>
+        </member>
+        <member name="F:SadConsole.CellSurface.ConnectedLineThin">
+            <summary>
+            Glyph indexes for a thin line.
+            </summary>
+        </member>
+        <member name="F:SadConsole.CellSurface.ConnectedLineThick">
+            <summary>
+            Glyph indexes for a thick line.
+            </summary>
+        </member>
+        <member name="F:SadConsole.CellSurface.ConnectedLineThinExtended">
+            <summary>
+            Glyph indexes for a thin line using a SadConsole extended font.
+            </summary>
+        </member>
+        <member name="F:SadConsole.CellSurface.ConnectedLineEmpty">
+            <summary>
+            Glyph indexes for an empty line 0. 
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.ValidateLineStyle(System.Int32[]@)">
+            <summary>
+            Returns a value that indicates a line style array is not null and contains the required number of elements.
+            </summary>
+            <param name="connectedLineStyle">The array to check based on the <see cref="T:SadConsole.CellSurface.ConnectedLineIndex"/> enum.</param>
+            <returns>True when the line style is correct.</returns>
+        </member>
+        <member name="T:SadConsole.CellSurface.ConnectedLineIndex">
+            <summary>
+            Array index enum for line glyphs.
+            </summary>
+        </member>
         <member name="T:SadConsole.ColoredGlyph">
             <summary>
             Represents a single character that has a foreground and background color.
@@ -432,7 +1520,7 @@
             Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
             </summary>
         </member>
-        <member name="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.Surfaces.SurfaceBase,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)">
             <summary>
             Creates a colored string by parsing commands embedded in the string.
             </summary>
@@ -451,7 +1539,7 @@
         </member>
         <member name="P:SadConsole.ColoredString.String">
             <summary>
-            Gets or sets the characters represneting this string. When set, first processes the string through <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.Surfaces.SurfaceBase,SadConsole.StringParser.ParseCommandStacks)"/>.
+            Gets or sets the characters represneting this string. When set, first processes the string through <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredString.Count">
@@ -497,7 +1585,7 @@
         </member>
         <member name="M:SadConsole.ColoredString.#ctor(System.String)">
             <summary>
-            Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.Surfaces.SurfaceBase,SadConsole.StringParser.ParseCommandStacks)"/> first to process the string.
+            Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)"/> first to process the string.
             </summary>
             <param name="value">The backing string.</param>
         </member>
@@ -575,34 +1663,50 @@
             <param name="string2">The right-side of the string.</param>
             <returns></returns>
         </member>
-        <member name="T:SadConsole.Console.ActiveBehavior">
+        <member name="T:SadConsole.Console">
             <summary>
-            How the console handles becoming <see cref="!:Global.InputTargets.Console"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ActiveBehavior.Set">
-            <summary>
-            Becomes the only active input object when focused.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ActiveBehavior.Push">
-            <summary>
-            Pushes to the top of the stack when it becomes the active input object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Cursor">
-            <summary>
-            The private virtual curser reference.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.AutoCursorOnFocus">
-            <summary>
-            Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+            A <see cref="T:SadConsole.CellSurface"/> that has a font and can be drawn to the screen.
             </summary>
         </member>
         <member name="P:SadConsole.Console.FocusedMode">
             <summary>
             How the console should handle becoming active.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Position">
+            <summary>
+            The position of the screen object.
+            </summary>
+            <remarks>This position has no substance.</remarks>
+        </member>
+        <member name="P:SadConsole.Console.CalculatedPosition">
+            <summary>
+            A position that is based on the <see cref="P:SadConsole.Console.Parent"/> position.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.UsePixelPositioning">
+            <summary>
+            Treats the <see cref="P:SadConsole.Console.Position"/> of the console as if it is pixels and not cells.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Children">
+            <summary>
+            The child objects of this instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Parent">
+            <summary>
+            The parent object that this instance is a child of.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.IsVisible">
+            <summary>
+            Gets or sets the visibility of this object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.IsPaused">
+            <summary>
+            Gets or sets the paused status of this object.
             </summary>
         </member>
         <member name="P:SadConsole.Console.IsExclusiveMouse">
@@ -615,86 +1719,95 @@
             Gets or sets this console as the focused console for input.
             </summary>
         </member>
-        <member name="P:SadConsole.Console.Item(System.Int32,System.Int32)">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Console.Item(System.Int32)">
-            <inheritdoc />
-        </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">THe height of the surface.</param>
-        </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Creates a new text surface with the specified width and height.
+            Creates a new text surface with the specified width and height. Uses <see cref="F:SadConsole.Global.FontDefault"/> as the font.
             </summary>
             <param name="width">The width of the surface.</param>
             <param name="height">The height of the surface.</param>
-            <param name="viewPort">Initial value for the <see cref="P:SadConsole.Surfaces.SurfaceBase.ViewPort"/> view.</param>
         </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.Font)">
             <summary>
-            Creates a new text surface with the specified width and height.
+            Creates a new text surface with the specified width, height, and font.
             </summary>
             <param name="width">The width of the surface.</param>
             <param name="height">The height of the surface.</param>
             <param name="font">The font used with rendering.</param>
         </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="font">The font used with rendering.</param>
-            <param name="viewPort">Initial value for the <see cref="P:SadConsole.Surfaces.SurfaceBase.ViewPort"/> view.</param>
-        </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle,SadConsole.Cell[])">
+        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.Font,SadConsole.Cell[])">
             <summary>
             Creates a new text surface with the specified width, height, and initial set of cell data.
             </summary>
             <param name="width">The width of the surface.</param>
             <param name="height">The height of the surface.</param>
             <param name="font">The font used with rendering.</param>
-            <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-            <param name="viewPort">Initial value for the <see cref="P:SadConsole.Surfaces.SurfaceBase.ViewPort"/> view.</param>
+            <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        </member>
+        <member name="M:SadConsole.Console.OnCellsReset">
+            <summary>
+            Calls <see cref="M:SadConsole.Console.SetRenderCells"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Console.OnCalculateRenderPosition">
+            <summary>
+            Sets a value for <see cref="P:SadConsole.Console.CalculatedPosition"/> based on the <see cref="P:SadConsole.Console.Position"/> of this instance and the <see cref="P:SadConsole.Console.Parent"/> instance.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Console.OnFocusLost">
+            <summary>
+            Called when this console's focus has been lost. Hides the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Console.OnFocused">
+            <summary>
+            Called when this console is focused. Shows the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
+            </summary>
         </member>
         <member name="M:SadConsole.Console.OnBeforeRender(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
             <summary>
             Called when the renderer renders the text view.
             </summary>
-            <param name="batch">The batch used in renderering.</param>
+            <param name="batch">The batch used in rendering.</param>
         </member>
-        <member name="M:SadConsole.Console.Update(System.TimeSpan)">
+        <member name="M:SadConsole.Console.OnParentChanged(SadConsole.Console,SadConsole.Console)">
             <summary>
-            Updates the <see cref="P:SadConsole.Console.Cursor"/>.
+            Called when the parent console changes for this console.
             </summary>
-            <param name="delta">Time difference for this frame (if update was called last frame).</param>
+            <param name="oldParent">The previous parent.</param>
+            <param name="newParent">The new parent.</param>
         </member>
-        <member name="M:SadConsole.Console.OnFocusLost">
+        <member name="M:SadConsole.Console.OnPositionChanged(Microsoft.Xna.Framework.Point)">
             <summary>
-            Called when this console's focus has been lost.
+            Called when the <see cref="P:SadConsole.Console.Position" /> property changes.
+            </summary>
+            <param name="oldLocation">The location before the change.</param>
+        </member>
+        <member name="M:SadConsole.Console.OnVisibleChanged">
+            <summary>
+            Called when the visibility of the object changes.
             </summary>
         </member>
-        <member name="M:SadConsole.Console.OnFocused">
+        <member name="M:SadConsole.Console.OnPausedChanged">
             <summary>
-            Called when this console is focused.
+            Called when the paused status of the object changes.
             </summary>
         </member>
-        <member name="M:SadConsole.Console.FromSurface(SadConsole.Surfaces.SurfaceBase)">
+        <member name="M:SadConsole.Console.Save(System.String)">
             <summary>
-            Creates a new console from an existing surface.
+            Saves the <see cref="T:SadConsole.Console"/> to a file.
             </summary>
-            <param name="surface"></param>
-            <returns>A new console.</returns>
+            <param name="file">The destination file.</param>
+        </member>
+        <member name="M:SadConsole.Console.Load(System.String)">
+            <summary>
+            Loads a <see cref="T:SadConsole.Console"/> from a file.
+            </summary>
+            <param name="file">The source file.</param>
+            <returns></returns>
         </member>
         <member name="E:SadConsole.Console.MouseButtonClicked">
             <summary>
-            Raised when the a mosue button is clicked on this console.
+            Raised when the a mouse button is clicked on this console.
             </summary>
         </member>
         <member name="E:SadConsole.Console.MouseMove">
@@ -712,7 +1825,7 @@
             Raised when the mouse enters this console.
             </summary>
         </member>
-        <member name="F:SadConsole.Console.isMouseOver">
+        <member name="F:SadConsole.Console.IsMouseOver">
             <summary>
             Indicates that the mouse is currently over this console.
             </summary>
@@ -799,12 +1912,198 @@
         </member>
         <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
-            Called by the engine to process the keyboard. If the <see cref="P:SadConsole.Console.KeyboardHandler"/> has been set, that will be called instead of this method.
+            Called by the engine to process the keyboard. If called, invokes the <see cref="P:SadConsole.Console.KeyboardHandler"/>; otherwise invokes the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method.
             </summary>
             <param name="info">Keyboard information.</param>
             <returns>True when the keyboard had data and this console did something with it.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:SadConsole.ConsoleContainer" -->
+        <member name="T:SadConsole.Console.ActiveBehavior">
+            <summary>
+            How the console handles becoming focused and added to the <see cref="F:SadConsole.Global.FocusedConsoles"/> collection.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Console.ActiveBehavior.Set">
+            <summary>
+            Becomes the only active input object when focused.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Console.ActiveBehavior.Push">
+            <summary>
+            Pushes to the top of the stack when it becomes the active input object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.IsCursorDisabled">
+            <summary>
+            When <see langword="true"/>, indicates that the <see cref="P:SadConsole.Console.Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Renderer">
+            <summary>
+            The renderer used to draw this surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Font">
+            <summary>
+            Font used with rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.RenderRects">
+            <summary>
+            Destination rectangles for rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.RenderCells">
+            <summary>
+            Cells that will be rendered.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Tint">
+            <summary>
+            A tint used in rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.AbsoluteArea">
+            <summary>
+            Pixel area of the render cells.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.LastRenderResult">
+            <summary>
+            The last texture render pass for this surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Cursor">
+            <summary>
+            The private virtual cursor reference.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.AutoCursorOnFocus">
+            <summary>
+            Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Console.Finalize">
+            <summary>
+            Disposes <see cref="P:SadConsole.Console.LastRenderResult"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Console.Draw(System.TimeSpan)">
+            <summary>
+            Draws all <see cref="P:SadConsole.Console.Children"/>.
+            </summary>
+            <param name="timeElapsed">Time since the last call.</param>
+            <remarks>Only processes if <see cref="P:SadConsole.Console.IsVisible"/> is <see langword="true"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.Console.Update(System.TimeSpan)">
+            <summary>
+            Updates all <see cref="P:SadConsole.Console.Children"/>.
+            </summary>
+            <param name="timeElapsed">Time since the last call.</param>
+            <remarks>Only processes if <see cref="P:SadConsole.Console.IsPaused"/> is <see langword="false"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.Console.SetRenderCells">
+            <summary>
+            Configures <see cref="P:SadConsole.Console.RenderCells"/>, <see cref="P:SadConsole.Console.RenderRects"/>, and <see cref="P:SadConsole.Console.LastRenderResult"/> for rendering.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Console.OnFontChanged">
+            <summary>
+            Called when the <see cref="P:SadConsole.Console.Font"/> property changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Console.FromSurface(SadConsole.CellSurface,SadConsole.Font)">
+            <summary>
+            Creates a new console from an existing surface.
+            </summary>
+            <param name="surface"></param>
+            <param name="font">The font to associate with the new console.</param>
+            <returns>A new console.</returns>
+        </member>
+        <member name="T:SadConsole.ConsoleCollection">
+            <summary>
+            Manages the parent and children relationship for <see cref="T:SadConsole.Console"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ConsoleCollection.IsLocked">
+            <summary>
+            When true, the collection cannot be modified.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ConsoleCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets a child object for this collection.
+            </summary>
+            <param name="index">The index of the child object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.#ctor(SadConsole.Console)">
+            <summary>
+            Creates a new screen object collection and parents it to the <paramref name="owner"/> object.
+            </summary>
+            <param name="owner">The owning object of this collection.</param>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.Clear">
+            <summary>
+            Removes all consoles.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.Contains(SadConsole.Console)">
+            <summary>
+            Returns true if this console list contains the specified <paramref name="screen"/>.
+            </summary>
+            <param name="screen">The console to search for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.IsTop(SadConsole.Console)">
+            <summary>
+            When true, indicates that the <paramref name="screen"/> is at the top of the collection stack.
+            </summary>
+            <param name="screen">The screen object to check.</param>
+            <returns>True when the object is on top.</returns>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.Add(SadConsole.Console)">
+            <summary>
+            Adds a new child object to this collection.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ConsoleCollection.IsLocked"/> property is set to true.</exception>
+            <param name="screen">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.Insert(System.Int32,SadConsole.Console)">
+            <summary>
+            Inserts a child object at the specified <paramref name="index"/>.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ConsoleCollection.IsLocked"/> property is set to true.</exception>
+            <param name="index">The 0-based index to insert the object at.</param>
+            <param name="screen">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.Remove(SadConsole.Console)">
+            <summary>
+            Removes a new child object from this collection.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ConsoleCollection.IsLocked"/> property is set to true.</exception>
+            <param name="screen">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.MoveToTop(SadConsole.Console)">
+            <summary>
+            Moves the specified <paramref name="screen"/>  to the top of the collection.
+            </summary>
+            <param name="screen">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.MoveToBottom(SadConsole.Console)">
+            <summary>
+            Moves the specified <paramref name="screen"/>  to the bottom of the collection.
+            </summary>
+            <param name="screen">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.IndexOf(SadConsole.Console)">
+            <summary>
+            Gets the 0-based index of the <paramref name="screen"/>.
+            </summary>
+            <param name="screen">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ConsoleCollection.GetEnumerator">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.ConsoleStack">
             <summary>
             A stack of consoles. The top-most of the stack is considered active and represented by the <see cref="P:SadConsole.ConsoleStack.Console"/> property.
@@ -825,23 +2124,28 @@
             Clears all consoles from the active stack along with the current active console.
             </summary>
         </member>
-        <member name="M:SadConsole.ConsoleStack.Push(SadConsole.IConsole)">
+        <member name="M:SadConsole.ConsoleStack.Push(SadConsole.Console)">
             <summary>
             Adds another console to active stack, setting it as the active (top most in the stack) console.
             </summary>
             <param name="console"></param>
         </member>
-        <member name="M:SadConsole.ConsoleStack.Set(SadConsole.IConsole)">
+        <member name="M:SadConsole.ConsoleStack.Set(SadConsole.Console)">
             <summary>
             Replaces the top console (active console) with the provided instance. Sets <see cref="P:SadConsole.ConsoleStack.Console"/> to this instance.
             </summary>
             <param name="console">The console to make active.</param>
         </member>
-        <member name="M:SadConsole.ConsoleStack.Pop(SadConsole.IConsole)">
+        <member name="M:SadConsole.ConsoleStack.Pop(SadConsole.Console)">
             <summary>
             Removes the console from the active stack. If the instance is the current active console, the active console is set to the last console in the previous console.
             </summary>
             <param name="console">The console to remove.</param>
+        </member>
+        <member name="T:SadConsole.ContainerConsole">
+            <summary>
+            A <see cref="T:SadConsole.Console"/> that only processes children and does not render anything.
+            </summary>
         </member>
         <member name="T:SadConsole.ControlsConsole">
             <summary>
@@ -851,6 +2155,11 @@
         <member name="F:SadConsole.ControlsConsole.KeyboardState">
             <summary>
             Keyboard processor shared by all Controls Consoles.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ControlsConsole.ControlsList">
+            <summary>
+            The collection of controls.
             </summary>
         </member>
         <member name="F:SadConsole.ControlsConsole.UseGlobalKeyboardInput">
@@ -904,7 +2213,14 @@
             </summary>
             <param name="width">The width of the console.</param>
             <param name="height">The height of the console.</param>
-            <param name="device">The graphics device to render this console on.</param>
+        </member>
+        <member name="M:SadConsole.ControlsConsole.#ctor(System.Int32,System.Int32,SadConsole.Font)">
+            <summary>
+             Creates a new instance of the controls console with the specified width, height, and font.
+            </summary>
+            <param name="width">The width of the console.</param>
+            <param name="height">The height of the console.</param>
+            <param name="font">The font used with the console.</param>
         </member>
         <member name="M:SadConsole.ControlsConsole.Add(SadConsole.Controls.ControlBase)">
             <summary>
@@ -927,6 +2243,18 @@
             <summary>
             Gives focus to the previous control in the tab order.
             </summary>
+        </member>
+        <member name="M:SadConsole.ControlsConsole.TryTabPreviousConsole">
+            <summary>
+            Tries to tab to the console that comes before this one in the <see cref="P:SadConsole.Console.Parent"/> collection of <see cref="P:SadConsole.Console.Children"/>. Sets focus to the target console if found.
+            </summary>
+            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.ControlsConsole.TryTabNextConsole">
+            <summary>
+            Tries to tab to the console that comes after this one in the <see cref="P:SadConsole.Console.Parent"/> collection of <see cref="P:SadConsole.Console.Children"/>. Sets focus to the target console if found.
+            </summary>
+            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.ControlsConsole.RemoveAll">
             <summary>
@@ -960,10 +2288,18 @@
             Reorders the control collection based on the tab index of each control.
             </summary>
         </member>
+        <member name="M:SadConsole.ControlsConsole.Invalidate">
+            <summary>
+            Signals that the console should be considered dirty and reapplies the <see cref="P:SadConsole.ControlsConsole.Theme"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.ControlsConsole.Update(System.TimeSpan)">
             <summary>
             Calls the Update method of the base class and then Update on each control.
             </summary>
+        </member>
+        <member name="M:SadConsole.ControlsConsole.Draw(System.TimeSpan)">
+            <inheritdoc />
         </member>
         <member name="M:SadConsole.ControlsConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
@@ -1003,6 +2339,12 @@
             Gets an enumerator of the controls collection.
             </summary>
             <returns>The enumerator of the controls collection.</returns>
+        </member>
+        <member name="M:SadConsole.ControlsConsole.OnFocused">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ControlsConsole.OnFocusLost">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Controls.ButtonBase">
             <summary>
@@ -1803,6 +3145,11 @@
             Shows or hides the cursor. This does not affect how the cursor operates.
             </summary>
         </member>
+        <member name="P:SadConsole.Cursor.IsEnabled">
+            <summary>
+            When true, allows the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method to run.
+            </summary>
+        </member>
         <member name="P:SadConsole.Cursor.Position">
             <summary>
             Gets or sets the location of the cursor on the console.
@@ -1820,7 +3167,7 @@
         </member>
         <member name="F:SadConsole.Cursor.UseStringParser">
             <summary>
-            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.Surfaces.SurfaceBase,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Cursor.Print(System.String,SadConsole.Cell,SadConsole.Effects.ICellEffect)"/>
+            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Cursor.Print(System.String,SadConsole.Cell,SadConsole.Effects.ICellEffect)"/>
             </summary>
         </member>
         <member name="P:SadConsole.Cursor.Row">
@@ -1838,13 +3185,13 @@
             Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
             </summary>
         </member>
-        <member name="M:SadConsole.Cursor.#ctor(SadConsole.Surfaces.SurfaceBase)">
+        <member name="M:SadConsole.Cursor.#ctor(SadConsole.CellSurface)">
             <summary>
             Creates a new instance of the cursor class that will work with the specified console.
             </summary>
             <param name="console">The console this cursor will print on.</param>
         </member>
-        <member name="M:SadConsole.Cursor.AttachSurface(SadConsole.Surfaces.SurfaceBase)">
+        <member name="M:SadConsole.Cursor.AttachSurface(SadConsole.CellSurface)">
             <summary>
             Sets the console this cursor is targetting.
             </summary>
@@ -2254,7 +3601,7 @@
             Gets the number of effects.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.#ctor(SadConsole.Surfaces.SurfaceBase)">
+        <member name="M:SadConsole.Effects.EffectsManager.#ctor(SadConsole.CellSurface)">
             <summary>
             Creates a new effects manager associated with a text surface.
             </summary>
@@ -2305,7 +3652,7 @@
             </summary>
             <param name="file">The file to save the effects to.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.Load(System.String,SadConsole.Surfaces.SurfaceBase)">
+        <member name="M:SadConsole.Effects.EffectsManager.Load(System.String,SadConsole.CellSurface)">
             <summary>
             Loads effects from a file.
             </summary>
@@ -2496,17 +3843,12 @@
         </member>
         <member name="E:SadConsole.Entities.Entity.AnimationStateChanged">
             <summary>
-            Automatically forwards the <see cref="E:SadConsole.Surfaces.Animated.AnimationStateChanged"/> event.
+            Automatically forwards the <see cref="E:SadConsole.AnimatedConsole.AnimationStateChanged"/> event.
             </summary>
         </member>
         <member name="F:SadConsole.Entities.Entity.animation">
             <summary>
             Animation for the game object.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Entity.font">
-            <summary>
-            Font for the game object.
             </summary>
         </member>
         <member name="F:SadConsole.Entities.Entity.positionOffset">
@@ -2544,15 +3886,15 @@
             Creates a new Entity.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.Surfaces.Animated)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedConsole)">
             <summary>
             Creates a new Entity with a default animation/
             </summary>
-            <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.Surfaces.Animated.Name"/> property changesd to "default".</param>
+            <param name="animation">The default animation. The animation will have its <see cref="!:Surfaces.AnimatedConsole.Name"/> property changesd to "default".</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.Surfaces.Animated.AnimationStateChangedEventArgs)">
+        <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.AnimatedConsole.AnimationStateChangedEventArgs)">
             <summary>
-            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.Surfaces.Animated.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
+            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="!:Surfaces.AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
             </summary>
             <param name="sender">The animation calling this method.</param>
             <param name="e">The state of the animation.</param>
@@ -2575,7 +3917,7 @@
         </member>
         <member name="T:SadConsole.Entities.EntityManager">
             <summary>
-            Keeps a list of entities in sync with the parent <see cref="T:SadConsole.Surfaces.SurfaceBase"/>.
+            Keeps a list of entities in sync with the parent <see cref="T:SadConsole.Console"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.EntityManager.Entities">
@@ -2593,16 +3935,15 @@
             The entities this manager manages.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.EntityManager.#ctor">
+        <member name="M:SadConsole.Entities.EntityManager.#ctor(SadConsole.ScrollingConsole)">
             <summary>
             Creates a new entity manager.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.Update(System.TimeSpan)">
-            <inheritdoc />
+        <member name="M:SadConsole.Entities.EntityManager.Update">
+            <summary>
+            Syncs the visibility of all objects with the viewport of the parent surface.
+            </summary>
         </member>
         <member name="M:SadConsole.Entities.EntityManager.Sync">
             <summary>
@@ -2641,7 +3982,7 @@
             <param name="point">The position to check for.</param>
             <returns>True or false based on if the position is associated with the Hotspot.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Hotspot.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Entities.Hotspot.OnParentChanged(SadConsole.Console,SadConsole.Console)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Entities.Hotspot.OnVisibleChanged">
@@ -2678,13 +4019,13 @@
             </summary>
             <param name="area">The area of the zone.</param>
         </member>
-        <member name="M:SadConsole.Entities.Zone.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
-            <inheritdoc />
-        </member>
         <member name="M:SadConsole.Entities.Zone.OnVisibleChanged">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Entities.Zone.Draw(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Zone.OnParentChanged(SadConsole.Console,SadConsole.Console)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.CellExtensions">
@@ -3141,121 +4482,25 @@
             <param name="width">Width that includes the point.</param>
             <returns>The cell index.</returns>
         </member>
-        <member name="T:SadConsole.IConsole">
+        <member name="T:SadConsole.IConsoleViewPort">
             <summary>
-            Defines a console object.
+            A <see cref="T:Microsoft.Xna.Framework.Rectangle"/> for viewing a subset of cells from a <see cref="T:SadConsole.Console"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.IConsole.Cursor">
+        <member name="P:SadConsole.IConsoleViewPort.ViewPort">
             <summary>
-            The private virtual curser reference.
+            The current view of the parent object.
             </summary>
         </member>
-        <member name="P:SadConsole.IConsole.IsExclusiveMouse">
+        <member name="P:SadConsole.IConsoleViewPort.Width">
             <summary>
-            Gets or sets whether or not this console has exclusive access to the mouse events.
+            The maximum width outside of the view port size.
             </summary>
         </member>
-        <member name="P:SadConsole.IConsole.IsFocused">
+        <member name="P:SadConsole.IConsoleViewPort.Height">
             <summary>
-            Gets or sets this console as the active input target.
+            The maximum height outside of the view port size.
             </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.UseKeyboard">
-            <summary>
-            Allows this console to accept keyboard input.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.UseMouse">
-            <summary>
-            Allows this console to accept mouse input.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.Width">
-            <summary>
-            How many cells wide the surface is.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.Height">
-            <summary>
-            How many cells high the surface is.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.Font">
-            <summary>
-            Font used with rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.Position">
-            <summary>
-            The poistion of the screen object.
-            </summary>
-            <remarks>This position has no substance.</remarks>
-        </member>
-        <member name="P:SadConsole.IConsole.CalculatedPosition">
-            <summary>
-            A position that is based on the <see cref="P:SadConsole.IConsole.Parent"/> position.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.UsePixelPositioning">
-            <summary>
-            Treats the <see cref="P:SadConsole.IConsole.Position"/> of the console as if it is pixels and not cells.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.Children">
-            <summary>
-            The child objects of this instance.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.Parent">
-            <summary>
-            The parent object that this instance is a child of.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.ViewPort">
-            <summary>
-            Sets the area of the console surface that should be rendered.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IConsole.IsVisible">
-            <summary>
-            Gets or sets the visibility of the console.
-            </summary>
-        </member>
-        <member name="M:SadConsole.IConsole.ProcessMouse(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Processes the mouse.
-            </summary>
-            <param name="state">The mouse state related to this console.</param>
-            <returns>True when the mouse is over this console and processing should stop.</returns>
-        </member>
-        <member name="M:SadConsole.IConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <summary>
-            Called by the engine to process the keyboard.
-            </summary>
-            <param name="info">Keyboard information.</param>
-            <returns>True when the keyboard had data and this console did something with it.</returns>
-        </member>
-        <member name="M:SadConsole.IConsole.LostMouse(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Tells the console it should not consider the mouse over it anymore.
-            </summary>
-            <param name="state"></param>
-        </member>
-        <member name="P:SadConsole.IConsole.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets a cell based on its coordinates on the surface.
-            </summary>
-            <param name="x">The X coordinate.</param>
-            <param name="y">The Y coordinate.</param>
-            <returns>The indicated cell.</returns>
-        </member>
-        <member name="P:SadConsole.IConsole.Item(System.Int32)">
-            <summary>
-            Gets a cell by index.
-            </summary>
-            <param name="index">The index of the cell.</param>
-            <returns>The indicated cell.</returns>
         </member>
         <member name="T:SadConsole.Input.AsciiKey">
             <summary>
@@ -3522,7 +4767,7 @@
             Builds information about the mouse state based on the <see cref="F:SadConsole.Global.FocusedConsoles"/> or <see cref="F:SadConsole.Global.CurrentScreen"/>. Should be called each frame.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.Mouse.IsMouseOverConsole(SadConsole.Console)">
+        <member name="M:SadConsole.Input.Mouse.IsMouseOverConsole(SadConsole.ScrollingConsole)">
             <summary>
             Returns true when the mouse is currently over the provided console.
             </summary>
@@ -3575,11 +4820,11 @@
             Indicates that the mouse is within the bounds of <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.MouseConsoleState.#ctor(SadConsole.IConsole,SadConsole.Input.Mouse)">
+        <member name="M:SadConsole.Input.MouseConsoleState.#ctor(SadConsole.Console,SadConsole.Input.Mouse)">
             <summary>
             Calculates a new <see cref="T:SadConsole.Input.MouseConsoleState"/> based on an <see cref="F:SadConsole.Input.MouseConsoleState.Console"/> and <see cref="F:SadConsole.Input.MouseConsoleState.Mouse"/> state.
             </summary>
-            <param name="console">The console to process with the mouse state.</param>
+            <param name="screenObject">The console to process with the mouse state.</param>
             <param name="mouseData">The current mouse state.</param>
         </member>
         <member name="M:SadConsole.Input.MouseConsoleState.Clone">
@@ -3678,7 +4923,7 @@
             Animation provider.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.Surfaces.SurfaceBase,Microsoft.Xna.Framework.ColorGradient,System.TimeSpan)">
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.Console,Microsoft.Xna.Framework.ColorGradient,System.TimeSpan)">
             <summary>
             Creates a new tint fade instruction.
             </summary>
@@ -3803,6 +5048,24 @@
             <summary>
             The duration of the wait.
             </summary>
+        </member>
+        <member name="T:SadConsole.LayeredConsole">
+            <summary>
+            Represents mutliple surfaces grouped together and rendered at the same time.
+            </summary>
+        </member>
+        <member name="M:SadConsole.LayeredConsole.Save(System.String)">
+            <summary>
+            Saves the <see cref="!:SurfaceBase"/> to a file.
+            </summary>
+            <param name="file">The destination file.</param>
+        </member>
+        <member name="M:SadConsole.LayeredConsole.Load(System.String)">
+            <summary>
+            Loads a <see cref="!:SurfaceBase"/> from a file.
+            </summary>
+            <param name="file">The source file.</param>
+            <returns></returns>
         </member>
         <member name="M:SadConsole.MathHelper.Wrap(System.Single,System.Single,System.Single)">
             <summary>
@@ -4020,9 +5283,9 @@
             </summary>
             <param name="layer">The layer.</param>
         </member>
-        <member name="M:SadConsole.Readers.REXPaintImage.ToLayeredSurface">
+        <member name="M:SadConsole.Readers.REXPaintImage.ToLayeredConsole">
             <summary>
-            Converts this REXPaint image to a <see cref="!:Consoles.LayeredTextSurface"/>.
+            Converts this REXPaint image to a <see cref="T:SadConsole.LayeredConsole"/>.
             </summary>
             <returns></returns>
         </member>
@@ -4100,31 +5363,32 @@
             <param name="image">The image to render.</param>
             <returns>The surface.</returns>
         </member>
-        <member name="T:SadConsole.Renderers.Basic">
+        <member name="T:SadConsole.Renderers.Console">
             <summary>
             Caches a text surface by rendering to a texture. That texture is then rendered at draw time. Reduces draw calls for a non-changing console.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.Basic.BeforeRenderCallback">
+        <member name="P:SadConsole.Renderers.Console.BeforeRenderCallback">
             <summary>
             A method called when the <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteBatch"/> has been created and transformed, but before any text is drawn.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.Basic.BeforeRenderTintCallback">
+        <member name="P:SadConsole.Renderers.Console.BeforeRenderTintCallback">
             <summary>
             A method called when all text characters have been drawn but before any tinting has been applied.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.Basic.AfterRenderCallback">
+        <member name="P:SadConsole.Renderers.Console.AfterRenderCallback">
             <summary>
             A method called when all text has been drawn and any tinting has been applied.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.Basic.Render(SadConsole.Surfaces.SurfaceBase,System.Boolean)">
+        <member name="M:SadConsole.Renderers.Console.Render(SadConsole.Console,System.Boolean)">
             <summary>
-            Renders the cached surface from a previous call to the constructor or the <see cref="!:Update(ISurfaceRendered)"/> method.
+            When <see cref="P:SadConsole.CellSurface.IsDirty"/> is <see langword="true"/>, draws the surface to the <see cref="P:SadConsole.Console.LastRenderResult"/> and tints it.
             </summary>
-            <param name="surface">Used only for tinting.</param>
+            <param name="surface">The surface to draw.</param>
+            <param name="force">When <see langword="true"/>, draws the surface even if <see cref="P:SadConsole.CellSurface.IsDirty"/> is <see langword="false"/>.</param>
         </member>
         <member name="T:SadConsole.Renderers.ControlsConsole">
             <summary>
@@ -4136,11 +5400,12 @@
             Controls to render.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.Surfaces.SurfaceBase,System.Boolean)">
+        <member name="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.Console,System.Boolean)">
             <summary>
             Renders a surface to the screen.
             </summary>
             <param name="surface">The surface to render.</param>
+            <param name="force">When <see langword="true"/> draws the surface even if <see cref="P:SadConsole.CellSurface.IsDirty"/> is <see langword="false"/>.</param>
         </member>
         <member name="T:SadConsole.Renderers.IRenderer">
             <summary>
@@ -4162,210 +5427,119 @@
             A method called when all text characters have been drawn and any tinting has been applied.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.Surfaces.SurfaceBase,System.Boolean)">
+        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.Console,System.Boolean)">
             <summary>
             Renders the cell data to the screen.
             </summary>
         </member>
-        <member name="T:SadConsole.Renderers.Window">
+        <member name="T:SadConsole.Renderers.LayeredConsole">
             <summary>
-            Renders a popup window taking into account the modal setting.
+            Draws a text surface to the screen.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.Window.#ctor">
+        <member name="P:SadConsole.Renderers.LayeredConsole.Layers">
             <summary>
-            Creates a new renderer.
+            Controls to render.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.Window.IsModal">
+        <member name="M:SadConsole.Renderers.LayeredConsole.Render(SadConsole.Console,System.Boolean)">
             <summary>
-            Indicates the window will be drawn modal (discolored background rect for the game window)
+            Renders a surface to the screen.
+            </summary>
+            <param name="surface">The surface to render.</param>
+            <param name="force">When <see langword="true"/> draws the surface even if <see cref="P:SadConsole.CellSurface.IsDirty"/> is <see langword="false"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredConsole.RenderLayer(SadConsole.CellSurfaceLayer,SadConsole.Console,System.Boolean)">
+            <summary>
+            Renders a layer on top of a console.
+            </summary>
+            <param name="layer">The layer to render.</param>
+            <param name="drawingHost">The console that will be drawn on.</param>
+            <param name="draw">If <see langword="false"/>, skips rendering.</param>
+        </member>
+        <member name="T:SadConsole.ScrollingConsole">
+            <summary>
+            A <see cref="T:SadConsole.Console"/> that implements <see cref="T:SadConsole.IConsoleViewPort"/> to provide a scrolling capability.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.Window.ModalTint">
+        <member name="F:SadConsole.ScrollingConsole.ViewPortRectangle">
             <summary>
-            The color of the modal background.
+            Sets the viewport without triggering <see cref="M:SadConsole.ScrollingConsole.SetRenderCells"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.Window.Render(SadConsole.Surfaces.SurfaceBase,System.Boolean)">
+        <member name="P:SadConsole.ScrollingConsole.ViewPort">
             <summary>
-            Renders a 
-            </summary>
-            <param name="surface"></param>
-            <param name="renderingMatrix"></param>
-        </member>
-        <member name="T:SadConsole.ScreenObject">
-            <summary>
-            An object that can be positioned on the screen and receive updates.
+            Sets the area of the text surface that should be rendered.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObject.Position">
-            <summary>
-            The poistion of the screen object.
-            </summary>
-            <remarks>This position has no substance.</remarks>
-        </member>
-        <member name="P:SadConsole.ScreenObject.CalculatedPosition">
-            <summary>
-            A position that is based on the <see cref="P:SadConsole.ScreenObject.Parent"/> position.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObject.UsePixelPositioning">
-            <summary>
-            Treats the <see cref="P:SadConsole.ScreenObject.Position"/> of the console as if it is pixels and not cells.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObject.Children">
-            <summary>
-            The child objects of this instance.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObject.Parent">
-            <summary>
-            The parent object that this instance is a child of.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObject.IsVisible">
-            <summary>
-            Gets or sets the visibility of this object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObject.IsPaused">
-            <summary>
-            Gets or sets the paused status of this object.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ScreenObject.#ctor">
-            <summary>
-            Creates a new screen.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ScreenObject.Draw(System.TimeSpan)">
-            <summary>
-            Draws all <see cref="P:SadConsole.ScreenObject.Children"/>.
-            </summary>
-            <param name="timeElapsed">Time since the last call.</param>
-            <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
-        </member>
-        <member name="M:SadConsole.ScreenObject.Update(System.TimeSpan)">
-            <summary>
-            Updates all <see cref="P:SadConsole.ScreenObject.Children"/>.
-            </summary>
-            <param name="timeElapsed">Time since the last call.</param>
-            <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsPaused"/> is <see langword="false"/>.</remarks>
-        </member>
-        <member name="M:SadConsole.ScreenObject.OnCalculateRenderPosition">
-            <summary>
-            Sets a value for <see cref="P:SadConsole.ScreenObject.CalculatedPosition"/> based on the <see cref="P:SadConsole.ScreenObject.Position"/> of this instance and the <see cref="P:SadConsole.ScreenObject.Parent"/> instance.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ScreenObject.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
-            <summary>
-            Called when the parent console changes for this console.
-            </summary>
-            <param name="oldParent">The previous parent.</param>
-            <param name="newParent">The new parent.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObject.OnPositionChanged(Microsoft.Xna.Framework.Point)">
-            <summary>
-            Called when the <see cref="P:SadConsole.ScreenObject.Position" /> property changes.
-            </summary>
-            <param name="oldLocation">The location before the change.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObject.OnVisibleChanged">
-            <summary>
-            Called when the visibility of the object changes.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ScreenObject.OnPausedChanged">
-            <summary>
-            Called when the paused status of the object changes.
-            </summary>
-        </member>
-        <member name="T:SadConsole.ScreenObjectCollection">
-            <summary>
-            Manages the parent and children relationship for <see cref="T:SadConsole.ScreenObject"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectCollection.IsLocked">
-            <summary>
-            When true, the collection cannot be modified.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectCollection.Item(System.Int32)">
-            <summary>
-            Gets or sets a child object for this collection.
-            </summary>
-            <param name="index">The index of the child object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.#ctor(SadConsole.ScreenObject)">
-            <summary>
-            Creates a new screen object collection and parents it to the <paramref name="owner"/> object.
-            </summary>
-            <param name="owner">The owning object of this collection.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Clear">
-            <summary>
-            Removes all consoles.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Contains(SadConsole.ScreenObject)">
-            <summary>
-            Returns true if this console list contains the specified <paramref name="screen"/>.
-            </summary>
-            <param name="screen">The console to search for.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.IsTop(SadConsole.ScreenObject)">
-            <summary>
-            When true, indicates that the <paramref name="screen"/> is at the top of the collection stack.
-            </summary>
-            <param name="screen">The screen object to check.</param>
-            <returns>True when the object is on top.</returns>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Add(SadConsole.ScreenObject)">
-            <summary>
-            Adds a new child object to this collection.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Insert(System.Int32,SadConsole.ScreenObject)">
-            <summary>
-            Inserts a child object at the specified <paramref name="index"/>.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="index">The 0-based index to insert the object at.</param>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Remove(SadConsole.ScreenObject)">
-            <summary>
-            Removes a new child object from this collection.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.MoveToTop(SadConsole.ScreenObject)">
-            <summary>
-            Moves the specified <paramref name="screen"/>  to the top of the collection.
-            </summary>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.MoveToBottom(SadConsole.ScreenObject)">
-            <summary>
-            Moves the specified <paramref name="screen"/>  to the bottom of the collection.
-            </summary>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.IndexOf(SadConsole.ScreenObject)">
-            <summary>
-            Gets the 0-based index of the <paramref name="screen"/>.
-            </summary>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ScreenObjectCollection.GetEnumerator">
+        <member name="M:SadConsole.ScrollingConsole.#ctor(System.Int32,System.Int32)">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.#ctor(System.Int32,System.Int32,SadConsole.Font)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Creates a new text surface with the specified width and height.
+            </summary>
+            <param name="width">The width of the surface.</param>
+            <param name="height">The height of the surface.</param>
+            <param name="font">The font used with rendering.</param>
+            <param name="viewPort">Initial value for the viewport if this console will scroll.</param>
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle,SadConsole.Cell[])">
+            <summary>
+            Creates a new text surface with the specified width, height, and initial set of cell data.
+            </summary>
+            <param name="width">The width of the surface.</param>
+            <param name="height">The height of the surface.</param>
+            <param name="font">The font used with rendering.</param>
+            <param name="viewPort">Initial value for the viewport if this console will scroll.</param>
+            <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.SetRenderCells">
+            <summary>
+            Calculates which cells to draw based on <see cref="P:SadConsole.ScrollingConsole.ViewPort"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.OnCellsReset">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.Resize(System.Int32,System.Int32,System.Boolean,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Resizes the surface to the specified width and height.
+            </summary>
+            <param name="width">The new width.</param>
+            <param name="height">The new height.</param>
+            <param name="clear">When true, resets every cell to the <see cref="P:SadConsole.CellSurface.DefaultForeground"/>, <see cref="P:SadConsole.CellSurface.DefaultBackground"/> and glyph 0.</param>
+            <param name="viewPort">The view port to apply after resizing.</param>
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.OnViewPortChanged">
+            <summary>
+            Called when the <see cref="P:SadConsole.ScrollingConsole.ViewPort"/> property changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.OnBeforeRender(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Called when the renderer renders the text view.
+            </summary>
+            <param name="batch">The batch used in rendering.</param>
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.FromSurface(SadConsole.Console,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Creates a new console from an existing surface.
+            </summary>
+            <param name="surface">The source console to convert to a scrolling console.</param>
+            <param name="viewPort">The view port to apply to the new scrolling console.</param>
+            <returns>A new scrolling console.</returns>
+        </member>
+        <member name="M:SadConsole.ScrollingConsole.FromSurface(SadConsole.CellSurface,SadConsole.Font)">
+            <summary>
+            Creates a new console from an existing surface.
+            </summary>
+            <param name="surface">The source console to convert to a scrolling console.</param>
+            <param name="font">The font to associate with the new console.</param>
+            <returns>A new scrolling console.</returns>
         </member>
         <member name="T:SadConsole.SerializedTypes.EntitySerialized">
             <summary>
@@ -4555,7 +5729,7 @@
             Type of command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredGlyph@,SadConsole.ColoredGlyph[],System.Int32,SadConsole.Surfaces.SurfaceBase,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredGlyph@,SadConsole.ColoredGlyph[],System.Int32,SadConsole.CellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
             <summary>
             Builds a glyph.
             </summary>
@@ -4612,1129 +5786,6 @@
         <member name="T:SadConsole.StringParser.ParseCommandUndo">
             <summary>
             Pops a behavior off of a <see cref="T:SadConsole.StringParser.ParseCommandStacks"/>.
-            </summary>
-        </member>
-        <member name="T:SadConsole.Surfaces.Animated">
-            <summary>
-            Animates a list of frames.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Surfaces.Animated.AnimationStateChanged">
-            <summary>
-            Raised when the <see cref="T:SadConsole.Surfaces.Animated.AnimationState"/> changes.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated._addedTime">
-            <summary>
-            Time counter for the naimation
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated._currentFrameIndex">
-            <summary>
-            The current frame index being animated.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated._animatedTime">
-            <summary>
-            The length of the animation
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated._timePerFrame">
-            <summary>
-            How much time per animated frame should be used.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated._isPlaying">
-            <summary>
-            Indicates the animation is currently animating.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated._font">
-            <summary>
-            The font to use with all frames.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.Frames">
-            <summary>
-            All frames of the animation
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.state">
-            <summary>
-            The state of the animation.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.Center">
-            <summary>
-            Center of the animation used in positioning.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.Repeat">
-            <summary>
-            Indicates whether or not this animation will repeat once it has finished animating.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.IsPlaying">
-            <summary>
-            When true, the <see cref="M:SadConsole.Surfaces.Animated.Update(System.TimeSpan)"/> method will advance the frames.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.AnimationDuration">
-            <summary>
-            The length of the animation.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.CurrentFrameIndex">
-            <summary>
-            Gets or sets the current frame index to animate.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.IsEmpty">
-            <summary>
-            Indicates the animation is empty.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.Name">
-            <summary>
-            Gets the name of this animation.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.CurrentFrame">
-            <summary>
-            Gets the currently frame being animated.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.Animated.State">
-            <summary>
-            Gets the current animation state.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.#ctor(System.String,System.Int32,System.Int32)">
-            <summary>
-            Creates a new animation with the specified name, width, and height.
-            </summary>
-            <param name="name">The name of the animation.</param>
-            <param name="width">The width of each frame this animation will have.</param>
-            <param name="height">The height of each frame this animation will have.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.#ctor(System.String,System.Int32,System.Int32,SadConsole.Font)">
-            <summary>
-            Creates a new animation with the specified name, width, and height.
-            </summary>
-            <param name="name">The name of the animation.</param>
-            <param name="width">The width of each frame this animation will have.</param>
-            <param name="height">The height of each frame this animation will have.</param>
-            <param name="font">The font used with this animation.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.SetRenderCells">
-            <summary>
-            Forces the area of this text surface to always be the full width and height.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.UpdateFrameReferences">
-            <summary>
-            Updates the base <see cref="!:TextSurface"/> render references to the current frame.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.CreateFrame">
-            <summary>
-            Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
-            </summary>
-            <returns>The created frame.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.CalculateFrameDuration">
-            <summary>
-            Calculates the time needed per frame for rendering.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.Stop">
-            <summary>
-            Stops animating.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.Start">
-            <summary>
-            Starts animating the frames.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.Restart">
-            <summary>
-            Restarts the animation from the first frame.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.ToString">
-            <summary>
-            Returns the name of the animation.
-            </summary>
-            <returns>The name.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.OnCalculateRenderPosition">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double)">
-            <summary>
-            Creates an animated surface that looks like static.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="frames">How many frames the animation should have.</param>
-            <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="M:System.Random.NextDouble"/>.</param>
-            <returns>An animation.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.Save(System.String)">
-            <summary>
-            Saves the animated text surface to a file.
-            </summary>
-            <param name="file">The destination file.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.Load(System.String)">
-            <summary>
-            Loads an animated text surface from a file.
-            </summary>
-            <param name="file">The source file.</param>
-            <returns></returns>
-        </member>
-        <member name="T:SadConsole.Surfaces.Animated.AnimationStateChangedEventArgs">
-            <summary>
-            Event args for when the animation state changes
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationStateChangedEventArgs.PreviousState">
-            <summary>
-            The previous state.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationStateChangedEventArgs.NewState">
-            <summary>
-            The new state.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Animated.AnimationStateChangedEventArgs.#ctor(SadConsole.Surfaces.Animated.AnimationState,SadConsole.Surfaces.Animated.AnimationState)">
-            <summary>
-            Creates a new instance of the event args.
-            </summary>
-            <param name="previousState">The previous state.</param>
-            <param name="newState">The new state.</param>
-        </member>
-        <member name="T:SadConsole.Surfaces.Animated.AnimationState">
-            <summary>
-            Represents what state the animation is in.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationState.Stopped">
-            <summary>
-            The animation has never been played or was forcibly stopped.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationState.Playing">
-            <summary>
-            The animation is currently playing.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationState.Restarted">
-            <summary>
-            The animation was either manually restarted or repeated.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationState.Finished">
-            <summary>
-            The animation was played and completed.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationState.Activated">
-            <summary>
-            The animation is now the current animation for an entity.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.Animated.AnimationState.Deactivated">
-            <summary>
-            The animation is no longer the current animation for an entity.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.Basic.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">THe height of the surface.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Basic.#ctor(System.Int32,System.Int32,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="viewPort">Initial value for the <see cref="!:ViewPort"/> view.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Basic.#ctor(System.Int32,System.Int32,SadConsole.Font)">
-            <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="font">The font used with rendering.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Basic.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="font">The font used with rendering.</param>
-            <param name="viewPort">Initial value for the <see cref="!:ViewPort"/> view.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Basic.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle,SadConsole.Cell[])">
-            <summary>
-            Creates a new text surface with the specified width, height, and initial set of cell data.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="font">The font used with rendering.</param>
-            <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-            <param name="viewPort">Initial value for the <see cref="!:ViewPort"/> view.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Basic.Save(System.String)">
-            <summary>
-            Saves the <see cref="T:SadConsole.Surfaces.SurfaceBase"/> to a file.
-            </summary>
-            <param name="file">The destination file.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Basic.Load(System.String)">
-            <summary>
-            Loads a <see cref="T:SadConsole.Surfaces.SurfaceBase"/> from a file.
-            </summary>
-            <param name="file">The source file.</param>
-            <returns></returns>
-        </member>
-        <member name="T:SadConsole.Surfaces.BasicNoDraw">
-            <summary>
-            A <see cref="T:SadConsole.Surfaces.SurfaceBase"/> surface that does not create a backing texture for rendering.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.FromSurface(SadConsole.Surfaces.SurfaceBase)">
-            <summary>
-            Creates a new surface from an existing surface.
-            </summary>
-            <param name="surface">The original surface</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.#ctor(System.Int32,System.Int32,SadConsole.Font)">
-            <summary>
-            Creates a new text surface with the specified width and height.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="font">The font used for calculations.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle,SadConsole.Cell[])">
-            <summary>
-            Creates a new text surface with the specified width, height, and initial set of cell data.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="font">The font used for calculations.</param>
-            <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-            <param name="viewPort">Initial value for the <see cref="P:SadConsole.Surfaces.SurfaceBase.ViewPort"/> view.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.SetRenderCells">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.Draw(System.TimeSpan)">
-            <summary>
-            Does nothing for this class.
-            </summary>
-            <param name="timeElapsed"></param>
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.Save(System.String)">
-            <summary>
-            Saves the <see cref="T:SadConsole.Surfaces.SurfaceBase"/> to a file.
-            </summary>
-            <param name="file">The destination file.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.BasicNoDraw.Load(System.String)">
-            <summary>
-            Loads a <see cref="T:SadConsole.Surfaces.SurfaceBase"/> from a file.
-            </summary>
-            <param name="file">The source file.</param>
-            <returns></returns>
-        </member>
-        <member name="T:SadConsole.Surfaces.Layered">
-            <summary>
-            Represents mutliple surfaces grouped together and rendered at the same time.
-            </summary>
-            <inheritdoc cref="T:System.Collections.IList"/>
-        </member>
-        <member name="M:SadConsole.Surfaces.Layered.Save(System.String)">
-            <summary>
-            Saves the <see cref="T:SadConsole.Surfaces.SurfaceBase"/> to a file.
-            </summary>
-            <param name="file">The destination file.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.Layered.Load(System.String)">
-            <summary>
-            Loads a <see cref="T:SadConsole.Surfaces.SurfaceBase"/> from a file.
-            </summary>
-            <param name="file">The source file.</param>
-            <returns></returns>
-        </member>
-        <member name="T:SadConsole.Surfaces.SurfaceBase">
-            <summary>
-            The base class for a text surface. Provides code for the view port and basic cell access.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Surfaces.SurfaceBase.DirtyChanged">
-            <summary>
-            An event that is raised when <see cref="P:SadConsole.Surfaces.SurfaceBase.IsDirty"/> is set to true.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.ViewPortRectangle">
-            <summary>
-            Sets the viewport without triggering <see cref="M:SadConsole.Surfaces.SurfaceBase.SetRenderCells"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Renderer">
-            <summary>
-            The renderer used to draw this surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.DefaultForeground">
-            <summary>
-            The default foreground for glyphs on this surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.DefaultBackground">
-            <summary>
-            The default background for glyphs on this surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Width">
-            <summary>
-            How many cells wide the surface is.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Height">
-            <summary>
-            How many cells high the surface is.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Cells">
-            <summary>
-            All cells of the surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets a cell based on its coordinates on the surface.
-            </summary>
-            <param name="x">The X coordinate.</param>
-            <param name="y">The Y coordinate.</param>
-            <returns>The indicated cell.</returns>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Item(System.Int32)">
-            <summary>
-            Gets a cell by index.
-            </summary>
-            <param name="index">The index of the cell.</param>
-            <returns>The indicated cell.</returns>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Font">
-            <summary>
-            Font used with rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.AbsoluteArea">
-            <summary>
-            Pixel area of the render cells.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.RenderRects">
-            <summary>
-            Destination rectangles for rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.RenderCells">
-            <summary>
-            Cells that will be rendered.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Tint">
-            <summary>
-            A tint used in rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.ViewPort">
-            <summary>
-            Sets the area of the text surface that should be rendered.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.IsDirty">
-            <summary>
-            Indicates the surface has changed and needs to be rendered.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.LastRenderResult">
-            <summary>
-            The last texture render pass for this surface.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.#ctor(System.Int32,System.Int32,SadConsole.Font,Microsoft.Xna.Framework.Rectangle,SadConsole.Cell[])">
-            <summary>
-            Creates a new text surface with the specified width, height, and initial set of cell data.
-            </summary>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
-            <param name="font">The font used with rendering.</param>
-            <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-            <param name="viewPort">Initial value for the <see cref="P:SadConsole.Surfaces.SurfaceBase.ViewPort"/> view.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.#ctor">
-            <summary>
-            Initialization is left to the derived class.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Finalize">
-            <summary>
-            Disposes <see cref="P:SadConsole.Surfaces.SurfaceBase.LastRenderResult"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.InitializeCells">
-            <summary>
-            Sets <see cref="P:SadConsole.Surfaces.SurfaceBase.RenderCells"/> to <see cref="P:SadConsole.Surfaces.SurfaceBase.Cells"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetRenderCells">
-            <summary>
-            Calculates which cells to draw based on <see cref="P:SadConsole.Surfaces.SurfaceBase.ViewPort"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Update(System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.OnFontChanged">
-            <summary>
-            Called when the <see cref="P:SadConsole.Surfaces.SurfaceBase.Font"/> property changes.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.OnViewPortChanged">
-            <summary>
-            Called when the <see cref="P:SadConsole.Surfaces.SurfaceBase.ViewPort"/> property changes.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetViewFromSurface``1(Microsoft.Xna.Framework.Rectangle,``0@)">
-            <summary>
-            Remaps the cells of this surface to a view of the <paramref name="surface"/>.
-            </summary>
-            <typeparam name="T">The surface type.</typeparam>
-            <param name="view">A view rectangle of the target surface.</param>
-            <param name="surface">The target surface to map cells from.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Resize(System.Int32,System.Int32,System.Boolean,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Resizes the surface to the specified width and height.
-            </summary>
-            <param name="width">The new width.</param>
-            <param name="height">The new height.</param>
-            <param name="clear">When true, resets every cell to the <see cref="P:SadConsole.Surfaces.SurfaceBase.DefaultForeground"/>, <see cref="P:SadConsole.Surfaces.SurfaceBase.DefaultBackground"/> and glyph 0.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetViewSurface(Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
-            </summary>
-            <param name="view">An area of the surface to create a view of.</param>
-            <returns>A new surface</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetEnumerator">
-            <summary>
-            Gets an enumerator for <see cref="P:SadConsole.Surfaces.SurfaceBase.Cells"/>.
-            </summary>
-            <returns>An enumerator for <see cref="P:SadConsole.Surfaces.SurfaceBase.Cells"/>.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            Gets an enumerator for <see cref="P:SadConsole.Surfaces.SurfaceBase.Cells"/>.
-            </summary>
-            <returns>An enumerator for <see cref="P:SadConsole.Surfaces.SurfaceBase.Cells"/>.</returns>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.TimesShiftedDown">
-            <summary>
-            A variable that tracks how many times this editor shifted the surface down.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.TimesShiftedRight">
-            <summary>
-            A variable that tracks how many times this editor shifted the surface right.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.TimesShiftedLeft">
-            <summary>
-            A variable that tracks how many times this editor shifted the surface left.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.TimesShiftedUp">
-            <summary>
-            A variable that tracks how many times this editor shifted the surface up.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.UsePrintProcessor">
-            <summary>
-            When true, the <see cref="!:ColoredString.Parse(string, int, ISurface, SurfaceEditor, ParseCommandStacks)"/> command is used to print strings.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Surfaces.SurfaceBase.Effects">
-            <summary>
-            The effects manager associated with the <see cref="!:TextSurface"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetPixels(Microsoft.Xna.Framework.Color[])">
-            <summary>
-            Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
-            </summary>
-            <param name="pixels">The colors to place.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetPixels(Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color[])">
-            <summary>
-            Sets each background of a cell to the array of colors.
-            </summary>
-            <param name="area">An area to fill with pixels.</param>
-            <param name="pixels"></param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.IsValidCell(System.Int32,System.Int32)">
-            <summary>
-            Tests if a cell is valid based on its x,y position.
-            </summary>
-            <param name="x">The x coordinate of the cell to test.</param>
-            <param name="y">The y coordinate of the cell to test.</param>
-            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.IsValidCell(System.Int32,System.Int32,System.Int32@)">
-            <summary>
-            Tests if a cell is valid based on its x,y position.
-            </summary>
-            <param name="x">The x coordinate of the cell to test.</param>
-            <param name="y">The y coordinate of the cell to test.</param>
-            <param name="index">If the cell is valid, the index of the cell when found.</param>
-            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.IsValidCell(System.Int32)">
-            <summary>
-            Tests if a cell is valid based on its index.
-            </summary>
-            <param name="index">The index to test.</param>
-            <returns>A true value indicating the cell index is in this cell surface.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetGlyph(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Changes the glyph of a specified cell to a new value.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph of the cell.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Changes the glyph and foreground of a cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Changes the glyph, foreground, and background of a cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-            <param name="background">The desired background.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
-            <summary>
-            Changes the glyph, foreground, background, and effect of a cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-            <param name="background">The desired background.</param>
-            <param name="mirror">Sets how the glyph will be mirrored.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetGlyph(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Collections.Generic.IEnumerable{SadConsole.CellDecorator})">
-            <summary>
-            Changes the glyph, foreground, background, and effect of a cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-            <param name="background">The desired background.</param>
-            <param name="mirror">Sets how the glyph will be mirrored.</param>
-            <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetGlyph(System.Int32,System.Int32)">
-            <summary>
-            Gets the glyph of a specified cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The glyph index.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetForeground(System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Changes the foreground of a specified cell to a new color.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="color">The desired color of the cell.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetForeground(System.Int32,System.Int32)">
-            <summary>
-            Gets the foreground of a specified cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetBackground(System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Changes the background of a cell to the specified color.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="color">The desired color of the cell.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetBackground(System.Int32,System.Int32)">
-            <summary>
-            Gets the background of a specified cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetEffect(System.Int32,System.Int32,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a cell to the specified effect.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetEffect(System.Int32,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a cell to the specified effect.
-            </summary>
-            <param name="index">Index of the cell.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.Cell},SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a list of cells to the specified effect.
-            </summary>
-            <param name="cells">The cells for the effect.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetEffect(SadConsole.Cell,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a cell to the specified effect.
-            </summary>
-            <param name="cell">The cells for the effect.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetEffect(System.Int32,System.Int32)">
-            <summary>
-            Gets the effect of the specified cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The effect.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetCellAppearance(System.Int32,System.Int32,SadConsole.Cell)">
-            <summary>
-            Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetCellAppearance(System.Int32,System.Int32)">
-            <summary>
-            Gets the appearance of a cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The appearance.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetCells(Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Gets an array of cells from a specified area.
-            </summary>
-            <param name="area">The area to get cells from.</param>
-            <returns>A new array with references to each cell in the area.</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the area is outside of the bounds of the surface.</exception>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetMirror(System.Int32,System.Int32)">
-            <summary>
-            Gets the sprite effect of a specified cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetMirror(System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
-            <summary>
-            Sets the sprite effect of a specified cell.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="mirror">The mirror of the cell.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetDecorator(System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Sets the decorator of one or more cells.
-            </summary>
-            <param name="x">The x coordinate of the cell.</param>
-            <param name="y">The y coordinate of the cell.</param>
-            <param name="count">The count of cells to use from the x,y cooridnate (inclusive).</param>
-            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.SetDecorator(System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Sets the decorator of one or more cells.
-            </summary>
-            <param name="index">The index of the cell to start applying.</param>
-            <param name="count">The count of cells to use from the index (inclusive).</param>
-            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.AddDecorator(System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Appends the decorators to one or more cells
-            </summary>
-            <param name="x">The x coordinate of the cell.</param>
-            <param name="y">The y coordinate of the cell.</param>
-            <param name="count">The count of cells to use from the x,y cooridnate (inclusive).</param>
-            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.AddDecorator(System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Appends the decorators to one or more cells
-            </summary>
-            <param name="index">The index of the cell to start applying.</param>
-            <param name="count">The count of cells to use from the index (inclusive).</param>
-            <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,System.String)">
-            <summary>
-            Draws the string on the console at the specified location, wrapping if needed.
-            </summary>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,System.String,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Draws the string on the console at the specified location and color, wrapping if needed.
-            </summary>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="foreground">Sets the foreground of all characters in the text.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,System.String,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Draws the string on the console at the specified location with the specified foreground and background color, wrapping if needed.
-            </summary>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="foreground">Sets the foreground of all characters in the text.</param>
-            <param name="background">Sets the background of all characters in the text.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,System.String,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
-            <summary>
-            Draws the string on the console at the specified location with the specified settings. 
-            </summary>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="foreground">Sets the foreground of all characters in the text.</param>
-            <param name="background">Sets the background of all characters in the text.</param>
-            <param name="mirror">The mirror to set on all characters in the text.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,System.String,SadConsole.Cell,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Draws the string on the console at the specified location, wrapping if needed.
-            </summary>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="appearance">The appearance of the cell</param>
-            <param name="effect">An optional effect to apply to the printed cells.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,SadConsole.ColoredString)">
-            <summary>
-            Draws the string on the console at the specified location, wrapping if needed.
-            </summary>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetString(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface from the specified coordinates.
-            </summary>
-            <param name="x">The x position of the surface to start at.</param>
-            <param name="y">The y position of the surface to start at.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetString(System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface.
-            </summary>
-            <param name="index">Where to start getting characters from.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetStringColored(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface from the specified coordinates.
-            </summary>
-            <param name="x">The x position of the surface to start at.</param>
-            <param name="y">The y position of the surface to start at.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetStringColored(System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface.
-            </summary>
-            <param name="index">Where to start getting characters from.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ClearShiftValues">
-            <summary>
-            Resets the shifted amounts to 0, as if the surface has never shifted.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftUp">
-            <summary>
-            Scrolls all the console data up by one.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftUp(System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data up by the specified amount of rows.
-            </summary>
-            <param name="amount">How many rows to shift.</param>
-            <param name="wrap">When false, a blank line appears at the borrom. When true, the top line appears at the borrom.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftDown">
-            <summary>
-            Scrolls all the console data down by one.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftDown(System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data down by the specified amount of rows.
-            </summary>
-            <param name="amount">How many rows to shift.</param>
-            <param name="wrap">When false, a blank line appears at the top. When true, the bottom line appears at the top.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftRight">
-            <summary>
-            Scrolls all the console data right by one.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftRight(System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data right by the specified amount.
-            </summary>
-            <param name="amount">How much to scroll.</param>
-            <param name="wrap">When false, a blank line appears at the left. When true, the right line appears at the left.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftLeft">
-            <summary>
-            Scrolls all the console data left by one.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ShiftLeft(System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data left by the specified amount.
-            </summary>
-            <param name="amount">How much to scroll.</param>
-            <param name="wrap">When false, a blank line appears at the right. When true, the left line appears at the right.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Clear">
-            <summary>
-            Clears the console data. Characters are reset to 0, the forground and background are set to default, and effect set to none. Clears cell decorators.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Clear(System.Int32,System.Int32)">
-            <summary>
-            Clears a cell. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
-            </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Clear(Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Clears an area of cells. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
-            </summary>
-            <param name="area"></param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Fill(System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
-            <summary>
-            Fills the console. Clears cell decorators.
-            </summary>
-            <param name="foreground">Foregorund of every cell. If null, skips.</param>
-            <param name="background">Foregorund of every cell. If null, skips.</param>
-            <param name="glyph">Glyph of every cell. If null, skips.</param>
-            <param name="mirror">Sprite effect of every cell. If null, skips.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Fill(Microsoft.Xna.Framework.Rectangle,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
-            <summary>
-            Fills the specified area. Clears cell decorators.
-            </summary>
-            <param name="area">The area to fill.</param>
-            <param name="foreground">Foregorund of every cell. If null, skips.</param>
-            <param name="background">Foregorund of every cell. If null, skips.</param>
-            <param name="glyph">Glyph of every cell. If null, skips.</param>
-            <param name="mirror">Sprite effect of every cell. If null, skips.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.DrawLine(Microsoft.Xna.Framework.Point,Microsoft.Xna.Framework.Point,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32})">
-            <summary>
-            Draws a line from <paramref name="start"/> to <paramref name="end"/>.
-            </summary>
-            <param name="start">Starting point of the line.</param>
-            <param name="end">Ending point of the line.</param>
-            <param name="foreground">Foreground to set. If null, skipped.</param>
-            <param name="background">Background to set. If null, skipped.</param>
-            <param name="glyph">Glyph to set. If null, skipped.</param>
-            <returns>A list of cells the line touched; ordered from first to last.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.DrawBox(Microsoft.Xna.Framework.Rectangle,SadConsole.Cell,SadConsole.Cell,System.Int32[])">
-            <summary>
-            Draws a box.
-            </summary>
-            <param name="area">The area of the box.</param>
-            <param name="border">The border style.</param>
-            <param name="fill">The fill style. If null, the box is not filled.</param>
-            <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.DrawCircle(Microsoft.Xna.Framework.Rectangle,SadConsole.Cell,SadConsole.Cell)">
-            <summary>
-            Draws an ellipse.
-            </summary>
-            <param name="area">The area the ellipse </param>
-            <param name="outer">The appearance of the outer line of the ellipse.</param>
-            <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ConnectLines">
-            <summary>
-            Connects all lines in a surface for both <see cref="!:LineStyleIndexesThin"/> and <see cref="!:LineStyleIndexesThick"/> styles.
-            </summary>
-            <param name="surface">The surface to process.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ConnectLines(System.Int32[])">
-            <summary>
-            Connects all lines in a surface based on the <paramref name="lineStyle"/> style provided.
-            </summary>
-            <param name="surface">The surface to process.</param>
-            <param name="lineStyle">The array of line styles indexed by <see cref="!:LineRoadIndex"/>.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Copy(SadConsole.Surfaces.SurfaceBase)">
-            <summary>
-            Copies the contents of the cell surface to the destination.
-            </summary>
-            <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
-            <param name="destination">The destination surface.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Copy(SadConsole.Surfaces.SurfaceBase,System.Int32,System.Int32)">
-            <summary>
-            Copies the contents of the cell surface to the destination at the specified x,y.
-            </summary>
-            <param name="x">The x coordinate of the destination.</param>
-            <param name="y">The y coordinate of the destination.</param>
-            <param name="destination">The destination surface.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.Copy(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.Surfaces.SurfaceBase,System.Int32,System.Int32)">
-            <summary>
-            Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
-            </summary>
-            <param name="x">The x coordinate to start from.</param>
-            <param name="y">The y coordinate to start from.</param>
-            <param name="width">The width to copy from.</param>
-            <param name="height">The height to copy from.</param>
-            <param name="destination">The destination surface.</param>
-            <param name="destinationX">The x coordinate to copy to.</param>
-            <param name="destinationY">The y coordinate to copy to.</param>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.FillWithRandomGarbage(System.Boolean)">
-            <summary>
-            Fills a console with random colors and glyphs.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetIndexFromPoint(Microsoft.Xna.Framework.Point)">
-            <summary>
-            Gets the index of a location on the surface by point.
-            </summary>
-            <param name="location">The location of the index to get.</param>
-            <returns>The cell index.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetIndexFromPoint(System.Int32,System.Int32)">
-            <summary>
-            Gets the index of a location on the surface by coordinate.
-            </summary>
-            <param name="x">The x of the location.</param>
-            <param name="y">The y of the location.</param>
-            <returns>The cell index.</returns>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.GetPointFromIndex(System.Int32)">
-            <summary>
-            Gets the x,y of an index on the surface.
-            </summary>
-            <param name="index">The index to get.</param>
-            <returns>The x,y as a <see cref="T:Microsoft.Xna.Framework.Point"/>.</returns>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.ConnectedLineThin">
-            <summary>
-            Glyph indexes for a thin line.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.ConnectedLineThick">
-            <summary>
-            Glyph indexes for a thick line.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.ConnectedLineThinExtended">
-            <summary>
-            Glyph indexes for a thin line using a SadConsole extended font.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Surfaces.SurfaceBase.ConnectedLineEmpty">
-            <summary>
-            Glyph indexes for an empty line 0. 
-            </summary>
-        </member>
-        <member name="M:SadConsole.Surfaces.SurfaceBase.ValidateLinestyle(System.Int32[]@)">
-            <summary>
-            Returns a value that indicates a line style array is not null and contains the required number of elements.
-            </summary>
-            <param name="connectedLineStyle">The array to check based on the <see cref="T:SadConsole.Surfaces.SurfaceBase.ConnectedLineIndex"/> enum.</param>
-            <returns>True when the line style is correct.</returns>
-        </member>
-        <member name="T:SadConsole.Surfaces.SurfaceBase.ConnectedLineIndex">
-            <summary>
-            Array index enum for line glyphs.
             </summary>
         </member>
         <member name="T:SadConsole.Themes.ButtonTheme">
@@ -5839,6 +5890,11 @@
         <member name="T:SadConsole.Themes.Colors">
             <summary>
             Default colors used by control themes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Themes.Colors.ModalBackground">
+            <summary>
+            The color used to darken the background when <see cref="o:Window.Show"/> is called and <see cref="P:SadConsole.Window.IsModal"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Themes.Colors.Clone">
@@ -6392,6 +6448,31 @@
             Raised when the window is closed.
             </summary>
         </member>
+        <member name="F:SadConsole.Window.PreviousMouseInfo">
+            <summary>
+            The mouse state of the previous update frame.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Window.CellAtDragPosition">
+            <summary>
+            The position of the cell that the window drag started at.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Window.PreviousMouseExclusiveDrag">
+            <summary>
+            Temporary value to hold the state of <see cref="P:SadConsole.Console.IsExclusiveMouse"/> prior to dragging.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Window.AddedToParent">
+            <summary>
+            When <see langword="true"/>, indicates that the window has been added to a parent; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Window.IsDragging">
+            <summary>
+            When <see langword="true"/>, indicates that the window is being dragged; otherwise <see langword="false"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.Window.TitleAlignment">
             <summary>
             Gets or sets the alignment of the window title.
@@ -6402,12 +6483,12 @@
             Gets the whether or not the console is being shown as modal. 
             </summary>
         </member>
-        <member name="P:SadConsole.Window.Dragable">
+        <member name="P:SadConsole.Window.CanDrag">
             <summary>
             Gets or sets whether or not this window can be moved with the mouse.
             </summary>
         </member>
-        <member name="P:SadConsole.Window.CloseOnESC">
+        <member name="P:SadConsole.Window.CloseOnEscKey">
             <summary>
             Gets or sets whether or not this window can be closed when the escape key is pressed.
             </summary>
@@ -6417,9 +6498,9 @@
             Gets or set the dialog result status of the window.
             </summary>
         </member>
-        <member name="P:SadConsole.Window.ModalIsDefault">
+        <member name="P:SadConsole.Window.IsModalDefault">
             <summary>
-            Indicates that when this window is shown by the <see cref="M:SadConsole.Window.Show"/> method or by setting the <see cref="P:SadConsole.ScreenObject.IsVisible"/> property to true, the window will be shown as modal.
+            Indicates that when this window is shown by the <see cref="M:SadConsole.Window.Show"/> method or by setting the <see cref="P:SadConsole.Console.IsVisible"/> property to true, the window will be shown as modal.
             </summary>
         </member>
         <member name="P:SadConsole.Window.Title">
@@ -6432,15 +6513,36 @@
             Gets or sets the theme of the window.
             </summary>
         </member>
-        <member name="M:SadConsole.Window.Invalidate">
+        <member name="M:SadConsole.Window.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new window with the specified with and height in cells.
+            </summary>
+            <param name="width">The width of the window in cells.</param>
+            <param name="height">The height of the window in cells.</param>
+        </member>
+        <member name="M:SadConsole.Window.#ctor(System.Int32,System.Int32,SadConsole.Font)">
+            <summary>
+            Creates a new window with the specified with and height in cells.
+            </summary>
+            <param name="width">The width of the window in cells.</param>
+            <param name="height">The height of the window in cells.</param>
+            <param name="font">THe font to use with the window.</param>
+        </member>
+        <member name="M:SadConsole.Window.OnVisibleChanged">
+            <summary>
+            Depending on if the window is visible, calls <see cref="M:SadConsole.Window.Show(System.Boolean)"/> or <see cref="M:SadConsole.Window.Hide"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Window.Draw(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Window.ProcessMouse(SadConsole.Input.MouseConsoleState)">
+        <member name="M:SadConsole.Window.Invalidate">
             <summary>
-            Processes the mouse. If allowed, will move the console around with the mouse.
+            Causes the window to be redrawn with the selected <see cref="P:SadConsole.Window.Theme"/>.
             </summary>
-            <param name="state">The mouse state.</param>
-            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Window.ProcessMouse(SadConsole.Input.MouseConsoleState)">
+            <inheritdoc />
         </member>
         <member name="M:SadConsole.Window.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
@@ -6450,7 +6552,7 @@
         </member>
         <member name="M:SadConsole.Window.Show">
             <summary>
-            Displays this window using the modal value of the <see cref="P:SadConsole.Window.ModalIsDefault"/> property.
+            Displays this window using the modal value of the <see cref="P:SadConsole.Window.IsModalDefault"/> property.
             </summary>
         </member>
         <member name="M:SadConsole.Window.Show(System.Boolean)">

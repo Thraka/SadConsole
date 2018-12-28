@@ -193,7 +193,7 @@ namespace SadConsole
         /// </summary>
         private void CalculateFrameDuration()
         {
-            if (IsEmpty || (int)_animatedTime == 0)
+            if (IsEmpty || _animatedTime == 0)
                 TimePerFrame = 0f;
             else
                 TimePerFrame = _animatedTime / FramesList.Count;
@@ -236,7 +236,7 @@ namespace SadConsole
         /// <param name="timeElapsed">The time elapsed since the last call in seconds.</param>
         public override void Update(TimeSpan timeElapsed)
         {
-            if (IsPlaying && (int)TimePerFrame != 0)
+            if (IsPlaying && TimePerFrame != 0)
             {
                 // TODO: Evaluate if we should change this to calculate current frame based on total time passed, \\not calculate frame based on individual frame duration on screen.
                 AddedTime += timeElapsed.TotalSeconds;

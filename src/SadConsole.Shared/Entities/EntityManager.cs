@@ -9,12 +9,12 @@ using Microsoft.Xna.Framework;
 namespace SadConsole.Entities
 {
     /// <summary>
-    /// Keeps a list of entities in sync with the parent <see cref="SurfaceBase"/>.
+    /// Keeps a list of entities in sync with the parent <see cref="Console"/>.
     /// </summary>
     public class EntityManager
     {
         private Rectangle _cachedView;
-        private ScrollingConsole _parent;
+        private readonly ScrollingConsole _parent;
 
         /// <summary>
         /// The entities this manager manages.

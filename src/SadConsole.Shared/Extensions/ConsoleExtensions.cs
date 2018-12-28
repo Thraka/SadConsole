@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SadConsole
 {
-    public static class SurfaceBaseExtensions
+    public static class ConsoleExtensions
     {
         public static Matrix GetPositionTransform(this Console surface, Point position, bool usePixelPositioning = false)
         {

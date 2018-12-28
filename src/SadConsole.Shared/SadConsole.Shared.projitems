@@ -76,7 +76,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PointExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\RectangleExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SurfaceExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ConsoleExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextureExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Font.cs" />
