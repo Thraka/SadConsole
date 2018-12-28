@@ -120,6 +120,7 @@ namespace SadConsole
             IsVisible = false;
             _theme = (WindowTheme)Themes.Library.Default.WindowTheme.Clone();
             Renderer = new SadConsole.Renderers.Window();
+            MoveToFrontOnMouseClick = true;
         }
         #endregion
 

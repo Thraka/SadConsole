@@ -1,4 +1,13 @@
-﻿## 11/19/2018 V7.2.0
+﻿## 12/28/2018 V7.3.0
+
+- Windows now default MoveToFrontOnMouseClick = true.
+- Consoles are brought forward and focused via LeftMouseDown instead of LeftMouseClick. (Thanks VGA256) #188
+- You can set ListBox.SelectedItem = null now (Thanks darrellp) #183
+- TextBox supports moving the cursor and inserting characters now (Thanks darrellp) #145
+- Window could steal the mouse focus while dragging some other control across the title bar (Thanks VGA256) #165
+- ColoredString.Parse now uses CultureInvariant (Thanks GPugnet) #173
+
+## 11/19/2018 V7.2.0
 
 - ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
 - Button theme would crash if ShowEnds was on and the width of the button was < 3. (reported by Hoonius)
