@@ -6,6 +6,7 @@
 - TextBox supports moving the cursor and inserting characters now (Thanks darrellp) #145
 - Window could steal the mouse focus while dragging some other control across the title bar (Thanks VGA256) #165
 - ColoredString.Parse now uses CultureInvariant (Thanks GPugnet) #173
+- SadConsole.Standard was missing the non extended font embedded resource.
 
 ## 11/19/2018 V7.2.0
 
