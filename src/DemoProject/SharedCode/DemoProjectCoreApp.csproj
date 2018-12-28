@@ -15,7 +15,6 @@
     <Compile Remove="CustomConsoles\CursorConsole.cs" />
     <Compile Remove="CustomConsoles\FadeConsole.cs" />
     <Compile Remove="CustomConsoles\HexConsole.cs" />
-    <Compile Remove="CustomConsoles\ScrollableConsole.cs" />
     <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
     <Compile Remove="ShaderRendererTesting.cs" />
   </ItemGroup>

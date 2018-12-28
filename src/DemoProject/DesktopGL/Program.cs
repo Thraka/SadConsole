@@ -18,7 +18,7 @@ namespace StarterProject
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
             
-            // Setup the engine and creat the main window.
+            // Setup the engine and create the main window.
             SadConsole.Game.Create(80, 25);
             //SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
 
@@ -64,6 +64,7 @@ namespace StarterProject
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
                 {
+                    SadConsole.Debug.CurrentScreen.Show();
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
                 {

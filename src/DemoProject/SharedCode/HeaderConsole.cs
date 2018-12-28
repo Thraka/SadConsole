@@ -9,7 +9,8 @@ using StarterProject.CustomConsoles;
 
 namespace StarterProject
 {
-    class HeaderConsole: ScrollingConsole
+    [System.Diagnostics.DebuggerDisplay("Header Area")]
+    class HeaderConsole : ScrollingConsole
     {
         public HeaderConsole(): base(80, 2)
         {
