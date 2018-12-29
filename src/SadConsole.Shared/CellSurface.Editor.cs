@@ -401,7 +401,7 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        public void SetDecorator(int x, int y, int count, CellDecorator[] decorators)
+        public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators)
         {
             if (!IsValidCell(x, y, out var index) || index + count >= Cells.Length) return;
 
@@ -414,20 +414,31 @@ namespace SadConsole
         /// <param name="index">The index of the cell to start applying.</param>
         /// <param name="count">The count of cells to use from the index (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        public void SetDecorator(int index, int count, CellDecorator[] decorators)
+        public void SetDecorator(int index, int count, params CellDecorator[] decorators)
         {
             // TODO: Setting decorators to an empty array causes a lot of GC when you FILL/CLEAR a surface. Need a better way
             if (!IsValidCell(index) || index + count >= Cells.Length) return;
-
-            if (decorators == null)
-                decorators = new CellDecorator[0];
-
+            
             for (var i = index; i < index + count; i++)
             {
-                if (decorators.Length != 0)
-                    Cells[i].Decorators = (CellDecorator[])decorators.Clone();
-                else
-                    Cells[i].Decorators = new CellDecorator[0];
+                switch (decorators)
+                {
+                    case null when Cells[i].Decorators.Length != 0:
+                        Cells[i].Decorators = new CellDecorator[0];
+                        break;
+
+                    case null:
+                        continue;
+
+                    default:
+                    {
+                        if (decorators.Length != 0)
+                            Cells[i].Decorators = (CellDecorator[])decorators.Clone();
+                        else if (Cells[i].Decorators.Length != 0)
+                            Cells[i].Decorators = new CellDecorator[0];
+                        break;
+                    }
+                }
             }
         }
 
@@ -1124,12 +1135,12 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Clears the console data. Characters are reset to 0, the forground and background are set to default, and effect set to none. Clears cell decorators.
+        /// Clears the console data. Characters are reset to 0, the foreground and background are set to default, and effect set to none. Clears cell decorators.
         /// </summary>
         public void Clear() => Fill(DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
 
         /// <summary>
-        /// Clears a cell. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
+        /// Clears a cell. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
@@ -1144,7 +1155,7 @@ namespace SadConsole
             IsDirty = true;
         }
         /// <summary>
-        /// Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
+        /// Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="x">The x position of the left end of the segment.</param>
         /// <param name="y">The y position of the segment.</param>
@@ -1155,7 +1166,7 @@ namespace SadConsole
             Fill(x, y, length, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
         }
         /// <summary>
-        /// Clears an area of cells. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
+        /// Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="area"></param>
         public void Clear(Rectangle area) => Fill(area, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
@@ -1163,8 +1174,8 @@ namespace SadConsole
         /// <summary>
         /// Fills the console. Clears cell decorators.
         /// </summary>
-        /// <param name="foreground">Foregorund to apply. If null, skips.</param>
-        /// <param name="background">Foregorund to apply. If null, skips.</param>
+        /// <param name="foreground">Foreground to apply. If null, skips.</param>
+        /// <param name="background">Foreground to apply. If null, skips.</param>
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
         /// <returns>The array of all cells in this console, starting from the top left corner.</returns>

@@ -138,7 +138,9 @@ namespace SadConsole
             Background = Color.Black;
             Glyph = 0;
             Mirror = SpriteEffects.None;
-            Decorators = new CellDecorator[0];
+
+            if (Decorators.Length != 0)
+                Decorators = new CellDecorator[0];
         }
 
         /// <summary>
