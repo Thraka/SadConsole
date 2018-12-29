@@ -109,7 +109,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\REXPaint.Image.Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Readers\TextureToSurfaceReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Renderers\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\ControlsConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\IRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
