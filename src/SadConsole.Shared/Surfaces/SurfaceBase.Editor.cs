@@ -1142,9 +1142,10 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
-        /// <param name="x">The x position of the left end of the segment</param>
-        /// <param name="y">The y position of the segment</param>
-        /// <param name="length">The length of the segment</param>
+        /// <param name="x">The x position of the left end of the segment.</param>
+        /// <param name="y">The y position of the segment.</param>
+        /// <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
+        /// <remarks>This works similarly to printing a string of whitespace</remarks>
         public void Clear(int x, int y, int length) 
         {
             Fill(x, y, length, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
@@ -1161,10 +1162,10 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Fills the console. Clears cell decorators.
         /// </summary>
-        /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
-        /// <param name="background">Foregorund of every cell. If null, skips.</param>
-        /// <param name="glyph">Glyph of every cell. If null, skips.</param>
-        /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        /// <param name="foreground">Foregorund to apply. If null, skips.</param>
+        /// <param name="background">Foregorund to apply. If null, skips.</param>
+        /// <param name="glyph">Glyph to apply. If null, skips.</param>
+        /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
         /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
         public Cell[] Fill(Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
         {
@@ -1189,12 +1190,14 @@ namespace SadConsole.Surfaces
         /// <summary>
         /// Fills a segment of cells, starting from the left, extending to the right, and wrapping if needed. Clears cell decorators.
         /// </summary>
-        /// <param name="length">Length of the segment to fill.</param>
-        /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
-        /// <param name="background">Foregorund of every cell. If null, skips.</param>
-        /// <param name="glyph">Glyph of every cell. If null, skips.</param>
-        /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
-        /// <returns>An array containing the affected cells, starting from the top left corner</returns>
+        /// <param name="x">The x position of the left end of the segment. </param>
+        /// <param name="y">The y position of the segment.</param>
+        /// <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
+        /// <param name="foreground">Foreground to apply. If null, skips.</param>
+        /// <param name="background">Background to apply. If null, skips.</param>
+        /// <param name="glyph">Glyph to apply. If null, skips.</param>
+        /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
+        /// <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
         public Cell[] Fill(int x, int y, int length, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null) {
 
 
@@ -1230,11 +1233,11 @@ namespace SadConsole.Surfaces
         /// Fills the specified area. Clears cell decorators.
         /// </summary>
         /// <param name="area">The area to fill.</param>
-        /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
-        /// <param name="background">Foregorund of every cell. If null, skips.</param>
-        /// <param name="glyph">Glyph of every cell. If null, skips.</param>
-        /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
-        /// <returns>An array containing the affected cells, starting from the top left corner</returns>
+        /// <param name="foreground">Foreground to apply. If null, skips.</param>
+        /// <param name="background">Background to apply. If null, skips.</param>
+        /// <param name="glyph">Glyph to apply. If null, skips.</param>
+        /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
+        /// <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
         public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
         {
             area = Rectangle.Intersect(area, new Rectangle(0, 0, Width, Height));
@@ -1279,6 +1282,7 @@ namespace SadConsole.Surfaces
         /// <param name="background">Background to set. If null, skipped.</param>
         /// <param name="glyph">Glyph to set. If null, skipped.</param>
         /// <returns>A list of cells the line touched; ordered from first to last.</returns>
+        /// <remarks>If no foreground, background, or glyph are specified, then the list of affected cells are returned but nothing is drawn.</remarks>
         public IEnumerable<Cell> DrawLine(Point start, Point end, Color? foreground = null, Color? background = null, int? glyph = null)
         {
             List<Cell> result = new List<Cell>();
@@ -1410,9 +1414,8 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Connects all lines in a surface for both <see cref="LineStyleIndexesThin"/> and <see cref="LineStyleIndexesThick"/> styles.
+        /// Connects all lines in this surface for both <see cref="ConnectedLineThin"/> and <see cref="ConnectedLineThick"/> styles.
         /// </summary>
-        /// <param name="surface">The surface to process.</param>
         public void ConnectLines()
         {
             ConnectLines(ConnectedLineThin);
@@ -1420,10 +1423,9 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
-        /// Connects all lines in a surface based on the <paramref name="lineStyle"/> style provided.
+        /// Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
         /// </summary>
-        /// <param name="surface">The surface to process.</param>
-        /// <param name="lineStyle">The array of line styles indexed by <see cref="LineRoadIndex"/>.</param>
+        /// <param name="lineStyle">The array of line styles indexed by <see cref="ConnectedLineIndex"/>.</param>
         public void ConnectLines(int[] lineStyle)
         {
             Rectangle area = new Rectangle(0, 0, Width, Height);
