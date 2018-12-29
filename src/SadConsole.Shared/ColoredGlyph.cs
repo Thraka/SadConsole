@@ -42,7 +42,7 @@ namespace SadConsole
         public ICellEffect Effect;
 
         /// <summary>
-        /// Creates a new colored glyph with a white foreground, transparent background, and a glyph index of 0.
+        /// Creates a new colored glyph with a white foreground, black background, and a glyph index of 0.
         /// </summary>
         public ColoredGlyph() : base(Color.White, Color.Black, 0) { }
 
@@ -54,6 +54,20 @@ namespace SadConsole
         {
             GlyphCharacter = (char)cell.Glyph;
         }
+
+        /// <summary>
+        /// Creates a new colored glyph with a white foreground and black background.
+        /// </summary>
+        /// <param name="glyph">The glyph.</param>
+        public ColoredGlyph(int glyph) : base(Color.White, Color.Black, glyph) { }
+
+        /// <summary>
+        /// Creates a new colored glyph with a given foreground and background.
+        /// </summary>
+        /// <param name="glyph">The glyph.</param>
+        /// <param name="background">The color of the foreground.</param>
+        /// <param name="foreground">The color of the background.</param>
+        public ColoredGlyph(int glyph, Color foreground, Color background) : base(foreground, background, glyph) { }
 
         /// <summary>
         /// Creates a new copy of this cell appearance.

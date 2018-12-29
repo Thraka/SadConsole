@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>7.2.0</version>
+    <version>7.3.0</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -11,12 +11,13 @@
     <iconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics. Use the SadConsole.Starter package for new projects.</description>
-    <releaseNotes>- ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
-- Button theme would crash if ShowEnds was on and the width of the button was less than 3. (reported by Hoonius)
-- Renamed and promoted the method that forwarded entity animation states to the entity: OnAnimationStateChanged. Override this on custom entities to detect the state changes.
-- Blink event did not respect the BlinkCounter property. (reported by Hoonius)
-- Default font is now a non-extended IBM 8x16 font.
-- Added SadConsole.Settings.UseDefaultExtendedFont setting and when set to true, loads the IBM 8x16 extended font instead of the normal font. Must be set before creating the game.
+    <releaseNotes>- Windows now default MoveToFrontOnMouseClick = true.
+- Consoles are brought forward and focused via LeftMouseDown instead of LeftMouseClick. (Thanks VGA256) #188
+- You can set ListBox.SelectedItem = null now (Thanks darrellp) #183
+- TextBox supports moving the cursor and inserting characters now (Thanks darrellp) #145
+- Window could steal the mouse focus while dragging some other control across the title bar (Thanks VGA256) #165
+- ColoredString.Parse now uses CultureInvariant (Thanks GPugnet) #173
+- Various helper methods in ColoredGlyph, ColoredString, and SurfaceBase added (Thanks INeedAUniqueUsername) #187
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>
