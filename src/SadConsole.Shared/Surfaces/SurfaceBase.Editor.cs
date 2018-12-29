@@ -486,9 +486,9 @@ namespace SadConsole.Surfaces
             
             if (!UsePrintProcessor)
             {
-                int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
                 int charIndex = 0;
-                for (; index < total; index++)
+                for (; index < end; index++)
                 {
                     Cells[index].Glyph = text[charIndex];
                     charIndex++;
@@ -516,9 +516,9 @@ namespace SadConsole.Surfaces
 
             if (!UsePrintProcessor)
             {
-                int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
                 int charIndex = 0;
-                for (; index < total; index++)
+                for (; index < end; index++)
                 {
                     Cells[index].Glyph = text[charIndex];
                     Cells[index].Foreground = foreground;
@@ -551,9 +551,9 @@ namespace SadConsole.Surfaces
 
             if (!UsePrintProcessor)
             {
-                int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
                 int charIndex = 0;
-                for (; index < total; index++)
+                for (; index < end; index++)
                 {
                     Cells[index].Glyph = text[charIndex];
                     Cells[index].Background = background;
@@ -591,9 +591,9 @@ namespace SadConsole.Surfaces
 
             if (!UsePrintProcessor)
             {
-                int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
                 int charIndex = 0;
-                for (; index < total; index++)
+                for (; index < end; index++)
                 {
                     Cells[index].Glyph = text[charIndex];
 
@@ -640,10 +640,10 @@ namespace SadConsole.Surfaces
 
             if (!IsValidCell(x, y, out int index)) return;
 
-            int total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+            int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
             int charIndex = 0;
 
-            for (; index < total; index++)
+            for (; index < end; index++)
             {
                 Cell cell = Cells[index];
                 appearance.CopyAppearanceTo(cell);
@@ -690,10 +690,10 @@ namespace SadConsole.Surfaces
 
         private void PrintNoCheck(int index, ColoredString text)
         {
-            int total = index + text.Count > Cells.Length ? Cells.Length : index + text.Count;
+            int end = index + text.Count > Cells.Length ? Cells.Length : index + text.Count;
             int charIndex = 0;
 
-            for (; index < total; index++)
+            for (; index < end; index++)
             {
                 if (!text.IgnoreGlyph)
                     Cells[index].Glyph = text[charIndex].GlyphCharacter;
@@ -1140,13 +1140,14 @@ namespace SadConsole.Surfaces
             IsDirty = true;
         }
         /// <summary>
-        /// Clears a segment of cells, starting from the left and extending to the right. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
+        /// Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="x">The x position of the left end of the segment</param>
         /// <param name="y">The y position of the segment</param>
         /// <param name="length">The length of the segment</param>
-        public void Clear(int x, int y, int length) {
-            Clear(new Rectangle(x, y, length, 1));
+        public void Clear(int x, int y, int length) 
+        {
+            Fill(x, y, length, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
         }
         /// <summary>
         /// Clears an area of cells. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
@@ -1164,16 +1165,17 @@ namespace SadConsole.Surfaces
         /// <param name="background">Foregorund of every cell. If null, skips.</param>
         /// <param name="glyph">Glyph of every cell. If null, skips.</param>
         /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
         public Cell[] Fill(Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
         {
             for (int i = 0; i < Cells.Length; i++)
             {
-                if (glyph.HasValue)
-                    Cells[i].Glyph = glyph.Value;
                 if (background.HasValue)
                     Cells[i].Background = background.Value;
                 if (foreground.HasValue)
                     Cells[i].Foreground = foreground.Value;
+                if (glyph.HasValue)
+                    Cells[i].Glyph = glyph.Value;
                 if (mirror.HasValue)
                     Cells[i].Mirror = mirror.Value;
 
@@ -1185,6 +1187,46 @@ namespace SadConsole.Surfaces
         }
 
         /// <summary>
+        /// Fills a segment of cells, starting from the left, extending to the right, and wrapping if needed. Clears cell decorators.
+        /// </summary>
+        /// <param name="length">Length of the segment to fill.</param>
+        /// <param name="foreground">Foregorund of every cell. If null, skips.</param>
+        /// <param name="background">Foregorund of every cell. If null, skips.</param>
+        /// <param name="glyph">Glyph of every cell. If null, skips.</param>
+        /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        /// <returns>An array containing the affected cells, starting from the top left corner</returns>
+        public Cell[] Fill(int x, int y, int length, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null) {
+
+
+            if (!IsValidCell(x, y, out int index)) return new Cell[0];
+
+            int end = index + length > Cells.Length ? Cells.Length - index : index + length;
+            int total = end - index;
+            Cell[] result = new Cell[total];
+            int resultIndex = 0;
+            for (; index < end; index++) {
+                Cell c = Cells[index];
+                if (background.HasValue)
+                    c.Background = background.Value;
+                if (foreground.HasValue)
+                    c.Foreground = foreground.Value;
+                if (glyph.HasValue)
+                    c.Glyph = glyph.Value;
+                if (mirror.HasValue)
+                    c.Mirror = mirror.Value;
+
+                SetDecorator(index, 1, null);
+
+                result[resultIndex] = c;
+                resultIndex++;
+            }
+
+
+            IsDirty = true;
+            return result;
+        }
+
+        /// <summary>
         /// Fills the specified area. Clears cell decorators.
         /// </summary>
         /// <param name="area">The area to fill.</param>
@@ -1192,14 +1234,15 @@ namespace SadConsole.Surfaces
         /// <param name="background">Foregorund of every cell. If null, skips.</param>
         /// <param name="glyph">Glyph of every cell. If null, skips.</param>
         /// <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+        /// <returns>An array containing the affected cells, starting from the top left corner</returns>
         public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
         {
             area = Rectangle.Intersect(area, new Rectangle(0, 0, Width, Height));
 
             if (area == Rectangle.Empty) return new Cell[0];
             
-            var cells = new Cell[area.Width * area.Height];
-            int cellIndex = 0;
+            var result = new Cell[area.Width * area.Height];
+            int resultIndex = 0;
 
             for (int x = area.Left; x < area.Left + area.Width; x++)
             {
@@ -1207,24 +1250,24 @@ namespace SadConsole.Surfaces
                 {
                     Cell cell = Cells[y * Width + x];
 
-                    if (glyph.HasValue)
-                        cell.Glyph = glyph.Value;
                     if (background.HasValue)
                         cell.Background = background.Value;
                     if (foreground.HasValue)
                         cell.Foreground = foreground.Value;
+                    if (glyph.HasValue)
+                        cell.Glyph = glyph.Value;
                     if (mirror.HasValue)
                         cell.Mirror = mirror.Value;
 
-                    SetDecorator(cellIndex, 1, null);
+                    SetDecorator(resultIndex, 1, null);
 
-                    cells[cellIndex] = cell;
-                    cellIndex++;
+                    result[resultIndex] = cell;
+                    resultIndex++;
                 }
             }
 
             IsDirty = true;
-            return cells;
+            return result;
         }
 
         /// <summary>
@@ -1238,7 +1281,7 @@ namespace SadConsole.Surfaces
         /// <returns>A list of cells the line touched; ordered from first to last.</returns>
         public IEnumerable<Cell> DrawLine(Point start, Point end, Color? foreground = null, Color? background = null, int? glyph = null)
         {
-            List<Cell> cells = new List<Cell>();
+            List<Cell> result = new List<Cell>();
             Func<int, int, bool> processor;
 
             if (foreground.HasValue || background.HasValue || glyph.HasValue)
@@ -1247,7 +1290,7 @@ namespace SadConsole.Surfaces
                     if (IsValidCell(x, y, out int index))
                     {
                         var cell = Cells[index];
-                        cells.Add(cell);
+                        result.Add(cell);
 
                         if (foreground.HasValue)
                         {
@@ -1276,7 +1319,7 @@ namespace SadConsole.Surfaces
                 {
                     if (IsValidCell(x, y, out int index))
                     {
-                        cells.Add(Cells[index]);
+                        result.Add(Cells[index]);
                         return true;
                     }
 
@@ -1286,7 +1329,7 @@ namespace SadConsole.Surfaces
 
             Algorithms.Line(start.X, start.Y, end.X, end.Y, processor);
 
-            return cells;
+            return result;
         }
 
         /// <summary>
