@@ -145,6 +145,7 @@ namespace SadConsole
         {
             IsVisible = false;
             CanDrag = true;
+            MoveToFrontOnMouseClick = true;
         }
 
         /// <summary>

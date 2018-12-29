@@ -78,7 +78,7 @@ namespace SadConsole.Themes
                     textbox.IsCaretVisible = true;
                 }
 
-                else if (_oldCaretPosition != textbox.CaretPosition || _oldState != textbox.State)
+                else if (_oldCaretPosition != textbox.CaretPosition || _oldState != textbox.State || _editingText != textbox.EditingText)
                 {
                     textbox.Surface.Effects.RemoveAll();
                     textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
@@ -86,8 +86,9 @@ namespace SadConsole.Themes
                     textbox.Surface.SetEffect(textbox.Surface[textbox.CaretPosition - textbox.LeftDrawOffset, 0], CaretEffect);
                     _oldCaretPosition = textbox.CaretPosition;
                     _oldState = textbox.State;
+                    _editingText = textbox.EditingText;
                 }
-            }
+			}
             else
             {
                 textbox.Surface.Effects.RemoveAll();

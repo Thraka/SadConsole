@@ -239,11 +239,7 @@ namespace SadConsole.Controls
 
                 if (EditingText.Length == MaxLength)
                     _caretPos = EditingText.Length - 1;
-                else
-                    _caretPos = EditingText.Length;
             }
-            else
-                _caretPos = EditingText.Length;
 
 			// Test to see if caret is off edge of box
 			if (_caretPos >= Width)
@@ -339,7 +335,7 @@ namespace SadConsole.Controls
 									_caretPos = newText.Length;
 							}
 
-							else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
+							else if ((info.KeysPressed[i].Key == Keys.Decimal || info.KeysPressed[i].Key == Keys.Delete) && _caretPos != newText.Length)
 							{
 								newText.Remove(_caretPos, 1);
 
@@ -407,12 +403,9 @@ namespace SadConsole.Controls
 						}
 
 					}
+	                EditingText = newText.ToString();
 
-                    string newString = newText.ToString();
-                    if (newString != EditingText)
-                        EditingText = newString;
-
-                    ValidateEdit();
+					ValidateEdit();
                 }
 
                 return true;

@@ -13,6 +13,17 @@
 - LayeredSurface is now LayeredConsole and has a new subtype, CellSurfaceLayer.
 - Mouse input works on all objects that inherit from Console, which is everything besodes CellSurface.
 
+## 12/29/2018 V7.3.0
+
+- Windows now default MoveToFrontOnMouseClick = true.
+- Consoles are brought forward and focused via LeftMouseDown instead of LeftMouseClick. (Thanks VGA256) #188
+- You can set ListBox.SelectedItem = null now (Thanks darrellp) #183
+- TextBox supports moving the cursor and inserting characters now (Thanks darrellp) #145
+- Window could steal the mouse focus while dragging some other control across the title bar (Thanks VGA256) #165
+- ColoredString.Parse now uses CultureInvariant (Thanks GPugnet) #173
+- SadConsole.Standard was missing the non extended font embedded resource.
+- Various helper methods in ColoredGlyph, ColoredString, and SurfaceBase added (Thanks INeedAUniqueUsername) #187
+
 ## 11/19/2018 V7.2.0
 
 - ControlsConsole.Controls collection now uses a foreach loop to make sure the collection is not modified when processing the mouse.
