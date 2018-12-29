@@ -125,9 +125,37 @@ namespace SadConsole
         /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.
         /// </summary>
         /// <param name="glyphs">The glyphs to combine.</param>
-        public ColoredString(ColoredGlyph[] glyphs)
+        public ColoredString(params ColoredGlyph[] glyphs)
         {
             _characters = new List<ColoredGlyph>(glyphs);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="ColoredString"/> object by cloning this instance.
+        /// </summary>
+        /// <returns>A new <see cref="ColoredString"/> object.</returns>
+        public ColoredString Clone()
+        {
+            ColoredString returnObject = new ColoredString(_characters.Length) {
+                IgnoreBackground = IgnoreBackground,
+                IgnoreForeground = IgnoreForeground,
+                IgnoreGlyph = IgnoreGlyph,
+                IgnoreEffect = IgnoreEffect
+            };
+
+            for (int i = 0; i < _characters.Length; i++) {
+                returnObject._characters[i] = _characters[i].Clone();
+            }
+            return returnObject;
+        }
+        /// <summary>
+        /// Returns a new <see cref="ColoredString"/> object using a substring of this instance from the index to the end.
+        /// </summary>
+        /// <param name="index">The index to copy the contents from.</param>
+        /// <returns>A new <see cref="ColoredString"/> object.</returns>
+        public ColoredString SubString(int index)
+        {
+            return SubString(index, _characters.Length - index);
         }
 
         /// <summary>
