@@ -1,4 +1,4 @@
-﻿## 12/28/2018 V7.3.0
+﻿## 12/29/2018 V7.3.0
 
 - Windows now default MoveToFrontOnMouseClick = true.
 - Consoles are brought forward and focused via LeftMouseDown instead of LeftMouseClick. (Thanks VGA256) #188
@@ -7,6 +7,7 @@
 - Window could steal the mouse focus while dragging some other control across the title bar (Thanks VGA256) #165
 - ColoredString.Parse now uses CultureInvariant (Thanks GPugnet) #173
 - SadConsole.Standard was missing the non extended font embedded resource.
+- Various helper methods in ColoredGlyph, ColoredString, and SurfaceBase added (Thanks INeedAUniqueUsername) #187
 
 ## 11/19/2018 V7.2.0
 
