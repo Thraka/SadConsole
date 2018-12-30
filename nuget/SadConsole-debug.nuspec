@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>7.0.0-pre1</version>
+    <version>8.0.0-pre2</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -12,25 +12,20 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A MonoGame library that emulates old-school console and command prompt style graphics.</description>
     <releaseNotes>[BREAKING CHANGES]
-- New SurfaceBase class which all Surface's inherit from.
-- SurfaceBase has an IRenderer on it directly now.
-- SurfaceEditor has been removed and is now implemented on SurfaceBase directly.
-- Console no longer combines Renderer and TextSurface for drawing.
-- Draw(SpriteBatch batch, Point position, Point size, Font font) has been removed.
-- Cell/CellState have a Decorators list which are used to add extra glyph draws to individual cells.
-- CellDecorator class added that has a color, glyph, and mirror setting.
-- SadConsole.Serialization uses Newtonsoft.Json instead of the default .NET classes.
-- SadConsole.Serialization supports GZIP compression now.
-- Settings.SerializationIsCompressed can be set to true to set all internal save/load to use compression.
-- Control themes completely rewritten. Themes control all drawing for a control now.
-- Windows/ControlsConsole use a theme for drawing.
-- InputBox renamed TextBox.
-- Removed GameHelpers namespace. Types moved to root namespace.
-- GameObject renamed to Entity.
-- Surface.RenderArea changed to Surface.ViewPort
-- Readded Zone and HotSpot types.
-- Removed random level generation.
-- Added Entities.EntityManager which helps control entity visibility and offsets based on a parent console. Also handles zones/hotspots.
+- Overhaul of the theme system.
+- Overhaul of the SurfaceBase/ScreenObject/Console system.
+- Changed Listbox.Slider to Listbox.Scrollbar. Also changed any property that used the word Slider to ScrollBar
+- Window messagebox and prompts have a library parameter to theme. If not specified, uses the default theme.
+- [Fixed #165] Window stealing mouse focus from scrollbar (thanks VGA256)
+- [Fixed #164] Controls should be aware of what theme is being used 
+- Upgraded to MonoGame 3.7
+- Renamed base types and removed some others
+- SurfaceBase is now CellSurface and not abstract
+- ScreenObject is now Console and inherits from SurfaceBase
+- Console is now ScrollingConsole.
+- AnimatedSurface is now AnimatedConsole.
+- LayeredSurface is now LayeredConsole and has a new subtype, CellSurfaceLayer.
+- Mouse input works on all objects that inherit from Console, which is everything besodes CellSurface.
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

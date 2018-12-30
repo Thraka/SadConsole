@@ -1,5 +1,6 @@
 ﻿## XX/XX/XXXX V8.0
 - Overhaul of the theme system.
+- Overhaul of the SurfaceBase/ScreenObject/Console system.
 - Changed Listbox.Slider to Listbox.Scrollbar. Also changed any property that used the word Slider to ScrollBar
 - Window messagebox and prompts have a library parameter to theme. If not specified, uses the default theme.
 - [Fixed #165] Window stealing mouse focus from scrollbar (thanks VGA256)

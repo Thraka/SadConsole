@@ -142,10 +142,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.7</Version>
+      <Version>6.1.9</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Framework.WindowsUniversal">
-      <Version>3.6.0.1625</Version>
+      <Version>3.7.1.189</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
