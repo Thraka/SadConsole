@@ -12,5 +12,11 @@ namespace Microsoft.Xna.Framework
         {
             return new Vector2(point.X, point.Y);
         }
+
+        public static void Deconstruct(this Point source, out int X, out int Y)
+        {
+            X = source.X;
+            Y = source.Y;
+        }
     }
 }

@@ -43,7 +43,11 @@ namespace SadConsole.Renderers
             //if (control.Surface.Tint.A == 255) return;
 
             if (control.Surface.DefaultBackground.A != 0)
-                Global.SpriteBatch.Draw(control.Parent.Font.FontImage, new Rectangle(control.Position.ConsoleLocationToPixel(control.Parent.Font), new Point(control.Width, control.Height) * control.Parent.Font.Size), control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+            {
+                var (x, y) = control.Position.ConsoleLocationToPixel(control.Parent.Font);
+                var (width, height) = new Point(control.Width, control.Height) * control.Parent.Font.Size;
+                Global.SpriteBatch.Draw(control.Parent.Font.FontImage, new Rectangle(x, y, width, height), control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+            }
 
             for (var i = 0; i < control.Surface.Cells.Length; i++)
             {

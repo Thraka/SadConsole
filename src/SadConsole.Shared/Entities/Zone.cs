@@ -89,8 +89,11 @@ namespace SadConsole.Entities
             {
                 if (Parent is IConsoleViewPort parent)
                 {
+                    var (x, y) = Font.GetWorldPosition(Area.Location);
+                    var (width, height) = new Point(Area.Width, Area.Height) * Font.Size;
+
                     _drawCallScreenObject.Position = (Area.Location - parent.ViewPort.Location + Parent.CalculatedPosition).ToVector2();
-                    _drawCallZone.Rectangle = new Rectangle(Font.GetWorldPosition(Area.Location), Area.Size * Font.Size);
+                    _drawCallZone.Rectangle = new Rectangle(x, y, width, height);
 
                     if (parent.ViewPort.Intersects(Area))
                     {
@@ -116,8 +119,11 @@ namespace SadConsole.Entities
                 }
                 else
                 {
+                    var (x, y) = Font.GetWorldPosition(Area.Location);
+                    var (width, height) = new Point(Area.Width, Area.Height) * Font.Size;
+
                     _drawCallScreenObject.Position = (Area.Location + Parent.CalculatedPosition).ToVector2();
-                    _drawCallZone.Rectangle = new Rectangle(Font.GetWorldPosition(Area.Location), Area.Size * Font.Size);
+                    _drawCallZone.Rectangle = new Rectangle(x, y, width, height);
 
                     Global.DrawCalls.Add(_drawCallZone);
                     Global.DrawCalls.Add(_drawCallScreenObject);
