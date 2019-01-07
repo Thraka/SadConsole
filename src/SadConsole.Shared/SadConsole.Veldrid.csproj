@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Graphics.MonoGame\**" />
+    <EmbeddedResource Remove="Graphics.MonoGame\**" />
+    <None Remove="Graphics.MonoGame\**" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0BEDCA0C-4292-40C6-A1E6-B9E2C4E9020E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DemoProject.FNA</RootNamespace>
+    <AssemblyName>DemoProject.FNA</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FNA">
+      <HintPath>..\..\FNA\library\Release\FNA.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConsoleMetadata.cs" />
+    <Compile Include="Container.cs" />
+    <Compile Include="CustomConsoles\AnsiConsole.cs" />
+    <Compile Include="CustomConsoles\ControlsTest.cs" />
+    <Compile Include="CustomConsoles\DOSConsole.cs" />
+    <Compile Include="CustomConsoles\EntityConsole.cs" />
+    <Compile Include="CustomConsoles\MouseRenderingDebug.cs" />
+    <Compile Include="CustomConsoles\RandomScrollingConsole.cs" />
+    <Compile Include="CustomConsoles\SceneProjectionConsole.cs" />
+    <Compile Include="CustomConsoles\ScrollableConsole.cs" />
+    <Compile Include="CustomConsoles\SerializationTests.cs" />
+    <Compile Include="CustomConsoles\ShapesConsole.cs" />
+    <Compile Include="CustomConsoles\SplashScreen.cs" />
+    <Compile Include="CustomConsoles\StretchedConsole.cs" />
+    <Compile Include="CustomConsoles\StringParsingConsole.cs" />
+    <Compile Include="CustomConsoles\SubConsoleCursor.cs" />
+    <Compile Include="CustomConsoles\TextCursorConsole.cs" />
+    <Compile Include="CustomConsoles\ViewsAndSubViews.cs" />
+    <Compile Include="HeaderConsole.cs" />
+    <Compile Include="InputHandling\ClassicConsoleKeyboardHandler.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Theme.cs" />
+    <Compile Include="Windows\CharacterViewer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ansi\files.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Ansi\QS-SIERR.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Ansi\ROY-BTC1.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Ansi\ROY-CCU3.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Ansi\ROY-DGZN.ANS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App.config" />
+    <None Include="Fonts\Cheepicus12.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Fonts\IBM.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Fonts\IBM_ext.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Cheepicus_12x12.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\IBM8x16.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\IBM8x16_NoPadding_extended.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="sad.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SadConsole.Shared\SadConsole.FNA.csproj">
+      <Project>{364c730b-b238-4ed2-a3e3-427a8a5d5f07}</Project>
+      <Name>SadConsole.FNA</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

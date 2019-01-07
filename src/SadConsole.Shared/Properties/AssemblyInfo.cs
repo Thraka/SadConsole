@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SadConsole for FNA")]
-[assembly: AssemblyDescription("An FNA library that emulates old-school console and command prompt style graphics.")]
+[assembly: AssemblyTitle("SadConsole")]
+[assembly: AssemblyDescription("A library that emulates old-school console and command prompt style graphics.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SadLogic")]
 [assembly: AssemblyProduct("SadConsole")]

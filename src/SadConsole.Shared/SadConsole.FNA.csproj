@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{364C730B-B238-4ED2-A3E3-427A8A5D5F07}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SadConsole</RootNamespace>
+    <AssemblyName>SadConsole.FNA</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\FNA\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\FNA\SadConsole.FNA.xml</DocumentationFile>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\FNA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\FNA\SadConsole.FNA.xml</DocumentationFile>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FNA, Version=17.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\FNA\library\Release\FNA.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algorithms.cs" />
+    <Compile Include="AnimatedConsole.cs" />
+    <Compile Include="Ansi\AnsiWriter.cs" />
+    <Compile Include="Ansi\Document.cs" />
+    <Compile Include="Ansi\Helpers.cs" />
+    <Compile Include="Ansi\State.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="CellDecorator.cs" />
+    <Compile Include="CellState.cs" />
+    <Compile Include="CellSurface.cs" />
+    <Compile Include="CellSurface.Editor.cs" />
+    <Compile Include="CellSurface.Editor.Static.cs" />
+    <Compile Include="ColoredGlyph.cs" />
+    <Compile Include="ColoredString.Commands.cs" />
+    <Compile Include="ColoredString.cs" />
+    <Compile Include="Console.cs" />
+    <Compile Include="Console.Input.cs" />
+    <Compile Include="Console.Surface.cs" />
+    <Compile Include="ConsoleCollection.cs" />
+    <Compile Include="ConsoleStack.cs" />
+    <Compile Include="ContainerConsole.cs" />
+    <Compile Include="ControlsConsole.cs" />
+    <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\CheckBox.cs" />
+    <Compile Include="Controls\ControlBase.cs" />
+    <Compile Include="Controls\ControlState.cs" />
+    <Compile Include="Controls\DrawingSurface.cs" />
+    <Compile Include="Controls\ListBox.cs" />
+    <Compile Include="Controls\ProgressBar.cs" />
+    <Compile Include="Controls\RadioButton.cs" />
+    <Compile Include="Controls\ScrollBar.cs" />
+    <Compile Include="Controls\SelectionButton.cs" />
+    <Compile Include="Controls\TextBox.cs" />
+    <Compile Include="Cursor.cs" />
+    <Compile Include="Debug\CurrentScreen.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="DoubleAnimation.cs" />
+    <Compile Include="DrawCalls\DrawCallColoredRect.cs" />
+    <Compile Include="DrawCalls\DrawCallCustom.cs" />
+    <Compile Include="DrawCalls\DrawCallScreenObject.cs" />
+    <Compile Include="DrawCalls\DrawCallTexture.cs" />
+    <Compile Include="DrawCalls\IDrawCall.cs" />
+    <Compile Include="EasingFunctions\Bounce.cs" />
+    <Compile Include="EasingFunctions\Circle.cs" />
+    <Compile Include="EasingFunctions\EasingBase.cs" />
+    <Compile Include="EasingFunctions\Expo.cs" />
+    <Compile Include="EasingFunctions\Linear.cs" />
+    <Compile Include="EasingFunctions\Quad.cs" />
+    <Compile Include="EasingFunctions\Sine.cs" />
+    <Compile Include="Effects\Blink.cs" />
+    <Compile Include="Effects\BlinkCharacter.cs" />
+    <Compile Include="Effects\CellEffectBase.cs" />
+    <Compile Include="Effects\CodeEffect.cs" />
+    <Compile Include="Effects\Delay.cs" />
+    <Compile Include="Effects\EffectsChain.cs" />
+    <Compile Include="Effects\EffectsManager.cs" />
+    <Compile Include="Effects\Fade.cs" />
+    <Compile Include="Effects\ICellEffect.cs" />
+    <Compile Include="Effects\Recolor.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\EntityManager.cs" />
+    <Compile Include="Entities\Hotspot.cs" />
+    <Compile Include="Entities\Zone.cs" />
+    <Compile Include="Extensions\CellExtensions.cs" />
+    <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\ColorGradient.cs" />
+    <Compile Include="Extensions\ConsoleExtensions.cs" />
+    <Compile Include="Extensions\IListExtensions.cs" />
+    <Compile Include="Extensions\PointExtensions.cs" />
+    <Compile Include="Extensions\RectangleExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TextureExtensions.cs" />
+    <Compile Include="Extensions\XamlExtensions.cs" />
+    <Compile Include="FNA\FnaExtensions.cs" />
+    <Compile Include="Font.cs" />
+    <Compile Include="FontMaster.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Graphics.MonoGame\ClearScreenGameComponent.cs" />
+    <Compile Include="Graphics.MonoGame\FPSCounterComponent.cs" />
+    <Compile Include="Graphics.MonoGame\Game.cs" />
+    <Compile Include="Graphics.MonoGame\SadConsoleGameComponent.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="IConsoleViewPort.cs" />
+    <Compile Include="Input\AsciiKey.cs" />
+    <Compile Include="Input\ConsoleViewInputHandler.cs" />
+    <Compile Include="Input\Keyboard.cs" />
+    <Compile Include="Input\Mouse.cs" />
+    <Compile Include="Input\MouseConsoleState.cs" />
+    <Compile Include="Input\MouseEventArgs.cs" />
+    <Compile Include="Instructions\CodeInstruction.cs" />
+    <Compile Include="Instructions\ConcurrentInstruction.cs" />
+    <Compile Include="Instructions\DoubleInstruction.cs" />
+    <Compile Include="Instructions\DrawString.cs" />
+    <Compile Include="Instructions\FadeTextSurfaceTint.cs" />
+    <Compile Include="Instructions\InstructionBase.cs" />
+    <Compile Include="Instructions\InstructionSet.cs" />
+    <Compile Include="Instructions\Wait.cs" />
+    <Compile Include="LayeredConsole.cs" />
+    <Compile Include="MathHelper.cs" />
+    <Compile Include="Palette.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Readers\REXPaint.Image.Cell.cs" />
+    <Compile Include="Readers\REXPaint.Image.Color.cs" />
+    <Compile Include="Readers\REXPaint.Image.cs" />
+    <Compile Include="Readers\REXPaint.Image.Layer.cs" />
+    <Compile Include="Readers\TextureToSurfaceReader.cs" />
+    <Compile Include="Renderers\Console.cs" />
+    <Compile Include="Renderers\ControlsConsole.cs" />
+    <Compile Include="Renderers\IRenderer.cs" />
+    <Compile Include="Renderers\LayeredConsole.cs" />
+    <Compile Include="ScrollingConsole.cs" />
+    <Compile Include="SerializedTypes\AnimatedConsole.cs" />
+    <Compile Include="SerializedTypes\Cell.cs" />
+    <Compile Include="SerializedTypes\CellSurface.cs" />
+    <Compile Include="SerializedTypes\CellSurfaceLayer.cs" />
+    <Compile Include="SerializedTypes\Color.cs" />
+    <Compile Include="SerializedTypes\Console.cs" />
+    <Compile Include="SerializedTypes\Entity.cs" />
+    <Compile Include="SerializedTypes\Font.cs" />
+    <Compile Include="SerializedTypes\LayeredConsole.cs" />
+    <Compile Include="SerializedTypes\Point.cs" />
+    <Compile Include="SerializedTypes\Rectangle.cs" />
+    <Compile Include="SerializedTypes\ScrollingConsole.cs" />
+    <Compile Include="Serializer.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="StringParser\ParseCommandBase.cs" />
+    <Compile Include="StringParser\ParseCommandBlink.cs" />
+    <Compile Include="StringParser\ParseCommandGlyph.cs" />
+    <Compile Include="StringParser\ParseCommandGradient.cs" />
+    <Compile Include="StringParser\ParseCommandMirror.cs" />
+    <Compile Include="StringParser\ParseCommandRecolor.cs" />
+    <Compile Include="StringParser\ParseCommandStacks.cs" />
+    <Compile Include="StringParser\ParseCommandUndo.cs" />
+    <Compile Include="Themes\ButtonTheme.cs" />
+    <Compile Include="Themes\CheckBoxTheme.cs" />
+    <Compile Include="Themes\Colors.cs" />
+    <Compile Include="Themes\ControlsConsoleTheme.cs" />
+    <Compile Include="Themes\DrawingSurfaceTheme.cs" />
+    <Compile Include="Themes\Library.cs" />
+    <Compile Include="Themes\ListBoxTheme.cs" />
+    <Compile Include="Themes\ProgressBarTheme.cs" />
+    <Compile Include="Themes\RadioButtonTheme.cs" />
+    <Compile Include="Themes\ScrollBarTheme.cs" />
+    <Compile Include="Themes\TextBoxTheme.cs" />
+    <Compile Include="Themes\ThemePartBase.cs" />
+    <Compile Include="Themes\WindowTheme.cs" />
+    <Compile Include="Timer.cs" />
+    <Compile Include="WindowConsole.cs" />
+    <Compile Include="WindowConsole.Static.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\IBM.font" />
+    <EmbeddedResource Include="Resources\IBM_ext.font" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\IBM8x16.png" />
+    <EmbeddedResource Include="Resources\IBM8x16_NoPadding_extended.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
