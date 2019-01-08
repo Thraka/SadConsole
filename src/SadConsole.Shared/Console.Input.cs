@@ -144,9 +144,10 @@ namespace SadConsole
         /// <returns>True when the mouse is over this console and processing should stop.</returns>
         public bool ProcessMouseNonHandler(MouseConsoleState state)
         {
-            var handlerResult = MouseHandler?.Invoke(this, state) ?? false;
+            if (MouseHandler != null)
+                return MouseHandler.Invoke(this, state);
 
-            if (handlerResult || !IsVisible || !UseMouse) return false;
+            if (!IsVisible || !UseMouse) return false;
 
             if (state.IsOnConsole)
             {
@@ -183,14 +184,12 @@ namespace SadConsole
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
         public virtual bool ProcessKeyboard(Keyboard info)
         {
-            if (KeyboardHandler?.Invoke(this, info) ?? true)
-            {
-                if (!UseKeyboard) return false;
+            if (KeyboardHandler != null)
+                return KeyboardHandler.Invoke(this, info);
 
-                return Cursor.IsEnabled && Cursor.ProcessKeyboard(info);
-            }
+            if (!UseKeyboard) return false;
 
-            return false;
+            return !IsCursorDisabled && Cursor.IsEnabled && Cursor.ProcessKeyboard(info);
         }
 
 
