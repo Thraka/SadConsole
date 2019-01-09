@@ -30,7 +30,7 @@ namespace SadConsole
 
                 if (value)
                 {
-                    if (_renderer?.BeforeRenderTintCallback == null)
+                    if (_renderer != null && _renderer.BeforeRenderTintCallback == null)
                         _renderer.BeforeRenderTintCallback = OnBeforeRender;
                 }
             }

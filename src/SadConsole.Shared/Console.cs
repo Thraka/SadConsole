@@ -165,22 +165,33 @@ namespace SadConsole
                 }
             }
         }
-        
+
         /// <summary>
-        /// Creates a new text surface with the specified width and height. Uses <see cref="Global.FontDefault"/> as the font.
+        /// Creates a new console with the specified width and height. Uses <see cref="Global.FontDefault"/> as the font.
         /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
         public Console(int width, int height): this(width, height, Global.FontDefault)
         {
             
         }
 
         /// <summary>
-        /// Creates a new text surface with the specified width, height, and font.
+        /// Creates a new console with the specified width, height, and the cells backing the console. Uses <see cref="Global.FontDefault"/> as the font.
         /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
+        /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        public Console(int width, int height, Cell[] cells) : this(width, height, Global.FontDefault, cells)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new console with the specified width, height, and font.
+        /// </summary>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the conosle.</param>
         /// <param name="font">The font used with rendering.</param>
         public Console(int width, int height, Font font): this(width, height, font, null)
         {
@@ -188,10 +199,10 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new text surface with the specified width, height, and initial set of cell data.
+        /// Creates a new console with the specified width, height, and initial set of cell data.
         /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
         /// <param name="font">The font used with rendering.</param>
         /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
         public Console(int width, int height, Font font, Cell[] cells) : base(width, height, cells)

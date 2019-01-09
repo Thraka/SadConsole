@@ -1746,9 +1746,20 @@ namespace SadConsole
             OnCellsReset();
         }
 
+        /// <summary>
+        /// Changes the cells of the surface to the provided array.
+        /// </summary>
+        /// <param name="cells">The cells to replace in this surface.</param>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        public void SetSurface(in Cell[] cells, int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Cells = cells;
 
-
-
+            OnCellsReset();
+        }
 
 
 

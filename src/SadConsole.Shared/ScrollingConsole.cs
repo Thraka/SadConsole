@@ -51,21 +51,40 @@ namespace SadConsole
             }
         }
 
-
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a new scrolling console with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
         public ScrollingConsole(int width, int height) : this(width, height, Global.FontDefault, new Rectangle(0, 0, width, height), null)
         {
 
         }
-        
-        /// <inheritdoc />
+
+        /// <summary>
+        /// Creates a new scrolling console with the specified width, height, and font.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="font">The font used with rendering.</param>
         public ScrollingConsole(int width, int height, Font font) : this(width, height, font, new Rectangle(0, 0, width, height), null)
         {
 
         }
 
         /// <summary>
-        /// Creates a new text surface with the specified width and height.
+        /// Creates a new scrolling console with the specified width, height, and a view port.
+        /// </summary>
+        /// <param name="width">The width of the surface.</param>
+        /// <param name="height">The height of the surface.</param>
+        /// <param name="viewPort">Initial value for the viewport if this console will scroll.</param>
+        public ScrollingConsole(int width, int height, Rectangle viewPort) : this(width, height, Global.FontDefault, viewPort, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new scrolling console with the specified width, height, font, and a view port.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
@@ -77,7 +96,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new text surface with the specified width, height, and initial set of cell data.
+        /// Creates a new scrolling console with the specified width, height, and initial set of cell data.
         /// </summary>
         /// <param name="width">The width of the surface.</param>
         /// <param name="height">The height of the surface.</param>
