@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28413.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicTutorial", "BasicTutorial.csproj", "{958E874B-1643-472B-BF6E-38BE5291B7B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.GoRogue", "..\SadConsole.GoRogue\SadConsole.GoRogue.csproj", "{7B436AEC-B541-4197-900A-30E9C830EE7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.GoRogue", "..\SadConsole.GoRogue\SadConsole.GoRogue.csproj", "{7B436AEC-B541-4197-900A-30E9C830EE7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole", "..\SadConsole.Shared\SadConsole.csproj", "{16D13E86-03FB-4034-B5EC-5E000AAA4C83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7B436AEC-B541-4197-900A-30E9C830EE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B436AEC-B541-4197-900A-30E9C830EE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B436AEC-B541-4197-900A-30E9C830EE7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D13E86-03FB-4034-B5EC-5E000AAA4C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D13E86-03FB-4034-B5EC-5E000AAA4C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D13E86-03FB-4034-B5EC-5E000AAA4C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D13E86-03FB-4034-B5EC-5E000AAA4C83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
