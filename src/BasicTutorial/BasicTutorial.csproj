@@ -53,9 +53,6 @@
     <Reference Include="Priority Queue, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\OptimizedPriorityQueue.4.1.1\lib\net45\Priority Queue.dll</HintPath>
     </Reference>
-    <Reference Include="SadConsole, Version=7.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\SadConsole.7.2.0\lib\net\SadConsole.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="Troschuetz.Random, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
       <HintPath>packages\Troschuetz.Random.4.3.0\lib\net461\Troschuetz.Random.dll</HintPath>
@@ -71,6 +68,7 @@
     <Compile Include="Items\Inventory.cs" />
     <Compile Include="Items\InventorySpot.cs" />
     <Compile Include="Items\Item.cs" />
+    <Compile Include="MapConsole.cs" />
     <Compile Include="Maps\Generators\DoorGenerator.cs" />
     <Compile Include="MessageConsole.cs" />
     <Compile Include="Program.cs" />
@@ -81,6 +79,10 @@
     <ProjectReference Include="..\SadConsole.GoRogue\SadConsole.GoRogue.csproj">
       <Project>{7b436aec-b541-4197-900a-30e9c830ee7e}</Project>
       <Name>SadConsole.GoRogue</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SadConsole.Shared\SadConsole.csproj">
+      <Project>{16d13e86-03fb-4034-b5ec-5e000aaa4c83}</Project>
+      <Name>SadConsole</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

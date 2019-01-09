@@ -16,11 +16,28 @@ namespace SadConsole
 
         private Font _font;
         private Renderers.IRenderer _renderer;
+        private bool _isCursorDisabled;
 
         /// <summary>
         /// When <see langword="true"/>, indicates that the <see cref="Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
         /// </summary>
-        public bool IsCursorDisabled { get; protected set; }
+        /// <remarks>
+        /// This property should only be used to indicate that this object can never use the <see cref="Cursor"/>. To simply disable or enable the <see cref="Cursor"/>, use <see cref="Cursor.IsEnabled"/> and <see cref="Cursor.IsVisible"/>.
+        /// </remarks>
+        public bool IsCursorDisabled
+        {
+            get => _isCursorDisabled;
+            set
+            {
+                _isCursorDisabled = value;
+
+                if (value)
+                {
+                    if (_renderer != null && _renderer.BeforeRenderTintCallback == null)
+                        _renderer.BeforeRenderTintCallback = OnBeforeRender;
+                }
+            }
+        }
 
         /// <summary>
         /// The renderer used to draw this surface.

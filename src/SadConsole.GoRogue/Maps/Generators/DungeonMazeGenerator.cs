@@ -185,7 +185,7 @@ namespace SadConsole.Maps.Generators
         /// </summary>
         protected virtual void Generate()
         {
-            SadConsoleMap = new SadConsole.Maps.Map(MapWidth, MapHeight, new Rectangle(0, 0, ViewPortWidth, ViewPortHeight));
+            SadConsoleMap = new SadConsole.Maps.Map(MapWidth, MapHeight);
             GoRogueMap = new GoRogue.MapViews.ArrayMap<bool>(MapWidth, MapHeight);
 
             // Generate rooms
