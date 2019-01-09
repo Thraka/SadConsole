@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="1.6.2" />
+    <PackageReference Include="GoRogue" Version="1.8.0" />
   </ItemGroup>
 
   <ItemGroup>
