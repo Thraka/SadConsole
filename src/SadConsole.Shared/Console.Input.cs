@@ -1,8 +1,8 @@
-﻿using System;
-using SadConsole.Input;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using SadConsole.Input;
+    using System;
+
     public partial class Console
     {
         /// <summary>
@@ -192,7 +192,6 @@ namespace SadConsole
 
             return false;
         }
-
 
         /// <summary>
         /// How the console handles becoming focused and added to the <see cref="Global.FocusedConsoles"/> collection.

@@ -1,19 +1,20 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
+#endif
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-
 namespace SadConsole.Entities
 {
-    //TODO make sure hotspot works.
+    // TODO: make sure hotspot works.
 
     /// <summary>
     /// A group of positions with a set of settings.
     /// </summary>
     [DataContract]
-    public class Hotspot: Console
+    public class Hotspot : Console
     {
         private CellSurface _debugSurface;
         private CellSurface _parentSurface;

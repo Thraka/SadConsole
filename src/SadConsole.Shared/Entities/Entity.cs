@@ -1,11 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
-using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Linq;
-
-using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 
@@ -140,5 +137,4 @@ namespace SadConsole.Entities
         /// <returns>The entity.</returns>
         public static Entity Load(string file) => Serializer.Load<Entity>(file, Settings.SerializationIsCompressed);
     }
-
 }

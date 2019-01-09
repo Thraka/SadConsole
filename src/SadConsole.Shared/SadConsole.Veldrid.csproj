@@ -6,9 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FNA\**" />
     <Compile Remove="Graphics.MonoGame\**" />
+    <EmbeddedResource Remove="FNA\**" />
     <EmbeddedResource Remove="Graphics.MonoGame\**" />
+    <None Remove="FNA\**" />
     <None Remove="Graphics.MonoGame\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Veldrid" Version="4.5.0" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.5.0" />
+    <PackageReference Include="Veldrid.SPIRV" Version="1.0.5" />
   </ItemGroup>
 
 </Project>

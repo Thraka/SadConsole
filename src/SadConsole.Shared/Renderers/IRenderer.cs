@@ -1,5 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endif
+
 using System;
 
 namespace SadConsole.Renderers

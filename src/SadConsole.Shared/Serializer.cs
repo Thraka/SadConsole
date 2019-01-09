@@ -1,12 +1,11 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json.Serialization;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Text;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Common serialization tasks for SadConsole.

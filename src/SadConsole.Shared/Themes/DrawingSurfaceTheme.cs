@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SadConsole.Controls;
-
 
 namespace SadConsole.Themes
 {

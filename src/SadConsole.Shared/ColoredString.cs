@@ -1,14 +1,17 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Effects;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Collections;
-using SadConsole.StringParser;
-using System.Linq;
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Effects;
+    using SadConsole.StringParser;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Represents a string that has foreground and background colors for each character in the string.
     /// </summary>
@@ -120,7 +123,7 @@ namespace SadConsole
             stacks.AddSafe(new ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground });
             stacks.AddSafe(new ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
             stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror, CommandType = CommandTypes.Mirror });
-            _characters = ColoredString.Parse(value, initialBehaviors: stacks)._characters;
+            _characters = Parse(value, initialBehaviors: stacks)._characters;
         }
 
         /// <summary>
@@ -145,7 +148,8 @@ namespace SadConsole
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
         public ColoredString Clone()
         {
-            ColoredString returnObject = new ColoredString(_characters.Length) {
+            ColoredString returnObject = new ColoredString(_characters.Length)
+            {
                 IgnoreBackground = IgnoreBackground,
                 IgnoreForeground = IgnoreForeground,
                 IgnoreGlyph = IgnoreGlyph,
@@ -248,7 +252,6 @@ namespace SadConsole
         /// <returns>The enumerator in the string.</returns>
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
 
-
         /// <summary>
         /// Combines two ColoredString objects into a single ColoredString object. Ignore* values are only copied when both strings Ignore* values match.
         /// </summary>
@@ -272,6 +275,5 @@ namespace SadConsole
 
             return returnString;
         }
-        
     }
 }

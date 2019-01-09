@@ -1,25 +1,19 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-
-using SadConsole.Renderers;
-using SadConsole.Input;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Keyboard = SadConsole.Input.Keyboard;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using SadConsole.Input;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A <see cref="Console"/> that only processes children and does not render anything.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Container")]
     public class ContainerConsole : Console
     {
-        public ContainerConsole() : base()
+        public ContainerConsole() 
+            : base()
         {
+
         }
 
         public override void Draw(TimeSpan timeElapsed)
@@ -47,7 +41,7 @@ namespace SadConsole
             return false;
         }
 
-        public override bool ProcessKeyboard(Keyboard info)
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             return false;
         }

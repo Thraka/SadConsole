@@ -1,12 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-
-using System.Collections.Generic;
-using System;
-using System.Collections.ObjectModel;
-using Newtonsoft.Json;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
+    using System.Collections.Generic;
+    using System;
+    using System.Collections.ObjectModel;
+    using Newtonsoft.Json;
+
     // TODO serialization
     /// <summary>
     /// Animates a list of frames.
@@ -14,7 +16,7 @@ namespace SadConsole
     //[JsonConverter(typeof(AnimatedSurfaceConverterJson))]
     [System.Diagnostics.DebuggerDisplay("Animated Surface")]
     [JsonConverter(typeof(SerializedTypes.AnimatedConsoleConverterJson))]
-    public class AnimatedConsole: Console
+    public class AnimatedConsole : Console
     {
         private float _animatedTime;
         private AnimationState _state;
@@ -50,7 +52,6 @@ namespace SadConsole
         /// </summary>
         public ReadOnlyCollection<CellSurface> Frames => FramesList.AsReadOnly();
 
-        
         /// <summary>
         /// Center of the animation used in positioning.
         /// </summary>
@@ -289,7 +290,6 @@ namespace SadConsole
             }
         }
 
-
         /// <summary>
         /// Creates an animated surface that looks like static.
         /// </summary>
@@ -342,7 +342,6 @@ namespace SadConsole
         /// <param name="file">The source file.</param>
         /// <returns></returns>
         public static new AnimatedConsole Load(string file) => Serializer.Load<AnimatedConsole>(file, Settings.SerializationIsCompressed);
-
 
         /// <inheritdoc />
         /// <summary>
@@ -408,5 +407,4 @@ namespace SadConsole
             Deactivated
         }
     }
-    
 }

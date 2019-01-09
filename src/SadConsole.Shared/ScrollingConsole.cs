@@ -1,11 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
-using SadConsole.Effects;
-
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Effects;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// A <see cref="Console"/> that implements <see cref="IConsoleViewPort"/> to provide a scrolling capability.
     /// </summary>
@@ -50,7 +52,6 @@ namespace SadConsole
                 OnViewPortChanged();
             }
         }
-
 
         /// <inheritdoc />
         public ScrollingConsole(int width, int height) : this(width, height, Global.FontDefault, new Rectangle(0, 0, width, height), null)

@@ -2,14 +2,13 @@
 {
     using System;
     using System.Runtime.Serialization;
-
-
+    
     /// <summary>
     /// Base class for instructions that target and interact with an object.
     /// </summary>
     /// <typeparam name="TInstructedType">The type of object used with the instruction</typeparam>
     [DataContract]
-    public abstract class InstructionBase<TInstructedType>: InstructionBase
+    public abstract class InstructionBase<TInstructedType> : InstructionBase
     {
         /// <summary>
         /// The target object to be used when the <see cref="Run"/> method is called.

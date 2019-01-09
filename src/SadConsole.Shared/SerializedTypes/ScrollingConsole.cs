@@ -2,11 +2,9 @@
 using System.Runtime.Serialization;
 using System.Linq;
 using Newtonsoft.Json;
-using SadConsole;
 
 namespace SadConsole.SerializedTypes
 {
-#pragma warning disable 1591
     public class ScrollingConsoleJsonConverter: JsonConverter<ScrollingConsole>
     {
         public override void WriteJson(JsonWriter writer, ScrollingConsole value, JsonSerializer serializer)
@@ -20,7 +18,6 @@ namespace SadConsole.SerializedTypes
             return serializer.Deserialize<ScrollingConsoleSerialized>(reader);
         }
     }
-
 
     [DataContract]
     public class ScrollingConsoleSerialized: ConsoleSerialized
@@ -67,5 +64,4 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
-#pragma warning restore 1591
 }

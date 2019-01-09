@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SadConsole.Instructions
+﻿namespace SadConsole.Instructions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// 
     /// </summary>
@@ -18,10 +15,7 @@ namespace SadConsole.Instructions
             get => _instructions;
             set
             {
-                if (value == null)
-                    throw new NullReferenceException("Instructions cannot be set to null.");
-
-                _instructions = value;
+                _instructions = value ?? throw new NullReferenceException("Instructions cannot be set to null.");
             }
         }
 

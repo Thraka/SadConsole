@@ -1,16 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Linq;
 using Newtonsoft.Json;
 using SadConsole.Entities;
 
 namespace SadConsole.SerializedTypes
 {
-#pragma warning disable 1591
     public class EntityJsonConverter : JsonConverter<Entity>
     {
         public override void WriteJson(JsonWriter writer, Entity value, JsonSerializer serializer)
@@ -18,12 +14,12 @@ namespace SadConsole.SerializedTypes
             serializer.Serialize(writer, (EntitySerialized)value);
         }
 
-        public override Entity ReadJson(JsonReader reader, Type objectType, Entity existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Entity ReadJson(JsonReader reader, Type objectType, Entity existingValue, 
+                                        bool hasExistingValue, JsonSerializer serializer)
         {
             return serializer.Deserialize<EntitySerialized>(reader);
         }
     }
-
 
     /// <summary>
     /// Serialized instance of a <see cref="Entity"/>.
@@ -80,5 +76,4 @@ namespace SadConsole.SerializedTypes
             return entity;
         }
     }
-#pragma warning restore 1591
 }

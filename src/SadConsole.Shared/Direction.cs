@@ -1,10 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
     /// <summary>
     /// Direction related types and methods.
     /// </summary>

@@ -1,9 +1,8 @@
-﻿using System;
-
-// Moved from https://github.com/jongallant/WorldGeneratorFinal/blob/master/Assets/Scripts/MathHelper.cs
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    // Moved from https://github.com/jongallant/WorldGeneratorFinal/blob/master/Assets/Scripts/MathHelper.cs
+
+    using System;
 
     public static class MathHelper
     {

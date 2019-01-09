@@ -1,11 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
-using SadConsole.DrawCalls;
+#endif
 
 namespace SadConsole
 {
+    using Newtonsoft.Json;
+    using SadConsole.DrawCalls;
+    using System;
+
     /// <summary>
     /// A <see cref="CellSurface"/> that has a font and can be drawn to the screen.
     /// </summary>

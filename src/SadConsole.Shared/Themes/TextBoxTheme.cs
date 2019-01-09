@@ -1,11 +1,13 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿#if XNA
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Controls;
-
+#endif
 
 namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// A theme for the input box control.
     /// </summary>
@@ -20,7 +22,7 @@ namespace SadConsole.Themes
         /// The style to use for the carrot.
         /// </summary>
         [DataMember]
-        public SadConsole.Effects.ICellEffect CaretEffect;
+        public Effects.ICellEffect CaretEffect;
 
         /// <summary>
         /// Creates a new theme used by the <see cref="TextBox"/>.

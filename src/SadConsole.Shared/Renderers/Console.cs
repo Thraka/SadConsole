@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endif
 
 using System;
 using System.Runtime.Serialization;
@@ -39,7 +41,6 @@ namespace SadConsole.Renderers
             RenderTint(surface, force);
             RenderEnd(surface, force);
         }
-
 
         protected virtual void RenderBegin(SadConsole.Console surface, bool force = false)
         {

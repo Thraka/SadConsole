@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace SadConsole.SerializedTypes
 {
-#pragma warning disable 1591
     public class LayeredJsonConverter : JsonConverter<LayeredConsole>
     {
         public override void WriteJson(JsonWriter writer, LayeredConsole value, JsonSerializer serializer)
@@ -68,5 +63,4 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
-#pragma warning restore 1591
 }

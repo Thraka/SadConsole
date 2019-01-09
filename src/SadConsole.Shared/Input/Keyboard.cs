@@ -1,18 +1,21 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
-using System.Collections.Generic;
-using System.Linq;
+#endif
 
 namespace SadConsole.Input
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Represents the state of the keyboard.
     /// </summary>
     public class Keyboard
     {
         /// <summary>
-        /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. Uses the <see cref="RepeatDelay"/> and <see cref="InitialRepeatDelay"/> settings.
+        /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. 
+        /// Uses the <see cref="RepeatDelay"/> and <see cref="InitialRepeatDelay"/> settings.
         /// </summary>
         public List<AsciiKey> KeysPressed { get; internal set; }
 

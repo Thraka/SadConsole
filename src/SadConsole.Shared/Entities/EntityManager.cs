@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif 
+
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Text;
-using Microsoft.Xna.Framework;
-
 
 namespace SadConsole.Entities
 {
