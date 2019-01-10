@@ -194,10 +194,10 @@ namespace SadConsole.Maps.Generators
                                                                                                 Settings.RoomsSizeFontRatioX, Settings.RoomsSizeFontRatioY);
 
             // Generate maze
-            GoRogue.MapGeneration.Generators.MazeGenerator.Generate(GoRogueMap, Settings.MazeChangeDirectionImprovement, Settings.MazeSaveDeadEndChance);
-
+            GoRogue.MapGeneration.Generators.MazeGenerator.Generate(GoRogueMap, null, Settings.MazeChangeDirectionImprovement, Settings.MazeSaveDeadEndChance);
+            
             // Conenct rooms to maze
-            var connections = GoRogue.MapGeneration.Generators.RoomsGenerator.ConnectRooms(GoRogueMap, mapRooms, 
+            var connections = GoRogue.MapGeneration.Connectors.RoomDoorConnector.ConnectRooms(GoRogueMap, mapRooms, 
                                                                          Settings.RoomsConnectionsMinSides, Settings.RoomsConnectionsMaxSides, 
                                                                          Settings.RoomsConnectionsCancelSideSelectChance, 
                                                                          Settings.RoomsConnectionsCancelPlacementChance, Settings.RoomsConnectionsCancelPlacementChanceIncrease);

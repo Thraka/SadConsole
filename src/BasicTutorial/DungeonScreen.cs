@@ -48,14 +48,18 @@ namespace BasicTutorial
 
         public override void Update(TimeSpan timeElapsed)
         {
-            if (SadConsole.Global.FocusedConsoles.Console != null)
+            // If there is a console that is focused, this one doesn't need to do anything.
+            if (Global.FocusedConsoles.Console != null)
                 return;
 
+            // Can through the list of actions and pop out the finished ones
             while (ActionProcessor.Peek().IsFinished)
                 ActionProcessor.Pop();
 
+            // Run the latest action.
             ActionProcessor.Peek().Run(timeElapsed);
 
+            // If the action finished, pop it out.
             if (ActionProcessor.Peek().IsFinished)
                 ActionProcessor.Pop();
 

@@ -7,6 +7,7 @@ using GoRogue;
 using SadConsole.Maps;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Point = Microsoft.Xna.Framework.Point;
+using Microsoft.Xna.Framework;
 
 namespace SadConsole.GameObjects
 {
@@ -52,5 +53,7 @@ namespace SadConsole.GameObjects
                 item.IsVisible = _viewPortConsole.ViewPort.Contains(item.Position);
             }
         }
+        
     }
+
 }
