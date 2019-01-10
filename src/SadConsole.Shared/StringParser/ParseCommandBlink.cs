@@ -1,11 +1,8 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-
-namespace SadConsole.StringParser
+﻿namespace SadConsole.StringParser
 {
+    using System.Collections.Generic;
+    using System.Globalization;
+
     /// <summary>
     /// Blinks characters.
     /// </summary>
@@ -13,7 +10,8 @@ namespace SadConsole.StringParser
     {
         public int Counter;
         public double Speed = 0.35d;
-        CustomBlinkEffect BlinkEffect;
+
+        private CustomBlinkEffect BlinkEffect;
 
         public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, CellSurface surfaceEditor)
         {
@@ -33,7 +31,7 @@ namespace SadConsole.StringParser
                 var effects = surfaceEditor.Effects.GetEffects();
                 if (effects != null)
                 {
-                    var existingBlinks = new List<SadConsole.Effects.ICellEffect>(effects);
+                    var existingBlinks = new List<Effects.ICellEffect>(effects);
 
                     foreach (var item in existingBlinks)
                     {
@@ -69,7 +67,8 @@ namespace SadConsole.StringParser
             CommandType = CommandTypes.Effect;
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+            CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             glyphState.Effect = BlinkEffect;
 
@@ -82,7 +81,7 @@ namespace SadConsole.StringParser
             }
         }
 
-        private class CustomBlinkEffect : SadConsole.Effects.Blink
+        private class CustomBlinkEffect : Effects.Blink
         {
 
         }

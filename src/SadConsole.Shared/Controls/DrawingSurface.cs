@@ -1,13 +1,7 @@
-﻿
-
-namespace SadConsole.Controls
+﻿namespace SadConsole.Controls
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A simple surface for drawing text that can be moved and sized like a control.
@@ -31,7 +25,7 @@ namespace SadConsole.Controls
             //Surface.Update(time);
         }
 
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             base.TabStop = false;

@@ -1,14 +1,8 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-
-using System.Runtime.Serialization;
-using SadConsole.Controls;
-
-
-namespace SadConsole.Themes
+﻿namespace SadConsole.Themes
 {
+    using System.Runtime.Serialization;
+    using SadConsole.Controls;
+
     /// <summary>
     /// The library of themes. Holds the themes of all controls.
     /// </summary>
@@ -27,37 +21,37 @@ namespace SadConsole.Themes
         public Colors Colors { get; set; }
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.Button"/> control.
+        /// Theme for the <see cref="Button"/> control.
         /// </summary>
         [DataMember]
         public ButtonTheme ButtonTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.SelectionButton"/> control.
+        /// Theme for the <see cref="SelectionButton"/> control.
         /// </summary>
         [DataMember]
         public ButtonTheme SelectionButtonTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.ScrollBar"/> control.
+        /// Theme for the <see cref="ScrollBar"/> control.
         /// </summary>
         [DataMember]
         public ScrollBarTheme ScrollBarTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.RadioButton"/> control.
+        /// Theme for the <see cref="RadioButton"/> control.
         /// </summary>
         [DataMember]
         public RadioButtonTheme RadioButtonTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.ListBox"/> control.
+        /// Theme for the <see cref="ListBox"/> control.
         /// </summary>
         [DataMember]
         public ListBoxTheme ListBoxTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.CheckBox"/> control.
+        /// Theme for the <see cref="CheckBox"/> control.
         /// </summary>
         [DataMember]
         public CheckBoxTheme CheckBoxTheme;
@@ -69,7 +63,7 @@ namespace SadConsole.Themes
         public TextBoxTheme TextBoxTheme;
 
         /// <summary>
-        /// Theme for the <see cref="SadConsole.Controls.ProgressBar"/> control.
+        /// Theme for the <see cref="ProgressBar"/> control.
         /// </summary>
         [DataMember]
         public ProgressBarTheme ProgressBarTheme;
@@ -91,7 +85,6 @@ namespace SadConsole.Themes
         /// </summary>
         [DataMember]
         public WindowTheme WindowTheme;
-
         
         static Library()
         {
@@ -117,7 +110,6 @@ namespace SadConsole.Themes
             SelectionButtonTheme = new ButtonTheme();
             DrawingSurfaceTheme = new DrawingSurfaceTheme();
         }
-
 
         /// <summary>
         /// Creates a new instance of the theme library with default themes.
@@ -204,4 +196,3 @@ namespace SadConsole.Themes
         }
     }
 }
-

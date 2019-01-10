@@ -1,12 +1,13 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-
-using System.Runtime.Serialization;
-using SadConsole.Controls;
-
+#endif
 
 namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// The theme for a ListBox control.
     /// </summary>

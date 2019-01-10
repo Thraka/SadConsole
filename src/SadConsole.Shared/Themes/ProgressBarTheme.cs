@@ -1,10 +1,11 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-using SadConsole.Controls;
-
+#endif
 
 namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -40,7 +41,6 @@ namespace SadConsole.Themes
 
             base.Attached(control);
         }
-
 
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors)

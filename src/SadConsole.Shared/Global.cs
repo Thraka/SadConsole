@@ -1,11 +1,13 @@
-﻿using System;
+﻿#if XNA
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+#endif
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 using SadConsole.DrawCalls;
 
 namespace SadConsole
@@ -85,7 +87,7 @@ namespace SadConsole
         /// </summary>
         public static Input.Keyboard KeyboardState = new Input.Keyboard();
 
-        #region Rendering
+#region Rendering
         /// <summary>
         /// The render target of SadConsole. This is generally rendered to the screen as the final step of drawing.
         /// </summary>
@@ -125,7 +127,7 @@ namespace SadConsole
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
         public static List<IDrawCall> DrawCalls = new List<IDrawCall>(5);
-        #endregion
+#endregion
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.

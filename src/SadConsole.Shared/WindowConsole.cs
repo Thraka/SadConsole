@@ -1,8 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.Serialization;
+﻿#if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#endif
+
+using System;
+using System.Diagnostics;
+using System.Runtime.Serialization;
 using SadConsole.DrawCalls;
 using SadConsole.Input;
 using SadConsole.Themes;
@@ -56,7 +59,6 @@ namespace SadConsole
         /// When <see langword="true"/>, indicates that the window is being dragged; otherwise <see langword="false"/>.
         /// </summary>
         protected bool IsDragging;
-
 
         /// <summary>
         /// Gets or sets the alignment of the window title.

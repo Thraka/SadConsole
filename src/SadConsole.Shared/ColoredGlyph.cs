@@ -1,12 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using SadConsole.Effects;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Effects;
+    
     /// <summary>
     /// Represents a single character that has a foreground and background color.
     /// </summary>

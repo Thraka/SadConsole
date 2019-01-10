@@ -1,13 +1,12 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿#if XNA
+using Microsoft.Xna.Framework.Input;
+#endif
 
-using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
 
-
 namespace SadConsole.Controls
 {
-    
     /// <summary>
     /// Represents a button that can be toggled on/off within a group of other buttons.
     /// </summary>
@@ -142,7 +141,7 @@ namespace SadConsole.Controls
             return false;
         }
 
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             DetermineState();

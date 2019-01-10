@@ -1,12 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 using SadConsole.DrawCalls;
-
-using SadConsole;
 
 namespace SadConsole.Entities
 {
@@ -22,6 +21,7 @@ namespace SadConsole.Entities
         private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
         private DrawCallScreenObject _drawCallScreenObject;
         private DrawCallColoredRect _drawCallZone;
+
         /// <summary>
         /// The area the zone covers.
         /// </summary>

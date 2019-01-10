@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿#if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// The font stored by the engine. Used to generate the <see cref="Font"/> type used by the engine.
     /// </summary>
@@ -81,7 +84,6 @@ namespace SadConsole
         /// A cached array of rectangles of individual glyphs.
         /// </summary>
         public Rectangle[] GlyphIndexRects;
-
 
         /// <summary>
         /// Standard decorators used by your app.
@@ -172,7 +174,6 @@ namespace SadConsole
             public Cell CreateCell(Color foreground, Color background) => new Cell(foreground, background, Glyph, Mirror);
         }
 
-        #region Methods
         /// <summary>
         /// After the font has been loaded, (with the <see cref="FilePath"/>, <see cref="GlyphHeight"/>, and <see cref="GlyphWidth"/> fields filled out) this method will create the actual texture.
         /// </summary>
@@ -227,7 +228,6 @@ namespace SadConsole
             return font;
         }
 
-
         [OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {
@@ -236,6 +236,5 @@ namespace SadConsole
 
             Generate();
         }
-        #endregion
     }
 }

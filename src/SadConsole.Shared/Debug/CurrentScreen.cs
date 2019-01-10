@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#if XNA
 using Microsoft.Xna.Framework;
+#endif
+
 using SadConsole.Controls;
 using System.Reflection;
 using System.Linq;
@@ -10,25 +10,16 @@ namespace SadConsole.Debug
 {
     public static class CurrentScreen
     {
-        private class DebugWindow: Window
+        private class DebugWindow : Window
         {
-            public DebugWindow(): base (80, 23)
+            public DebugWindow() : base (80, 23)
             {
                 Title = "Global.CurrentScreen";
                 IsModalDefault = true;
                 CloseOnEscKey = true;
 
-                ListBox listbox = new ListBox(20, 15) {Position = new Point(2, 2)};
+                ListBox listbox = new ListBox(20, 15) { Position = new Point(2, 2) };
                 Add(listbox);
-
-
-
-
-
-
-
-
-
 
                 Console screenObject = Global.CurrentScreen;
 
@@ -59,7 +50,7 @@ namespace SadConsole.Debug
             window.Show();
         }
 
-        //private class DebugSurface: Console
+        //private class DebugSurface : Console
         //{
         //    public override void Draw(TimeSpan timeElapsed)
         //    {
@@ -71,6 +62,5 @@ namespace SadConsole.Debug
         //{
 
         //}
-
     }
 }

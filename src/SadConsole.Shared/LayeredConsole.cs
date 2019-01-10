@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using SadConsole.SerializedTypes;
+#endif
 
 namespace SadConsole
 {
-    public class CellSurfaceLayer: CellSurface
+    using Newtonsoft.Json;
+    using SadConsole.SerializedTypes;
+    using System;
+    using System.Collections.Generic;
+
+    public class CellSurfaceLayer : CellSurface
     {
         public CellSurfaceLayer(int width, int height): base(width, height) { }
 
@@ -80,7 +76,6 @@ namespace SadConsole
             
             Renderer = new Renderers.LayeredConsole() { Layers = _layers };
         }
-
 
         public override void Update(TimeSpan timeElapsed)
         {

@@ -1,10 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Runtime.Serialization;
-
-
-namespace SadConsole.Instructions
+﻿namespace SadConsole.Instructions
 {
+    using System;
+    using System.Runtime.Serialization;
 
     [DataContract]
     public class CodeInstruction : InstructionBase

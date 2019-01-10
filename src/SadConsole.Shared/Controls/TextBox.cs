@@ -1,13 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
-using SadConsole.Input;
-using SadConsole.Themes;
+#endif
 
 using System;
 using System.Runtime.Serialization;
-using System.Windows;
-
 
 namespace SadConsole.Controls
 {
@@ -206,8 +203,7 @@ namespace SadConsole.Controls
                 }
                 else
                 {
-                    int value;
-                    if (_text != null & int.TryParse(_text, out value))
+                    if (_text != null & int.TryParse(_text, out int value))
                         _text = value.ToString();
                     else
                         _text = "0";
@@ -452,7 +448,7 @@ namespace SadConsole.Controls
             }
         }
         
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             Text = _text;

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using SadConsole.StringParser;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using SadConsole.StringParser;
+    using System;
+    using System.Collections.Generic;
+
     public partial class ColoredString
     {
         /// <summary>
@@ -93,7 +93,7 @@ namespace SadConsole
                         }
                         
                     }
-                    catch (System.Exception e1)
+                    catch (Exception e1)
                     {
 #if DEBUG
                         throw e1;
@@ -141,6 +141,5 @@ namespace SadConsole
 
             return new ColoredString(glyphs.ToArray()) { IgnoreEffect = !commandStacks.TurnOnEffects };
         }
-        
     }
 }

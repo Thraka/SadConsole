@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#endif
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SadConsole.Input
 {
@@ -11,8 +13,8 @@ namespace SadConsole.Input
     /// </summary>
     public class Mouse
     {
-        private System.TimeSpan _leftLastClickedTime;
-        private System.TimeSpan _rightLastClickedTime;
+        private TimeSpan _leftLastClickedTime;
+        private TimeSpan _rightLastClickedTime;
         private Console lastMouseConsole;
 
         /// <summary>

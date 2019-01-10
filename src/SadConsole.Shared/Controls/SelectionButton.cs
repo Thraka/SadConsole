@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿#if XNA
+using Microsoft.Xna.Framework.Input;
+#endif
 
-using SadConsole.Themes;
-using System;
 using System.Runtime.Serialization;
 
 namespace SadConsole.Controls

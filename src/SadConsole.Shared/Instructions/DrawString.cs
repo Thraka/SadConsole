@@ -1,9 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-
-using System.Runtime.Serialization;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.Instructions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Draws a string to a console as if someone was typing.
     /// </summary>

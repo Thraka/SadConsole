@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System.Runtime.Serialization;
 

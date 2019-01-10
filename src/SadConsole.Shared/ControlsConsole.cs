@@ -1,11 +1,14 @@
-﻿using System;
+﻿#if XNA
+using Microsoft.Xna.Framework.Input;
+#endif
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
-using Microsoft.Xna.Framework.Input;
 using SadConsole.Controls;
 using SadConsole.Input;
 using SadConsole.Themes;
@@ -170,7 +173,6 @@ namespace SadConsole
         {
             IsDirty = true;
         }
-
 
         /// <summary>
         /// Removes a control from this console.
@@ -434,8 +436,6 @@ namespace SadConsole
 
             foreach (var control in ControlsList)
                 control.Update(time);
-
-            
         }
 
         /// <inheritdoc />

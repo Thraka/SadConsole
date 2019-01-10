@@ -1,4 +1,6 @@
-﻿using FrameworkPoint = Microsoft.Xna.Framework.Point;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -16,8 +18,8 @@ namespace SadConsole.SerializedTypes
             serializer.Serialize(writer, (AnimatedConsoleSerialized)value);
         }
 
-        public override AnimatedConsole ReadJson(JsonReader reader, Type objectType, AnimatedConsole existingValue, bool hasExistingValue,
-            JsonSerializer serializer)
+        public override AnimatedConsole ReadJson(JsonReader reader, Type objectType, 
+            AnimatedConsole existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             return serializer.Deserialize<AnimatedConsoleSerialized>(reader);
         }
@@ -30,7 +32,7 @@ namespace SadConsole.SerializedTypes
         [DataMember] public float AnimationDuration;
         [DataMember] public string Name;
         [DataMember] public bool Repeat;
-        [DataMember] public FrameworkPoint Center;
+        [DataMember] public Point Center;
 
         public static implicit operator AnimatedConsoleSerialized(AnimatedConsole surface)
         {
@@ -82,5 +84,4 @@ namespace SadConsole.SerializedTypes
         }
     }
 #pragma warning restore 1591
-
 }

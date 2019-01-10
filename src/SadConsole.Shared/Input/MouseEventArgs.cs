@@ -1,8 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-
-namespace SadConsole.Input
+﻿namespace SadConsole.Input
 {
+    using System;
+
     /// <summary>
     /// Event arguments for mouse events.
     /// </summary>

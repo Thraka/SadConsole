@@ -2,8 +2,6 @@
 using System.Runtime.Serialization;
 using SadConsole.Controls;
 
-
-
 namespace SadConsole.Themes
 {
     /// <summary>
@@ -146,5 +144,4 @@ namespace SadConsole.Themes
             };
         }
     }
-
 }

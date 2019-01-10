@@ -1,10 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-using System;
+#endif
 
 namespace SadConsole
 {
+    using System;
+
     /// <summary>
     /// Represents a specific font size from a <see cref="FontMaster"/>.
     /// </summary>
@@ -197,7 +199,5 @@ namespace SadConsole
         {
             return new Point(position.X * Size.X, position.Y * Size.Y);
         }
-
-
     }
 }

@@ -1,13 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#endif
 
-using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
 
 namespace SadConsole.Controls
 {
-
     /// <summary>
     /// A control that fills an area (vertical or horizontal) according to a value.
     /// </summary>
@@ -138,8 +138,6 @@ namespace SadConsole.Controls
             }
         }
 
-
-
         /// <summary>
         /// Creates a new horizontal progress bar.
         /// </summary>
@@ -190,7 +188,7 @@ namespace SadConsole.Controls
             return false;
         }
         
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             var temp = progressValue;

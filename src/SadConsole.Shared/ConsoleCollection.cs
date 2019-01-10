@@ -1,10 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-
-using System;
-using System.Collections.Generic;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Manages the parent and children relationship for <see cref="Console"/>.
     /// </summary>
@@ -234,6 +236,5 @@ namespace SadConsole
         {
             return screens.GetEnumerator();
         }
-
     }
 }

@@ -1,6 +1,7 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿#if XNA
+using Microsoft.Xna.Framework.Input;
+#endif 
 
-using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
 
@@ -10,7 +11,7 @@ namespace SadConsole.Controls
     /// Base class for creating a button type control.
     /// </summary>
     [DataContract]
-    public abstract class ButtonBase: ControlBase
+    public abstract class ButtonBase : ControlBase
     {
         /// <summary>
         /// Raised when the button is clicked.
@@ -52,7 +53,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="width">Width of the button.</param>
         /// <param name="height">Height of the button.</param>
-        public ButtonBase(int width, int height): base(width, height) { }
+        public ButtonBase(int width, int height) : base(width, height) { }
 
         /// <summary>
         /// Raises the <see cref="Click"/> event.
@@ -94,7 +95,7 @@ namespace SadConsole.Controls
     /// Simple button control with a height of 1.
     /// </summary>
     [DataContract]
-    public class Button: ButtonBase
+    public class Button : ButtonBase
     {
         /// <summary>
         /// Creates an instance of the button control with the specified width and height.

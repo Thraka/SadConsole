@@ -1,16 +1,14 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-
-using System;
-using System.Runtime.Serialization;
 using Microsoft.Xna.Framework.Input;
-
-using SadConsole.Effects;
-using SadConsole;
-//using SadConsole.Effects;
+using Microsoft.Xna.Framework.Graphics;
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Effects;
+    using System;
+
     //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
     public class Cursor
     {
@@ -126,7 +124,6 @@ namespace SadConsole
             Constructor();
         }
 
-
         private void Constructor()
         {
             IsEnabled = true;
@@ -179,7 +176,6 @@ namespace SadConsole
 
             return this;
         }
-
 
         private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
         {
