@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
-using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
-
 
 namespace SadConsole.Controls
 {
@@ -280,8 +280,6 @@ namespace SadConsole.Controls
                 //{
                 //    Parent.ReleaseControl();
                 //}
-
-
             }
 
             return false;
@@ -342,7 +340,7 @@ namespace SadConsole.Controls
             }
         }
         
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             _initialized = true;
@@ -355,5 +353,4 @@ namespace SadConsole.Controls
             DetermineState();
         }
     }
-
 }

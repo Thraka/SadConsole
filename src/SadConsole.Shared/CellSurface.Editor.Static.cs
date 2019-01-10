@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using System;
+
     public partial class CellSurface
     {
         /// <summary>

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using System.Collections;
+
     public static class IListExtensions
     {
         /// <summary>

@@ -1,5 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#else
+using System.Numerics;
+#endif
 
 namespace SadConsole.DrawCalls
 {

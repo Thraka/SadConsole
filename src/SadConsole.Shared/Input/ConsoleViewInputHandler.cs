@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
-
+#endif
 
 namespace SadConsole.Input
 {
@@ -105,7 +105,7 @@ namespace SadConsole.Input
 
         public bool HandlerKeyboard(Console console, Keyboard info)
         {
-            //TODO: This is dependent on how fast update is working... Make independent
+            // TODO: This is dependent on how fast update is working... Make independent
             bool handled = false;
             if (console is IConsoleViewPort viewPortObject && console.IsVisible && console.UseKeyboard && CanMoveWithKeyboard)
             {

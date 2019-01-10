@@ -1,9 +1,13 @@
-﻿using System.Runtime.Serialization;
-using System.Linq;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endif
 
 namespace SadConsole.SerializedTypes
 {
-#pragma warning disable 1591
+    using System.Runtime.Serialization;
+    using System.Linq;
+
     [DataContract]
     public class CellSerialized
     {
@@ -20,7 +24,7 @@ namespace SadConsole.SerializedTypes
         public int Glyph;
 
         [DataMember]
-        public Microsoft.Xna.Framework.Graphics.SpriteEffects Mirror;
+        public SpriteEffects Mirror;
 
         [DataMember]
         public bool IsVisible;
@@ -47,7 +51,8 @@ namespace SadConsole.SerializedTypes
             var newCell = new Cell(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
             {
                 IsVisible = cell.IsVisible,
-                Decorators = cell.Decorators != null ? cell.Decorators.ToArray() : new CellDecorator[0]
+                Decorators = cell.Decorators != null ? cell.Decorators.ToArray() 
+                                                     : new CellDecorator[0]
             };
 
             if (cell.CellState != null)
@@ -55,7 +60,6 @@ namespace SadConsole.SerializedTypes
 
             return newCell;
         }
-
     }
 
     [DataContract]
@@ -74,7 +78,7 @@ namespace SadConsole.SerializedTypes
         public int Glyph;
 
         [DataMember]
-        public Microsoft.Xna.Framework.Graphics.SpriteEffects Mirror;
+        public SpriteEffects Mirror;
 
         [DataMember]
         public bool IsVisible = true;
@@ -94,9 +98,8 @@ namespace SadConsole.SerializedTypes
 
         public static implicit operator CellState(CellStateSerialized cell)
         {
-            return new CellState(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror, cell.IsVisible, cell.Decorators);
+            return new CellState(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror, 
+                                 cell.IsVisible, cell.Decorators);
         }
-
     }
-#pragma warning restore 1591
 }

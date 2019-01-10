@@ -1,9 +1,7 @@
-﻿using System;
-using SadConsole.Controls;
-
-
-namespace SadConsole.Themes
+﻿namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>

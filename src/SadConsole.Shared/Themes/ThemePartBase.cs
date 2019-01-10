@@ -1,11 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Controls;
-
-using System.Runtime.Serialization;
+#endif
 
 namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Has the basic appearances of each control state.
     /// </summary>
@@ -170,7 +172,6 @@ namespace SadConsole.Themes
             Focused = themeColors.Appearance_ControlFocused.Clone();
         }
     }
-
 
     /// <summary> 
     /// The base class for a theme.

@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-
-using System.Runtime.Serialization;
-
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.Themes
 {
+    using System.Runtime.Serialization;
+    
     /// <summary>
     /// A theme for a Window object.
     /// </summary>
@@ -53,8 +54,10 @@ namespace SadConsole.Themes
         [DataMember]
         public Color ModalTint;
 
-        public WindowTheme(Colors themeColors) : base(themeColors)
+        public WindowTheme(Colors themeColors) 
+            : base(themeColors)
         {
+
         }
 
         protected WindowTheme() { }

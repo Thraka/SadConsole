@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System;
 using System.Runtime.Serialization;
@@ -42,7 +44,7 @@ namespace SadConsole.Instructions
         public override void Run()
         {
             if (Colors == null)
-                throw new System.NullReferenceException("The Colors property is null. It must be set to an instance before this instruction can run.");
+                throw new NullReferenceException("The Colors property is null. It must be set to an instance before this instruction can run.");
 
             if (!FadeAnimationSettings.IsStarted)
                 FadeAnimationSettings.Start();

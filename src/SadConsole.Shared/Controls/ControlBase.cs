@@ -1,5 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using SadConsole.Input;
 using System.Runtime.Serialization;
@@ -93,10 +94,11 @@ namespace SadConsole.Controls
             get => _isDirty;
             set
             {
-                if (value == _isDirty) return;
-
-                _isDirty = value;
-                IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+                if (value != _isDirty)
+                {
+                    _isDirty = value;
+                    IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -128,13 +130,7 @@ namespace SadConsole.Controls
         /// </summary>
         public bool IsFocused
         {
-            get
-            {
-                if (Parent == null)
-                    return false;
-                else
-                    return Parent.FocusedControl == this;
-            }
+            get => (Parent == null) ? false : Parent.FocusedControl == this;
             set
             {
                 if (Parent != null)
@@ -154,7 +150,6 @@ namespace SadConsole.Controls
 
                     DetermineState();
                 }
-
             }
         }
 
@@ -201,23 +196,24 @@ namespace SadConsole.Controls
             get => ActiveTheme;
             set
             {
-                if (value == ActiveTheme) return;
-                
-                if (value == null)
+                if (value != ActiveTheme)
                 {
-                    IsCustomTheme = false;
-                    ActiveTheme = parent?.Theme.GetControlTheme(this) ?? Themes.Library.Default.GetControlTheme(this);
-                }
-                else
-                {
-                    ActiveTheme = value;
-                    IsCustomTheme = true;
-                }
+                    if (value == null)
+                    {
+                        IsCustomTheme = false;
+                        ActiveTheme = parent?.Theme.GetControlTheme(this) ?? Themes.Library.Default.GetControlTheme(this);
+                    }
+                    else
+                    {
+                        ActiveTheme = value;
+                        IsCustomTheme = true;
+                    }
 
-                OnThemeChanged();
-                ActiveTheme.Attached(this);
-                DetermineState();
-                IsDirty = true;
+                    OnThemeChanged();
+                    ActiveTheme.Attached(this);
+                    DetermineState();
+                    IsDirty = true;
+                }
             }
         }
 
@@ -499,7 +495,7 @@ namespace SadConsole.Controls
         /// </summary>
         public virtual void Update(TimeSpan time) => Theme.UpdateAndDraw(this, time);
 
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             IsDirty = true;

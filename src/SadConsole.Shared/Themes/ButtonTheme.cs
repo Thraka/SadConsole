@@ -1,9 +1,11 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿#if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Controls;
+#endif
 
+using System;
+using System.Runtime.Serialization;
+using SadConsole.Controls;
 
 namespace SadConsole.Themes
 {
@@ -11,10 +13,11 @@ namespace SadConsole.Themes
     /// The theme of the button control
     /// </summary>
     [DataContract]
-    public class ButtonTheme: ThemeBase
+    public class ButtonTheme : ThemeBase
     {
         /// <summary>
-        /// When true, renders the <see cref="EndCharacterLeft"/> and <see cref="EndCharacterRight"/> on the button.
+        /// When true, renders the <see cref="EndCharacterLeft"/> 
+        /// and <see cref="EndCharacterRight"/> on the button.
         /// </summary>
         [DataMember]
         public bool ShowEnds { get; set; } = true;
@@ -31,12 +34,10 @@ namespace SadConsole.Themes
         [DataMember]
         public int EndCharacterRight { get; set; } = '>';
 
-
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
             control.Surface = new CellSurface(control.Width, control.Height);
-
             base.Attached(control);
         }
 
@@ -359,5 +360,4 @@ namespace SadConsole.Themes
             };
         }
     }
-
 }

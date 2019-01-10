@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System.Runtime.Serialization;
 
 namespace SadConsole.Effects
 {
-   
     /// <summary>
     /// Recors the foreground or the background of a cell.
     /// </summary>

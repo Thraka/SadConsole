@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#if XNA
 using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {

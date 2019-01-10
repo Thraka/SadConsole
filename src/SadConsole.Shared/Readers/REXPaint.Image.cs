@@ -1,11 +1,15 @@
-﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-
+﻿#if XNA
+using FrameworkColor = Microsoft.Xna.Framework.Color;
+#else
+using FrameworkColor = SadConsole.Color;
+#endif
 
 namespace SadConsole.Readers
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Compression;
+
     /// <summary>
     /// A RexPaint image.
     /// </summary>

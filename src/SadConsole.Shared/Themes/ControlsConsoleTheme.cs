@@ -1,8 +1,7 @@
-﻿using System.Runtime.Serialization;
-
-
-namespace SadConsole.Themes
+﻿namespace SadConsole.Themes
 {
+    using System.Runtime.Serialization;
+    
     /// <summary>
     /// A theme for a Window object.
     /// </summary>

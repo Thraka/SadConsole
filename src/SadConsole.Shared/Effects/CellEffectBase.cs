@@ -2,7 +2,6 @@
 {
     using System.Runtime.Serialization;
 
-
     /// <summary>
     /// A base class for cell effects.
     /// </summary>

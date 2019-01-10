@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
-#pragma warning disable 1591
     public class ConsoleJsonConverter: JsonConverter<Console>
     {
         public override void WriteJson(JsonWriter writer, Console value, JsonSerializer serializer)
@@ -13,13 +12,12 @@ namespace SadConsole.SerializedTypes
             serializer.Serialize(writer, (ConsoleSerialized)value);
         }
 
-        public override Console ReadJson(JsonReader reader, Type objectType, Console existingValue, bool hasExistingValue,
-            JsonSerializer serializer)
+        public override Console ReadJson(JsonReader reader, Type objectType, Console existingValue, 
+                                         bool hasExistingValue, JsonSerializer serializer)
         {
             return serializer.Deserialize<ConsoleSerialized>(reader);
         }
     }
-
 
     [DataContract]
     public class ConsoleSerialized
@@ -75,5 +73,4 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
-#pragma warning restore 1591
 }

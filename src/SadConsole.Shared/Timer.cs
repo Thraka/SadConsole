@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using System;
+    
     /// <summary>
     /// A simple timer with callback.
     /// </summary>

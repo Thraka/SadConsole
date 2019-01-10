@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-
-using SadConsole.Controls;
-using System;
-
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Controls;
+    using System;
+
     public partial class Window
     {
         /// <summary>

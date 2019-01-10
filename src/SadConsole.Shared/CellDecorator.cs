@@ -1,12 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Runtime.Serialization;
+    
     /// <summary>
     /// Decorates a cell with a colored glyph.
     /// </summary>

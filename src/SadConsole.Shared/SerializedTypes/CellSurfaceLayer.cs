@@ -5,8 +5,6 @@ using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
-#pragma warning disable 1591
-
     public class CellSurfaceLayerJson : JsonConverter<CellSurfaceLayer>
     {
         public override void WriteJson(JsonWriter writer, CellSurfaceLayer value, JsonSerializer serializer)
@@ -19,7 +17,6 @@ namespace SadConsole.SerializedTypes
             return serializer.Deserialize<CellSurfaceLayerSerialized>(reader);
         }
     }
-
 
     [DataContract]
     public class CellSurfaceLayerSerialized
@@ -55,5 +52,4 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
-#pragma warning restore 1591
 }

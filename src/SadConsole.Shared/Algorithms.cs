@@ -1,13 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-using MyMathHelper = Microsoft.Xna.Framework.MathHelper;
-
-using System;
-using System.Collections.Generic;
-
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#else
+using System.Numerics;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// The Bresenham algorithm collection
     /// </summary>
@@ -43,9 +44,7 @@ namespace SadConsole
                 if (err >= 0) continue;
                 y += ystep; err += dX;
             }
-
         }
-
 
         /// <summary>
         /// Plot the line from (x0, y0) to (x1, y1) using an interpolation derived algorithm.
@@ -163,17 +162,17 @@ namespace SadConsole
 
                     //lerp = Math.Abs((lerp - (int)lerp));
 
-                    lerp = MyMathHelper.Clamp((float)lerp, 0f, 1.0f);
+                    lerp = MathHelper.Clamp((float)lerp, 0f, 1.0f);
 
                     int counter;
                     for (counter = 0; counter < gradient.Stops.Length && gradient.Stops[counter].Stop < (float)lerp; counter++) ;
 
                     counter--;
-                    counter = (int)MyMathHelper.Clamp(counter, 0, gradient.Stops.Length - 2);
+                    counter = (int)MathHelper.Clamp(counter, 0, gradient.Stops.Length - 2);
 
                     float newLerp = (gradient.Stops[counter].Stop - (float)lerp) / (gradient.Stops[counter].Stop - gradient.Stops[counter + 1].Stop);
 
-                    applyAction(x, y, ColorHelper.Lerp(gradient.Stops[counter].Color, gradient.Stops[counter + 1].Color, newLerp));
+                    applyAction(x, y, Color.Lerp(gradient.Stops[counter].Color, gradient.Stops[counter + 1].Color, newLerp));
                 }
             }
         }

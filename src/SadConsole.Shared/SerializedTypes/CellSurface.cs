@@ -5,8 +5,6 @@ using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
-#pragma warning disable 1591
-
     public class CellSurfaceJson : JsonConverter<CellSurface>
     {
         public override void WriteJson(JsonWriter writer, CellSurface value, JsonSerializer serializer)
@@ -19,7 +17,6 @@ namespace SadConsole.SerializedTypes
             return serializer.Deserialize<CellSurfaceSerialized>(reader);
         }
     }
-
 
     [DataContract]
     public class CellSurfaceSerialized
@@ -51,5 +48,4 @@ namespace SadConsole.SerializedTypes
             };
         }
     }
-#pragma warning restore 1591
 }

@@ -1,7 +1,9 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#endif
 
+using System;
 
 namespace SadConsole.Input
 {

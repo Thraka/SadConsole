@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// An array of <see cref="Cell"/> objects used to represent a 2D surface.
     /// </summary>

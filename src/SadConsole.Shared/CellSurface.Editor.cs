@@ -236,6 +236,7 @@ namespace SadConsole
             Cells[index].Foreground = color;
             IsDirty = true;
         }
+
         /// <summary>
         /// Gets the foreground of a specified cell.
         /// </summary>
@@ -257,6 +258,7 @@ namespace SadConsole
             Cells[index].Background = color;
             IsDirty = true;
         }
+
         /// <summary>
         /// Gets the background of a specified cell.
         /// </summary>
@@ -547,7 +549,7 @@ namespace SadConsole
         /// <param name="background">Sets the background of all characters in the text.</param>
         public void Print(int x, int y, string text, Color foreground, Color background)
         {
-            if (String.IsNullOrEmpty(text)) return;
+            if (string.IsNullOrEmpty(text)) return;
 
             if (!IsValidCell(x, y, out var index)) return;
 
@@ -586,7 +588,7 @@ namespace SadConsole
         /// <param name="mirror">The mirror to set on all characters in the text.</param>
         public void Print(int x, int y, string text, Color foreground, Color background, SpriteEffects mirror)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return;
 
             if (!IsValidCell(x, y, out var index)) return;
@@ -627,7 +629,7 @@ namespace SadConsole
         /// <param name="mirror">The mirror to set on all characters in the text.</param>
         public void Print(int x, int y, string text, SpriteEffects mirror)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return;
 
             if (!IsValidCell(x, y, out var index)) return;
@@ -664,7 +666,7 @@ namespace SadConsole
         /// <param name="effect">An optional effect to apply to the printed cells.</param>
         public void Print(int x, int y, string text, Cell appearance, ICellEffect effect = null)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return;
 
             if (!IsValidCell(x, y, out var index)) return;
@@ -810,7 +812,6 @@ namespace SadConsole
             return sb;
 
         }
-
 
         /// <summary>
         /// Resets the shifted amounts to 0, as if the surface has never shifted.
@@ -1154,6 +1155,7 @@ namespace SadConsole
             cell.Background = DefaultBackground;
             IsDirty = true;
         }
+
         /// <summary>
         /// Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
@@ -1165,6 +1167,7 @@ namespace SadConsole
         {
             Fill(x, y, length, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
         }
+
         /// <summary>
         /// Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
@@ -1564,7 +1567,6 @@ namespace SadConsole
                     }
                 }
             }
-
         }
 
         /// <summary>
@@ -1761,15 +1763,6 @@ namespace SadConsole
             OnCellsReset();
         }
 
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// Fills a console with random colors and glyphs.
         /// </summary>
@@ -1794,18 +1787,7 @@ namespace SadConsole
 
             IsDirty = true;
         }
-
-
-
-
-
-
-
-
-
-
-
-
+        
         /// <summary>
         /// Gets the index of a location on the surface by point.
         /// </summary>

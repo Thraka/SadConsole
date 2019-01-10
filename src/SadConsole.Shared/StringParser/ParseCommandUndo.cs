@@ -1,11 +1,9 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-
-namespace SadConsole.StringParser
+﻿namespace SadConsole.StringParser
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+
     /// <summary>
     /// Pops a behavior off of a <see cref="ParseCommandStacks"/>.
     /// </summary>
@@ -50,7 +48,6 @@ namespace SadConsole.StringParser
 
             if (parts.Length >= 1 && parts[0] != "")
                 times = int.Parse(parts[0], CultureInfo.InvariantCulture);
-
 
             for (int i = 0; i < times; i++)
             {
@@ -126,7 +123,8 @@ namespace SadConsole.StringParser
             CommandType = CommandTypes.PureCommand;
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+            CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
 
         }
