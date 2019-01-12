@@ -1,17 +1,14 @@
-﻿#if XNA
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿namespace SadConsole
+{
+#if XNA
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 #endif
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-
-namespace SadConsole
-{
-    using SadConsole.DrawCalls;
     using SadConsole.Content;
+    using SadConsole.DrawCalls;
+    using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public static class Global
