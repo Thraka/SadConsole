@@ -131,9 +131,9 @@ namespace SadConsole
         public static List<IDrawCall> DrawCalls = new List<IDrawCall>(5);
         #endregion
 
-        private static IContentProvider ContentProvider;
-        private static TextureLoader TextureLoader;
-        private static FontLoader FontLoader;
+        private static readonly IContentProvider ContentProvider;
+        private static readonly TextureLoader TextureLoader;
+        private static readonly FontLoader FontLoader;
 
         static Global()
         {
