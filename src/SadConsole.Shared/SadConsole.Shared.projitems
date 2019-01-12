@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Content\ContentProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSurface.cs" />
