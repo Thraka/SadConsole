@@ -146,12 +146,7 @@
         /// <returns>A master font that you can generate a usable font from.</returns>
         public static FontMaster LoadFont(string name)
         {
-            return LoadFontAsync(name).GetAwaiter().GetResult();
-        }
-
-        public static async Task<FontMaster> LoadFontAsync(string name)
-        {
-            var font = await FontLoader.Load(name);
+            var font = FontLoader.Load(name).GetAwaiter().GetResult();
 
             if (Fonts.ContainsKey(font.Name))
                 Fonts.Remove(font.Name);

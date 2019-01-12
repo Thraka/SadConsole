@@ -54,10 +54,14 @@
                 return await content.ReadAsStreamAsync().ConfigureAwait(false);
             }
 
+#if XNA
+            return Microsoft.Xna.Framework.TitleContainer.OpenStream(name);
+#else
             if (!File.Exists(name))
                 return null;
 
             return File.OpenRead(name);
+#endif
         }
 
         private static Assembly GetAssembly()
