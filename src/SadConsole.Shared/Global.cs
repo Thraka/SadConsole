@@ -7,11 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using SadConsole.DrawCalls;
 
 namespace SadConsole
 {
+    using SadConsole.DrawCalls;
+    using SadConsole.Content;
+    using System.Threading.Tasks;
+
     public static class Global
     {
         internal static string SerializerPathHint;
@@ -127,86 +129,55 @@ namespace SadConsole
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
         public static List<IDrawCall> DrawCalls = new List<IDrawCall>(5);
-#endregion
+        #endregion
+
+        private static IContentProvider ContentProvider;
+        private static TextureLoader TextureLoader;
+        private static FontLoader FontLoader;
+
+        static Global()
+        {
+            ContentProvider = new ContentProvider();
+            TextureLoader = new TextureLoader(ContentProvider);
+            FontLoader = new FontLoader(ContentProvider, TextureLoader);
+        }
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
         /// </summary>
-        /// <param name="font">The font file to load.</param>
+        /// <param name="name">The font file to load.</param>
         /// <returns>A master font that you can generate a usable font from.</returns>
-        public static FontMaster LoadFont(string font)
+        public static FontMaster LoadFont(string name)
         {
-            //if (!File.Exists(font))
-            //{
-            //    font = Path.Combine(Path.Combine(Path.GetDirectoryName(Path.GetFullPath(font)), "fonts"), Path.GetFileName(font));
-            //    if (!File.Exists(font))
-            //        throw new Exception($"Font does not exist: {font}");
-            //}                    
+            return LoadFontAsync(name).GetAwaiter().GetResult();
+        }
 
-            //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
-            try
-            {
-                var masterFont = SadConsole.Serializer.Load<FontMaster>(font, false);
+        public static async Task<FontMaster> LoadFontAsync(string name)
+        {
+            var font = await FontLoader.Load(name);
 
-                if (Fonts.ContainsKey(masterFont.Name))
-                    Fonts.Remove(masterFont.Name);
+            if (Fonts.ContainsKey(font.Name))
+                Fonts.Remove(font.Name);
 
-                Fonts.Add(masterFont.Name, masterFont);
-                return masterFont;
-            }
-            catch (System.Runtime.Serialization.SerializationException e)
-            {
-
-                throw;
-            }
-
+            Fonts.Add(font.Name, font);
+            return font;
         }
         
         internal static void LoadEmbeddedFont()
         {
-            //var auxList = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
-#if WINDOWS_UWP || WINDOWS_UAP
-            var assembly = new ColoredString().GetType().GetTypeInfo().Assembly;
-#else
-            var assembly = Assembly.GetExecutingAssembly();
-#endif
-            string resourceNameFont;
-            string resourceNameImage;
+            var resourceNameFont = Settings.UseDefaultExtendedFont ?
+                "embedded:SadConsole.Resources.IBM_ext.font" :
+                "embedded:SadConsole.Resources.IBM.font";
+            
+            Settings.LoadingEmbeddedFont = true;
+            Global.SerializerPathHint = "";
 
-            if (Settings.UseDefaultExtendedFont)
-            {
-                resourceNameFont = "SadConsole.Resources.IBM_ext.font";
-                resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
-            }
-            else
-            {
-                resourceNameFont = "SadConsole.Resources.IBM.font";
-                resourceNameImage = "SadConsole.Resources.IBM8x16.png";
-            }
+            var font = FontLoader.Load(resourceNameFont).GetAwaiter().GetResult();
 
+            Fonts.Add(font.Name, font);
+            FontDefault = font.GetFont(Font.FontSizes.One);
 
-            using (Stream stream = assembly.GetManifestResourceStream(resourceNameFont))
-            using (StreamReader sr = new StreamReader(stream))
-            {
-                Settings.LoadingEmbeddedFont = true;
-                Global.SerializerPathHint = "";
-                var masterFont = (FontMaster) Newtonsoft.Json.JsonConvert.DeserializeObject(
-                    sr.ReadToEnd(),
-                    typeof(FontMaster),
-                    new Newtonsoft.Json.JsonSerializerSettings()
-                    {
-                        TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
-                    });
-
-                using (Stream fontStream = assembly.GetManifestResourceStream(resourceNameImage))
-                    masterFont.Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
-
-                masterFont.ConfigureRects();
-                Fonts.Add(masterFont.Name, masterFont);
-                FontDefault = masterFont.GetFont(Font.FontSizes.One);
-
-                Settings.LoadingEmbeddedFont = false;
-            }
+            Settings.LoadingEmbeddedFont = false;
         }
 
 
