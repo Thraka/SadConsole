@@ -157,11 +157,7 @@ namespace SadConsole
 
             control.Parent = this;
             control.TabIndex = ControlsList.Count - 1;
-
-
-            if (ControlsList.Count == 1)
-                FocusedControl = control;
-
+            
             control.IsDirtyChanged += ControlOnIsDirtyChanged;
 
             IsDirty = true;
