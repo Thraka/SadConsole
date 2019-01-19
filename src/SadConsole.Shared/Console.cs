@@ -26,22 +26,22 @@ namespace SadConsole
         /// <summary>
         /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
         /// </summary>
-        protected List<IConsoleComponent> ComponentsUpdate;
+        protected SortedSet<IConsoleComponent> ComponentsUpdate;
 
         /// <summary>
         /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsDraw"/> is <see langword="true"/>.
         /// </summary>
-        protected List<IConsoleComponent> ComponentsDraw;
+        protected SortedSet<IConsoleComponent> ComponentsDraw;
 
         /// <summary>
         /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsMouse"/> is <see langword="true"/>.
         /// </summary>
-        protected List<IConsoleComponent> ComponentsMouse;
+        protected SortedSet<IConsoleComponent> ComponentsMouse;
 
         /// <summary>
         /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
         /// </summary>
-        protected List<IConsoleComponent> ComponentsKeyboard;
+        protected SortedSet<IConsoleComponent> ComponentsKeyboard;
 
         /// <summary>
         /// A collection of components processed by this console.
@@ -241,10 +241,12 @@ namespace SadConsole
             Components = new ObservableCollection<IConsoleComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
 
-            ComponentsKeyboard = new List<IConsoleComponent>();
-            ComponentsDraw = new List<IConsoleComponent>();
-            ComponentsUpdate = new List<IConsoleComponent>();
-            ComponentsMouse = new List<IConsoleComponent>();
+            var comparer = new ConsoleComponentSortComparison();
+
+            ComponentsKeyboard = new SortedSet<IConsoleComponent>();
+            ComponentsDraw = new SortedSet<IConsoleComponent>();
+            ComponentsUpdate = new SortedSet<IConsoleComponent>(comparer);
+            ComponentsMouse = new SortedSet<IConsoleComponent>();
 
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
@@ -277,10 +279,12 @@ namespace SadConsole
             Components = new ObservableCollection<IConsoleComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
 
-            ComponentsKeyboard = new List<IConsoleComponent>();
-            ComponentsDraw = new List<IConsoleComponent>();
-            ComponentsUpdate = new List<IConsoleComponent>();
-            ComponentsMouse = new List<IConsoleComponent>();
+            var comparer = new ConsoleComponentSortComparison();
+
+            ComponentsKeyboard = new SortedSet<IConsoleComponent>();
+            ComponentsDraw = new SortedSet<IConsoleComponent>();
+            ComponentsUpdate = new SortedSet<IConsoleComponent>();
+            ComponentsMouse = new SortedSet<IConsoleComponent>();
 
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
@@ -420,32 +424,24 @@ namespace SadConsole
                 {
                     if (!ComponentsDraw.Contains(component))
                         ComponentsDraw.Add(component);
-
-                    ComponentsDraw.Sort(CompareComponent);
                 }
 
                 if (component.IsUpdate)
                 {
                     if (!ComponentsUpdate.Contains(component))
                         ComponentsUpdate.Add(component);
-
-                    ComponentsUpdate.Sort(CompareComponent);
                 }
 
                 if (component.IsKeyboard)
                 {
                     if (!ComponentsKeyboard.Contains(component))
                         ComponentsKeyboard.Add(component);
-
-                    ComponentsKeyboard.Sort(CompareComponent);
                 }
 
                 if (component.IsMouse)
                 {
                     if (!ComponentsMouse.Contains(component))
                         ComponentsMouse.Add(component);
-
-                    ComponentsMouse.Sort(CompareComponent);
                 }
             }
 
@@ -455,44 +451,25 @@ namespace SadConsole
                 {
                     if (!ComponentsDraw.Contains(component))
                         ComponentsDraw.Remove(component);
-
-                    ComponentsDraw.Sort(CompareComponent);
                 }
 
                 if (component.IsUpdate)
                 {
                     if (!ComponentsUpdate.Contains(component))
                         ComponentsUpdate.Remove(component);
-
-                    ComponentsUpdate.Sort(CompareComponent);
                 }
 
                 if (component.IsKeyboard)
                 {
                     if (!ComponentsKeyboard.Contains(component))
                         ComponentsKeyboard.Remove(component);
-
-                    ComponentsKeyboard.Sort(CompareComponent);
                 }
 
                 if (component.IsMouse)
                 {
                     if (!ComponentsMouse.Contains(component))
                         ComponentsMouse.Remove(component);
-
-                    ComponentsMouse.Sort(CompareComponent);
                 }
-            }
-
-            int CompareComponent(IConsoleComponent left, IConsoleComponent right)
-            {
-                if (left.SortOrder > right.SortOrder)
-                    return 1;
-
-                if (left.SortOrder < right.SortOrder)
-                    return -1;
-
-                return 0;
             }
         }
 

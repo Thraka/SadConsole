@@ -77,7 +77,7 @@ namespace SadConsole
     }
 
     /// <summary>
-    /// An <see cref="IConsoleComponent"/> that only works with <see cref="IConsoleComponent.Update(SadConsole.Console, TimeSpan)"/>.
+    /// A base class that implements <see cref="IConsoleComponent.Update(SadConsole.Console, TimeSpan)"/> of <see cref="IConsoleComponent"/>.
     /// </summary>
     public abstract class UpdateConsoleComponent : IConsoleComponent
     {
@@ -119,7 +119,7 @@ namespace SadConsole
     }
 
     /// <summary>
-    /// An <see cref="IConsoleComponent"/> that only works with <see cref="IConsoleComponent.Draw(Console, TimeSpan)"/>.
+    /// A base class that implements <see cref="IConsoleComponent.Draw(Console, TimeSpan)"/> of <see cref="IConsoleComponent"/>.
     /// </summary>
     public abstract class DrawConsoleComponent : IConsoleComponent
     {
@@ -161,7 +161,7 @@ namespace SadConsole
     }
 
     /// <summary>
-    /// An <see cref="IConsoleComponent"/> that only works with <see cref="IConsoleComponent.ProcessMouse(Console, MouseConsoleState, out bool)"/>.
+    /// A base class that implements <see cref="IConsoleComponent.ProcessMouse(Console, MouseConsoleState, out bool)"/> of <see cref="IConsoleComponent"/>.
     /// </summary>
     public abstract class MouseConsoleComponent : IConsoleComponent
     {
@@ -204,7 +204,7 @@ namespace SadConsole
     }
 
     /// <summary>
-    /// An <see cref="IConsoleComponent"/> that only works with <see cref="IConsoleComponent.ProcessKeyboard(Console, Keyboard, out bool)"/>.
+    /// A base class that implements <see cref="IConsoleComponent.ProcessKeyboard(Console, Keyboard, out bool)"/> of <see cref="IConsoleComponent"/>.
     /// </summary>
     public abstract class KeyboardConsoleComponent : IConsoleComponent
     {
@@ -247,7 +247,7 @@ namespace SadConsole
     }
 
     /// <summary>
-    /// An <see cref="IConsoleComponent"/> that only works with <see cref="IConsoleComponent.ProcessMouse(Console, MouseConsoleState, out bool)"/> and <see cref="IConsoleComponent.ProcessKeyboard(Console, Keyboard, out bool)"/>.
+    /// A base class that implements <see cref="IConsoleComponent.ProcessMouse(Console, MouseConsoleState, out bool)"/> and <see cref="IConsoleComponent.ProcessKeyboard(Console, Keyboard, out bool)"/> of <see cref="IConsoleComponent"/>.
     /// </summary>
     public abstract class InputConsoleComponent : IConsoleComponent
     {
@@ -298,7 +298,7 @@ namespace SadConsole
     }
 
     /// <summary>
-    /// An <see cref="IConsoleComponent"/> that only works with <see cref="IConsoleComponent.Update(SadConsole.Console, TimeSpan)"/> and <see cref="IConsoleComponent.Draw(Console, TimeSpan)"/>.
+    /// A base class that implements <see cref="IConsoleComponent.Update(SadConsole.Console, TimeSpan)"/> and <see cref="IConsoleComponent.Draw(Console, TimeSpan)"/> of <see cref="IConsoleComponent"/>.
     /// </summary>
     public abstract class LogicConsoleComponent : IConsoleComponent
     {
@@ -345,6 +345,64 @@ namespace SadConsole
         void IConsoleComponent.ProcessMouse(Console console, MouseConsoleState state, out bool handled) => handled = false;
 
         void IConsoleComponent.Update(Console console, TimeSpan delta) => Update(console, delta);
+    }
+
+    /// <summary>
+    /// A base class that implements all of <see cref="IConsoleComponent"/>.
+    /// </summary>
+    public abstract class ConsoleComponent : IConsoleComponent
+    {
+        /// <inheritdoc />
+        public int SortOrder { get; set; }
+
+        /// <inheritdoc />
+        public bool IsUpdate => true;
+
+        /// <inheritdoc />
+        public bool IsDraw => true;
+
+        /// <inheritdoc />
+        public bool IsMouse => true;
+
+        /// <inheritdoc />
+        public bool IsKeyboard => true;
+
+        /// <inheritdoc />
+        public abstract void Draw(Console console, TimeSpan delta);
+
+        /// <inheritdoc />
+        public abstract void Update(Console console, TimeSpan delta);
+
+        /// <inheritdoc />
+        public abstract void ProcessKeyboard(Console console, Keyboard info, out bool handled);
+
+        /// <inheritdoc />
+        public abstract void ProcessMouse(Console console, MouseConsoleState state, out bool handled);
+
+        /// <inheritdoc />
+        public virtual void Removed(Console console) { }
+
+        
+        /// <inheritdoc />
+        public virtual void Added(Console console) { }
+    }
+
+    /// <summary>
+    /// Compares two <see cref="IConsoleComponent.SortOrder"/> values.
+    /// </summary>
+    public class ConsoleComponentSortComparison : System.Collections.Generic.IComparer<IConsoleComponent>
+    {
+        /// <inheritdoc />
+        public int Compare(IConsoleComponent x, IConsoleComponent y)
+        {
+            if (x.SortOrder > y.SortOrder)
+                return 1;
+
+            if (x.SortOrder < y.SortOrder)
+                return -1;
+
+            return 0;
+        }
     }
 
 }
