@@ -18,6 +18,12 @@
 
         private double _lastUpdateTime = -1d;
 
+        /// <summary>
+        /// Creates a new wait timer with the specified duration.
+        /// </summary>
+        /// <param name="duration">How long this instruction waits until it signals <see cref="InstructionBase.IsFinished"/>.</param>
+        public Wait(float duration) => Duration = duration;
+
         public override void Run()
         {
             if (_lastUpdateTime == -1d)
