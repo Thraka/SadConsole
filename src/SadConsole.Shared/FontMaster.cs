@@ -99,6 +99,7 @@ namespace SadConsole
         /// <param name="glyphPadding">Pixels between each glyph, defaults to 0.</param>
         public FontMaster(Texture2D fontImage, int glyphWidth, int glyphHeight, int totalColumns = 16, int glyphPadding = 0)
         {
+            cachedFonts = new Dictionary<Font.FontSizes, Font>();
             Image = fontImage;
             GlyphWidth = glyphWidth;
             GlyphHeight = glyphHeight;

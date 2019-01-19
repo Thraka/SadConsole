@@ -40,7 +40,7 @@
         }
 
         /// <summary>
-        /// Runs the instruction set. Once all instructions are Done, this set will set the <see cref="Done"/> property will be set to true.
+        /// Runs the instruction set. Once all instructions are done, this set will set the <see cref="IsFinished"/> property will be set to true.
         /// </summary>
         public override void Run()
         {

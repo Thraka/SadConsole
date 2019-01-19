@@ -120,6 +120,7 @@ namespace SadConsole
             IsVisible = false;
             _theme = (WindowTheme)Themes.Library.Default.WindowTheme.Clone();
             Renderer = new SadConsole.Renderers.Window();
+            MoveToFrontOnMouseClick = true;
         }
         #endregion
 
@@ -185,7 +186,7 @@ namespace SadConsole
                 }
 
                 // Left button freshly down and we're not already dragging, check to see if in title
-                if (state.IsOnConsole && !isDragging && !previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
+                if (CapturedControl == null && state.IsOnConsole && !isDragging && !previousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
                 {
                     if (state.CellPosition.Y == Theme.TitleAreaY && state.CellPosition.X >= Theme.TitleAreaX && state.CellPosition.X < Theme.TitleAreaX + Theme.TitleAreaLength)
                     {

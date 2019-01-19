@@ -87,9 +87,9 @@
 
             OnExecutionRepeating();
         }
-        
+
         /// <summary>
-        /// Executes the instruction. This base class method should be called from derived classes. If the Done property is set to true, will try to repeat if needed and will raise all appropriate events.
+        /// Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
         /// </summary>
         public virtual void Run()
         {

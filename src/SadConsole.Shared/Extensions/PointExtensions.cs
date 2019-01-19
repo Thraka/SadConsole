@@ -59,6 +59,14 @@ namespace Microsoft.Xna.Framework
         public static int ToIndex(this Point point, int rowWidth) => Helpers.GetIndexFromPoint(point.X, point.Y, rowWidth);
 
         /// <summary>
+        /// Translates an array index to a Point.
+        /// </summary>
+        /// <param name="index">The index in the array.</param>
+        /// <param name="rowWidth">How many columns in a row.</param>
+        /// <returns></returns>
+        public static Point ToPoint(this int index, int rowWidth) => Helpers.GetPointFromIndex(index, rowWidth);
+
+        /// <summary>
         /// Gets the cell coordinates of the <paramref name="targetFont"/> based on a cell in the <paramref name="sourceFont"/>.
         /// </summary>
         /// <param name="point">The position of the cell in the <paramref name="sourceFont"/>.</param>

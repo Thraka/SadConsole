@@ -412,7 +412,7 @@
         </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor">
             <summary>
-            Creates a new colored glyph with a white foreground, transparent background, and a glyph index of 0.
+            Creates a new colored glyph with a white foreground, black background, and a glyph index of 0.
             </summary>
         </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor(SadConsole.Cell)">
@@ -420,6 +420,20 @@
             Creates a new colored glyph based on the provided cell.
             </summary>
             <param name="cell">The cell.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.#ctor(System.Int32)">
+            <summary>
+            Creates a new colored glyph with a white foreground and black background.
+            </summary>
+            <param name="glyph">The glyph.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.#ctor(System.Int32,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Creates a new colored glyph with a given foreground and background.
+            </summary>
+            <param name="glyph">The glyph.</param>
+            <param name="background">The color of the foreground.</param>
+            <param name="foreground">The color of the background.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clone">
             <summary>
@@ -480,7 +494,7 @@
         </member>
         <member name="M:SadConsole.ColoredString.#ctor">
             <summary>
-            Default contructor.
+            Default constructor.
             </summary>
         </member>
         <member name="M:SadConsole.ColoredString.#ctor(System.Int32)">
@@ -516,6 +530,19 @@
             Combines a <see cref="T:SadConsole.ColoredGlyph"/> array into a <see cref="T:SadConsole.ColoredString"/>.
             </summary>
             <param name="glyphs">The glyphs to combine.</param>
+        </member>
+        <member name="M:SadConsole.ColoredString.Clone">
+            <summary>
+            Returns a new <see cref="T:SadConsole.ColoredString"/> object by cloning this instance.
+            </summary>
+            <returns>A new <see cref="T:SadConsole.ColoredString"/> object.</returns>
+        </member>
+        <member name="M:SadConsole.ColoredString.SubString(System.Int32)">
+            <summary>
+            Returns a new <see cref="T:SadConsole.ColoredString"/> object using a substring of this instance from the index to the end.
+            </summary>
+            <param name="index">The index to copy the contents from.</param>
+            <returns>A new <see cref="T:SadConsole.ColoredString"/> object.</returns>
         </member>
         <member name="M:SadConsole.ColoredString.SubString(System.Int32,System.Int32)">
             <summary>
@@ -1044,10 +1071,10 @@
         </member>
         <member name="M:SadConsole.Controls.Button.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates an instance of the button control with the specified width.
+            Creates an instance of the button control with the specified width and height.
             </summary>
             <param name="width">Width of the control.</param>
-            <param name="height">Height of the control.</param>
+            <param name="height">Height of the control (default is 1).</param>
         </member>
         <member name="M:SadConsole.Controls.Button.Update(System.TimeSpan)">
             <summary>
@@ -5407,6 +5434,14 @@
             <param name="appearance">The appearance of the cell</param>
             <param name="effect">An optional effect to apply to the printed cells.</param>
         </member>
+        <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,SadConsole.ColoredGlyph)">
+            <summary>
+            Draws a single glyph on the console at the specified location.
+            </summary>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="glyph">The glyph to display.</param>
+        </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.Print(System.Int32,System.Int32,SadConsole.ColoredString)">
             <summary>
             Draws the string on the console at the specified location, wrapping if needed.
@@ -5514,6 +5549,15 @@
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
         </member>
+        <member name="M:SadConsole.Surfaces.SurfaceBase.Clear(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
+            </summary>
+            <param name="x">The x position of the left end of the segment.</param>
+            <param name="y">The y position of the segment.</param>
+            <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
+            <remarks>This works similarly to printing a string of whitespace</remarks>
+        </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.Clear(Microsoft.Xna.Framework.Rectangle)">
             <summary>
             Clears an area of cells. Character is reset to 0, the forground and background is set to default, and effect is set to none. Clears cell decorators.
@@ -5524,20 +5568,35 @@
             <summary>
             Fills the console. Clears cell decorators.
             </summary>
-            <param name="foreground">Foregorund of every cell. If null, skips.</param>
-            <param name="background">Foregorund of every cell. If null, skips.</param>
-            <param name="glyph">Glyph of every cell. If null, skips.</param>
-            <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+            <param name="foreground">Foregorund to apply. If null, skips.</param>
+            <param name="background">Foregorund to apply. If null, skips.</param>
+            <param name="glyph">Glyph to apply. If null, skips.</param>
+            <param name="mirror">Sprite effect to apply. If null, skips.</param>
+            <returns>The array of all cells in this console, starting from the top left corner.</returns>
+        </member>
+        <member name="M:SadConsole.Surfaces.SurfaceBase.Fill(System.Int32,System.Int32,System.Int32,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
+            <summary>
+            Fills a segment of cells, starting from the left, extending to the right, and wrapping if needed. Clears cell decorators.
+            </summary>
+            <param name="x">The x position of the left end of the segment. </param>
+            <param name="y">The y position of the segment.</param>
+            <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
+            <param name="foreground">Foreground to apply. If null, skips.</param>
+            <param name="background">Background to apply. If null, skips.</param>
+            <param name="glyph">Glyph to apply. If null, skips.</param>
+            <param name="mirror">Sprite effect to apply. If null, skips.</param>
+            <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.Fill(Microsoft.Xna.Framework.Rectangle,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
             <summary>
             Fills the specified area. Clears cell decorators.
             </summary>
             <param name="area">The area to fill.</param>
-            <param name="foreground">Foregorund of every cell. If null, skips.</param>
-            <param name="background">Foregorund of every cell. If null, skips.</param>
-            <param name="glyph">Glyph of every cell. If null, skips.</param>
-            <param name="mirror">Sprite effect of every cell. If null, skips.</param>
+            <param name="foreground">Foreground to apply. If null, skips.</param>
+            <param name="background">Background to apply. If null, skips.</param>
+            <param name="glyph">Glyph to apply. If null, skips.</param>
+            <param name="mirror">Sprite effect to apply. If null, skips.</param>
+            <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.DrawLine(Microsoft.Xna.Framework.Point,Microsoft.Xna.Framework.Point,System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32})">
             <summary>
@@ -5549,6 +5608,7 @@
             <param name="background">Background to set. If null, skipped.</param>
             <param name="glyph">Glyph to set. If null, skipped.</param>
             <returns>A list of cells the line touched; ordered from first to last.</returns>
+            <remarks>If no foreground, background, or glyph are specified, then the list of affected cells are returned but nothing is drawn.</remarks>
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.DrawBox(Microsoft.Xna.Framework.Rectangle,SadConsole.Cell,SadConsole.Cell,System.Int32[])">
             <summary>
@@ -5569,16 +5629,14 @@
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.ConnectLines">
             <summary>
-            Connects all lines in a surface for both <see cref="!:LineStyleIndexesThin"/> and <see cref="!:LineStyleIndexesThick"/> styles.
+            Connects all lines in this surface for both <see cref="F:SadConsole.Surfaces.SurfaceBase.ConnectedLineThin"/> and <see cref="F:SadConsole.Surfaces.SurfaceBase.ConnectedLineThick"/> styles.
             </summary>
-            <param name="surface">The surface to process.</param>
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.ConnectLines(System.Int32[])">
             <summary>
-            Connects all lines in a surface based on the <paramref name="lineStyle"/> style provided.
+            Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
             </summary>
-            <param name="surface">The surface to process.</param>
-            <param name="lineStyle">The array of line styles indexed by <see cref="!:LineRoadIndex"/>.</param>
+            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.Surfaces.SurfaceBase.ConnectedLineIndex"/>.</param>
         </member>
         <member name="M:SadConsole.Surfaces.SurfaceBase.Copy(SadConsole.Surfaces.SurfaceBase)">
             <summary>
@@ -6620,6 +6678,14 @@
             Translates an x,y position to an array index.
             </summary>
             <param name="point">The position.</param>
+            <param name="rowWidth">How many columns in a row.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.PointExtensions.ToPoint(System.Int32,System.Int32)">
+            <summary>
+            Translates an array index to a Point.
+            </summary>
+            <param name="index">The index in the array.</param>
             <param name="rowWidth">How many columns in a row.</param>
             <returns></returns>
         </member>

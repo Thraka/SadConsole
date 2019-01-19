@@ -90,6 +90,15 @@ namespace SadConsole
         /// <param name="state">Current mouse state in relation to this console.</param>
         protected virtual void OnMouseMove(MouseConsoleState state)
         {
+            if (state.Mouse.LeftButtonDown)
+            {
+                if (MoveToFrontOnMouseClick && Parent != null && Parent.Children.IndexOf(this) != Parent.Children.Count - 1)
+                    Parent.Children.MoveToTop(this);
+
+                if (FocusOnMouseClick && !IsFocused)
+                    IsFocused = true;
+            }
+
             MouseMove?.Invoke(this, new MouseEventArgs(state));
         }
 
@@ -99,12 +108,6 @@ namespace SadConsole
         /// <param name="state">Current mouse state in relation to this console.</param>
         protected virtual void OnMouseLeftClicked(MouseConsoleState state)
         {
-            if (MoveToFrontOnMouseClick && Parent != null && Parent.Children.IndexOf(this) != Parent.Children.Count - 1)
-                Parent.Children.MoveToTop(this);
-
-            if (FocusOnMouseClick && !IsFocused)
-                IsFocused = true;
-
             MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
         }
 

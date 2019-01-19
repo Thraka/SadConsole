@@ -2,6 +2,7 @@
 
 using SadConsole.Surfaces;
 using System;
+using System.Globalization;
 
 namespace SadConsole.StringParser
 {
@@ -21,7 +22,7 @@ namespace SadConsole.StringParser
             string[] paramArray = parameters.Split(':');
 
             if (paramArray.Length == 2)
-                Counter = int.Parse(paramArray[1]);
+                Counter = int.Parse(paramArray[1], CultureInfo.InvariantCulture);
             else
                 Counter = -1;
 
