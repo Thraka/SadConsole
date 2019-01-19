@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28413.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsoleFNA", "src\SadConsoleFNA\SadConsoleFNA.csproj", "{364C730B-B238-4ED2-A3E3-427A8A5D5F07}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Shared", "src\SadConsole.Shared\SadConsole.Shared.shproj", "{111F8273-2EAD-47D3-88EC-CB0CD6122BE8}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DemoProject", "src\DemoProject\SharedCode\DemoProject.shproj", "{B41A356C-4BA6-40CC-AC03-0E5D46B0B981}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject.FNA", "src\DemoProject\DemoProject.FNA\DemoProject.FNA.csproj", "{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\SadConsole.Shared\SadConsole.Shared.projitems*{111f8273-2ead-47d3-88ec-cb0cd6122be8}*SharedItemsImports = 13
+		src\SadConsole.Shared\SadConsole.Shared.projitems*{364c730b-b238-4ed2-a3e3-427a8a5d5f07}*SharedItemsImports = 4
+		src\DemoProject\SharedCode\DemoProject.projitems*{680ff2f5-ae1c-4ae7-92f2-62bee74f7a43}*SharedItemsImports = 4
+		src\DemoProject\SharedCode\DemoProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{364C730B-B238-4ED2-A3E3-427A8A5D5F07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{364C730B-B238-4ED2-A3E3-427A8A5D5F07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{364C730B-B238-4ED2-A3E3-427A8A5D5F07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{364C730B-B238-4ED2-A3E3-427A8A5D5F07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{680FF2F5-AE1C-4AE7-92F2-62BEE74F7A43}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A3AB7591-B643-4D38-869A-8CE3F9EEBCAD}
+	EndGlobalSection
+EndGlobal

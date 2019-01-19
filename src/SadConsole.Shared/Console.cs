@@ -34,6 +34,16 @@ namespace SadConsole
         protected List<IConsoleComponent> ComponentsDraw;
 
         /// <summary>
+        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsMouse"/> is <see langword="true"/>.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsMouse;
+
+        /// <summary>
+        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsKeyboard;
+
+        /// <summary>
         /// A collection of components processed by this console.
         /// </summary>
         public ObservableCollection<IConsoleComponent> Components { get; private set; }
@@ -231,6 +241,11 @@ namespace SadConsole
             Components = new ObservableCollection<IConsoleComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
 
+            ComponentsKeyboard = new List<IConsoleComponent>();
+            ComponentsDraw = new List<IConsoleComponent>();
+            ComponentsUpdate = new List<IConsoleComponent>();
+            ComponentsMouse = new List<IConsoleComponent>();
+
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
             RenderRects = new Rectangle[Cells.Length];
@@ -261,6 +276,11 @@ namespace SadConsole
 
             Components = new ObservableCollection<IConsoleComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
+
+            ComponentsKeyboard = new List<IConsoleComponent>();
+            ComponentsDraw = new List<IConsoleComponent>();
+            ComponentsUpdate = new List<IConsoleComponent>();
+            ComponentsMouse = new List<IConsoleComponent>();
 
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
@@ -362,24 +382,34 @@ namespace SadConsole
             {
                 case NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
+                    {
                         FilterAddItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).Added(this);
+                    }
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
+                    {
                         FilterRemoveItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).Removed(this);
+                    }
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var item in e.NewItems)
+                    {
                         FilterAddItem((IConsoleComponent)item);
-
+                        ((IConsoleComponent)item).Added(this);
+                    }
                     foreach (var item in e.OldItems)
+                    {
                         FilterRemoveItem((IConsoleComponent)item);
-
+                        ((IConsoleComponent)item).Removed(this);
+                    }
                     break;
                 case NotifyCollectionChangedAction.Move:
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException("Calling Clear in this object is not supported. Please use the RemoveAll extension method.");
+                    throw new NotSupportedException("Calling Clear in this object is not supported. Use the RemoveAll extension method.");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -401,6 +431,22 @@ namespace SadConsole
 
                     ComponentsUpdate.Sort(CompareComponent);
                 }
+
+                if (component.IsKeyboard)
+                {
+                    if (!ComponentsKeyboard.Contains(component))
+                        ComponentsKeyboard.Add(component);
+
+                    ComponentsKeyboard.Sort(CompareComponent);
+                }
+
+                if (component.IsMouse)
+                {
+                    if (!ComponentsMouse.Contains(component))
+                        ComponentsMouse.Add(component);
+
+                    ComponentsMouse.Sort(CompareComponent);
+                }
             }
 
             void FilterRemoveItem(IConsoleComponent component)
@@ -419,6 +465,22 @@ namespace SadConsole
                         ComponentsUpdate.Remove(component);
 
                     ComponentsUpdate.Sort(CompareComponent);
+                }
+
+                if (component.IsKeyboard)
+                {
+                    if (!ComponentsKeyboard.Contains(component))
+                        ComponentsKeyboard.Remove(component);
+
+                    ComponentsKeyboard.Sort(CompareComponent);
+                }
+
+                if (component.IsMouse)
+                {
+                    if (!ComponentsMouse.Contains(component))
+                        ComponentsMouse.Remove(component);
+
+                    ComponentsMouse.Sort(CompareComponent);
                 }
             }
 

@@ -23,7 +23,7 @@ namespace StarterProject.CustomConsoles
             // Assign our custom handler method from our handler object to this consoles keyboard handler.
             // We could have overridden the ProcessKeyboard method, but I wanted to demonstrate how you
             // can use your own handler on any console type.
-            KeyboardHandler = _keyboardHandlerObject.HandleKeyboard;
+            Components.Add(_keyboardHandlerObject);
 
             // Our custom handler has a call back for processing the commands the user types. We could handle
             // this in any method object anywhere, but we've implemented it on this console directly.
