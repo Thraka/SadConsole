@@ -157,11 +157,7 @@ namespace SadConsole
 
             control.Parent = this;
             control.TabIndex = ControlsList.Count - 1;
-
-
-            if (ControlsList.Count == 1)
-                FocusedControl = control;
-
+            
             control.IsDirtyChanged += ControlOnIsDirtyChanged;
 
             IsDirty = true;
@@ -466,9 +462,14 @@ namespace SadConsole
                 info = KeyboardState;
             }
 
-            var handlerResult = KeyboardHandler != null && KeyboardHandler(this, info);
+            foreach (var component in ComponentsKeyboard)
+            {
+                component.ProcessKeyboard(this, info, out bool isHandled);
 
-            if (!handlerResult && UseKeyboard)
+                if (isHandled) return true;
+            }
+
+            if (UseKeyboard)
             {
                 if (
                     ((info.IsKeyDown(Keys.LeftShift)  ||

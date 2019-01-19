@@ -9,7 +9,7 @@ using System;
 
 namespace StarterProject.InputHandling
 {
-    class ClassicConsoleKeyboardHandler
+    class ClassicConsoleKeyboardHandler: KeyboardConsoleComponent
     {
         // This holds the row that the virtual cursor is starting from when someone is typing.
         public int CursorLastY;
@@ -17,10 +17,11 @@ namespace StarterProject.InputHandling
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public Action<string> EnterPressedAction = (s) => { int i = s.Length; };
 
-        public bool HandleKeyboard(SadConsole.Console consoleObject, SadConsole.Input.Keyboard info)
+        public override void ProcessKeyboard(SadConsole.Console consoleObject, SadConsole.Input.Keyboard info, out bool handled)
         {
             // Upcast this because we know we're only using it with a Console type.
             var console = (ScrollingConsole)consoleObject;
+
             // Check each key pressed.
             foreach (var key in info.KeysPressed)
             {
@@ -78,7 +79,9 @@ namespace StarterProject.InputHandling
                     console.TimesShiftedUp = 0;
                 }
             }
-            return true;
+
+            handled = true;
         }
+        
     }
 }

@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Content\ContentProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Content\Font\FontLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Content\Texture\TextureLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IConsoleComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSurface.cs" />

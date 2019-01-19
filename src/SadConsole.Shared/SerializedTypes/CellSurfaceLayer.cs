@@ -49,6 +49,7 @@ namespace SadConsole.SerializedTypes
             {
                 DefaultBackground = screen.DefaultBackground,
                 DefaultForeground = screen.DefaultForeground,
+                Name = screen.Name
             };
         }
     }

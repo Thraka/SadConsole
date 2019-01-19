@@ -52,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\TextCursorConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ViewsAndSubViews.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputHandling\MoveViewPortKeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputHandling\ClassicConsoleKeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Theme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\CharacterViewer.cs" />

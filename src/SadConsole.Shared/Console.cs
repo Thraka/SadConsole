@@ -8,6 +8,9 @@ namespace SadConsole
     using Newtonsoft.Json;
     using SadConsole.DrawCalls;
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
 
     /// <summary>
     /// A <see cref="CellSurface"/> that has a font and can be drawn to the screen.
@@ -19,6 +22,31 @@ namespace SadConsole
         private Point _position;
         private bool _isVisible = true;
         private bool _isPaused;
+        
+        /// <summary>
+        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsUpdate;
+
+        /// <summary>
+        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsDraw"/> is <see langword="true"/>.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsDraw;
+
+        /// <summary>
+        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsMouse"/> is <see langword="true"/>.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsMouse;
+
+        /// <summary>
+        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsKeyboard;
+
+        /// <summary>
+        /// A collection of components processed by this console.
+        /// </summary>
+        public ObservableCollection<IConsoleComponent> Components { get; private set; }
 
         /// <summary>
         /// How the console should handle becoming active.
@@ -210,6 +238,14 @@ namespace SadConsole
         /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
         public Console(int width, int height, Font font, Cell[] cells) : base(width, height, cells)
         {
+            Components = new ObservableCollection<IConsoleComponent>();
+            Components.CollectionChanged += Components_CollectionChanged;
+
+            ComponentsKeyboard = new List<IConsoleComponent>();
+            ComponentsDraw = new List<IConsoleComponent>();
+            ComponentsUpdate = new List<IConsoleComponent>();
+            ComponentsMouse = new List<IConsoleComponent>();
+
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
             RenderRects = new Rectangle[Cells.Length];
@@ -233,10 +269,19 @@ namespace SadConsole
             LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             Cursor = new Cursor(this);
         }
-
+        
         internal Console(): base(1, 1)
         {
             IsCursorDisabled = true;
+
+            Components = new ObservableCollection<IConsoleComponent>();
+            Components.CollectionChanged += Components_CollectionChanged;
+
+            ComponentsKeyboard = new List<IConsoleComponent>();
+            ComponentsDraw = new List<IConsoleComponent>();
+            ComponentsUpdate = new List<IConsoleComponent>();
+            ComponentsMouse = new List<IConsoleComponent>();
+
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
             RenderRects = new Rectangle[Cells.Length];
@@ -330,6 +375,126 @@ namespace SadConsole
         /// Called when the paused status of the object changes.
         /// </summary>
         protected virtual void OnPausedChanged() { }
+
+        private void Components_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        FilterAddItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).Added(this);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        FilterRemoveItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).Removed(this);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (var item in e.NewItems)
+                    {
+                        FilterAddItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).Added(this);
+                    }
+                    foreach (var item in e.OldItems)
+                    {
+                        FilterRemoveItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).Removed(this);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    throw new NotSupportedException("Calling Clear in this object is not supported. Use the RemoveAll extension method.");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            void FilterAddItem(IConsoleComponent component)
+            {
+                if (component.IsDraw)
+                {
+                    if (!ComponentsDraw.Contains(component))
+                        ComponentsDraw.Add(component);
+
+                    ComponentsDraw.Sort(CompareComponent);
+                }
+
+                if (component.IsUpdate)
+                {
+                    if (!ComponentsUpdate.Contains(component))
+                        ComponentsUpdate.Add(component);
+
+                    ComponentsUpdate.Sort(CompareComponent);
+                }
+
+                if (component.IsKeyboard)
+                {
+                    if (!ComponentsKeyboard.Contains(component))
+                        ComponentsKeyboard.Add(component);
+
+                    ComponentsKeyboard.Sort(CompareComponent);
+                }
+
+                if (component.IsMouse)
+                {
+                    if (!ComponentsMouse.Contains(component))
+                        ComponentsMouse.Add(component);
+
+                    ComponentsMouse.Sort(CompareComponent);
+                }
+            }
+
+            void FilterRemoveItem(IConsoleComponent component)
+            {
+                if (component.IsDraw)
+                {
+                    if (!ComponentsDraw.Contains(component))
+                        ComponentsDraw.Remove(component);
+
+                    ComponentsDraw.Sort(CompareComponent);
+                }
+
+                if (component.IsUpdate)
+                {
+                    if (!ComponentsUpdate.Contains(component))
+                        ComponentsUpdate.Remove(component);
+
+                    ComponentsUpdate.Sort(CompareComponent);
+                }
+
+                if (component.IsKeyboard)
+                {
+                    if (!ComponentsKeyboard.Contains(component))
+                        ComponentsKeyboard.Remove(component);
+
+                    ComponentsKeyboard.Sort(CompareComponent);
+                }
+
+                if (component.IsMouse)
+                {
+                    if (!ComponentsMouse.Contains(component))
+                        ComponentsMouse.Remove(component);
+
+                    ComponentsMouse.Sort(CompareComponent);
+                }
+            }
+
+            int CompareComponent(IConsoleComponent left, IConsoleComponent right)
+            {
+                if (left.SortOrder > right.SortOrder)
+                    return 1;
+
+                if (left.SortOrder < right.SortOrder)
+                    return -1;
+
+                return 0;
+            }
+        }
 
         /// <summary>
         /// Saves the <see cref="Console"/> to a file.

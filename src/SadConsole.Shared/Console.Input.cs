@@ -51,16 +51,6 @@
         public bool UseMouse { get; set; } = true;
 
         /// <summary>
-        /// An alternative method handler for handling the mouse logic.
-        /// </summary>
-        public Func<Console, MouseConsoleState, bool> MouseHandler { get; set; }
-
-        /// <summary>
-        /// An alternative method handler for handling the keyboard logic.
-        /// </summary>
-        public Func<Console, Keyboard, bool> KeyboardHandler { get; set; }
-
-        /// <summary>
         /// Raises the <see cref="MouseEnter"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
@@ -134,7 +124,14 @@
         /// <returns>True when the mouse is over this console and processing should stop.</returns>
         public virtual bool ProcessMouse(MouseConsoleState state)
         {
-            return MouseHandler?.Invoke(this, state) ?? ProcessMouseNonHandler(state);
+            foreach (var component in ComponentsMouse)
+            {
+                component.ProcessMouse(this, state, out bool isHandled);
+
+                if (isHandled) return true;
+            }
+
+            return ProcessMouseNonHandler(state);
         }
 
         /// <summary>
@@ -144,8 +141,6 @@
         /// <returns>True when the mouse is over this console and processing should stop.</returns>
         public bool ProcessMouseNonHandler(MouseConsoleState state)
         {
-            if (MouseHandler != null)
-                return MouseHandler.Invoke(this, state);
 
             if (!IsVisible || !UseMouse) return false;
 
@@ -184,8 +179,12 @@
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
         public virtual bool ProcessKeyboard(Keyboard info)
         {
-            if (KeyboardHandler != null)
-                return KeyboardHandler.Invoke(this, info);
+            foreach (var component in ComponentsKeyboard)
+            {
+                component.ProcessKeyboard(this, info, out bool isHandled);
+
+                if (isHandled) return true;
+            }
 
             if (!UseKeyboard) return false;
 

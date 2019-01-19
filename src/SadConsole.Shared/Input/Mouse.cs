@@ -182,7 +182,7 @@ namespace SadConsole.Input
                 bool foundMouseTarget = false;
 
                 // Build a list of all consoles
-                var consoles = new List<ScrollingConsole>();
+                var consoles = new List<Console>();
                 GetConsoles(Global.CurrentScreen, ref consoles);
 
                 // Process top-most consoles first.
@@ -209,15 +209,10 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(Console screen, ref List<ScrollingConsole> list)
+        private void GetConsoles(Console screen, ref List<Console> list)
         {
-            if (screen is ScrollingConsole)
-            {
-                var console = screen as ScrollingConsole;
-
-                if (console.UseMouse)
-                    list.Add(console);
-            }
+            if (screen.UseMouse)
+                list.Add(screen);
 
             foreach (var child in screen.Children)
             {

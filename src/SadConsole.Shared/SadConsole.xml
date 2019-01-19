@@ -1736,6 +1736,31 @@
             A <see cref="T:SadConsole.CellSurface"/> that has a font and can be drawn to the screen.
             </summary>
         </member>
+        <member name="F:SadConsole.Console.ComponentsUpdate">
+            <summary>
+            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Console.ComponentsDraw">
+            <summary>
+            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsDraw"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Console.ComponentsMouse">
+            <summary>
+            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsMouse"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Console.ComponentsKeyboard">
+            <summary>
+            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Components">
+            <summary>
+            A collection of components processed by this console.
+            </summary>
+        </member>
         <member name="P:SadConsole.Console.FocusedMode">
             <summary>
             How the console should handle becoming active.
@@ -1926,16 +1951,6 @@
             Allows this console to accept mouse input.
             </summary>
         </member>
-        <member name="P:SadConsole.Console.MouseHandler">
-            <summary>
-            An alternative method handler for handling the mouse logic.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.KeyboardHandler">
-            <summary>
-            An alternative method handler for handling the keyboard logic.
-            </summary>
-        </member>
         <member name="M:SadConsole.Console.OnMouseEnter(SadConsole.Input.MouseConsoleState)">
             <summary>
             Raises the <see cref="E:SadConsole.Console.MouseEnter"/> event.
@@ -1981,14 +1996,14 @@
         </member>
         <member name="M:SadConsole.Console.ProcessMouseNonHandler(SadConsole.Input.MouseConsoleState)">
             <summary>
-            Processing the mouse ignoring the attached <see cref="P:SadConsole.Console.MouseHandler"/>.
+            Processing the mouse ignoring the attached <see cref="!:MouseHandler"/>.
             </summary>
             <param name="state">The mouse state related to this console.</param>
             <returns>True when the mouse is over this console and processing should stop.</returns>
         </member>
         <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
-            Called by the engine to process the keyboard. If called, invokes the <see cref="P:SadConsole.Console.KeyboardHandler"/>; otherwise invokes the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method.
+            Called by the engine to process the keyboard. If called, invokes the <see cref="!:KeyboardHandler"/>; otherwise invokes the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method.
             </summary>
             <param name="info">Keyboard information.</param>
             <returns>True when the keyboard had data and this console did something with it.</returns>
@@ -3965,15 +3980,23 @@
             Creates a new Entity.
             </summary>
         </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Int32)">
+            <summary>
+            Creates a new 1x1 entity with the specified foreground, background, and glyph.
+            </summary>
+            <param name="foreground">The foreground color of the entity.</param>
+            <param name="background">The background color of the entity.</param>
+            <param name="glyph">The glyph color of the entity.</param>
+        </member>
         <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedConsole)">
             <summary>
             Creates a new Entity with a default animation/
             </summary>
-            <param name="animation">The default animation. The animation will have its <see cref="!:Surfaces.AnimatedConsole.Name"/> property changesd to "default".</param>
+            <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.AnimatedConsole.Name"/> property changesd to "default".</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.AnimatedConsole.AnimationStateChangedEventArgs)">
             <summary>
-            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="!:Surfaces.AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
+            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
             </summary>
             <param name="sender">The animation calling this method.</param>
             <param name="e">The state of the animation.</param>
@@ -4561,6 +4584,234 @@
             <param name="width">Width that includes the point.</param>
             <returns>The cell index.</returns>
         </member>
+        <member name="T:SadConsole.IConsoleComponent">
+            <summary>
+            A component that can be added to a <see cref="T:SadConsole.Console"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IConsoleComponent.IsUpdate">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IConsoleComponent.IsDraw">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IConsoleComponent.IsMouse">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.IConsoleComponent.ProcessMouse(SadConsole.Console,SadConsole.Input.MouseConsoleState,System.Boolean@)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IConsoleComponent.IsKeyboard">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.IConsoleComponent.ProcessKeyboard(SadConsole.Console,SadConsole.Input.Keyboard,System.Boolean@)"/> method.
+            </summary>
+        </member>
+        <member name="M:SadConsole.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)">
+            <summary>
+            Called by a host on the update frame.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)">
+            <summary>
+            Called by a host on the draw frame.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.IConsoleComponent.ProcessMouse(SadConsole.Console,SadConsole.Input.MouseConsoleState,System.Boolean@)">
+            <summary>
+            Called by a host when the mouse is being processed.
+            </summary>
+            <param name="console">The host console.</param>
+            <param name="state">The mouse state.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.IConsoleComponent.ProcessKeyboard(SadConsole.Console,SadConsole.Input.Keyboard,System.Boolean@)">
+            <summary>
+            Called by a host when the keyboard is being processed.
+            </summary>
+            <param name="console">The host console.</param>
+            <param name="info">The keyboard state.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.IConsoleComponent.Added(SadConsole.Console)">
+            <summary>
+            Called when the component is added to a host.
+            </summary>
+            <param name="console">The host that added the component.</param>
+        </member>
+        <member name="M:SadConsole.IConsoleComponent.Removed(SadConsole.Console)">
+            <summary>
+            Called when the component is removed from the host.
+            </summary>
+            <param name="console">The host that removed the component.</param>
+        </member>
+        <member name="T:SadConsole.UpdateConsoleComponent">
+            <summary>
+            An <see cref="T:SadConsole.IConsoleComponent"/> that only works with <see cref="M:SadConsole.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UpdateConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UpdateConsoleComponent.Update(SadConsole.Console,System.TimeSpan)">
+            <summary>
+            Called by a host on the update frame.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.UpdateConsoleComponent.Added(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UpdateConsoleComponent.Removed(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.DrawConsoleComponent">
+            <summary>
+            An <see cref="T:SadConsole.IConsoleComponent"/> that only works with <see cref="M:SadConsole.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.DrawConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)">
+            <summary>
+            Called by a host on the draw frame.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.DrawConsoleComponent.Added(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.DrawConsoleComponent.Removed(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.MouseConsoleComponent">
+            <summary>
+            An <see cref="T:SadConsole.IConsoleComponent"/> that only works with <see cref="M:SadConsole.IConsoleComponent.ProcessMouse(SadConsole.Console,SadConsole.Input.MouseConsoleState,System.Boolean@)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.MouseConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.MouseConsoleComponent.ProcessMouse(SadConsole.Console,SadConsole.Input.MouseConsoleState,System.Boolean@)">
+            <summary>
+            Called by a host when the mouse is being processed.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="state">The state of the mouse in relation to the console.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.MouseConsoleComponent.Added(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.MouseConsoleComponent.Removed(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.KeyboardConsoleComponent">
+            <summary>
+            An <see cref="T:SadConsole.IConsoleComponent"/> that only works with <see cref="M:SadConsole.IConsoleComponent.ProcessKeyboard(SadConsole.Console,SadConsole.Input.Keyboard,System.Boolean@)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.KeyboardConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.KeyboardConsoleComponent.ProcessKeyboard(SadConsole.Console,SadConsole.Input.Keyboard,System.Boolean@)">
+            <summary>
+            Called by a host when the keyboard is being processed.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="info">The state of the keyboard.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.KeyboardConsoleComponent.Added(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.KeyboardConsoleComponent.Removed(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.InputConsoleComponent">
+            <summary>
+            An <see cref="T:SadConsole.IConsoleComponent"/> that only works with <see cref="M:SadConsole.IConsoleComponent.ProcessMouse(SadConsole.Console,SadConsole.Input.MouseConsoleState,System.Boolean@)"/> and <see cref="M:SadConsole.IConsoleComponent.ProcessKeyboard(SadConsole.Console,SadConsole.Input.Keyboard,System.Boolean@)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.InputConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.InputConsoleComponent.ProcessKeyboard(SadConsole.Console,SadConsole.Input.Keyboard,System.Boolean@)">
+            <summary>
+            Called by a host when the keyboard is being processed.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="info">The state of the keyboard.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.InputConsoleComponent.ProcessMouse(SadConsole.Console,SadConsole.Input.MouseConsoleState,System.Boolean@)">
+            <summary>
+            Called by a host when the mouse is being processed.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="state">The state of the mouse in relation to the console.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.InputConsoleComponent.Added(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.InputConsoleComponent.Removed(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.LogicConsoleComponent">
+            <summary>
+            An <see cref="T:SadConsole.IConsoleComponent"/> that only works with <see cref="M:SadConsole.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)"/> and <see cref="M:SadConsole.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LogicConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.LogicConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)">
+            <summary>
+            Called by a host on the draw frame.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.LogicConsoleComponent.Update(SadConsole.Console,System.TimeSpan)">
+            <summary>
+            Called by a host on the update frame.
+            </summary>
+            <param name="console">The console calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.LogicConsoleComponent.Added(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.LogicConsoleComponent.Removed(SadConsole.Console)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.IConsoleViewPort">
             <summary>
             A <see cref="T:Microsoft.Xna.Framework.Rectangle"/> for viewing a subset of cells from a <see cref="T:SadConsole.Console"/>.
@@ -4693,7 +4944,8 @@
         </member>
         <member name="P:SadConsole.Input.Keyboard.KeysPressed">
             <summary>
-            A collection of keys registered as pressed which behaves like a command prompt when holding down keys. Uses the <see cref="F:SadConsole.Input.Keyboard.RepeatDelay"/> and <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/> settings.
+            A collection of keys registered as pressed which behaves like a command prompt when holding down keys. 
+            Uses the <see cref="F:SadConsole.Input.Keyboard.RepeatDelay"/> and <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/> settings.
             </summary>
         </member>
         <member name="P:SadConsole.Input.Keyboard.KeysDown">
@@ -5727,7 +5979,7 @@
         </member>
         <member name="P:SadConsole.Settings.UseDefaultExtendedFont">
             <summary>
-            When set to true, and a font is not specified with the <see cref="M:SadConsole.Game.Create(System.String,System.Int32,System.Int32,System.Action{SadConsole.Game})"/> overload, the IBM 8x16 extended SadConsole font will be used.
+            When set to true, and a font is not specified with the <see cref="!:Game.Create(string, int, int, Action&lt;Game&gt;)"/> overload, the IBM 8x16 extended SadConsole font will be used.
             </summary>
         </member>
         <member name="M:SadConsole.Settings.ToggleFullScreen">
@@ -5869,7 +6121,8 @@
         </member>
         <member name="M:SadConsole.StringParser.ParseCommandStacks.AddSafe(SadConsole.StringParser.ParseCommandBase)">
             <summary>
-            Adds a behavior to the <see cref="F:SadConsole.StringParser.ParseCommandStacks.All"/> collection and the collection based on the <see cref="F:SadConsole.StringParser.ParseCommandBase.CommandType"/> type.
+            Adds a behavior to the <see cref="F:SadConsole.StringParser.ParseCommandStacks.All"/> collection and the collection 
+            based on the <see cref="F:SadConsole.StringParser.ParseCommandBase.CommandType"/> type.
             </summary>
             <param name="command"></param>
         </member>
@@ -5891,7 +6144,8 @@
         </member>
         <member name="P:SadConsole.Themes.ButtonTheme.ShowEnds">
             <summary>
-            When true, renders the <see cref="P:SadConsole.Themes.ButtonTheme.EndCharacterLeft"/> and <see cref="P:SadConsole.Themes.ButtonTheme.EndCharacterRight"/> on the button.
+            When true, renders the <see cref="P:SadConsole.Themes.ButtonTheme.EndCharacterLeft"/> 
+            and <see cref="P:SadConsole.Themes.ButtonTheme.EndCharacterRight"/> on the button.
             </summary>
         </member>
         <member name="P:SadConsole.Themes.ButtonTheme.EndCharacterLeft">

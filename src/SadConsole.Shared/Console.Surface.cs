@@ -139,6 +139,9 @@ namespace SadConsole
                 Global.DrawCalls.Add(_drawCall);
             }
 
+            foreach (var component in ComponentsDraw)
+                component.Draw(this, timeElapsed);
+
             var copyList = new List<Console>(Children);
             foreach (var child in copyList)
                 child.Draw(timeElapsed);
@@ -157,6 +160,9 @@ namespace SadConsole
 
             if (!IsCursorDisabled && Cursor.IsVisible)
                 Cursor.Update(timeElapsed);
+
+            foreach (var component in ComponentsUpdate)
+                component.Update(this, timeElapsed);
 
             var copyList = new List<Console>(Children);
 
