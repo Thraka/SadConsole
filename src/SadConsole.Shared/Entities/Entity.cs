@@ -85,7 +85,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new Entity.
         /// </summary>
-        public Entity(int width, int height, Font font) : base(width, height, font)
+        public Entity(int width, int height, Font font)
         {
             IsCursorDisabled = true;
             Animation = new AnimatedConsole("default", width, height, Global.FontDefault);
@@ -94,10 +94,24 @@ namespace SadConsole.Entities
         }
 
         /// <summary>
+        /// Creates a new 1x1 entity with the specified foreground, background, and glyph.
+        /// </summary>
+        /// <param name="foreground">The foreground color of the entity.</param>
+        /// <param name="background">The background color of the entity.</param>
+        /// <param name="glyph">The glyph color of the entity.</param>
+        public Entity(Color foreground, Color background, int glyph)
+        {
+            IsCursorDisabled = true;
+            Animation = new AnimatedConsole("default", 1, 1, Global.FontDefault);
+            animation.CreateFrame().SetGlyph(0, 0, glyph, foreground, background);
+            Animations.Add("default", animation);
+        }
+
+        /// <summary>
         /// Creates a new Entity with a default animation/
         /// </summary>
-        /// <param name="animation">The default animation. The animation will have its <see cref="Surfaces.AnimatedConsole.Name"/> property changesd to "default".</param>
-        public Entity(AnimatedConsole animation): base(animation.Width, animation.Height, animation.Font)
+        /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedConsole.Name"/> property changesd to "default".</param>
+        public Entity(AnimatedConsole animation)
         {
             IsCursorDisabled = true;
             animation.Name = "default";
@@ -106,7 +120,7 @@ namespace SadConsole.Entities
         }
         
         /// <summary>
-        /// Called when the current <see cref="Animation"/> raises the <see cref="Surfaces.AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="AnimationStateChanged"/> event for the entity.
+        /// Called when the current <see cref="Animation"/> raises the <see cref="AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="AnimationStateChanged"/> event for the entity.
         /// </summary>
         /// <param name="sender">The animation calling this method.</param>
         /// <param name="e">The state of the animation.</param>

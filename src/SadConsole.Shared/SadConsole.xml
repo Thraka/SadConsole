@@ -3980,15 +3980,23 @@
             Creates a new Entity.
             </summary>
         </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Int32)">
+            <summary>
+            Creates a new 1x1 entity with the specified foreground, background, and glyph.
+            </summary>
+            <param name="foreground">The foreground color of the entity.</param>
+            <param name="background">The background color of the entity.</param>
+            <param name="glyph">The glyph color of the entity.</param>
+        </member>
         <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedConsole)">
             <summary>
             Creates a new Entity with a default animation/
             </summary>
-            <param name="animation">The default animation. The animation will have its <see cref="!:Surfaces.AnimatedConsole.Name"/> property changesd to "default".</param>
+            <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.AnimatedConsole.Name"/> property changesd to "default".</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.AnimatedConsole.AnimationStateChangedEventArgs)">
             <summary>
-            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="!:Surfaces.AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
+            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
             </summary>
             <param name="sender">The animation calling this method.</param>
             <param name="e">The state of the animation.</param>
