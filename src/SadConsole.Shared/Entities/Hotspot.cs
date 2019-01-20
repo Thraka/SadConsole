@@ -24,7 +24,7 @@ namespace SadConsole.Entities
         /// The hotspot position on the map.
         /// </summary>
         [DataMember]
-        public List<Point> Positions { get; } = new List<Point>();
+        public HashSet<Point> Positions { get; } = new HashSet<Point>();
 
         /// <summary>
         /// A visual for the area to help debug.
