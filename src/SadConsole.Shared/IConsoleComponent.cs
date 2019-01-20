@@ -67,13 +67,13 @@ namespace SadConsole
         /// Called when the component is added to a host.
         /// </summary>
         /// <param name="console">The host that added the component.</param>
-        void Added(Console console);
+        void OnAdded(Console console);
 
         /// <summary>
         /// Called when the component is removed from the host.
         /// </summary>
         /// <param name="console">The host that removed the component.</param>
-        void Removed(Console console);
+        void OnRemoved(Console console);
     }
 
     /// <summary>
@@ -94,10 +94,10 @@ namespace SadConsole
         public abstract void Update(Console console, TimeSpan delta);
 
         /// <inheritdoc />
-        public virtual void Added(Console console) { }
+        public virtual void OnAdded(Console console) { }
 
         /// <inheritdoc />
-        public virtual void Removed(Console console) { }
+        public virtual void OnRemoved(Console console) { }
         
         int IConsoleComponent.SortOrder => SortOrder;
 
@@ -136,10 +136,10 @@ namespace SadConsole
         public abstract void Draw(Console console, TimeSpan delta);
 
         /// <inheritdoc />
-        public virtual void Added(Console console) { }
+        public virtual void OnAdded(Console console) { }
 
         /// <inheritdoc />
-        public virtual void Removed(Console console) { }
+        public virtual void OnRemoved(Console console) { }
 
         int IConsoleComponent.SortOrder => SortOrder;
 
@@ -179,10 +179,10 @@ namespace SadConsole
         public abstract void ProcessMouse(Console console, MouseConsoleState state, out bool handled);
 
         /// <inheritdoc />
-        public virtual void Added(Console console) { }
+        public virtual void OnAdded(Console console) { }
 
         /// <inheritdoc />
-        public virtual void Removed(Console console) { }
+        public virtual void OnRemoved(Console console) { }
 
         int IConsoleComponent.SortOrder => SortOrder;
 
@@ -222,10 +222,10 @@ namespace SadConsole
         public abstract void ProcessKeyboard(Console console, Keyboard info, out bool handled);
 
         /// <inheritdoc />
-        public virtual void Added(Console console) { }
+        public virtual void OnAdded(Console console) { }
 
         /// <inheritdoc />
-        public virtual void Removed(Console console) { }
+        public virtual void OnRemoved(Console console) { }
 
         int IConsoleComponent.SortOrder => SortOrder;
 
@@ -273,10 +273,10 @@ namespace SadConsole
         public abstract void ProcessMouse(Console console, MouseConsoleState state, out bool handled);
 
         /// <inheritdoc />
-        public virtual void Added(Console console) { }
+        public virtual void OnAdded(Console console) { }
 
         /// <inheritdoc />
-        public virtual void Removed(Console console) { }
+        public virtual void OnRemoved(Console console) { }
 
         int IConsoleComponent.SortOrder => SortOrder;
 
@@ -323,10 +323,10 @@ namespace SadConsole
         public abstract void Update(Console console, TimeSpan delta);
 
         /// <inheritdoc />
-        public virtual void Added(Console console) { }
+        public virtual void OnAdded(Console console) { }
 
         /// <inheritdoc />
-        public virtual void Removed(Console console) { }
+        public virtual void OnRemoved(Console console) { }
 
         int IConsoleComponent.SortOrder => SortOrder;
 
@@ -380,29 +380,10 @@ namespace SadConsole
         public abstract void ProcessMouse(Console console, MouseConsoleState state, out bool handled);
 
         /// <inheritdoc />
-        public virtual void Removed(Console console) { }
+        public virtual void OnRemoved(Console console) { }
 
         
         /// <inheritdoc />
-        public virtual void Added(Console console) { }
+        public virtual void OnAdded(Console console) { }
     }
-
-    /// <summary>
-    /// Compares two <see cref="IConsoleComponent.SortOrder"/> values.
-    /// </summary>
-    public class ConsoleComponentSortComparison : System.Collections.Generic.IComparer<IConsoleComponent>
-    {
-        /// <inheritdoc />
-        public int Compare(IConsoleComponent x, IConsoleComponent y)
-        {
-            if (x.SortOrder > y.SortOrder)
-                return 1;
-
-            if (x.SortOrder < y.SortOrder)
-                return -1;
-
-            return 0;
-        }
-    }
-
 }
