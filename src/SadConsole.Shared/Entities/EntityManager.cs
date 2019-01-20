@@ -256,7 +256,7 @@ namespace SadConsole.Entities
                     }
 
                     // Entered zone
-                    else
+                    else if (isZone)
                     {
                         EnterZone?.Invoke(this, new ZoneEventArgs(console, zone, entity, entity.Position));
                         state.IsInZone = true;
@@ -280,13 +280,15 @@ namespace SadConsole.Entities
                         state.IsInHotspot = false;
                         state.Hotspot = null;
                     }
-                    else
+                    else if (isHotspot)
                     {
                         EnterHotspot?.Invoke(this, new HotspotEventArgs(console, spot, entity, entity.Position));
 
                         state.IsInHotspot = true;
                         state.Hotspot = spot;
                     }
+
+                    state.Position = entity.Position;
                 }
             }
         }
@@ -325,7 +327,7 @@ namespace SadConsole.Entities
 
 
         /// <inheritdoc />
-        public override void Added(Console console)
+        public override void OnAdded(Console console)
         {
             if (_hasBeenAdded) throw new Exception("The entity manager does not support being added to two different consoles. Remove this component from the previous console before adding it to another.");
 
@@ -337,7 +339,7 @@ namespace SadConsole.Entities
         }
 
         /// <inheritdoc />
-        public override void Removed(Console console)
+        public override void OnRemoved(Console console)
         {
             _hasBeenAdded = false;
             _cachedView = default;
