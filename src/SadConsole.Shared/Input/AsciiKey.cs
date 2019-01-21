@@ -21,6 +21,7 @@ namespace SadConsole.Input
 		[DllImport("user32.dll")]
         static extern short GetKeyState(int keyCode);
 
+        // It will be nice when we can use modern Tuples here.
         static readonly Dictionary<Keys, cases> keyMappings = new Dictionary<Keys, cases>
         {
             {Keys.OemComma,             new cases(',', '<') },
