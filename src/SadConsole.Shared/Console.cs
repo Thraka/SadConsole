@@ -24,22 +24,22 @@ namespace SadConsole
         private bool _isPaused;
         
         /// <summary>
-        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
         /// </summary>
         protected List<IConsoleComponent> ComponentsUpdate;
 
         /// <summary>
-        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsDraw"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsDraw"/> is <see langword="true"/>.
         /// </summary>
         protected List<IConsoleComponent> ComponentsDraw;
 
         /// <summary>
-        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsMouse"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsMouse"/> is <see langword="true"/>.
         /// </summary>
         protected List<IConsoleComponent> ComponentsMouse;
 
         /// <summary>
-        /// A filterd list from <see cref="Components"/> where <see cref="IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
         /// </summary>
         protected List<IConsoleComponent> ComponentsKeyboard;
 
