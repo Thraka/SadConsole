@@ -9,7 +9,9 @@ namespace SadConsole
     using SadConsole.Effects;
     using System;
 
-    //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
+    /// <summary>
+    /// A cursor that is attached to a <see cref="Console"/> used for printing.
+    /// </summary>
     public class Cursor
     {
         private CellSurface editor;
@@ -76,7 +78,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// When true, prevents the <see cref="Print"/> method from breaking words up by spaces when wrapping lines.
+        /// When true, prevents the any print method from breaking words up by spaces when wrapping lines.
         /// </summary>
         public bool DisableWordBreak = false;
 
@@ -146,20 +148,22 @@ namespace SadConsole
         /// Sets the console this cursor is targetting.
         /// </summary>
         /// <param name="console">The console the cursor works with.</param>
-        internal void AttachSurface(CellSurface console)
+        public void AttachSurface(CellSurface console)
         {
             editor = console;
+            Position = Position;
         }
 
         /// <summary>
         /// Resets the <see cref="CursorRenderCell"/> back to the default.
         /// </summary>
-        public void ResetCursorEffect()
+        public Cursor ResetCursorEffect()
         {
             SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
             blinkEffect.BlinkSpeed = 0.35f;
             CursorEffect = blinkEffect;
             CursorEffect.AddCell(CursorRenderCell);
+            return this;
         }
 
         /// <summary>
@@ -172,8 +176,19 @@ namespace SadConsole
             if (editor != null)
                 PrintAppearance = new Cell(editor.DefaultForeground, editor.DefaultBackground, 0);
             else
-                throw new Exception("CellData of the attached console is null. Cannot reset appearance.");
+                throw new Exception("Attached console is null. Cannot reset appearance.");
 
+            return this;
+        }
+
+        /// <summary>
+        /// Sets <see cref="PrintAppearance"/>.
+        /// </summary>
+        /// <param name="appearance">The appearance to set.</param>
+        /// <returns>This cursor object.</returns>
+        public Cursor SetPrintAppearance(Cell appearance)
+        {
+            PrintAppearance = appearance;
             return this;
         }
 
@@ -435,12 +450,23 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Calls the <see cref="M:CarriageReturn()"/> and <see cref="M:LineFeed()"/> methods in a single call.
+        /// Calls the <see cref="CarriageReturn"/> and <see cref="LineFeed"/> methods in a single call.
         /// </summary>
         /// <returns>The current cursor object.</returns>
         public Cursor NewLine()
         {
             return CarriageReturn().LineFeed();
+        }
+
+        /// <summary>
+        /// Moves the cursor to the specified position.
+        /// </summary>
+        /// <param name="position">The destination of the cursor.</param>
+        /// <returns>This cursor object.</returns>
+        public Cursor Move(Point position)
+        {
+            Position = position;
+            return this;
         }
 
         /// <summary>
@@ -541,6 +567,7 @@ namespace SadConsole
             return this;
         }
 
+        /// <inheritdoc />
         public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
         {
             batch.Draw(font.FontImage, renderArea, font.GlyphRects[font.SolidGlyphIndex], CursorRenderCell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
