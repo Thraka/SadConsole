@@ -54,7 +54,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Clears the <see cref="KeysPressedInternal"/>, <see cref="KeysDownInternal"/>, <see cref="KeysReleasedInternal"/> collections.
+        /// Clears the <see cref="KeysPressed"/>, <see cref="KeysDown"/>, <see cref="KeysReleased"/> collections.
         /// </summary>
         public void Clear()
         {
