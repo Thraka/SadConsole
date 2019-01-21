@@ -1738,22 +1738,22 @@
         </member>
         <member name="F:SadConsole.Console.ComponentsUpdate">
             <summary>
-            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Console.ComponentsDraw">
             <summary>
-            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsDraw"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsDraw"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Console.ComponentsMouse">
             <summary>
-            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsMouse"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsMouse"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Console.ComponentsKeyboard">
             <summary>
-            A filterd list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Console.Components">
@@ -1994,16 +1994,9 @@
             <param name="state">The mouse state related to this console.</param>
             <returns>True when the mouse is over this console and processing should stop.</returns>
         </member>
-        <member name="M:SadConsole.Console.ProcessMouseNonHandler(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Processing the mouse ignoring the attached <see cref="!:MouseHandler"/>.
-            </summary>
-            <param name="state">The mouse state related to this console.</param>
-            <returns>True when the mouse is over this console and processing should stop.</returns>
-        </member>
         <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
-            Called by the engine to process the keyboard. If called, invokes the <see cref="!:KeyboardHandler"/>; otherwise invokes the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method.
+            Called by the engine to process the keyboard.
             </summary>
             <param name="info">Keyboard information.</param>
             <returns>True when the keyboard had data and this console did something with it.</returns>
@@ -3962,6 +3955,11 @@
             Automatically forwards the <see cref="E:SadConsole.AnimatedConsole.AnimationStateChanged"/> event.
             </summary>
         </member>
+        <member name="E:SadConsole.Entities.Entity.Moved">
+            <summary>
+            Triggered when the entity changes position.
+            </summary>
+        </member>
         <member name="F:SadConsole.Entities.Entity.animation">
             <summary>
             Animation for the game object.
@@ -4025,6 +4023,12 @@
         </member>
         <member name="M:SadConsole.Entities.Entity.OnCalculateRenderPosition">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Entity.OnPositionChanged(Microsoft.Xna.Framework.Point)">
+            <summary>
+            Called when the <see cref="P:SadConsole.Console.Position"/> value changes. Triggers <see cref="E:SadConsole.Entities.Entity.Moved"/>.
+            </summary>
+            <param name="oldLocation"></param>
         </member>
         <member name="M:SadConsole.Entities.Entity.Save(System.String)">
             <summary>
@@ -5650,6 +5654,13 @@
             Adds a new <see cref="T:SadConsole.Instructions.PredicateInstruction"/> instruction with the specified callback to the end of this set.
             </summary>
             <param name="expression">The code callback.</param>
+            <returns>This instruction set.</returns>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.InstructConcurrent(SadConsole.Instructions.InstructionBase[])">
+            <summary>
+            Adds a <see cref="T:SadConsole.Instructions.ConcurrentInstructions"/> to the end of this set.
+            </summary>
+            <param name="instructions">Instructions to add. Must be two or more instructions.</param>
             <returns>This instruction set.</returns>
         </member>
         <member name="T:SadConsole.Instructions.PredicateInstruction">

@@ -1,4 +1,15 @@
 ﻿## XX/XX/XXXX V8.0
+Special thanks to the SadConsole Discord on all the feedback provided.
+Shout to the GoRogue project.
+
+File changes:
+
+- SadConsole and SadConsole.Universal have been replaced by the SadConsole for .NET Standard library.
+- NuGet packages will be retired and the SadConsole.Standard will remain the main NuGet package.
+- FNA is unknown.
+
+Code changes:
+
 - Overhaul of the theme system.
 - Overhaul of the SurfaceBase/ScreenObject/Console system.
 - Changed Listbox.Slider to Listbox.Scrollbar. Also changed any property that used the word Slider to ScrollBar
@@ -13,6 +24,13 @@
 - AnimatedSurface is now AnimatedConsole.
 - LayeredSurface is now LayeredConsole and has a new subtype, CellSurfaceLayer.
 - Mouse input works on all objects that inherit from Console, which is everything besodes CellSurface.
+- Added new ConsoleComponent types.
+- Consoles have a collection of Components that can hook into Update, Draw, Keyboard, Mouse methods.
+- EntityManager is now a ConsoleComponent.
+- Instructions reimplemented as ConsoleComponents.
+- InstructionSet has fluent-type methods to construct the set. See the SplashScreen console in the demo project.
+- [Fixed #199] New PredicateInstruction (thanks VGA256)
+
 
 ## 12/29/2018 V7.3.0
 

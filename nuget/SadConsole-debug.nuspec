@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SadConsole</id>
-    <version>8.0.0-pre2</version>
+    <version>8.0.0-pre3</version>
     <title>SadConsole for MonoGame</title>
     <authors>SadLogic</authors>
     <owners>Thraka</owners>
@@ -25,7 +25,13 @@
 - Console is now ScrollingConsole.
 - AnimatedSurface is now AnimatedConsole.
 - LayeredSurface is now LayeredConsole and has a new subtype, CellSurfaceLayer.
-- Mouse input works on all objects that inherit from Console, which is everything besodes CellSurface.
+- Mouse input works on all objects that inherit from Console, which is everything besides CellSurface.
+- Added new ConsoleComponent types.
+- Consoles have a collection of Components that can hook into Update, Draw, Keyboard, Mouse methods.
+- EntityManager is now a ConsoleComponent.
+- Instructions reimplemented as ConsoleComponents.
+- InstructionSet has fluent-type methods to construct the set. See the SplashScreen console in the demo project.
+- [Fixed #199] New PredicateInstruction (thanks VGA256)
     </releaseNotes>
     <copyright>Copyright 2018 Steve De George JR</copyright>
     <tags>monogame roguelike cli xna game development console ansi ascii</tags>

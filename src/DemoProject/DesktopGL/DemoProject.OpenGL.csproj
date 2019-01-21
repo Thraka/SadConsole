@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StarterProject</RootNamespace>
     <AssemblyName>StarterProject.MonoGL</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -86,13 +86,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj">
-      <Project>{f44a9e76-b19d-4219-afae-561089354280}</Project>
-      <Name>SadConsole</Name>
-    </ProjectReference>
+    <Folder Include="Content\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\" />
+    <ProjectReference Include="..\..\SadConsole.Shared\SadConsole.csproj">
+      <Project>{1b55342f-95be-41ae-803a-bbf86a94b51f}</Project>
+      <Name>SadConsole</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\SharedCode\DemoProject.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

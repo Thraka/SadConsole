@@ -131,17 +131,6 @@
                 if (isHandled) return true;
             }
 
-            return ProcessMouseNonHandler(state);
-        }
-
-        /// <summary>
-        /// Processing the mouse ignoring the attached <see cref="MouseHandler"/>.
-        /// </summary>
-        /// <param name="state">The mouse state related to this console.</param>
-        /// <returns>True when the mouse is over this console and processing should stop.</returns>
-        public bool ProcessMouseNonHandler(MouseConsoleState state)
-        {
-
             if (!IsVisible || !UseMouse) return false;
 
             if (state.IsOnConsole)
@@ -171,9 +160,9 @@
 
             return false;
         }
-
+        
         /// <summary>
-        /// Called by the engine to process the keyboard. If called, invokes the <see cref="KeyboardHandler"/>; otherwise invokes the <see cref="SadConsole.Cursor.ProcessKeyboard(Input.Keyboard)"/> method.
+        /// Called by the engine to process the keyboard.
         /// </summary>
         /// <param name="info">Keyboard information.</param>
         /// <returns>True when the keyboard had data and this console did something with it.</returns>

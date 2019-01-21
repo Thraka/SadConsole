@@ -13,9 +13,15 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x86\1.6.0\build\Microsoft.Net.Native.SharedLibrary-x86.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x86\1.6.0\build\Microsoft.Net.Native.SharedLibrary-x86.props')" />
-    <Import Project="$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x64\1.6.0\build\Microsoft.Net.Native.SharedLibrary-x64.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x64\1.6.0\build\Microsoft.Net.Native.SharedLibrary-x64.props')" />
-    <Import Project="$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-arm\1.6.0\build\Microsoft.Net.Native.SharedLibrary-arm.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-arm\1.6.0\build\Microsoft.Net.Native.SharedLibrary-arm.props')" />
-    <Import Project="$(NuGetPackageRoot)microsoft.net.native.compiler\1.6.0\build\Microsoft.Net.Native.Compiler.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.compiler\1.6.0\build\Microsoft.Net.Native.Compiler.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x86\1.7.0\build\Microsoft.Net.Native.SharedLibrary-x86.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x86\1.7.0\build\Microsoft.Net.Native.SharedLibrary-x86.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x64\1.7.0\build\Microsoft.Net.Native.SharedLibrary-x64.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-x64\1.7.0\build\Microsoft.Net.Native.SharedLibrary-x64.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-arm\1.7.0\build\Microsoft.Net.Native.SharedLibrary-arm.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.sharedlibrary-arm\1.7.0\build\Microsoft.Net.Native.SharedLibrary-arm.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.net.native.compiler\1.7.3\build\Microsoft.Net.Native.Compiler.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.native.compiler\1.7.3\build\Microsoft.Net.Native.Compiler.props')" />
   </ImportGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgMicrosoft_Net_Native_SharedLibrary-x86 Condition=" '$(PkgMicrosoft_Net_Native_SharedLibrary-x86)' == '' ">C:\Users\Andy\.nuget\packages\microsoft.net.native.sharedlibrary-x86\1.7.0</PkgMicrosoft_Net_Native_SharedLibrary-x86>
+    <PkgMicrosoft_Net_Native_SharedLibrary-x64 Condition=" '$(PkgMicrosoft_Net_Native_SharedLibrary-x64)' == '' ">C:\Users\Andy\.nuget\packages\microsoft.net.native.sharedlibrary-x64\1.7.0</PkgMicrosoft_Net_Native_SharedLibrary-x64>
+    <PkgMicrosoft_Net_Native_SharedLibrary-arm Condition=" '$(PkgMicrosoft_Net_Native_SharedLibrary-arm)' == '' ">C:\Users\Andy\.nuget\packages\microsoft.net.native.sharedlibrary-arm\1.7.0</PkgMicrosoft_Net_Native_SharedLibrary-arm>
+    <PkgMicrosoft_Net_Native_Compiler Condition=" '$(PkgMicrosoft_Net_Native_Compiler)' == '' ">C:\Users\Andy\.nuget\packages\microsoft.net.native.compiler\1.7.3</PkgMicrosoft_Net_Native_Compiler>
+  </PropertyGroup>
 </Project>
