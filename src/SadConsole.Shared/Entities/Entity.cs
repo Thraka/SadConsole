@@ -21,6 +21,11 @@ namespace SadConsole.Entities
         public event System.EventHandler<AnimatedConsole.AnimationStateChangedEventArgs> AnimationStateChanged;
 
         /// <summary>
+        /// Triggered when the entity changes position.
+        /// </summary>
+        public event System.EventHandler Moved;
+
+        /// <summary>
         /// Animation for the game object.
         /// </summary>
         protected AnimatedConsole animation;
@@ -139,6 +144,12 @@ namespace SadConsole.Entities
                 child.OnCalculateRenderPosition();
             }
         }
+
+        /// <summary>
+        /// Called when the <see cref="Console.Position"/> value changes. Triggers <see cref="Moved"/>.
+        /// </summary>
+        /// <param name="oldLocation"></param>
+        protected override void OnPositionChanged(Point oldLocation) => Moved?.Invoke(this, System.EventArgs.Empty);
 
         /// <summary>
         /// Saves the <see cref="Entity"/> to a file.
