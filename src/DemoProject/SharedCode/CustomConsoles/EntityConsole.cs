@@ -33,9 +33,11 @@ namespace StarterProject.CustomConsoles
             UseKeyboard = true;
             IsVisible = false;
 
-            EntityManager manager = new EntityManager(this);
+            EntityManager manager = new EntityManager();
 
             manager.Entities.Add(player);
+
+            Components.Add(manager);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
