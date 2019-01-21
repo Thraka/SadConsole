@@ -65,7 +65,7 @@
         }
 
         /// <summary>
-        /// Adds a new <see cref="Instructions.Wait"/> instruction with the specified duration to the end of this set.
+        /// Adds a new <see cref="SadConsole.Instructions.Wait"/> instruction with the specified duration to the end of this set.
         /// </summary>
         /// <param name="duration">The time to wait.</param>
         /// <returns>This instruction set.</returns>
@@ -87,7 +87,7 @@
         }
 
         /// <summary>
-        /// Adds a new <see cref="Instructions.CodeInstruction"/> instruction with the specified callback to the end of this set.
+        /// Adds a new <see cref="CodeInstruction"/> instruction with the specified callback to the end of this set.
         /// </summary>
         /// <param name="expression">The code callback.</param>
         /// <returns>This instruction set.</returns>
@@ -98,13 +98,27 @@
         }
 
         /// <summary>
-        /// Adds a new <see cref="Instructions.PredicateInstruction"/> instruction with the specified callback to the end of this set.
+        /// Adds a new <see cref="PredicateInstruction"/> instruction with the specified callback to the end of this set.
         /// </summary>
         /// <param name="expression">The code callback.</param>
         /// <returns>This instruction set.</returns>
         public InstructionSet WaitTrue(Func<bool> expression)
         {
             Instructions.AddLast(new PredicateInstruction(expression));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a <see cref="ConcurrentInstructions"/> to the end of this set.
+        /// </summary>
+        /// <param name="instructions">Instructions to add. Must be two or more instructions.</param>
+        /// <returns>This instruction set.</returns>
+        public InstructionSet InstructConcurrent(params InstructionBase[] instructions)
+        {
+            if (instructions.Length == 0)
+                throw new ArgumentOutOfRangeException(nameof(instructions), "Two or more instruction must be provided.");
+
+            Instructions.AddLast(new ConcurrentInstructions(instructions));
             return this;
         }
     }
