@@ -1,24 +1,24 @@
 ﻿namespace SadConsole.Instructions
 {
+    using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
+    using Console = SadConsole.Console;
 
     /// <summary>
     /// A set of instructions to be executed sequentially.
     /// </summary>
-    [DataContract]
     public class InstructionSet : InstructionBase
     {
+        private LinkedListNode<InstructionBase> _currentInstructionNode;
+
         /// <summary>
         /// All instructions in this set.
         /// </summary>
-        [DataMember]
-        public LinkedList<InstructionBase> Instructions = new LinkedList<InstructionBase>();
+        public LinkedList<InstructionBase> Instructions { get; } = new LinkedList<InstructionBase>();
 
         /// <summary>
         /// The name of this instruction to identify it apart from other instruction sets.
         /// </summary>
-        [DataMember]
         public string Name { get; set; }
 
         /// <summary>
@@ -26,30 +26,29 @@
         /// </summary>
         public InstructionBase CurrentInstruction => _currentInstructionNode != null ? _currentInstructionNode.Value : null;
 
-        protected LinkedListNode<InstructionBase> _currentInstructionNode;
 
-        /// <summary>
-        /// Resets each instruction's status so that it can be run again.
-        /// </summary>
+        /// <inheritdoc />
         public override void Reset()
         {
             foreach (var item in Instructions)
                 item.Reset();
 
+            _currentInstructionNode = null;
+
             base.Reset();
         }
 
         /// <summary>
-        /// Runs the instruction set. Once all instructions are Done, this set will set the <see cref="Done"/> property will be set to true.
+        /// Runs the instruction set. Once all instructions are finished, this set will set the <see cref="InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
         /// </summary>
-        public override void Run()
+        public override void Update(Console console, TimeSpan delta)
         {
             if (!IsFinished && Instructions.Count != 0)
             {
                 if (_currentInstructionNode == null)
                     _currentInstructionNode = Instructions.First;
 
-                _currentInstructionNode.Value.Run();
+                _currentInstructionNode.Value.Update(console, delta);
 
                 if (_currentInstructionNode.Value.IsFinished)
                 {
@@ -58,10 +57,55 @@
                     if (_currentInstructionNode == null)
                         IsFinished = true;
                 }
-
-                base.Run();
             }
+            else
+                IsFinished = true;
+
+            base.Update(console, delta);
         }
-        
+
+        /// <summary>
+        /// Adds a new <see cref="Instructions.Wait"/> instruction with the specified duration to the end of this set.
+        /// </summary>
+        /// <param name="duration">The time to wait.</param>
+        /// <returns>This instruction set.</returns>
+        public InstructionSet Wait(TimeSpan duration)
+        {
+            Instructions.AddLast(new Wait(duration));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds an instruction to the end of this set.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <returns>This instruction set.</returns>
+        public InstructionSet Instruct(InstructionBase instruction)
+        {
+            Instructions.AddLast(instruction);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new <see cref="Instructions.CodeInstruction"/> instruction with the specified callback to the end of this set.
+        /// </summary>
+        /// <param name="expression">The code callback.</param>
+        /// <returns>This instruction set.</returns>
+        public InstructionSet Code(Func<Console, TimeSpan, bool> expression)
+        {
+            Instructions.AddLast(new CodeInstruction(expression));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new <see cref="Instructions.PredicateInstruction"/> instruction with the specified callback to the end of this set.
+        /// </summary>
+        /// <param name="expression">The code callback.</param>
+        /// <returns>This instruction set.</returns>
+        public InstructionSet WaitTrue(Func<bool> expression)
+        {
+            Instructions.AddLast(new PredicateInstruction(expression));
+            return this;
+        }
     }
 }

@@ -4,11 +4,11 @@
     using Console = SadConsole.Console;
 
     /// <summary>
-    /// An instruction with a code callback.
+    /// Instruction that waits until the code callback returns <see langword="true"/>.
     /// </summary>
-    public class CodeInstruction : InstructionBase
+    public class PredicateInstruction : InstructionBase
     {
-        private Func<Console, TimeSpan, bool> _callback;
+        private Func<bool> _callback;
 
         /// <summary>
         /// Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
@@ -19,15 +19,15 @@
         /// Creates a new instruction with the specified callback.
         /// </summary>
         /// <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="InstructionBase.IsFinished"/>.</param>
-        public CodeInstruction(Func<Console, TimeSpan, bool> callback) =>
+        public PredicateInstruction(Func<bool> callback) =>
             _callback = callback;
 
-        private CodeInstruction() { }
+        private PredicateInstruction() { }
 
         /// <inheritdoc />
         public override void Update(Console console, TimeSpan delta)
         {
-            IsFinished = _callback(console, delta);
+            IsFinished = _callback();
 
             base.Update(console, delta);
         }
@@ -36,7 +36,7 @@
         /// Sets the callback used by the instruction.
         /// </summary>
         /// <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="InstructionBase.IsFinished"/>.</param>
-        public void SetCallback(Func<Console, TimeSpan, bool> callback) =>
+        public void SetCallback(Func<bool> callback) =>
             _callback = callback;
     }
 }

@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IConsoleComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Instructions\PredicateInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScrollingConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSurface.cs" />
@@ -97,7 +98,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\CodeInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\ConcurrentInstruction.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Instructions\DoubleInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\DrawString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\FadeTextSurfaceTint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\InstructionBase.cs" />
