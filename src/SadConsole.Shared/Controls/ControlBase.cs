@@ -54,6 +54,12 @@ namespace SadConsole.Controls
         public CellSurface Surface { get; set; }
 
         /// <summary>
+        /// The region the of the control used for mouse input.
+        /// </summary>
+        [DataMember]
+        public Rectangle MouseBounds { get; set; }
+
+        /// <summary>
         /// Indicates the rendering location of this control.
         /// </summary>
         [DataMember]
@@ -62,8 +68,10 @@ namespace SadConsole.Controls
             get => position;
             set
             {
+                var oldPosition = position;
                 position = value;
                 Bounds = new Rectangle(position.X, position.Y, Width, Height);
+                MouseBounds = new Rectangle(MouseBounds.Location + value - oldPosition, new Point(MouseBounds.Width, MouseBounds.Height));
                 OnPositionChanged();
             }
         }
@@ -260,6 +268,7 @@ namespace SadConsole.Controls
             UseMouse = true;
             UseKeyboard = true;
             Bounds = new Rectangle(0, 0, width, height);
+            MouseBounds = new Rectangle(0, 0, width, height);
         }
         #endregion
 
@@ -316,7 +325,7 @@ namespace SadConsole.Controls
         {
             if (IsEnabled && UseMouse)
             {
-                if (Bounds.Contains(state.CellPosition))
+                if (MouseBounds.Contains(state.CellPosition))
                 {
                     if (isMouseOver != true)
                     {
