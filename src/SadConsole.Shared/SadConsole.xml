@@ -5068,10 +5068,17 @@
             Total time the key has been held.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.AsciiKey.PreviouslyPressed">
+        <member name="F:SadConsole.Input.AsciiKey.PostInitialDelay">
             <summary>
-            Tracks if the key was previously held when calcualting the <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/>.
+            Tracks if the key was previously held when calculating the <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/>.
             </summary>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.RemapVirtualKeys(Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+             Does any necessary remapping for virtual keys.
+            </summary>
+            <param name="key"> The key to be remapped. </param>
+            <returns> The remapped key. </returns>
         </member>
         <member name="M:SadConsole.Input.AsciiKey.Fill(Microsoft.Xna.Framework.Input.Keys,System.Boolean)">
             <summary>
@@ -5582,7 +5589,7 @@
         </member>
         <member name="M:SadConsole.Instructions.InstructionBase.Update(SadConsole.Console,System.TimeSpan)">
             <summary>
-            Executes the instruction. This base class method should be called from derived classes. If the Done property is set to true, will try to repeat if needed and will raise all appropriate events.
+            Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
             </summary>
         </member>
         <member name="M:SadConsole.Instructions.InstructionBase.OnFinished">
