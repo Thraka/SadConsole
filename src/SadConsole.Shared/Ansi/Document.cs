@@ -1,17 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SadConsole.Ansi
 {
+    /// <summary>
+    /// Represents an ANSI.SYS formatted document.
+    /// </summary>
     public class Document: IDisposable
     {
-        private string _ansiData;
         private byte[] _ansiBytes;
 
+        /// <summary>
+        /// Gets or sets the ANSI.SYS bytes that make up the document.
+        /// </summary>
         public byte[] AnsiBytes
         {
             get => _ansiBytes;
@@ -19,49 +22,59 @@ namespace SadConsole.Ansi
             {
                 _ansiBytes = value;
                 //_ansiData = Encoding.ASCII.GetString(_ansiBytes);
-                _ansiData = new string(_ansiBytes.Select(b => (char)b).ToArray());
+                AnsiString = new string(_ansiBytes.Select(b => (char)b).ToArray());
 
-                if (Stream != null)
-                    Stream.Dispose();
+                Stream?.Dispose();
 
                 Stream = new MemoryStream(AnsiBytes);
             }
         }
 
-        public string AnsiString => _ansiData;
+        /// <summary>
+        /// A string representing the <see cref="AnsiBytes"/>.
+        /// </summary>
+        public string AnsiString {get; private set; }
 
+        /// <summary>
+        /// A stream that points to the <see cref="AnsiBytes"/>.
+        /// </summary>
         public MemoryStream Stream { get; private set; }
 
         private Document() { }
 
+        /// <summary>
+        /// Creates a new document from the provided file name.
+        /// </summary>
+        /// <param name="file">The file to load.</param>
         public Document(string file)
         {
-            using (var stream = System.IO.File.OpenRead(file))
-                using (var reader = new System.IO.BinaryReader(stream))
+            using (var stream = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
+                using (var reader = new BinaryReader(stream))
                     AnsiBytes = reader.ReadBytes((int)stream.Length);
 
             Stream = new MemoryStream(AnsiBytes);
         }
 
-        public static Document FromAsciiString(string ansiContent)
-        {
-            Document doc = new Document();
-            doc.AnsiBytes = Encoding.ASCII.GetBytes(ansiContent);
-            doc.Stream = new MemoryStream(doc.AnsiBytes);
-            return doc;
-        }
+        /// <inheritdoc />
+        ~Document() => ((IDisposable)this).Dispose();
 
-        public static Document FromBytes(byte[] bytes)
-        {
-            Document doc = new Document();
-            doc.AnsiBytes = bytes;
-            doc.Stream = new MemoryStream(doc.AnsiBytes);
-            return doc;
-        }
+        /// <summary>
+        /// Creates a new document from an existing string representing ANSI.SYS codes and characters.
+        /// </summary>
+        /// <param name="ansiContent">The ANSI.SYS encoded string.</param>
+        /// <returns>A new document.</returns>
+        public static Document FromAsciiString(string ansiContent) => new Document {AnsiBytes = Encoding.ASCII.GetBytes(ansiContent)};
 
-        public void Dispose()
-        {
-            Stream.Dispose();
-        }
+        /// <summary>
+        /// Creates a new document from an existing byte array representing ANSI.SYS codes and characters.
+        /// </summary>
+        /// <param name="bytes">The ANSI.SYS encoded byte array.</param>
+        /// <returns>A new document.</returns>
+        public static Document FromBytes(byte[] bytes) => new Document { AnsiBytes = bytes };
+
+        /// <summary>
+        /// Disposes the <see cref="Stream"/>.
+        /// </summary>
+        void IDisposable.Dispose() => Stream?.Dispose();
     }
 }

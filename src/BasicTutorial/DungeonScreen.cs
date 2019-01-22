@@ -11,7 +11,7 @@ using Console = SadConsole.Console;
 
 namespace BasicTutorial
 {
-    class DungeonScreen : ScreenObject
+    class DungeonScreen : ContainerConsole
     {
         public static readonly Rectangle ScreenRegionMap = new Rectangle(0, 0, Program.ScreenWidth - 10, Program.ScreenHeight - 5);
         public static readonly Rectangle ScreenRegionMessages = new Rectangle(0, ScreenRegionMap.Bottom + 1, Program.ScreenWidth - 10, Program.ScreenHeight - ScreenRegionMap.Height - 1);
@@ -20,15 +20,20 @@ namespace BasicTutorial
         public bool RunLogicFrame;
         public bool RedrawMap;
 
-        public SadConsole.Maps.SimpleMap Map { get; }
+        private MapConsole _mapView;
+
+        public SadConsole.Maps.Map Map { get; }
 
         public MessageConsole Messages { get; }
 
-        public DungeonScreen(SadConsole.Maps.SimpleMap map)
+        public MapConsole MapView => _mapView;
+
+        public DungeonScreen(SadConsole.Maps.Map map)
         {
             // Setup map
             Map = map;
-            Children.Add(Map);
+            _mapView = new MapConsole(ScreenRegionMap.Width, ScreenRegionMap.Height, map);
+            _mapView.Position = ScreenRegionMap.Location;
 
             // Setup actions
             ActionProcessor = new SadConsole.Actions.ActionStack();
@@ -38,23 +43,28 @@ namespace BasicTutorial
             Messages = new MessageConsole(ScreenRegionMessages.Width, ScreenRegionMessages.Height);
             Messages.Position = ScreenRegionMessages.Location;
             Children.Add(Messages);
+            Children.Add(_mapView);
         }
 
         public override void Update(TimeSpan timeElapsed)
         {
-            if (SadConsole.Global.FocusedConsoles.Console != null)
+            // If there is a console that is focused, this one doesn't need to do anything.
+            if (Global.FocusedConsoles.Console != null)
                 return;
 
+            // Can through the list of actions and pop out the finished ones
             while (ActionProcessor.Peek().IsFinished)
                 ActionProcessor.Pop();
 
+            // Run the latest action.
             ActionProcessor.Peek().Run(timeElapsed);
 
+            // If the action finished, pop it out.
             if (ActionProcessor.Peek().IsFinished)
                 ActionProcessor.Pop();
 
             // Center view on player
-            Map.Surface.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
+            Map.ViewPort.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
 
             // Run logic if valid move made by player
             if (RunLogicFrame)
@@ -62,7 +72,7 @@ namespace BasicTutorial
 
             if (RedrawMap)
             {
-                Map.Surface.IsDirty = true;
+                MapView.IsDirty = true;
                 RedrawMap = false;
             }
             //point.X = Math.Max(0, point.X);

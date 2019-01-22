@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-
-using System;
-using System.Runtime.Serialization;
-
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Runtime.Serialization;
+
     [DataContract]
     public sealed class DoubleAnimation
     {

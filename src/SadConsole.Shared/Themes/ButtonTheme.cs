@@ -1,9 +1,11 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿#if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endif
+
+using System;
+using System.Runtime.Serialization;
 using SadConsole.Controls;
-using SadConsole.Surfaces;
 
 namespace SadConsole.Themes
 {
@@ -11,10 +13,11 @@ namespace SadConsole.Themes
     /// The theme of the button control
     /// </summary>
     [DataContract]
-    public class ButtonTheme : ThemeBase<Button>
+    public class ButtonTheme : ThemeBase
     {
         /// <summary>
-        /// When true, renders the <see cref="EndCharacterLeft"/> and <see cref="EndCharacterRight"/> on the button.
+        /// When true, renders the <see cref="EndCharacterLeft"/> 
+        /// and <see cref="EndCharacterRight"/> on the button.
         /// </summary>
         [DataMember]
         public bool ShowEnds { get; set; } = true;
@@ -31,62 +34,63 @@ namespace SadConsole.Themes
         [DataMember]
         public int EndCharacterRight { get; set; } = '>';
 
-        public ButtonTheme()
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
         {
-
+            control.Surface = new CellSurface(control.Width, control.Height);
+            base.Attached(control);
         }
 
-        public override void Attached(Button control)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
-        }
-
-        public override void UpdateAndDraw(Button control, TimeSpan time)
-        {
-            if (!control.IsDirty) return;
+            if (!(control is Button button)) return;
+            
+            if (!button.IsDirty) return;
 
             Cell appearance;
 
-            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+            if (Helpers.HasFlag(button.State, ControlStates.Disabled))
                 appearance = Disabled;
                 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+            else if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
                 appearance = MouseDown;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+            else if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
                 appearance = MouseOver;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+            else if (Helpers.HasFlag(button.State, ControlStates.Focused))
                 appearance = Focused;
 
             else
                 appearance = Normal;
 
-            var middle = (control.Height != 1 ? control.Height / 2 : 0);
+            var middle = (button.Height != 1 ? button.Height / 2 : 0);
 
             // Redraw the control
-            control.Surface.Fill(
+            button.Surface.Fill(
                 appearance.Foreground,
                 appearance.Background,
                 appearance.Glyph, null);
 
-            if (ShowEnds && control.Width >= 3)
+            if (ShowEnds && button.Width >= 3)
             {
-                control.Surface.Print(1, middle, (control.Text).Align(control.TextAlignment, control.Width - 2));
-                control.Surface.SetGlyph(0, middle, EndCharacterLeft);
-                control.Surface.SetGlyph(control.Width - 1, middle, EndCharacterRight);
+                button.Surface.Print(1, middle, (button.Text).Align(button.TextAlignment, button.Width - 2));
+                button.Surface.SetGlyph(0, middle, EndCharacterLeft);
+                button.Surface.SetGlyph(button.Width - 1, middle, EndCharacterRight);
             }
             else
-                control.Surface.Print(0, middle, control.Text.Align(control.TextAlignment, control.Width));
+                button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width));
 
-            control.IsDirty = false;
+            button.IsDirty = false;
         }
 
         /// <inheritdoc />
-        public override object Clone()
+        public override ThemeBase Clone()
         {
             return new ButtonTheme()
             {
+                Colors = Colors?.Clone(),
                 Normal = Normal.Clone(),
                 Disabled = Disabled.Clone(),
                 MouseOver = MouseOver.Clone(),
@@ -108,93 +112,106 @@ namespace SadConsole.Themes
     {
         [DataMember]
         public Cell Shade;
-
-        public Button3dTheme()
+        
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
         {
-            Shade = new Cell(Colors.ControlBackDark, Color.Transparent, 176);
-            Normal = new Cell(Colors.CyanDark, Colors.ControlBackLight);
+            control.Surface = new CellSurface(control.Width + 2, control.Height + 1);
+
+            var colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
+
+            RefreshTheme(colors);
         }
 
-        public override void Attached(Button control)
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
         {
-            control.Surface = new BasicNoDraw(control.Width + 2, control.Height + 1);
+            base.RefreshTheme(themeColors);
+
+            //TODO shade should not hard code the glyph
+            Shade = new Cell(themeColors.ControlBackDark, Color.Transparent, 176);
+            Normal = new Cell(themeColors.CyanDark, themeColors.ControlBackLight);
         }
 
-        public override void UpdateAndDraw(Button control, TimeSpan time)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!control.IsDirty) return;
+            if (!(control is Button button)) return;
+            
+            if (!button.IsDirty) return;
 
             Cell appearance;
 
-            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+            if (Helpers.HasFlag(button.State, ControlStates.Disabled))
                 appearance = Disabled;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+            else if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
                 appearance = MouseDown;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+            else if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
                 appearance = MouseOver;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+            else if (Helpers.HasFlag(button.State, ControlStates.Focused))
                 appearance = Focused;
 
             else
                 appearance = Normal;
 
 
-            var middle = control.Height != 1 ? control.Height / 2 : 0;
+            var middle = button.Height != 1 ? button.Height / 2 : 0;
 
-            Rectangle shadowBounds = new Rectangle(0, 0, control.Width, control.Height);
+            Rectangle shadowBounds = new Rectangle(0, 0, button.Width, button.Height);
             shadowBounds.Location += new Point(2, 1);
 
-            control.Surface.Clear();
+            button.Surface.Clear();
 
             if (appearance == MouseDown)
             {
                 middle += 1;
 
                 // Redraw the control
-                control.Surface.Fill(shadowBounds,
+                button.Surface.Fill(shadowBounds,
                     appearance.Foreground,
                     appearance.Background,
                     appearance.Glyph, null);
 
-                control.Surface.Print(shadowBounds.Left, middle, control.Text.Align(control.TextAlignment, control.Width));
+                button.Surface.Print(shadowBounds.Left, middle, button.Text.Align(button.TextAlignment, button.Width));
             }
             else
             {
                 // Redraw the control
-                control.Surface.Fill(new Rectangle(0, 0, control.Width, control.Height),
+                button.Surface.Fill(new Rectangle(0, 0, button.Width, button.Height),
                     appearance.Foreground,
                     appearance.Background,
                     appearance.Glyph, null);
 
-                control.Surface.Print(0, middle, control.Text.Align(control.TextAlignment, control.Width));
+                button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width));
 
                 // Bottom line
-                control.Surface.DrawLine(new Point(shadowBounds.Left, shadowBounds.Bottom - 1),
+                button.Surface.DrawLine(new Point(shadowBounds.Left, shadowBounds.Bottom - 1),
                     new Point(shadowBounds.Right - 1, shadowBounds.Bottom - 1), Shade.Foreground, Shade.Background,
                     Shade.Glyph);
 
                 // Side line 1
-                control.Surface.DrawLine(new Point(shadowBounds.Right - 2, shadowBounds.Top),
+                button.Surface.DrawLine(new Point(shadowBounds.Right - 2, shadowBounds.Top),
                     new Point(shadowBounds.Right - 2, shadowBounds.Bottom - 1), Shade.Foreground, Shade.Background,
                     Shade.Glyph);
 
                 // Side line 2
-                control.Surface.DrawLine(new Point(shadowBounds.Right - 1, shadowBounds.Top),
+                button.Surface.DrawLine(new Point(shadowBounds.Right - 1, shadowBounds.Top),
                     new Point(shadowBounds.Right - 1, shadowBounds.Bottom - 1), Shade.Foreground, Shade.Background,
                     Shade.Glyph);
             }
 
-            control.IsDirty = false;
+            button.IsDirty = false;
         }
 
         /// <inheritdoc />
-        public override object Clone()
+        public override ThemeBase Clone()
         {
             return new Button3dTheme()
             {
+                Colors = Colors.Clone(),
                 Normal = Normal.Clone(),
                 Disabled = Disabled.Clone(),
                 MouseOver = MouseOver.Clone(),
@@ -222,44 +239,49 @@ namespace SadConsole.Themes
         public bool UseExtended;
 
         public ButtonLinesTheme()
-        {
-            TopLeftLineColors = new Cell(Themes.Colors.Gray, Color.Transparent);
-            BottomRightLineColors = new Cell(Themes.Colors.GrayDark, Color.Transparent);
+        {            
             UseExtended = true;
         }
-
-        public override void Attached(Button control)
+        
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
+            base.RefreshTheme(themeColors);
+
+            TopLeftLineColors = new Cell(themeColors.Gray, Color.Transparent);
+            BottomRightLineColors = new Cell(themeColors.GrayDark, Color.Transparent);
         }
 
-        public override void UpdateAndDraw(Button control, TimeSpan time)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!control.IsDirty) return;
+            if (!(control is Button button)) return;
+            
+            if (!button.IsDirty) return;
 
             Cell appearance;
             var mouseDown = false;
             var mouseOver = false;
             var focused = false;
 
-            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+            if (Helpers.HasFlag(button.State, ControlStates.Disabled))
                 appearance = Disabled;
             else
                 appearance = Normal;
 
-            if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) ||
-                Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+            if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) ||
+                Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
                 mouseDown = true;
 
-            if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+            if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
                 mouseOver = true;
 
-            if (Helpers.HasFlag(control.State, ControlStates.Focused))
+            if (Helpers.HasFlag(button.State, ControlStates.Focused))
                 focused = true;
 
 
             // Middle part of the button for text.
-            var middle = control.Surface.Height != 1 ? control.Surface.Height / 2 : 0;
+            var middle = button.Surface.Height != 1 ? button.Surface.Height / 2 : 0;
             var topleftcolor = !mouseDown ? TopLeftLineColors.Foreground : BottomRightLineColors.Foreground;
             var bottomrightcolor = !mouseDown ? BottomRightLineColors.Foreground : TopLeftLineColors.Foreground;
             Color textColor = Normal.Foreground;
@@ -270,32 +292,34 @@ namespace SadConsole.Themes
                 textColor = Focused.Foreground;
 
             // Redraw the control
-            control.Surface.Fill(appearance.Foreground, appearance.Background,
+            button.Surface.Fill(appearance.Foreground, appearance.Background,
                 appearance.Glyph, SpriteEffects.None);
 
-            control.Surface.Print(0, middle, control.Text.Align(control.TextAlignment, control.Width), textColor);
+            button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), textColor);
                 
-            control.Surface.DrawBox(new Rectangle(0,0,control.Width, control.Surface.Height), new Cell(topleftcolor, TopLeftLineColors.Background, 0),
-                connectedLineStyle: control.Parent.Font.Master.IsSadExtended ? SurfaceBase.ConnectedLineThinExtended : SurfaceBase.ConnectedLineThin);
+            button.Surface.DrawBox(new Rectangle(0,0,button.Width, button.Surface.Height), new Cell(topleftcolor, TopLeftLineColors.Background, 0),
+                connectedLineStyle: button.Parent.Font.Master.IsSadExtended ? CellSurface.ConnectedLineThinExtended : CellSurface.ConnectedLineThin);
 
-            control.Surface.DrawLine(Point.Zero, new Point(control.Width - 1, 0), topleftcolor, appearance.Background);
-            control.Surface.DrawLine(Point.Zero, new Point(0, control.Surface.Height - 1), topleftcolor, appearance.Background);
-            control.Surface.DrawLine(new Point(control.Width - 1, 0), new Point(control.Width - 1, control.Surface.Height - 1), bottomrightcolor, appearance.Background);
-            control.Surface.DrawLine(new Point(1, control.Surface.Height - 1), new Point(control.Width - 1, control.Surface.Height - 1), bottomrightcolor, appearance.Background);
+            //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
 
-            if (control.Parent.Font.Master.IsSadExtended && UseExtended)
+            button.Surface.DrawLine(Point.Zero, new Point(button.Width - 1, 0), topleftcolor, appearance.Background);
+            button.Surface.DrawLine(Point.Zero, new Point(0, button.Surface.Height - 1), topleftcolor, appearance.Background);
+            button.Surface.DrawLine(new Point(button.Width - 1, 0), new Point(button.Width - 1, button.Surface.Height - 1), bottomrightcolor, appearance.Background);
+            button.Surface.DrawLine(new Point(1, button.Surface.Height - 1), new Point(button.Width - 1, button.Surface.Height - 1), bottomrightcolor, appearance.Background);
+
+            if (button.Parent.Font.Master.IsSadExtended && UseExtended)
             {
                 // Tweak the corners
                 //hostSurface.SetGlyph(0, 0, 0);
-                control.Surface.SetGlyph(control.Width - 1, 0, 0);
-                control.Surface.SetGlyph(0, control.Surface.Height - 1, 0);
+                button.Surface.SetGlyph(button.Width - 1, 0, 0);
+                button.Surface.SetGlyph(0, button.Surface.Height - 1, 0);
                 //hostSurface.SetGlyph(control.Width - 1, control.Surface.Height - 1, 0);
 
-                control.Surface.SetDecorator(
-                    new Point(0, control.Surface.Height - 1).ToIndex(control.Width), 1, new[]
+                button.Surface.SetDecorator(
+                    new Point(0, button.Surface.Height - 1).ToIndex(button.Width), 1, new[]
                     {
-                        control.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor),
-                        control.Parent.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor)
+                        button.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor),
+                        button.Parent.Font.Master.GetDecorator("box-edge-bottom", bottomrightcolor)
                     });
 
                 //hostSurface.SetDecorator(new Point(0, 0).ToIndex(hostSurface.Width), 1, new[] {
@@ -303,11 +327,11 @@ namespace SadConsole.Themes
                 //    hostSurface.Font.Master.GetDecorator("box-edge-top", topleftcolor)
                 //});
 
-                control.Surface.SetDecorator(
-                    new Point(control.Width - 1, 0).ToIndex(control.Width), 1, new[]
+                button.Surface.SetDecorator(
+                    new Point(button.Width - 1, 0).ToIndex(button.Width), 1, new[]
                     {
-                        control.Parent.Font.Master.GetDecorator("box-edge-top", topleftcolor),
-                        control.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
+                        button.Parent.Font.Master.GetDecorator("box-edge-top", topleftcolor),
+                        button.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor)
                     });
 
                 //hostSurface.SetDecorator(new Point(control.Width - 1, control.Surface.Height - 1).ToIndex(hostSurface.Width), 1, new[] {
@@ -317,10 +341,11 @@ namespace SadConsole.Themes
 
             }
 
-            control.IsDirty = false;
+            button.IsDirty = false;
         }
 
-        public override object Clone()
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
             return new ButtonLinesTheme()
             {
@@ -335,5 +360,4 @@ namespace SadConsole.Themes
             };
         }
     }
-
 }

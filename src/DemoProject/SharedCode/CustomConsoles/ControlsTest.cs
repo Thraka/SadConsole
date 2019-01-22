@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surfaces;
+
 using System;
 using System.Collections.Generic;
 using SadConsole;
@@ -53,12 +53,12 @@ namespace StarterProject.CustomConsoles
             prog2.Position = new Point(18, 7);
             Add(prog2);
 
-            var slider = SadConsole.Controls.ScrollBar.Create(Orientation.Horizontal, 10);
+            var slider = new ScrollBar(Orientation.Horizontal, 10);
             slider.Position = new Point(16, 3);
             slider.Maximum = 18;
             Add(slider);
 
-            slider = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, 6);
+            slider = new ScrollBar( Orientation.Vertical, 6);
             slider.Position = new Point(16, 7);
             slider.Maximum = 6;
             Add(slider);
@@ -125,26 +125,26 @@ namespace StarterProject.CustomConsoles
             //DisableControlFocusing = true;
             
             List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>();
-            colors.Add(new Tuple<Color, string>(Colors.Red, "Red"));
-            colors.Add(new Tuple<Color, string>(Colors.RedDark, "DRed"));
-            colors.Add(new Tuple<Color, string>(Colors.Purple, "Prp"));
-            colors.Add(new Tuple<Color, string>(Colors.PurpleDark, "DPrp"));
-            colors.Add(new Tuple<Color, string>(Colors.Blue, "Blu"));
-            colors.Add(new Tuple<Color, string>(Colors.BlueDark, "DBlu"));
-            colors.Add(new Tuple<Color, string>(Colors.Cyan, "Cya"));
-            colors.Add(new Tuple<Color, string>(Colors.CyanDark, "DCya"));
-            colors.Add(new Tuple<Color, string>(Colors.Green, "Gre"));
-            colors.Add(new Tuple<Color, string>(Colors.GreenDark, "DGre"));
-            colors.Add(new Tuple<Color, string>(Colors.Yellow, "Yel"));
-            colors.Add(new Tuple<Color, string>(Colors.YellowDark, "DYel"));
-            colors.Add(new Tuple<Color, string>(Colors.Orange, "Ora"));
-            colors.Add(new Tuple<Color, string>(Colors.OrangeDark, "DOra"));
-            colors.Add(new Tuple<Color, string>(Colors.Brown, "Bro"));
-            colors.Add(new Tuple<Color, string>(Colors.BrownDark, "DBrow"));
-            colors.Add(new Tuple<Color, string>(Colors.Gray, "Gray"));
-            colors.Add(new Tuple<Color, string>(Colors.GrayDark, "DGray"));
-            colors.Add(new Tuple<Color, string>(Colors.White, "White"));
-            colors.Add(new Tuple<Color, string>(Colors.Black, "Black"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Red, "Red"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.RedDark, "DRed"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Purple, "Prp"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.PurpleDark, "DPrp"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Blue, "Blu"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.BlueDark, "DBlu"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Cyan, "Cya"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.CyanDark, "DCya"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Green, "Gre"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.GreenDark, "DGre"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Yellow, "Yel"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.YellowDark, "DYel"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Orange, "Ora"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.OrangeDark, "DOra"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Brown, "Bro"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.BrownDark, "DBrow"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Gray, "Gray"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.GrayDark, "DGray"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.White, "White"));
+            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Black, "Black"));
 
             backgroundcycle = colors.Select(i => i.Item1).ToArray();
             backIndex = 5;
@@ -179,8 +179,9 @@ namespace StarterProject.CustomConsoles
                 if (backIndex == backgroundcycle.Length)
                     backIndex = 0;
 
-                var theme = Theme;
-                theme.FillStyle.Background = backgroundcycle[backIndex];
+                var theme = Theme.Clone();
+                theme.Colors.MenuBack = backgroundcycle[backIndex];
+                theme.Colors.RebuildAppearances();
                 Theme = theme;
 
             }
@@ -204,50 +205,50 @@ namespace StarterProject.CustomConsoles
         {
             base.Invalidate();
 
-            Print(1, 1, "BUTTONS", Colors.YellowDark);
-            Print(16, 1, "BARS", Colors.YellowDark);
-            Print(28, 1, "LISTBOX", Colors.YellowDark);
-            Print(28, 10, "RADIO BUTTON", Colors.YellowDark);
+            Print(1, 1, "BUTTONS", Library.Default.Colors.YellowDark);
+            Print(16, 1, "BARS", Library.Default.Colors.YellowDark);
+            Print(28, 1, "LISTBOX", Library.Default.Colors.YellowDark);
+            Print(28, 10, "RADIO BUTTON", Library.Default.Colors.YellowDark);
 
-            Print(51, 1, "SELECTION BUTTON (UP/DN KEYS)", Colors.YellowDark);
-            Print(51, 7, "TEXTBOX", Colors.YellowDark);
-            Print(51, 11, "CHECKBOX", Colors.YellowDark);
+            Print(51, 1, "SELECTION BUTTON (UP/DN KEYS)", Library.Default.Colors.YellowDark);
+            Print(51, 7, "TEXTBOX", Library.Default.Colors.YellowDark);
+            Print(51, 11, "CHECKBOX", Library.Default.Colors.YellowDark);
 
-            Print(2, 15, "RED ".CreateColored(Colors.Red, null) +
-                                      "PURPLE ".CreateColored(Colors.Purple, null) +
-                                      "BLUE ".CreateColored(Colors.Blue, null) +
-                                      "CYAN ".CreateColored(Colors.Cyan, null) +
-                                      "GREEN ".CreateColored(Colors.Green, null) +
-                                      "YELLOW ".CreateColored(Colors.Yellow, null) +
-                                      "ORANGE ".CreateColored(Colors.Orange, null) +
-                                      "BROWN ".CreateColored(Colors.Brown, null) +
-                                      "GRAY ".CreateColored(Colors.Gray, null) +
-                                      "WHITE ".CreateColored(Colors.White, null)
+            Print(2, 15, "RED ".CreateColored(Library.Default.Colors.Red, null) +
+                                      "PURPLE ".CreateColored(Library.Default.Colors.Purple, null) +
+                                      "BLUE ".CreateColored(Library.Default.Colors.Blue, null) +
+                                      "CYAN ".CreateColored(Library.Default.Colors.Cyan, null) +
+                                      "GREEN ".CreateColored(Library.Default.Colors.Green, null) +
+                                      "YELLOW ".CreateColored(Library.Default.Colors.Yellow, null) +
+                                      "ORANGE ".CreateColored(Library.Default.Colors.Orange, null) +
+                                      "BROWN ".CreateColored(Library.Default.Colors.Brown, null) +
+                                      "GRAY ".CreateColored(Library.Default.Colors.Gray, null) +
+                                      "WHITE ".CreateColored(Library.Default.Colors.White, null)
                                       );
 
-            Print(2, 16, "RED ".CreateColored(Colors.RedDark, null) +
-                                      "PURPLE ".CreateColored(Colors.PurpleDark, null) +
-                                      "BLUE ".CreateColored(Colors.BlueDark, null) +
-                                      "CYAN ".CreateColored(Colors.CyanDark, null) +
-                                      "GREEN ".CreateColored(Colors.GreenDark, null) +
-                                      "YELLOW ".CreateColored(Colors.YellowDark, null) +
-                                      "ORANGE ".CreateColored(Colors.OrangeDark, null) +
-                                      "BROWN ".CreateColored(Colors.BrownDark, null) +
-                                      "GRAY ".CreateColored(Colors.GrayDark, null) +
-                                      "BLACK ".CreateColored(Colors.Black, null)
+            Print(2, 16, "RED ".CreateColored(Library.Default.Colors.RedDark, null) +
+                                      "PURPLE ".CreateColored(Library.Default.Colors.PurpleDark, null) +
+                                      "BLUE ".CreateColored(Library.Default.Colors.BlueDark, null) +
+                                      "CYAN ".CreateColored(Library.Default.Colors.CyanDark, null) +
+                                      "GREEN ".CreateColored(Library.Default.Colors.GreenDark, null) +
+                                      "YELLOW ".CreateColored(Library.Default.Colors.YellowDark, null) +
+                                      "ORANGE ".CreateColored(Library.Default.Colors.OrangeDark, null) +
+                                      "BROWN ".CreateColored(Library.Default.Colors.BrownDark, null) +
+                                      "GRAY ".CreateColored(Library.Default.Colors.GrayDark, null) +
+                                      "BLACK ".CreateColored(Library.Default.Colors.Black, null)
                                       );
-            Print(2, 18, CreateGradientExample("RED", Colors.Red, Colors.RedDark));
-            Print(2, 19, CreateGradientExample("PURPLE", Colors.Purple, Colors.PurpleDark));
-            Print(2, 20, CreateGradientExample("BLUE", Colors.Blue, Colors.BlueDark));
-            Print(2, 21, CreateGradientExample("CYAN", Colors.Cyan, Colors.CyanDark));
-            Print(2, 22, CreateGradientExample("GREEN", Colors.Green, Colors.GreenDark));
-            Print(34, 18, CreateGradientExample("YELLOW", Colors.Yellow, Colors.YellowDark));
-            Print(34, 19, CreateGradientExample("ORANGE", Colors.Orange, Colors.OrangeDark));
-            Print(34, 20, CreateGradientExample("BROWN", Colors.Brown, Colors.BrownDark));
-            Print(34, 21, CreateGradientExample("GRAY", Colors.Gray, Colors.GrayDark));
-            Print(34, 22, CreateGradientExample("WHITE", Colors.White, Colors.Black));
+            Print(2, 18, CreateGradientExample("RED", Library.Default.Colors.Red, Library.Default.Colors.RedDark));
+            Print(2, 19, CreateGradientExample("PURPLE", Library.Default.Colors.Purple, Library.Default.Colors.PurpleDark));
+            Print(2, 20, CreateGradientExample("BLUE", Library.Default.Colors.Blue, Library.Default.Colors.BlueDark));
+            Print(2, 21, CreateGradientExample("CYAN", Library.Default.Colors.Cyan, Library.Default.Colors.CyanDark));
+            Print(2, 22, CreateGradientExample("GREEN", Library.Default.Colors.Green, Library.Default.Colors.GreenDark));
+            Print(34, 18, CreateGradientExample("YELLOW", Library.Default.Colors.Yellow, Library.Default.Colors.YellowDark));
+            Print(34, 19, CreateGradientExample("ORANGE", Library.Default.Colors.Orange, Library.Default.Colors.OrangeDark));
+            Print(34, 20, CreateGradientExample("BROWN", Library.Default.Colors.Brown, Library.Default.Colors.BrownDark));
+            Print(34, 21, CreateGradientExample("GRAY", Library.Default.Colors.Gray, Library.Default.Colors.GrayDark));
+            Print(34, 22, CreateGradientExample("WHITE", Library.Default.Colors.White, Library.Default.Colors.Black));
 
-            //Print(2, 23, CreateGradientExample("GOLD", Colors.Gold, Colors.GoldDark));
+            //Print(2, 23, CreateGradientExample("GOLD", Library.Default.Colors.Gold, Library.Default.Colors.GoldDark));
         }
 
         private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7)

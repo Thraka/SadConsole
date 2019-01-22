@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole;
 using SadConsole.Entities;
-using SadConsole.Surfaces;
+
 
 namespace StarterProject.CustomConsoles
 {
-    class EntityConsole: Console
+    class EntityConsole: ScrollingConsole
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
@@ -21,7 +21,7 @@ namespace StarterProject.CustomConsoles
         public EntityConsole()
             : base(80, 23)
         {
-            var animation = new Animated("default", 1, 1);
+            var animation = new AnimatedConsole("default", 1, 1);
             var frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
 
@@ -37,7 +37,7 @@ namespace StarterProject.CustomConsoles
 
             manager.Entities.Add(player);
 
-            Children.Add(manager);
+            Components.Add(manager);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)

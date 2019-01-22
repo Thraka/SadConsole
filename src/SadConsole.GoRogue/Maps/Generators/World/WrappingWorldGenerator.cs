@@ -1,10 +1,10 @@
 ﻿using System;
-using SadConsole.Surfaces;
+using SadConsole;
 using TinkerWorX.AccidentalNoiseLibrary;
 
 namespace SadConsole.Maps.Generators.World
 {
-    public class WrappingWorldGenerator : WrappingWorldGeneratorGeneric<SurfaceMap, Basic>
+    public class WrappingWorldGenerator : WrappingWorldGeneratorGeneric<SurfaceMap, CellSurface>
     {
 
     }

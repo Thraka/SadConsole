@@ -1,16 +1,14 @@
-﻿using System;
-using SadConsole.Controls;
-using SadConsole.Surfaces;
-
-namespace SadConsole.Themes
+﻿namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
     /// The theme of the slider control.
     /// </summary>
     [DataContract]
-    public class ScrollBarTheme: ThemeBase<ScrollBar>
+    public class ScrollBarTheme: ThemeBase
     {
         /// <summary>
         /// The theme part fot the start button.
@@ -48,6 +46,9 @@ namespace SadConsole.Themes
         [DataMember]
         public int SliderGlyph;
 
+        /// <summary>
+        /// Creates a new theme used by the <see cref="ScrollBar"/>.
+        /// </summary>
         public ScrollBarTheme()
         {
             //TODO add states for ends. Bar should use base state.
@@ -57,97 +58,106 @@ namespace SadConsole.Themes
             EndButtonHorizontalGlyph = 31;
             SliderGlyph = 219;
             BarGlyph = 176;
+        }
+
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
+        {
+            control.Surface = new CellSurface(control.Width, control.Height);
+
+            base.Attached(control);
+        }
+
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
+        {
+            base.RefreshTheme(themeColors);
 
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
 
-            Disabled = Library.Default.Appearance_ControlDisabled.Clone();
+            Disabled = themeColors.Appearance_ControlDisabled.Clone();
         }
 
-        public override void Attached(ScrollBar control)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
-        }
-
-        public override void UpdateAndDraw(ScrollBar control, TimeSpan time)
-        {
-            if (!control.IsDirty) return;
+            if (!(control is ScrollBar scrollbar)) return;
+            
+            if (!scrollbar.IsDirty) return;
 
             Cell appearance;
 
-            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+            if (Helpers.HasFlag(scrollbar.State, ControlStates.Disabled))
                 appearance = Disabled;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+            else if (Helpers.HasFlag(scrollbar.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(scrollbar.State, ControlStates.MouseRightButtonDown))
                 appearance = MouseDown;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+            else if (Helpers.HasFlag(scrollbar.State, ControlStates.MouseOver))
                 appearance = MouseOver;
 
-            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+            else if (Helpers.HasFlag(scrollbar.State, ControlStates.Focused))
                 appearance = Focused;
 
             else
                 appearance = Normal;
 
-            control.Surface.Clear();
+            scrollbar.Surface.Clear();
 
-            if (control.Orientation == Orientation.Horizontal)
+            if (scrollbar.Orientation == Orientation.Horizontal)
             {
-                control.Surface.SetCellAppearance(0, 0, appearance);
-                control.Surface.SetGlyph(0, 0, StartButtonVerticalGlyph);
+                scrollbar.Surface.SetCellAppearance(0, 0, appearance);
+                scrollbar.Surface.SetGlyph(0, 0, StartButtonVerticalGlyph);
 
-                control.Surface.SetCellAppearance(control.Width - 1, 0, appearance);
-                control.Surface.SetGlyph(control.Width - 1, 0, EndButtonVerticalGlyph);
+                scrollbar.Surface.SetCellAppearance(scrollbar.Width - 1, 0, appearance);
+                scrollbar.Surface.SetGlyph(scrollbar.Width - 1, 0, EndButtonVerticalGlyph);
 
-                for (int i = 1; i <= control.SliderBarSize; i++)
+                for (int i = 1; i <= scrollbar.SliderBarSize; i++)
                 {
-                    control.Surface.SetCellAppearance(i, 0, appearance);
-                    control.Surface.SetGlyph(i, 0, BarGlyph);
+                    scrollbar.Surface.SetCellAppearance(i, 0, appearance);
+                    scrollbar.Surface.SetGlyph(i, 0, BarGlyph);
                 }
 
-                if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)
+                if (scrollbar.Value >= scrollbar.Minimum && scrollbar.Value <= scrollbar.Maximum && scrollbar.Minimum != scrollbar.Maximum)
                 {
-                    if (control.IsEnabled)
+                    if (scrollbar.IsEnabled)
                     {
-                        control.Surface.SetCellAppearance(1 + control.CurrentSliderPosition, 0, appearance);
-                        control.Surface.SetGlyph(1 + control.CurrentSliderPosition, 0, SliderGlyph);
+                        scrollbar.Surface.SetCellAppearance(1 + scrollbar.CurrentSliderPosition, 0, appearance);
+                        scrollbar.Surface.SetGlyph(1 + scrollbar.CurrentSliderPosition, 0, SliderGlyph);
                     }
                 }
             }
             else
             {
-                control.Surface.SetCellAppearance(0, 0, appearance);
-                control.Surface.SetGlyph(0, 0, StartButtonHorizontalGlyph);
+                scrollbar.Surface.SetCellAppearance(0, 0, appearance);
+                scrollbar.Surface.SetGlyph(0, 0, StartButtonHorizontalGlyph);
 
-                control.Surface.SetCellAppearance(0, control.Height - 1, appearance);
-                control.Surface.SetGlyph(0, control.Height - 1, EndButtonHorizontalGlyph);
+                scrollbar.Surface.SetCellAppearance(0, scrollbar.Height - 1, appearance);
+                scrollbar.Surface.SetGlyph(0, scrollbar.Height - 1, EndButtonHorizontalGlyph);
 
-                for (int i = 0; i < control.SliderBarSize; i++)
+                for (int i = 0; i < scrollbar.SliderBarSize; i++)
                 {
-                    control.Surface.SetCellAppearance(0, i + 1, appearance);
-                    control.Surface.SetGlyph(0, i + 1, BarGlyph);
+                    scrollbar.Surface.SetCellAppearance(0, i + 1, appearance);
+                    scrollbar.Surface.SetGlyph(0, i + 1, BarGlyph);
                 }
 
-                if (control.Value >= control.Minimum && control.Value <= control.Maximum && control.Minimum != control.Maximum)
+                if (scrollbar.Value >= scrollbar.Minimum && scrollbar.Value <= scrollbar.Maximum && scrollbar.Minimum != scrollbar.Maximum)
                 {
-                    if (control.IsEnabled)
+                    if (scrollbar.IsEnabled)
                     {
-                        control.Surface.SetCellAppearance(0, 1 + control.CurrentSliderPosition, appearance);
-                        control.Surface.SetGlyph(0, 1 + control.CurrentSliderPosition, SliderGlyph);
+                        scrollbar.Surface.SetCellAppearance(0, 1 + scrollbar.CurrentSliderPosition, appearance);
+                        scrollbar.Surface.SetGlyph(0, 1 + scrollbar.CurrentSliderPosition, SliderGlyph);
                     }
                 }
                     
             }
 
-            control.IsDirty = false;
+            scrollbar.IsDirty = false;
         }
-
-        /// <summary>
-        /// Returns a clone of this object.
-        /// </summary>
-        /// <returns>The cloned object.</returns>
-        public override object Clone()
+        
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
             return new ScrollBarTheme()
             {

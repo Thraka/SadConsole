@@ -1,41 +1,28 @@
-﻿using Microsoft.Xna.Framework;
-using SadConsole.Effects;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Effects;
+    
     /// <summary>
     /// Represents a single character that has a foreground and background color.
     /// </summary>
     public class ColoredGlyph : Cell
     {
-        private char _character;
-
         /// <summary>
         /// The glyph.
         /// </summary>
         public char GlyphCharacter
         {
-            get => _character;
+            get => (char)Glyph;
             set
             {
-                _character = value;
-                base.Glyph = _character;
+                Glyph = value;
             }
         }
-
-        /// <summary>
-        /// Sets the glyph by index.
-        /// </summary>
-        public new int Glyph
-        {
-            get => base.Glyph;
-            set => GlyphCharacter = (char)value;
-        }
-
+        
         /// <summary>
         /// The effect for the glyph.
         /// </summary>
@@ -75,7 +62,16 @@ namespace SadConsole
         /// <returns>The cloned cell appearance.</returns>
         public new ColoredGlyph Clone()
         {
-            return new ColoredGlyph() { Foreground = this.Foreground, Background = this.Background, Effect = this.Effect != null ? this.Effect.Clone() : null, GlyphCharacter = this.GlyphCharacter, Mirror = this.Mirror };
+            return new ColoredGlyph()
+            {
+                Foreground = Foreground,
+                Background = Background,
+                Effect = Effect != null ? 
+                            (Effect.CloneOnApply ? Effect.Clone() : Effect)
+                            : null,
+                GlyphCharacter = GlyphCharacter,
+                Mirror = Mirror
+            };
         }
     }
 }

@@ -1,18 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SadConsole.Surfaces;
-using Console = SadConsole.Console;
+
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole.Input;
 using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class AnsiConsole: Console
+    class AnsiConsole: ScrollingConsole
     {
         int fileIndex = -1;
         string[] files;
-        private Basic ansiSurface;
+        private ScrollingConsole ansiSurface;
         
         public AnsiConsole(): base(80, 23)
         {
@@ -23,49 +23,6 @@ namespace StarterProject.CustomConsoles
 
             NextAnsi();
             LoadAnsi();
-
-            KeyboardHandler = (cons, info) =>
-            {
-
-                if (info.IsKeyDown(Keys.Left))
-                    cons.ViewPort = new Rectangle(cons.ViewPort.Left - 1, cons.ViewPort.Top, 80, 23);
-
-                if (info.IsKeyDown(Keys.Right))
-                    cons.ViewPort = new Rectangle(cons.ViewPort.Left + 1, cons.ViewPort.Top, 80, 23);
-
-                if (info.IsKeyDown(Keys.Up))
-                    cons.ViewPort = new Rectangle(cons.ViewPort.Left, cons.ViewPort.Top - 1, 80, 23);
-
-                if (info.IsKeyDown(Keys.Down))
-                    cons.ViewPort = new Rectangle(cons.ViewPort.Left, cons.ViewPort.Top + 1, 80, 23);
-
-                if (info.IsKeyReleased(Keys.Space))
-                {
-                    NextAnsi();
-                    LoadAnsi();
-                }
-
-                if (info.IsKeyReleased(Keys.L))
-                {
-                    if (writer == null || lineCounter == lines.Length)
-                    {
-                        NextAnsi();
-                        lineCounter = 0;
-                        Clear();
-                        lines = doc.AnsiString.Split('\n');
-                        writer = new SadConsole.Ansi.AnsiWriter(doc, this);
-                    }
-
-                    writer.AnsiReadLine(lines[lineCounter], true);
-
-                    lineCounter++;
-
-                    if (lineCounter > lines.Length)
-                        writer = null;
-                }
-
-                return true;
-            };
         }
 
         private void NextAnsi()
@@ -87,7 +44,7 @@ namespace StarterProject.CustomConsoles
         {
             Clear();
 
-            ansiSurface = new Basic(80, 25);
+            ansiSurface = new ScrollingConsole(80, 25);
             writer = new SadConsole.Ansi.AnsiWriter(doc, ansiSurface);
             writer.ReadEntireDocument();
 
@@ -101,7 +58,44 @@ namespace StarterProject.CustomConsoles
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
-            return base.ProcessKeyboard(info);
+            if (info.IsKeyDown(Keys.Left))
+                ViewPort = new Rectangle(ViewPort.Left - 1, ViewPort.Top, 80, 23);
+
+            if (info.IsKeyDown(Keys.Right))
+                ViewPort = new Rectangle(ViewPort.Left + 1, ViewPort.Top, 80, 23);
+
+            if (info.IsKeyDown(Keys.Up))
+                ViewPort = new Rectangle(ViewPort.Left, ViewPort.Top - 1, 80, 23);
+
+            if (info.IsKeyDown(Keys.Down))
+                ViewPort = new Rectangle(ViewPort.Left, ViewPort.Top + 1, 80, 23);
+
+            if (info.IsKeyReleased(Keys.Space))
+            {
+                NextAnsi();
+                LoadAnsi();
+            }
+
+            if (info.IsKeyReleased(Keys.L))
+            {
+                if (writer == null || lineCounter == lines.Length)
+                {
+                    NextAnsi();
+                    lineCounter = 0;
+                    Clear();
+                    lines = doc.AnsiString.Split('\n');
+                    writer = new SadConsole.Ansi.AnsiWriter(doc, this);
+                }
+
+                writer.AnsiReadLine(lines[lineCounter], true);
+
+                lineCounter++;
+
+                if (lineCounter > lines.Length)
+                    writer = null;
+            }
+
+            return true;
         }
     }
 }

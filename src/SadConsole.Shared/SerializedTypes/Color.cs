@@ -1,12 +1,11 @@
-﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
-
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.SerializedTypes
 {
+    using System.Runtime.Serialization;
+
     [DataContract]
     public struct ColorSerialized
     {
@@ -19,14 +18,14 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public byte A;
 
-        public static implicit operator ColorSerialized(FrameworkColor color)
+        public static implicit operator ColorSerialized(Color color)
         {
             return new ColorSerialized() { R = color.R, G = color.G, B = color.B, A = color.A };
         }
 
-        public static implicit operator FrameworkColor(ColorSerialized color)
+        public static implicit operator Color(ColorSerialized color)
         {
-            return new FrameworkColor(color.R, color.G, color.B, color.A);
+            return new Color(color.R, color.G, color.B, color.A);
         }
     }
 }

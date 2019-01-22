@@ -1,19 +1,15 @@
-﻿using Microsoft.Xna.Framework;
-
-using SadConsole.Surfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using SadConsole.StringParser;
-
-namespace SadConsole
+﻿namespace SadConsole
 {
+    using SadConsole.StringParser;
+    using System;
+    using System.Collections.Generic;
+
     public partial class ColoredString
     {
         /// <summary>
         /// Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
         /// </summary>
-        public static Func<string, string, ColoredGlyph[], Surfaces.SurfaceBase, ParseCommandStacks, ParseCommandBase> CustomProcessor;
+        public static Func<string, string, ColoredGlyph[], CellSurface, ParseCommandStacks, ParseCommandBase> CustomProcessor;
 
         /// <summary>
         /// Creates a colored string by parsing commands embedded in the string.
@@ -21,12 +17,11 @@ namespace SadConsole
         /// <param name="value">The string to parse.</param>
         /// <param name="surfaceIndex">Index of where this string will be printed.</param>
         /// <param name="surface">The surface the string will be printed to.</param>
-        /// <param name="editor">A surface editor associated with the text surface.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
         /// <returns></returns>
-        public static ColoredString Parse(string value, int surfaceIndex = -1, Surfaces.SurfaceBase surface = null, ParseCommandStacks initialBehaviors = null)
+        public static ColoredString Parse(string value, int surfaceIndex = -1, CellSurface surface = null, ParseCommandStacks initialBehaviors = null)
         {
-            var commandStacks = initialBehaviors != null ? initialBehaviors : new ParseCommandStacks();
+            var commandStacks = initialBehaviors ?? new ParseCommandStacks();
             List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);
 
             for (int i = 0; i < value.Length; i++)
@@ -54,7 +49,7 @@ namespace SadConsole
                             }
 
                             // Check for custom command
-                            ParseCommandBase commandObject = CustomProcessor != null ? CustomProcessor(command, commandParams, existingGlyphs, surface, commandStacks) : null;
+                            ParseCommandBase commandObject = CustomProcessor?.Invoke(command, commandParams, existingGlyphs, surface, commandStacks);
 
                             // No custom command found, run build in ones
                             if (commandObject == null)
@@ -98,7 +93,7 @@ namespace SadConsole
                         }
                         
                     }
-                    catch (System.Exception e1)
+                    catch (Exception e1)
                     {
 #if DEBUG
                         throw e1;
@@ -146,6 +141,5 @@ namespace SadConsole
 
             return new ColoredString(glyphs.ToArray()) { IgnoreEffect = !commandStacks.TurnOnEffects };
         }
-        
     }
 }

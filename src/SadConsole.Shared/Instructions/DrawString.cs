@@ -1,59 +1,85 @@
-﻿using Microsoft.Xna.Framework;
-
-using System.Runtime.Serialization;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.Instructions
 {
+    using System;
+    using System.Runtime.Serialization;
+    using Console = SadConsole.Console;
+
     /// <summary>
     /// Draws a string to a console as if someone was typing.
     /// </summary>
-    [DataContract]
-    public class DrawString : InstructionBase<Surfaces.SurfaceBase>
+    public class DrawString : InstructionBase
     {
-        #region Settings
+        private ColoredString _text;
+
         /// <summary>
         /// Gets or sets the text to print.
         /// </summary>
-        [DataMember]
-        public ColoredString Text { get; set; }
+        public ColoredString Text
+        {
+            get => _text;
+            set => _text = value ?? throw new Exception($"{nameof(Text)} can't be null.");
+        }
 
         /// <summary>
         /// Gets or sets the total time to take to write the string. Use zero for instant.
         /// </summary>
-        [DataMember]
         public float TotalTimeToPrint { get; set; }
 
         /// <summary>
         /// Gets or sets the position on the console to write the text.
         /// </summary>
-        [DataMember]
         public Point Position { get; set; }
 
         /// <summary>
         /// Represents the cursor used in printing. Use this for styling and printing behavior.
         /// </summary>
-        [DataMember]
-        public Cursor Cursor { get => _cursor; set => _cursor = value; }
+        public Cursor Cursor { get; set; }
 
-        #endregion
-
+        private CellSurface _target;
         private double _timeElapsed = 0d;
         private double _timePerCharacter = 0d;
         private string _textCopy;
         private short _textIndex;
         private bool _started = false;
         private Point _tempLocation;
-        private Cursor _cursor;
-        
 
-        public DrawString(Surfaces.SurfaceBase target)
-            : base(target)
+        /// <summary>
+        /// Draws a string on the specified surface.
+        /// </summary>
+        /// <param name="target">The target surface to use.</param>
+        /// <param name="text">The text to print.</param>
+        public DrawString(CellSurface target, ColoredString text)
         {
-            _cursor = new Cursor(target);
-            _cursor.DisableWordBreak = true;
+            _target = target;
+            Cursor = new Cursor();
+            Text = text;
         }
 
-        public override void Run()
+        /// <summary>
+        /// Draws a string on the surface passed to <see cref="Update(Console, TimeSpan)"/>.
+        /// </summary>
+        /// <param name="text"></param>
+        public DrawString(ColoredString text)
+        {
+            Cursor = new Cursor();
+            Text = text;
+        }
+
+        /// <summary>
+        /// Draws a string on the surface passed to <see cref="Update(Console, TimeSpan)"/>. <see cref="Text"/> must be set manually.
+        /// </summary>
+        public DrawString()
+        {
+            Cursor = new Cursor();
+            Text = new ColoredString();
+        }
+
+        /// <inheritdoc />
+        public override void Update(Console console, TimeSpan delta)
         {
             if (!_started)
             {
@@ -61,10 +87,16 @@ namespace SadConsole.Instructions
                 _textCopy = Text.ToString();
                 _textIndex = 0;
 
+                if (_target == null)
+                    _target = console;
+
+                Cursor.AttachSurface(_target);
+                Cursor.DisableWordBreak = true;
+
                 if (_textCopy.Length == 0)
                 {
                     IsFinished = true;
-                    base.Run();
+                    base.Update(console, delta);
                     return;
                 }
 
@@ -89,7 +121,7 @@ namespace SadConsole.Instructions
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
                     _timeElapsed = 0d;
 
-                    _cursor.Position = _tempLocation;
+                    Cursor.Position = _tempLocation;
 
                     if (charCount >= _textCopy.Length - _textIndex)
                     {
@@ -98,16 +130,17 @@ namespace SadConsole.Instructions
                     }
 
                     var textToPrint = Text.SubString(_textIndex, charCount);
-                    _cursor.Print(textToPrint);
+                    Cursor.Print(textToPrint);
                     _textIndex += (short)charCount;
 
-                    _tempLocation = _cursor.Position;
+                    _tempLocation = Cursor.Position;
                 }
             }
 
-            base.Run();
+            base.Update(console, delta);
         }
 
+        /// <inheritdoc />
         public override void Repeat()
         {
             _started = false;

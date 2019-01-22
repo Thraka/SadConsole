@@ -1,22 +1,21 @@
-﻿using FrameworkColor = Microsoft.Xna.Framework.Color;
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-
-
+﻿#if XNA
+using FrameworkColor = Microsoft.Xna.Framework.Color;
+#else
+using FrameworkColor = SadConsole.Color;
+#endif
 
 namespace SadConsole.Readers
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Compression;
+
     /// <summary>
     /// A RexPaint image.
     /// </summary>
     public partial class REXPaintImage
     {
-        private List<Layer> layers;
+        private readonly List<Layer> _layers;
 
         /// <summary>
         /// The version of RexPaint that created this image.
@@ -26,22 +25,22 @@ namespace SadConsole.Readers
         /// <summary>
         /// The width of the image.
         /// </summary>
-        public int Width { get; private set; }
+        public int Width { get; }
 
         /// <summary>
         /// The height of the image.
         /// </summary>
-        public int Height { get; private set; }
+        public int Height { get; }
 
         /// <summary>
         /// The total number of layers for this image.
         /// </summary>
-        public int LayerCount => layers.Count;
+        public int LayerCount => _layers.Count;
 
         /// <summary>
         /// A read-only collection of layers.
         /// </summary>
-        public System.Collections.ObjectModel.ReadOnlyCollection<Layer> Layers => new System.Collections.ObjectModel.ReadOnlyCollection<Layer>(layers);
+        public System.Collections.ObjectModel.ReadOnlyCollection<Layer> Layers => new System.Collections.ObjectModel.ReadOnlyCollection<Layer>(_layers);
 
         /// <summary>
         /// Creates a new RexPaint image.
@@ -52,7 +51,7 @@ namespace SadConsole.Readers
         {
             Width = width;
             Height = height;
-            layers = new List<Layer>();
+            _layers = new List<Layer>();
             Create();
         }
 
@@ -63,7 +62,7 @@ namespace SadConsole.Readers
         public Layer Create()
         {
             var layer = new Layer(Width, Height);
-            layers.Add(layer);
+            _layers.Add(layer);
             return layer;
         }
 
@@ -75,7 +74,7 @@ namespace SadConsole.Readers
         public Layer Create(int index)
         {
             var layer = new Layer(Width, Height);
-            layers.Insert(index, layer);
+            _layers.Insert(index, layer);
             return layer;
         }
 
@@ -85,7 +84,7 @@ namespace SadConsole.Readers
         /// <param name="layer">The layer to add.</param>
         public void Add(Layer layer)
         {
-            layers.Add(layer);
+            _layers.Add(layer);
         }
 
         /// <summary>
@@ -95,7 +94,7 @@ namespace SadConsole.Readers
         /// <param name="index">The position to add the layer.</param>
         public void Add(Layer layer, int index)
         {
-            layers.Insert(index, layer);
+            _layers.Insert(index, layer);
         }
 
         /// <summary>
@@ -104,41 +103,39 @@ namespace SadConsole.Readers
         /// <param name="layer">The layer.</param>
         public void Remove(Layer layer)
         {
-            layers.Remove(layer);
+            _layers.Remove(layer);
         }
 
         /// <summary>
-        /// Converts this REXPaint image to a <see cref="Consoles.LayeredTextSurface"/>.
+        /// Converts this REXPaint image to a <see cref="LayeredConsole"/>.
         /// </summary>
         /// <returns></returns>
-        public Surfaces.Layered ToLayeredSurface()
+        public LayeredConsole ToLayeredConsole()
         {
-            var surface = new Surfaces.Layered();
-            
-            for (int i = 0; i < LayerCount; i++)
-            {
-                var layer = new Surfaces.Basic(Width, Height);
+            var console = new LayeredConsole(Width, Height, LayerCount);
 
-                for (int y = 0; y < Height; y++)
+            for (var i = 0; i < LayerCount; i++)
+            {
+                var layer = console.GetLayer(i);
+
+                for (var y = 0; y < Height; y++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (var x = 0; x < Width; x++)
                     {
-                        var rexCell = layers[i][x, y];
-                        if (!rexCell.IsTransparent())
-                        {
-                            var newCell = layer[x, y];
-                            newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
-                            newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
-                            newCell.Glyph = rexCell.Character;
-                        }
+                        var rexCell = _layers[i][x, y];
+                        if (rexCell.IsTransparent()) continue;
+                        var newCell = layer[x, y];
+                        newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
+                        newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
+                        newCell.Glyph = rexCell.Character;
                     }
                 }
 
                 layer.IsDirty = true;
-                surface.Add(layer);
             }
 
-            return surface;
+            console.IsDirty = true;
+            return console;
         }
 
         /// <summary>
@@ -156,25 +153,25 @@ namespace SadConsole.Readers
                 var layerCount = reader.ReadInt32();
                 REXPaintImage image = null;
 
-                for (int currentLayer = 0; currentLayer < layerCount; currentLayer++)
+                for (var currentLayer = 0; currentLayer < layerCount; currentLayer++)
                 {
-                    int width = reader.ReadInt32();
-                    int height = reader.ReadInt32();
+                    var width = reader.ReadInt32();
+                    var height = reader.ReadInt32();
 
-                    Layer layer = null;
+                    Layer layer;
 
                     if (currentLayer == 0)
                     {
-                        image = new REXPaintImage(width, height);
-                        layer = image.layers[0];
+                        image = new REXPaintImage(width, height) {Version = version};
+                        layer = image._layers[0];
                     }
                     else
                         layer = image.Create();
 
                     // Process cells (could probably be streamlined into index processing instead of x,y...
-                    for (int x = 0; x < width; x++)
+                    for (var x = 0; x < width; x++)
                     {
-                        for (int y = 0; y < height; y++)
+                        for (var y = 0; y < height; y++)
                         {
 
                             var cell = new Cell(reader.ReadInt32(),                                                  // character

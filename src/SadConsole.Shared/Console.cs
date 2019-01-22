@@ -1,63 +1,157 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿#if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Effects;
-using SadConsole.Input;
-using SadConsole.Surfaces;
+#endif
 
 namespace SadConsole
 {
-    [System.Diagnostics.DebuggerDisplay("Console")]
-    public partial class Console: Surfaces.SurfaceBase, IConsole
+    using Newtonsoft.Json;
+    using SadConsole.DrawCalls;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+
+    /// <summary>
+    /// A <see cref="CellSurface"/> that has a font and can be drawn to the screen.
+    /// </summary>
+    [JsonConverter(typeof(SerializedTypes.ConsoleJsonConverter))]
+    public partial class Console : CellSurface
     {
+        private Console _parentScreen;
+        private Point _position;
+        private bool _isVisible = true;
+        private bool _isPaused;
+        
         /// <summary>
-        /// How the console handles becoming <see cref="Global.InputTargets.Console"/>.
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
         /// </summary>
-        [DataContract]
-        public enum ActiveBehavior
-        {
-            /// <summary>
-            /// Becomes the only active input object when focused.
-            /// </summary>
-            Set,
-
-            /// <summary>
-            /// Pushes to the top of the stack when it becomes the active input object.
-            /// </summary>
-            Push
-        }
+        protected List<IConsoleComponent> ComponentsUpdate;
 
         /// <summary>
-        /// The private virtual curser reference.
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsDraw"/> is <see langword="true"/>.
         /// </summary>
-        public Cursor Cursor { get; private set; }
+        protected List<IConsoleComponent> ComponentsDraw;
 
         /// <summary>
-        /// Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsMouse"/> is <see langword="true"/>.
         /// </summary>
-        public bool AutoCursorOnFocus { get; set; }
+        protected List<IConsoleComponent> ComponentsMouse;
+
+        /// <summary>
+        /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsKeyboard;
+
+        /// <summary>
+        /// A collection of components processed by this console.
+        /// </summary>
+        public ObservableCollection<IConsoleComponent> Components { get; private set; }
 
         /// <summary>
         /// How the console should handle becoming active.
         /// </summary>
-        public Console.ActiveBehavior FocusedMode { get; set; }
+        public ActiveBehavior FocusedMode { get; set; }
+
+        /// <summary>
+        /// The position of the screen object.
+        /// </summary>
+        /// <remarks>This position has no substance.</remarks>
+        public Point Position
+        {
+            get => _position;
+            set
+            {
+                var oldPosition = _position;
+                _position = value;
+                OnCalculateRenderPosition();
+                OnPositionChanged(oldPosition);
+            }
+        }
+
+        /// <summary>
+        /// A position that is based on the <see cref="Parent"/> position.
+        /// </summary>
+        public Point CalculatedPosition { get; protected set; }
+
+        /// <summary>
+        /// Treats the <see cref="Position"/> of the console as if it is pixels and not cells.
+        /// </summary>
+        public bool UsePixelPositioning { get; set; } = false;
+
+        /// <summary>
+        /// The child objects of this instance.
+        /// </summary>
+        public ConsoleCollection Children { get; }
+
+        /// <summary>
+        /// The parent object that this instance is a child of.
+        /// </summary>
+        public Console Parent
+        {
+            get => _parentScreen;
+            set
+            {
+                if (value == this) throw new Exception("Cannot set parent to itself.");
+                if (_parentScreen == value) return;
+                if (_parentScreen == null)
+                {
+                    _parentScreen = value;
+                    _parentScreen.Children.Add(this);
+                    OnCalculateRenderPosition();
+                    OnParentChanged(null, _parentScreen);
+                }
+                else
+                {
+                    var oldParent = _parentScreen;
+                    _parentScreen = value;
+
+                    oldParent.Children.Remove(this);
+
+                    _parentScreen?.Children.Add(this);
+
+                    OnCalculateRenderPosition();
+                    OnParentChanged(oldParent, _parentScreen);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the visibility of this object.
+        /// </summary>
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                if (_isVisible == value) return;
+                _isVisible = value;
+                OnVisibleChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the paused status of this object.
+        /// </summary>
+        public bool IsPaused
+        {
+            get => _isPaused;
+            set
+            {
+                if (_isPaused == value) return;
+                _isPaused = value;
+                OnPausedChanged();
+            }
+        }
 
         /// <summary>
         /// Gets or sets whether or not this console has exclusive access to the mouse events.
         /// </summary>
-        [DataMember]
         public bool IsExclusiveMouse { get; set; }
 
         /// <summary>
         /// Gets or sets this console as the focused console for input.
         /// </summary>
-        /// <remarks>If the <see cref="Console.ActiveConsoles.Console"/> has the <see cref="Console.ExclusiveFocus"/> property set to true, you cannot use this property to set this console to focused.</remarks>
-        [DataMember]
         public bool IsFocused
         {
             get => Global.FocusedConsoles.Console == this;
@@ -103,97 +197,136 @@ namespace SadConsole
             }
         }
 
-        /// <inheritdoc />
-        public new Cell this[int x, int y] => base[x, y];
-
-        /// <inheritdoc />
-        public new Cell this[int index] => base[index];
+        /// <summary>
+        /// Creates a new console with the specified width and height. Uses <see cref="Global.FontDefault"/> as the font.
+        /// </summary>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
+        public Console(int width, int height): this(width, height, Global.FontDefault)
+        {
+            
+        }
 
         /// <summary>
-        /// Creates a new text surface with the specified width and height.
+        /// Creates a new console with the specified width, height, and the cells backing the console. Uses <see cref="Global.FontDefault"/> as the font.
         /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">THe height of the surface.</param>
-        public Console(int width, int height) : this(width, height, Global.FontDefault, new Rectangle(0, 0, width, height), null)
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
+        /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        public Console(int width, int height, Cell[] cells) : this(width, height, Global.FontDefault, cells)
         {
 
         }
 
         /// <summary>
-        /// Creates a new text surface with the specified width and height.
+        /// Creates a new console with the specified width, height, and font.
         /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
-        /// <param name="viewPort">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
-        public Console(int width, int height, Rectangle viewPort) : this(width, height, Global.FontDefault, viewPort, null)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new text surface with the specified width and height.
-        /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the conosle.</param>
         /// <param name="font">The font used with rendering.</param>
-        public Console(int width, int height, Font font) : this(width, height, font, new Rectangle(0, 0, width, height), null)
+        public Console(int width, int height, Font font): this(width, height, font, null)
         {
-
+            
         }
 
         /// <summary>
-        /// Creates a new text surface with the specified width and height.
+        /// Creates a new console with the specified width, height, and initial set of cell data.
         /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
         /// <param name="font">The font used with rendering.</param>
-        /// <param name="viewPort">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
-        public Console(int width, int height, Font font, Rectangle viewPort) : this(width, height, font, viewPort, null)
+        /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        public Console(int width, int height, Font font, Cell[] cells) : base(width, height, cells)
         {
+            Components = new ObservableCollection<IConsoleComponent>();
+            Components.CollectionChanged += Components_CollectionChanged;
+            
+            ComponentsKeyboard = new List<IConsoleComponent>();
+            ComponentsDraw = new List<IConsoleComponent>();
+            ComponentsUpdate = new List<IConsoleComponent>();
+            ComponentsMouse = new List<IConsoleComponent>();
 
-        }
+            Children = new ConsoleCollection(this);
+            RenderCells = new Cell[Cells.Length];
+            RenderRects = new Rectangle[Cells.Length];
+            Renderer = new Renderers.Console();
+            _font = font;
+            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
-        /// <summary>
-        /// Creates a new text surface with the specified width, height, and initial set of cell data.
-        /// </summary>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
-        /// <param name="font">The font used with rendering.</param>
-        /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        /// <param name="viewPort">Initial value for the <see cref="SurfaceBase.ViewPort"/> view.</param>
-        public Console(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells): base (width, height, font, viewPort, initialCells)
-        {
+            var index = 0;
+
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    RenderRects[index] = Font.GetRenderRect(x, y);
+                    RenderCells[index] = this[x, y];
+                    index++;
+                }
+            }
+
+            AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
+            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             Cursor = new Cursor(this);
-            Renderer.BeforeRenderTintCallback = OnBeforeRender;
         }
-
-
-        /// <summary>
-        /// Called when the renderer renders the text view.
-        /// </summary>
-        /// <param name="batch">The batch used in renderering.</param>
-        protected virtual void OnBeforeRender(SpriteBatch batch)
+        
+        internal Console(): base(1, 1)
         {
-            if (Cursor.IsVisible && ViewPort.Contains(Cursor.Position))
-                Cursor.Render(batch, Font, Font.GetRenderRect(Cursor.Position.X - ViewPort.Location.X, Cursor.Position.Y - ViewPort.Location.Y));
-        }
+            IsCursorDisabled = true;
 
-        /// <summary>
-        /// Updates the <see cref="Cursor"/>.
-        /// </summary>
-        /// <param name="delta">Time difference for this frame (if update was called last frame).</param>
-        public override void Update(TimeSpan delta)
-        {
-            if (IsPaused) return;
+            Components = new ObservableCollection<IConsoleComponent>();
+            Components.CollectionChanged += Components_CollectionChanged;
+            
+            ComponentsKeyboard = new List<IConsoleComponent>();
+            ComponentsDraw = new List<IConsoleComponent>();
+            ComponentsUpdate = new List<IConsoleComponent>();
+            ComponentsMouse = new List<IConsoleComponent>();
 
-            if (Cursor.IsVisible)
-                Cursor.Update(delta);
+            Children = new ConsoleCollection(this);
+            RenderCells = new Cell[Cells.Length];
+            RenderRects = new Rectangle[Cells.Length];
+            Renderer = new Renderers.Console();
+            _font = Global.FontDefault;
+            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
-            base.Update(delta);
+            var index = 0;
+
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    RenderRects[index] = Font.GetRenderRect(x, y);
+                    RenderCells[index] = this[x, y];
+                    index++;
+                }
+            }
+
+            AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
         }
         
         /// <summary>
-        /// Called when this console's focus has been lost.
+        /// Calls <see cref="SetRenderCells"/>.
+        /// </summary>
+        protected override void OnCellsReset()
+        {
+            SetRenderCells();
+        }
+
+        /// <summary>
+        /// Sets a value for <see cref="CalculatedPosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
+        /// </summary>
+        public virtual void OnCalculateRenderPosition()
+        {
+            CalculatedPosition = Position + (Parent?.CalculatedPosition ?? Point.Zero);
+
+            foreach (var child in Children)
+            {
+                child.OnCalculateRenderPosition();
+            }
+        }
+
+        /// <summary>
+        /// Called when this console's focus has been lost. Hides the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
         protected virtual void OnFocusLost()
         {
@@ -202,22 +335,162 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Called when this console is focused.
+        /// Called when this console is focused. Shows the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
         protected virtual void OnFocused()
         {
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = true;
         }
+        
+        /// <summary>
+        /// Called when the renderer renders the text view.
+        /// </summary>
+        /// <param name="batch">The batch used in rendering.</param>
+        protected virtual void OnBeforeRender(SpriteBatch batch)
+        {
+            if (Cursor.IsVisible && IsValidCell(Cursor.Position.X, Cursor.Position.Y))
+                Cursor.Render(batch, Font, Font.GetRenderRect(Cursor.Position.X, Cursor.Position.Y));
+        }
 
         /// <summary>
-        /// Creates a new console from an existing surface.
+        /// Called when the parent console changes for this console.
         /// </summary>
-        /// <param name="surface"></param>
-        /// <returns>A new console.</returns>
-        public static Console FromSurface(SurfaceBase surface)
+        /// <param name="oldParent">The previous parent.</param>
+        /// <param name="newParent">The new parent.</param>
+        protected virtual void OnParentChanged(Console oldParent, Console newParent) { }
+
+        /// <summary>
+        /// Called when the <see cref="Position" /> property changes.
+        /// </summary>
+        /// <param name="oldLocation">The location before the change.</param>
+        protected virtual void OnPositionChanged(Point oldLocation) { }
+
+        /// <summary>
+        /// Called when the visibility of the object changes.
+        /// </summary>
+        protected virtual void OnVisibleChanged() { }
+
+        /// <summary>
+        /// Called when the paused status of the object changes.
+        /// </summary>
+        protected virtual void OnPausedChanged() { }
+
+        private void Components_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            return new Console(surface.Width, surface.Height, surface.Font, surface.ViewPort, surface.Cells);
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        FilterAddItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).OnAdded(this);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        FilterRemoveItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).OnRemoved(this);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (var item in e.NewItems)
+                    {
+                        FilterAddItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).OnAdded(this);
+                    }
+                    foreach (var item in e.OldItems)
+                    {
+                        FilterRemoveItem((IConsoleComponent)item);
+                        ((IConsoleComponent)item).OnRemoved(this);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    throw new NotSupportedException("Calling Clear in this object is not supported. Use the RemoveAll extension method.");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            void FilterAddItem(IConsoleComponent component)
+            {
+                if (component.IsDraw)
+                {
+                    if (!ComponentsDraw.Contains(component))
+                        ComponentsDraw.Add(component);
+                }
+
+                if (component.IsUpdate)
+                {
+                    if (!ComponentsUpdate.Contains(component))
+                        ComponentsUpdate.Add(component);
+                }
+
+                if (component.IsKeyboard)
+                {
+                    if (!ComponentsKeyboard.Contains(component))
+                        ComponentsKeyboard.Add(component);
+                }
+
+                if (component.IsMouse)
+                {
+                    if (!ComponentsMouse.Contains(component))
+                        ComponentsMouse.Add(component);
+                }
+            }
+
+            void FilterRemoveItem(IConsoleComponent component)
+            {
+                if (component.IsDraw)
+                {
+                    if (!ComponentsDraw.Contains(component))
+                        ComponentsDraw.Remove(component);
+                }
+
+                if (component.IsUpdate)
+                {
+                    if (!ComponentsUpdate.Contains(component))
+                        ComponentsUpdate.Remove(component);
+                }
+
+                if (component.IsKeyboard)
+                {
+                    if (!ComponentsKeyboard.Contains(component))
+                        ComponentsKeyboard.Remove(component);
+                }
+
+                if (component.IsMouse)
+                {
+                    if (!ComponentsMouse.Contains(component))
+                        ComponentsMouse.Remove(component);
+                }
+            }
+
+            int CompareComponent(IConsoleComponent left, IConsoleComponent right)
+            {
+                if (left.SortOrder > right.SortOrder)
+                    return 1;
+
+                if (left.SortOrder < right.SortOrder)
+                    return -1;
+
+                return 0;
+            }
         }
+
+        /// <summary>
+        /// Saves the <see cref="Console"/> to a file.
+        /// </summary>
+        /// <param name="file">The destination file.</param>
+        public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
+
+        /// <summary>
+        /// Loads a <see cref="Console"/> from a file.
+        /// </summary>
+        /// <param name="file">The source file.</param>
+        /// <returns></returns>
+        public static Console Load(string file) => Serializer.Load<Console>(file, Settings.SerializationIsCompressed);
     }
 }

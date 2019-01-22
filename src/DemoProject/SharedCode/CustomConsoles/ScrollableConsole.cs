@@ -3,27 +3,26 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SadConsole.Surfaces;
 using SadConsole.Input;
 using SadConsole;
 using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
-    class ScrollableConsole : Console
+    class ScrollableConsole : ScrollingConsole
     {
         SadConsole.ControlsConsole controlsContainer;
         SadConsole.Controls.ScrollBar scrollBar;
 
         int scrollingCounter;
 
-        public ScrollableConsole(int width, int height, int bufferHeight) : base(width - 1, bufferHeight, new Rectangle(0,0,width - 1,height))
+        public ScrollableConsole(int width, int height, int bufferHeight) : base(width - 1, bufferHeight, Global.FontDefault, new Rectangle(0,0,width - 1,height))
         {
             controlsContainer = new SadConsole.ControlsConsole(1, height);
 
             ViewPort = new Rectangle(0, 0, width, height);
 
-            scrollBar = SadConsole.Controls.ScrollBar.Create(Orientation.Vertical, height);
+            scrollBar = new SadConsole.Controls.ScrollBar(Orientation.Vertical, height);
             scrollBar.IsEnabled = false;
             scrollBar.ValueChanged += ScrollBar_ValueChanged;
 

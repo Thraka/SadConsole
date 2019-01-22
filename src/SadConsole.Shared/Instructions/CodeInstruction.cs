@@ -1,35 +1,42 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Runtime.Serialization;
-
-
-namespace SadConsole.Instructions
+﻿namespace SadConsole.Instructions
 {
+    using System;
+    using Console = SadConsole.Console;
 
-    [DataContract]
+    /// <summary>
+    /// An instruction with a code callback.
+    /// </summary>
     public class CodeInstruction : InstructionBase
     {
+        private Func<Console, TimeSpan, bool> _callback;
+
         /// <summary>
         /// Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
         /// </summary>
-        [DataMember]
         public string ID { get; set; }
 
         /// <summary>
-        /// The code to execute when this instruction is run.
+        /// Creates a new instruction with the specified callback.
         /// </summary>
-        public Action<CodeInstruction> CodeCallback { get; set; }
+        /// <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="InstructionBase.IsFinished"/>.</param>
+        public CodeInstruction(Func<Console, TimeSpan, bool> callback) =>
+            _callback = callback;
 
-        public CodeInstruction() { }
+        private CodeInstruction() { }
+
+        /// <inheritdoc />
+        public override void Update(Console console, TimeSpan delta)
+        {
+            IsFinished = _callback(console, delta);
+
+            base.Update(console, delta);
+        }
 
         /// <summary>
-        /// Runs this instruction.
+        /// Sets the callback used by the instruction.
         /// </summary>
-        public override void Run()
-        {
-            CodeCallback(this);
-
-            base.Run();
-        }
+        /// <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="InstructionBase.IsFinished"/>.</param>
+        public void SetCallback(Func<Console, TimeSpan, bool> callback) =>
+            _callback = callback;
     }
 }

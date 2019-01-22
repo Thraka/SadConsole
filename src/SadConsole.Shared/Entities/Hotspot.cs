@@ -1,27 +1,30 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
+#endif
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using SadConsole.Surfaces;
 
 namespace SadConsole.Entities
 {
+    // TODO: make sure hotspot works.
+
     /// <summary>
     /// A group of positions with a set of settings.
     /// </summary>
     [DataContract]
-    public class Hotspot: ScreenObject
+    public class Hotspot : Console
     {
-        private Surfaces.Basic _debugSurface;
-        private Surfaces.SurfaceBase _parentSurface;
+        private CellSurface _debugSurface;
+        private CellSurface _parentSurface;
         private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
         
         /// <summary>
         /// The hotspot position on the map.
         /// </summary>
         [DataMember]
-        public List<Point> Positions { get; } = new List<Point>();
+        public HashSet<Point> Positions { get; } = new HashSet<Point>();
 
         /// <summary>
         /// A visual for the area to help debug.
@@ -46,7 +49,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new hotspot object.
         /// </summary>
-        public Hotspot()
+        public Hotspot(): base(1, 1)
         {
             IsVisible = false;
         }
@@ -62,9 +65,9 @@ namespace SadConsole.Entities
         }
 
         /// <inheritdoc />
-        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        protected override void OnParentChanged(Console oldParent, Console newParent)
         {
-            _parentSurface = newParent as SurfaceBase;
+            //_parentSurface = newParent as SurfaceBase;
         }
 
         /// <inheritdoc />
@@ -75,34 +78,34 @@ namespace SadConsole.Entities
 
         public override void Draw(TimeSpan timeElapsed)
         {
-            if (IsVisible && _parentSurface != null)
-            {
-                foreach (var spot in Positions)
-                {
-                    if (!_parentSurface.ViewPort.Contains(spot)) continue;
+            //if (IsVisible && _parentSurface != null)
+            //{
+            //    foreach (var spot in Positions)
+            //    {
+            //        if (!_parentSurface.ViewPort.Contains(spot)) continue;
 
-                    Global.DrawCalls.Add(new DrawCalls.DrawCallSurface(_debugSurface,
-                        spot - _parentSurface.ViewPort.Location + _parentSurface.CalculatedPosition,
-                        _parentSurface.UsePixelPositioning));
-                }
-            }
+            //        Global.DrawCalls.Add(new DrawCalls.DrawCallScreenObject(_debugSurface,
+            //            spot - _parentSurface.ViewPort.Location + _parentSurface.CalculatedPosition,
+            //            _parentSurface.UsePixelPositioning));
+            //    }
+            //}
 
-            base.Draw(timeElapsed);
+            //base.Draw(timeElapsed);
         }
 
 
         private void Rebuild()
         {
-            if (IsVisible)
-            {
-                _debugSurface = new Basic(1, 1);
-                _debugSurface.DefaultBackground = _debugAppearance.Background;
-                _debugSurface.DefaultForeground = _debugAppearance.Foreground;
-                _debugSurface.SetCellAppearance(0, 0, _debugAppearance);
-                _debugSurface.Draw(TimeSpan.Zero);
-            }
-            else
-                _debugSurface = null;
+            //if (IsVisible)
+            //{
+            //    _debugSurface = new Basic(1, 1);
+            //    _debugSurface.DefaultBackground = _debugAppearance.Background;
+            //    _debugSurface.DefaultForeground = _debugAppearance.Foreground;
+            //    _debugSurface.SetCellAppearance(0, 0, _debugAppearance);
+            //    _debugSurface.Draw(TimeSpan.Zero);
+            //}
+            //else
+            //    _debugSurface = null;
         }
     }
 }

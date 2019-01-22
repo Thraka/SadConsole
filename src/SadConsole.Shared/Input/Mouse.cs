@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#endif
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SadConsole.Input
 {
@@ -11,9 +13,9 @@ namespace SadConsole.Input
     /// </summary>
     public class Mouse
     {
-        private System.TimeSpan _leftLastClickedTime;
-        private System.TimeSpan _rightLastClickedTime;
-        private IConsole lastMouseConsole;
+        private TimeSpan _leftLastClickedTime;
+        private TimeSpan _rightLastClickedTime;
+        private Console lastMouseConsole;
 
         /// <summary>
         /// The pixel position of the mouse on the screen.
@@ -207,15 +209,10 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(ScreenObject screen, ref List<Console> list)
+        private void GetConsoles(Console screen, ref List<Console> list)
         {
-            if (screen is Console)
-            {
-                var console = screen as Console;
-
-                if (console.UseMouse)
-                    list.Add(console);
-            }
+            if (screen.UseMouse)
+                list.Add(screen);
 
             foreach (var child in screen.Children)
             {
@@ -228,7 +225,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="console">The console to check.</param>
         /// <returns>True or false indicating if the mouse is over the console.</returns>
-        public bool IsMouseOverConsole(Console console)
+        public bool IsMouseOverConsole(ScrollingConsole console)
         {
             return new MouseConsoleState(console, this).IsOnConsole;
         }

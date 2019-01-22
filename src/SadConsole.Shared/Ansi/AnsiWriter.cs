@@ -1,37 +1,51 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
-using SadConsole.Surfaces;
 using SadConsole.Effects;
 using System;
 using System.Linq;
 using System.Text;
-using Console = SadConsole.Console;
+using Console = SadConsole.ScrollingConsole;
 
 namespace SadConsole.Ansi
 {
-
+    /// <summary>
+    /// Writes a <see cref="Document"/> to a <see cref="CellSurface"/>.
+    /// </summary>
     public class AnsiWriter
     {
-        private string ValidAnsiCodes = "HhfFAaBbCcDdJjKkMmSsUu";
-        
+        private const string ValidAnsiCodes = "HhfFAaBbCcDdJjKkMmSsUu";
+
         private bool _inEscapeCode;
-        private StringBuilder _ansiCodeBuilder;
-        private StringBuilder _ansiStringBuilder;
-        private Cursor _cursor;
-        private Document _ansiDoc;
+        private readonly StringBuilder _ansiCodeBuilder;
         private double _totalTime;
         private double _timePerCharacter;
         private int _charsPerSecond;
         private int _readerIndex;
-        private byte[] _bytes;
-        private SurfaceBase _editor;
-        private State _ansiState;
+        private readonly byte[] _bytes;
+        private readonly CellSurface _editor;
+        private readonly State _ansiState;
         private Point _storedCursorLocation;
 
+        /// <summary>
+        /// The document used to create this writer.
+        /// </summary>
+        public Document AnsiDocument { get; }
+
+        /// <summary>
+        /// The blink effect to apply when the ansi document provides the ANSI blink command.
+        /// </summary>
         public ICellEffect BlinkEffect { get; set; }
 
-        public Cursor Cursor => _cursor;
+        /// <summary>
+        /// The cursor used to write to the target <see cref="CellSurface"/>.
+        /// </summary>
+        public Cursor Cursor { get; }
 
+        /// <summary>
+        /// How many characters to process a second. When set to 0 reads the entire document at once.
+        /// </summary>
         public int CharactersPerSecond
         {
             get => _charsPerSecond;
@@ -44,13 +58,16 @@ namespace SadConsole.Ansi
             }
         }
 
-        public AnsiWriter(Document ansiDocument, SurfaceBase editor)
+        /// <summary>
+        /// Creates a new instance with the source document and target surface.
+        /// </summary>
+        /// <param name="ansiDocument">The source document containing ANSI commands.</param>
+        /// <param name="editor">The surface to parse the ANSI to.</param>
+        public AnsiWriter(Document ansiDocument, CellSurface editor)
         {
-            _ansiDoc = ansiDocument;
+            AnsiDocument = ansiDocument;
             _editor = editor;
-            _cursor = new Cursor(editor);
-            _cursor.UseStringParser = false;
-            _cursor.DisableWordBreak = true;
+            Cursor = new Cursor(editor) {UseStringParser = false, DisableWordBreak = true};
 
             CharactersPerSecond = 800;
 
@@ -58,11 +75,14 @@ namespace SadConsole.Ansi
             _ansiState = new State();
 
             _ansiCodeBuilder = new StringBuilder(5);
-            _ansiStringBuilder = new StringBuilder(40);
 
             BlinkEffect = new Blink() { BlinkSpeed = 0.35f };
         }
 
+        /// <summary>
+        /// Processes the document by the amount of time that has elapsed. If <see cref="CharactersPerSecond"/> is 0, time elapsed has no affect.
+        /// </summary>
+        /// <param name="timeElapsed">The time in seconds.</param>
         public void Process(double timeElapsed)
         {
             if (_readerIndex != _bytes.Length - 1)
@@ -79,15 +99,15 @@ namespace SadConsole.Ansi
                     // Process a character
                     if (_totalTime >= _timePerCharacter)
                     {
-                        int charCount = (int)(_totalTime / _timePerCharacter);
+                        var charCount = (int)(_totalTime / _timePerCharacter);
                         _totalTime -= _timePerCharacter * charCount;
 
                         if (_readerIndex + charCount > _bytes.Length - 1)
                             charCount = _bytes.Length - _readerIndex - 1;
 
-                        for (int i = 0; i < charCount; i++)
+                        for (var i = 0; i < charCount; i++)
                         {
-                            char character = (char)_bytes[_readerIndex];
+                            var character = (char)_bytes[_readerIndex];
                             _readerIndex++;
 
                             if (_inEscapeCode)
@@ -113,8 +133,8 @@ namespace SadConsole.Ansi
                             }
                             else
                             {
-                                _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
-                                _cursor.Print(character.ToString());
+                                Cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
+                                Cursor.Print(character.ToString());
                             }
                         }
                     }
@@ -138,8 +158,8 @@ namespace SadConsole.Ansi
         {
             if (code[0] == (char)27 && code[1] == '[')
             {
-                string data = code.Substring(2, code.Length - 3);
-                string[] values = data.Split(';');
+                var data = code.Substring(2, code.Length - 3);
+                var values = data.Split(';');
 
                 switch (code[code.Length - 1])
                 {
@@ -147,16 +167,17 @@ namespace SadConsole.Ansi
                     case 'h':
                         if (values.Length == 2)
                         {
-                            if (values[1] == "")
-                                _cursor.Position = new Point(0, _cursor.Position.Y);
-                            else
-                                _cursor.Position = new Point(Convert.ToInt32(values[1]) - 1, _cursor.Position.Y);
+                            Cursor.Position = new Point(
+                                values[1] == ""
+                                    ? 0
+                                    : Convert.ToInt32(values[1]) - 1,
 
-                            if (values[0] == "")
-                                _cursor.Position = new Point(_cursor.Position.X, 0);
-                            else
-                                _cursor.Position = new Point(_cursor.Position.X, Convert.ToInt32(values[0]) - 1);
+                                values[0] == ""
+                                    ? 0
+                                    : Convert.ToInt32(values[0]) - 1
+                            );
                         }
+
                         //else
                         //    System.Diagnostics.Debugger.Break();
                         break;
@@ -165,72 +186,74 @@ namespace SadConsole.Ansi
                         break;
                     case 'A':
                     case 'a':
-                        if (data.Length == 0)
-                            _cursor.Up(1);
-                        else
-                            _cursor.Up(Convert.ToInt32(data));
+                        Cursor.Up(data.Length == 0
+                            ? 1
+                            : Convert.ToInt32(data)
+                        );
                         break;
                     case 'B':
                     case 'b':
-                        if (data.Length == 0)
-                            _cursor.Down(1);
-                        else
-                            _cursor.Down(Convert.ToInt32(data));
+                        Cursor.Down(data.Length == 0 
+                            ? 1 
+                            : Convert.ToInt32(data)
+                        );
                         break;
                     case 'C':
                     case 'c':
-                        if (data.Length == 0)
-                            _cursor.Right(1);
-                        else
-                            _cursor.Right(Convert.ToInt32(data));
+                        Cursor.Right(data.Length == 0 
+                            ? 1 
+                            : Convert.ToInt32(data)
+                        );
                         break;
                     case 'D':
                     case 'd':
-                        if (data.Length == 0)
-                            _cursor.Left(1);
-                        else
-                            _cursor.Left(Convert.ToInt32(data));
+                        Cursor.Left(data.Length == 0 
+                            ? 1 
+                            : Convert.ToInt32(data)
+                        );
                         break;
                     case 'J':
                     case 'j':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _editor.Width; i++)
-                                _editor.Clear(i, _cursor.Position.Y);
+                            for (var i = Cursor.Position.X; i < _editor.Width; i++)
+                                _editor.Clear(i, Cursor.Position.Y);
 
                         else if (data == "1")
-                            for (int i = _cursor.Position.X; i >= 0; i--)
-                                _editor.Clear(i, _cursor.Position.Y);
+                            for (var i = Cursor.Position.X; i >= 0; i--)
+                                _editor.Clear(i, Cursor.Position.Y);
 
                         else if (data == "2")
                         {
                             _editor.Clear();
-                            _cursor.Position = new Point(0, 0);
+                            Cursor.Position = new Point(0, 0);
                         }
+
                         break;
                     case 'K':
                     case 'k':
                         if (data == "" || data == "0")
-                            for (int i = _cursor.Position.X; i < _editor.Width; i++)
-                                _editor.Clear(i, _cursor.Position.Y);
+                            for (var i = Cursor.Position.X; i < _editor.Width; i++)
+                                _editor.Clear(i, Cursor.Position.Y);
 
                         else if (data == "1")
-                            for (int i = _cursor.Position.X; i >= 0; i--)
-                                _editor.Clear(i, _cursor.Position.Y);
+                            for (var i = Cursor.Position.X; i >= 0; i--)
+                                _editor.Clear(i, Cursor.Position.Y);
 
                         else if (data == "2")
                         {
-                            for (int i = 0; i < _editor.Width; i++)
-                                _editor.Clear(i, _cursor.Position.Y);
+                            for (var i = 0; i < _editor.Width; i++)
+                                _editor.Clear(i, Cursor.Position.Y);
                         }
+
                         break;
 
                     case 'S':
                     case 's':
-                        _storedCursorLocation = _cursor.Position;
+                        _storedCursorLocation = Cursor.Position;
                         break;
                     case 'U':
                     case 'u':
-                        _cursor.Position = _storedCursorLocation;
+                        Cursor.Position = _storedCursorLocation;
                         break;
                     case 'M':
                     case 'm':
@@ -240,9 +263,9 @@ namespace SadConsole.Ansi
 
                         else
                         {
-                            for (int i = 0; i < values.Length; i++)
+                            foreach (var v in values)
                             {
-                                int value = Convert.ToInt32(values[i]);
+                                var value = Convert.ToInt32(v);
                                 switch (value)
                                 {
                                     case 0:
@@ -256,7 +279,7 @@ namespace SadConsole.Ansi
                                         //Appearance.Effect = BlinkEffect;
                                         break;
                                     case 7:
-                                        Color tempFore = _ansiState.Foreground;
+                                        var tempFore = _ansiState.Foreground;
                                         _ansiState.Foreground = Helpers.AnsiAdjustColor(_ansiState.Background, _ansiState.Bold);
                                         _ansiState.Background = Helpers.AnsiJustNormalColor(tempFore);
                                         break;
@@ -280,12 +303,10 @@ namespace SadConsole.Ansi
                                     case 47:
                                         Helpers.AnsiConfigurePrintColor(true, value - 40, _ansiState);
                                         break;
-
-                                    default:
-                                        break;
                                 }
                             }
                         }
+
                         break;
                     default:
                         System.Diagnostics.Debugger.Break();
@@ -298,21 +319,22 @@ namespace SadConsole.Ansi
         /// Reads a line of ANSI.SYS code.
         /// </summary>
         /// <param name="line">The line to read.</param>
+        /// <param name="moreLines">When <see langword="true"/>, calls <see cref="SadConsole.Cursor.LineFeed"/>; otherwise does nothing.</param>
         /// <returns>Returns false when character 26 is encountered; otherwise true.</returns>
         public bool AnsiReadLine(string line, bool moreLines = false)
         {
-            bool inEscape = false;
-            StringBuilder stringValue = new StringBuilder();
-            StringBuilder stringEscape = new StringBuilder(5);
+            var inEscape = false;
+            var stringValue = new StringBuilder();
+            var stringEscape = new StringBuilder(5);
 
             if (line == "")
             {
-                _cursor.CarriageReturn();
-                _cursor.LineFeed();
+                Cursor.CarriageReturn();
+                Cursor.LineFeed();
                 return true;
             }
 
-            bool onLastLine = _cursor.Position.Y == _editor.Height - 1;
+            var onLastLine = Cursor.Position.Y == _editor.Height - 1;
 
             foreach (var item in line)
             {
@@ -336,8 +358,8 @@ namespace SadConsole.Ansi
                 {
                     if (stringValue.Length != 0)
                     {
-                        _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
-                        _cursor.Print(stringValue.ToString());
+                        Cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
+                        Cursor.Print(stringValue.ToString());
                         stringValue.Clear();
                     }
 
@@ -354,14 +376,14 @@ namespace SadConsole.Ansi
 
             if (stringValue.Length != 0)
             {
-                _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
-                _cursor.Print(stringValue.ToString());
+                Cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
+                Cursor.Print(stringValue.ToString());
             }
 
-            _cursor.CarriageReturn();
+            Cursor.CarriageReturn();
 
             if ((onLastLine && moreLines) || !onLastLine)
-                _cursor.LineFeed();
+                Cursor.LineFeed();
 
             return true;
         }
@@ -369,7 +391,6 @@ namespace SadConsole.Ansi
         /// <summary>
         /// Loads an ansi file and parses it.
         /// </summary>
-        /// <param name="path">The paath to the ansi file.</param>
         public void ReadEntireDocument()
         {
             //string[] lines = _ansiDoc.AnsiString.Split('\n');
@@ -387,9 +408,9 @@ namespace SadConsole.Ansi
 
             _ansiState.AnsiResetVideo();
 
-            for (int i = 0; i < _bytes.Length; i++)
+            for (var i = 0; i < _bytes.Length; i++)
             {
-                char character = (char)_bytes[_readerIndex];
+                var character = (char)_bytes[_readerIndex];
                 _readerIndex++;
 
                 if (_inEscapeCode)
@@ -415,12 +436,15 @@ namespace SadConsole.Ansi
                 }
                 else if (_readerIndex - 1 < _bytes.Length || (_readerIndex - 1 == _bytes.Length && character != '\n'))
                 {
-                    _cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
-                    _cursor.Print(character.ToString());
+                    Cursor.PrintAppearance = new Cell(_ansiState.Foreground, _ansiState.Background);
+                    Cursor.Print(character.ToString());
                 }
             }
         }
 
+        /// <summary>
+        /// Moves the reader back to the start of the file so that the source can .
+        /// </summary>
         public void Restart()
         {
             _readerIndex = 0;

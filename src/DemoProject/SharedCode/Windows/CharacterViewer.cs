@@ -36,11 +36,11 @@ namespace StarterProject.Windows
             Title = (char)198 + "Character" + (char)198;
             TitleAlignment = HorizontalAlignment.Left;
             //SetTitle(" Characters ", HorizontalAlignment.Center, Color.Blue, Color.LightGray);
-            CloseOnESC = true;
+            CloseOnEscKey = true;
             UsePixelPositioning = true;
 
             // CHARACTER SCROLL
-            _charScrollBar = ScrollBar.Create(Orientation.Vertical, 16);
+            _charScrollBar = new ScrollBar(Orientation.Vertical, 16);
             _charScrollBar.Position = new Point(17, 1);
             _charScrollBar.Name = "ScrollBar";
             _charScrollBar.Maximum = Font.Rows - 16;
@@ -139,7 +139,7 @@ namespace StarterProject.Windows
 
                 items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
 
-                var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
+                var text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
                            items[1].CreateColored(Color.LightCoral, Color.Black, null) +
                            items[2].CreateColored(Color.LightCyan, Color.Black, null);
 
@@ -186,11 +186,11 @@ namespace StarterProject.Windows
             string[] items = new string[] { "Selected: ", ((char)SelectedCharacterIndex).ToString(), " (", SelectedCharacterIndex.ToString(), ")" };
             items[4] = items[4].PadRight(Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
 
-            var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
-                       items[1].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
-                       items[2].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null) +
-                       items[3].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
-                       items[4].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null);
+            var text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[1].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[2].CreateColored(Color.LightCyan, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[3].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[4].CreateColored(Color.LightCyan, Theme.WindowTheme.BorderStyle.Background, null);
 
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;

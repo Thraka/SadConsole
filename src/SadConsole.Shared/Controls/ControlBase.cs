@@ -1,6 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
-using SadConsole.Surfaces;
 using SadConsole.Input;
 using System.Runtime.Serialization;
 using System;
@@ -18,6 +19,9 @@ namespace SadConsole.Controls
         protected bool isEnabled = true;
         protected ControlsConsole parent;
         protected ControlStates state;
+
+        protected Themes.ThemeBase ActiveTheme;
+        protected bool IsCustomTheme;
 
         /// <summary>
         /// True when the mouse is down.
@@ -47,7 +51,7 @@ namespace SadConsole.Controls
         /// The cell data to render the control. Controlled by a theme.
         /// </summary>
         [DataMember]
-        public BasicNoDraw Surface { get; set; }
+        public CellSurface Surface { get; set; }
 
         /// <summary>
         /// Indicates the rendering location of this control.
@@ -90,10 +94,11 @@ namespace SadConsole.Controls
             get => _isDirty;
             set
             {
-                if (value == _isDirty) return;
-
-                _isDirty = value;
-                IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+                if (value != _isDirty)
+                {
+                    _isDirty = value;
+                    IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -125,13 +130,7 @@ namespace SadConsole.Controls
         /// </summary>
         public bool IsFocused
         {
-            get
-            {
-                if (Parent == null)
-                    return false;
-                else
-                    return Parent.FocusedControl == this;
-            }
+            get => (Parent == null) ? false : Parent.FocusedControl == this;
             set
             {
                 if (Parent != null)
@@ -151,7 +150,6 @@ namespace SadConsole.Controls
 
                     DetermineState();
                 }
-
             }
         }
 
@@ -180,7 +178,43 @@ namespace SadConsole.Controls
         public ControlsConsole Parent
         {
             get => parent;
-            set { parent = value; OnParentChanged(); }
+            set
+            {
+                parent = value;
+
+                RefreshParentTheme();
+
+                OnParentChanged();
+            }
+        }
+
+        /// <summary>
+        /// The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="Parent"/>.
+        /// </summary>
+        public Themes.ThemeBase Theme
+        {
+            get => ActiveTheme;
+            set
+            {
+                if (value != ActiveTheme)
+                {
+                    if (value == null)
+                    {
+                        IsCustomTheme = false;
+                        ActiveTheme = parent?.Theme.GetControlTheme(this) ?? Themes.Library.Default.GetControlTheme(this);
+                    }
+                    else
+                    {
+                        ActiveTheme = value;
+                        IsCustomTheme = true;
+                    }
+
+                    OnThemeChanged();
+                    ActiveTheme.Attached(this);
+                    DetermineState();
+                    IsDirty = true;
+                }
+            }
         }
 
         /// <summary>
@@ -238,6 +272,33 @@ namespace SadConsole.Controls
         /// Called when the control is focused. Calls DetermineAppearance.
         /// </summary>
         public virtual void Focused() { DetermineState(); }
+
+
+        /// <summary>
+        /// Called when the <see cref="Theme"/> changes.
+        /// </summary>
+        protected virtual void OnThemeChanged() { }
+
+        /// <summary>
+        /// Gets the latest theme from the parent's library unless a theme has been explicitly set.
+        /// </summary>
+        public void RefreshParentTheme()
+        {
+            if (parent == null) return;
+
+            if (IsCustomTheme && ActiveTheme != null)
+            {
+                var colors = ActiveTheme.Colors ?? Parent?.Theme.Colors ?? Themes.Library.Default.Colors;
+
+                ActiveTheme.RefreshTheme(colors);
+            }
+            else
+            {
+                ActiveTheme = parent.Theme.GetControlTheme(this);
+                ActiveTheme?.Attached(this);
+            }
+        }
+
 
         #region Input
         /// <summary>
@@ -432,9 +493,9 @@ namespace SadConsole.Controls
         /// <summary>
         /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.
         /// </summary>
-        public abstract void Update(TimeSpan time);
+        public virtual void Update(TimeSpan time) => Theme.UpdateAndDraw(this, time);
 
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             IsDirty = true;

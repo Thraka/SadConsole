@@ -1,20 +1,20 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-
-using System;
-using System.Runtime.Serialization;
 using Microsoft.Xna.Framework.Input;
-using SadConsole.Surfaces;
-using SadConsole.Effects;
-using SadConsole;
-//using SadConsole.Effects;
+using Microsoft.Xna.Framework.Graphics;
+#endif
 
 namespace SadConsole
 {
-    //TODO: Cursor should have option to not use PrintAppearance but just place the character using existing appearance of cell
+    using SadConsole.Effects;
+    using System;
+
+    /// <summary>
+    /// A cursor that is attached to a <see cref="Console"/> used for printing.
+    /// </summary>
     public class Cursor
     {
-        private SurfaceBase editor;
+        private CellSurface editor;
         private Point position = new Point();
 
         private int cursorCharacter = 219;
@@ -50,6 +50,11 @@ namespace SadConsole
         public bool IsVisible { get; set; }
 
         /// <summary>
+        /// When true, allows the <see cref="ProcessKeyboard(Input.Keyboard)"/> method to run.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the location of the cursor on the console.
         /// </summary>
         public Point Position
@@ -73,7 +78,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// When true, prevents the <see cref="Print"/> method from breaking words up by spaces when wrapping lines.
+        /// When true, prevents the any print method from breaking words up by spaces when wrapping lines.
         /// </summary>
         public bool DisableWordBreak = false;
 
@@ -114,16 +119,16 @@ namespace SadConsole
         /// Creates a new instance of the cursor class that will work with the specified console.
         /// </summary>
         /// <param name="console">The console this cursor will print on.</param>
-        public Cursor(SurfaceBase console)
+        public Cursor(CellSurface console)
         {
             editor = console;
 
             Constructor();
         }
 
-
         private void Constructor()
         {
+            IsEnabled = true;
             IsVisible = false;
             AutomaticallyShiftRowsUp = true;
 
@@ -143,19 +148,22 @@ namespace SadConsole
         /// Sets the console this cursor is targetting.
         /// </summary>
         /// <param name="console">The console the cursor works with.</param>
-        internal void AttachSurface(SurfaceBase console)
+        public void AttachSurface(CellSurface console)
         {
             editor = console;
+            Position = Position;
         }
 
         /// <summary>
         /// Resets the <see cref="CursorRenderCell"/> back to the default.
         /// </summary>
-        public void ResetCursorEffect()
+        public Cursor ResetCursorEffect()
         {
             SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
             blinkEffect.BlinkSpeed = 0.35f;
             CursorEffect = blinkEffect;
+            CursorEffect.AddCell(CursorRenderCell);
+            return this;
         }
 
         /// <summary>
@@ -168,11 +176,21 @@ namespace SadConsole
             if (editor != null)
                 PrintAppearance = new Cell(editor.DefaultForeground, editor.DefaultBackground, 0);
             else
-                throw new Exception("CellData of the attached console is null. Cannot reset appearance.");
+                throw new Exception("Attached console is null. Cannot reset appearance.");
 
             return this;
         }
 
+        /// <summary>
+        /// Sets <see cref="PrintAppearance"/>.
+        /// </summary>
+        /// <param name="appearance">The appearance to set.</param>
+        /// <returns>This cursor object.</returns>
+        public Cursor SetPrintAppearance(Cell appearance)
+        {
+            PrintAppearance = appearance;
+            return this;
+        }
 
         private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
         {
@@ -432,12 +450,23 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Calls the <see cref="M:CarriageReturn()"/> and <see cref="M:LineFeed()"/> methods in a single call.
+        /// Calls the <see cref="CarriageReturn"/> and <see cref="LineFeed"/> methods in a single call.
         /// </summary>
         /// <returns>The current cursor object.</returns>
         public Cursor NewLine()
         {
             return CarriageReturn().LineFeed();
+        }
+
+        /// <summary>
+        /// Moves the cursor to the specified position.
+        /// </summary>
+        /// <param name="position">The destination of the cursor.</param>
+        /// <returns>This cursor object.</returns>
+        public Cursor Move(Point position)
+        {
+            Position = position;
+            return this;
         }
 
         /// <summary>
@@ -538,6 +567,7 @@ namespace SadConsole
             return this;
         }
 
+        /// <inheritdoc />
         public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
         {
             batch.Draw(font.FontImage, renderArea, font.GlyphRects[font.SolidGlyphIndex], CursorRenderCell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
@@ -550,7 +580,7 @@ namespace SadConsole
             {
                 CursorEffect.Update(elapsed.TotalSeconds);
 
-                if (CursorEffect.Apply(CursorRenderCell))
+                if (CursorEffect.UpdateCell(CursorRenderCell))
                     editor.IsDirty = true;
             }
         }
@@ -562,7 +592,10 @@ namespace SadConsole
         /// <returns>Returns true when the keyboard caused the cursor to do something.</returns>
         public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
+            if (!IsEnabled) return false;
+
             var didSomething = false;
+
             foreach (var key in info.KeysPressed)
             {
                 if (key.Character == '\0')

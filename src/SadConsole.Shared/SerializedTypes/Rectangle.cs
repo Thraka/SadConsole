@@ -1,12 +1,11 @@
-﻿using FrameworkRect = Microsoft.Xna.Framework.Rectangle;
-
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.SerializedTypes
 {
+    using System.Runtime.Serialization;
+
     [DataContract]
     public struct RectangleSerialized
     {
@@ -19,14 +18,20 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public int Height;
 
-        public static implicit operator RectangleSerialized(FrameworkRect rect)
+        public static implicit operator RectangleSerialized(Rectangle rect)
         {
-            return new RectangleSerialized() { X = rect.Left, Y = rect.Top, Width = rect.Width, Height = rect.Height };
+            return new RectangleSerialized()
+            {
+                X = rect.Left,
+                Y = rect.Top,
+                Width = rect.Width,
+                Height = rect.Height
+            };
         }
 
-        public static implicit operator FrameworkRect(RectangleSerialized rect)
+        public static implicit operator Rectangle(RectangleSerialized rect)
         {
-            return new FrameworkRect(rect.X, rect.Y, rect.Width, rect.Height);
+            return new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
         }
     }
 }

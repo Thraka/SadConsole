@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System.Runtime.Serialization;
 
@@ -14,8 +16,6 @@ namespace SadConsole.Effects
         private int _blinkCounter = 0;
         [DataMember]
         private bool _isOn;
-        [DataMember]
-        private double _timeElapsed;
 
         /// <summary>
         /// In seconds, how fast the fade in and fade out each are
@@ -48,16 +48,11 @@ namespace SadConsole.Effects
             UseCellBackgroundColor = true;
             BlinkOutColor = Color.Transparent;
             _isOn = true;
-            _timeElapsed = 0d;
-            StartDelay = 0d;
             _blinkCounter = 0;
         }
 
-        public override bool Apply(Cell cell)
+        public override bool UpdateCell(Cell cell)
         {
-            if (cell.State == null)
-                cell.SaveState();
-
             var oldColor = cell.Foreground;
 
             if (!_isOn)
@@ -78,9 +73,9 @@ namespace SadConsole.Effects
 
         public override void Update(double timeElapsed)
         {
-            _timeElapsed += timeElapsed;
+            base.Update(timeElapsed);
 
-            if (_delayFinished)
+            if (_delayFinished && !IsFinished)
             {
                 if (_timeElapsed >= BlinkSpeed)
                 {
@@ -94,14 +89,6 @@ namespace SadConsole.Effects
                     }
                 }
             }
-            else
-            {
-                if (_timeElapsed >= _startDelay)
-                {
-                    _delayFinished = true;
-                    _timeElapsed = 0.0d;
-                }
-            }
         }
 
         /// <summary>
@@ -109,7 +96,6 @@ namespace SadConsole.Effects
         /// </summary>
         public override void Restart()
         {
-            _timeElapsed = 0d;
             _isOn = true;
             _blinkCounter = 0;
 
@@ -124,13 +110,16 @@ namespace SadConsole.Effects
                 BlinkOutColor = this.BlinkOutColor,
                 BlinkSpeed = this.BlinkSpeed,
                 _isOn = this._isOn,
-                _timeElapsed = this._timeElapsed,
                 UseCellBackgroundColor = this.UseCellBackgroundColor,
-                IsFinished = this.IsFinished,
-                StartDelay = this.StartDelay,
                 BlinkCount = this.BlinkCount,
-                RemoveOnFinished = this.RemoveOnFinished,
-                CloneOnApply = this.CloneOnApply,
+
+                IsFinished = IsFinished,
+                StartDelay = StartDelay,
+                CloneOnApply = CloneOnApply,
+                RemoveOnFinished = RemoveOnFinished,
+                DiscardCellState = DiscardCellState,
+                Permanent = Permanent,
+                _timeElapsed = _timeElapsed,
             };
         }
 

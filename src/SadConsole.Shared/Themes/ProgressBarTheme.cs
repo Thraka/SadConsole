@@ -1,17 +1,18 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-using SadConsole.Controls;
-using SadConsole.Surfaces;
+#endif
 
 namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
     /// The theme of a radio button control.
     /// </summary>
     [DataContract]
-    public class ProgressBarTheme: ThemeBase<ProgressBar>
+    public class ProgressBarTheme: ThemeBase
     {
         /// <summary>
         /// The theme of the unprogressed part of the bar.
@@ -25,53 +26,69 @@ namespace SadConsole.Themes
         [DataMember]
         public ThemeStates Foreground;
 
-
+        /// <summary>
+        /// Creates a new theme used by the <see cref="ProgressBar"/>.
+        /// </summary>
         public ProgressBarTheme()
         {
-            Background = new ThemeStates();
+
+        }
+
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
+        {
+            control.Surface = new CellSurface(control.Width, control.Height);
+
+            base.Attached(control);
+        }
+
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
+        {
+            base.RefreshTheme(themeColors);
+
+            Background = new ThemeStates(themeColors);
             Background.SetForeground(Normal.Foreground);
             Background.SetBackground(Normal.Background);
             Background.SetGlyph(176);
             Background.Disabled = new Cell(Color.Gray, Color.Black, 176);
-            Foreground = new ThemeStates();
+            Foreground = new ThemeStates(themeColors);
             Foreground.SetForeground(Normal.Foreground);
             Foreground.SetBackground(Normal.Background);
             Foreground.SetGlyph(219);
             Foreground.Disabled = new Cell(Color.Gray, Color.Black, 219);
         }
 
-        public override void Attached(ProgressBar control)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
-        }
-
-        public override void UpdateAndDraw(ProgressBar control, TimeSpan time)
-        {
+            if (!(control is ProgressBar progressbar)) return;
+            
             if (!control.IsDirty) return;
 
             Cell foregroundAppearance;
             Cell backgroundAppearance;
 
-            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+            if (Helpers.HasFlag(progressbar.State, ControlStates.Disabled))
             {
                 foregroundAppearance = Foreground.Disabled;
                 backgroundAppearance = Background.Disabled;
             }
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) ||
-                     Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+            else if (Helpers.HasFlag(progressbar.State, ControlStates.MouseLeftButtonDown) ||
+                     Helpers.HasFlag(progressbar.State, ControlStates.MouseRightButtonDown))
             {
                 foregroundAppearance = Foreground.MouseDown;
                 backgroundAppearance = Background.MouseDown;
             }
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+            else if (Helpers.HasFlag(progressbar.State, ControlStates.MouseOver))
             {
                 foregroundAppearance = Foreground.MouseOver;
                 backgroundAppearance = Background.MouseOver;
             }
 
-            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+            else if (Helpers.HasFlag(progressbar.State, ControlStates.Focused))
             {
                 foregroundAppearance = Foreground.Focused;
                 backgroundAppearance = Background.Focused;
@@ -83,42 +100,39 @@ namespace SadConsole.Themes
                 backgroundAppearance = Background.Normal;
             }
 
-            control.Surface.Clear();
+            progressbar.Surface.Clear();
 
-            control.Surface.Fill(backgroundAppearance.Foreground, backgroundAppearance.Background, backgroundAppearance.Glyph);
+            progressbar.Surface.Fill(backgroundAppearance.Foreground, backgroundAppearance.Background, backgroundAppearance.Glyph);
 
-            if (control.IsHorizontal)
+            if (progressbar.IsHorizontal)
             {
                 Rectangle fillRect;
 
-                if (control.HorizontalAlignment == HorizontalAlignment.Left)
-                    fillRect = new Rectangle(0, 0, control.fillSize, control.Height);
+                if (progressbar.HorizontalAlignment == HorizontalAlignment.Left)
+                    fillRect = new Rectangle(0, 0, progressbar.fillSize, progressbar.Height);
                 else
-                    fillRect = new Rectangle(control.Width - control.fillSize, 0, control.fillSize, control.Height);
+                    fillRect = new Rectangle(progressbar.Width - progressbar.fillSize, 0, progressbar.fillSize, progressbar.Height);
 
-                control.Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
+                progressbar.Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
             }
 
             else
             {
                 Rectangle fillRect;
 
-                if (control.VerticalAlignment == VerticalAlignment.Top)
-                    fillRect = new Rectangle(0, 0, control.Width, control.fillSize);
+                if (progressbar.VerticalAlignment == VerticalAlignment.Top)
+                    fillRect = new Rectangle(0, 0, progressbar.Width, progressbar.fillSize);
                 else
-                    fillRect = new Rectangle(0, control.Height - control.fillSize, control.Width, control.fillSize);
+                    fillRect = new Rectangle(0, progressbar.Height - progressbar.fillSize, progressbar.Width, progressbar.fillSize);
 
-                control.Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
+                progressbar.Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
             }
 
-            control.IsDirty = false;
+            progressbar.IsDirty = false;
         }
 
-        /// <summary>
-        /// Returns a clone of this object.
-        /// </summary>
-        /// <returns>The cloned object.</returns>
-        public override object Clone()
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
             return new ProgressBarTheme()
             {

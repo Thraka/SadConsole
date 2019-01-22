@@ -1,49 +1,57 @@
 ﻿namespace SadConsole.Instructions
 {
-    using System.Runtime.Serialization;
+    using System;
+    using Console = SadConsole.Console;
 
     /// <summary>
     /// Represents an instruction to pause for a specified duration.
     /// </summary>
-    [DataContract]
     public class Wait: InstructionBase
     {
-        #region Public Settings
+        private bool _started = false;
+        private TimeSpan _lastUpdateTime = TimeSpan.Zero;
+
         /// <summary>
         /// The duration of the wait.
         /// </summary>
-        [DataMember]
-        public float Duration { get; set; }
-        #endregion
+        public TimeSpan Duration { get; set; }
+        
+        /// <summary>
+        /// Creates a new wait timer with the specified duration.
+        /// </summary>
+        /// <param name="duration">How long this instruction waits until it signals <see cref="InstructionBase.IsFinished"/>.</param>
+        public Wait(TimeSpan duration) 
+            => Duration = duration;
 
-        private double _lastUpdateTime = -1d;
+        /// <summary>
+        /// Creates a new wait timer with a 1-second delay.
+        /// </summary>
+        public Wait()
+            => Duration = TimeSpan.FromSeconds(1);
 
-        public override void Run()
+        /// <inheritdoc />
+        public override void Update(Console console, TimeSpan delta)
         {
-            if (_lastUpdateTime == -1d)
-                _lastUpdateTime = 0d;
+            if (!_started)
+            {
+                _lastUpdateTime = TimeSpan.Zero;
+                _started = true;
+            }
             else
-                _lastUpdateTime += Global.GameTimeElapsedUpdate;
+                _lastUpdateTime += delta;
 
             if (_lastUpdateTime > Duration)
                 IsFinished = true;
 
-            base.Run();
+            base.Update(console, delta);
         }
 
+        /// <inheritdoc />
         public override void Reset()
         {
-            _lastUpdateTime = -1d;
+            _started = false;
 
             base.Reset();
-
-        }
-
-        public override void Repeat()
-        {
-            _lastUpdateTime = 0d;
-
-            base.Repeat();
         }
     }
 }

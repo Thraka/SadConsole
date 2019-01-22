@@ -1,13 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Linq;
-using System.Text;
+#endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using System.Linq;
+
     /// <summary>
     /// A cell in structure format for temporary storage.
     /// </summary>
@@ -66,7 +68,7 @@ namespace SadConsole
             Glyph = glyph;
             Mirror = mirror;
             IsVisible = isVisible;
-            Decorators = decorators == null ? new CellDecorator[0] { } : new List<CellDecorator>(decorators).ToArray();
+            Decorators = decorators == null ? new CellDecorator[0] { } : decorators.ToArray();
         }
 
         /// <summary>

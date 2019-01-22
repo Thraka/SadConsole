@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -34,12 +34,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;XNA</DefineConstants>
     <DocumentationFile>C:\Code\Fun\SadConsole\src\SadConsole.Shared\SadConsole.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>C:\Code\Fun\SadConsole\src\SadConsole.Shared\SadConsole.xml</DocumentationFile>
+    <DefineConstants>TRACE;XNA</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,6 +50,8 @@
   <ItemGroup>
     <None Remove="Resources\IBM8x16_NoPadding_extended.png" />
     <None Remove="Resources\IBM_ext.font" />
+    <None Remove="SadConsole.Shared.projitems" />
+    <None Remove="SadConsole.xml" />
     <None Remove="Resources\IBM8x16.png" />
     <None Remove="Resources\IBM.font" />
   </ItemGroup>

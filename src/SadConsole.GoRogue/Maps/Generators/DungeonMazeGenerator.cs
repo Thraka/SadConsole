@@ -104,7 +104,7 @@ namespace SadConsole.Maps.Generators
         /// <summary>
         /// The SadConsole map generated from the <see cref="GoRogueMap"/>.
         /// </summary>
-        public Maps.SimpleMap SadConsoleMap { get; protected set; }
+        public Maps.Map SadConsoleMap { get; protected set; }
 
         /// <summary>
         /// Settings used to generate the map.
@@ -185,7 +185,7 @@ namespace SadConsole.Maps.Generators
         /// </summary>
         protected virtual void Generate()
         {
-            SadConsoleMap = new SadConsole.Maps.SimpleMap(MapWidth, MapHeight, new Rectangle(0, 0, ViewPortWidth, ViewPortHeight));
+            SadConsoleMap = new SadConsole.Maps.Map(MapWidth, MapHeight);
             GoRogueMap = new GoRogue.MapViews.ArrayMap<bool>(MapWidth, MapHeight);
 
             // Generate rooms
@@ -194,10 +194,10 @@ namespace SadConsole.Maps.Generators
                                                                                                 Settings.RoomsSizeFontRatioX, Settings.RoomsSizeFontRatioY);
 
             // Generate maze
-            GoRogue.MapGeneration.Generators.MazeGenerator.Generate(GoRogueMap, Settings.MazeChangeDirectionImprovement, Settings.MazeSaveDeadEndChance);
-
+            GoRogue.MapGeneration.Generators.MazeGenerator.Generate(GoRogueMap, null, Settings.MazeChangeDirectionImprovement, Settings.MazeSaveDeadEndChance);
+            
             // Conenct rooms to maze
-            var connections = GoRogue.MapGeneration.Generators.RoomsGenerator.ConnectRooms(GoRogueMap, mapRooms, 
+            var connections = GoRogue.MapGeneration.Connectors.RoomDoorConnector.ConnectRooms(GoRogueMap, mapRooms, 
                                                                          Settings.RoomsConnectionsMinSides, Settings.RoomsConnectionsMaxSides, 
                                                                          Settings.RoomsConnectionsCancelSideSelectChance, 
                                                                          Settings.RoomsConnectionsCancelPlacementChance, Settings.RoomsConnectionsCancelPlacementChanceIncrease);

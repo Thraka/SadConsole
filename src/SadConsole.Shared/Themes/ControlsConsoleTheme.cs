@@ -1,8 +1,7 @@
-﻿using System.Runtime.Serialization;
-using SadConsole.Surfaces;
-
-namespace SadConsole.Themes
+﻿namespace SadConsole.Themes
 {
+    using System.Runtime.Serialization;
+    
     /// <summary>
     /// A theme for a Window object.
     /// </summary>
@@ -15,27 +14,34 @@ namespace SadConsole.Themes
         [DataMember]
         public Cell FillStyle;
 
-        public ControlsConsoleTheme()
+        public ControlsConsoleTheme(Colors themeColors)
         {
-            FillStyle = new Cell(Colors.ControlHostFore, Colors.ControlHostBack);
+            Refresh(themeColors);
         }
+
+        protected ControlsConsoleTheme() { }
 
         /// <summary>
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>The cloned object.</returns>
-        public object Clone()
+        public ControlsConsoleTheme Clone()
         {
             var newItem = new ControlsConsoleTheme();
             newItem.FillStyle = this.FillStyle.Clone();
             return newItem;
         }
 
-        public virtual void Draw(ControlsConsole console, SurfaceBase hostSurface)
+        public virtual void Draw(ControlsConsole console, CellSurface hostSurface)
         {
             hostSurface.DefaultForeground = FillStyle.Foreground;
             hostSurface.DefaultBackground = FillStyle.Background;
             hostSurface.Fill(hostSurface.DefaultForeground, hostSurface.DefaultBackground, FillStyle.Glyph, null);
+        }
+
+        public virtual void Refresh(Colors themeColors)
+        {
+            FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
         }
     }
 }

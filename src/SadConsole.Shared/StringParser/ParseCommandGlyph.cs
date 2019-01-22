@@ -1,12 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using SadConsole.Surfaces;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.StringParser
 {
+    using System.Globalization;
+    
     /// <summary>
     /// Prints a glyph.
     /// </summary>
@@ -50,12 +49,12 @@ namespace SadConsole.StringParser
                 Glyph = (char)int.Parse(parts[0], CultureInfo.InvariantCulture);
             }
 
-
             // No exceptions, set the type
             CommandType = CommandTypes.Glyph;
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, Surfaces.SurfaceBase surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+            CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             if (RandomGlyph)
                 glyphState.GlyphCharacter = (char)SadConsole.Global.Random.Next(RandomGlyphMin, RandomGlyphMax);

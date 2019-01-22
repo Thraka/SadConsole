@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
-using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
-using SadConsole.Surfaces;
 
 namespace SadConsole.Controls
 {
@@ -16,12 +16,6 @@ namespace SadConsole.Controls
         public event EventHandler ValueChanged;
 
         private bool _initialized;
-
-        [DataMember(Name = "Theme")]
-        protected ScrollBarTheme _theme;
-        //protected Cell _currentAppearanceEnds;
-        //protected Cell _currentAppearanceBar;
-        //protected Cell _currentAppearanceSlider;
 
         protected int _topOrLeftCharacter;
         protected int _bottomOrRightCharacter;
@@ -117,38 +111,19 @@ namespace SadConsole.Controls
             get => _valueStep;
             set => _valueStep = value;
         }
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public ScrollBarTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
         
-        public static ScrollBar Create(Orientation orientation, int size)
+        /// <summary>
+        /// Creates a new ScrollBar control.
+        /// </summary>
+        /// <param name="orientation">Sets the control to either horizontal or vertical.</param>
+        /// <param name="size">The height or width of the control.</param>
+        /// <returns>The new control instance.</returns>
+        public ScrollBar(Orientation orientation, int size): base(orientation == Orientation.Horizontal ? size : 1,
+                                                                  orientation == Orientation.Vertical ? size : 1)
         {
             if (size <= 2)
                 throw new Exception("The scroll bar must be 4 or more in size.");
-
-            if (orientation == Orientation.Vertical)
-                return new ScrollBar(orientation, 1, size);
-            else
-                return new ScrollBar(orientation, size, 1);
-        }
-
-
-        private ScrollBar(Orientation orientation, int width, int height): base(width, height)
-        {
-            Theme = (ScrollBarTheme) Library.Default.ScrollBarTheme.Clone();
-
+            
             _initialized = true;
             Orientation = orientation;
 
@@ -167,10 +142,10 @@ namespace SadConsole.Controls
                 _bottomOrRightCharacter = 31;
             }
 
-            if (width > height)
-                SliderBarSize = width - 2;
+            if (Width > Height)
+                SliderBarSize = Width - 2;
             else
-                SliderBarSize = height - 2;
+                SliderBarSize = Height - 2;
 
             _sliderPositionValues = new int[SliderBarSize];
             DetermineSliderPositions();
@@ -238,7 +213,7 @@ namespace SadConsole.Controls
 
                             Parent.FocusedControl = this;
                         }
-
+                        
                         return true;
                     }
                 }
@@ -305,8 +280,6 @@ namespace SadConsole.Controls
                 //{
                 //    Parent.ReleaseControl();
                 //}
-
-
             }
 
             return false;
@@ -366,14 +339,8 @@ namespace SadConsole.Controls
                 }
             }
         }
-
-        /// <inheritdoc />
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
-        [OnDeserializedAttribute]
+        
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             _initialized = true;
@@ -386,5 +353,4 @@ namespace SadConsole.Controls
             DetermineState();
         }
     }
-
 }

@@ -1,7 +1,9 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SadConsole.Surfaces;
+#endif
+
+using System;
 
 namespace SadConsole.Input
 {
@@ -10,7 +12,7 @@ namespace SadConsole.Input
         /// <summary>
         /// The console used to create this object.
         /// </summary>
-        public readonly IConsole Console;
+        public readonly Console Console;
 
         /// <summary>
         /// The mouse state.
@@ -50,47 +52,46 @@ namespace SadConsole.Input
         /// <summary>
         /// Calculates a new <see cref="MouseConsoleState"/> based on an <see cref="Console"/> and <see cref="Mouse"/> state.
         /// </summary>
-        /// <param name="console">The console to process with the mouse state.</param>
+        /// <param name="screenObject">The console to process with the mouse state.</param>
         /// <param name="mouseData">The current mouse state.</param>
-        public MouseConsoleState(IConsole console, Mouse mouseData)
+        public MouseConsoleState(Console screenObject, Mouse mouseData)
         {
             this.Mouse = mouseData.Clone();
-            this.Console = console;
+            this.Console = screenObject;
 
-            if (console == null || console == null)
+            if (screenObject != null)
             {
-                return;
-            }
-            else
-            {
-                if (console.UsePixelPositioning)
+                if (screenObject.UsePixelPositioning)
                 {
-                    RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
+                    RelativePixelPosition = mouseData.ScreenPosition - screenObject.CalculatedPosition;
                     WorldPosition = mouseData.ScreenPosition;
-                    ConsolePosition = RelativePixelPosition.PixelLocationToConsole(console.Font);
+                    ConsolePosition = RelativePixelPosition.PixelLocationToConsole(screenObject.Font);
+                }
+                else
+                {
+                    RelativePixelPosition = mouseData.ScreenPosition - screenObject.CalculatedPosition.ConsoleLocationToPixel(screenObject.Font);
+                    WorldPosition = mouseData.ScreenPosition.PixelLocationToConsole(screenObject.Font);
+                    ConsolePosition = WorldPosition - screenObject.CalculatedPosition;
+                }
 
-                    var tempCellPosition = ConsolePosition + Console.ViewPort.Location;
-                    IsOnConsole = Console.ViewPort.Contains(tempCellPosition);
+                if (screenObject is IConsoleViewPort viewObject)
+                {
+                    var tempCellPosition = ConsolePosition + viewObject.ViewPort.Location;
+                    IsOnConsole = viewObject.ViewPort.Contains(tempCellPosition);
 
                     if (IsOnConsole)
                     {
                         CellPosition = tempCellPosition;
-                        Cell = console[CellPosition.X, CellPosition.Y];
+                        Cell = screenObject[CellPosition.X, CellPosition.Y];
                     }
                 }
                 else
                 {
-                    RelativePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition.ConsoleLocationToPixel(console.Font);
-                    WorldPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.Font);
-                    ConsolePosition = WorldPosition - console.CalculatedPosition;
-
-                    var tempCellPosition = ConsolePosition + Console.ViewPort.Location;
-                    IsOnConsole = Console.ViewPort.Contains(tempCellPosition);
-
-                    if (IsOnConsole)
+                    if (screenObject.IsValidCell(ConsolePosition.X, ConsolePosition.Y))
                     {
-                        CellPosition = tempCellPosition;
-                        Cell = console[CellPosition.X, CellPosition.Y];
+                        IsOnConsole = true;
+                        CellPosition = ConsolePosition;
+                        Cell = Console[ConsolePosition.X, ConsolePosition.Y];
                     }
                 }
             }

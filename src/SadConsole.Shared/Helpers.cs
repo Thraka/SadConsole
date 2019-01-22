@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-using SadConsole.Controls;
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Controls;
+    using System.Runtime.CompilerServices;
+
     public static class Helpers
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

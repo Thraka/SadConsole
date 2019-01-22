@@ -1,6 +1,7 @@
-﻿using Microsoft.Xna.Framework.Input;
-using SadConsole.Surfaces;
-using SadConsole.Themes;
+﻿#if XNA
+using Microsoft.Xna.Framework.Input;
+#endif 
+
 using System;
 using System.Runtime.Serialization;
 
@@ -10,7 +11,7 @@ namespace SadConsole.Controls
     /// Base class for creating a button type control.
     /// </summary>
     [DataContract]
-    public abstract class ButtonBase: ControlBase
+    public abstract class ButtonBase : ControlBase
     {
         /// <summary>
         /// Raised when the button is clicked.
@@ -52,7 +53,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="width">Width of the button.</param>
         /// <param name="height">Height of the button.</param>
-        public ButtonBase(int width, int height): base(width, height) { }
+        public ButtonBase(int width, int height) : base(width, height) { }
 
         /// <summary>
         /// Raises the <see cref="Click"/> event.
@@ -94,26 +95,8 @@ namespace SadConsole.Controls
     /// Simple button control with a height of 1.
     /// </summary>
     [DataContract]
-    public class Button: ButtonBase
+    public class Button : ButtonBase
     {
-        private ButtonTheme _theme;
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public ButtonTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
-
-
         /// <summary>
         /// Creates an instance of the button control with the specified width and height.
         /// </summary>
@@ -122,18 +105,8 @@ namespace SadConsole.Controls
         public Button(int width, int height = 1)
             : base(width, height)
         {
-            Theme = (ButtonTheme)Library.Default.ButtonTheme.Clone();
         }
         
-        /// <summary>
-        /// Redraws the control if it is dirty.
-        /// </summary>
-        /// <param name="time">The duration of this update frame.</param>
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {

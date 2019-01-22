@@ -1,16 +1,14 @@
-﻿using System;
-using SadConsole.Controls;
-using SadConsole.Surfaces;
-
-namespace SadConsole.Themes
+﻿namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
     /// The theme of a radio button control.
     /// </summary>
     [DataContract]
-    public class RadioButtonTheme : ThemeBase<RadioButton>
+    public class RadioButtonTheme : ThemeBase
     {
         /// <summary>
         /// The icon displayed when the radio button is checked.
@@ -22,64 +20,88 @@ namespace SadConsole.Themes
         /// </summary>
         [DataMember] public ThemeStates UncheckedIcon;
 
+        /// <summary>
+        /// The icon displayed for the brack left of the check icon.
+        /// </summary>
         [DataMember] public ThemeStates LeftBracket;
 
+        /// <summary>
+        /// The icon displayed for the brack right of the check icon.
+        /// </summary>
         [DataMember] public ThemeStates RightBracket;
 
+        /// <summary>
+        /// Creates a new theme used by the <see cref="RadioButton"/>.
+        /// </summary>
         public RadioButtonTheme()
         {
-            CheckedIcon = new ThemeStates();
-            UncheckedIcon = new ThemeStates();
-            LeftBracket = new ThemeStates();
-            RightBracket = new ThemeStates();
+            
+        }
 
-            CheckedIcon.SetGlyph(251);
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
+        {
+            control.Surface = new CellSurface(control.Width, control.Height);
+
+            base.Attached(control);
+        }
+
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
+        {
+            base.RefreshTheme(themeColors);
+
+            CheckedIcon = new ThemeStates(themeColors);
+            UncheckedIcon = new ThemeStates(themeColors);
+            LeftBracket = new ThemeStates(themeColors);
+            RightBracket = new ThemeStates(themeColors);
+
+            //TODO Hardcoded radio button glyphs
+            //CheckedIcon.SetGlyph(251);
             CheckedIcon.SetGlyph(15);
             UncheckedIcon.SetGlyph(0);
             LeftBracket.SetGlyph('(');
             RightBracket.SetGlyph(')');
         }
 
-        public override void Attached(RadioButton control)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
-        }
-
-        public override void UpdateAndDraw(RadioButton control, TimeSpan time)
-        {
-            if (!control.IsDirty) return;
+            if (!(control is RadioButton radiobutton)) return;
+            
+            if (!radiobutton.IsDirty) return;
 
             Cell appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
 
-            if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+            if (Helpers.HasFlag(radiobutton.State, ControlStates.Disabled))
             {
                 appearance = Disabled;
-                iconAppearance = control.IsSelected ? CheckedIcon.Disabled : UncheckedIcon.Disabled;
+                iconAppearance = radiobutton.IsSelected ? CheckedIcon.Disabled : UncheckedIcon.Disabled;
                 leftBracketAppearance = LeftBracket.Disabled;
                 rightBracketAppearance = RightBracket.Disabled;
             }
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) ||
-                     Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+            else if (Helpers.HasFlag(radiobutton.State, ControlStates.MouseLeftButtonDown) ||
+                     Helpers.HasFlag(radiobutton.State, ControlStates.MouseRightButtonDown))
             {
                 appearance = MouseDown;
-                iconAppearance = control.IsSelected ? CheckedIcon.MouseDown : UncheckedIcon.MouseDown;
+                iconAppearance = radiobutton.IsSelected ? CheckedIcon.MouseDown : UncheckedIcon.MouseDown;
                 leftBracketAppearance = LeftBracket.MouseDown;
                 rightBracketAppearance = RightBracket.MouseDown;
             }
 
-            else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+            else if (Helpers.HasFlag(radiobutton.State, ControlStates.MouseOver))
             {
                 appearance = MouseOver;
-                iconAppearance = control.IsSelected ? CheckedIcon.MouseOver : UncheckedIcon.MouseOver;
+                iconAppearance = radiobutton.IsSelected ? CheckedIcon.MouseOver : UncheckedIcon.MouseOver;
                 leftBracketAppearance = LeftBracket.MouseOver;
                 rightBracketAppearance = RightBracket.MouseOver;
             }
 
-            else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+            else if (Helpers.HasFlag(radiobutton.State, ControlStates.Focused))
             {
                 appearance = Focused;
-                iconAppearance = control.IsSelected ? CheckedIcon.Focused : UncheckedIcon.Focused;
+                iconAppearance = radiobutton.IsSelected ? CheckedIcon.Focused : UncheckedIcon.Focused;
                 leftBracketAppearance = LeftBracket.Focused;
                 rightBracketAppearance = RightBracket.Focused;
             }
@@ -87,37 +109,31 @@ namespace SadConsole.Themes
             else
             {
                 appearance = Normal;
-                iconAppearance = control.IsSelected ? CheckedIcon.Normal : UncheckedIcon.Normal;
+                iconAppearance = radiobutton.IsSelected ? CheckedIcon.Normal : UncheckedIcon.Normal;
                 leftBracketAppearance = LeftBracket.Normal;
                 rightBracketAppearance = RightBracket.Normal;
             }
 
-            control.Surface.Clear();
+            radiobutton.Surface.Clear();
 
 
-            control.Surface.Fill(appearance.Foreground, appearance.Background, null);
+            radiobutton.Surface.Fill(appearance.Foreground, appearance.Background, null);
 
             // If we are doing text, then print it otherwise we're just displaying the button part
-            if (control.Width >= 5)
+            if (radiobutton.Width >= 5)
             {
-                leftBracketAppearance.CopyAppearanceTo(control.Surface[0, 0]);
-                iconAppearance.CopyAppearanceTo(control.Surface[1, 0]);
-                rightBracketAppearance.CopyAppearanceTo(control.Surface[2, 0]);
+                leftBracketAppearance.CopyAppearanceTo(radiobutton.Surface[0, 0]);
+                iconAppearance.CopyAppearanceTo(radiobutton.Surface[1, 0]);
+                rightBracketAppearance.CopyAppearanceTo(radiobutton.Surface[2, 0]);
 
-                control.Surface.Print(4, 0, control.Text.Align(control.TextAlignment, control.Width - 4));
-            }
-            else
-            {
+                radiobutton.Surface.Print(4, 0, radiobutton.Text.Align(radiobutton.TextAlignment, radiobutton.Width - 4));
             }
 
-            control.IsDirty = false;
+            radiobutton.IsDirty = false;
         }
 
-        /// <summary>
-        /// Returns a clone of this object.
-        /// </summary>
-        /// <returns>The cloned object.</returns>
-        public override object Clone()
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
             return new RadioButtonTheme()
             {

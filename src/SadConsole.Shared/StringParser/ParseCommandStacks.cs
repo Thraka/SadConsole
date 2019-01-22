@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SadConsole.StringParser
+﻿namespace SadConsole.StringParser
 {
+    using System.Collections.Generic;
+    
     /// <summary>
     /// A list of behaviors applied as a string is processed.
     /// </summary>
@@ -29,7 +27,8 @@ namespace SadConsole.StringParser
         }
 
         /// <summary>
-        /// Adds a behavior to the <see cref="All"/> collection and the collection based on the <see cref="ParseCommandBase.CommandType"/> type.
+        /// Adds a behavior to the <see cref="All"/> collection and the collection 
+        /// based on the <see cref="ParseCommandBase.CommandType"/> type.
         /// </summary>
         /// <param name="command"></param>
         public void AddSafe(ParseCommandBase command)
@@ -124,8 +123,7 @@ namespace SadConsole.StringParser
                 }
             }
 
-            List<ParseCommandBase> all = new List<ParseCommandBase>(All);
-
+            var all = new List<ParseCommandBase>(All);
             if (all.Contains(command))
             {
                 all.Remove(command);

@@ -1,13 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
-using SadConsole.Input;
-using SadConsole.Themes;
+#endif
 
 using System;
 using System.Runtime.Serialization;
-using System.Windows;
-using SadConsole.Surfaces;
 
 namespace SadConsole.Controls
 {
@@ -26,12 +23,6 @@ namespace SadConsole.Controls
         /// A list of valid number characters
         /// </summary>
         protected static char[] _validNumbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-
-        /// <summary>
-        /// The theme of the control.
-        /// </summary>
-        [DataMember(Name="Theme")]
-        protected TextBoxTheme _theme;
 
         /// <summary>
         /// The alignment of the text.
@@ -99,21 +90,6 @@ namespace SadConsole.Controls
         /// A temp holder for the text as it's being edited.
         /// </summary>
         public string EditingText { get; protected set; } = "";
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public  TextBoxTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
 
         /// <summary>
         /// The alignment of the caret.
@@ -205,7 +181,6 @@ namespace SadConsole.Controls
         public TextBox(int width)
             : base(width, 1)
         {
-            Theme = (TextBoxTheme) Library.Default.TextBoxTheme.Clone();
         }
         #endregion
 
@@ -228,8 +203,7 @@ namespace SadConsole.Controls
                 }
                 else
                 {
-                    int value;
-                    if (_text != null & int.TryParse(_text, out value))
+                    if (_text != null & int.TryParse(_text, out int value))
                         _text = value.ToString();
                     else
                         _text = "0";
@@ -473,14 +447,8 @@ namespace SadConsole.Controls
                 IsDirty = true;    
             }
         }
-
-        /// <inheritdoc />
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
-        [OnDeserializedAttribute]
+        
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             Text = _text;

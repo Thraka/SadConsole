@@ -1,13 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#endif
 
-using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
 
 namespace SadConsole.Controls
 {
-
     /// <summary>
     /// A control that fills an area (vertical or horizontal) according to a value.
     /// </summary>
@@ -18,12 +18,6 @@ namespace SadConsole.Controls
         /// Called when the <see cref="Progress"/> property value changes.
         /// </summary>
         public event EventHandler ProgressChanged;
-
-        /// <summary>
-        /// Overriding theme.
-        /// </summary>
-        [DataMember(Name = "Theme")]
-        protected ProgressBarTheme _theme;
 
         private Cell _currentAppearanceForeground;
         private Cell _currentAppearanceBackground;
@@ -63,21 +57,6 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember]
         protected VerticalAlignment verticalAlignment;
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public ProgressBarTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
 
         /// <summary>
         /// The horizontal orientation used when <see cref="IsHorizontal"/> is set to true.
@@ -159,8 +138,6 @@ namespace SadConsole.Controls
             }
         }
 
-
-
         /// <summary>
         /// Creates a new horizontal progress bar.
         /// </summary>
@@ -179,7 +156,6 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -200,7 +176,6 @@ namespace SadConsole.Controls
 
             CanFocus = false;
             TabStop = false;
-            Theme = (ProgressBarTheme)Library.Default.ProgressBarTheme.Clone();
         }
 
         /// <summary>
@@ -212,13 +187,8 @@ namespace SadConsole.Controls
         {
             return false;
         }
-
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
-        [OnDeserializedAttribute]
+        
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             var temp = progressValue;
