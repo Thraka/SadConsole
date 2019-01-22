@@ -7,6 +7,8 @@ namespace SadConsole.Input
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// Represents the state of the keyboard.
@@ -17,22 +19,32 @@ namespace SadConsole.Input
         /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. 
         /// Uses the <see cref="RepeatDelay"/> and <see cref="InitialRepeatDelay"/> settings.
         /// </summary>
-        public List<AsciiKey> KeysPressed { get; internal set; }
+        public ReadOnlyCollection<AsciiKey> KeysPressed => KeysPressedInternal.AsReadOnly();
+
+        private List<AsciiKey> KeysPressedInternal { get; }
 
         /// <summary>
-        /// A collection of keys currently held down.
-        /// </summary>
-        public List<AsciiKey> KeysDown { get; internal set; }
+		/// A collection of keys currently held down.
+		/// </summary>
+        public ReadOnlyCollection<AsciiKey> KeysDown => KeysDownInternal.AsReadOnly();
+
+		private List<AsciiKey> KeysDownInternal { get; }
+
+        // List that parallels KeysDownInternal of unmapped virtual keys.  Always use AddKeyDown and RemoveKeyDownAt to
+		// modify both these lists so they stay parallel.
+		private List<Keys> UnmappedVirtualKeysDown { get; }
 
         /// <summary>
         /// A collection of keys that were just released this frame.
         /// </summary>
-        public List<AsciiKey> KeysReleased { get; internal set; }
+        public ReadOnlyCollection<AsciiKey> KeysReleased => KeysReleasedInternal.AsReadOnly();
 
-        /// <summary>
-        /// How often a key is included in the <see cref="KeysPressed"/> collection after the <see cref="InitialRepeatDelay"/> time has passed.
-        /// </summary>
-        public float RepeatDelay = 0.04f;
+        private List<AsciiKey> KeysReleasedInternal { get; }
+
+		/// <summary>
+		/// How often a key is included in the <see cref="KeysPressed"/> collection after the <see cref="InitialRepeatDelay"/> time has passed.
+		/// </summary>
+		public float RepeatDelay = 0.04f;
 
         /// <summary>
         /// The initial delay after a key is first pressed before it is included a second time (while held down) in the <see cref="KeysPressed"/> collection.
@@ -41,9 +53,10 @@ namespace SadConsole.Input
 
         public Keyboard()
         {
-            KeysPressed = new List<AsciiKey>();
-            KeysReleased = new List<AsciiKey>();
-            KeysDown = new List<AsciiKey>();
+            KeysPressedInternal = new List<AsciiKey>();
+            KeysReleasedInternal = new List<AsciiKey>();
+            KeysDownInternal = new List<AsciiKey>();
+            UnmappedVirtualKeysDown = new List<Keys>();
         }
 
         /// <summary>
@@ -51,9 +64,10 @@ namespace SadConsole.Input
         /// </summary>
         public void Clear()
         {
-            KeysPressed.Clear();
-            KeysDown.Clear();
-            KeysReleased.Clear();
+            KeysPressedInternal.Clear();
+            KeysDownInternal.Clear();
+            UnmappedVirtualKeysDown.Clear();
+            KeysReleasedInternal.Clear();
         }
 
         /// <summary>
@@ -63,7 +77,7 @@ namespace SadConsole.Input
         /// <returns>True when the key is not being pressed.</returns>
         public bool IsKeyUp(Keys key)
         {
-            return !KeysDown.Contains(AsciiKey.Get(key));
+            return !KeysDownInternal.Contains(AsciiKey.Get(key));
         }
 
         /// <summary>
@@ -73,7 +87,7 @@ namespace SadConsole.Input
         /// <returns>True when the key is being pressed.</returns>
         public bool IsKeyDown(Keys key)
         {
-            return KeysDown.Contains(AsciiKey.Get(key));
+            return KeysDownInternal.Contains(AsciiKey.Get(key));
         }
 
         /// <summary>
@@ -83,7 +97,7 @@ namespace SadConsole.Input
         /// <returns>True when the key was released this update frame.</returns>
         public bool IsKeyReleased(Keys key)
         {
-            return KeysReleased.Contains(AsciiKey.Get(key));
+            return KeysReleasedInternal.Contains(AsciiKey.Get(key));
         }
 
         /// <summary>
@@ -93,9 +107,22 @@ namespace SadConsole.Input
         /// <returns>True when the key was considered first pressed.</returns>
         public bool IsKeyPressed(Keys key)
         {
-            return KeysPressed.Contains(AsciiKey.Get(key));
+            return KeysPressedInternal.Contains(AsciiKey.Get(key));
         }
 
+        // Always use the next routines to add or remove keys from KeysDownInternal or
+        // UnmappedVirtualKeysDown.  This ensures that they stay parallel.
+        private void AddKeyDown(AsciiKey key, Keys unmappedVirtualKey)
+        {
+            KeysDownInternal.Add(key);
+            UnmappedVirtualKeysDown.Add(unmappedVirtualKey);
+        }
+
+        private void RemoveKeyDownAt(int i)
+        {
+            KeysDownInternal.RemoveAt(i);
+            UnmappedVirtualKeysDown.RemoveAt(i);
+        }
 
         /// <summary>
         /// Reads the keyboard state using the <see cref="GameTime"/> from the update frame.
@@ -103,74 +130,85 @@ namespace SadConsole.Input
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            this.KeysPressed.Clear();
-            this.KeysReleased.Clear();
+            KeysPressedInternal.Clear();
+            KeysReleasedInternal.Clear();
 
-            // Cycle all the keys down known if any are up currently, remove
+            // Cycle all the keys down known if any are up currently, remove them from KeysDownInternal
             KeyboardState state = Microsoft.Xna.Framework.Input.Keyboard.GetState();
             bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
-            var keys = state.GetPressedKeys();
-            for (int i = 0; i < this.KeysDown.Count;)
+            var unmappedVirtualKeys = state.GetPressedKeys();
+
+			for (int i = 0; i < KeysDownInternal.Count;)
             {
-                if (state.IsKeyUp(this.KeysDown[i].Key))
+                if (state.IsKeyUp(UnmappedVirtualKeysDown[i]))
                 {
-                    KeysReleased.Add(this.KeysDown[i]);
-                    this.KeysDown.Remove(this.KeysDown[i]);
+                    KeysReleasedInternal.Add(KeysDownInternal[i]);
+                    RemoveKeyDownAt(i);
                 }
                 else
                     i++;
             }
 
+            // KeysDownInternal now contains all the keys that are currently down except potentially newly pressed keys
+            // however the shift state may have changed so if there was an 'a' previously and the shift key was
+            // just pressed, then the 'a' needs to get replaced with 'A'.
+
             // For all new keys down, if we don't know them, add them to pressed, add them to down.
-            for (int i = 0; i < keys.Length; i++)
+            foreach (var unmappedVirtualKey in unmappedVirtualKeys)
             {
                 bool firstPressed = false;
 
                 AsciiKey key = new AsciiKey();
                 AsciiKey keyOppositeShift = new AsciiKey();
-                AsciiKey activeKey;
+                int activeKeyIndex = -1;
 
-                key.Fill(keys[i], shiftPressed);
-                keyOppositeShift.Fill(keys[i], !shiftPressed);
+                // These keys will be mapped since Fill does the mapping automatically
+                key.Fill(unmappedVirtualKey, shiftPressed);
+                keyOppositeShift.Fill(unmappedVirtualKey, !shiftPressed);
 
-                if (this.KeysDown.Contains(key))
+                if (KeysDownInternal.Contains(key))
                 {
-                    activeKey = this.KeysDown.First(k => k == key);
-                    activeKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    this.KeysDown.Remove(key);
+                    activeKeyIndex = KeysDownInternal.FindIndex(k => k == key);
+                    var thisKey = KeysDownInternal[activeKeyIndex];
+                    thisKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    KeysDownInternal[activeKeyIndex] = thisKey;
                 }
-                else if (this.KeysDown.Contains(keyOppositeShift))
+                else if (KeysDownInternal.Contains(keyOppositeShift))
                 {
-                    activeKey = this.KeysDown.First(k => k == keyOppositeShift);
-                    activeKey.Character = key.Character;
-                    activeKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    this.KeysDown.Remove(keyOppositeShift);
-                }
-                else
+                    activeKeyIndex = KeysDownInternal.FindIndex(k => k == keyOppositeShift);
+                    var thisKey = KeysDownInternal[activeKeyIndex];
+                    thisKey.Character = key.Character;
+                    thisKey.TimeHeld += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    KeysDownInternal[activeKeyIndex] = thisKey;
+				}
+				else
                 {
-                    activeKey = key;
+                    // The physical key (independent of shift) for this character was not being pressed before
+                    // so add it in.
                     firstPressed = true;
+                    activeKeyIndex = KeysDownInternal.Count;
+                    AddKeyDown(key, unmappedVirtualKey);
                 }
+
+                var activeKey = KeysDownInternal[activeKeyIndex];
 
                 if (firstPressed)
                 {
-                    this.KeysPressed.Add(activeKey);
+                    KeysPressedInternal.Add(activeKey);
                 }
-                else if (activeKey.PreviouslyPressed == false && activeKey.TimeHeld >= InitialRepeatDelay)
+                else if (activeKey.PostInitialDelay == false && activeKey.TimeHeld >= InitialRepeatDelay)
                 {
-                    activeKey.PreviouslyPressed = true;
+                    activeKey.PostInitialDelay = true;
                     activeKey.TimeHeld = 0f;
-                    this.KeysPressed.Add(activeKey);
+                    KeysPressedInternal.Add(activeKey);
                 }
-                else if (activeKey.PreviouslyPressed == true && activeKey.TimeHeld >= RepeatDelay)
+                else if (activeKey.PostInitialDelay && activeKey.TimeHeld >= RepeatDelay)
                 {
                     activeKey.TimeHeld = 0f;
-                    this.KeysPressed.Add(activeKey);
+                    KeysPressedInternal.Add(activeKey);
                 }
-
-                this.KeysDown.Add(activeKey);
             }
-        }
+		}
 
         /// <summary>
         /// Send the keyboard to the active console.

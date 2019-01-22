@@ -85,10 +85,9 @@ namespace SadConsole.Themes
                     textbox.Surface.Effects.RemoveAll();
                     textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
                     textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
-                    textbox.Surface.SetEffect(textbox.Surface[textbox.CaretPosition - textbox.LeftDrawOffset, 0], CaretEffect);
-                    _oldCaretPosition = textbox.CaretPosition;
-                    _oldState = textbox.State;
-                    _editingText = textbox.EditingText;
+                    // TODO: If the keyboard repeat is down and the text goes off the end of the textbox and we're hitting the left arrow then sometimes control.LeftDrawOffset can exceed control.CaretPosition
+                    // This causes an Out of Bounds error here.  I don't think it's new - I think it's been in for a long time so I'm gonna check in and come back to this.
+                    // It might be that we just need to take Max(0, "bad value") below but I think it should be checked into to really understand the situation.
                 }
 			}
             else

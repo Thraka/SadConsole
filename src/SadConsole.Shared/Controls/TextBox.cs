@@ -331,7 +331,7 @@ namespace SadConsole.Controls
 									_caretPos = newText.Length;
 							}
 
-							else if ((info.KeysPressed[i].Key == Keys.Decimal || info.KeysPressed[i].Key == Keys.Delete) && _caretPos != newText.Length)
+							else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
 							{
 								newText.Remove(_caretPos, 1);
 
