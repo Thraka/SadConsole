@@ -36,12 +36,12 @@ namespace SadConsole.Input
         private List<AsciiKey> KeysReleasedInternal { get; }
 
 		/// <summary>
-		/// How often a key is included in the <see cref="KeysPressedInternal"/> collection after the <see cref="InitialRepeatDelay"/> time has passed.
+		/// How often a key is included in the <see cref="KeysPressed"/> collection after the <see cref="InitialRepeatDelay"/> time has passed.
 		/// </summary>
 		public float RepeatDelay = 0.04f;
 
         /// <summary>
-        /// The initial delay after a key is first pressed before it is included a second time (while held down) in the <see cref="KeysPressedInternal"/> collection.
+        /// The initial delay after a key is first pressed before it is included a second time (while held down) in the <see cref="KeysPressed"/> collection.
         /// </summary>
         public float InitialRepeatDelay = 0.8f;
 
@@ -65,7 +65,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Returns true if the key is not in the <see cref="KeysDownInternal"/> collection.
+        /// Returns true if the key is not in the <see cref="KeysDown"/> collection.
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key is not being pressed.</returns>
@@ -75,7 +75,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Returns true if the key is in the <see cref="KeysDownInternal"/> collection.
+        /// Returns true if the key is in the <see cref="KeysDown"/> collection.
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key is being pressed.</returns>
@@ -85,7 +85,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Returns true when the key is in the <see cref="KeysReleasedInternal"/> collection.
+        /// Returns true when the key is in the <see cref="KeysReleased"/> collection.
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key was released this update frame.</returns>
@@ -95,7 +95,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Returns true when the key is in the <see cref="KeysPressedInternal"/> collection.
+        /// Returns true when the key is in the <see cref="KeysPressed"/> collection.
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key was considered first pressed.</returns>

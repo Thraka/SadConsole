@@ -118,12 +118,12 @@ namespace SadConsole.Input
         public void Fill(Keys key, bool shiftPressed)
         {
             Key = key;
-            shiftPressed |= (((ushort) GetKeyState(VK_CAPSLOCK)) & 0xffff) != 0;
             var numLock = (((ushort) GetKeyState(VK_NUMLOCK)) & 0xffff) != 0;
 
             if (key >= Keys.A && key <= Keys.Z)
             {
-                Character = (char) (Key + (shiftPressed ? CapOffset : LowerOffset));
+                var capsLock = (((ushort)GetKeyState(VK_CAPSLOCK)) & 0xffff) != 0;
+				Character = (char) (Key + (shiftPressed || capsLock ? CapOffset : LowerOffset));
                 return;
             }
 
