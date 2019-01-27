@@ -59,6 +59,8 @@ namespace SadConsole.Themes
         public override void Attached(ControlBase control)
         {
             control.Surface = new CellSurface(control.Width, control.Height);
+            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface.Clear();
 
             ((ListBox) control).ScrollBar.Theme = ScrollBarTheme;
 

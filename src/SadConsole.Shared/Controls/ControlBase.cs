@@ -24,10 +24,15 @@ namespace SadConsole.Controls
         protected bool IsCustomTheme;
 
         /// <summary>
-        /// True when the mouse is down.
+        /// <see langword="true"/> when the left mouse button is down.
         /// </summary>
         protected bool isMouseLeftDown;
+
+        /// <summary>
+        /// <see langword="true"/> when the right mouse button is down.
+        /// </summary>
         protected bool isMouseRightDown;
+
         private bool _isDirty;
 
         public event EventHandler<EventArgs> IsDirtyChanged;
@@ -71,7 +76,8 @@ namespace SadConsole.Controls
                 var oldPosition = position;
                 position = value;
                 Bounds = new Rectangle(position.X, position.Y, Width, Height);
-                MouseBounds = new Rectangle(MouseBounds.Location + value - oldPosition, new Point(MouseBounds.Width, MouseBounds.Height));
+                var mouseBoundsPosition = MouseBounds.Location + value - oldPosition;
+                MouseBounds = new Rectangle(mouseBoundsPosition.X, mouseBoundsPosition.Y, MouseBounds.Width, MouseBounds.Height);
                 OnPositionChanged();
             }
         }

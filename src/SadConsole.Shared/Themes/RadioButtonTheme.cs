@@ -1,9 +1,13 @@
-﻿namespace SadConsole.Themes
-{
-    using SadConsole.Controls;
-    using System;
-    using System.Runtime.Serialization;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
+using SadConsole.Controls;
+using System;
+using System.Runtime.Serialization;
+
+namespace SadConsole.Themes
+{
     /// <summary>
     /// The theme of a radio button control.
     /// </summary>
@@ -42,6 +46,8 @@
         public override void Attached(ControlBase control)
         {
             control.Surface = new CellSurface(control.Width, control.Height);
+            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface.Clear();
 
             base.Attached(control);
         }

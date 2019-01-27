@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
+
+using System;
 using SadConsole.Controls;
 
 namespace SadConsole.Themes
@@ -17,6 +21,8 @@ namespace SadConsole.Themes
         public override void Attached(ControlBase control)
         {
             control.Surface = new CellSurface(control.Width, control.Height);
+            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface.Clear();
 
             base.Attached(control);
         }

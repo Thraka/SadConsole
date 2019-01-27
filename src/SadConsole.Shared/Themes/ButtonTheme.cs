@@ -38,6 +38,8 @@ namespace SadConsole.Themes
         public override void Attached(ControlBase control)
         {
             control.Surface = new CellSurface(control.Width, control.Height);
+            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface.Clear();
             base.Attached(control);
         }
 
@@ -111,12 +113,14 @@ namespace SadConsole.Themes
     public class Button3dTheme : ButtonTheme
     {
         [DataMember]
-        public Cell Shade;
+        public Cell Shade { get; set; }
         
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
             control.Surface = new CellSurface(control.Width + 2, control.Height + 1);
+            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface.Clear();
 
             var colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
 
@@ -160,7 +164,7 @@ namespace SadConsole.Themes
 
             var middle = button.Height != 1 ? button.Height / 2 : 0;
 
-            Rectangle shadowBounds = new Rectangle(0, 0, button.Width, button.Height);
+            var shadowBounds = new Rectangle(0, 0, button.Width, button.Height);
             shadowBounds.Location += new Point(2, 1);
 
             button.Surface.Clear();
@@ -176,6 +180,7 @@ namespace SadConsole.Themes
                     appearance.Glyph, null);
 
                 button.Surface.Print(shadowBounds.Left, middle, button.Text.Align(button.TextAlignment, button.Width));
+                button.MouseBounds = new Rectangle(button.Position.X, button.Position.Y, button.Width + 2, button.Height + 1);
             }
             else
             {
@@ -201,6 +206,8 @@ namespace SadConsole.Themes
                 button.Surface.DrawLine(new Point(shadowBounds.Right - 1, shadowBounds.Top),
                     new Point(shadowBounds.Right - 1, shadowBounds.Bottom - 1), Shade.Foreground, Shade.Background,
                     Shade.Glyph);
+
+                button.MouseBounds = button.Bounds;
             }
 
             button.IsDirty = false;
