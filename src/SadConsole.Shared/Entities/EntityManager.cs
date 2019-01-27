@@ -1,12 +1,12 @@
 ﻿#if XNA
 using Microsoft.Xna.Framework;
-using SadConsole.Input;
 #endif
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using SadConsole.Input;
 
 namespace SadConsole.Entities
 {
