@@ -378,11 +378,11 @@ namespace SadConsole
         /// <returns>True when the focus change is allowed; otherwise false.</returns>
         protected virtual bool FocusedControlChanging(ControlBase newControl, ControlBase oldControl)
         {
-            return true;
+            return  newControl?.CanFocus ?? true;
         }
 
         /// <summary>
-        /// This method is called when a control gains focus. Unless overridden, this method calls the DetermineAppearance method both the <paramref name="newControl"/> and <paramref name="oldControl"/> parameters.
+        /// This method is called when a control gains focus.
         /// </summary>
         /// <param name="newControl">The control that has focus.</param>
         /// <param name="oldControl">The control that previously had focus.</param>

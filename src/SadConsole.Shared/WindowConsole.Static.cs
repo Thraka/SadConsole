@@ -60,6 +60,8 @@ namespace SadConsole
             window.Add(yesButton);
             window.Add(noButton);
 
+            noButton.IsFocused = true;
+
             window.Closed += (o, e) =>
                 {
                     resultCallback?.Invoke(window.DialogResult);
@@ -120,6 +122,7 @@ namespace SadConsole
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
 
             window.Add(closeButton);
+            closeButton.IsFocused = true;
             window.CloseOnEscKey = true;
             window.Show(true);
             window.Center();

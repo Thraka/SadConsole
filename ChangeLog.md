@@ -30,7 +30,8 @@ Code changes:
 - Instructions reimplemented as ConsoleComponents.
 - InstructionSet has fluent-type methods to construct the set. See the SplashScreen console in the demo project.
 - [Fixed #199] New PredicateInstruction (thanks VGA256)
-
+- SurfaceBase.DefaultBackground is now Black instead of Transparent. You may need to use console.DefaultBackground = Color.Transparent; console.Clear(); to restore old behavior.
+- Control.CanFocus is now respected.
 
 ## 12/29/2018 V7.3.0
 

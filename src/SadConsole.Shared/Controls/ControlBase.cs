@@ -269,7 +269,7 @@ namespace SadConsole.Controls
             TabStop = true;
             IsVisible = true;
             FocusOnClick = true;
-            CanFocus = false;
+            CanFocus = true;
             position = new Point();
             UseMouse = true;
             UseKeyboard = true;
@@ -331,7 +331,7 @@ namespace SadConsole.Controls
         {
             if (IsEnabled && UseMouse)
             {
-                if (MouseBounds.Contains(state.CellPosition))
+                if (state.Console == parent && state.IsOnConsole && MouseBounds.Contains(state.CellPosition))
                 {
                     if (isMouseOver != true)
                     {

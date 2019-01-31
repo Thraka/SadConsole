@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>8.0.0-pre3</Version>
+    <Version>8.0.0-pre4</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -12,7 +12,7 @@
     <Description>A MonoGame library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.0</Description>
     <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>SadConsole.Standard</PackageId>
+    <PackageId>SadConsole</PackageId>
     <PackageReleaseNotes>[BREAKING CHANGES]
 - Overhaul of the theme system.
 - Overhaul of the SurfaceBase/ScreenObject/Console system.
@@ -34,6 +34,7 @@
 - Instructions reimplemented as ConsoleComponents.
 - InstructionSet has fluent-type methods to construct the set. See the SplashScreen console in the demo project.
 - [Fixed #199] New PredicateInstruction (thanks VGA256)
+- SurfaceBase.DefaultBackground is now Black instead of Transparent. You may need to use console.DefaultBackground = Color.Transparent; console.Clear(); to restore old behavior.
 </PackageReleaseNotes>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
