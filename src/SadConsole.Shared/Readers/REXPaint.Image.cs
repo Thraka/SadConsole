@@ -145,45 +145,46 @@ namespace SadConsole.Readers
         /// <returns>The RexPaint image.</returns>
         public static REXPaintImage Load(Stream stream)
         {
-            var deflatedStream = new GZipStream(stream, CompressionMode.Decompress);
-
-            using (var reader = new BinaryReader(deflatedStream))
+            using (var deflatedStream = new GZipStream(stream, CompressionMode.Decompress))
             {
-                var version = reader.ReadInt32();
-                var layerCount = reader.ReadInt32();
-                REXPaintImage image = null;
-
-                for (var currentLayer = 0; currentLayer < layerCount; currentLayer++)
+                using (var reader = new BinaryReader(deflatedStream))
                 {
-                    var width = reader.ReadInt32();
-                    var height = reader.ReadInt32();
+                    var version = reader.ReadInt32();
+                    var layerCount = reader.ReadInt32();
+                    REXPaintImage image = null;
 
-                    Layer layer;
-
-                    if (currentLayer == 0)
+                    for (var currentLayer = 0; currentLayer < layerCount; currentLayer++)
                     {
-                        image = new REXPaintImage(width, height) {Version = version};
-                        layer = image._layers[0];
-                    }
-                    else
-                        layer = image.Create();
+                        var width = reader.ReadInt32();
+                        var height = reader.ReadInt32();
 
-                    // Process cells (could probably be streamlined into index processing instead of x,y...
-                    for (var x = 0; x < width; x++)
-                    {
-                        for (var y = 0; y < height; y++)
+                        Layer layer;
+
+                        if (currentLayer == 0)
                         {
+                            image = new REXPaintImage(width, height) { Version = version };
+                            layer = image._layers[0];
+                        }
+                        else
+                            layer = image.Create();
 
-                            var cell = new Cell(reader.ReadInt32(),                                                  // character
-                                                new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte()),  // foreground
-                                                new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte())); // background
+                        // Process cells (could probably be streamlined into index processing instead of x,y...
+                        for (var x = 0; x < width; x++)
+                        {
+                            for (var y = 0; y < height; y++)
+                            {
 
-                            layer[x, y] = cell;
+                                var cell = new Cell(reader.ReadInt32(),                                                  // character
+                                                    new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte()),  // foreground
+                                                    new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte())); // background
+
+                                layer[x, y] = cell;
+                            }
                         }
                     }
-                }
 
-                return image;
+                    return image;
+                }
             }
         }
     }
