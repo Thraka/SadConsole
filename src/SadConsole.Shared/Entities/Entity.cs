@@ -23,7 +23,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// Triggered when the entity changes position.
         /// </summary>
-        public event System.EventHandler Moved;
+        public event System.EventHandler<EntityMovedEventArgs> Moved;
 
         /// <summary>
         /// Animation for the game object.
@@ -148,8 +148,8 @@ namespace SadConsole.Entities
         /// <summary>
         /// Called when the <see cref="Console.Position"/> value changes. Triggers <see cref="Moved"/>.
         /// </summary>
-        /// <param name="oldLocation"></param>
-        protected override void OnPositionChanged(Point oldLocation) => Moved?.Invoke(this, System.EventArgs.Empty);
+        /// <param name="oldPosition"></param>
+        protected override void OnPositionChanged(Point oldPosition) => Moved?.Invoke(this, new EntityMovedEventArgs(this, oldPosition));
 
         /// <summary>
         /// Saves the <see cref="Entity"/> to a file.
@@ -163,5 +163,32 @@ namespace SadConsole.Entities
         /// <param name="file">The source file.</param>
         /// <returns>The entity.</returns>
         public static Entity Load(string file) => Serializer.Load<Entity>(file, Settings.SerializationIsCompressed);
+
+        /// <summary>
+        /// Arguments for the entity moved event.
+        /// </summary>
+        public class EntityMovedEventArgs
+        {
+            /// <summary>
+            /// The entity associated with the event.
+            /// </summary>
+            public readonly Entity Entity;
+
+            /// <summary>
+            /// The positiont the <see cref="Entity"/> moved from.
+            /// </summary>
+            public readonly Point FromPosition;
+
+            /// <summary>
+            /// Creates a new event args for the entity movement.
+            /// </summary>
+            /// <param name="entity">The entity associated with the event.</param>
+            /// <param name="oldPosition">The position the entity moved from.</param>
+            public EntityMovedEventArgs(Entity entity, Point oldPosition)
+            {
+                Entity = entity;
+                FromPosition = oldPosition;
+            }
+        }
     }
 }
