@@ -78,7 +78,7 @@ namespace SadConsole.Themes
                     _oldState = textbox.State;
                     _editingText = textbox.EditingText;
                     textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    if (textbox.PasswordChar == string.Empty)
+                    if (string.IsNullOrEmpty(textbox.PasswordChar))
                     {
                         textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
                     }
@@ -94,7 +94,7 @@ namespace SadConsole.Themes
                 {
                     textbox.Surface.Effects.RemoveAll();
                     textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    if (textbox.PasswordChar == string.Empty)
+                    if (string.IsNullOrEmpty(textbox.PasswordChar))
                     {
                         textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
                     }
@@ -116,7 +116,7 @@ namespace SadConsole.Themes
                 textbox.Surface.Effects.RemoveAll();
                 textbox.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
                 textbox.IsCaretVisible = false;
-                if (textbox.PasswordChar == string.Empty)
+                if (string.IsNullOrEmpty(textbox.PasswordChar))
                 {
                     textbox.Surface.Print(0, 0, textbox.Text.Align(textbox.TextAlignment, textbox.Width));
                 }
