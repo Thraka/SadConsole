@@ -21,29 +21,9 @@ namespace StarterProject.CustomConsoles
         
         public ControlsTest():base(80, 23)
         {
-            var button = new SadConsole.Controls.Button(11, 1)
-            {
-                Text = "Click",
-                Position = new Point(1, 3)
-            };
-            button.Click += (s, a) => Window.Message("This has been clicked!", "Close");
-            Add(button);
 
-            button = new SadConsole.Controls.Button(11, 3)
-            {
-                Text = "Click",
-                Position = new Point(1, 5),
-                Theme = new Button3dTheme()
-            };
-            Add(button);
 
-            button = new SadConsole.Controls.Button(11, 3)
-            {
-                Text = "Click",
-                Position = new Point(1, 10),
-                Theme = new ButtonLinesTheme()
-            };
-            Add(button);
+
             
             var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left);
             prog1.Position = new Point(16, 5);
@@ -110,9 +90,38 @@ namespace StarterProject.CustomConsoles
             selButton2.PreviousSelection = selButton1;
             selButton2.NextSelection = selButton;
 
-            var input = new TextBox(20);
+            var input = new TextBox(10);
             input.Position = new Point(51, 9);
             Add(input);
+
+            var password = new TextBox(10);
+            password.PasswordChar = "*";
+            password.Position = new Point(65, 9);
+            Add(password);
+
+            var button = new SadConsole.Controls.Button(11, 1)
+            {
+                Text = "Click",
+                Position = new Point(1, 3)
+            };
+            button.Click += (s, a) => Window.Message("This has been clicked -- and your password field contains '" + password.Text + "'", "Close");
+            Add(button);
+
+            button = new SadConsole.Controls.Button(11, 3)
+            {
+                Text = "Click",
+                Position = new Point(1, 5),
+                Theme = new Button3dTheme()
+            };
+            Add(button);
+
+            button = new SadConsole.Controls.Button(11, 3)
+            {
+                Text = "Click",
+                Position = new Point(1, 10),
+                Theme = new ButtonLinesTheme()
+            };
+            Add(button);
 
             var checkbox = new SadConsole.Controls.CheckBox(13, 1)
             {
@@ -212,6 +221,8 @@ namespace StarterProject.CustomConsoles
 
             Print(51, 1, "SELECTION BUTTON (UP/DN KEYS)", Library.Default.Colors.YellowDark);
             Print(51, 7, "TEXTBOX", Library.Default.Colors.YellowDark);
+            Print(65, 7, "(WITH MASK)", Library.Default.Colors.YellowDark);
+
             Print(51, 11, "CHECKBOX", Library.Default.Colors.YellowDark);
 
             Print(2, 15, "RED ".CreateColored(Library.Default.Colors.Red, null) +
