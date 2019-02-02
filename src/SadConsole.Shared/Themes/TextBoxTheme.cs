@@ -78,7 +78,14 @@ namespace SadConsole.Themes
                     _oldState = textbox.State;
                     _editingText = textbox.EditingText;
                     textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    if (textbox.PasswordChar == string.Empty)
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    }
+                    else
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset).Masked(textbox.PasswordChar));
+                    }
                     textbox.Surface.SetEffect(textbox.Surface[textbox.CaretPosition - textbox.LeftDrawOffset, 0], CaretEffect);
                     textbox.IsCaretVisible = true;
                 }
@@ -87,7 +94,14 @@ namespace SadConsole.Themes
                 {
                     textbox.Surface.Effects.RemoveAll();
                     textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    if (textbox.PasswordChar == string.Empty)
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    }
+                    else
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset).Masked(textbox.PasswordChar));
+                    }
                     // TODO: If the keyboard repeat is down and the text goes off the end of the textbox and we're hitting the left arrow then sometimes control.LeftDrawOffset can exceed control.CaretPosition
                     // This causes an Out of Bounds error here.  I don't think it's new - I think it's been in for a long time so I'm gonna check in and come back to this.
                     // It might be that we just need to take Max(0, "bad value") below but I think it should be checked into to really understand the situation.
@@ -102,7 +116,14 @@ namespace SadConsole.Themes
                 textbox.Surface.Effects.RemoveAll();
                 textbox.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
                 textbox.IsCaretVisible = false;
-                textbox.Surface.Print(0, 0, textbox.Text.Align(textbox.TextAlignment, textbox.Width));
+                if (textbox.PasswordChar == string.Empty)
+                {
+                    textbox.Surface.Print(0, 0, textbox.Text.Align(textbox.TextAlignment, textbox.Width));
+                }
+                else
+                {
+                    textbox.Surface.Print(0, 0, textbox.Text.Masked(textbox.PasswordChar).Align(textbox.TextAlignment, textbox.Width));
+                }
             }
 
             textbox.IsDirty = false;
