@@ -44,7 +44,7 @@ namespace SadConsole
         /// <summary>
         /// The default background for glyphs on this surface.
         /// </summary>
-        public Color DefaultBackground { get; set; } = Color.Black;
+        public Color DefaultBackground { get; set; } = Color.Transparent;
 
         /// <summary>
         /// How many cells wide the surface is.
@@ -85,7 +85,7 @@ namespace SadConsole
         }
         
         /// <summary>
-        /// Creates a new surface with the specified width and height, with <see cref="Color.Black"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
@@ -95,7 +95,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new surface with the specified width and height, with <see cref="Color.Black"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
