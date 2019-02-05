@@ -15,6 +15,11 @@ namespace SadConsole.Controls
     public class TextBox: ControlBase
     {
         /// <summary>
+        /// Mask input with a certain character.
+        /// </summary>
+        public string PasswordChar;
+
+        /// <summary>
         /// Indicates the caret is visible.
         /// </summary>
         public bool IsCaretVisible = false;
