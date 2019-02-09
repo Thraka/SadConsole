@@ -170,5 +170,23 @@ namespace System
 
             return false;
         }
+
+        /// <summary>
+        /// Returns a string of mask characters the same length as the input string.
+        /// </summary>
+        /// <param name="toMask">The string to mask.</param>
+        /// <param name="mask">The mask to use.</param>
+        /// <returns>A string of masks.</returns>
+        public static string Masked(this string toMask, string mask)
+        {
+            if (mask.Length == 1)
+            {
+                return new String(char.Parse(mask), toMask.Length);
+            }
+            else
+            {
+                throw new NotImplementedException("Can't generate multiple character password masks.");
+            }
+        }
     }
 }
