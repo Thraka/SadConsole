@@ -124,7 +124,11 @@ namespace SadConsole
             get => _theme ?? Library.Default;
             set
             {
-                _theme = value;
+                _theme = value ?? throw new ArgumentNullException(nameof(Theme), "Theme cannot be set to null.");
+
+                foreach (var control in Controls)
+                    control.RefreshParentTheme();
+
                 IsDirty = true;
                 Invalidate();
             }
