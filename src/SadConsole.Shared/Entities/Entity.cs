@@ -77,6 +77,8 @@ namespace SadConsole.Entities
             get => positionOffset;
             set
             {
+                if (positionOffset == value) return;
+
                 positionOffset = value;
                 OnCalculateRenderPosition();
             }
