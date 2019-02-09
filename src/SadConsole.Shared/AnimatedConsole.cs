@@ -9,11 +9,9 @@ namespace SadConsole
     using System.Collections.ObjectModel;
     using Newtonsoft.Json;
 
-    // TODO serialization
     /// <summary>
     /// Animates a list of frames.
     /// </summary>
-    //[JsonConverter(typeof(AnimatedSurfaceConverterJson))]
     [System.Diagnostics.DebuggerDisplay("Animated Surface")]
     [JsonConverter(typeof(SerializedTypes.AnimatedConsoleConverterJson))]
     public class AnimatedConsole : Console
@@ -341,9 +339,8 @@ namespace SadConsole
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static new AnimatedConsole Load(string file) => Serializer.Load<AnimatedConsole>(file, Settings.SerializationIsCompressed);
+        public new static AnimatedConsole Load(string file) => Serializer.Load<AnimatedConsole>(file, Settings.SerializationIsCompressed);
 
-        /// <inheritdoc />
         /// <summary>
         /// Event args for when the animation state changes
         /// </summary>
