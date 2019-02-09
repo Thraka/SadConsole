@@ -12,7 +12,7 @@
     <Description>A MonoGame library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.0</Description>
     <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>SadConsole</PackageId>
+    <PackageId>SadConsole.Standard</PackageId>
     <PackageReleaseNotes>[BREAKING CHANGES]
 - Overhaul of the theme system.
 - Overhaul of the SurfaceBase/ScreenObject/Console system.
