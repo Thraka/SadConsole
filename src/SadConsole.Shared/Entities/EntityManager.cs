@@ -224,10 +224,9 @@ namespace SadConsole.Entities
             {
                 var parentViewPort = ((IConsoleViewPort)console).ViewPort;
 
-                if (_cachedView != parentViewPort)
-                    _cachedView = parentViewPort;
+                _cachedView = parentViewPort;
 
-                offsetPosition = new Point(-_cachedView.Location.X, -_cachedView.Location.Y) + console.CalculatedPosition;
+                offsetPosition = new Point(-_cachedView.Location.X, -_cachedView.Location.Y);
             }
             else
                 offsetPosition = console.CalculatedPosition;
