@@ -13,6 +13,6 @@ namespace BasicTutorial.GameObjects
 {
     class Player : GameObjects.LivingCharacter
     {
-        public Player(Map map): base(map, Color.Green, Color.Black, 1) { }
+        public Player(MapConsole map): base(map, Color.Green, Color.Black, 1) { }
     }
 }

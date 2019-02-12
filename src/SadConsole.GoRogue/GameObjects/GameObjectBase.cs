@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using SadConsole.Entities;
 using SadConsole.Maps;
-using SadConsole;
 using SadConsole.Actions;
 
 namespace SadConsole.GameObjects
@@ -14,12 +8,12 @@ namespace SadConsole.GameObjects
     /// <summary>
     /// A game object you can use on a map.
     /// </summary>
-    public abstract class GameObjectBase: Entity, GoRogue.IHasID
+    public abstract class GameObjectBase: Entity, GoRogue.IHasID, GoRogue.IHasLayer
     {
         /// <summary>
         /// The map this object is associated with.
         /// </summary>
-        protected Map map { get; set; }
+        protected MapConsole map { get; set; }
 
         /// <summary>
         /// Gets or sets a friendly short title for the object.
@@ -39,7 +33,7 @@ namespace SadConsole.GameObjects
         /// <summary>
         /// A unique ID for the object.
         /// </summary>
-        public uint ID { get; } = GoRogue.Random.SingletonRandom.DefaultRNG.NextUInt();
+        public uint ID { get; set;  } = GoRogue.Random.SingletonRandom.DefaultRNG.NextUInt();
 
         /// <summary>
         /// Gets the position of the entity.
@@ -50,18 +44,17 @@ namespace SadConsole.GameObjects
             internal set => base.Position = value;
         }
 
+        public int Layer { get; }
+
         /// <summary>
         /// Creates a new game object with the specified foreground, background, and glyph.
         /// </summary>
         /// <param name="foreground"></param>
         /// <param name="background"></param>
         /// <param name="glyph"></param>
-        protected GameObjectBase(Map map, Color foreground, Color background, int glyph) : base(1, 1)
+        protected GameObjectBase(MapConsole map, Color foreground, Color background, int glyph) : base(foreground, background, glyph)
         {
             this.map = map;
-            Animation.CurrentFrame[0].Foreground = foreground;
-            Animation.CurrentFrame[0].Background = background;
-            Animation.CurrentFrame[0].Glyph = glyph;
 
             Title = "Unknown";
             Description = "Not much is known about this object.";
@@ -74,11 +67,7 @@ namespace SadConsole.GameObjects
             // Check the map if we can move to this new position
             if (map.IsTileWalkable(newPosition.X, newPosition.Y))
             {
-                if (map.GameObjects.Move(this, newPosition.ToCoord()))
-                {
-                    //this.Position = newPosition;
-
-                }
+                this.Position = newPosition;
             }
 
             // Let the map know we moved. So it can sync anything up.

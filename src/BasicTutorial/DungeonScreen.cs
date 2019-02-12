@@ -20,20 +20,16 @@ namespace BasicTutorial
         public bool RunLogicFrame;
         public bool RedrawMap;
 
-        private MapConsole _mapView;
-
-        public SadConsole.Maps.Map Map { get; }
+        public SadConsole.Maps.MapConsole Map { get; }
 
         public MessageConsole Messages { get; }
 
-        public MapConsole MapView => _mapView;
-
-        public DungeonScreen(SadConsole.Maps.Map map)
+        public DungeonScreen(SadConsole.Maps.MapConsole map)
         {
             // Setup map
             Map = map;
-            _mapView = new MapConsole(ScreenRegionMap.Width, ScreenRegionMap.Height, map);
-            _mapView.Position = ScreenRegionMap.Location;
+            Map.Position = ScreenRegionMap.Location;
+            Map.ViewPort = ScreenRegionMap;
 
             // Setup actions
             ActionProcessor = new SadConsole.Actions.ActionStack();
@@ -43,7 +39,7 @@ namespace BasicTutorial
             Messages = new MessageConsole(ScreenRegionMessages.Width, ScreenRegionMessages.Height);
             Messages.Position = ScreenRegionMessages.Location;
             Children.Add(Messages);
-            Children.Add(_mapView);
+            Children.Add(Map);
         }
 
         public override void Update(TimeSpan timeElapsed)
@@ -64,7 +60,7 @@ namespace BasicTutorial
                 ActionProcessor.Pop();
 
             // Center view on player
-            Map.ViewPort.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
+            Map.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
 
             // Run logic if valid move made by player
             if (RunLogicFrame)
@@ -72,7 +68,7 @@ namespace BasicTutorial
 
             if (RedrawMap)
             {
-                MapView.IsDirty = true;
+                Map.IsDirty = true;
                 RedrawMap = false;
             }
             //point.X = Math.Max(0, point.X);
@@ -114,8 +110,9 @@ namespace BasicTutorial
 
         private void RunGameLogicFrame()
         {
-            foreach (var ent in Map.GameObjects)
-                ent.Item.ProcessGameFrame();
+            foreach (var ent in Map.GameObjects.Entities)
+                if (ent != Map.ControlledGameObject)
+                    ((SadConsole.GameObjects.GameObjectBase)ent).ProcessGameFrame();
 
             // Process player (though it was proc in the previous loop) to make sure they are last to be processed
             Map.ControlledGameObject.ProcessGameFrame();

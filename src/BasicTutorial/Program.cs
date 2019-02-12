@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
 using SadConsole.Effects;
 using SadConsole.Entities;
+using SadConsole.Input;
 using Console = SadConsole.Console;
 
 namespace BasicTutorial
@@ -34,21 +35,20 @@ namespace BasicTutorial
             // Start the game.
             SadConsole.Game.Instance.Run();
 
-
-
             //
             // Code here will not run until the game window closes.
             //
 
             SadConsole.Game.Instance.Dispose();
         }
-        
+
         private static void Init()
         {
             SadConsole.Maps.Tile.Factory.Add(new BasicTutorial.Maps.TileBlueprints.Door());
 
             GameState.FirstDungeonSetup();
-            Global.CurrentScreen = GameState.Dungeon;
+            Global.CurrentScreen.Children.Add(GameState.Dungeon);
+            
         }
     }
 }

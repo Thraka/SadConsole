@@ -11,28 +11,25 @@ using SadConsole;
 
 namespace SadConsole.Maps
 {
-    public class Map: ISettableMapView<Tile>, IEnumerable<Tile>
+    /// <summary>
+    /// Console representing a map.
+    /// </summary>
+    public class MapConsole: ScrollingConsole, ISettableMapView<Tile>, IEnumerable<Tile>
     {
-        public GameObjects.GameObjectManager GameObjects { get; protected set; }
+        /// <summary>
+        /// The game objects added to the map.
+        /// </summary>
+        public Components.EntityManager GameObjects { get; protected set; }
 
+        /// <summary>
+        /// The game object that will be controlled by the player.
+        /// </summary>
         public GameObjects.GameObjectBase ControlledGameObject { get; set; }
-
-        public IConsoleViewPort ViewPort { get; private set; }
 
         /// <summary>
         /// Fires when a map tile is replaced or gets an alert that its state has changed.
         /// </summary>
         public event EventHandler<TileChangedEventArgs> MapTileChanged;
-
-        /// <summary>
-        /// The width of the map.
-        /// </summary>
-        public int Width { get; }
-
-        /// <summary>
-        /// The height of the map.
-        /// </summary>
-        public int Height { get; }
 
         /// <summary>
         /// Instance of the FOV translator
@@ -43,13 +40,13 @@ namespace SadConsole.Maps
 
         public List<Region> Regions;
 
-        public Tile this[int index]
+        public new Tile this[int index]
         {
             get => Tiles[index];
-            set => SetupTile(value, new Point(index % Width, index / Width));
+            set => SetupTile(value, index.ToPoint(Width));
         }
 
-        public Tile this[int x, int y]
+        public new Tile this[int x, int y]
         {
             get => Tiles[Helpers.GetIndexFromPoint(x, y, Width)];
             set => SetupTile(value, new Point(x, y));
@@ -58,7 +55,7 @@ namespace SadConsole.Maps
         public Tile this[Coord position]
         {
             get => Tiles[position.ToIndex(Width)];
-            set => SetupTile(value, position.ToPoint());
+            set => SetupTile(value, position);
         }
 
         public Tile this[Point position]
@@ -73,13 +70,14 @@ namespace SadConsole.Maps
         /// <param name="width">The total width of the map.</param>
         /// <param name="height">The total height of the map.</param>
         /// <param name="defaultTileBlueprint">The tile blueprint used to fill the map.</param>
-        public Map(int width, int height, string defaultTileBlueprint = "wall")
+        public MapConsole(int width, int height, string defaultTileBlueprint = "wall"): base(width, height)
         {
             Width = width;
             Height = height;
             
             // Create our tiles for the map
             Tiles = new Tile[width * height];
+
             Regions = new List<Region>();
 
             // Be efficient by not using factory.Create each tile below. Instead, get the blueprint and use that to create each tile.
@@ -93,8 +91,14 @@ namespace SadConsole.Maps
                 Tiles[i].TileChanged += SimpleMap_TileChanged;
             }
 
+            Cells = Tiles;
+            OnCellsReset();
+
             // Instance of the FOV translator.
             MapToFOV = new TranslationFOV(this);
+
+            GameObjects = new Components.EntityManager();
+            Components.Add(GameObjects);
         }
 
         private void SetupTile(Tile tile, Point position)
@@ -108,14 +112,7 @@ namespace SadConsole.Maps
         }
 
         private void SimpleMap_TileChanged(object sender, EventArgs e) => MapTileChanged?.Invoke(this, new TileChangedEventArgs(this, (Tile)sender));
-
-        /// <summary>
-        /// Returns <see cref="SadConsole.GameObjects.GameObjectBase"/> by position.
-        /// </summary>
-        /// <param name="position">The position of the <see cref="SadConsole.GameObjects.GameObjectBase"/>.</param>
-        /// <returns>The <see cref="SadConsole.GameObjects.GameObjectBase"/> at the position, otherwise null.</returns>
-        public GameObjects.GameObjectBase GetGameObject(Point position) => GameObjects.GetItem(position.ToCoord());
-
+        
         /// <summary>
         /// Gets a tile from the map.
         /// </summary>
@@ -173,19 +170,6 @@ namespace SadConsole.Maps
                     return foundTile;
             }
         }
-
-        /// <summary>
-        /// Gets the array of tiles for this map. Do not modify this array.
-        /// </summary>
-        /// <remarks>
-        /// This array is the same array used by the map. However, changing tiles in this array does not inform this map that a tile changed.
-        /// </remarks>
-        public void SyncToSurface(in ScrollingConsole console)
-        {
-            console.SetSurface(Tiles, Width, Height);
-            ViewPort = console;
-            GameObjects = new GameObjects.GameObjectManager(console);
-        }
         
         /// <summary>
         /// Translates FOV values between GoRogue and our game tiles.
@@ -201,7 +185,7 @@ namespace SadConsole.Maps
             }
         }
 
-        public IEnumerator<Tile> GetEnumerator()
+        public new IEnumerator<Tile> GetEnumerator()
         {
             return new List<Tile>(Tiles).GetEnumerator();
         }
@@ -224,9 +208,9 @@ namespace SadConsole.Maps
             /// <summary>
             /// The map that owns the tile.
             /// </summary>
-            public readonly Map Map;
+            public readonly MapConsole Map;
 
-            public TileChangedEventArgs(Map map, Tile tile)
+            public TileChangedEventArgs(MapConsole map, Tile tile)
             {
                 Map = map;
                 Tile = tile;

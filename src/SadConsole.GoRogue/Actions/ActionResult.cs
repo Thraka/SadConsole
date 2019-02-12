@@ -11,13 +11,31 @@ namespace SadConsole.Actions
     /// </summary>
     public struct ActionResult
     {
-        public static readonly ActionResult Empty = new ActionResult(false);
+        /// <summary>
+        /// A success result without any supplemental data.
+        /// </summary>
         public static readonly ActionResult Success = new ActionResult(true);
-        public static readonly ActionResult Failure = Empty;
 
+        /// <summary>
+        /// A failure result withotu any supplemental data.
+        /// </summary>
+        public static readonly ActionResult Failure = new ActionResult(false);
+
+        /// <summary>
+        /// When <see langword="true"/>, indicates that this result was successful; otherwise <see langword="false"/>
+        /// </summary>
         public readonly bool IsSuccess;
+
+        /// <summary>
+        /// A user supplied value to dictate more information or state that is associated with this result.
+        /// </summary>
         public readonly int Data;
 
+        /// <summary>
+        /// Creates a new <see cref="ActionResult"/> with the specified success value.
+        /// </summary>
+        /// <param name="success">Indicates that this result was succesful or not.</param>
+        /// <param name="data">Supplemental data associated with the result.</param>
         public ActionResult(bool success, int data = 0)
         {
             IsSuccess = success;

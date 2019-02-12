@@ -9,7 +9,7 @@ namespace BasicTutorial.Maps.Generators
 {
     public static class DoorGenerator
     {
-        public static void Generate(SadConsole.Maps.Map map, IEnumerable<Region> rooms, string doorBlueprint, int leaveFloorAloneChance = 20)
+        public static void Generate(SadConsole.Maps.MapConsole map, IEnumerable<Region> rooms, string doorBlueprint, int leaveFloorAloneChance = 20)
         {
             bool PercentageCheck(int outOfHundred) => outOfHundred != 0 && GoRogue.Random.SingletonRandom.DefaultRNG.Next(101) < outOfHundred;
 
