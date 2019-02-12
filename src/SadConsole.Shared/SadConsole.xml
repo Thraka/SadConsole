@@ -1730,6 +1730,20 @@
             <param name="string2">The right-side of the string.</param>
             <returns></returns>
         </member>
+        <member name="T:SadConsole.Components.EntityViewSyncComponent">
+            <summary>
+            Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.EntityViewSyncComponent.Update(SadConsole.Console,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.EntityViewSyncComponent.OnAdded(SadConsole.Console)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.EntityViewSyncComponent.OnRemoved(SadConsole.Console)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Console">
             <summary>
             A <see cref="T:SadConsole.CellSurface"/> that has a font and can be drawn to the screen.
@@ -3078,6 +3092,11 @@
             InputBox control that allows text input.
             </summary>
         </member>
+        <member name="F:SadConsole.Controls.TextBox.PasswordChar">
+            <summary>
+            Mask input with a certain character.
+            </summary>
+        </member>
         <member name="F:SadConsole.Controls.TextBox.IsCaretVisible">
             <summary>
             Indicates the caret is visible.
@@ -4073,272 +4092,6 @@
             </summary>
             <param name="entity">The entity associated with the event.</param>
             <param name="oldPosition">The position the entity moved from.</param>
-        </member>
-        <member name="T:SadConsole.Entities.EntityManager">
-            <summary>
-            Manages one or more <see cref="T:SadConsole.Entities.Entity"/> objects in relation to a <see cref="T:SadConsole.Console"/> and provides events for <see cref="T:SadConsole.Entities.Hotspot"/> and <see cref="T:SadConsole.Entities.Zone"/> interactions.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Entities.EntityManager.EnterHotspot">
-            <summary>
-            An event to indicate that an entity entered a hotspot.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Entities.EntityManager.ExitHotspot">
-            <summary>
-            An event to indicate that an entity exited a hotspot.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Entities.EntityManager.EnterZone">
-            <summary>
-            An event to indicate that an entity entered a zone.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Entities.EntityManager.ExitZone">
-            <summary>
-            An event to indicate that an entity exited a zone.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Entities.EntityManager.MoveZone">
-            <summary>
-            An event to indicate that an entity moved within a zone.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Entities.EntityManager.EntityMoved">
-            <summary>
-            An event to indicate that an entity moved.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.EntityManager.HasViewport">
-            <summary>
-            When <see langword="true"/>, indicates that the attached console is <see cref="T:SadConsole.ScrollingConsole"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.EntityManager.Entities">
-            <summary>
-            The entities this manager manages.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.EntityManager.Zones">
-            <summary>
-            The entities this manager manages.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.EntityManager.Hotspots">
-            <summary>
-            The entities this manager manages.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.#ctor">
-            <summary>
-            Creates a new entity manager.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.Draw(SadConsole.Console,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.Update(SadConsole.Console,System.TimeSpan)">
-            <summary>
-            Syncs all entity positions and visibility with the component host.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.ProcessKeyboard(SadConsole.Console,SadConsole.Input.Keyboard,System.Boolean@)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.ProcessMouse(SadConsole.Console,SadConsole.Input.MouseConsoleState,System.Boolean@)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnAdded(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnRemoved(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.DisableEntity(SadConsole.Entities.Entity)">
-            <summary>
-            Prevents an entity from being processed with the <see cref="P:SadConsole.Entities.EntityManager.Hotspots"/> and <see cref="P:SadConsole.Entities.EntityManager.Zones"/>.
-            </summary>
-            <param name="entity">The entity to disable.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.EnableEntity(SadConsole.Entities.Entity)">
-            <summary>
-            Enables the entity to be processed with with the <see cref="P:SadConsole.Entities.EntityManager.Hotspots"/> and <see cref="P:SadConsole.Entities.EntityManager.Zones"/>.
-            </summary>
-            <param name="entity">The entity to disable.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.IsEntityDisabled(SadConsole.Entities.Entity)">
-            <summary>
-            Returns <see langword="true"/> when the entity has been disabled by <see cref="M:SadConsole.Entities.EntityManager.DisableEntity(SadConsole.Entities.Entity)"/>; otherwise <see langword="false"/>.
-            </summary>
-            <param name="entity">The entity to check.</param>
-            <returns><see langword="true"/> when the entity is disabled.</returns>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityAdded(SadConsole.Console,SadConsole.Entities.Entity)">
-            <summary>
-            Called when an entity is added to the manager.
-            </summary>
-            <param name="host">The console this manager is attached to.</param>
-            <param name="entity">The entity added.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityRemoved(SadConsole.Console,SadConsole.Entities.Entity)">
-            <summary>
-            Called when an entity is removed from the manager.
-            </summary>
-            <param name="host">The console this manager is attached to.</param>
-            <param name="entity">The entity removed.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityEnterHotspot(SadConsole.Console,SadConsole.Entities.Hotspot,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Called when an entity enters a hotspot.
-            </summary>
-            <param name="host">The host console that the hotspot and entity share.</param>
-            <param name="hotspot">The hotspot the entity entered.</param>
-            <param name="entity">The entity that entered a hotspot.</param>
-            <param name="triggeredPosition">The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/>.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityExitHotspot(SadConsole.Console,SadConsole.Entities.Hotspot,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Called when an entity exits a hotspot.
-            </summary>
-            <param name="host">The host console that the hotspot and entity share.</param>
-            <param name="hotspot">The hotspot the entity exited.</param>
-            <param name="entity">The entity that exited a hotspot.</param>
-            <param name="triggeredPosition">The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/>.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityEnterZone(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Called when an entity enters a zone.
-            </summary>
-            <param name="host">The host console that the zone and entity share.</param>
-            <param name="zone">The zone the entity entered.</param>
-            <param name="entity">The entity that entered the zone.</param>
-            <param name="triggeredPosition">The position the entity entered.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityExitZone(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Called when an entity enters a zone.
-            </summary>
-            <param name="host">The host console that the zone and entity share.</param>
-            <param name="zone">The zone the entity exited.</param>
-            <param name="entity">The entity that exited the zone.</param>
-            <param name="triggeredPosition">The new position the entity left.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityMoveZone(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Called when an entity moves within a zone.
-            </summary>
-            <param name="host">The host console that the zone and entity share.</param>
-            <param name="zone">The zone the entity moved in.</param>
-            <param name="entity">The entity that moved in the zone.</param>
-            <param name="newPosition">The position the entity moved to.</param>
-            <param name="oldPosition">The position the entity moved from.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.OnEntityMoved(SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Creates a new event args for the entity movement.
-            </summary>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="newPosition">The position the entity moved to.</param>
-            <param name="oldPosition">The position the entity moved from.</param>
-        </member>
-        <member name="T:SadConsole.Entities.EntityManager.HotspotEventArgs">
-            <summary>
-            Contains event data for a <see cref="F:SadConsole.Entities.EntityManager.HotspotEventArgs.Hotspot"/> and <see cref="F:SadConsole.Entities.EntityManager.HotspotEventArgs.Entity"/> interaction.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.HotspotEventArgs.Hotspot">
-            <summary>
-            The hotspot associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.HotspotEventArgs.Entity">
-            <summary>
-            The entity associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.HotspotEventArgs.Host">
-            <summary>
-            The host console that the hotspot and entity share.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.HotspotEventArgs.TriggeredPosition">
-            <summary>
-            The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/> associated with the event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.HotspotEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Hotspot,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Creates a new event args for a hotspot interaction.
-            </summary>
-            <param name="host">The host console that the hotspot and entity share.</param>
-            <param name="hotspot">The hotspot associated with the event.</param>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="triggeredPosition">The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/> associated with the event.</param>
-        </member>
-        <member name="T:SadConsole.Entities.EntityManager.ZoneEventArgs">
-            <summary>
-            Contains event data for a <see cref="F:SadConsole.Entities.EntityManager.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.EntityManager.ZoneEventArgs.Entity"/> interaction.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.ZoneEventArgs.Zone">
-            <summary>
-            The zone associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.ZoneEventArgs.Entity">
-            <summary>
-            The entity associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.ZoneEventArgs.Host">
-            <summary>
-            The host console that the zone and entity share.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.ZoneEventArgs.TriggeredPosition">
-            <summary>
-            The position within the zone associated with the event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.ZoneEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Creates a new event args for a zone interaction.
-            </summary>
-            <param name="host">The host console that the zone and entity share.</param>
-            <param name="zone">The zone associated with the event.</param>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
-        </member>
-        <member name="T:SadConsole.Entities.EntityManager.ZoneMoveEventArgs">
-            <summary>
-            Contains event data for a <see cref="T:SadConsole.Entities.Zone"/> and <see cref="T:SadConsole.Entities.Entity"/> interaction.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityManager.ZoneMoveEventArgs.MovedFromPosition">
-            <summary>
-            The position within the zone that the entity moved from.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityManager.ZoneMoveEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,Microsoft.Xna.Framework.Point,Microsoft.Xna.Framework.Point)">
-            <summary>
-            Creates a new event args for a zone movement event.
-            </summary>
-            <param name="host">The host console that the zone and entity share.</param>
-            <param name="zone">The zone associated with the event.</param>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
-            <param name="movedFromPosition">The position within the zone that the entity moved from.</param>
-        </member>
-        <member name="T:SadConsole.Entities.EntityViewSyncComponent">
-            <summary>
-            Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityViewSyncComponent.Update(SadConsole.Console,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityViewSyncComponent.OnAdded(SadConsole.Console)">
-            <inheritdoc />
         </member>
         <member name="T:SadConsole.Entities.Hotspot">
             <summary>
@@ -7881,6 +7634,14 @@
             </summary>
             <param name="item">The string to convert</param>
             <returns>The converted boolean value, otherwise false.</returns>
+        </member>
+        <member name="M:System.StringExtensions.Masked(System.String,System.String)">
+            <summary>
+            Returns a string of mask characters the same length as the input string.
+            </summary>
+            <param name="toMask">The string to mask.</param>
+            <param name="mask">The mask to use.</param>
+            <returns>A string of masks.</returns>
         </member>
     </members>
 </doc>
