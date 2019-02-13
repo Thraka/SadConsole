@@ -11,6 +11,7 @@ namespace SadConsole
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using SadConsole.Components;
 
     /// <summary>
     /// A <see cref="CellSurface"/> that has a font and can be drawn to the screen.
@@ -439,6 +440,11 @@ namespace SadConsole
                     if (!ComponentsMouse.Contains(component))
                         ComponentsMouse.Add(component);
                 }
+
+                ComponentsDraw.Sort(CompareComponent);
+                ComponentsUpdate.Sort(CompareComponent);
+                ComponentsKeyboard.Sort(CompareComponent);
+                ComponentsMouse.Sort(CompareComponent);
             }
 
             void FilterRemoveItem(IConsoleComponent component)
@@ -466,6 +472,11 @@ namespace SadConsole
                     if (!ComponentsMouse.Contains(component))
                         ComponentsMouse.Remove(component);
                 }
+
+                ComponentsDraw.Sort(CompareComponent);
+                ComponentsUpdate.Sort(CompareComponent);
+                ComponentsKeyboard.Sort(CompareComponent);
+                ComponentsMouse.Sort(CompareComponent);
             }
 
             int CompareComponent(IConsoleComponent left, IConsoleComponent right)

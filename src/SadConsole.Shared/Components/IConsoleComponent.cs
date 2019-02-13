@@ -1,7 +1,7 @@
 ﻿using SadConsole.Input;
 using System;
 
-namespace SadConsole
+namespace SadConsole.Components
 {
     /// <summary>
     /// A component that can be added to a <see cref="Console"/>.
