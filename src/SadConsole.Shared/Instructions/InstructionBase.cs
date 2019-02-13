@@ -1,7 +1,7 @@
 ﻿namespace SadConsole.Instructions
 {
     using System;
-    using System.Runtime.Serialization;
+    using SadConsole.Components;
     
     /// <summary>
     /// Base class for all instructions.
