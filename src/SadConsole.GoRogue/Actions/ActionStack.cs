@@ -3,14 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SadConsole.Components;
+using SadConsole.Input;
 
 namespace SadConsole.Actions
 {
     /// <summary>
     /// A stack of <see cref="ActionBase"/> objects. As each <see cref="ActionBase.IsFinished"/> boolean is set, the action will be automatically removed from the stack.
     /// </summary>
-    public class ActionStack : Stack<ActionBase>
+    public class ActionStack : Stack<ActionBase>, SadConsole.Components.IConsoleComponent
     {
+        int IConsoleComponent.SortOrder => ComponentSortOrder;
+
+        bool IConsoleComponent.IsUpdate => true;
+
+        bool IConsoleComponent.IsDraw => false;
+
+        bool IConsoleComponent.IsMouse => false;
+
+        bool IConsoleComponent.IsKeyboard => false;
+
+        public int ComponentSortOrder { get; set; }
+
         /// <summary>
         /// Pushes the action to the stack and immediently calls <see cref="ActionBase.Run(TimeSpan)"/>. Removes it if it finishes.
         /// </summary>
@@ -47,5 +61,26 @@ namespace SadConsole.Actions
             if (Count != 0)
                 Peek().Run(timeElapsed);
         }
+
+        void IConsoleComponent.Draw(Console console, TimeSpan delta)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IConsoleComponent.OnAdded(Console console) { }
+
+        void IConsoleComponent.OnRemoved(Console console) { }
+
+        void IConsoleComponent.ProcessKeyboard(Console console, Keyboard info, out bool handled)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IConsoleComponent.ProcessMouse(Console console, MouseConsoleState state, out bool handled)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IConsoleComponent.Update(Console console, TimeSpan delta) => Run(delta);
     }
 }

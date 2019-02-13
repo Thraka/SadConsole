@@ -29,7 +29,7 @@ namespace BasicTutorial
             // Setup map
             Map = map;
             Map.Position = ScreenRegionMap.Location;
-            Map.ViewPort = ScreenRegionMap;
+            Map.ViewPort = new Rectangle(0, 0, ScreenRegionMap.Width, ScreenRegionMap.Height);
 
             // Setup actions
             ActionProcessor = new SadConsole.Actions.ActionStack();
