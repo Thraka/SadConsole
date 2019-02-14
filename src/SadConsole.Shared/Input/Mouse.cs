@@ -15,7 +15,7 @@ namespace SadConsole.Input
     {
         private TimeSpan _leftLastClickedTime;
         private TimeSpan _rightLastClickedTime;
-        private Console lastMouseConsole;
+        private Console _lastMouseConsole;
 
         /// <summary>
         /// The pixel position of the mouse on the screen.
@@ -152,11 +152,11 @@ namespace SadConsole.Input
         public virtual void Process()
         {
             // Check if last mouse was marked exclusive
-            if (lastMouseConsole != null && lastMouseConsole.IsExclusiveMouse)
+            if (_lastMouseConsole != null && _lastMouseConsole.IsExclusiveMouse)
             {
-                var state = new MouseConsoleState(lastMouseConsole, this);
+                var state = new MouseConsoleState(_lastMouseConsole, this);
 
-                lastMouseConsole.ProcessMouse(state);
+                _lastMouseConsole.ProcessMouse(state);
             }
 
             // Check if the focused input console wants exclusive mouse
@@ -165,15 +165,15 @@ namespace SadConsole.Input
                 var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
 
                 // if the last console to have the mouse is not our global, signal
-                if (lastMouseConsole != null && lastMouseConsole != Global.FocusedConsoles.Console)
+                if (_lastMouseConsole != null && _lastMouseConsole != Global.FocusedConsoles.Console)
                 {
-                    lastMouseConsole.LostMouse(state);
-                    lastMouseConsole = null;
+                    _lastMouseConsole.LostMouse(state);
+                    _lastMouseConsole = null;
                 }
 
                 Global.FocusedConsoles.Console.ProcessMouse(state);
 
-                lastMouseConsole = Global.FocusedConsoles.Console;
+                _lastMouseConsole = Global.FocusedConsoles.Console;
             }
 
             // Scan through each "console" in the current screen, including children.
@@ -194,17 +194,17 @@ namespace SadConsole.Input
 
                     if (consoles[i].ProcessMouse(state))
                     {
-                        if (lastMouseConsole != null && lastMouseConsole != consoles[i])
-                            lastMouseConsole.LostMouse(state);
+                        if (_lastMouseConsole != null && _lastMouseConsole != consoles[i])
+                            _lastMouseConsole.LostMouse(state);
 
                         foundMouseTarget = true;
-                        lastMouseConsole = consoles[i];
+                        _lastMouseConsole = consoles[i];
                         break;
                     }
                 }
 
                 if (!foundMouseTarget)
-                    lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
+                    _lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
             }
 
         }
@@ -218,6 +218,15 @@ namespace SadConsole.Input
             {
                 GetConsoles(child, ref list);
             }
+        }
+
+        /// <summary>
+        /// Unlocks the last console the mouse was locked to. Allows another conosle to become locked to the mouse.
+        /// </summary>
+        public void ClearLastMouseConsole()
+        {
+            _lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
+            _lastMouseConsole = null;
         }
 
         /// <summary>

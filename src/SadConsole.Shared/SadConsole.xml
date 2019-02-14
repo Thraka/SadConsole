@@ -5184,6 +5184,11 @@
             Builds information about the mouse state based on the <see cref="F:SadConsole.Global.FocusedConsoles"/> or <see cref="P:SadConsole.Global.CurrentScreen"/>. Should be called each frame.
             </summary>
         </member>
+        <member name="M:SadConsole.Input.Mouse.ClearLastMouseConsole">
+            <summary>
+            Unlocks the last console the mouse was locked to. Allows another conosle to become locked to the mouse.
+            </summary>
+        </member>
         <member name="M:SadConsole.Input.Mouse.IsMouseOverConsole(SadConsole.ScrollingConsole)">
             <summary>
             Returns true when the mouse is currently over the provided console.

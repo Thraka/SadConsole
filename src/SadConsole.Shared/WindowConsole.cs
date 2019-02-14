@@ -298,6 +298,7 @@ namespace SadConsole
             {
                 Global.FocusedConsoles.Push(this);
                 IsFocused = true;
+                Global.MouseState.ClearLastMouseConsole();
             }
         }
 
