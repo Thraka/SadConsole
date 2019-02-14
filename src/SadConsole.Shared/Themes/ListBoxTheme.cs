@@ -75,7 +75,6 @@ namespace SadConsole.Themes
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
 
-            DrawBorder = true;
             ScrollBarTheme?.RefreshTheme(themeColors);
             ItemTheme?.RefreshTheme(themeColors);
             BorderTheme = new ThemeStates(themeColors);
@@ -123,6 +122,8 @@ namespace SadConsole.Themes
                 columnEnd = listbox.Width;
                 listbox.Surface.Fill(borderAppearance.Foreground, borderAppearance.Background, 0, null);
             }
+
+            ShowHideScrollBar(listbox);
 
             int offset = listbox.IsScrollBarVisible ? listbox.ScrollBar.Value : 0;
             for (int i = 0; i < endingRow; i++)
@@ -185,6 +186,25 @@ namespace SadConsole.Themes
                 BorderLineStyle = (int[])BorderLineStyle.Clone(),
                 DrawBorder = DrawBorder,
             };
+        }
+
+        public void ShowHideScrollBar(ListBox control)
+        {
+            var heightOffset = DrawBorder ? 2 : 0;
+
+            // process the scroll bar
+            var scrollbarItems = control.Items.Count - (control.Height - heightOffset);
+
+            if (scrollbarItems > 0)
+            {
+                control.ScrollBar.Maximum = scrollbarItems;
+                control.IsScrollBarVisible = true;
+            }
+            else
+            {
+                control.ScrollBar.Maximum = 0;
+                control.IsScrollBarVisible = false;
+            }
         }
     }
 

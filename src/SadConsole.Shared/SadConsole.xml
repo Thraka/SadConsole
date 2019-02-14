@@ -3107,7 +3107,7 @@
         </member>
         <member name="P:SadConsole.Controls.ListBox.IsScrollBarVisible">
             <summary>
-            Used in rendering.
+            Internal use only; used in rendering.
             </summary>
         </member>
         <member name="P:SadConsole.Controls.ListBox.ScrollBar">
@@ -3128,11 +3128,6 @@
         <member name="P:SadConsole.Controls.ListBox.CompareByReference">
             <summary>
             When the <see cref="P:SadConsole.Controls.ListBox.SelectedItem"/> changes, and this property is true, objects will be compared by reference. If false, they will be compared by value.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Controls.ListBox.HideBorder">
-            <summary>
-            When set to true, does not render the border.
             </summary>
         </member>
         <member name="M:SadConsole.Controls.ListBox.#ctor(System.Int32,System.Int32)">

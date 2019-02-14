@@ -23,7 +23,6 @@ namespace SadConsole.Controls
             }
         }
 
-        protected bool hideBorder;
         protected bool initialized;
         [DataMember(Name="SelectedIndex")]
         protected int selectedIndex;
@@ -42,9 +41,9 @@ namespace SadConsole.Controls
         public event EventHandler<SelectedItemEventArgs> SelectedItemExecuted;
 
         /// <summary>
-        /// Used in rendering.
+        /// Internal use only; used in rendering.
         /// </summary>
-        public bool IsScrollBarVisible { get; private set; }
+        public bool IsScrollBarVisible { get; set; }
 
         /// <summary>
         /// Used in rendering.
@@ -67,23 +66,7 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember]
         public bool CompareByReference { get; set; }
-
-        /// <summary>
-        /// When set to true, does not render the border.
-        /// </summary>
-        [DataMember]
-        public bool HideBorder
-        {
-            get => hideBorder;
-            set
-            {
-                hideBorder = value;
-                ShowHideScrollBar();
-                IsDirty = true;
-            }
-        }
         
-
         [DataMember]
         public ObservableCollection<object> Items { get; private set; }
 
@@ -223,28 +206,7 @@ namespace SadConsole.Controls
             if (SelectedItem != null && !Items.Contains(selectedItem))
                 SelectedItem = null;
 
-            ShowHideScrollBar();
-
             this.IsDirty = true;
-        }
-
-        private void ShowHideScrollBar()
-        {
-            var heightOffset = hideBorder ? 0 : 2;
-
-            // process the scroll bar
-            var scrollbarItems = Items.Count - (Height - heightOffset);
-
-            if (scrollbarItems > 0)
-            {
-                ScrollBar.Maximum = scrollbarItems;
-                IsScrollBarVisible = true;
-            }
-            else
-            {
-                ScrollBar.Maximum = 0;
-                IsScrollBarVisible = false;
-            }
         }
         
         public override bool ProcessKeyboard(Input.Keyboard info)
@@ -299,9 +261,9 @@ namespace SadConsole.Controls
         {
             base.OnMouseIn(state);
 
-            var rowOffset = hideBorder ? 0 : 1;
-            var rowOffsetReverse = hideBorder ? 1 : 0;
-            var columnOffsetEnd = IsScrollBarVisible || !hideBorder ? 1 : 0;
+            var rowOffset = ((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
+            var rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
+            var columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
@@ -331,9 +293,9 @@ namespace SadConsole.Controls
             bool doubleClicked = (click - leftMouseLastClick).TotalSeconds <= 0.5;
             leftMouseLastClick = click;
 
-            int rowOffset = hideBorder ? 0 : 1;
-            int rowOffsetReverse = hideBorder ? 1 : 0;
-            int columnOffsetEnd = IsScrollBarVisible || !hideBorder ? 1 : 0;
+            int rowOffset = ((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
+            int rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
+            int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
