@@ -263,7 +263,7 @@ namespace SadConsole.Controls
 
             var rowOffset = ((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
             var rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
-            var columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
+            var columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
@@ -278,6 +278,8 @@ namespace SadConsole.Controls
                 {
                     RelativeIndexMouseOver = mouseControlPosition.Y - rowOffset;
                 }
+                else
+                    RelativeIndexMouseOver = -1;
             }
             else
             {
@@ -295,7 +297,7 @@ namespace SadConsole.Controls
 
             int rowOffset = ((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
             int rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
-            int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
+            int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
 
             Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
 
