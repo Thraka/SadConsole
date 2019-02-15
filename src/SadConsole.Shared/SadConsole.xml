@@ -7088,11 +7088,6 @@
             <param name="height">The height of the window in cells.</param>
             <param name="font">THe font to use with the window.</param>
         </member>
-        <member name="M:SadConsole.Window.OnVisibleChanged">
-            <summary>
-            Depending on if the window is visible, calls <see cref="M:SadConsole.Window.Show(System.Boolean)"/> or <see cref="M:SadConsole.Window.Hide"/>.
-            </summary>
-        </member>
         <member name="M:SadConsole.Window.Draw(System.TimeSpan)">
             <inheritdoc />
         </member>
@@ -7109,6 +7104,11 @@
             Processes the keyboard looking for the ESC key press to close the console, if required. Otherwise the base ControlsConsole will process the keyboard.
             </summary>
             <param name="info">Keyboard state.</param>
+        </member>
+        <member name="M:SadConsole.Window.OnVisibleChanged">
+            <summary>
+            Depending on if the window is visible, calls <see cref="M:SadConsole.Window.Show(System.Boolean)"/> or <see cref="M:SadConsole.Window.Hide"/>.
+            </summary>
         </member>
         <member name="M:SadConsole.Window.Show">
             <summary>

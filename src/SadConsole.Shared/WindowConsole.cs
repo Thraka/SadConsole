@@ -254,6 +254,9 @@ namespace SadConsole
         protected override void OnVisibleChanged()
         {
             base.OnVisibleChanged();
+
+            if (_isVisibleProcessing) return;
+
             _isVisibleProcessing = true;
             if (IsVisible)
                 Show();
@@ -285,6 +288,7 @@ namespace SadConsole
             if (IsVisible && !_isVisibleProcessing)
                 return;
 
+            _isVisibleProcessing = true;
             IsVisible = true;
 
             IsExclusiveMouse = IsModal = modal;
@@ -304,6 +308,7 @@ namespace SadConsole
                 IsFocused = true;
                 Global.MouseState.ClearLastMouseConsole();
             }
+            _isVisibleProcessing = false;
         }
 
         /// <summary>
@@ -313,6 +318,7 @@ namespace SadConsole
         {
             if (!IsVisible && !_isVisibleProcessing) return;
 
+            _isVisibleProcessing = true;
             IsVisible = false;
             IsExclusiveMouse = false;
 
@@ -323,6 +329,7 @@ namespace SadConsole
                 Parent = null;
 
             Closed?.Invoke(this, new EventArgs());
+            _isVisibleProcessing = false;
         }
 
         /// <summary>
