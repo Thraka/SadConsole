@@ -35,6 +35,8 @@ namespace SadConsole
         [DataMember(Name="TitleAlignment")]
         private HorizontalAlignment _titleAlignment;
 
+        private bool _isVisibleProcessing;
+
         /// <summary>
         /// The mouse state of the previous update frame.
         /// </summary>
@@ -153,20 +155,7 @@ namespace SadConsole
             CanDrag = true;
             MoveToFrontOnMouseClick = true;
         }
-
-        /// <summary>
-        /// Depending on if the window is visible, calls <see cref="Show(bool)"/> or <see cref="Hide"/>.
-        /// </summary>
-        protected override void OnVisibleChanged()
-        {
-            base.OnVisibleChanged();
-
-            if (IsVisible)
-                Show(IsModalDefault);
-            else
-                Hide();
-        }
-
+        
         /// <inheritdoc />
         public override void Draw(TimeSpan drawTime)
         {
@@ -258,6 +247,20 @@ namespace SadConsole
             
             return base.ProcessKeyboard(info);
         }
+        
+        /// <summary>
+        /// Depending on if the window is visible, calls <see cref="Show(bool)"/> or <see cref="Hide"/>.
+        /// </summary>
+        protected override void OnVisibleChanged()
+        {
+            base.OnVisibleChanged();
+            _isVisibleProcessing = true;
+            if (IsVisible)
+                Show();
+            else
+                Hide();
+            _isVisibleProcessing = false;
+        }
 
         /// <summary>
         /// Displays this window using the modal value of the <see cref="IsModalDefault"/> property.
@@ -278,9 +281,10 @@ namespace SadConsole
                 Parent.Children.MoveToTop(this);
                 return;
             }
-
-            if (IsVisible)
+            
+            if (IsVisible && !_isVisibleProcessing)
                 return;
+
             IsVisible = true;
 
             IsExclusiveMouse = IsModal = modal;
@@ -307,6 +311,8 @@ namespace SadConsole
         /// </summary>
         public virtual void Hide()
         {
+            if (!IsVisible && !_isVisibleProcessing) return;
+
             IsVisible = false;
             IsExclusiveMouse = false;
 
