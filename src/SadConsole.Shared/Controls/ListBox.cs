@@ -329,8 +329,6 @@ namespace SadConsole.Controls
         {
             if (isEnabled)
             {
-                base.ProcessMouse(state);
-
                 if (isMouseOver)
                 {
                     var mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
@@ -339,7 +337,12 @@ namespace SadConsole.Controls
                     {
                         ScrollBar.ProcessMouse(state);
                     }
+                    else
+                        base.ProcessMouse(state);
                 }
+                else
+                    base.ProcessMouse(state);
+
             }
 
             return false;

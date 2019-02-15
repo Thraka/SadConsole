@@ -41,7 +41,7 @@ namespace SadConsole.Renderers
 
         public void RenderControlCells(ControlBase control, bool draw = false)
         {
-            if (!draw) return;
+            if (!draw || !control.IsVisible) return;
             //if (control.Surface.Tint.A == 255) return;
 
             if (control.Surface.DefaultBackground.A != 0)

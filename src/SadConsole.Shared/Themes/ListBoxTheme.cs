@@ -265,13 +265,19 @@ namespace SadConsole.Themes
 
         public ListBoxItemColorTheme() { }
         
-        public virtual void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
+        public override void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             if (item is Color || item is Tuple<Color, Color, string>)
             {
                 string value = new string(' ', area.Width - 2);
 
                 Cell cellLook = GetStateAppearance(itemState).Clone();
+
+                surface.Print(area.Left + 1, area.Top, value, cellLook);
+
+                surface.Print(area.Left, area.Top, " ", cellLook);
+                surface.Print(area.Left + area.Width - 1, area.Top, " ", cellLook);
+
 
                 if (item is Color color)
                 {
@@ -285,11 +291,8 @@ namespace SadConsole.Themes
                     value = ((Tuple<Color, Color, string>)item).Item3.Align(HorizontalAlignment.Left, area.Width - 2);
                     surface.Print(area.Left + 1, area.Top, value, cellLook);
                 }
-
-                surface.Print(area.Left, area.Top, " ", cellLook);
-                surface.Print(area.Left + area.Width - 1, area.Top, " ", cellLook);
-
-                if (itemState.HasFlag(ControlStates.Clicked))
+                
+                if (itemState.HasFlag(ControlStates.Selected))
                 {
                     surface.SetGlyph(area.Left, area.Top, 16);
                     surface.SetGlyph(area.Left + area.Width - 1, area.Top, 17);

@@ -447,6 +447,11 @@ namespace SadConsole
                     }
                 }
 
+            // This should be how you draw on a controlsconsole/window. But, Prompt windows draw from the outside...
+            // What to do?
+            //if (IsDirty)
+            //    Invalidate();
+
             base.Draw(update);
         }
 
