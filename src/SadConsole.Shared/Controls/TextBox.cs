@@ -44,7 +44,7 @@ namespace SadConsole.Controls
         /// The location of the caret.
         /// </summary>
         [DataMember(Name = "CaretPosition")]
-        protected int _caretPos;
+        private int _caretPos;
 
         /// <summary>
         /// The text value of the input box.
@@ -234,16 +234,21 @@ namespace SadConsole.Controls
         /// </summary>
         protected void PositionCursor()
         {
-            if (MaxLength != 0 && EditingText.Length > MaxLength)
+            if (MaxLength != 0)
             {
-                EditingText = EditingText.Substring(0, MaxLength);
-
-                if (EditingText.Length == MaxLength)
+                if (EditingText.Length >= MaxLength)
+                {
+                    EditingText = EditingText.Substring(0, MaxLength);
                     _caretPos = EditingText.Length - 1;
+                }
+                else
+                    _caretPos = EditingText.Length;
             }
+            else
+                _caretPos = EditingText.Length;
 
-			// Test to see if caret is off edge of box
-			if (_caretPos >= Width)
+            // Test to see if caret is off edge of box
+            if (_caretPos >= Width)
 			{
 				LeftDrawOffset = EditingText.Length - Width + 1;
 
@@ -254,6 +259,9 @@ namespace SadConsole.Controls
 			{
 			    LeftDrawOffset = 0;
 			}
+
+            DetermineState();
+            IsDirty = true;
 		}
 
         /// <summary>
@@ -289,29 +297,37 @@ namespace SadConsole.Controls
 						if (_isNumeric)
 						{
                             if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
-								newText.Remove(newText.Length - 1, 1);
-
-							else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
-								DisableKeyboard = true;
+                                newText.Remove(newText.Length - 1, 1);
+                                _caretPos -= 1;
 
-								Text = EditingText;
+                                if (_caretPos == -1)
+                                    _caretPos = 0;
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Enter)
+                            {
+                                DisableKeyboard = true;
 
-								return true;
-							}
-							else if (info.KeysPressed[i].Key == Keys.Escape)
-							{
-								DisableKeyboard = true;
-								return true;
-							}
+                                Text = EditingText;
+                                PositionCursor();
+                                ValidateEdit();
+                                return true;
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Escape)
+                            {
+                                DisableKeyboard = true;
+                                PositionCursor();
+                                ValidateEdit();
+                                return true;
+                            }
 
-							else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
-							{
-								newText.Append(info.KeysPressed[i].Character);
-							}
+                            else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
+                            {
+                                newText.Append(info.KeysPressed[i].Character);
+                                _caretPos += 1;
+                            }
 
-							PositionCursor();
-						}
+                        }
 
 						else
 						{
@@ -405,8 +421,8 @@ namespace SadConsole.Controls
 
 					}
 	                EditingText = newText.ToString();
-
-					ValidateEdit();
+                    PositionCursor();
+                    ValidateEdit();
                 }
 
                 return true;

@@ -54,12 +54,18 @@ namespace SadConsole.Themes
         [DataMember]
         public Color ModalTint;
 
-        public WindowTheme(Colors themeColors) 
-            : base(themeColors)
+        /// <summary>
+        /// Creates a new controls console theme with the specified colors.
+        /// </summary>
+        /// <param name="themeColors">The colors used with this theme.</param>
+        public WindowTheme(Colors themeColors) : base(themeColors)
         {
 
         }
 
+        /// <summary>
+        /// Creates a new theme without specifying the colors.
+        /// </summary>
         protected WindowTheme() { }
 
         /// <summary>
@@ -81,6 +87,7 @@ namespace SadConsole.Themes
             };
         }
 
+        /// <inheritdoc />
         public override void Draw(ControlsConsole console, CellSurface hostSurface)
         {
             hostSurface.DefaultForeground = FillStyle.Foreground;
@@ -124,7 +131,8 @@ namespace SadConsole.Themes
             }
         }
 
-        public override void Refresh(Colors themeColors)
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
         {
             FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
             TitleStyle = new Cell(themeColors.TitleText, FillStyle.Background, FillStyle.Glyph);

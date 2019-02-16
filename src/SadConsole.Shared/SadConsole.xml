@@ -2654,6 +2654,9 @@
             Reorders the control collection based on the tab index of each control.
             </summary>
         </member>
+        <member name="M:SadConsole.ControlsConsole.OnDirtyChanged">
+            <inheritdoc />
+        </member>
         <member name="M:SadConsole.ControlsConsole.Invalidate">
             <summary>
             Signals that the console should be considered dirty and reapplies the <see cref="P:SadConsole.ControlsConsole.Theme"/>.
@@ -2964,6 +2967,12 @@
             Gets the latest theme from the parent's library unless a theme has been explicitly set.
             </summary>
         </member>
+        <member name="M:SadConsole.Controls.ControlBase.GetThemeColors">
+            <summary>
+            Gets the theme colors associated with this control.
+            </summary>
+            <returns>Theme colors.</returns>
+        </member>
         <member name="M:SadConsole.Controls.ControlBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
             Called when the keyboard is used on this control.
@@ -3098,12 +3107,22 @@
             A simple surface for drawing text that can be moved and sized like a control.
             </summary>
         </member>
+        <member name="P:SadConsole.Controls.DrawingSurface.OnDraw">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:SadConsole.Controls.DrawingSurface.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new drawing surface control with the specified width and height.
             </summary>
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
+        </member>
+        <member name="P:SadConsole.Controls.ListBox.ItemTheme">
+            <summary>
+            The theme used by the listbox items.
+            </summary>
         </member>
         <member name="P:SadConsole.Controls.ListBox.IsScrollBarVisible">
             <summary>
@@ -6473,11 +6492,35 @@
             The style of of the console surface.
             </summary>
         </member>
+        <member name="M:SadConsole.Themes.ControlsConsoleTheme.#ctor(SadConsole.Themes.Colors)">
+            <summary>
+            Creates a new controls console theme with the specified colors.
+            </summary>
+            <param name="themeColors">The colors used with this theme.</param>
+        </member>
+        <member name="M:SadConsole.Themes.ControlsConsoleTheme.#ctor">
+            <summary>
+            Creates a new theme without specifying the colors.
+            </summary>
+        </member>
         <member name="M:SadConsole.Themes.ControlsConsoleTheme.Clone">
             <summary>
             Returns a clone of this object.
             </summary>
             <returns>The cloned object.</returns>
+        </member>
+        <member name="M:SadConsole.Themes.ControlsConsoleTheme.Draw(SadConsole.ControlsConsole,SadConsole.CellSurface)">
+            <summary>
+            Draws the theme to the console.
+            </summary>
+            <param name="console">Console associated with the theme.</param>
+            <param name="hostSurface">Surface used for drawing.</param>
+        </member>
+        <member name="M:SadConsole.Themes.ControlsConsoleTheme.RefreshTheme(SadConsole.Themes.Colors)">
+            <summary>
+            Updates the theme with a color scheme.
+            </summary>
+            <param name="themeColors">The colors to update with.</param>
         </member>
         <member name="T:SadConsole.Themes.DrawingSurfaceTheme">
             <summary>
@@ -6513,57 +6556,57 @@
             Colors for the theme library.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.ButtonTheme">
+        <member name="P:SadConsole.Themes.Library.ButtonTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.Button"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.SelectionButtonTheme">
+        <member name="P:SadConsole.Themes.Library.SelectionButtonTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.SelectionButton"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.ScrollBarTheme">
+        <member name="P:SadConsole.Themes.Library.ScrollBarTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.ScrollBar"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.RadioButtonTheme">
+        <member name="P:SadConsole.Themes.Library.RadioButtonTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.RadioButton"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.ListBoxTheme">
+        <member name="P:SadConsole.Themes.Library.ListBoxTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.ListBox"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.CheckBoxTheme">
+        <member name="P:SadConsole.Themes.Library.CheckBoxTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.CheckBox"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.TextBoxTheme">
+        <member name="P:SadConsole.Themes.Library.TextBoxTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.TextBox"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.ProgressBarTheme">
+        <member name="P:SadConsole.Themes.Library.ProgressBarTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Controls.ProgressBar"/> control.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.DrawingSurfaceTheme">
+        <member name="P:SadConsole.Themes.Library.DrawingSurfaceTheme">
             <summary>
             Theme for <see cref="T:SadConsole.Controls.DrawingSurface"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.ControlsConsoleTheme">
+        <member name="P:SadConsole.Themes.Library.ControlsConsoleTheme">
             <summary>
             Theme for <see cref="T:SadConsole.ControlsConsole"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.Library.WindowTheme">
+        <member name="P:SadConsole.Themes.Library.WindowTheme">
             <summary>
             Theme for the <see cref="T:SadConsole.Window"/> control.
             </summary>
@@ -6612,22 +6655,16 @@
             If false the border will not be drawn.
             </summary>
         </member>
-        <member name="F:SadConsole.Themes.ListBoxTheme.ItemTheme">
-            <summary>
-            The appearance of an item.
-            </summary>
-        </member>
         <member name="F:SadConsole.Themes.ListBoxTheme.ScrollBarTheme">
             <summary>
             The appearance of the scrollbar used by the listbox control.
             </summary>
         </member>
-        <member name="M:SadConsole.Themes.ListBoxTheme.#ctor(SadConsole.Themes.ScrollBarTheme,SadConsole.Themes.ListBoxItemTheme)">
+        <member name="M:SadConsole.Themes.ListBoxTheme.#ctor(SadConsole.Themes.ScrollBarTheme)">
             <summary>
             Creates a new theme used by the <see cref="T:SadConsole.Controls.ListBox"/>.
             </summary>
             <param name="scrollBarTheme">The theme to use to draw the scroll bar.</param>
-            <param name="itemTheme">The theme to draw each listbox item.</param>
         </member>
         <member name="M:SadConsole.Themes.ListBoxTheme.Attached(SadConsole.Controls.ControlBase)">
             <inheritdoc />
@@ -6949,11 +6986,28 @@
             The color to tint the background when the window is shown as modal.
             </summary>
         </member>
+        <member name="M:SadConsole.Themes.WindowTheme.#ctor(SadConsole.Themes.Colors)">
+            <summary>
+            Creates a new controls console theme with the specified colors.
+            </summary>
+            <param name="themeColors">The colors used with this theme.</param>
+        </member>
+        <member name="M:SadConsole.Themes.WindowTheme.#ctor">
+            <summary>
+            Creates a new theme without specifying the colors.
+            </summary>
+        </member>
         <member name="M:SadConsole.Themes.WindowTheme.Clone">
             <summary>
             Returns a clone of this object. <see cref="F:SadConsole.Themes.WindowTheme.BorderLineStyle"/> is referenced.
             </summary>
             <returns>The cloned object.</returns>
+        </member>
+        <member name="M:SadConsole.Themes.WindowTheme.Draw(SadConsole.ControlsConsole,SadConsole.CellSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Themes.WindowTheme.RefreshTheme(SadConsole.Themes.Colors)">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Timer">
             <summary>

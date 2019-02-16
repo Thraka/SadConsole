@@ -230,7 +230,7 @@ namespace SadConsole.Controls
                 }
             }
         }
-
+        
         /// <summary>
         /// The state of the control.
         /// </summary>
@@ -303,9 +303,7 @@ namespace SadConsole.Controls
 
             if (IsCustomTheme && ActiveTheme != null)
             {
-                var colors = ActiveTheme.Colors ?? Parent?.Theme.Colors ?? Themes.Library.Default.Colors;
-
-                ActiveTheme.RefreshTheme(colors);
+                ActiveTheme.RefreshTheme(GetThemeColors());
             }
             else
             {
@@ -314,6 +312,14 @@ namespace SadConsole.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the theme colors associated with this control.
+        /// </summary>
+        /// <returns>Theme colors.</returns>
+        public Themes.Colors GetThemeColors()
+        {
+            return ActiveTheme.Colors ?? Parent?.Theme.Colors ?? Themes.Library.Default.Colors;
+        }
 
         #region Input
         /// <summary>

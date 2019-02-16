@@ -14,11 +14,18 @@
         [DataMember]
         public Cell FillStyle;
 
+        /// <summary>
+        /// Creates a new controls console theme with the specified colors.
+        /// </summary>
+        /// <param name="themeColors">The colors used with this theme.</param>
         public ControlsConsoleTheme(Colors themeColors)
         {
-            Refresh(themeColors);
+            RefreshTheme(themeColors);
         }
 
+        /// <summary>
+        /// Creates a new theme without specifying the colors.
+        /// </summary>
         protected ControlsConsoleTheme() { }
 
         /// <summary>
@@ -32,6 +39,11 @@
             return newItem;
         }
 
+        /// <summary>
+        /// Draws the theme to the console.
+        /// </summary>
+        /// <param name="console">Console associated with the theme.</param>
+        /// <param name="hostSurface">Surface used for drawing.</param>
         public virtual void Draw(ControlsConsole console, CellSurface hostSurface)
         {
             hostSurface.DefaultForeground = FillStyle.Foreground;
@@ -39,7 +51,11 @@
             hostSurface.Fill(hostSurface.DefaultForeground, hostSurface.DefaultBackground, FillStyle.Glyph, null);
         }
 
-        public virtual void Refresh(Colors themeColors)
+        /// <summary>
+        /// Updates the theme with a color scheme.
+        /// </summary>
+        /// <param name="themeColors">The colors to update with.</param>
+        public virtual void RefreshTheme(Colors themeColors)
         {
             FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
         }

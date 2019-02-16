@@ -14,6 +14,8 @@ namespace SadConsole.Themes
     [DataContract]
     public class ListBoxTheme : ThemeBase
     {
+        private bool _updatedColors;
+
         /// <summary>
         /// The drawing theme for the boarder when <see cref="DrawBorder"/> is true.
         /// </summary>
@@ -33,12 +35,6 @@ namespace SadConsole.Themes
         public bool DrawBorder;
 
         /// <summary>
-        /// The appearance of an item.
-        /// </summary>
-        [DataMember]
-        public ListBoxItemTheme ItemTheme;
-
-        /// <summary>
         /// The appearance of the scrollbar used by the listbox control.
         /// </summary>
         [DataMember]
@@ -48,11 +44,9 @@ namespace SadConsole.Themes
         /// Creates a new theme used by the <see cref="ListBox"/>.
         /// </summary>
         /// <param name="scrollBarTheme">The theme to use to draw the scroll bar.</param>
-        /// <param name="itemTheme">The theme to draw each listbox item.</param>
-        public ListBoxTheme(ScrollBarTheme scrollBarTheme, ListBoxItemTheme itemTheme)
+        public ListBoxTheme(ScrollBarTheme scrollBarTheme)
         {
             ScrollBarTheme = scrollBarTheme;
-            ItemTheme = itemTheme;
         }
 
         /// <inheritdoc />
@@ -71,12 +65,12 @@ namespace SadConsole.Themes
         public override void RefreshTheme(Colors themeColors)
         {
             base.RefreshTheme(themeColors);
+            _updatedColors = true;
 
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
 
             ScrollBarTheme?.RefreshTheme(themeColors);
-            ItemTheme?.RefreshTheme(themeColors);
             BorderTheme = new ThemeStates(themeColors);
             BorderTheme.SetForeground(Normal.Foreground);
             BorderTheme.SetBackground(Normal.Background);
@@ -90,12 +84,17 @@ namespace SadConsole.Themes
 
             if (!listbox.IsDirty) return;
 
+            if (_updatedColors)
+            {
+                listbox.ItemTheme.RefreshTheme(Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors);
+                _updatedColors = false;
+            }
+
             int columnOffset;
             int columnEnd;
             int startingRow;
             int endingRow;
-
-
+            
             Cell appearance = GetStateAppearance(listbox.State);
             Cell scrollBarAppearance = ScrollBarTheme.GetStateAppearance(listbox.State);
             Cell borderAppearance = BorderTheme.GetStateAppearance(listbox.State);
@@ -148,7 +147,7 @@ namespace SadConsole.Themes
                     if (itemIndexRelative == listbox.SelectedIndex)
                         Helpers.SetFlag(ref state, ControlStates.Selected);
 
-                    ItemTheme.Draw(listbox.Surface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
+                    listbox.ItemTheme.Draw(listbox.Surface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
                 }
             }
 
@@ -173,7 +172,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone()
         {
-            return new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone(), (ListBoxItemTheme)ItemTheme.Clone())
+            return new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone())
             {
                 Colors = Colors?.Clone(),
                 Normal = Normal.Clone(),
@@ -215,6 +214,8 @@ namespace SadConsole.Themes
             
         }
 
+        public ListBoxItemTheme(): base(Library.Default.Colors) { }
+
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors)
         {
@@ -226,9 +227,7 @@ namespace SadConsole.Themes
             Selected.Foreground = themeColors.Appearance_ControlSelected.Foreground;
             MouseOver = themeColors.Appearance_ControlOver.Clone();
         }
-
-        protected ListBoxItemTheme() { }
-
+        
         public virtual void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             string value = item.ToString();
@@ -263,7 +262,7 @@ namespace SadConsole.Themes
             
         }
 
-        public ListBoxItemColorTheme() { }
+        public ListBoxItemColorTheme():base() { }
         
         public override void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
         {

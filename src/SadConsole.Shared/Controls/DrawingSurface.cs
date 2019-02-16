@@ -10,6 +10,11 @@
     public class DrawingSurface: ControlBase
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public Action<DrawingSurface> OnDraw { get; set; }
+
+        /// <summary>
         /// Creates a new drawing surface control with the specified width and height.
         /// </summary>
         /// <param name="width">Width of the control.</param>
@@ -18,13 +23,7 @@
         {
             base.TabStop = false;
         }
-
-        public override void Update(TimeSpan time)
-        {
-            base.Update(time);
-            //Surface.Update(time);
-        }
-
+        
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {

@@ -358,6 +358,7 @@ namespace SadConsole
                 control.Parent = null;
 
             ControlsList.Clear();
+            IsDirty = true;
         }
 
         /// <summary>
@@ -407,12 +408,19 @@ namespace SadConsole
             });
         }
 
+        /// <inheritdoc />
+        protected override void OnDirtyChanged()
+        {
+            foreach (var control in ControlsList)
+                control.IsDirty = true;
+        }
+
         /// <summary>
         /// Signals that the console should be considered dirty and reapplies the <see cref="Theme"/>.
         /// </summary>
         public virtual void Invalidate()
         {
-            Theme.ControlsConsoleTheme.Refresh(Theme.Colors);
+            Theme.ControlsConsoleTheme.RefreshTheme(Theme.Colors);
             Theme.ControlsConsoleTheme.Draw(this, this);
 
             IsDirty = true;
@@ -517,7 +525,8 @@ namespace SadConsole
 
                 else
                 {
-                    foreach (var control in ControlsList)
+                    var controls = ControlsList.ToList();
+                    foreach (var control in controls)
                     {
                         if (control.IsVisible && control.ProcessMouse(state))
                             break;

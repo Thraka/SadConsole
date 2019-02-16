@@ -32,6 +32,8 @@ namespace SadConsole.Themes
         {
             if (!control.IsDirty) return;
 
+            if (!(control is DrawingSurface drawingSurface)) return;
+
             Cell appearance;
 
             if (!UseNormalStateOnly)
@@ -56,6 +58,8 @@ namespace SadConsole.Themes
                 appearance = Normal;
 
             control.Surface.Fill(appearance.Foreground, appearance.Background, null);
+            drawingSurface?.OnDraw(drawingSurface);
+            control.IsDirty = false;
         }
 
         /// <inheritdoc />

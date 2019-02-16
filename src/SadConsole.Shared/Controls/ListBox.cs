@@ -39,6 +39,11 @@ namespace SadConsole.Controls
 
         public event EventHandler<SelectedItemEventArgs> SelectedItemChanged;
         public event EventHandler<SelectedItemEventArgs> SelectedItemExecuted;
+        
+        /// <summary>
+        /// The theme used by the listbox items.
+        /// </summary>
+        public ListBoxItemTheme ItemTheme { get; private set; }
 
         /// <summary>
         /// Internal use only; used in rendering.
@@ -141,7 +146,6 @@ namespace SadConsole.Controls
             set { scrollBarSizeAdjust = value; SetupScrollBar(); }
         }
 
-        #region Constructors
         /// <summary>
         /// Creates a new instance of the listbox control.
         /// </summary>
@@ -152,11 +156,16 @@ namespace SadConsole.Controls
             SetupScrollBar();
 
             Items = new ObservableCollection<object>();
-
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
-        }
-        #endregion
 
+            ItemTheme = new ListBoxItemTheme();
+        }
+
+        public ListBox(int width, int height, ListBoxItemTheme itemTheme): this(width, height)
+        {
+            ItemTheme = itemTheme;
+        }
+        
         protected override void OnParentChanged() => ScrollBar.Parent = this.Parent;
 
         private void _scrollbar_ValueChanged(object sender, EventArgs e) => this.IsDirty = true;

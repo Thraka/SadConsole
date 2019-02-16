@@ -9,6 +9,8 @@
     [DataContract]
     public class Library
     {
+        private Colors _colors;
+
         /// <summary>
         /// If a control does not specify its own theme, the theme from this property will be used.
         /// </summary>
@@ -18,74 +20,95 @@
         /// Colors for the theme library.
         /// </summary>
         [DataMember]
-        public Colors Colors { get; set; }
+        public Colors Colors
+        {
+            get => _colors;
+            set
+            {
+                if (_colors == null) throw new System.NullReferenceException("Colors cannot be set to null");
+                _colors = value;
+
+                ControlsConsoleTheme.RefreshTheme(value);
+                WindowTheme.RefreshTheme(value);
+
+                ScrollBarTheme.RefreshTheme(value);
+                ButtonTheme.RefreshTheme(value);
+                CheckBoxTheme.RefreshTheme(value);
+                ListBoxTheme.RefreshTheme(value);
+                ProgressBarTheme.RefreshTheme(value);
+                RadioButtonTheme.RefreshTheme(value);
+                TextBoxTheme.RefreshTheme(value);
+                SelectionButtonTheme.RefreshTheme(value);
+                DrawingSurfaceTheme.RefreshTheme(value);
+            }
+        }
 
         /// <summary>
         /// Theme for the <see cref="Button"/> control.
         /// </summary>
         [DataMember]
-        public ButtonTheme ButtonTheme;
+        public ButtonTheme ButtonTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="SelectionButton"/> control.
         /// </summary>
         [DataMember]
-        public ButtonTheme SelectionButtonTheme;
+        public ButtonTheme SelectionButtonTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="ScrollBar"/> control.
         /// </summary>
         [DataMember]
-        public ScrollBarTheme ScrollBarTheme;
+        public ScrollBarTheme ScrollBarTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="RadioButton"/> control.
         /// </summary>
         [DataMember]
-        public RadioButtonTheme RadioButtonTheme;
+        public RadioButtonTheme RadioButtonTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="ListBox"/> control.
         /// </summary>
         [DataMember]
-        public ListBoxTheme ListBoxTheme;
+        public ListBoxTheme ListBoxTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="CheckBox"/> control.
         /// </summary>
         [DataMember]
-        public CheckBoxTheme CheckBoxTheme;
+        public CheckBoxTheme CheckBoxTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="TextBox"/> control.
         /// </summary>
         [DataMember]
-        public TextBoxTheme TextBoxTheme;
+        public TextBoxTheme TextBoxTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="ProgressBar"/> control.
         /// </summary>
         [DataMember]
-        public ProgressBarTheme ProgressBarTheme;
-        
+        public ProgressBarTheme ProgressBarTheme { get; set; }
+
         /// <summary>
         /// Theme for <see cref="DrawingSurface"/>.
         /// </summary>
         [DataMember]
-        public DrawingSurfaceTheme DrawingSurfaceTheme;
+        public DrawingSurfaceTheme DrawingSurfaceTheme { get; set; }
 
         /// <summary>
         /// Theme for <see cref="ControlsConsole"/>.
         /// </summary>
         [DataMember]
-        public ControlsConsoleTheme ControlsConsoleTheme;
+        public ControlsConsoleTheme ControlsConsoleTheme { get; set; }
 
         /// <summary>
         /// Theme for the <see cref="Window"/> control.
         /// </summary>
         [DataMember]
-        public WindowTheme WindowTheme;
-        
+        public WindowTheme WindowTheme { get; set; }
+
         static Library()
         {
             if (Default == null)
@@ -103,7 +126,7 @@
             ScrollBarTheme = new ScrollBarTheme();
             ButtonTheme = new ButtonTheme();
             CheckBoxTheme = new CheckBoxTheme();
-            ListBoxTheme = new ListBoxTheme(new ScrollBarTheme(), new ListBoxItemTheme(Colors));
+            ListBoxTheme = new ListBoxTheme(new ScrollBarTheme());
             ProgressBarTheme = new ProgressBarTheme();
             RadioButtonTheme = new RadioButtonTheme();
             TextBoxTheme = new TextBoxTheme();
@@ -116,7 +139,7 @@
         /// </summary>
         public Library()
         {
-            Colors = new Colors();
+            _colors = new Colors();
             Init();
         }
 
@@ -126,7 +149,7 @@
         /// <param name="_">Not used.</param>
         private Library(bool _)
         {
-            Colors = new Colors();
+            _colors = new Colors();
         }
 
         /// <summary>
