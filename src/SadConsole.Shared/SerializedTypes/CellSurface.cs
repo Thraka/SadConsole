@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
-    public class CellSurfaceJson : JsonConverter<CellSurface>
+    public class CellSurfaceJsonConverter : JsonConverter<CellSurface>
     {
         public override void WriteJson(JsonWriter writer, CellSurface value, JsonSerializer serializer)
         {

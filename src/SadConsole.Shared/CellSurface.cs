@@ -11,7 +11,7 @@ namespace SadConsole
     /// <summary>
     /// An array of <see cref="Cell"/> objects used to represent a 2D surface.
     /// </summary>
-    [JsonConverter(typeof(SerializedTypes.CellSurfaceSerialized))]
+    [JsonConverter(typeof(SerializedTypes.CellSurfaceJsonConverter))]
     public partial class CellSurface: IEnumerable<Cell>
     {
         private bool _isDirty;

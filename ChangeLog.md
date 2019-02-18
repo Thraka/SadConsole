@@ -32,6 +32,10 @@ Code changes:
 - [Fixed #199] New PredicateInstruction (thanks VGA256)
 - SurfaceBase.DefaultBackground is now Black instead of Transparent. You may need to use console.DefaultBackground = Color.Transparent; console.Clear(); to restore old behavior.
 - Control.CanFocus is now respected.
+- Fixed CellSurface JSON converter.
+- Fixed ControlsConsole renderer not respecting viewport.
+- Fixed inputbox not working with nummbers.
+- Redesigned ListboxItemTheme to be passable on Listbox ctor.
 
 ## 12/29/2018 V7.3.0
 

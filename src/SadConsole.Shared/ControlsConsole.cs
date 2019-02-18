@@ -411,8 +411,11 @@ namespace SadConsole
         /// <inheritdoc />
         protected override void OnDirtyChanged()
         {
-            foreach (var control in ControlsList)
-                control.IsDirty = true;
+            if (IsDirty)
+            {
+                foreach (var control in ControlsList)
+                    control.IsDirty = true;
+            }
         }
 
         /// <summary>
