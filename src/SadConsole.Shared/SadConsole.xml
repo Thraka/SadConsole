@@ -2010,6 +2010,22 @@
         <member name="M:SadConsole.Components.ConsoleComponent.OnAdded(SadConsole.Console)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Components.MultipleConsoleEntityDrawingComponent">
+            <summary>
+            Add to a <see cref="T:SadConsole.Console"/> to draw the <see cref="P:SadConsole.Components.MultipleConsoleEntityDrawingComponent.Entities"/> on it. May be used with multiple consoles.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MultipleConsoleEntityDrawingComponent.Entities">
+            <summary>
+            Entities to draw on each console this component is added to.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MultipleConsoleEntityDrawingComponent.Update(SadConsole.Console,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.MultipleConsoleEntityDrawingComponent.Draw(SadConsole.Console,System.TimeSpan)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Console">
             <summary>
             A <see cref="T:SadConsole.CellSurface"/> that has a font and can be drawn to the screen.
