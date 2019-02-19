@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>8.0.0-pre4</Version>
+    <Version>8.0.0-pre5</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -14,28 +14,14 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Standard</PackageId>
     <PackageReleaseNotes>[BREAKING CHANGES]
+[This list is just some of the major changes]
+[See the documentation on NuGet for more information]
 - Overhaul of the theme system.
 - Overhaul of the SurfaceBase/ScreenObject/Console system.
-- Changed Listbox.Slider to Listbox.Scrollbar. Also changed any property that used the word Slider to ScrollBar
-- Window messagebox and prompts have a library parameter to theme. If not specified, uses the default theme.
-- [Fixed #165] Window stealing mouse focus from scrollbar (thanks VGA256)
-- [Fixed #164] Controls should be aware of what theme is being used 
+- Overhaul of Instruction system.
+- Added new ConsoleComponents system.
 - Upgraded to MonoGame 3.7
-- Renamed base types and removed some others
-- SurfaceBase is now CellSurface and not abstract
-- ScreenObject is now Console and inherits from SurfaceBase
-- Console is now ScrollingConsole.
-- AnimatedSurface is now AnimatedConsole.
-- LayeredSurface is now LayeredConsole and has a new subtype, CellSurfaceLayer.
-- Mouse input works on all objects that inherit from Console, which is everything besides CellSurface.
-- Added new ConsoleComponent types.
-- Consoles have a collection of Components that can hook into Update, Draw, Keyboard, Mouse methods.
-- EntityManager is now a ConsoleComponent.
-- Instructions reimplemented as ConsoleComponents.
-- InstructionSet has fluent-type methods to construct the set. See the SplashScreen console in the demo project.
-- [Fixed #199] New PredicateInstruction (thanks VGA256)
-- SurfaceBase.DefaultBackground is now Black instead of Transparent. You may need to use console.DefaultBackground = Color.Transparent; console.Clear(); to restore old behavior.
-</PackageReleaseNotes>
+- EntityManager removed and will be added to GoRogue-SadConsole integration lib.</PackageReleaseNotes>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Thraka/SadConsole</RepositoryUrl>

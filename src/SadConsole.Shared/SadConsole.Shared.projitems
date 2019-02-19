@@ -21,7 +21,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ColoredGlyph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColoredString.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IConsoleComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\EntityViewSyncComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\IConsoleComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\MultipleConsoleEntityDrawingComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Instructions\PredicateInstruction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScrollingConsole.cs" />
@@ -70,7 +72,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Effects\ICellEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\Recolor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Entity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities\EntityManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\CellExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ColorGradient.cs" />

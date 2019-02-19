@@ -2,6 +2,10 @@
 Special thanks to the SadConsole Discord on all the feedback provided.
 Shout to the GoRogue project.
 
+[SadConsole GitHub](https://github.com/SadConsole/SadConsole)
+[SadConsole Documentation](http://sadconsole.com/docs/)
+[SadConsole Discord](https://discord.gg/mttxqAs)
+
 File changes:
 
 - SadConsole and SadConsole.Universal have been replaced by the SadConsole for .NET Standard library.
@@ -36,6 +40,7 @@ Code changes:
 - Fixed ControlsConsole renderer not respecting viewport.
 - Fixed inputbox not working with nummbers.
 - Redesigned ListboxItemTheme to be passable on Listbox ctor.
+- Consoles no longer use a cached drawcall.
 
 ## 12/29/2018 V7.3.0
 
