@@ -12,7 +12,6 @@ namespace SadConsole
     public partial class Console
     {
         private Color _tint = Color.Transparent;
-        private readonly DrawCallScreenObject _drawCall;
 
         private Font _font;
         private Renderers.IRenderer _renderer;
@@ -134,9 +133,7 @@ namespace SadConsole
             {
                 Renderer.Render(this);
 
-                _drawCall.Position = UsePixelPositioning ? CalculatedPosition.ToVector2() : Font.GetWorldPosition(CalculatedPosition).ToVector2();
-
-                Global.DrawCalls.Add(_drawCall);
+                Global.DrawCalls.Add(new DrawCalls.DrawCallScreenObject(this, CalculatedPosition, UsePixelPositioning));
             }
 
             foreach (var component in ComponentsDraw)

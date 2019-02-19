@@ -252,7 +252,6 @@ namespace SadConsole
             RenderRects = new Rectangle[Cells.Length];
             Renderer = new Renderers.Console();
             _font = font;
-            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
             var index = 0;
 
@@ -288,7 +287,6 @@ namespace SadConsole
             RenderRects = new Rectangle[Cells.Length];
             Renderer = new Renderers.Console();
             _font = Global.FontDefault;
-            _drawCall = new DrawCallScreenObject(this, Point.Zero, false);
 
             var index = 0;
 
