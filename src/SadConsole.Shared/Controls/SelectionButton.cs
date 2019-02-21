@@ -18,7 +18,7 @@ namespace SadConsole.Controls
         public SelectionButton PreviousSelection { get; set; }
 
         /// <summary>
-        /// The selection button to focus when the UP key is pressed or the SelectNext() method is called.
+        /// The selection button to focus when the DOWN key is pressed or the SelectNext() method is called.
         /// </summary>
         public SelectionButton NextSelection { get; set; }
 
