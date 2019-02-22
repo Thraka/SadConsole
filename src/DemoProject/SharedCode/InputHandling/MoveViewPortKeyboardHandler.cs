@@ -5,7 +5,7 @@ using SadConsole.Input;
 using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole;
 using System;
-
+using SadConsole.Components;
 
 namespace StarterProject.InputHandling
 {

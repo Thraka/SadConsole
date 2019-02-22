@@ -47,7 +47,6 @@ namespace StarterProject.CustomConsoles
 
             var listbox = new SadConsole.Controls.ListBox(20, 6);
             listbox.Position = new Point(28, 3);
-            listbox.HideBorder = false;
             listbox.Items.Add("item 1");
             listbox.Items.Add("item 2");
             listbox.Items.Add("item 3");
