@@ -139,12 +139,22 @@ namespace SadConsole.Entities
         /// <inheritdoc />
         public override void OnCalculateRenderPosition()
         {
-            CalculatedPosition = Position + PositionOffset + (Parent?.CalculatedPosition ?? Point.Zero);
+            if (UsePixelPositioning)
+                CalculatedPosition = Position + PositionOffset + (Parent?.CalculatedPosition ?? Point.Zero);
+            else
+                CalculatedPosition = Position.ConsoleLocationToPixel(Font) + PositionOffset.ConsoleLocationToPixel(Font) + (Parent?.CalculatedPosition ?? Point.Zero);
 
             foreach (var child in Children)
             {
                 child.OnCalculateRenderPosition();
             }
+        }
+
+        /// <inheritdoc />
+        protected override void OnFontChanged()
+        {
+            if (animation != null)
+                animation.Font = Font;
         }
 
         /// <summary>

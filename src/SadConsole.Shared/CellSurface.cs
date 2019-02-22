@@ -15,6 +15,8 @@ namespace SadConsole
     public partial class CellSurface: IEnumerable<Cell>
     {
         private bool _isDirty;
+        private Color _defaultBackground;
+        private Color _defaultForeground;
 
         /// <summary>
         /// An event that is raised when <see cref="IsDirty"/> is set to true.
@@ -39,12 +41,20 @@ namespace SadConsole
         /// <summary>
         /// The default foreground for glyphs on this surface.
         /// </summary>
-        public Color DefaultForeground { get; set; } = Color.White;
+        public Color DefaultForeground
+        {
+            get => _defaultForeground;
+            set { _defaultForeground = value; IsDirty = true; }
+        }
 
         /// <summary>
         /// The default background for glyphs on this surface.
         /// </summary>
-        public Color DefaultBackground { get; set; } = Color.Transparent;
+        public Color DefaultBackground
+        {
+            get => _defaultBackground;
+            set { _defaultBackground = value; IsDirty = true; }
+        }
 
         /// <summary>
         /// How many cells wide the surface is.
@@ -102,6 +112,8 @@ namespace SadConsole
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         public CellSurface(int width, int height, Cell[] initialCells)
         {
+            DefaultForeground = Color.White;
+            DefaultBackground = Color.Transparent;
             Width = width;
             Height = height;
 

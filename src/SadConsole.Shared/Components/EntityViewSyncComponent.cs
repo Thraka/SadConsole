@@ -24,8 +24,8 @@ namespace SadConsole.Components
 
                 if (parentViewPort != _oldView || console.Position != _oldPosition)
                 {
-                    ((Entity)console).PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y);
-                    console.IsVisible = parentViewPort.Contains(console.Position);
+                    ((Entity)console).PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y).TranslateFont(console.Parent.Font, console.Font);
+                    console.IsVisible = console.Parent.AbsoluteArea.Contains(console.CalculatedPosition);
 
                     _oldPosition = console.Position;
                     _oldView = parentViewPort;
@@ -33,8 +33,7 @@ namespace SadConsole.Components
             }
             else
             {
-                console.IsVisible = console.Position.X >= 0 && console.Position.Y >= 0 &&
-                                    console.Position.X < console.Parent.Width && console.Position.Y < console.Parent.Height;
+                console.IsVisible = console.Parent.AbsoluteArea.Contains(console.CalculatedPosition);
             }
         }
 

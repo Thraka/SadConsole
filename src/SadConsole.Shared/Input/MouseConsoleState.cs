@@ -69,9 +69,9 @@ namespace SadConsole.Input
                 }
                 else
                 {
-                    RelativePixelPosition = mouseData.ScreenPosition - screenObject.CalculatedPosition.ConsoleLocationToPixel(screenObject.Font);
+                    RelativePixelPosition = mouseData.ScreenPosition - screenObject.CalculatedPosition;
                     WorldPosition = mouseData.ScreenPosition.PixelLocationToConsole(screenObject.Font);
-                    ConsolePosition = WorldPosition - screenObject.CalculatedPosition;
+                    ConsolePosition = RelativePixelPosition.PixelLocationToConsole(screenObject.Font);
                 }
 
                 if (screenObject is IConsoleViewPort viewObject)

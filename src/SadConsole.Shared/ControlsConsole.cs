@@ -32,7 +32,7 @@ namespace SadConsole
         /// The collection of controls.
         /// </summary>
         [DataMember]
-        protected List<ControlBase> ControlsList;
+        protected List<ControlBase> ControlsList = new List<ControlBase>();
 
         [DataMember]
         private ControlBase _focusedControl;
@@ -134,7 +134,6 @@ namespace SadConsole
         /// <param name="font">The font used with the console.</param>
         public ControlsConsole(int width, int height, Font font) : base(width, height, font)
         {
-            ControlsList = new List<ControlBase>();
             Cursor.IsVisible = false;
             AutoCursorOnFocus = false;
             UseKeyboard = true;

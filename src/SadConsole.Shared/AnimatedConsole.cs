@@ -280,12 +280,13 @@ namespace SadConsole
         /// <inheritdoc />
         public override void OnCalculateRenderPosition()
         {
-            CalculatedPosition = Position - Center + (Parent?.CalculatedPosition ?? Point.Zero);
+            if (UsePixelPositioning)
+                CalculatedPosition = Position - Center + (Parent?.CalculatedPosition ?? Point.Zero);
+            else
+                CalculatedPosition = Position.ConsoleLocationToPixel(Font) - Center.ConsoleLocationToPixel(Font) + (Parent?.CalculatedPosition ?? Point.Zero);
 
             foreach (var child in Children)
-            {
                 child.OnCalculateRenderPosition();
-            }
         }
 
         /// <summary>

@@ -177,7 +177,7 @@ namespace SadConsole
                 }
             }
 
-            AbsoluteArea = new Rectangle(0, 0, ViewPortRectangle.Width * Font.Size.X, ViewPortRectangle.Height * Font.Size.Y);
+            AbsoluteArea = new Rectangle(CalculatedPosition.X, CalculatedPosition.Y, ViewPortRectangle.Width * Font.Size.X, ViewPortRectangle.Height * Font.Size.Y);
 
             if (LastRenderResult != null && (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height))
             {

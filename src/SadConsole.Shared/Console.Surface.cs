@@ -133,7 +133,7 @@ namespace SadConsole
             {
                 Renderer.Render(this);
 
-                Global.DrawCalls.Add(new DrawCalls.DrawCallScreenObject(this, CalculatedPosition, UsePixelPositioning));
+                Global.DrawCalls.Add(new DrawCalls.DrawCallScreenObject(this, CalculatedPosition, true));
             }
 
             foreach (var component in ComponentsDraw)

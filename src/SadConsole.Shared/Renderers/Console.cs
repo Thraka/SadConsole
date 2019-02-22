@@ -76,7 +76,7 @@ namespace SadConsole.Renderers
                 if (surface.Tint.A != 255)
                 {
                     if (surface.DefaultBackground.A != 0)
-                        Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                        Global.SpriteBatch.Draw(surface.Font.FontImage, new Rectangle(0, 0, surface.AbsoluteArea.Width, surface.AbsoluteArea.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
                     for (var i = 0; i < surface.RenderCells.Length; i++)
                     {
@@ -107,7 +107,7 @@ namespace SadConsole.Renderers
                 BeforeRenderTintCallback?.Invoke(Global.SpriteBatch);
 
                 if (surface.Tint.A != 0)
-                    Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
+                    Global.SpriteBatch.Draw(surface.Font.FontImage, new Rectangle(0, 0, surface.AbsoluteArea.Width, surface.AbsoluteArea.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.Tint, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
             }
         }
     }

@@ -35,15 +35,15 @@ namespace SadConsole.Components
                 {
                     var parentViewPort = scroller.ViewPort;
 
-                    entity.PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y) + console.CalculatedPosition;
-                    entity.IsVisible = parentViewPort.Contains(entity.Position);
+                    entity.PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y).TranslateFont(console.Font, entity.Font) + console.CalculatedPosition.PixelLocationToConsole(entity.Font);
+                    entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
                 }
                 else
                 {
-                    entity.PositionOffset = console.CalculatedPosition;
-                    entity.IsVisible = entity.Position.X >= 0 && entity.Position.Y >= 0 &&
-                                       entity.Position.X < console.Width && entity.Position.Y < console.Height;
+                    entity.PositionOffset = console.CalculatedPosition.PixelLocationToConsole(entity.Font);
+                    entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
                 }
+
 
                 if (entity.IsVisible)
                     entity.Draw(delta);

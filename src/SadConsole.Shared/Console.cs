@@ -71,7 +71,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// A position that is based on the <see cref="Parent"/> position.
+        /// A position that is based on the current <see cref="Position"/> and <see cref="Parent"/> position, in pixels.
         /// </summary>
         public Point CalculatedPosition { get; protected set; }
 
@@ -316,7 +316,12 @@ namespace SadConsole
         /// </summary>
         public virtual void OnCalculateRenderPosition()
         {
-            CalculatedPosition = Position + (Parent?.CalculatedPosition ?? Point.Zero);
+            if (UsePixelPositioning)
+                CalculatedPosition = Position + (Parent?.CalculatedPosition ?? Point.Zero);
+            else
+                CalculatedPosition = Position.ConsoleLocationToPixel(Font) + (Parent?.CalculatedPosition ?? Point.Zero);
+
+            AbsoluteArea = new Rectangle(CalculatedPosition, AbsoluteArea.Size);
 
             foreach (var child in Children)
             {

@@ -2069,7 +2069,7 @@
         </member>
         <member name="P:SadConsole.Console.CalculatedPosition">
             <summary>
-            A position that is based on the <see cref="P:SadConsole.Console.Parent"/> position.
+            A position that is based on the current <see cref="P:SadConsole.Console.Position"/> and <see cref="P:SadConsole.Console.Parent"/> position, in pixels.
             </summary>
         </member>
         <member name="P:SadConsole.Console.UsePixelPositioning">
@@ -4346,6 +4346,9 @@
             <param name="e">The state of the animation.</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.OnCalculateRenderPosition">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Entity.OnFontChanged">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Entities.Entity.OnPositionChanged(Microsoft.Xna.Framework.Point)">
