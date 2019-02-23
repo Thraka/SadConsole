@@ -3453,7 +3453,7 @@
             Disables mouse input.
             </summary>
         </member>
-        <member name="F:SadConsole.Controls.TextBox.DisableKeyboard">
+        <member name="P:SadConsole.Controls.TextBox.DisableKeyboard">
             <summary>
             Disables the keyboard which turns off keyboard input and hides the cursor.
             </summary>
@@ -3504,7 +3504,7 @@
             Validates that the value of the input box conforms to the settings of this control and sets the dirty flag to true.
             </summary>
         </member>
-        <member name="M:SadConsole.Controls.TextBox.PositionCursor">
+        <member name="M:SadConsole.Controls.TextBox.ValidateCursorPosition">
             <summary>
             Correctly positions the cursor within the text.
             </summary>
@@ -6280,6 +6280,11 @@
         <member name="F:SadConsole.Settings.WindowResizeOptions.Scale">
             <summary>
             Scales <see cref="F:SadConsole.Global.RenderOutput"/> to fit the window as best as possible while maintaining a good picture.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Settings.WindowResizeOptions.Fit">
+            <summary>
+            Fits <see cref="F:SadConsole.Global.RenderOutput"/> to the window using padding to maintain aspect ratio.
             </summary>
         </member>
         <member name="T:SadConsole.StringParser.CommandTypes">

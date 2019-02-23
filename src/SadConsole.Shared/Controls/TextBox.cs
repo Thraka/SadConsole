@@ -14,6 +14,9 @@ namespace SadConsole.Controls
     [DataContract]
     public class TextBox: ControlBase
     {
+        private string _editingText;
+        private bool _disableKeyboardEdit;
+
         /// <summary>
         /// Mask input with a certain character.
         /// </summary>
@@ -89,12 +92,39 @@ namespace SadConsole.Controls
         /// Disables the keyboard which turns off keyboard input and hides the cursor.
         /// </summary>
         [DataMember(Name = "DisableKeyboardInput")]
-        public bool DisableKeyboard;
+        public bool DisableKeyboard
+        {
+            get => _disableKeyboardEdit;
+            set
+            {
+                _disableKeyboardEdit = value;
+
+                if (!_disableKeyboardEdit)
+                    _caretPos = Text.Length;
+            }
+        }
 
         /// <summary>
         /// A temp holder for the text as it's being edited.
         /// </summary>
-        public string EditingText { get; protected set; } = "";
+        public string EditingText
+        {
+            get => _editingText;
+            protected set
+            {
+                _editingText = value;
+
+                if (MaxLength != 0)
+                {
+                    if (_editingText.Length >= MaxLength)
+                        _editingText = _editingText.Substring(0, MaxLength);
+                }
+
+                ValidateCursorPosition();
+                DetermineState();
+                IsDirty = true;
+            }
+        }
 
         /// <summary>
         /// The alignment of the caret.
@@ -153,7 +183,7 @@ namespace SadConsole.Controls
 
 					Validate();
                     EditingText = _text;
-					PositionCursor();
+                    _caretPos = Text.Length;
 
                     TextChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -214,17 +244,6 @@ namespace SadConsole.Controls
                         _text = "0";
                 }
             }
-
-            PositionCursor();
-
-            DetermineState();
-            IsDirty = true;
-        }
-
-        protected void ValidateEdit()
-        {
-            PositionCursor();
-
             DetermineState();
             IsDirty = true;
         }
@@ -232,20 +251,16 @@ namespace SadConsole.Controls
         /// <summary>
         /// Correctly positions the cursor within the text.
         /// </summary>
-        protected void PositionCursor()
+        protected void ValidateCursorPosition()
         {
             if (MaxLength != 0)
             {
-                if (EditingText.Length >= MaxLength)
-                {
-                    EditingText = EditingText.Substring(0, MaxLength);
+                if (_caretPos > EditingText.Length)
                     _caretPos = EditingText.Length - 1;
-                }
-                else
-                    _caretPos = EditingText.Length;
             }
-            else
+            else if (_caretPos > EditingText.Length)
                 _caretPos = EditingText.Length;
+            
 
             // Test to see if caret is off edge of box
             if (_caretPos >= Width)
@@ -307,17 +322,12 @@ namespace SadConsole.Controls
                             else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
                                 DisableKeyboard = true;
-
                                 Text = EditingText;
-                                PositionCursor();
-                                ValidateEdit();
                                 return true;
                             }
                             else if (info.KeysPressed[i].Key == Keys.Escape)
                             {
                                 DisableKeyboard = true;
-                                PositionCursor();
-                                ValidateEdit();
                                 return true;
                             }
 
@@ -393,7 +403,7 @@ namespace SadConsole.Controls
 
 							else if (info.KeysPressed[i].Key == Keys.End)
 							{
-									_caretPos = newText.Length;
+								_caretPos = newText.Length;
 							}
 
 							else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
@@ -404,25 +414,10 @@ namespace SadConsole.Controls
 								if (_caretPos > newText.Length)
 									_caretPos = newText.Length;
 							}
-
-							// Test to see if caret is off edge of box
-							if (_caretPos >= Width)
-							{
-							    LeftDrawOffset = newText.Length - Width + 1;
-
-								if (LeftDrawOffset < 0)
-								    LeftDrawOffset = 0;
-							}
-							else
-							{
-							    LeftDrawOffset = 0;
-							}
 						}
-
 					}
+
 	                EditingText = newText.ToString();
-                    PositionCursor();
-                    ValidateEdit();
                 }
 
                 return true;
@@ -451,7 +446,7 @@ namespace SadConsole.Controls
             DisableKeyboard = false;
             EditingText = _text;
             IsDirty = true;
-            PositionCursor();
+            ValidateCursorPosition();
         }
 
         protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
