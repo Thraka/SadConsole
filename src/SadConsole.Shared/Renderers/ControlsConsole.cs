@@ -47,7 +47,7 @@ namespace SadConsole.Renderers
             if (control.Surface.DefaultBackground.A != 0)
             {
                 var (x, y) = (control.Position - control.Parent.ViewPort.Location).ConsoleLocationToPixel(control.Parent.Font);
-                var (width, height) = new Point(control.Width, control.Height) * control.Parent.Font.Size;
+                var (width, height) = new Point(control.Surface.Width, control.Surface.Height) * control.Parent.Font.Size;
                 Global.SpriteBatch.Draw(control.Parent.Font.FontImage, new Rectangle(x, y, width, height), control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
             }
 
@@ -57,7 +57,7 @@ namespace SadConsole.Renderers
 
                 if (!cell.IsVisible) continue;
 
-                var cellRenderPosition = i.ToPoint(control.Width) + control.Position;
+                var cellRenderPosition = i.ToPoint(control.Surface.Width) + control.Position;
 
                 if (!control.Parent.ViewPort.Contains(cellRenderPosition)) continue;
 
