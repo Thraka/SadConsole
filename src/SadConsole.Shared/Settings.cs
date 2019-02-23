@@ -148,6 +148,11 @@ namespace SadConsole
             /// Scales <see cref="Global.RenderOutput"/> to fit the window as best as possible while maintaining a good picture.
             /// </summary>
             Scale,
+
+            /// <summary>
+            /// Fits <see cref="Global.RenderOutput"/> to the window using padding to maintain aspect ratio.
+            /// </summary>
+            Fit,
         }
     }
 }

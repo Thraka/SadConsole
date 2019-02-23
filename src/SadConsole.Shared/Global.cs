@@ -243,6 +243,32 @@ namespace SadConsole
                 RenderRect = new Rectangle((GraphicsDevice.PresentationParameters.BackBufferWidth - (RenderWidth * multiple)) / 2, (GraphicsDevice.PresentationParameters.BackBufferHeight - (RenderHeight * multiple)) / 2, RenderWidth * multiple, RenderHeight * multiple);
                 RenderScale = new Vector2(RenderWidth / ((float)RenderWidth * multiple), RenderHeight / (float)(RenderHeight * multiple));
             }
+            else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
+            {
+
+                var heightRatio = (float)GraphicsDevice.PresentationParameters.BackBufferHeight / (float)RenderHeight;
+                var widthRatio = (float)GraphicsDevice.PresentationParameters.BackBufferWidth / (float)RenderWidth;
+
+                var fitHeight = RenderHeight * widthRatio;
+                var fitWidth = RenderWidth * heightRatio;
+
+                if (fitHeight <= GraphicsDevice.PresentationParameters.BackBufferHeight)
+                {
+                    // Render width = window width, pad top and bottom
+
+                    RenderRect = new Rectangle(0, (int)((GraphicsDevice.PresentationParameters.BackBufferHeight - fitHeight) / 2), GraphicsDevice.PresentationParameters.BackBufferWidth, (int)fitHeight);
+
+                    RenderScale = new Vector2(RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, RenderHeight / (float)fitHeight);
+                }
+                else
+                {
+                    // Render height = window height, pad left and right
+
+                    RenderRect = new Rectangle((int)((GraphicsDevice.PresentationParameters.BackBufferWidth - fitWidth) / 2), 0, (int)fitWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
+
+                    RenderScale = new Vector2(RenderWidth / (float)fitWidth, RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
+                }
+            }
             else
             {
                 RenderRect = GraphicsDevice.Viewport.Bounds;
