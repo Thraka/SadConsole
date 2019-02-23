@@ -191,7 +191,10 @@ namespace SadConsole
             {
                 if (state.Mouse.IsOnScreen)
                 {
-                    Position = state.WorldPosition - CellAtDragPosition;
+                    if (UsePixelPositioning)
+                        Position = state.Mouse.ScreenPosition - CellAtDragPosition;
+                    else
+                        Position = state.WorldCellPosition - CellAtDragPosition;
                     PreviousMouseInfo = state;
                     return true;
                 }
@@ -218,9 +221,9 @@ namespace SadConsole
                     IsDragging = true;
 
                     if (UsePixelPositioning)
-                        CellAtDragPosition = state.RelativePixelPosition;
+                        CellAtDragPosition = state.ConsolePixelPosition;
                     else
-                        CellAtDragPosition = state.ConsolePosition;
+                        CellAtDragPosition = state.ConsoleCellPosition;
 
                     if (MoveToFrontOnMouseClick)
                     {

@@ -70,13 +70,13 @@ namespace SadConsole.Input
                     if (!_mouseDown)
                     {
                         _mouseDown = true;
-                        _mouseLastLocation = state.ConsolePosition;
+                        _mouseLastLocation = state.ConsoleCellPosition;
                         console.IsExclusiveMouse = true;
                     }
                     else
                     {
                         // Mouse has been down, still is
-                        Point currentLocation = new Point(state.ConsolePosition.X, state.ConsolePosition.Y);
+                        Point currentLocation = new Point(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y);
 
                         if (currentLocation != _mouseLastLocation)
                         {

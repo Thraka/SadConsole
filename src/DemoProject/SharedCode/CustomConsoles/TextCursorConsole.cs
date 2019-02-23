@@ -19,21 +19,15 @@ namespace StarterProject.CustomConsoles
         {
             mouseCursor = new SadConsole.Console(1, 1);
             mouseCursor.SetGlyph(0,0, 178);
+            mouseCursor.UseMouse = false;
 
             Children.Add(mouseCursor);
         }
 
-        public override void Draw(TimeSpan delta)
-        {
-            // First draw the console
-            base.Draw(delta);
-
-            //mouseCursor.Draw(delta);
-        }
-
         public override bool ProcessMouse(MouseConsoleState state)
         {
-            mouseCursor.Position = state.ConsolePosition;
+            mouseCursor.IsVisible = state.IsOnConsole;
+            mouseCursor.Position = state.ConsoleCellPosition;
 
             return base.ProcessMouse(state);
         }

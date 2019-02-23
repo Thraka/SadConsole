@@ -234,7 +234,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="console">The console to check.</param>
         /// <returns>True or false indicating if the mouse is over the console.</returns>
-        public bool IsMouseOverConsole(ScrollingConsole console)
+        public bool IsMouseOverConsole(Console console)
         {
             return new MouseConsoleState(console, this).IsOnConsole;
         }

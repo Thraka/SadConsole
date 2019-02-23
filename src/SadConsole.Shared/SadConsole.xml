@@ -3348,7 +3348,7 @@
         </member>
         <member name="P:SadConsole.Controls.SelectionButton.NextSelection">
             <summary>
-            The selection button to focus when the UP key is pressed or the SelectNext() method is called.
+            The selection button to focus when the DOWN key is pressed or the SelectNext() method is called.
             </summary>
         </member>
         <member name="M:SadConsole.Controls.SelectionButton.#ctor(System.Int32,System.Int32)">
@@ -5227,7 +5227,7 @@
             Unlocks the last console the mouse was locked to. Allows another conosle to become locked to the mouse.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.Mouse.IsMouseOverConsole(SadConsole.ScrollingConsole)">
+        <member name="M:SadConsole.Input.Mouse.IsMouseOverConsole(SadConsole.Console)">
             <summary>
             Returns true when the mouse is currently over the provided console.
             </summary>
@@ -5242,12 +5242,12 @@
         </member>
         <member name="F:SadConsole.Input.MouseConsoleState.Console">
             <summary>
-            The console used to create this object.
+            The console used to create the mouse state.
             </summary>
         </member>
         <member name="F:SadConsole.Input.MouseConsoleState.Mouse">
             <summary>
-            The mouse state.
+            The mouse data.
             </summary>
         </member>
         <member name="F:SadConsole.Input.MouseConsoleState.Cell">
@@ -5255,24 +5255,24 @@
             The cell the mouse is over, from <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.ConsolePosition">
-            <summary>
-            The position of the mouse on the <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>, based on the <see cref="F:SadConsole.Input.MouseConsoleState.WorldPosition"/>.
-            </summary>
-        </member>
         <member name="F:SadConsole.Input.MouseConsoleState.CellPosition">
             <summary>
             The position of the <see cref="F:SadConsole.Input.MouseConsoleState.Cell"/>.  
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.WorldPosition">
+        <member name="F:SadConsole.Input.MouseConsoleState.ConsoleCellPosition">
             <summary>
-            A screen-based location based on the <see cref="F:SadConsole.Input.MouseConsoleState.ConsolePosition"/>.
+            The position of the mouse on the <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>, based on the <see cref="F:SadConsole.Input.MouseConsoleState.WorldCellPosition"/> and the position of the <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.RelativePixelPosition">
+        <member name="F:SadConsole.Input.MouseConsoleState.WorldCellPosition">
             <summary>
-            The <see cref="F:SadConsole.Input.MouseConsoleState.ConsolePosition"/> translated to pixels.
+            A cell-based location of the mouse based on the screen, not the console.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.MouseConsoleState.ConsolePixelPosition">
+            <summary>
+            The mouse position in pixels on the console.
             </summary>
         </member>
         <member name="F:SadConsole.Input.MouseConsoleState.IsOnConsole">
@@ -5284,7 +5284,7 @@
             <summary>
             Calculates a new <see cref="T:SadConsole.Input.MouseConsoleState"/> based on an <see cref="F:SadConsole.Input.MouseConsoleState.Console"/> and <see cref="F:SadConsole.Input.MouseConsoleState.Mouse"/> state.
             </summary>
-            <param name="screenObject">The console to process with the mouse state.</param>
+            <param name="console">The console to process with the mouse state.</param>
             <param name="mouseData">The current mouse state.</param>
         </member>
         <member name="M:SadConsole.Input.MouseConsoleState.Clone">

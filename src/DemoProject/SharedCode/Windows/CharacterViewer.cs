@@ -120,11 +120,11 @@ namespace StarterProject.Windows
 
         protected override void OnMouseLeftClicked(SadConsole.Input.MouseConsoleState state)
         {
-            if (state.Cell != null && trackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
+            if (state.Cell != null && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
             {
                 SelectedCharacterIndex = state.Cell.Glyph;
             }
-            else if (state.ConsolePosition.X == Width - 1 && state.ConsolePosition.Y == 0)
+            else if (state.ConsoleCellPosition.X == Width - 1 && state.ConsoleCellPosition.Y == 0)
                 Hide();
 
             base.OnMouseLeftClicked(state);
@@ -132,7 +132,7 @@ namespace StarterProject.Windows
 
         protected override void OnMouseMove(SadConsole.Input.MouseConsoleState state)
         {
-            if (state.Cell != null && trackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
+            if (state.Cell != null && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
             {
                 // Draw the character index and value in the status area
                 string[] items = new string[] { "Index: ", state.Cell.Glyph.ToString() + " ", ((char)state.Cell.Glyph).ToString() };
@@ -152,14 +152,14 @@ namespace StarterProject.Windows
                 if (lastMouseState == null)
                 {
                 }
-                else if (lastMouseState.ConsolePosition != state.ConsolePosition)
+                else if (lastMouseState.ConsoleCellPosition != state.ConsoleCellPosition)
                 {
-                    SetEffect(lastMouseState.ConsolePosition.X, lastMouseState.ConsolePosition.Y,
+                    SetEffect(lastMouseState.ConsoleCellPosition.X, lastMouseState.ConsoleCellPosition.Y,
                     unhighlightEffect
                     );
                 }
 
-                SetEffect(state.ConsolePosition.X, state.ConsolePosition.Y, highlightedEffect);
+                SetEffect(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y, highlightedEffect);
                 lastMouseState = state.Clone();
             }
             else
@@ -169,7 +169,7 @@ namespace StarterProject.Windows
                 // Clear the special effect on the last known character
                 if (lastMouseState != null)
                 {
-                    SetEffect(lastMouseState.ConsolePosition.X, lastMouseState.ConsolePosition.Y, unhighlightEffect);
+                    SetEffect(lastMouseState.ConsoleCellPosition.X, lastMouseState.ConsoleCellPosition.Y, unhighlightEffect);
                     lastMouseState = null;
                 }
             }

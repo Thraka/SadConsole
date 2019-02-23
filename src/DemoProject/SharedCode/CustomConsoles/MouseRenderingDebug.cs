@@ -176,7 +176,7 @@ namespace StarterProject.CustomConsoles
 
         public override bool ProcessMouse(SadConsole.Input.MouseConsoleState state)
         {
-            if (showMouse)
+            //if (showMouse)
             {
                 if (DoClear)
                     Clear();
