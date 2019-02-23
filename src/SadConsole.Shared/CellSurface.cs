@@ -14,7 +14,7 @@ namespace SadConsole
     [JsonConverter(typeof(SerializedTypes.CellSurfaceJsonConverter))]
     public partial class CellSurface: IEnumerable<Cell>
     {
-        private bool _isDirty;
+        private bool _isDirty = true;
         private Color _defaultBackground;
         private Color _defaultForeground;
 
