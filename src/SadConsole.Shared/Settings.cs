@@ -109,6 +109,22 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Resizes the game window.
+        /// </summary>
+        /// <param name="width">The width of the window in pixels.</param>
+        /// <param name="height">The height of the window in pixels.</param>
+        public static void ResizeWindow(int width, int height)
+        {
+            Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
+            Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
+            Global.GraphicsDeviceManager.ApplyChanges();
+
+            Global.WindowWidth = width;
+            Global.WindowHeight = height;
+            Global.ResetRendering();
+        }
+
+        /// <summary>
         /// Settings related to input.
         /// </summary>
         public static class Input
