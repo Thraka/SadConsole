@@ -97,8 +97,8 @@
     <None Include="Rendering.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole.Shared\SadConsole.csproj">
-      <Project>{1b55342f-95be-41ae-803a-bbf86a94b51f}</Project>
+    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj">
+      <Project>{1702fe12-1d90-4c76-a273-285310e67b53}</Project>
       <Name>SadConsole</Name>
     </ProjectReference>
   </ItemGroup>

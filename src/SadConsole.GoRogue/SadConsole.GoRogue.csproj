@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole.Shared\SadConsole.csproj" />
+    <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
   </ItemGroup>
 
 </Project>

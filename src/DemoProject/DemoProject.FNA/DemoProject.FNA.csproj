@@ -56,12 +56,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SadConsoleFNA\SadConsoleFNA.csproj">
-      <Project>{364c730b-b238-4ed2-a3e3-427a8a5d5f07}</Project>
-      <Name>SadConsoleFNA</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="..\SharedCode\DemoProject.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
