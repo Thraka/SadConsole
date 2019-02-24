@@ -21,10 +21,6 @@ namespace StarterProject.CustomConsoles
         
         public ControlsTest():base(80, 23)
         {
-
-
-
-            
             var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left);
             prog1.Position = new Point(16, 5);
             Add(prog1);

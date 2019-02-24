@@ -70,6 +70,10 @@ namespace StarterProject
                 {
                     SadConsole.Settings.ToggleFullScreen();
                 }
+                else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F10))
+                {
+                    SadConsole.Settings.ResizeWindow(SadConsole.Global.WindowWidth * 2, SadConsole.Global.WindowHeight * 2);
+                }
             }
         }
 

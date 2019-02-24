@@ -27,17 +27,14 @@ namespace StarterProject.CustomConsoles
 
             player = new Entity(animation);
             player.Position = new Point(Width / 2, Height / 2);
+            player.Components.Add(new SadConsole.Components.EntityViewSyncComponent());
             playerPreviousPosition = player.Position;
+
+            Children.Add(player);
 
             // Setup this console to accept keyboard input.
             UseKeyboard = true;
             IsVisible = false;
-
-            //EntityManager manager = new EntityManager();
-
-            //manager.Entities.Add(player);
-
-            //Components.Add(manager);
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
