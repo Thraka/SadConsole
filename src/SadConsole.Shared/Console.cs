@@ -321,7 +321,7 @@ namespace SadConsole
             else
                 CalculatedPosition = Position.ConsoleLocationToPixel(Font) + (Parent?.CalculatedPosition ?? Point.Zero);
 
-            AbsoluteArea = new Rectangle(CalculatedPosition, AbsoluteArea.Size);
+            AbsoluteArea = new Rectangle(CalculatedPosition.X, CalculatedPosition.Y, AbsoluteArea.Width, AbsoluteArea.Height);
 
             foreach (var child in Children)
             {

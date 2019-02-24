@@ -509,8 +509,12 @@ namespace SadConsole.Controls
             /// </summary>
             /// <param name="oldValue">The original value of the text.</param>
             /// <param name="newValue">The value the text is chaning to.</param>
-            public TextChangedEventArgs(string oldValue, string newValue) =>
-                (OldValue, NewValue) = (oldValue, newValue);
+            public TextChangedEventArgs(string oldValue, string newValue)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+                
         }
 
         /// <summary>
