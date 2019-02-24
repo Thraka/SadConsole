@@ -1,20 +1,29 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Effects;
-using SadConsole.StringParser;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+#endif
 
 namespace SadConsole
 {
+    using SadConsole.Effects;
+    using SadConsole.StringParser;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Represents a string that has foreground and background colors for each character in the string.
     /// </summary>
     public partial class ColoredString : IEnumerable<ColoredGlyph>
     {
-        private List<ColoredGlyph> _characters;
+        private ColoredGlyph[] _characters;
 
+        /// <summary>
+        /// Gets a <see cref="ColoredGlyph"/> from the string.
+        /// </summary>
+        /// <param name="index">The index in the string of the <see cref="ColoredGlyph"/>.</param>
+        /// <returns>The colored glyph representing the character in the string.</returns>
         public ColoredGlyph this[int index]
         {
             get => _characters[index];
@@ -22,26 +31,30 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets or sets the string. When Set, the colors for each character default to the <see cref="SadConsole.ColoredString.Foreground"/> and <see cref="SadConsole.ColoredString.Background"/> property values.
+        /// Gets or sets the characters represneting this string. When set, first processes the string through <see cref="Parse(string, int, CellSurface, ParseCommandStacks)"/>.
         /// </summary>
         public string String
         {
             get
             {
-                if (_characters.Count == 0)
+                if (_characters.Length == 0)
                     return "";
 
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(_characters.Count);
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(_characters.Length);
 
-                for (int i = 0; i < _characters.Count; i++)
+                for (int i = 0; i < _characters.Length; i++)
                     sb.Append(_characters[i].GlyphCharacter);
 
                 return sb.ToString();
             }
+
             set => _characters = ColoredString.Parse(value)._characters;
         }
 
-        public int Count => _characters.Count;
+        /// <summary>
+        /// The total number of <see cref="ColoredGlyph"/> characters in the string.
+        /// </summary>
+        public int Count => _characters.Length;
 
         /// <summary>
         /// When true, instructs a caller to not render the glyphs of the string.
@@ -84,15 +97,15 @@ namespace SadConsole
         /// <param name="capacity">The number of blank characters.</param>
         public ColoredString(int capacity)
         {
-            _characters = new List<ColoredGlyph>(capacity);
+            _characters = new ColoredGlyph[capacity];
             for (int i = 0; i < capacity; i++)
             {
-                _characters.Add(new ColoredGlyph() { GlyphCharacter = ' ' });
+                _characters[i] = new ColoredGlyph() { GlyphCharacter = ' ' };
             }
         }
         
         /// <summary>
-        /// Creates a new instance of the ColoredString class with the specified string value.
+        /// Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="Parse(string, int, CellSurface, ParseCommandStacks)"/> first to process the string.
         /// </summary>
         /// <param name="value">The backing string.</param>
         public ColoredString(string value) { String = value; }
@@ -110,7 +123,7 @@ namespace SadConsole
             stacks.AddSafe(new ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground });
             stacks.AddSafe(new ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
             stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror, CommandType = CommandTypes.Mirror });
-            _characters = ColoredString.Parse(value, initialBehaviors: stacks)._characters;
+            _characters = Parse(value, initialBehaviors: stacks)._characters;
         }
 
         /// <summary>
@@ -126,7 +139,7 @@ namespace SadConsole
         /// <param name="glyphs">The glyphs to combine.</param>
         public ColoredString(params ColoredGlyph[] glyphs)
         {
-            _characters = new List<ColoredGlyph>(glyphs);
+            _characters = glyphs.ToArray();
         }
 
         /// <summary>
@@ -135,14 +148,15 @@ namespace SadConsole
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
         public ColoredString Clone()
         {
-            ColoredString returnObject = new ColoredString(_characters.Count) {
+            ColoredString returnObject = new ColoredString(_characters.Length)
+            {
                 IgnoreBackground = IgnoreBackground,
                 IgnoreForeground = IgnoreForeground,
                 IgnoreGlyph = IgnoreGlyph,
                 IgnoreEffect = IgnoreEffect
             };
 
-            for (int i = 0; i < _characters.Count; i++) {
+            for (int i = 0; i < _characters.Length; i++) {
                 returnObject._characters[i] = _characters[i].Clone();
             }
             return returnObject;
@@ -154,7 +168,7 @@ namespace SadConsole
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
         public ColoredString SubString(int index)
         {
-            return SubString(index, _characters.Count - index);
+            return SubString(index, _characters.Length - index);
         }
 
         /// <summary>
@@ -165,15 +179,16 @@ namespace SadConsole
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
         public ColoredString SubString(int index, int count)
         {
-            if (index + count > _characters.Count)
+            if (index + count > _characters.Length)
                 throw new System.IndexOutOfRangeException();
 
-            ColoredString returnObject = new ColoredString(count);
-
-            returnObject.IgnoreBackground = this.IgnoreBackground;
-            returnObject.IgnoreForeground = this.IgnoreForeground;
-            returnObject.IgnoreGlyph = this.IgnoreGlyph;
-            returnObject.IgnoreEffect = this.IgnoreEffect;
+            ColoredString returnObject = new ColoredString(count)
+            {
+                IgnoreBackground = IgnoreBackground,
+                IgnoreForeground = IgnoreForeground,
+                IgnoreGlyph = IgnoreGlyph,
+                IgnoreEffect = IgnoreEffect
+            };
 
             for (int i = 0; i < count; i++)
             {
@@ -189,7 +204,7 @@ namespace SadConsole
         /// <param name="effect">The effect to apply.</param>
         public void SetEffect(ICellEffect effect)
         {
-            for (int i = 0; i < _characters.Count; i++)
+            for (int i = 0; i < _characters.Length; i++)
             {
                 _characters[i].Effect = effect;
             }
@@ -201,7 +216,7 @@ namespace SadConsole
         /// <param name="color">The color to apply.</param>
         public void SetForeground(Color color)
         {
-            for (int i = 0; i < _characters.Count; i++)
+            for (int i = 0; i < _characters.Length; i++)
             {
                 _characters[i].Foreground = color;
             }
@@ -213,28 +228,29 @@ namespace SadConsole
         /// <param name="color">The color to apply.</param>
         public void SetBackground(Color color)
         {
-            for (int i = 0; i < _characters.Count; i++)
+            for (int i = 0; i < _characters.Length; i++)
             {
                 _characters[i].Background = color;
             }
         }
 
-        public override string ToString()
-        {
-            return this.String;
-        }
+        /// <summary>
+        /// Returns a string representing the glyphs in this object.
+        /// </summary>
+        /// <returns>A string composed of each glyph in this object.</returns>
+        public override string ToString() => String;
 
+        /// <summary>
+        /// Gets an enumerator for the <see cref="ColoredGlyph"/> objects in this string.
+        /// </summary>
+        /// <returns>The enumerator in the string.</returns>
+        public IEnumerator<ColoredGlyph> GetEnumerator() => ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
 
-        public IEnumerator<ColoredGlyph> GetEnumerator()
-        {
-            return ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
-        }
-
+        /// <summary>
+        /// Gets an enumerator for the <see cref="ColoredGlyph"/> objects in this string.
+        /// </summary>
+        /// <returns>The enumerator in the string.</returns>
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
 
         /// <summary>
         /// Combines two ColoredString objects into a single ColoredString object. Ignore* values are only copied when both strings Ignore* values match.
@@ -259,6 +275,5 @@ namespace SadConsole
 
             return returnString;
         }
-        
     }
 }

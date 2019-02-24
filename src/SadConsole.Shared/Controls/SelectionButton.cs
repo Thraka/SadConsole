@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿#if XNA
+using Microsoft.Xna.Framework.Input;
+#endif
 
-using SadConsole.Themes;
-using System;
 using System.Runtime.Serialization;
 
 namespace SadConsole.Controls
@@ -18,7 +18,7 @@ namespace SadConsole.Controls
         public SelectionButton PreviousSelection { get; set; }
 
         /// <summary>
-        /// The selection button to focus when the UP key is pressed or the SelectNext() method is called.
+        /// The selection button to focus when the DOWN key is pressed or the SelectNext() method is called.
         /// </summary>
         public SelectionButton NextSelection { get; set; }
 
@@ -27,7 +27,9 @@ namespace SadConsole.Controls
         /// Creates a new Selection Button with a specific width and height.
         /// </summary>
         /// <param name="width">The width of the selection button.</param>
-        public SelectionButton(int width, int height) : base(width, height) => Theme = (ButtonTheme)Library.Default.SelectionButtonTheme.Clone();
+        public SelectionButton(int width, int height) : base(width, height)
+        {
+        }
 
         /// <summary>
         /// Sets the next selection button and optionally sets the previous of the referenced selection to this button.

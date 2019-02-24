@@ -1,28 +1,33 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿#if XNA
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Controls;
-using SadConsole.Surfaces;
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// A theme for the input box control.
     /// </summary>
     [DataContract]
-    public class TextBoxTheme: ThemeBase<TextBox>
+    public class TextBoxTheme: ThemeBase
     {
         private int _oldCaretPosition;
         private ControlStates _oldState;
         private string _editingText;
-        private Cell _oldAppearance;
 
         /// <summary>
         /// The style to use for the carrot.
         /// </summary>
         [DataMember]
-        public SadConsole.Effects.ICellEffect CaretEffect;
+        public Effects.ICellEffect CaretEffect;
 
+        /// <summary>
+        /// Creates a new theme used by the <see cref="TextBox"/>.
+        /// </summary>
         public TextBoxTheme()
         {
             CaretEffect = new Effects.BlinkGlyph()
@@ -30,62 +35,103 @@ namespace SadConsole.Themes
                 GlyphIndex = 95,
                 BlinkSpeed = 0.4f
             };
-
-            Normal = new SadConsole.Cell(Colors.Text, Colors.GrayDark);
         }
 
-        public override void Attached(TextBox control)
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
+            control.Surface = new CellSurface(control.Width, control.Height);
+            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface.Clear();
+
+            base.Attached(control);
         }
 
-        public override void UpdateAndDraw(TextBox control, TimeSpan time)
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
         {
-            if (control.Surface.Effects.Count != 0)
+            base.RefreshTheme(themeColors);
+
+            Normal = new SadConsole.Cell(themeColors.Text, themeColors.GrayDark);
+        }
+
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
+        {
+            if (!(control is TextBox textbox)) return;
+
+            if (textbox.Surface.Effects.Count != 0)
             {
-                control.Surface.Update(time);
-                control.IsDirty = true;
+                textbox.Surface.Effects.UpdateEffects(time.TotalSeconds);
+                textbox.IsDirty = true;
             }
 
-            if (!control.IsDirty) return;
+            if (!textbox.IsDirty) return;
 
-            Cell appearance = GetStateAppearance(control.State);
+            Cell appearance = GetStateAppearance(textbox.State);
 
-            if (control.IsFocused && !control.DisableKeyboard)
+            if (textbox.IsFocused && !textbox.DisableKeyboard)
             {
-                if (!control.IsCaretVisible)
+                if (!textbox.IsCaretVisible)
                 {
-                    _oldCaretPosition = control.CaretPosition;
-                    _oldState = control.State;
-                    _editingText = control.EditingText;
-                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
-                    control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
-                    control.IsCaretVisible = true;
+                    _oldCaretPosition = textbox.CaretPosition;
+                    _oldState = textbox.State;
+                    _editingText = textbox.EditingText;
+                    textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
+                    if (string.IsNullOrEmpty(textbox.PasswordChar))
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    }
+                    else
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset).Masked(textbox.PasswordChar));
+                    }
+                    textbox.Surface.SetEffect(textbox.Surface[textbox.CaretPosition - textbox.LeftDrawOffset, 0], CaretEffect);
+                    textbox.IsCaretVisible = true;
                 }
 
-                else if (_oldCaretPosition != control.CaretPosition || _oldState != control.State || _editingText != control.EditingText)
+                else if (_oldCaretPosition != textbox.CaretPosition || _oldState != textbox.State || _editingText != textbox.EditingText)
                 {
-                    control.Surface.Effects.RemoveAll();
-                    control.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
-                    control.Surface.Print(0, 0, control.EditingText.Substring(control.LeftDrawOffset));
-                    control.Surface.SetEffect(control.Surface[control.CaretPosition - control.LeftDrawOffset, 0], CaretEffect);
-                    _oldCaretPosition = control.CaretPosition;
+                    textbox.Surface.Effects.RemoveAll();
+                    textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, SpriteEffects.None);
+                    if (string.IsNullOrEmpty(textbox.PasswordChar))
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    }
+                    else
+                    {
+                        textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset).Masked(textbox.PasswordChar));
+                    }
+                    // TODO: If the keyboard repeat is down and the text goes off the end of the textbox and we're hitting the left arrow then sometimes control.LeftDrawOffset can exceed control.CaretPosition
+                    // This causes an Out of Bounds error here.  I don't think it's new - I think it's been in for a long time so I'm gonna check in and come back to this.
+                    // It might be that we just need to take Max(0, "bad value") below but I think it should be checked into to really understand the situation.
+                    textbox.Surface.SetEffect(control.Surface[textbox.CaretPosition - textbox.LeftDrawOffset, 0], CaretEffect);
+                    _oldCaretPosition = textbox.CaretPosition;
                     _oldState = control.State;
-	                _editingText = control.EditingText;
+                    _editingText = textbox.EditingText;
                 }
 			}
             else
             {
-                control.Surface.Effects.RemoveAll();
-                control.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
-                control.IsCaretVisible = false;
-                control.Surface.Print(0, 0, control.Text.Align(control.TextAlignment, control.Width));
+                textbox.Surface.Effects.RemoveAll();
+                textbox.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
+                textbox.IsCaretVisible = false;
+                if (string.IsNullOrEmpty(textbox.PasswordChar))
+                {
+                    textbox.Surface.Print(0, 0, textbox.Text.Align(textbox.TextAlignment, textbox.Width));
+                }
+                else
+                {
+                    textbox.Surface.Print(0, 0, textbox.Text.Masked(textbox.PasswordChar).Align(textbox.TextAlignment, textbox.Width));
+                }
             }
 
-            control.IsDirty = false;
+            textbox.IsDirty = false;
         }
-        public override object Clone()
+
+
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
             return new TextBoxTheme()
             {

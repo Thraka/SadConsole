@@ -6,7 +6,7 @@
     public interface ICellEffect// : System.IEquatable<ICellEffect>
     {
         /// <summary>
-        /// True when the effect is finished but attached to the cell.
+        /// True when the effect is finished.
         /// </summary>
         bool IsFinished { get; }
 
@@ -28,33 +28,39 @@
         /// <summary>
         /// When true, the effect should not call <see cref="Cell.RestoreState"/> when it has finished processing.
         /// </summary>
-        bool KeepStateOnFinished { get; set; }
-
+        bool DiscardCellState { get; set; }
+        
         /// <summary>
         /// When true, indicates the effect this effect has on a cell should remain after this effect is cleared from the cell.
         /// </summary>
         bool Permanent { get; set; }
 
         /// <summary>
+        /// Cell is first associated with the effect.
+        /// </summary>
+        /// <param name="cell">The surface cell using this effect.</param>
+        void AddCell(Cell cell);
+
+        /// <summary>
         /// Applies the state of the effect to a cell.
         /// </summary>
-        /// <param name="callingCell">The console cell using this effect.</param>
-        bool Apply(Cell cell);
+        /// <param name="cell">The surface cell using this effect.</param>
+        bool UpdateCell(Cell cell);
 
         /// <summary>
         /// Updates the state of the effect.
         /// </summary>
         /// <param name="gameTimeSeconds">Time since the last call to this effect.</param>
-        void Update(double timeElapsed);
+        void Update(double gameTimeSeconds);
 
         /// <summary>
         /// Clears the effect from the cell.
         /// </summary>
-        /// <param name="cell">The console cell that will no longer use this effect.</param>
-        void Clear(Cell cell);
+        /// <param name="cell">The surface cell that will no longer use this effect.</param>
+        void ClearCell(Cell cell);
 
         /// <summary>
-        /// Restarts the cell effect but does not reset it.
+        /// Restarts the cell effect.
         /// </summary>
         void Restart();
 

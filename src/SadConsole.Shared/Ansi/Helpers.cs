@@ -1,8 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.Ansi
 {
-
+    /// <summary>
+    /// Helpers related to ANSI processing.
+    /// </summary>
     public static class Helpers
     {
         /// <summary>
@@ -36,7 +40,7 @@ namespace SadConsole.Ansi
         }
 
         /// <summary>
-        /// Adjusts the provided color based on the <see cref="Attribute_Bold"/> value.
+        /// Adjusts the provided color based on the <paramref name="bold"/> value.
         /// </summary>
         /// <param name="input">The ansi color to adjust.</param>
         /// <returns>The adjusted color.</returns>
@@ -70,6 +74,7 @@ namespace SadConsole.Ansi
         /// </summary>
         /// <param name="isBackground">When true, changes the background color instead of the foreground.</param>
         /// <param name="code">The 0-7 color code.</param>
+        /// <param name="ansiState">The current state of the ANSI settings.</param>
         public static void AnsiConfigurePrintColor(bool isBackground, int code, State ansiState)
         {
             Color color;

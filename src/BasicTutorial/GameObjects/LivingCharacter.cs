@@ -17,7 +17,7 @@ namespace BasicTutorial.GameObjects
         protected int baseAttack = 10;
         protected int baseDefense = 10;
         protected int baseVisibilityDistance = 10;
-        protected int baseLightSourceDistance = 0;
+        protected int baseLightSourceDistance = 5;
 
         /// <summary>
         /// Current health of the character
@@ -69,18 +69,12 @@ namespace BasicTutorial.GameObjects
         protected GoRogue.FOV FOVSight;
         protected GoRogue.FOV FOVLighted;
 
-        protected LivingCharacter(SimpleMap map, Color foreground, Color background, int glyph) : base(map, foreground, background, glyph)
+        protected LivingCharacter(MapConsole map, Color foreground, Color background, int glyph) : base(map, foreground, background, glyph)
         {
             FOVSight = new GoRogue.FOV(map.MapToFOV);
             FOVLighted = new GoRogue.FOV(map.MapToFOV);
         }
-
-        protected override void OnPositionChanged(Point oldLocation)
-        {
-            // search for region
-
-        }
-
+        
         public override void ProcessGameFrame()
         {
             RefreshVisibilityTiles();
@@ -136,7 +130,7 @@ namespace BasicTutorial.GameObjects
             //      that should be visible are not.
 
             // Visibility
-            FOVSight.Calculate(GoRogue.Coord.Get(Position.X, Position.Y), VisibilityDistance);
+            FOVSight.Calculate(Position, VisibilityDistance);
 
             // If player, handle LOS flags for tiles.
             if (this == map.ControlledGameObject)
@@ -149,7 +143,7 @@ namespace BasicTutorial.GameObjects
             }
 
             // Lighting
-            FOVLighted.Calculate(GoRogue.Coord.Get(Position.X, Position.Y), LightSourceDistance);
+            FOVLighted.Calculate(Position, LightSourceDistance);
 
             if (this == map.ControlledGameObject)
             {

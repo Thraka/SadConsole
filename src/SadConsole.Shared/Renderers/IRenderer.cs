@@ -1,5 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endif
+
 using System;
 
 namespace SadConsole.Renderers
@@ -27,6 +30,6 @@ namespace SadConsole.Renderers
         /// <summary>
         /// Renders the cell data to the screen.
         /// </summary>
-        void Render(Surfaces.SurfaceBase cells, bool force = false);
+        void Render(SadConsole.Console cells, bool force = false);
     }
 }

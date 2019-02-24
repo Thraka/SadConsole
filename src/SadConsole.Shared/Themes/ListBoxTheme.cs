@@ -1,18 +1,21 @@
-﻿using System;
+﻿#if XNA
 using Microsoft.Xna.Framework;
-
-using System.Runtime.Serialization;
-using SadConsole.Controls;
-using SadConsole.Surfaces;
+#endif
 
 namespace SadConsole.Themes
 {
+    using SadConsole.Controls;
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// The theme for a ListBox control.
     /// </summary>
     [DataContract]
-    public class ListBoxTheme : ThemeBase<ListBox>
+    public class ListBoxTheme : ThemeBase
     {
+        private bool _updatedColors;
+
         /// <summary>
         /// The drawing theme for the boarder when <see cref="DrawBorder"/> is true.
         /// </summary>
@@ -32,126 +35,146 @@ namespace SadConsole.Themes
         public bool DrawBorder;
 
         /// <summary>
-        /// The appearance of an item.
-        /// </summary>
-        [DataMember]
-        public ListBoxItemTheme ItemTheme;
-
-        /// <summary>
         /// The appearance of the scrollbar used by the listbox control.
         /// </summary>
         [DataMember]
         public ScrollBarTheme ScrollBarTheme;
 
-        public ListBoxTheme()
+        /// <summary>
+        /// Creates a new theme used by the <see cref="ListBox"/>.
+        /// </summary>
+        /// <param name="scrollBarTheme">The theme to use to draw the scroll bar.</param>
+        public ListBoxTheme(ScrollBarTheme scrollBarTheme)
         {
+            ScrollBarTheme = scrollBarTheme;
+        }
+
+        /// <inheritdoc />
+        public override void Attached(ControlBase control)
+        {
+            control.Surface = new CellSurface(control.Width, control.Height);
+            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface.Clear();
+
+            ((ListBox) control).ScrollBar.Theme = ScrollBarTheme;
+
+            base.Attached(control);
+        }
+
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
+        {
+            base.RefreshTheme(themeColors);
+            _updatedColors = true;
+
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
 
-            DrawBorder = true;
-            ScrollBarTheme = (ScrollBarTheme)Library.Default.ScrollBarTheme?.Clone() ?? new ScrollBarTheme();
-            ItemTheme = new ListBoxItemTheme();
-            BorderTheme = new ThemeStates();
+            ScrollBarTheme?.RefreshTheme(themeColors);
+            BorderTheme = new ThemeStates(themeColors);
             BorderTheme.SetForeground(Normal.Foreground);
             BorderTheme.SetBackground(Normal.Background);
-            BorderLineStyle = (int[])SurfaceBase.ConnectedLineThick.Clone();
+            BorderLineStyle = (int[])CellSurface.ConnectedLineThick.Clone();
         }
 
-        public override void Attached(ListBox control)
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            control.Surface = new BasicNoDraw(control.Width, control.Height);
-        }
+            if (!(control is ListBox listbox)) return;
 
-        public override void UpdateAndDraw(ListBox control, TimeSpan time)
-        {
-            if (!control.IsDirty) return;
+            if (!listbox.IsDirty) return;
+
+            if (_updatedColors)
+            {
+                listbox.ItemTheme.RefreshTheme(Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors);
+                _updatedColors = false;
+            }
 
             int columnOffset;
             int columnEnd;
             int startingRow;
             int endingRow;
-
-
-            Cell appearance = GetStateAppearance(control.State);
-            Cell scrollBarAppearance = ScrollBarTheme.GetStateAppearance(control.State);
-            Cell borderAppearance = BorderTheme.GetStateAppearance(control.State);
+            
+            Cell appearance = GetStateAppearance(listbox.State);
+            Cell scrollBarAppearance = ScrollBarTheme.GetStateAppearance(listbox.State);
+            Cell borderAppearance = BorderTheme.GetStateAppearance(listbox.State);
 
             // Redraw the control
-            control.Surface.Fill(
+            listbox.Surface.Fill(
                 appearance.Foreground,
                 appearance.Background,
                 appearance.Glyph);
 
             if (DrawBorder)
             {
-                endingRow = control.Height - 2;
+                endingRow = listbox.Height - 2;
                 startingRow = 1;
                 columnOffset = 1;
-                columnEnd = control.Width - 2;
-                control.Surface.DrawBox(new Rectangle(0, 0, control.Width, control.Height), new Cell(borderAppearance.Foreground, borderAppearance.Background, 0), null, BorderLineStyle);
+                columnEnd = listbox.Width - 2;
+                listbox.Surface.DrawBox(new Rectangle(0, 0, listbox.Width, listbox.Height), new Cell(borderAppearance.Foreground, borderAppearance.Background, 0), null, BorderLineStyle);
             }
             else
             {
-                endingRow = control.Height;
+                endingRow = listbox.Height;
                 startingRow = 0;
                 columnOffset = 0;
-                columnEnd = control.Width;
-                control.Surface.Fill(borderAppearance.Foreground, borderAppearance.Background, 0, null);
+                columnEnd = listbox.Width;
+                listbox.Surface.Fill(borderAppearance.Foreground, borderAppearance.Background, 0, null);
             }
 
-            int offset = control.IsSliderVisible ? control.Slider.Value : 0;
+            ShowHideScrollBar(listbox);
+
+            int offset = listbox.IsScrollBarVisible ? listbox.ScrollBar.Value : 0;
             for (int i = 0; i < endingRow; i++)
             {
                 var itemIndexRelative = i + offset;
-                if (itemIndexRelative < control.Items.Count)
+                if (itemIndexRelative < listbox.Items.Count)
                 {
                     ControlStates state = 0;
 
-                    if (Helpers.HasFlag(control.State, ControlStates.MouseOver) && control.RelativeIndexMouseOver == itemIndexRelative)
+                    if (Helpers.HasFlag(listbox.State, ControlStates.MouseOver) && listbox.RelativeIndexMouseOver == itemIndexRelative)
                         Helpers.SetFlag(ref state, ControlStates.MouseOver);
 
-                    if (control.State.HasFlag(ControlStates.MouseLeftButtonDown))
+                    if (listbox.State.HasFlag(ControlStates.MouseLeftButtonDown))
                         Helpers.SetFlag(ref state, ControlStates.MouseLeftButtonDown);
 
-                    if (control.State.HasFlag(ControlStates.MouseRightButtonDown))
+                    if (listbox.State.HasFlag(ControlStates.MouseRightButtonDown))
                         Helpers.SetFlag(ref state, ControlStates.MouseRightButtonDown);
 
-                    if (control.State.HasFlag(ControlStates.Disabled))
+                    if (listbox.State.HasFlag(ControlStates.Disabled))
                         Helpers.SetFlag(ref state, ControlStates.Disabled);
 
-                    if (itemIndexRelative == control.SelectedIndex)
+                    if (itemIndexRelative == listbox.SelectedIndex)
                         Helpers.SetFlag(ref state, ControlStates.Selected);
 
-                    ItemTheme.Draw(control.Surface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), control.Items[itemIndexRelative], state);
+                    listbox.ItemTheme.Draw(listbox.Surface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
                 }
             }
 
-            if (control.IsSliderVisible)
+            if (listbox.IsScrollBarVisible)
             {
-                control.Slider.IsDirty = true;
-                control.Slider.Update(time);
-                var y = control.SliderRenderLocation.Y;
+                listbox.ScrollBar.IsDirty = true;
+                listbox.ScrollBar.Update(time);
+                var y = listbox.ScrollBarRenderLocation.Y;
 
-                for (var ycell = 0; ycell < control.Slider.Height; ycell++)
+                for (var ycell = 0; ycell < listbox.ScrollBar.Height; ycell++)
                 {
-                    control.Surface.SetGlyph(control.SliderRenderLocation.X, y, control.Slider.Surface[0, ycell].Glyph);
-                    control.Surface.SetCellAppearance(control.SliderRenderLocation.X, y, control.Slider.Surface[0, ycell]);
+                    listbox.Surface.SetGlyph(listbox.ScrollBarRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell].Glyph);
+                    listbox.Surface.SetCellAppearance(listbox.ScrollBarRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell]);
                     y++;
                 }
             }
 
 
-            control.IsDirty = Helpers.HasFlag(control.State, ControlStates.MouseOver);
+            listbox.IsDirty = Helpers.HasFlag(listbox.State, ControlStates.MouseOver);
         }
 
-        /// <summary>
-        /// Returns a clone of this object.
-        /// </summary>
-        /// <returns>The cloned object.</returns>
-        public override object Clone()
+        /// <inheritdoc />
+        public override ThemeBase Clone()
         {
-            return new ListBoxTheme()
+            return new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone())
             {
+                Colors = Colors?.Clone(),
                 Normal = Normal.Clone(),
                 Disabled = Disabled.Clone(),
                 MouseOver = MouseOver.Clone(),
@@ -161,24 +184,51 @@ namespace SadConsole.Themes
                 BorderTheme = BorderTheme.Clone(),
                 BorderLineStyle = (int[])BorderLineStyle.Clone(),
                 DrawBorder = DrawBorder,
-                ItemTheme = (ListBoxItemTheme)ItemTheme.Clone(),
-                ScrollBarTheme = (ScrollBarTheme)ScrollBarTheme.Clone()
             };
+        }
+
+        public void ShowHideScrollBar(ListBox control)
+        {
+            var heightOffset = DrawBorder ? 2 : 0;
+
+            // process the scroll bar
+            var scrollbarItems = control.Items.Count - (control.Height - heightOffset);
+
+            if (scrollbarItems > 0)
+            {
+                control.ScrollBar.Maximum = scrollbarItems;
+                control.IsScrollBarVisible = true;
+            }
+            else
+            {
+                control.ScrollBar.Maximum = 0;
+                control.IsScrollBarVisible = false;
+            }
         }
     }
 
     public class ListBoxItemTheme: ThemeStates
     {
-        public ListBoxItemTheme()
+        public ListBoxItemTheme(Colors themeColors): base(themeColors)
         {
+            
+        }
+
+        public ListBoxItemTheme(): base(Library.Default.Colors) { }
+
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors themeColors)
+        {
+            base.RefreshTheme(themeColors);
+
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
 
-            Selected.Foreground = Library.Default.Appearance_ControlSelected.Foreground;
-            MouseOver = Library.Default.Appearance_ControlOver.Clone();
+            Selected.Foreground = themeColors.Appearance_ControlSelected.Foreground;
+            MouseOver = themeColors.Appearance_ControlOver.Clone();
         }
-
-        public virtual void Draw(Surfaces.SurfaceBase surface, Rectangle area, object item, ControlStates itemState)
+        
+        public virtual void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             string value = item.ToString();
             if (value.Length < area.Width)
@@ -207,13 +257,26 @@ namespace SadConsole.Themes
 
     public class ListBoxItemColorTheme : ListBoxItemTheme
     {
-        public virtual void Draw(Surfaces.SurfaceBase surface, Rectangle area, object item, ControlStates itemState)
+        public ListBoxItemColorTheme(Colors themeColors) : base(themeColors)
+        {
+            
+        }
+
+        public ListBoxItemColorTheme():base() { }
+        
+        public override void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             if (item is Color || item is Tuple<Color, Color, string>)
             {
                 string value = new string(' ', area.Width - 2);
 
                 Cell cellLook = GetStateAppearance(itemState).Clone();
+
+                surface.Print(area.Left + 1, area.Top, value, cellLook);
+
+                surface.Print(area.Left, area.Top, " ", cellLook);
+                surface.Print(area.Left + area.Width - 1, area.Top, " ", cellLook);
+
 
                 if (item is Color color)
                 {
@@ -227,11 +290,8 @@ namespace SadConsole.Themes
                     value = ((Tuple<Color, Color, string>)item).Item3.Align(HorizontalAlignment.Left, area.Width - 2);
                     surface.Print(area.Left + 1, area.Top, value, cellLook);
                 }
-
-                surface.Print(area.Left, area.Top, " ", cellLook);
-                surface.Print(area.Left + area.Width - 1, area.Top, " ", cellLook);
-
-                if (itemState.HasFlag(ControlStates.Clicked))
+                
+                if (itemState.HasFlag(ControlStates.Selected))
                 {
                     surface.SetGlyph(area.Left, area.Top, 16);
                     surface.SetGlyph(area.Left + area.Width - 1, area.Top, 17);

@@ -3,8 +3,8 @@ using SadConsole;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Input;
-using SadConsole.Surfaces;
-using Console = SadConsole.Console;
+
+using Console = SadConsole.ScrollingConsole;
 
 namespace StarterProject
 {
@@ -18,7 +18,7 @@ namespace StarterProject
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
             
-            // Setup the engine and creat the main window.
+            // Setup the engine and create the main window.
             SadConsole.Game.Create(80, 25);
             //SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
 
@@ -64,10 +64,15 @@ namespace StarterProject
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
                 {
+                    SadConsole.Debug.CurrentScreen.Show();
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
                 {
                     SadConsole.Settings.ToggleFullScreen();
+                }
+                else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F10))
+                {
+                    SadConsole.Settings.ResizeWindow(SadConsole.Global.WindowWidth * 2, SadConsole.Global.WindowHeight * 2);
                 }
             }
         }

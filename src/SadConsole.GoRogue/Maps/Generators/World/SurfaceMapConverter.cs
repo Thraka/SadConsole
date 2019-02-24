@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SadConsole.Surfaces;
+using SadConsole;
 
 namespace SadConsole.Maps.Generators.World
 {
@@ -32,7 +32,7 @@ namespace SadConsole.Maps.Generators.World
         }
     }
 
-    public class SurfaceMap: IMapConverter<Basic>
+    public class SurfaceMap: IMapConverter<CellSurface>
     {
         #region Colors
         // Height Map Colors
@@ -123,9 +123,9 @@ namespace SadConsole.Maps.Generators.World
         //    return texture;
         //}
 
-        public Basic GetHeightMapTexture(int width, int height, Tile[,] tiles)
+        public CellSurface GetHeightMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new Basic(width, height);
+            var surface = new CellSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -179,9 +179,9 @@ namespace SadConsole.Maps.Generators.World
             return surface;
         }
 
-        public Basic GetHeatMapTexture(int width, int height, Tile[,] tiles)
+        public CellSurface GetHeatMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new Basic(width, height);
+            var surface = new CellSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -221,9 +221,9 @@ namespace SadConsole.Maps.Generators.World
             return surface;
         }
 
-        public Basic GetMoistureMapTexture(int width, int height, Tile[,] tiles)
+        public CellSurface GetMoistureMapTexture(int width, int height, Tile[,] tiles)
         {
-            var surface = new Basic(width, height);
+            var surface = new CellSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)
@@ -251,9 +251,9 @@ namespace SadConsole.Maps.Generators.World
             return surface;
         }
 
-        public Basic GetBiomeMapTexture(int width, int height, Tile[,] tiles, float coldest, float colder, float cold)
+        public CellSurface GetBiomeMapTexture(int width, int height, Tile[,] tiles, float coldest, float colder, float cold)
         {
-            var surface = new Basic(width, height);
+            var surface = new CellSurface(width, height);
             var pixels = new Color[width * height];
 
             for (var x = 0; x < width; x++)

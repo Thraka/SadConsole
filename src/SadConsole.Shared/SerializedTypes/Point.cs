@@ -1,28 +1,28 @@
-﻿using FrameworkPoint = Microsoft.Xna.Framework.Point;
-
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole.SerializedTypes
 {
+    using System.Runtime.Serialization;
+
     [DataContract]
     public struct PointSerialized
     {
         [DataMember]
         public int X;
+
         [DataMember]
         public int Y;
 
-        public static implicit operator PointSerialized(FrameworkPoint point)
+        public static implicit operator PointSerialized(Point point)
         {
             return new PointSerialized() { X = point.X, Y = point.Y };
         }
 
-        public static implicit operator FrameworkPoint(PointSerialized point)
+        public static implicit operator Point(PointSerialized point)
         {
-            return new FrameworkPoint(point.X, point.Y);
+            return new Point(point.X, point.Y);
         }
     }
 }

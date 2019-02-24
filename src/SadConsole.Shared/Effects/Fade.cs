@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System.Runtime.Serialization;
 
@@ -72,9 +74,8 @@ namespace SadConsole.Effects
         public bool UseCellDestinationReverse { get; set; }
 
         [DataMember]
-        protected double _timeElapsed;
-        [DataMember]
         protected double _calculatedValue;
+
         [DataMember]
         protected bool _goingDown;
 
@@ -85,19 +86,12 @@ namespace SadConsole.Effects
             UseCellForeground = true;
             UseCellBackground = true;
             FadeDuration = 1d;
-            _timeElapsed = 0d;
-            IsFinished = false;
-            RemoveOnFinished = false;
-            Permanent = false;
             Repeat = false;
-            StartDelay = 0d;
         }
 
-        public override bool Apply(Cell cell)
+        /// <inheritdoc />
+        public override bool UpdateCell(Cell cell)
         {
-            if (cell.State == null)
-                cell.SaveState();
-
             var oldForeground = cell.Foreground;
             var oldBackground = cell.Background;
 
@@ -120,9 +114,10 @@ namespace SadConsole.Effects
             return oldForeground != cell.Foreground || oldBackground != cell.Background;
         }
 
+        /// <inheritdoc />
         public override void Update(double gameTimeSeconds)
         {
-           _timeElapsed += gameTimeSeconds;
+           base.Update(gameTimeSeconds);
 
            if (_delayFinished)
            {
@@ -174,31 +169,14 @@ namespace SadConsole.Effects
                        _calculatedValue = 1f - (_timeElapsed / FadeDuration);
                }
            }
-           else
-           {
-               if (_timeElapsed >= _startDelay)
-               {
-                   _delayFinished = true;
-                   _timeElapsed = 0d;
-               }
-           }
         }
-
-        /// <summary>
-        /// Restarts the cell effect but does not reset it.
-        /// </summary>
-        public override void Restart()
+        
+        /// <inheritdoc />
+        public override void ClearCell(Cell cell)
         {
-            _timeElapsed = 0d;
+            base.ClearCell(cell);
 
-            base.Restart();
-        }
-
-        public override void Clear(Cell cell)
-        {
-            base.Clear(cell);
-
-            if (IsFinished && Permanent)
+            if (Permanent)
             {
                 if (FadeForeground)
                     cell.Foreground = DestinationForeground.Stops[DestinationForeground.Stops.Length - 1].Color;
@@ -208,6 +186,7 @@ namespace SadConsole.Effects
             }
         }
 
+        /// <inheritdoc />
         public override ICellEffect Clone()
         {
             return new Fade()
@@ -219,14 +198,16 @@ namespace SadConsole.Effects
                 UseCellForeground = this.UseCellForeground,
                 UseCellBackground = this.UseCellBackground,
                 FadeDuration = this.FadeDuration,
-                _timeElapsed = this._timeElapsed,
-                IsFinished = this.IsFinished,
-                RemoveOnFinished = this.RemoveOnFinished,
-                Permanent = this.Permanent,
                 Repeat = this.Repeat,
-                StartDelay = this.StartDelay,
-                CloneOnApply = this.CloneOnApply,
-                UseCellDestinationReverse = this.UseCellDestinationReverse
+                UseCellDestinationReverse = this.UseCellDestinationReverse,
+
+                IsFinished = IsFinished,
+                StartDelay = StartDelay,
+                CloneOnApply = CloneOnApply,
+                RemoveOnFinished = RemoveOnFinished,
+                DiscardCellState = DiscardCellState,
+                Permanent = Permanent,
+                _timeElapsed = _timeElapsed,
             };
         }
 
@@ -254,6 +235,7 @@ namespace SadConsole.Effects
         //    return false;
         //}
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return string.Format("FADE-{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", DestinationBackground.ToString(), DestinationForeground.ToString(), FadeBackground, FadeForeground, FadeDuration, Permanent, StartDelay, RemoveOnFinished);

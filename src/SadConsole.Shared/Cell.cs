@@ -1,19 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
-using System.Text;
-
-#if MONOGAME
-using Color = Microsoft.Xna.Framework.Color;
 #endif
 
 namespace SadConsole
 {
+    using System;
+    using System.Linq;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Represents an individual glyph on the screen with a foreground, background, and mirror effect.
     /// </summary>
@@ -138,7 +133,9 @@ namespace SadConsole
             Background = Color.Black;
             Glyph = 0;
             Mirror = SpriteEffects.None;
-            Decorators = new CellDecorator[0];
+
+            if (Decorators.Length != 0)
+                Decorators = new CellDecorator[0];
         }
 
         /// <summary>
@@ -257,7 +254,4 @@ namespace SadConsole
                    !left.Decorators.SequenceEqual(right.Decorators);
         }
     }
-
-
-
 }

@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿#if XNA
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+#endif
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using SadConsole.DrawCalls;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// A global state provider used by SadConsole.
+    /// </summary>
     public static class Global
     {
         internal static string SerializerPathHint;
@@ -22,27 +26,27 @@ namespace SadConsole
         /// <summary>
         /// The default font for any type that does not provide a font.
         /// </summary>
-        public static Font FontDefault;
+        public static Font FontDefault { get; set; }
 
         /// <summary>
         /// The MonoGame graphics device.
         /// </summary>
-        public static GraphicsDevice GraphicsDevice;
+        public static GraphicsDevice GraphicsDevice { get; set; }
 
         /// <summary>
         /// The MonoGame graphics device manager.
         /// </summary>
-        public static GraphicsDeviceManager GraphicsDeviceManager;
+        public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
 
         /// <summary>
         /// A global reusable sprite batch.
         /// </summary>
-        public static SpriteBatch SpriteBatch;
+        public static SpriteBatch SpriteBatch { get; set; }
 
         /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public static ScreenObject CurrentScreen = new ScreenObject();
+        public static Console CurrentScreen { get; set; }
 
         /// <summary>
         /// The stack of consoles that will receive keyboard and mouse input.
@@ -52,40 +56,40 @@ namespace SadConsole
         /// <summary>
         /// A global random number generator.
         /// </summary>
-        public static Random Random = new Random();
+        public static Random Random { get; set; } = new Random();
 
         /// <summary>
         /// The elapsed time from the update call. The value is from <see cref="GameTimeUpdate"/>.
         /// </summary>
-        public static double GameTimeElapsedUpdate;
+        public static double GameTimeElapsedUpdate { get; set; }
 
         /// <summary>
         /// The elapsed time from the render call. The value is from <see cref="GameTimeRender"/>.
         /// </summary>
-        public static double GameTimeElapsedRender;
+        public static double GameTimeElapsedRender { get; set; }
 
 
         /// <summary>
         /// The <see cref="GameTime"/> object from the update pass.
         /// </summary>
-        public static GameTime GameTimeUpdate;
+        public static GameTime GameTimeUpdate { get; set; }
 
         /// <summary>
         /// The <see cref="GameTime"/> object from the render pass.
         /// </summary>
-        public static GameTime GameTimeRender;
+        public static GameTime GameTimeRender { get; set; }
 
         /// <summary>
         /// Mouse state which is usually updated in the update pass.
         /// </summary>
-        public static Input.Mouse MouseState = new Input.Mouse();
+        public static Input.Mouse MouseState { get; set; } = new Input.Mouse();
 
         /// <summary>
         /// Keyboard state which is usually updated in the update pass.
         /// </summary>
-        public static Input.Keyboard KeyboardState = new Input.Keyboard();
+        public static Input.Keyboard KeyboardState { get; set; } = new Input.Keyboard();
 
-        #region Rendering
+#region Rendering
         /// <summary>
         /// The render target of SadConsole. This is generally rendered to the screen as the final step of drawing.
         /// </summary>
@@ -125,7 +129,7 @@ namespace SadConsole
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
         public static List<IDrawCall> DrawCalls = new List<IDrawCall>(5);
-        #endregion
+#endregion
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
@@ -238,6 +242,32 @@ namespace SadConsole
 
                 RenderRect = new Rectangle((GraphicsDevice.PresentationParameters.BackBufferWidth - (RenderWidth * multiple)) / 2, (GraphicsDevice.PresentationParameters.BackBufferHeight - (RenderHeight * multiple)) / 2, RenderWidth * multiple, RenderHeight * multiple);
                 RenderScale = new Vector2(RenderWidth / ((float)RenderWidth * multiple), RenderHeight / (float)(RenderHeight * multiple));
+            }
+            else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
+            {
+
+                var heightRatio = (float)GraphicsDevice.PresentationParameters.BackBufferHeight / (float)RenderHeight;
+                var widthRatio = (float)GraphicsDevice.PresentationParameters.BackBufferWidth / (float)RenderWidth;
+
+                var fitHeight = RenderHeight * widthRatio;
+                var fitWidth = RenderWidth * heightRatio;
+
+                if (fitHeight <= GraphicsDevice.PresentationParameters.BackBufferHeight)
+                {
+                    // Render width = window width, pad top and bottom
+
+                    RenderRect = new Rectangle(0, (int)((GraphicsDevice.PresentationParameters.BackBufferHeight - fitHeight) / 2), GraphicsDevice.PresentationParameters.BackBufferWidth, (int)fitHeight);
+
+                    RenderScale = new Vector2(RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, RenderHeight / (float)fitHeight);
+                }
+                else
+                {
+                    // Render height = window height, pad left and right
+
+                    RenderRect = new Rectangle((int)((GraphicsDevice.PresentationParameters.BackBufferWidth - fitWidth) / 2), 0, (int)fitWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
+
+                    RenderScale = new Vector2(RenderWidth / (float)fitWidth, RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
+                }
             }
             else
             {

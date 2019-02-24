@@ -4,47 +4,28 @@ using Microsoft.Xna.Framework.Graphics;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
 using SadConsole;
-using SadConsole.Surfaces;
-using Console = SadConsole.Console;
+
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using System;
+using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    class RandomScrollingConsole : Console
+    class RandomScrollingConsole : ScrollingConsole
     {
-        private Basic mainData;
-        private Basic messageData;
+        private ScrollingConsole mainData;
+        private ScrollingConsole messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
         
         public RandomScrollingConsole() : base(80, 23)
         {
-            messageData = new Basic(80, 1);
+            messageData = new ScrollingConsole(80, 1);
             messageData.Print(0, 0, "Generating random console data, please wait...");
-            mainData = new Basic(1, 1);
+            mainData = new ScrollingConsole(1, 1);
             IsVisible = false;
             mainData.IsVisible = false;
-            
-            KeyboardHandler = (cons, info) =>
-            {
-                if (!mainData.IsVisible)
-                    return false; 
-
-                if (info.IsKeyDown(Keys.Left))
-                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left - 1, mainData.ViewPort.Top, 80, 23);
-
-                if (info.IsKeyDown(Keys.Right))
-                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left + 1, mainData.ViewPort.Top, 80, 23);
-
-                if (info.IsKeyDown(Keys.Up))
-                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left, mainData.ViewPort.Top - 1, 80, 23);
-
-                if (info.IsKeyDown(Keys.Down))
-                    mainData.ViewPort = new Rectangle(mainData.ViewPort.Left, mainData.ViewPort.Top + 1, 80, 23);
-
-                return true;
-            };
 
             Children.Add(mainData);
             Children.Add(messageData);
@@ -77,6 +58,9 @@ namespace StarterProject.CustomConsoles
                 {
                     base.Draw(delta);
 
+                    mainData.Components.RemoveAll();
+                    mainData.Components.Add(new InputHandling.MoveViewPortKeyboardHandler());
+
                     // Generate the content
                     mainData.Resize(2000, 2000, false, new Rectangle(0, 0, 80, 23));
                     mainData.FillWithRandomGarbage();
@@ -100,6 +84,11 @@ namespace StarterProject.CustomConsoles
                     //Renderer.Render(messageData.TextSurface, new Point(0, 0));
                 }
             }
+        }
+
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
+        {
+            return mainData.ProcessKeyboard(info);
         }
     }
 }

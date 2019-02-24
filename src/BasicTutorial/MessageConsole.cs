@@ -23,6 +23,7 @@ namespace BasicTutorial
 
         public MessageConsole(int width, int height) : base(width, height)
         {
+            IsCursorDisabled = true;
             Cursor.IsVisible = false;
             UseKeyboard = false;
 

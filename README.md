@@ -39,9 +39,6 @@ Here are some of the features SadConsole supports.
 #### Scrolling
 ![scrolling console](images/scrolling-example2.gif)
 
-#### Demo video
-http://youtu.be/ZukjZIqDfJw
-
 ## Dependencies
 SadConsole uses NuGet for its .NET dependencies.
 

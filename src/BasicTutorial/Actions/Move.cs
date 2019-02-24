@@ -10,12 +10,12 @@ namespace SadConsole.Actions
 {
     class Move : ActionBase
     {
-        public static Move MoveBy(GameObjects.GameObjectBase source, Point change, Maps.SimpleMap map)
+        public static Move MoveBy(GameObjects.GameObjectBase source, Point change, Maps.MapConsole map)
         {
             return new Move() { Source = source, PositionChange = change, Map = map };
         }
 
-        public Maps.SimpleMap Map;
+        public Maps.MapConsole Map;
         public GameObjects.GameObjectBase Source;
         public Point PositionChange;
         public Point TargetPosition;
@@ -29,9 +29,9 @@ namespace SadConsole.Actions
 
             if (Map.IsTileWalkable(TargetPosition.X, TargetPosition.Y))
             {
-                var ent = Map.GetGameObject(TargetPosition);
+                var ents = Map.GameObjects.GetEntities(TargetPosition).ToArray();
 
-                if (ent == null)
+                if (ents.Length == 0)
                 {
                     Source.MoveBy(PositionChange);
 
@@ -49,8 +49,11 @@ namespace SadConsole.Actions
                 }
                 else
                 {
-                    BumpEntity bump = new BumpEntity(Source, ent);
-                    BasicTutorial.GameState.Dungeon.ActionProcessor.PushAndRun(bump);
+                    foreach (var item in ents)
+                    {
+                        BumpGameObject bump = new BumpGameObject(Source, (GameObjects.GameObjectBase)item);
+                        BasicTutorial.GameState.Dungeon.ActionProcessor.PushAndRun(bump);
+                    }
                 }
             }
             else

@@ -21,9 +21,9 @@ namespace SadConsole.Actions
         }
     }
 
-    class BumpEntity : ActionBase<GameObjects.GameObjectBase, GameObjects.GameObjectBase>
+    class BumpGameObject : ActionBase<GameObjects.GameObjectBase, GameObjects.GameObjectBase>
     {
-        public BumpEntity(GameObjects.GameObjectBase source, GameObjects.GameObjectBase target): base (source, target) { }
+        public BumpGameObject(GameObjects.GameObjectBase source, GameObjects.GameObjectBase target): base (source, target) { }
 
         public override void Run(TimeSpan timeElapsed)
         {

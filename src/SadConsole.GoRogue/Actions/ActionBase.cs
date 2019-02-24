@@ -7,15 +7,28 @@ using System.Threading.Tasks;
 
 namespace SadConsole.Actions
 {
+    /// <summary>
+    /// Base class for actions that provide a success and failure callback.
+    /// </summary>
     public abstract class ActionBase
     {
         protected Func<ActionBase, bool> OnSuccessMethod;
         protected Func<ActionBase, bool> OnFailureMethod;
 
+        /// <summary>
+        /// When <see langword="true"/>, indicates that this action has been completed; otherwise <see langword="false"/>
+        /// </summary>
         public bool IsFinished { get; private set; }
 
-        public ActionResult Result { get; private set; } = ActionResult.Empty;
+        /// <summary>
+        /// A success or failure result for this action.
+        /// </summary>
+        public ActionResult Result { get; private set; } = ActionResult.Failure;
         
+        /// <summary>
+        /// Finishes the action with the specified result.
+        /// </summary>
+        /// <param name="result"></param>
         public void Finish(ActionResult result)
         {
             Result = result;

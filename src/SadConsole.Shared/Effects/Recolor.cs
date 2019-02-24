@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 using System.Runtime.Serialization;
 
 namespace SadConsole.Effects
 {
-   
     /// <summary>
     /// Recors the foreground or the background of a cell.
     /// </summary>
@@ -22,15 +23,7 @@ namespace SadConsole.Effects
         /// </summary>
         [DataMember]
         public Color Background { get; set; }
-
-        [DataMember]
-        private double _timeElapsed;
-
-        [DataMember]
-        private bool _delayFinished = true;
-        [DataMember]
-        private double _startDelay;
-
+        
         /// <summary>
         /// When true, the <see cref="Foreground"/> color will be applied to the cell.
         /// </summary>
@@ -49,18 +42,11 @@ namespace SadConsole.Effects
             Color Background = Color.Transparent;
             DoBackground = true;
             DoForeground = true;
-            RemoveOnFinished = false;
-            Permanent = false;
-            StartDelay = 0d;
-            IsFinished = false;
-            _timeElapsed = 0d;
         }
         
-        public override bool Apply(Cell cell)
+        /// <inheritdoc />
+        public override bool UpdateCell(Cell cell)
         {
-            if (cell.State == null)
-                cell.SaveState();
-
             var oldForeground = cell.Foreground;
             var oldBackground = cell.Background;
 
@@ -70,39 +56,12 @@ namespace SadConsole.Effects
             return oldForeground != cell.Foreground || oldBackground != cell.Background;
         }
 
-        public override void Update(double gameTimeSeconds)
+        /// <inheritdoc />
+        public override void ClearCell(Cell cell)
         {
-            if (_delayFinished)
-            {
-                IsFinished = true;
-            }
-            else
-            {
-                _timeElapsed += gameTimeSeconds;
+            base.ClearCell(cell);
 
-                if (_timeElapsed >= _startDelay)
-                {
-                    _delayFinished = true;
-                    _timeElapsed = 0.0d;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Restarts the cell effect but does not reset it.
-        /// </summary>
-        public override void Restart()
-        {
-            base.Restart();
-
-            _timeElapsed = 0d;
-        }
-
-        public override void Clear(Cell cell)
-        {
-            base.Clear(cell);
-
-            if (!Permanent)
+            if (Permanent)
             {
                 if (DoBackground)
                     cell.Background = Background;
@@ -118,12 +77,16 @@ namespace SadConsole.Effects
             {
                 Foreground = this.Foreground,
                 Background = this.Background,
-                Permanent = this.Permanent,
-                RemoveOnFinished = this.RemoveOnFinished,
-                StartDelay = this.StartDelay,
                 DoForeground = this.DoForeground,
                 DoBackground = this.DoBackground,
-                CloneOnApply = this.CloneOnApply
+
+                IsFinished = IsFinished,
+                StartDelay = StartDelay,
+                CloneOnApply = CloneOnApply,
+                RemoveOnFinished = RemoveOnFinished,
+                DiscardCellState = DiscardCellState,
+                Permanent = Permanent,
+                _timeElapsed = _timeElapsed,
             };
         }
 

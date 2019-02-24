@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,9 +11,17 @@
     <Description>A game helpers library for SadConsole built with GoRogue.</Description>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;XNA</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="1.6.2" />
-    <PackageReference Include="SadConsole.Standard" Version="7.1.0" />
+    <PackageReference Include="GoRogue" Version="2.0.0-pre3" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SadConsole.Shared\SadConsole.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using Console = SadConsole.Console;
 
 namespace StarterProject
@@ -11,13 +12,13 @@ namespace StarterProject
         public string Title;
         public string Summary;
 
-        public IConsole Console
+        public Console Console
         {
             get;
             set;
         }
 
-        public CustomConsole(IConsole console, string title, string summary)
+        public CustomConsole(Console console, string title, string summary)
         {
             Console = console;
             Title = title;

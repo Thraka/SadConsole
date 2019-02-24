@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>7.3.0</Version>
+    <Version>8.0.0</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -13,16 +13,16 @@
     <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Standard</PackageId>
-    <PackageReleaseNotes>- Windows now default MoveToFrontOnMouseClick = true.
-- Consoles are brought forward and focused via LeftMouseDown instead of LeftMouseClick. (Thanks VGA256) #188
-- You can set ListBox.SelectedItem = null now (Thanks darrellp) #183
-- TextBox supports moving the cursor and inserting characters now (Thanks darrellp) #145
-- Window could steal the mouse focus while dragging some other control across the title bar (Thanks VGA256) #165
-- ColoredString.Parse now uses CultureInvariant (Thanks GPugnet) #173
-- SadConsole.Standard was missing the non extended font embedded resource.
-- Various helper methods in ColoredGlyph, ColoredString, and SurfaceBase added (Thanks INeedAUniqueUsername) #187
-</PackageReleaseNotes>
-    <AssemblyVersion>7.3.0.0</AssemblyVersion>
+    <PackageReleaseNotes>[BREAKING CHANGES]
+[This list is just some of the major changes]
+[See the documentation on NuGet for more information]
+- Overhaul of the theme system.
+- Overhaul of the SurfaceBase/ScreenObject/Console system.
+- Overhaul of Instruction system.
+- Added new ConsoleComponents system.
+- Upgraded to MonoGame 3.7
+- EntityManager removed and will be added to GoRogue-SadConsole integration lib.</PackageReleaseNotes>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Thraka/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -34,12 +34,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;XNA</DefineConstants>
     <DocumentationFile>C:\Code\Fun\SadConsole\src\SadConsole.Shared\SadConsole.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>C:\Code\Fun\SadConsole\src\SadConsole.Shared\SadConsole.xml</DocumentationFile>
+    <DefineConstants>TRACE;XNA</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,6 +50,8 @@
   <ItemGroup>
     <None Remove="Resources\IBM8x16_NoPadding_extended.png" />
     <None Remove="Resources\IBM_ext.font" />
+    <None Remove="SadConsole.Shared.projitems" />
+    <None Remove="SadConsole.xml" />
     <None Remove="Resources\IBM8x16.png" />
     <None Remove="Resources\IBM.font" />
   </ItemGroup>
@@ -58,11 +61,12 @@
     <EmbeddedResource Include="Resources\IBM_ext.font" />
     <EmbeddedResource Include="Resources\IBM8x16.png" />
     <EmbeddedResource Include="Resources\IBM.font" />
+    <None Include="Resources\readme.txt" pack="true" PackagePath="." />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.4" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
+    <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" PrivateAssets="All" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" PrivateAssets="All" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
   </ItemGroup>
 

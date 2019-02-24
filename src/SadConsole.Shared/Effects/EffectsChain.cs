@@ -10,6 +10,9 @@
     public class EffectsChain : CellEffectBase
     {
         [DataMember]
+        private List<Cell> _addedCells = new List<Cell>();
+
+        [DataMember]
         public List<ICellEffect> Effects = new List<ICellEffect>();
         [DataMember]
         public bool Repeat;
@@ -21,8 +24,6 @@
         [DataMember]
         private int _activeIndex = -1;
 
-        [DataMember]
-        private double _timeElapsed;
         [DataMember]
         private bool _inChainDelay = false;
 
@@ -46,10 +47,22 @@
             _enabled = false;
         }
 
-        public override bool Apply(Cell cell)
+        public override void AddCell(Cell cell)
+        {
+            _addedCells.Add(cell);
+            _activeEffect?.AddCell(cell);
+        }
+
+        public override void ClearCell(Cell cell)
+        {
+            _addedCells.Remove(cell);
+            _activeEffect?.ClearCell(cell);
+        }
+
+        public override bool UpdateCell(Cell cell)
         {
             if (_activeEffect != null)
-                return _activeEffect.Apply(cell);
+                return _activeEffect.UpdateCell(cell);
             else
                 return false;
         }
@@ -58,7 +71,7 @@
         {
             if (_enabled)
             {
-                _timeElapsed += gameTimeSeconds;
+                base.Update(gameTimeSeconds);
 
                 if (_delayFinished)
                 {
@@ -71,12 +84,18 @@
                         // If the effect finished, we move on to the next effect
                         if (_activeEffect.IsFinished)
                         {
+                            foreach (var cell in _addedCells)
+                                _activeEffect.ClearCell(cell);
+
                             _activeIndex++;
 
                             if (_activeIndex != Effects.Count)
                             {
                                 _activeEffect = Effects[_activeIndex];
-                                
+
+                                foreach (var cell in _addedCells)
+                                    _activeEffect.AddCell(cell);
+
                                 // When moving to the next effect, check and see if we have a delay. If so, flag and wait.
                                 if (DelayBetweenEffects != 0f)
                                 {
@@ -119,11 +138,6 @@
                         }
                     }
                 }
-                else
-                {
-                    if (_timeElapsed >= _startDelay)
-                        _delayFinished = true;
-                }
             }
         }
         
@@ -132,7 +146,8 @@
         /// </summary>
         public override void Restart()
         {
-            _timeElapsed = 0d;
+            base.Restart();
+
             _inChainDelay = false;
 
             foreach (var item in Effects)
@@ -149,15 +164,20 @@
             {
                 _enabled = this._enabled,
                 _activeIndex = this._activeIndex,
-                RemoveOnFinished = this.RemoveOnFinished,
-                StartDelay = this.StartDelay,
                 DelayBetweenEffects = this.DelayBetweenEffects,
-                CloneOnApply = this.CloneOnApply,
-                Repeat = this.Repeat
+                Repeat = this.Repeat,
+
+                IsFinished = IsFinished,
+                StartDelay = StartDelay,
+                CloneOnApply = CloneOnApply,
+                RemoveOnFinished = RemoveOnFinished,
+                DiscardCellState = DiscardCellState,
+                Permanent = Permanent,
+                _timeElapsed = _timeElapsed,
             };
 
             foreach (var item in Effects)
-                chain.Effects.Add(item.Clone());
+                chain.Effects.Add(item.CloneOnApply ? item.Clone() : item);
 
             chain._activeEffect = chain.Effects[chain._activeIndex];
             return chain;
@@ -189,7 +209,8 @@
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
-            Start();
+            if (_enabled)
+                Start();
         }
     }
 }

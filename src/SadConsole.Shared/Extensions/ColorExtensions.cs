@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 

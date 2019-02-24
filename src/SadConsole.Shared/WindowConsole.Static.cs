@@ -1,12 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-
-using SadConsole.Controls;
-using System;
-
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
-    public partial class Window : ControlsConsole
+    using SadConsole.Controls;
+    using System;
+
+    public partial class Window
     {
         /// <summary>
         /// Shows a window prompt with two buttons for the user to click.
@@ -15,9 +16,10 @@ namespace SadConsole
         /// <param name="yesPrompt">The yes button's text.</param>
         /// <param name="noPrompt">The no button's text.</param>
         /// <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
-        public static void Prompt(string message, string yesPrompt, string noPrompt, Action<bool> resultCallback)
+        /// <param name="library">The library to theme the message box. If <see langword="null"/>, then the theme will be set to <see cref="Themes.Library.Default"/>.</param>
+        public static void Prompt(string message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Themes.Library library = null)
         {
-            Prompt(new ColoredString(message), yesPrompt, noPrompt, resultCallback);
+            Prompt(new ColoredString(message), yesPrompt, noPrompt, resultCallback, library);
         }
 
         /// <summary>
@@ -27,16 +29,22 @@ namespace SadConsole
         /// <param name="yesPrompt">The yes button's text.</param>
         /// <param name="noPrompt">The no button's text.</param>
         /// <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
-        public static void Prompt(ColoredString message, string yesPrompt, string noPrompt, Action<bool> resultCallback)
+        /// <param name="library">The library to theme the message box. If <see langword="null"/>, then the theme will be set to <see cref="Themes.Library.Default"/>.</param>
+        public static void Prompt(ColoredString message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Themes.Library library = null)
         {
             message.IgnoreBackground = true;
 
-            Themes.Library.Default.ButtonTheme = new Themes.ButtonLinesTheme();
+            if (library == null)
+                library = Themes.Library.Default;
+            
+            var yesButton = new Button(yesPrompt.Length + 2, 1);
+            var noButton = new Button(noPrompt.Length + 2, 1);
 
-            Button yesButton = new Button(yesPrompt.Length + 2, 1);
-            Button noButton = new Button(noPrompt.Length + 2, 1);
+            yesButton.Theme = library.ButtonTheme.Clone();
+            noButton.Theme = library.ButtonTheme.Clone();
 
-            Window window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
+            var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
+            window.Theme = library;
 
             window.Print(2, 2, message);
             
@@ -51,6 +59,8 @@ namespace SadConsole
 
             window.Add(yesButton);
             window.Add(noButton);
+
+            noButton.IsFocused = true;
 
             window.Closed += (o, e) =>
                 {
@@ -67,9 +77,10 @@ namespace SadConsole
         /// <param name="message">The message.</param>
         /// <param name="closeButtonText">The text of the dialog's close button.</param>
         /// <param name="closedCallback">A callback indicating the message was dismissed.</param>
-        public static void Message(string message, string closeButtonText, Action closedCallback = null)
+        /// <param name="library">The library to theme the message box. If <see langword="null"/>, then the theme will be set to <see cref="Themes.Library.Default"/>.</param>
+        public static void Message(string message, string closeButtonText, Action closedCallback = null, Themes.Library library = null)
         {
-            Message(new ColoredString(message), closeButtonText, closedCallback);
+            Message(new ColoredString(message), closeButtonText, closedCallback, library);
         }
 
         /// <summary>
@@ -78,10 +89,14 @@ namespace SadConsole
         /// <param name="message">The message. (background color is ignored)</param>
         /// <param name="closeButtonText">The text of the dialog's close button.</param>
         /// <param name="closedCallback">A callback indicating the message was dismissed.</param>
-        public static void Message(ColoredString message, string closeButtonText, Action closedCallback = null)
+        /// <param name="library">The library to theme the message box. If <see langword="null"/>, then the theme will be set to <see cref="Themes.Library.Default"/>.</param>
+        public static void Message(ColoredString message, string closeButtonText, Action closedCallback = null, Themes.Library library = null)
         {
             var width = message.ToString().Length + 4;
             var buttonWidth = closeButtonText.Length + 2;
+
+            if (library == null)
+                library = Themes.Library.Default;
 
             if (buttonWidth < 9)
                 buttonWidth = 9;
@@ -89,14 +104,16 @@ namespace SadConsole
             if (width < buttonWidth + 4)
                 width = buttonWidth + 4;
 
-            Button closeButton = new Button(buttonWidth, 1)
+            var closeButton = new Button(buttonWidth, 1)
             {
-                Text = closeButtonText
+                Text = closeButtonText,
+                Theme = library.ButtonTheme.Clone()
             };
 
 
-            Window window = new Window(width, 5 + closeButton.Surface.Height);
-            
+            var window = new Window(width, 5 + closeButton.Surface.Height);
+            window.Theme = library;
+
             message.IgnoreBackground = true;
 
             window.Print(2, 2, message);
@@ -105,7 +122,8 @@ namespace SadConsole
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
 
             window.Add(closeButton);
-            window.CloseOnESC = true;
+            closeButton.IsFocused = true;
+            window.CloseOnEscKey = true;
             window.Show(true);
             window.Center();
         }

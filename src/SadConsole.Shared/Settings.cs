@@ -1,7 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#if XNA
+using Microsoft.Xna.Framework;
+#endif
 
 namespace SadConsole
 {
@@ -110,6 +109,22 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Resizes the game window.
+        /// </summary>
+        /// <param name="width">The width of the window in pixels.</param>
+        /// <param name="height">The height of the window in pixels.</param>
+        public static void ResizeWindow(int width, int height)
+        {
+            Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
+            Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
+            Global.GraphicsDeviceManager.ApplyChanges();
+
+            Global.WindowWidth = width;
+            Global.WindowHeight = height;
+            Global.ResetRendering();
+        }
+
+        /// <summary>
         /// Settings related to input.
         /// </summary>
         public static class Input
@@ -149,6 +164,11 @@ namespace SadConsole
             /// Scales <see cref="Global.RenderOutput"/> to fit the window as best as possible while maintaining a good picture.
             /// </summary>
             Scale,
+
+            /// <summary>
+            /// Fits <see cref="Global.RenderOutput"/> to the window using padding to maintain aspect ratio.
+            /// </summary>
+            Fit,
         }
     }
 }

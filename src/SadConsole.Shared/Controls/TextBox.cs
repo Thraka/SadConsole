@@ -1,13 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
-using SadConsole.Input;
-using SadConsole.Themes;
+#endif
 
 using System;
 using System.Runtime.Serialization;
-using System.Windows;
-using SadConsole.Surfaces;
 
 namespace SadConsole.Controls
 {
@@ -17,6 +14,14 @@ namespace SadConsole.Controls
     [DataContract]
     public class TextBox: ControlBase
     {
+        private string _editingText;
+        private bool _disableKeyboardEdit;
+        
+        /// <summary>
+        /// Mask input with a certain character.
+        /// </summary>
+        public string PasswordChar;
+
         /// <summary>
         /// Indicates the caret is visible.
         /// </summary>
@@ -26,12 +31,6 @@ namespace SadConsole.Controls
         /// A list of valid number characters
         /// </summary>
         protected static char[] _validNumbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-
-        /// <summary>
-        /// The theme of the control.
-        /// </summary>
-        [DataMember(Name="Theme")]
-        protected TextBoxTheme _theme;
 
         /// <summary>
         /// The alignment of the text.
@@ -48,7 +47,7 @@ namespace SadConsole.Controls
         /// The location of the caret.
         /// </summary>
         [DataMember(Name = "CaretPosition")]
-        protected int _caretPos;
+        private int _caretPos;
 
         /// <summary>
         /// The text value of the input box.
@@ -84,6 +83,11 @@ namespace SadConsole.Controls
         public event EventHandler<TextChangedEventArgs> TextChangedPreview;
 
         /// <summary>
+        /// Raised when a key is pressed on the textbox.
+        /// </summary>
+        public event EventHandler<KeyPressEventArgs> KeyPressed;
+
+        /// <summary>
         /// Disables mouse input.
         /// </summary>
         [DataMember(Name = "DisableMouseInput")]
@@ -93,23 +97,35 @@ namespace SadConsole.Controls
         /// Disables the keyboard which turns off keyboard input and hides the cursor.
         /// </summary>
         [DataMember(Name = "DisableKeyboardInput")]
-        public bool DisableKeyboard;
+        public bool DisableKeyboard
+        {
+            get => _disableKeyboardEdit;
+            set
+            {
+                _disableKeyboardEdit = value;
+
+                if (!_disableKeyboardEdit)
+                    _caretPos = Text.Length;
+            }
+        }
 
         /// <summary>
         /// A temp holder for the text as it's being edited.
         /// </summary>
-        public string EditingText { get; protected set; } = "";
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public  TextBoxTheme Theme
+        public string EditingText
         {
-            get => _theme;
-            set
+            get => _editingText;
+            protected set
             {
-                _theme = value;
-                _theme.Attached(this);
+                _editingText = value;
+
+                if (MaxLength != 0)
+                {
+                    if (_editingText.Length >= MaxLength)
+                        _editingText = _editingText.Substring(0, MaxLength);
+                }
+
+                ValidateCursorPosition();
                 DetermineState();
                 IsDirty = true;
             }
@@ -159,11 +175,7 @@ namespace SadConsole.Controls
             {
                 if (value != _text)
                 {
-                    TextChangedEventArgs args = new TextChangedEventArgs
-                    {
-                        NewValue = MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value,
-                        OldValue = _text
-                    };
+                    var args = new TextChangedEventArgs(_text, MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value);
 
                     TextChangedPreview?.Invoke(this, args);
 
@@ -172,7 +184,7 @@ namespace SadConsole.Controls
 
 					Validate();
                     EditingText = _text;
-					PositionCursor();
+                    _caretPos = Text.Length;
 
                     TextChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -205,7 +217,6 @@ namespace SadConsole.Controls
         public TextBox(int width)
             : base(width, 1)
         {
-            Theme = (TextBoxTheme) Library.Default.TextBoxTheme.Clone();
         }
         #endregion
 
@@ -228,24 +239,12 @@ namespace SadConsole.Controls
                 }
                 else
                 {
-                    int value;
-                    if (_text != null & int.TryParse(_text, out value))
+                    if (_text != null & int.TryParse(_text, out int value))
                         _text = value.ToString();
                     else
                         _text = "0";
                 }
             }
-
-            PositionCursor();
-
-            DetermineState();
-            IsDirty = true;
-        }
-
-        protected void ValidateEdit()
-        {
-            PositionCursor();
-
             DetermineState();
             IsDirty = true;
         }
@@ -253,18 +252,19 @@ namespace SadConsole.Controls
         /// <summary>
         /// Correctly positions the cursor within the text.
         /// </summary>
-        protected void PositionCursor()
+        protected void ValidateCursorPosition()
         {
-            if (MaxLength != 0 && EditingText.Length > MaxLength)
+            if (MaxLength != 0)
             {
-                EditingText = EditingText.Substring(0, MaxLength);
-
-                if (EditingText.Length == MaxLength)
+                if (_caretPos > EditingText.Length)
                     _caretPos = EditingText.Length - 1;
             }
+            else if (_caretPos > EditingText.Length)
+                _caretPos = EditingText.Length;
+            
 
-			// Test to see if caret is off edge of box
-			if (_caretPos >= Width)
+            // Test to see if caret is off edge of box
+            if (_caretPos >= Width)
 			{
 				LeftDrawOffset = EditingText.Length - Width + 1;
 
@@ -275,7 +275,22 @@ namespace SadConsole.Controls
 			{
 			    LeftDrawOffset = 0;
 			}
+
+            DetermineState();
+            IsDirty = true;
 		}
+
+
+        private bool TriggerKeyPressEvent(Input.AsciiKey key)
+        {
+            if (KeyPressed == null) return false;
+
+            var args = new KeyPressEventArgs(key);
+            KeyPressed(this, args);
+
+            return args.IsCancelled;
+        }
+
 
         /// <summary>
         /// Called when the control should process keyboard information.
@@ -292,7 +307,9 @@ namespace SadConsole.Controls
                     {
                         if (info.KeysPressed[i].Key == Keys.Enter)
                         {
-                            this.IsDirty = true;
+                            if (TriggerKeyPressEvent(info.KeysPressed[i])) return false;
+
+                            IsDirty = true;
                             DisableKeyboard = false;
                             Text = EditingText;
                         }
@@ -301,38 +318,43 @@ namespace SadConsole.Controls
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(EditingText, Width - 1);
+                    var newText = new System.Text.StringBuilder(EditingText, Width - 1);
 
-                    this.IsDirty = true;
+                    IsDirty = true;
 
 					for (int i = 0; i < info.KeysPressed.Count; i++)
 					{
-						if (_isNumeric)
+                        if (TriggerKeyPressEvent(info.KeysPressed[i])) return false;
+                        
+                        if (_isNumeric)
 						{
                             if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
-								newText.Remove(newText.Length - 1, 1);
-
-							else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
-								DisableKeyboard = true;
+                                newText.Remove(newText.Length - 1, 1);
+                                _caretPos -= 1;
 
-								Text = EditingText;
+                                if (_caretPos == -1)
+                                    _caretPos = 0;
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Enter)
+                            {
+                                DisableKeyboard = true;
+                                Text = EditingText;
+                                return true;
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Escape)
+                            {
+                                DisableKeyboard = true;
+                                return true;
+                            }
 
-								return true;
-							}
-							else if (info.KeysPressed[i].Key == Keys.Escape)
-							{
-								DisableKeyboard = true;
-								return true;
-							}
+                            else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
+                            {
+                                newText.Append(info.KeysPressed[i].Character);
+                                _caretPos += 1;
+                            }
 
-							else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
-							{
-								newText.Append(info.KeysPressed[i].Character);
-							}
-
-							PositionCursor();
-						}
+                        }
 
 						else
 						{
@@ -357,7 +379,7 @@ namespace SadConsole.Controls
 									_caretPos = newText.Length;
 							}
 
-							else if ((info.KeysPressed[i].Key == Keys.Decimal || info.KeysPressed[i].Key == Keys.Delete) && _caretPos != newText.Length)
+							else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
 							{
 								newText.Remove(_caretPos, 1);
 
@@ -398,7 +420,7 @@ namespace SadConsole.Controls
 
 							else if (info.KeysPressed[i].Key == Keys.End)
 							{
-									_caretPos = newText.Length;
+								_caretPos = newText.Length;
 							}
 
 							else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
@@ -409,25 +431,10 @@ namespace SadConsole.Controls
 								if (_caretPos > newText.Length)
 									_caretPos = newText.Length;
 							}
-
-							// Test to see if caret is off edge of box
-							if (_caretPos >= Width)
-							{
-							    LeftDrawOffset = newText.Length - Width + 1;
-
-								if (LeftDrawOffset < 0)
-								    LeftDrawOffset = 0;
-							}
-							else
-							{
-							    LeftDrawOffset = 0;
-							}
 						}
-
 					}
-	                EditingText = newText.ToString();
 
-					ValidateEdit();
+	                EditingText = newText.ToString();
                 }
 
                 return true;
@@ -456,7 +463,7 @@ namespace SadConsole.Controls
             DisableKeyboard = false;
             EditingText = _text;
             IsDirty = true;
-            PositionCursor();
+            ValidateCursorPosition();
         }
 
         protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
@@ -473,14 +480,8 @@ namespace SadConsole.Controls
                 IsDirty = true;    
             }
         }
-
-        /// <inheritdoc />
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
-        [OnDeserializedAttribute]
+        
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             Text = _text;
@@ -488,10 +489,55 @@ namespace SadConsole.Controls
             IsDirty = true;
         }
 
+        /// <summary>
+        /// Event arguments that indicate the change in text for a textbox control.
+        /// </summary>
         public class TextChangedEventArgs : EventArgs
         {
-            public string OldValue;
-            public string NewValue;
+            /// <summary>
+            /// The original text value.
+            /// </summary>
+            public readonly string OldValue;
+
+            /// <summary>
+            /// The new text of the textbox.
+            /// </summary>
+            public string NewValue { get; set; }
+
+            /// <summary>
+            /// Creates a new event args object.
+            /// </summary>
+            /// <param name="oldValue">The original value of the text.</param>
+            /// <param name="newValue">The value the text is chaning to.</param>
+            public TextChangedEventArgs(string oldValue, string newValue)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+                
+        }
+
+        /// <summary>
+        /// Event arguments to indicate that a key is being pressed on the textbox.
+        /// </summary>
+        public class KeyPressEventArgs : EventArgs
+        {
+            /// <summary>
+            /// The key being pressed by the textbox.
+            /// </summary>
+            public readonly Input.AsciiKey Key;
+
+            /// <summary>
+            /// When set to <see langword="true"/>, causes the textbox to cancel the key press.
+            /// </summary>
+            public bool IsCancelled { get; set; }
+
+            /// <summary>
+            /// Creates a new event args object.
+            /// </summary>
+            /// <param name="key">The key being pressed.</param>
+            public KeyPressEventArgs(Input.AsciiKey key) =>
+                Key = key;
         }
     }
 }

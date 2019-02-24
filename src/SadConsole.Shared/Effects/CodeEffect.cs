@@ -1,8 +1,4 @@
-﻿using SadConsole.Effects;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System;
 
 namespace SadConsole.Effects
 {
@@ -26,12 +22,12 @@ namespace SadConsole.Effects
             Id = id;
         }
 
-        public override bool Apply(Cell cell)
+        public override bool UpdateCell(Cell cell)
         {
             return applyAction(this, cell);
         }
 
-        public override void Clear(Cell cell)
+        public override void ClearCell(Cell cell)
         {
             clearAction(this, cell);
         }

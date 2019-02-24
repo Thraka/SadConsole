@@ -1,4 +1,5 @@
-﻿using SadConsole;
+﻿using System.Runtime.CompilerServices;
+using SadConsole;
 
 namespace Microsoft.Xna.Framework
 {
@@ -11,10 +12,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="cellWidth">The width of a cell in pixels.</param>
         /// <param name="cellHeight">The height of a cell in pixels.</param>
         /// <returns>The pixel position of the top-left of the cell.</returns>
-        public static Point ConsoleLocationToPixel(this Point point, int cellWidth, int cellHeight)
-        {
-            return new Point(point.X * cellWidth, point.Y * cellHeight);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point ConsoleLocationToPixel(this Point point, int cellWidth, int cellHeight) =>
+            new Point(point.X * cellWidth, point.Y * cellHeight);
 
         /// <summary>
         /// Translates a console cell position to where it appears on the screen in pixels.
@@ -22,10 +22,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="point">The current cell position.</param>
         /// <param name="font">The font to use in calculating the position.</param>
         /// <returns>The pixel position of the top-left of the cell.</returns>
-        public static Point ConsoleLocationToPixel(this Point point, Font font)
-        {
-            return new Point(point.X * font.Size.X, point.Y * font.Size.Y);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point ConsoleLocationToPixel(this Point point, Font font) =>
+            new Point(point.X * font.Size.X, point.Y * font.Size.Y);
 
         /// <summary>
         /// Translates a pixel to where it appears on a console cell.
@@ -34,10 +33,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="cellWidth">The width of a cell in pixels.</param>
         /// <param name="cellHeight">The height of a cell in pixels.</param>
         /// <returns>The cell position on the screen.</returns>
-        public static Point PixelLocationToConsole(this Point point, int cellWidth, int cellHeight)
-        {
-            return new Point(point.X / cellWidth, point.Y / cellHeight);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point PixelLocationToConsole(this Point point, int cellWidth, int cellHeight) =>
+            new Point(point.X / cellWidth, point.Y / cellHeight);
 
         /// <summary>
         /// Translates a pixel to where it appears on a console cell.
@@ -45,10 +43,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="point">The current world position.</param>
         /// <param name="font">The font to use in calculating the position.</param>
         /// <returns>The cell position on the screen.</returns>
-        public static Point PixelLocationToConsole(this Point point, Font font)
-        {
-            return new Point(point.X / font.Size.X, point.Y / font.Size.Y);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point PixelLocationToConsole(this Point point, Font font) => 
+            new Point(point.X / font.Size.X, point.Y / font.Size.Y);
 
         /// <summary>
         /// Translates an x,y position to an array index.
@@ -56,7 +53,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="point">The position.</param>
         /// <param name="rowWidth">How many columns in a row.</param>
         /// <returns></returns>
-        public static int ToIndex(this Point point, int rowWidth) => Helpers.GetIndexFromPoint(point.X, point.Y, rowWidth);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ToIndex(this Point point, int rowWidth) => 
+            Helpers.GetIndexFromPoint(point.X, point.Y, rowWidth);
 
         /// <summary>
         /// Translates an array index to a Point.
@@ -64,7 +63,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="index">The index in the array.</param>
         /// <param name="rowWidth">How many columns in a row.</param>
         /// <returns></returns>
-        public static Point ToPoint(this int index, int rowWidth) => Helpers.GetPointFromIndex(index, rowWidth);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point ToPoint(this int index, int rowWidth) => 
+            Helpers.GetPointFromIndex(index, rowWidth);
 
         /// <summary>
         /// Gets the cell coordinates of the <paramref name="targetFont"/> based on a cell in the <paramref name="sourceFont"/>.
@@ -73,11 +74,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="sourceFont">The source font translating from.</param>
         /// <param name="targetFont">The target font translating to.</param>
         /// <returns>The position of the cell in the <paramref name="targetFont"/>.</returns>
-        public static Point TranslateFont(this Point point, Font sourceFont, Font targetFont)
-        {
-            var world = point.ConsoleLocationToPixel(sourceFont.Size.X, sourceFont.Size.Y);
-            return world.PixelLocationToConsole(targetFont.Size.X, targetFont.Size.Y);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point TranslateFont(this Point point, Font sourceFont, Font targetFont) => 
+            point.ConsoleLocationToPixel(sourceFont.Size.X, sourceFont.Size.Y).PixelLocationToConsole(targetFont.Size.X, targetFont.Size.Y);
 
         /// <summary>
         /// Creates a position matrix (in pixels) based on the position of a cell.

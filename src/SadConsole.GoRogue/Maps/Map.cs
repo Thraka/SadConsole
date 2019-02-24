@@ -11,23 +11,25 @@ using SadConsole;
 
 namespace SadConsole.Maps
 {
-    public class SimpleMap: ScreenObject, ISettableMapView<Tile>, IEnumerable<Tile>
+    /// <summary>
+    /// Console representing a map.
+    /// </summary>
+    public class MapConsole: ScrollingConsole, ISettableMapView<Tile>, IEnumerable<Tile>
     {
-        public Surfaces.Basic Surface { get; set; }
-        
-        public GameObjects.GameObjectManager GameObjects { get; protected set; }
+        /// <summary>
+        /// The game objects added to the map.
+        /// </summary>
+        public Components.EntityManager GameObjects { get; protected set; }
 
+        /// <summary>
+        /// The game object that will be controlled by the player.
+        /// </summary>
         public GameObjects.GameObjectBase ControlledGameObject { get; set; }
 
         /// <summary>
-        /// The width of the map.
+        /// Fires when a map tile is replaced or gets an alert that its state has changed.
         /// </summary>
-        public int Width { get; }
-
-        /// <summary>
-        /// The height of the map.
-        /// </summary>
-        public int Height { get; }
+        public event EventHandler<TileChangedEventArgs> MapTileChanged;
 
         /// <summary>
         /// Instance of the FOV translator
@@ -38,22 +40,22 @@ namespace SadConsole.Maps
 
         public List<Region> Regions;
 
-        public Tile this[int index]
+        public new Tile this[int index]
         {
             get => Tiles[index];
-            set => SetupTile(value, new Point(index % Width, index / Width));
+            set => SetupTile(value, index.ToPoint(Width));
         }
 
-        public Tile this[int x, int y]
+        public new Tile this[int x, int y]
         {
-            get => Tiles[Surface.GetIndexFromPoint(x, y)];
+            get => Tiles[Helpers.GetIndexFromPoint(x, y, Width)];
             set => SetupTile(value, new Point(x, y));
         }
 
         public Tile this[Coord position]
         {
             get => Tiles[position.ToIndex(Width)];
-            set => SetupTile(value, position.ToPoint());
+            set => SetupTile(value, position);
         }
 
         public Tile this[Point position]
@@ -67,19 +69,15 @@ namespace SadConsole.Maps
         /// </summary>
         /// <param name="width">The total width of the map.</param>
         /// <param name="height">The total height of the map.</param>
-        /// <param name="viewPort">A view of the map that is displayed on the screen.</param>
         /// <param name="defaultTileBlueprint">The tile blueprint used to fill the map.</param>
-        /// <param name="font">The font used with the map. Defaults to <see cref="SadConsole.Global.FontDefault"/>.</param>
-        public SimpleMap(int width, int height, Rectangle viewPort, string defaultTileBlueprint = "wall", Font font = null)
+        public MapConsole(int width, int height, string defaultTileBlueprint = "wall"): base(width, height)
         {
             Width = width;
             Height = height;
-
-            if (font == null)
-                font = SadConsole.Global.FontDefault;
-
+            
             // Create our tiles for the map
             Tiles = new Tile[width * height];
+
             Regions = new List<Region>();
 
             // Be efficient by not using factory.Create each tile below. Instead, get the blueprint and use that to create each tile.
@@ -93,14 +91,14 @@ namespace SadConsole.Maps
                 Tiles[i].TileChanged += SimpleMap_TileChanged;
             }
 
+            Cells = Tiles;
+            OnCellsReset();
+
             // Instance of the FOV translator.
             MapToFOV = new TranslationFOV(this);
-            
-            Surface = new SadConsole.Surfaces.Basic(width, height, font, viewPort, Tiles);
-            GameObjects = new GameObjects.GameObjectManager(this);
-            
-            // Parent the surface to the map.
-            Children.Add(Surface);
+
+            GameObjects = new Components.EntityManager();
+            Components.Add(GameObjects);
         }
 
         private void SetupTile(Tile tile, Point position)
@@ -111,18 +109,10 @@ namespace SadConsole.Maps
             tile.Position = position;
             tile.TileChanged += SimpleMap_TileChanged;
             Tiles[position.ToIndex(Width)] = tile;
-            Surface.SetRenderCells();
         }
 
-        private void SimpleMap_TileChanged(object sender, EventArgs e) => Surface.IsDirty = true;
-
-        /// <summary>
-        /// Returns <see cref="SadConsole.GameObjects.GameObjectBase"/> by position.
-        /// </summary>
-        /// <param name="position">The position of the <see cref="SadConsole.GameObjects.GameObjectBase"/>.</param>
-        /// <returns>The <see cref="SadConsole.GameObjects.GameObjectBase"/> at the position, otherwise null.</returns>
-        public GameObjects.GameObjectBase GetGameObject(Point position) => GameObjects.GetItem(position.ToCoord());
-
+        private void SimpleMap_TileChanged(object sender, EventArgs e) => MapTileChanged?.Invoke(this, new TileChangedEventArgs(this, (Tile)sender));
+        
         /// <summary>
         /// Gets a tile from the map.
         /// </summary>
@@ -180,25 +170,7 @@ namespace SadConsole.Maps
                     return foundTile;
             }
         }
-
-        public override void Draw(TimeSpan timeElapsed)
-        {
-            base.Draw(timeElapsed);
-
-            foreach (var gameObject in GameObjects)
-                gameObject.Item.Draw(timeElapsed);
-        }
-
-        public override void Update(TimeSpan timeElapsed)
-        {
-            base.Update(timeElapsed);
-
-            foreach (var gameObject in GameObjects)
-                gameObject.Item.Update(timeElapsed);
-
-            GameObjects.SyncView();
-        }
-
+        
         /// <summary>
         /// Translates FOV values between GoRogue and our game tiles.
         /// </summary>
@@ -213,7 +185,7 @@ namespace SadConsole.Maps
             }
         }
 
-        public IEnumerator<Tile> GetEnumerator()
+        public new IEnumerator<Tile> GetEnumerator()
         {
             return new List<Tile>(Tiles).GetEnumerator();
         }
@@ -221,6 +193,28 @@ namespace SadConsole.Maps
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Event arguments for when a tile changed event fires.
+        /// </summary>
+        public class TileChangedEventArgs: EventArgs
+        {
+            /// <summary>
+            /// The tile that changed.
+            /// </summary>
+            public readonly Tile Tile;
+
+            /// <summary>
+            /// The map that owns the tile.
+            /// </summary>
+            public readonly MapConsole Map;
+
+            public TileChangedEventArgs(MapConsole map, Tile tile)
+            {
+                Map = map;
+                Tile = tile;
+            }
         }
     }
 }

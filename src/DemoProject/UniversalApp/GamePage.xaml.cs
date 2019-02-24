@@ -42,13 +42,6 @@ namespace Game1
 			var launchArguments = string.Empty;
             _game = MonoGame.Framework.XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, swapChainPanel);
             
-            // Hook the update event that happens each frame so we can trap keys and respond.
-            SadConsole.Game.OnUpdate = Update;
-
-            // Hook the "after render" even though we're not using it.
-            SadConsole.Game.OnDraw = DrawFrame;
-
-
             // Init
             Theme.SetupThemes();
 
@@ -67,7 +60,11 @@ namespace Game1
             // Initialize the windows
             _characterWindow = new StarterProject.Windows.CharacterViewer();
 
+            // Hook the update event that happens each frame so we can trap keys and respond.
+            SadConsole.Game.OnUpdate = Update;
 
+            // Hook the "after render" even though we're not using it.
+            SadConsole.Game.OnDraw = DrawFrame;
         }
 
         private void DrawFrame(GameTime time)

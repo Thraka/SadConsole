@@ -1,13 +1,12 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿#if XNA
+using Microsoft.Xna.Framework.Input;
+#endif
 
-using SadConsole.Themes;
 using System;
 using System.Runtime.Serialization;
-using SadConsole.Surfaces;
 
 namespace SadConsole.Controls
 {
-    
     /// <summary>
     /// Represents a button that can be toggled on/off within a group of other buttons.
     /// </summary>
@@ -21,8 +20,6 @@ namespace SadConsole.Controls
 
         [DataMember(Name = "Group")]
         protected string _groupName = "";
-        [DataMember(Name = "Theme")]
-        protected CheckBoxTheme _theme;
         [DataMember(Name = "Text")]
         protected string _text;
         [DataMember(Name = "TextAlignment")]
@@ -32,22 +29,7 @@ namespace SadConsole.Controls
         protected bool _isMouseDown;
         protected Cell _currentAppearanceButton;
         protected Cell _currentAppearanceText;
-
-        /// <summary>
-        /// The theme of this control. If the theme is not explicitly set, the theme is taken from the library.
-        /// </summary>
-        public CheckBoxTheme Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                _theme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
-
+        
         /// <summary>
         /// The text displayed on the control.
         /// </summary>
@@ -106,7 +88,6 @@ namespace SadConsole.Controls
         /// <param name="height">Height of the control.</param>
         public CheckBox(int width, int height) : base(width, height)
         {
-            Theme = (CheckBoxTheme)Library.Default.CheckBoxTheme.Clone();
         }
         
         protected override void OnMouseIn(Input.MouseConsoleState state)
@@ -160,13 +141,7 @@ namespace SadConsole.Controls
             return false;
         }
 
-        /// <inheritdoc />
-        public override void Update(TimeSpan time)
-        {
-            Theme.UpdateAndDraw(this, time);
-        }
-
-        [OnDeserializedAttribute]
+        [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             DetermineState();

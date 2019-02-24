@@ -16,10 +16,7 @@ namespace SadConsole
         Bottom = 2,
         Stretch = 3,
     }
-}
 
-namespace SadConsole
-{
     public enum Orientation
     {
         Vertical = 0,

@@ -3,64 +3,50 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// An effect that doesn't do anything but delays. Usually used by the ChainEffect effect.
+    /// An effect that doesn't do anything but delays. Usually used with the <see cref="EffectsChain"/> effect.
     /// </summary>
     [DataContract]
     public class Delay: CellEffectBase
     {
-        [DataMember]
-        private double _timeElapsed;
-
-        [DataMember]
-        public double DelayTime { get; set; }
-
+        /// <inheritdoc />
         public override void Update(double gameTimeSeconds)
         {
-            _timeElapsed += gameTimeSeconds;
+            base.Update(gameTimeSeconds);
 
-            if (_delayFinished)
+            if (_delayFinished && !IsFinished)
             {
-                if (_timeElapsed >= DelayTime)
-                {
-                    IsFinished = true;
-                }
-            }
-            else
-            {
-                if (_timeElapsed >= _startDelay)
-                {
-                    _delayFinished = true;
-                    _timeElapsed = 0.0d;
-                }
+                IsFinished = true;
             }
         }
 
-        /// <summary>
-        /// Restarts the cell effect but does not reset it.
-        /// </summary>
-        public override void Restart()
+        /// <inheritdoc />
+        public override void AddCell(Cell cell)
         {
-            _timeElapsed = 0.0d;
-
-            base.Restart();
         }
 
-        public override bool Apply(Cell cell)
+        /// <inheritdoc />
+        public override bool UpdateCell(Cell cell)
         {
             return false;
         }
 
-        public override void Clear(Cell cell)
+        /// <inheritdoc />
+        public override void ClearCell(Cell cell)
         {
         }
 
+        /// <inheritdoc />
         public override ICellEffect Clone()
         {
             return new Delay()
             {
-                DelayTime = this.DelayTime,
-                StartDelay = this.StartDelay,
-                CloneOnApply = this.CloneOnApply,
+                IsFinished = IsFinished,
+                StartDelay = StartDelay,
+                CloneOnApply = CloneOnApply,
+                RemoveOnFinished = RemoveOnFinished,
+                DiscardCellState = DiscardCellState,
+                Permanent = Permanent,
+                _timeElapsed = _timeElapsed,
             };
         }
 
@@ -80,9 +66,10 @@
         //    return false;
         //}
 
+        /// <inheritdoc />
         public override string ToString()
         {
-            return string.Format("BLINK-{0}-{1}", DelayTime, StartDelay);
+            return string.Format("DELAY-{0}", StartDelay);
         }
     }
 }

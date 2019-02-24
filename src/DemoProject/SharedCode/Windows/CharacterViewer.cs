@@ -36,11 +36,11 @@ namespace StarterProject.Windows
             Title = (char)198 + "Character" + (char)198;
             TitleAlignment = HorizontalAlignment.Left;
             //SetTitle(" Characters ", HorizontalAlignment.Center, Color.Blue, Color.LightGray);
-            CloseOnESC = true;
+            CloseOnEscKey = true;
             UsePixelPositioning = true;
 
             // CHARACTER SCROLL
-            _charScrollBar = ScrollBar.Create(Orientation.Vertical, 16);
+            _charScrollBar = new ScrollBar(Orientation.Vertical, 16);
             _charScrollBar.Position = new Point(17, 1);
             _charScrollBar.Name = "ScrollBar";
             _charScrollBar.Maximum = Font.Rows - 16;
@@ -120,11 +120,11 @@ namespace StarterProject.Windows
 
         protected override void OnMouseLeftClicked(SadConsole.Input.MouseConsoleState state)
         {
-            if (state.Cell != null && trackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
+            if (state.Cell != null && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
             {
                 SelectedCharacterIndex = state.Cell.Glyph;
             }
-            else if (state.ConsolePosition.X == Width - 1 && state.ConsolePosition.Y == 0)
+            else if (state.ConsoleCellPosition.X == Width - 1 && state.ConsoleCellPosition.Y == 0)
                 Hide();
 
             base.OnMouseLeftClicked(state);
@@ -132,14 +132,14 @@ namespace StarterProject.Windows
 
         protected override void OnMouseMove(SadConsole.Input.MouseConsoleState state)
         {
-            if (state.Cell != null && trackedRegion.Contains(state.ConsolePosition.X, state.ConsolePosition.Y))
+            if (state.Cell != null && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
             {
                 // Draw the character index and value in the status area
                 string[] items = new string[] { "Index: ", state.Cell.Glyph.ToString() + " ", ((char)state.Cell.Glyph).ToString() };
 
                 items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
 
-                var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
+                var text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
                            items[1].CreateColored(Color.LightCoral, Color.Black, null) +
                            items[2].CreateColored(Color.LightCyan, Color.Black, null);
 
@@ -152,14 +152,14 @@ namespace StarterProject.Windows
                 if (lastMouseState == null)
                 {
                 }
-                else if (lastMouseState.ConsolePosition != state.ConsolePosition)
+                else if (lastMouseState.ConsoleCellPosition != state.ConsoleCellPosition)
                 {
-                    SetEffect(lastMouseState.ConsolePosition.X, lastMouseState.ConsolePosition.Y,
+                    SetEffect(lastMouseState.ConsoleCellPosition.X, lastMouseState.ConsoleCellPosition.Y,
                     unhighlightEffect
                     );
                 }
 
-                SetEffect(state.ConsolePosition.X, state.ConsolePosition.Y, highlightedEffect);
+                SetEffect(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y, highlightedEffect);
                 lastMouseState = state.Clone();
             }
             else
@@ -169,7 +169,7 @@ namespace StarterProject.Windows
                 // Clear the special effect on the last known character
                 if (lastMouseState != null)
                 {
-                    SetEffect(lastMouseState.ConsolePosition.X, lastMouseState.ConsolePosition.Y, unhighlightEffect);
+                    SetEffect(lastMouseState.ConsoleCellPosition.X, lastMouseState.ConsoleCellPosition.Y, unhighlightEffect);
                     lastMouseState = null;
                 }
             }
@@ -186,11 +186,11 @@ namespace StarterProject.Windows
             string[] items = new string[] { "Selected: ", ((char)SelectedCharacterIndex).ToString(), " (", SelectedCharacterIndex.ToString(), ")" };
             items[4] = items[4].PadRight(Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
 
-            var text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
-                       items[1].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
-                       items[2].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null) +
-                       items[3].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
-                       items[4].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null);
+            var text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[1].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[2].CreateColored(Color.LightCyan, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[3].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
+                       items[4].CreateColored(Color.LightCyan, Theme.WindowTheme.BorderStyle.Background, null);
 
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;

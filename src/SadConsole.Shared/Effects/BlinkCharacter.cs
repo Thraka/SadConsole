@@ -10,9 +10,7 @@
     {
         [DataMember]
         private bool _isOn;
-        [DataMember]
-        private double _timeElapsed;
-
+        
         /// <summary>
         /// In seconds, how fast the fade in and fade out each are
         /// </summary>
@@ -30,17 +28,10 @@
             BlinkSpeed = 1d;
             GlyphIndex = 0;
             _isOn = true;
-            _timeElapsed = 0d;
-            StartDelay = 0d;
         }
-
-        #region ICellEffect Members
-
-        public override bool Apply(Cell cell)
+        
+        public override bool UpdateCell(Cell cell)
         {
-            if (cell.State == null)
-                cell.SaveState();
-
             var oldGlyph = cell.Glyph;
 
             if (!_isOn)
@@ -53,22 +44,14 @@
 
         public override void Update(double gameTimeSeconds)
         {
-            _timeElapsed += gameTimeSeconds;
+            base.Update(gameTimeSeconds);
 
-            if (_delayFinished)
+            if (_delayFinished && !IsFinished)
             {
                 if (_timeElapsed >= BlinkSpeed)
                 {
                     _isOn = !_isOn;
                     _timeElapsed = 0.0d;
-                }
-            }
-            else
-            {
-                if (_timeElapsed >= _startDelay)
-                {
-                    _delayFinished = true;
-                    _timeElapsed = 0d;
                 }
             }
         }
@@ -89,13 +72,16 @@
             return new BlinkGlyph()
             {
                 _isOn = this._isOn,
-                _timeElapsed = this._timeElapsed,
                 BlinkSpeed = this.BlinkSpeed,
                 GlyphIndex = this.GlyphIndex,
-                IsFinished = this.IsFinished,
-                StartDelay = this.StartDelay,
-                RemoveOnFinished = this.RemoveOnFinished,
-                CloneOnApply = this.CloneOnApply
+
+                IsFinished = IsFinished,
+                StartDelay = StartDelay,
+                CloneOnApply = CloneOnApply,
+                RemoveOnFinished = RemoveOnFinished,
+                DiscardCellState = DiscardCellState,
+                Permanent = Permanent,
+                _timeElapsed = _timeElapsed,
             };
         }
 
@@ -117,10 +103,10 @@
         //    return false;
         //}
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return string.Format("BLINKCHAR-{0}-{1}-{2}-{3}", GlyphIndex, BlinkSpeed, StartDelay, RemoveOnFinished);
         }
-        #endregion
     }
 }
