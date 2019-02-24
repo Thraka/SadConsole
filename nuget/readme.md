@@ -41,3 +41,9 @@ Code changes:
 - Fixed inputbox not working with nummbers.
 - Redesigned ListboxItemTheme to be passable on Listbox ctor.
 - Consoles no longer use a cached drawcall.
+- Window resize option Settings.ResizeMode now supports Fit. (Thanks ajhmain)
+- Console.CalculatedPosition is now in pixels. Consoles of different font sizes now play nice with parenting. Things will be offset properly now.
+- Settings.ResizeWindow method allows you to easily resize the game window.
+- Added TextBox.KeyPressed event to allow you to cancel input of keys on a textbox.
+- MouseWheel support has been added to the listbox control.
+- Listbox.SingleClickItemExecute has been added to allow the ItemExecute event to trigger without a doubleclick.
