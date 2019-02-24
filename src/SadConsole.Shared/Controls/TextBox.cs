@@ -16,7 +16,7 @@ namespace SadConsole.Controls
     {
         private string _editingText;
         private bool _disableKeyboardEdit;
-
+        
         /// <summary>
         /// Mask input with a certain character.
         /// </summary>
@@ -81,6 +81,11 @@ namespace SadConsole.Controls
         /// Raised before the text has changed and allows the change to be cancelled.
         /// </summary>
         public event EventHandler<TextChangedEventArgs> TextChangedPreview;
+
+        /// <summary>
+        /// Raised when a key is pressed on the textbox.
+        /// </summary>
+        public event EventHandler<KeyPressEventArgs> KeyPressed;
 
         /// <summary>
         /// Disables mouse input.
@@ -170,11 +175,7 @@ namespace SadConsole.Controls
             {
                 if (value != _text)
                 {
-                    TextChangedEventArgs args = new TextChangedEventArgs
-                    {
-                        NewValue = MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value,
-                        OldValue = _text
-                    };
+                    var args = new TextChangedEventArgs(_text, MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value);
 
                     TextChangedPreview?.Invoke(this, args);
 
@@ -279,6 +280,18 @@ namespace SadConsole.Controls
             IsDirty = true;
 		}
 
+
+        private bool TriggerKeyPressEvent(Input.AsciiKey key)
+        {
+            if (KeyPressed == null) return false;
+
+            var args = new KeyPressEventArgs(key);
+            KeyPressed(this, args);
+
+            return args.IsCancelled;
+        }
+
+
         /// <summary>
         /// Called when the control should process keyboard information.
         /// </summary>
@@ -294,7 +307,9 @@ namespace SadConsole.Controls
                     {
                         if (info.KeysPressed[i].Key == Keys.Enter)
                         {
-                            this.IsDirty = true;
+                            if (TriggerKeyPressEvent(info.KeysPressed[i])) return false;
+
+                            IsDirty = true;
                             DisableKeyboard = false;
                             Text = EditingText;
                         }
@@ -303,13 +318,15 @@ namespace SadConsole.Controls
                 }
                 else
                 {
-                    System.Text.StringBuilder newText = new System.Text.StringBuilder(EditingText, Width - 1);
+                    var newText = new System.Text.StringBuilder(EditingText, Width - 1);
 
-                    this.IsDirty = true;
+                    IsDirty = true;
 
 					for (int i = 0; i < info.KeysPressed.Count; i++)
 					{
-						if (_isNumeric)
+                        if (TriggerKeyPressEvent(info.KeysPressed[i])) return false;
+                        
+                        if (_isNumeric)
 						{
                             if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
                             {
@@ -472,10 +489,51 @@ namespace SadConsole.Controls
             IsDirty = true;
         }
 
+        /// <summary>
+        /// Event arguments that indicate the change in text for a textbox control.
+        /// </summary>
         public class TextChangedEventArgs : EventArgs
         {
-            public string OldValue;
-            public string NewValue;
+            /// <summary>
+            /// The original text value.
+            /// </summary>
+            public readonly string OldValue;
+
+            /// <summary>
+            /// The new text of the textbox.
+            /// </summary>
+            public string NewValue { get; set; }
+
+            /// <summary>
+            /// Creates a new event args object.
+            /// </summary>
+            /// <param name="oldValue">The original value of the text.</param>
+            /// <param name="newValue">The value the text is chaning to.</param>
+            public TextChangedEventArgs(string oldValue, string newValue) =>
+                (OldValue, NewValue) = (oldValue, newValue);
+        }
+
+        /// <summary>
+        /// Event arguments to indicate that a key is being pressed on the textbox.
+        /// </summary>
+        public class KeyPressEventArgs : EventArgs
+        {
+            /// <summary>
+            /// The key being pressed by the textbox.
+            /// </summary>
+            public readonly Input.AsciiKey Key;
+
+            /// <summary>
+            /// When set to <see langword="true"/>, causes the textbox to cancel the key press.
+            /// </summary>
+            public bool IsCancelled { get; set; }
+
+            /// <summary>
+            /// Creates a new event args object.
+            /// </summary>
+            /// <param name="key">The key being pressed.</param>
+            public KeyPressEventArgs(Input.AsciiKey key) =>
+                Key = key;
         }
     }
 }
