@@ -1,4 +1,4 @@
-﻿## XX/XX/XXXX V8.0
+﻿## 02/24/2019 V8.0
 Special thanks to the SadConsole Discord on all the feedback provided.
 Shout to the GoRogue project.
 
@@ -9,8 +9,6 @@ Shout to the GoRogue project.
 File changes:
 
 - SadConsole and SadConsole.Universal have been replaced by the SadConsole for .NET Standard library.
-- NuGet packages will be retired and the SadConsole.Standard will remain the main NuGet package.
-- FNA is unknown.
 
 Code changes:
 
