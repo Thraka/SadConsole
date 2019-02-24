@@ -36,7 +36,7 @@ Code changes:
 - Control.CanFocus is now respected.
 - Fixed CellSurface JSON converter.
 - Fixed ControlsConsole renderer not respecting viewport.
-- Fixed inputbox not working with nummbers.
+- Fixed inputbox not working with numbers.
 - Redesigned ListboxItemTheme to be passable on Listbox ctor.
 - Consoles no longer use a cached drawcall.
 - Window resize option Settings.ResizeMode now supports Fit. (Thanks ajhmain)
