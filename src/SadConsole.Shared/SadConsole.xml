@@ -3175,10 +3175,18 @@
             When the <see cref="P:SadConsole.Controls.ListBox.SelectedItem"/> changes, and this property is true, objects will be compared by reference. If false, they will be compared by value.
             </summary>
         </member>
+        <member name="P:SadConsole.Controls.ListBox.SingleClickItemExecute">
+            <summary>
+            When set to <see langword="true"/>, the <see cref="E:SadConsole.Controls.ListBox.SelectedItemExecuted"/> event will fire when an item is single-clicked instead of double-clicked.
+            </summary>
+        </member>
         <member name="M:SadConsole.Controls.ListBox.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new instance of the listbox control.
             </summary>
+        </member>
+        <member name="M:SadConsole.Controls.ListBox.ProcessMouse(SadConsole.Input.MouseConsoleState)">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Controls.ProgressBar">
             <summary>

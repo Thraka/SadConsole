@@ -78,6 +78,12 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember]
         public bool CompareByReference { get; set; }
+
+        /// <summary>
+        /// When set to <see langword="true"/>, the <see cref="SelectedItemExecuted"/> event will fire when an item is single-clicked instead of double-clicked.
+        /// </summary>
+        [DataMember]
+        public bool SingleClickItemExecute { get; set; }
         
         [DataMember]
         public ObservableCollection<object> Items { get; private set; }
@@ -307,7 +313,7 @@ namespace SadConsole.Controls
         {
             base.OnLeftMouseClicked(state);
 
-            DateTime click = DateTime.Now;
+            var click = DateTime.Now;
             bool doubleClicked = (click - leftMouseLastClick).TotalSeconds <= 0.5;
             leftMouseLastClick = click;
 
@@ -336,13 +342,15 @@ namespace SadConsole.Controls
                 else
                     noItem = true;
 
-                if (doubleClicked && oldItem == SelectedItem && !noItem)
+                if (!noItem && (SingleClickItemExecute || (doubleClicked && oldItem == SelectedItem)))
                 {
                     leftMouseLastClick = DateTime.MinValue;
                     OnItemAction();
                 }
             }
         }
+
+        /// <inheritdoc />
         public override bool ProcessMouse(Input.MouseConsoleState state)
         {
             if (isEnabled)
