@@ -37,7 +37,14 @@ namespace SadConsole.Controls
         [DataMember(Name = "ScrollBarSizeAdjust")]
         protected int scrollBarSizeAdjust = 0;
 
+        /// <summary>
+        /// An event that triggers when the <see cref="SelectedItem"/> changes.
+        /// </summary>
         public event EventHandler<SelectedItemEventArgs> SelectedItemChanged;
+
+        /// <summary>
+        /// An event that triggers when an item is double clicked or the Enter key is pressed while the listbox has focus.
+        /// </summary>
         public event EventHandler<SelectedItemEventArgs> SelectedItemExecuted;
         
         /// <summary>

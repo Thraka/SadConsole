@@ -3135,6 +3135,16 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
         </member>
+        <member name="E:SadConsole.Controls.ListBox.SelectedItemChanged">
+            <summary>
+            An event that triggers when the <see cref="P:SadConsole.Controls.ListBox.SelectedItem"/> changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Controls.ListBox.SelectedItemExecuted">
+            <summary>
+            An event that triggers when an item is double clicked or the Enter key is pressed while the listbox has focus.
+            </summary>
+        </member>
         <member name="P:SadConsole.Controls.ListBox.ItemTheme">
             <summary>
             The theme used by the listbox items.
@@ -3448,6 +3458,11 @@
             Raised before the text has changed and allows the change to be cancelled.
             </summary>
         </member>
+        <member name="E:SadConsole.Controls.TextBox.KeyPressed">
+            <summary>
+            Raised when a key is pressed on the textbox.
+            </summary>
+        </member>
         <member name="F:SadConsole.Controls.TextBox.DisableMouse">
             <summary>
             Disables mouse input.
@@ -3525,6 +3540,49 @@
             <summary>
             Called when the control is focused.
             </summary>
+        </member>
+        <member name="T:SadConsole.Controls.TextBox.TextChangedEventArgs">
+            <summary>
+            Event arguments that indicate the change in text for a textbox control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Controls.TextBox.TextChangedEventArgs.OldValue">
+            <summary>
+            The original text value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Controls.TextBox.TextChangedEventArgs.NewValue">
+            <summary>
+            The new text of the textbox.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Controls.TextBox.TextChangedEventArgs.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new event args object.
+            </summary>
+            <param name="oldValue">The original value of the text.</param>
+            <param name="newValue">The value the text is chaning to.</param>
+        </member>
+        <member name="T:SadConsole.Controls.TextBox.KeyPressEventArgs">
+            <summary>
+            Event arguments to indicate that a key is being pressed on the textbox.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Controls.TextBox.KeyPressEventArgs.Key">
+            <summary>
+            The key being pressed by the textbox.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Controls.TextBox.KeyPressEventArgs.IsCancelled">
+            <summary>
+            When set to <see langword="true"/>, causes the textbox to cancel the key press.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Controls.TextBox.KeyPressEventArgs.#ctor(SadConsole.Input.AsciiKey)">
+            <summary>
+            Creates a new event args object.
+            </summary>
+            <param name="key">The key being pressed.</param>
         </member>
         <member name="T:SadConsole.Cursor">
             <summary>
