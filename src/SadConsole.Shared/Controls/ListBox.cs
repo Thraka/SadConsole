@@ -356,7 +356,15 @@ namespace SadConsole.Controls
                         ScrollBar.ProcessMouse(state);
                     }
                     else
+                    {
+                        if (IsScrollBarVisible && state.Mouse.ScrollWheelValueChange != 0)
+                        {
+                            ScrollBar.Value += state.Mouse.ScrollWheelValueChange / 20;
+                            return true;
+                        }
+
                         base.ProcessMouse(state);
+                    }
                 }
                 else
                     base.ProcessMouse(state);

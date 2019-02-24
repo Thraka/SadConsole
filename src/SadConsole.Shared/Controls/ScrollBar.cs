@@ -169,6 +169,11 @@ namespace SadConsole.Controls
                     if (state.CellPosition.X >= this.Position.X && state.CellPosition.X < this.Position.X + Width &&
                         state.CellPosition.Y >= this.Position.Y && state.CellPosition.Y < this.Position.Y + Height)
                     {
+                        if (state.Mouse.ScrollWheelValueChange != 0)
+                        {
+                            Value += state.Mouse.ScrollWheelValueChange / 20;
+                            return true;
+                        }
 
                         if (state.Mouse.LeftClicked)
                         {
