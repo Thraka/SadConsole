@@ -2,15 +2,30 @@
 using Microsoft.Xna.Framework;
 #endif
 
+using System.Runtime.CompilerServices;
+using SadConsole;
+
 namespace SadConsole
 {
     public static class RectangleExtensions
     {
-        public static void CenterViewPortOnPoint(this IConsoleViewPort surface, Point target)
-        {
+        /// <summary>
+        /// Centers a console with a viewport on a specific point.
+        /// </summary>
+        /// <param name="surface">The console viewport to adjust.</param>
+        /// <param name="target">The location of the point to center on.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CenterViewPortOnPoint(this IConsoleViewPort surface, Point target) =>
             surface.ViewPort = surface.ViewPort.CenterOnPoint(target, surface.Width, surface.Height);
-        }
 
+        /// <summary>
+        /// Repositions the center of a rectangle to a specific point. Keeps the rectangle within the specified bounds.
+        /// </summary>
+        /// <param name="rect">The rectangle to center.</param>
+        /// <param name="target">The point to center on.</param>
+        /// <param name="maxWidth">The bounds of the rectangle cannot exceed this width.</param>
+        /// <param name="maxHeight">The bounds of the rectangle cannot exceed this height.</param>
+        /// <returns></returns>
         public static Rectangle CenterOnPoint(this Rectangle rect, Point target, int maxWidth, int maxHeight)
         {
             var newRect = rect;
@@ -28,5 +43,32 @@ namespace SadConsole
 
             return newRect;
         }
+    }
+}
+
+namespace Microsoft.Xna.Framework
+{
+    public static class RectangleExtensions2
+    {
+        /// <summary>
+        /// Converts a rectangle from cells to pixels.
+        /// </summary>
+        /// <param name="rect">The rectangle to work with.</param>
+        /// <param name="font">The font used for translation.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rectangle ToPixels(this Rectangle rect, Font font) =>
+            new Rectangle(rect.Location * font.Size, rect.Size * font.Size);
+
+        /// <summary>
+        /// Converts a rectangle from cells to pixels.
+        /// </summary>
+        /// <param name="rect">The rectangle to work with.</param>
+        /// <param name="cellWidth">The width of a cell used in converting.</param>
+        /// <param name="cellHeight">The height of a cell used in converting.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rectangle ToPixels(this Rectangle rect, int cellWidth, int cellHeight) =>
+            new Rectangle(rect.X * cellWidth, rect.Y * cellHeight, rect.Width * cellWidth, rect.Height * cellHeight);
     }
 }
