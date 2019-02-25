@@ -142,19 +142,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.7</Version>
+      <Version>6.1.9</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Framework.WindowsUniversal">
-      <Version>3.6.0.1625</Version>
+      <Version>3.7.1.189</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole.Universal\SadConsole.Universal.csproj">
-      <Project>{653ebcbd-af0e-48ad-89e1-e38bb0db130b}</Project>
-      <Name>SadConsole.Universal</Name>
+    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj">
+      <Project>{1702fe12-1d90-4c76-a273-285310e67b53}</Project>
+      <Name>SadConsole</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\SharedCode\DemoProject.projitems" Label="Shared" />

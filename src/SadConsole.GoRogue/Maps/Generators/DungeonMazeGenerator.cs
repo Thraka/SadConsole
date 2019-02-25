@@ -99,12 +99,12 @@ namespace SadConsole.Maps.Generators
         /// <summary>
         /// The map from GoRogue used in generation.
         /// </summary>
-        public ISettableMapView<bool> GoRogueMap { get; protected set; }
+        public ArrayMap<bool> GoRogueMap { get; protected set; }
 
         /// <summary>
         /// The SadConsole map generated from the <see cref="GoRogueMap"/>.
         /// </summary>
-        public Maps.SimpleMap SadConsoleMap { get; protected set; }
+        public Maps.MapConsole SadConsoleMap { get; protected set; }
 
         /// <summary>
         /// Settings used to generate the map.
@@ -185,7 +185,7 @@ namespace SadConsole.Maps.Generators
         /// </summary>
         protected virtual void Generate()
         {
-            SadConsoleMap = new SadConsole.Maps.SimpleMap(MapWidth, MapHeight, new Rectangle(0, 0, ViewPortWidth, ViewPortHeight));
+            SadConsoleMap = new SadConsole.Maps.MapConsole(MapWidth, MapHeight);
             GoRogueMap = new GoRogue.MapViews.ArrayMap<bool>(MapWidth, MapHeight);
 
             // Generate rooms
@@ -194,17 +194,17 @@ namespace SadConsole.Maps.Generators
                                                                                                 Settings.RoomsSizeFontRatioX, Settings.RoomsSizeFontRatioY);
 
             // Generate maze
-            GoRogue.MapGeneration.Generators.MazeGenerator.Generate(GoRogueMap, Settings.MazeChangeDirectionImprovement, Settings.MazeSaveDeadEndChance);
-
+            GoRogue.MapGeneration.Generators.MazeGenerator.Generate(GoRogueMap, Settings.MazeChangeDirectionImprovement);
+            
             // Conenct rooms to maze
-            var connections = GoRogue.MapGeneration.Generators.RoomsGenerator.ConnectRooms(GoRogueMap, mapRooms, 
+            var connections = GoRogue.MapGeneration.Connectors.RoomDoorConnector.ConnectRooms(GoRogueMap, mapRooms, 
                                                                          Settings.RoomsConnectionsMinSides, Settings.RoomsConnectionsMaxSides, 
                                                                          Settings.RoomsConnectionsCancelSideSelectChance, 
                                                                          Settings.RoomsConnectionsCancelPlacementChance, Settings.RoomsConnectionsCancelPlacementChanceIncrease);
             // Transform rooms into regions
             Rooms = (from c in connections
-                    let innerRect = c.Room.ToMonoGameRectangle()
-                    let outerRect = c.Room.Expand(1, 1).ToMonoGameRectangle()
+                    let innerRect = (Rectangle)c.Room
+                    let outerRect = (Rectangle)c.Room.Expand(1, 1)
                     select new Region()
                     {
                         IsRectangle = true,
@@ -212,7 +212,7 @@ namespace SadConsole.Maps.Generators
                         OuterRect = outerRect,
                         InnerPoints = new List<Point>(innerRect.GetPoints()),
                         OuterPoints = new List<Point>(outerRect.GetPoints()),
-                        Connections = c.Connections.SelectMany(a => a).Select(a => a.ToPoint()).ToList()
+                        Connections = c.Connections.SelectMany(a => a).Select(a => (Point)a).ToList()
                     }).ToList();
 
             // Copy regions to map

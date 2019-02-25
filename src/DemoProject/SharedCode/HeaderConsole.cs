@@ -1,5 +1,5 @@
 ﻿using System;
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -9,7 +9,8 @@ using StarterProject.CustomConsoles;
 
 namespace StarterProject
 {
-    class HeaderConsole: Console
+    [System.Diagnostics.DebuggerDisplay("Header Area")]
+    class HeaderConsole : ScrollingConsole
     {
         public HeaderConsole(): base(80, 2)
         {

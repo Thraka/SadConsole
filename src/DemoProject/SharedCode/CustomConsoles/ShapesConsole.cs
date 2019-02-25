@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole;
 using System;
 using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class ShapesConsole: Console
+    class ShapesConsole: ScrollingConsole
     {
         public ShapesConsole()
             : base(80, 23)

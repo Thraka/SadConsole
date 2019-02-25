@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
-using SadConsole.Surfaces;
 using System;
 using Console = SadConsole.Console;
 using SadConsole.Input;
@@ -12,7 +11,7 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class SubConsoleCursor : SadConsole.ConsoleContainer
+    class SubConsoleCursor : SadConsole.ContainerConsole
     {
         Console mainView;
         Console subView;
@@ -20,7 +19,7 @@ namespace StarterProject.CustomConsoles
         public SubConsoleCursor()
         {
             mainView = new Console(80, 23);
-            subView = Console.FromSurface(mainView.GetViewSurface(new Rectangle(30, 4, 25, 10)));
+            subView = Console.FromSurface(mainView.GetSubSurface(new Rectangle(30, 4, 25, 10)), mainView.Font);
 
             UseKeyboard = true;
 

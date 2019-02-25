@@ -1,39 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using ColorHelper = Microsoft.Xna.Framework.Color;
 
-using Console = SadConsole.Console;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 using SadConsole;
 using System;
 using System.Linq;
 using SadConsole.Input;
-using SadConsole.Surfaces;
+
 
 namespace StarterProject.CustomConsoles
 {
-    class TextCursorConsole : Console
+    class TextCursorConsole : ScrollingConsole
     {
-        Basic mouseCursor;
+        SadConsole.Console mouseCursor;
         
         public TextCursorConsole()
             : base(80, 23)
         {
-            mouseCursor = new Basic(1, 1);
+            mouseCursor = new SadConsole.Console(1, 1);
             mouseCursor.SetGlyph(0,0, 178);
+            mouseCursor.UseMouse = false;
 
             Children.Add(mouseCursor);
         }
 
-        public override void Draw(TimeSpan delta)
-        {
-            // First draw the console
-            base.Draw(delta);
-
-            //mouseCursor.Draw(delta);
-        }
-
         public override bool ProcessMouse(MouseConsoleState state)
         {
-            mouseCursor.Position = state.ConsolePosition;
+            mouseCursor.IsVisible = state.IsOnConsole;
+            mouseCursor.Position = state.ConsoleCellPosition;
 
             return base.ProcessMouse(state);
         }
