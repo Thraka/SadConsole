@@ -42,39 +42,79 @@ namespace SadConsole.Renderers
         public void RenderControlCells(ControlBase control, bool draw = false)
         {
             if (!draw || !control.IsVisible) return;
-            //if (control.Surface.Tint.A == 255) return;
 
-            if (control.Surface.DefaultBackground.A != 0)
+            // This disabled code supported drawing alternative fonts IN the size they defined. This did not play
+            // well with mouse handling and requires a much bigger investment to get that working.
+            // Is it worth it? I'm not sure..
+
+            //if (control.AlternateFont == null || control.AlternateFont.Size == control.Parent.Font.Size)
             {
-                var (x, y) = (control.Position - control.Parent.ViewPort.Location).ConsoleLocationToPixel(control.Parent.Font);
-                var (width, height) = new Point(control.Surface.Width, control.Surface.Height) * control.Parent.Font.Size;
-                Global.SpriteBatch.Draw(control.Parent.Font.FontImage, new Rectangle(x, y, width, height), control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
-            }
+                var font = control.AlternateFont ?? control.Parent.Font;
 
-            for (var i = 0; i < control.Surface.Cells.Length; i++)
-            {
-                ref var cell = ref control.Surface.Cells[i];
-
-                if (!cell.IsVisible) continue;
-
-                var cellRenderPosition = i.ToPoint(control.Surface.Width) + control.Position;
-
-                if (!control.Parent.ViewPort.Contains(cellRenderPosition)) continue;
-
-                Rectangle renderRect = control.Parent.RenderRects[(cellRenderPosition - control.Parent.ViewPort.Location).ToIndex(control.Parent.Width)];
-
-                if (cell.Background != Color.Transparent && cell.Background != control.Surface.DefaultBackground)
-                    Global.SpriteBatch.Draw(control.Parent.Font.FontImage, renderRect, control.Parent.Font.GlyphRects[control.Parent.Font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-
-                if (cell.Foreground != Color.Transparent)
-                    Global.SpriteBatch.Draw(control.Parent.Font.FontImage, renderRect, control.Parent.Font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
-
-                foreach (var decorator in cell.Decorators)
+                if (control.Surface.DefaultBackground.A != 0)
                 {
-                    if (decorator.Color != Color.Transparent)
-                        Global.SpriteBatch.Draw(control.Parent.Font.FontImage, renderRect, control.Parent.Font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+                    var (x, y) = (control.Position - control.Parent.ViewPort.Location).ConsoleLocationToPixel(font);
+                    var (width, height) = new Point(control.Surface.Width, control.Surface.Height) * font.Size;
+                    Global.SpriteBatch.Draw(font.FontImage, new Rectangle(x, y, width, height), font.GlyphRects[font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                }
+
+                for (var i = 0; i < control.Surface.Cells.Length; i++)
+                {
+                    ref var cell = ref control.Surface.Cells[i];
+
+                    if (!cell.IsVisible) continue;
+
+                    var cellRenderPosition = i.ToPoint(control.Surface.Width) + control.Position;
+
+                    if (!control.Parent.ViewPort.Contains(cellRenderPosition)) continue;
+
+                    Rectangle renderRect = control.Parent.RenderRects[(cellRenderPosition - control.Parent.ViewPort.Location).ToIndex(control.Parent.Width)];
+
+                    if (cell.Background != Color.Transparent && cell.Background != control.Surface.DefaultBackground)
+                        Global.SpriteBatch.Draw(font.FontImage, renderRect, font.GlyphRects[font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+
+                    if (cell.Foreground != Color.Transparent)
+                        Global.SpriteBatch.Draw(font.FontImage, renderRect, font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
+
+                    foreach (var decorator in cell.Decorators)
+                    {
+                        if (decorator.Color != Color.Transparent)
+                            Global.SpriteBatch.Draw(font.FontImage, renderRect, font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+                    }
                 }
             }
+            //else
+            //{
+            //    var (x, y) = (control.Position - control.Parent.ViewPort.Location).ConsoleLocationToPixel(control.Parent.Font);
+            //    if (control.Surface.DefaultBackground.A != 0)
+            //    {
+            //        var (width, height) = new Point(control.Surface.Width, control.Surface.Height) * control.AlternateFont.Size;
+            //        Global.SpriteBatch.Draw(control.AlternateFont.FontImage, new Rectangle(x, y, width, height), control.AlternateFont.GlyphRects[control.AlternateFont.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+            //    }
+
+            //    for (var i = 0; i < control.Surface.Cells.Length; i++)
+            //    {
+            //        ref var cell = ref control.Surface.Cells[i];
+
+            //        if (!cell.IsVisible) continue;
+
+            //        var (cellX, cellY) = i.ToPoint(control.Surface.Width).ConsoleLocationToPixel(control.AlternateFont);
+
+            //        var renderRect = new Rectangle(x + cellX, y + cellY, control.AlternateFont.Size.X, control.AlternateFont.Size.Y);
+
+            //        if (cell.Background != Color.Transparent && cell.Background != control.Surface.DefaultBackground)
+            //            Global.SpriteBatch.Draw(control.AlternateFont.FontImage, renderRect, control.AlternateFont.GlyphRects[control.AlternateFont.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+
+            //        if (cell.Foreground != Color.Transparent)
+            //            Global.SpriteBatch.Draw(control.AlternateFont.FontImage, renderRect, control.AlternateFont.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
+
+            //        foreach (var decorator in cell.Decorators)
+            //        {
+            //            if (decorator.Color != Color.Transparent)
+            //                Global.SpriteBatch.Draw(control.AlternateFont.FontImage, renderRect, control.AlternateFont.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+            //        }
+            //    }
+            //}
         }
 
         [OnDeserialized]
