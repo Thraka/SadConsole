@@ -55,7 +55,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="rect">The rectangle to work with.</param>
         /// <param name="font">The font used for translation.</param>
-        /// <returns></returns>
+        /// <returns>A new rectangle in pixels.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle ToPixels(this Rectangle rect, Font font) =>
             new Rectangle(rect.Location * font.Size, rect.Size * font.Size);
@@ -66,9 +66,29 @@ namespace Microsoft.Xna.Framework
         /// <param name="rect">The rectangle to work with.</param>
         /// <param name="cellWidth">The width of a cell used in converting.</param>
         /// <param name="cellHeight">The height of a cell used in converting.</param>
-        /// <returns></returns>
+        /// <returns>A new rectangle in pixels.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle ToPixels(this Rectangle rect, int cellWidth, int cellHeight) =>
             new Rectangle(rect.X * cellWidth, rect.Y * cellHeight, rect.Width * cellWidth, rect.Height * cellHeight);
+
+        /// <summary>
+        /// Converts a rectangle from pixels to cells.
+        /// </summary>
+        /// <param name="rect">The rectangle to work with.</param>
+        /// <param name="font">The font used for translation.</param>
+        /// <returns>A new rectangle in cell coordinates.</returns>
+        public static Rectangle ToConsole(this Rectangle rect, Font font) =>
+            new Rectangle(rect.Location / font.Size, rect.Size / font.Size);
+
+        /// <summary>
+        /// Converts a rectangle from pixels to cells.
+        /// </summary>
+        /// <param name="rect">The rectangle to work with.</param>
+        /// <param name="cellWidth">The width of a cell used in converting.</param>
+        /// <param name="cellHeight">The height of a cell used in converting.</param>
+        /// <returns>A new rectangle in cell coordinates.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rectangle ToConsole(this Rectangle rect, int cellWidth, int cellHeight) =>
+            new Rectangle(rect.X / cellWidth, rect.Y / cellHeight, rect.Width / cellWidth, rect.Height / cellHeight);
     }
 }
