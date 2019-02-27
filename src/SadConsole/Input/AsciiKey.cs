@@ -173,8 +173,8 @@ namespace SadConsole.Input
         /// <summary>
         /// Checks if the two <see cref="AsciiKey"/> types use the same <see cref="Key"/> if the <see cref="Character"/> is 0. If the <see cref="Character"/> is not 0, the <see cref="Character"/> is compared.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
+        /// <param name="left">First item to compare.</param>
+        /// <param name="right">Second item to compare.</param>
         /// <returns></returns>
         public static bool operator ==(AsciiKey left, AsciiKey right)
         {
@@ -186,12 +186,57 @@ namespace SadConsole.Input
         /// <summary>
         /// Compares if the <see cref="Character"/> field of two <see cref="AsciiKey"/> instances are the same.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
+        /// <param name="left">First item to compare.</param>
+        /// <param name="right">Second item to compare.</param>
         /// <returns></returns>
         public static bool operator !=(AsciiKey left, AsciiKey right)
         {
             return left.Character != right.Character;
+        }
+
+
+        /// <summary>
+        /// Checks if the a <see cref="AsciiKey"/> type uses the indicated <see cref="Key"/>.
+        /// </summary>
+        /// <param name="left">The <see cref="AsciiKey"/> to compare.</param>
+        /// <param name="right">The <see cref="Key"/> to compare.</param>
+        /// <returns>True when <see cref="AsciiKey.Key"/> matches.</returns>
+        public static bool operator ==(AsciiKey left, Keys right)
+        {
+            return left.Key == right;
+        }
+
+        /// <summary>
+        /// Checks if the a <see cref="AsciiKey"/> type does not use the indicated <see cref="Key"/>.
+        /// </summary>
+        /// <param name="left">The <see cref="AsciiKey"/> to compare.</param>
+        /// <param name="right">The <see cref="Key"/> to compare.</param>
+        /// <returns>True when <see cref="AsciiKey.Key"/> does not match.</returns>
+        public static bool operator !=(AsciiKey left, Keys right)
+        {
+            return left.Key != right;
+        }
+
+        /// <summary>
+        /// Checks if the a <see cref="AsciiKey"/> type uses the indicated <see cref="Key"/>.
+        /// </summary>
+        /// <param name="left">The <see cref="Key"/> to compare.</param>
+        /// <param name="right">The <see cref="AsciiKey"/> to compare.</param>
+        /// <returns>True when <see cref="AsciiKey.Key"/> matches.</returns>
+        public static bool operator ==(Keys left, AsciiKey right)
+        {
+            return left == right.Key;
+        }
+
+        /// <summary>
+        /// Checks if the a <see cref="AsciiKey"/> type does not use the indicated <see cref="Key"/>.
+        /// </summary>
+        /// <param name="left">The <see cref="Key"/> to compare.</param>
+        /// <param name="right">The <see cref="AsciiKey"/> to compare.</param>
+        /// <returns>True when <see cref="AsciiKey.Key"/> does not match.</returns>
+        public static bool operator !=(Keys left, AsciiKey right)
+        {
+            return left != right.Key;
         }
 
         /// <summary>

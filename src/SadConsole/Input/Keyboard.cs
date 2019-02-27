@@ -71,13 +71,33 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Returns true if the key is not in the <see cref="KeysDown"/> collection.
+        /// Returns true if the key is not in the <see cref="KeysDown"/> collection regardless of shift state.
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key is not being pressed.</returns>
         public bool IsKeyUp(Keys key)
         {
-            return !KeysDownInternal.Contains(AsciiKey.Get(key));
+            return !KeysDownInternal.Contains(AsciiKey.Get(key)) && !KeysDownInternal.Contains(AsciiKey.Get(key, true));
+        }
+
+        /// <summary>
+        /// Returns true if the key is not in the <see cref="KeysDown"/> collection.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key is not being pressed.</returns>
+        public bool IsKeyUp(AsciiKey key)
+        {
+            return !KeysDownInternal.Contains(key);
+        }
+
+        /// <summary>
+        /// Returns true if the key is in the <see cref="KeysDown"/> collection regardless of shift state.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key is being pressed.</returns>
+        public bool IsKeyDown(Keys key)
+        {
+            return KeysDownInternal.Contains(AsciiKey.Get(key)) || KeysDownInternal.Contains(AsciiKey.Get(key, true));
         }
 
         /// <summary>
@@ -85,9 +105,19 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key is being pressed.</returns>
-        public bool IsKeyDown(Keys key)
+        public bool IsKeyDown(AsciiKey key)
         {
-            return KeysDownInternal.Contains(AsciiKey.Get(key));
+            return KeysDownInternal.Contains(key);
+        }
+
+        /// <summary>
+        /// Returns true when the key is in the <see cref="KeysReleased"/> collection regardless of shift state.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key was released this update frame.</returns>
+        public bool IsKeyReleased(Keys key)
+        {
+            return KeysReleasedInternal.Contains(AsciiKey.Get(key)) || KeysReleasedInternal.Contains(AsciiKey.Get(key, true));
         }
 
         /// <summary>
@@ -95,9 +125,19 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key was released this update frame.</returns>
-        public bool IsKeyReleased(Keys key)
+        public bool IsKeyReleased(AsciiKey key)
         {
-            return KeysReleasedInternal.Contains(AsciiKey.Get(key));
+            return KeysReleasedInternal.Contains(key);
+        }
+
+        /// <summary>
+        /// Returns true when the key is in the <see cref="KeysPressed"/> collection regardless of shift state.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>True when the key was considered first pressed.</returns>
+        public bool IsKeyPressed(Keys key)
+        {
+            return KeysPressedInternal.Contains(AsciiKey.Get(key)) || KeysPressedInternal.Contains(AsciiKey.Get(key, true));
         }
 
         /// <summary>
@@ -105,9 +145,9 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True when the key was considered first pressed.</returns>
-        public bool IsKeyPressed(Keys key)
+        public bool IsKeyPressed(AsciiKey key)
         {
-            return KeysPressedInternal.Contains(AsciiKey.Get(key));
+            return KeysPressedInternal.Contains(key);
         }
 
         // Always use the next routines to add or remove keys from KeysDownInternal or
