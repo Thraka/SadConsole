@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 Misc", "00 Misc", "{6431
 		.gitignore = .gitignore
 		ChangeLog.md = ChangeLog.md
 		README.md = README.md
+		nuget\readme.md = nuget\readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 Demo Projects", "03 Demo Projects", "{8DE41EC4-BEFD-4837-B2B1-352A66ABDF75}"
@@ -39,6 +40,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\DemoProject\SharedCode\DemoProject.projitems*{74327ccc-4606-40b8-9587-60e55b1d6a80}*SharedItemsImports = 4
+		src\DemoProject\SharedCode\DemoProject.projitems*{7b1f1dbf-f16c-4402-9cb0-6e035ba76c6d}*SharedItemsImports = 4
 		src\DemoProject\SharedCode\DemoProject.projitems*{b41a356c-4ba6-40cc-ac03-0e5d46b0b981}*SharedItemsImports = 13
 		src\DemoProject\SharedCode\DemoProject.projitems*{d6129ae5-b519-4368-b080-805a73405eda}*SharedItemsImports = 4
 		src\DemoProject\SharedCode\DemoProject.projitems*{f2257bf9-b694-4e75-9d49-d386391569d9}*SharedItemsImports = 4

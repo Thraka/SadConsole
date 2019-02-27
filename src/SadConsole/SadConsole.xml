@@ -4563,6 +4563,23 @@
             </summary>
             <param name="list">The list collection to remove from.</param>
         </member>
+        <member name="M:SadConsole.RectangleExtensions.CenterViewPortOnPoint(SadConsole.IConsoleViewPort,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Centers a console with a viewport on a specific point.
+            </summary>
+            <param name="surface">The console viewport to adjust.</param>
+            <param name="target">The location of the point to center on.</param>
+        </member>
+        <member name="M:SadConsole.RectangleExtensions.CenterOnPoint(Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Point,System.Int32,System.Int32)">
+            <summary>
+            Repositions the center of a rectangle to a specific point. Keeps the rectangle within the specified bounds.
+            </summary>
+            <param name="rect">The rectangle to center.</param>
+            <param name="target">The point to center on.</param>
+            <param name="maxWidth">The bounds of the rectangle cannot exceed this width.</param>
+            <param name="maxHeight">The bounds of the rectangle cannot exceed this height.</param>
+            <returns></returns>
+        </member>
         <member name="T:SadConsole.Font">
             <summary>
             Represents a specific font size from a <see cref="T:SadConsole.FontMaster"/>.
@@ -5073,17 +5090,49 @@
             <summary>
             Checks if the two <see cref="T:SadConsole.Input.AsciiKey"/> types use the same <see cref="F:SadConsole.Input.AsciiKey.Key"/> if the <see cref="F:SadConsole.Input.AsciiKey.Character"/> is 0. If the <see cref="F:SadConsole.Input.AsciiKey.Character"/> is not 0, the <see cref="F:SadConsole.Input.AsciiKey.Character"/> is compared.
             </summary>
-            <param name="left"></param>
-            <param name="right"></param>
+            <param name="left">First item to compare.</param>
+            <param name="right">Second item to compare.</param>
             <returns></returns>
         </member>
         <member name="M:SadConsole.Input.AsciiKey.op_Inequality(SadConsole.Input.AsciiKey,SadConsole.Input.AsciiKey)">
             <summary>
             Compares if the <see cref="F:SadConsole.Input.AsciiKey.Character"/> field of two <see cref="T:SadConsole.Input.AsciiKey"/> instances are the same.
             </summary>
-            <param name="left"></param>
-            <param name="right"></param>
+            <param name="left">First item to compare.</param>
+            <param name="right">Second item to compare.</param>
             <returns></returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Equality(SadConsole.Input.AsciiKey,Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type uses the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <param name="right">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> matches.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Inequality(SadConsole.Input.AsciiKey,Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type does not use the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <param name="right">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> does not match.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Equality(Microsoft.Xna.Framework.Input.Keys,SadConsole.Input.AsciiKey)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type uses the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <param name="right">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> matches.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Inequality(Microsoft.Xna.Framework.Input.Keys,SadConsole.Input.AsciiKey)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type does not use the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <param name="right">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> does not match.</returns>
         </member>
         <member name="M:SadConsole.Input.AsciiKey.Equals(System.Object)">
             <summary>
@@ -5165,12 +5214,26 @@
         </member>
         <member name="M:SadConsole.Input.Keyboard.IsKeyUp(Microsoft.Xna.Framework.Input.Keys)">
             <summary>
+            Returns true if the key is not in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key is not being pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyUp(SadConsole.Input.AsciiKey)">
+            <summary>
             Returns true if the key is not in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection.
             </summary>
             <param name="key">The key to check.</param>
             <returns>True when the key is not being pressed.</returns>
         </member>
         <member name="M:SadConsole.Input.Keyboard.IsKeyDown(Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Returns true if the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key is being pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyDown(SadConsole.Input.AsciiKey)">
             <summary>
             Returns true if the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection.
             </summary>
@@ -5179,12 +5242,26 @@
         </member>
         <member name="M:SadConsole.Input.Keyboard.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys)">
             <summary>
+            Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysReleased"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key was released this update frame.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyReleased(SadConsole.Input.AsciiKey)">
+            <summary>
             Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysReleased"/> collection.
             </summary>
             <param name="key">The key to check.</param>
             <returns>True when the key was released this update frame.</returns>
         </member>
         <member name="M:SadConsole.Input.Keyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key was considered first pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyPressed(SadConsole.Input.AsciiKey)">
             <summary>
             Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection.
             </summary>
@@ -7724,6 +7801,40 @@
             <param name="cellSize">The size of the cell in pixels.</param>
             <param name="absolutePositioning">When true, indicates that the <paramref name="position"/> indicates pixels, not cell coordinates.</param>
             <returns>A matrix for rendering.</returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.RectangleExtensions2.ToPixels(Microsoft.Xna.Framework.Rectangle,SadConsole.Font)">
+            <summary>
+            Converts a rectangle from cells to pixels.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="font">The font used for translation.</param>
+            <returns>A new rectangle in pixels.</returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.RectangleExtensions2.ToPixels(Microsoft.Xna.Framework.Rectangle,System.Int32,System.Int32)">
+            <summary>
+            Converts a rectangle from cells to pixels.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="cellWidth">The width of a cell used in converting.</param>
+            <param name="cellHeight">The height of a cell used in converting.</param>
+            <returns>A new rectangle in pixels.</returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.RectangleExtensions2.ToConsole(Microsoft.Xna.Framework.Rectangle,SadConsole.Font)">
+            <summary>
+            Converts a rectangle from pixels to cells.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="font">The font used for translation.</param>
+            <returns>A new rectangle in cell coordinates.</returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.RectangleExtensions2.ToConsole(Microsoft.Xna.Framework.Rectangle,System.Int32,System.Int32)">
+            <summary>
+            Converts a rectangle from pixels to cells.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="cellWidth">The width of a cell used in converting.</param>
+            <param name="cellHeight">The height of a cell used in converting.</param>
+            <returns>A new rectangle in cell coordinates.</returns>
         </member>
         <member name="T:System.StringExtensions">
             <summary>

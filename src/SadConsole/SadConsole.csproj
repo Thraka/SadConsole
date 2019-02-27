@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>8.0.0</Version>
+    <Version>8.1.0-pre1</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -12,8 +12,8 @@
     <Description>A MonoGame library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.0</Description>
     <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>SadConsole.Standard</PackageId>
-    <PackageReleaseNotes>[BREAKING CHANGES]
+    <PackageId>SadConsole</PackageId>
+    <PackageReleaseNotes>[BREAKING CHANGES] from version 7.X
 [This list is just some of the major changes]
 [See the documentation on NuGet for more information]
 - Overhaul of the theme system.
@@ -21,15 +21,18 @@
 - Overhaul of Instruction system.
 - Added new ConsoleComponents system.
 - Upgraded to MonoGame 3.7
-- EntityManager removed and will be added to GoRogue-SadConsole integration lib.</PackageReleaseNotes>
-    <AssemblyVersion>8.0.0.0</AssemblyVersion>
-    <PackageIconUrl>https://raw.githubusercontent.com/Thraka/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/Thraka/SadConsole</RepositoryUrl>
+- EntityManager removed and will be added to GoRogue-SadConsole integration lib.
+- Reenabled Control.AlternativeFont</PackageReleaseNotes>
+    <AssemblyVersion>8.1.0.0</AssemblyVersion>
+    <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Thraka/SadConsole/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii;standard</PackageTags>
   </PropertyGroup>
 
@@ -64,9 +67,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" PrivateAssets="All" />
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" PrivateAssets="All" />
-    <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+    <PackageReference Include="newtonsoft.json" Version="11.*" />
   </ItemGroup>
 
   <ItemGroup>
