@@ -5057,28 +5057,28 @@
             Tracks if the key was previously held when calculating the <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.AsciiKey.RemapVirtualKeys(Microsoft.Xna.Framework.Input.Keys)">
+        <member name="M:SadConsole.Input.AsciiKey.RemapVirtualKeys(Microsoft.Xna.Framework.Input.Keys,Microsoft.Xna.Framework.Input.KeyboardState)">
             <summary>
              Does any necessary remapping for virtual keys.
             </summary>
             <param name="key"> The key to be remapped. </param>
             <returns> The remapped key. </returns>
         </member>
-        <member name="M:SadConsole.Input.AsciiKey.Fill(Microsoft.Xna.Framework.Input.Keys,System.Boolean)">
+        <member name="M:SadConsole.Input.AsciiKey.Fill(Microsoft.Xna.Framework.Input.Keys,System.Boolean,Microsoft.Xna.Framework.Input.KeyboardState)">
             <summary>
             Fills out the fields based on the MonoGame/XNA key.
             </summary>
             <param name="key">The key.</param>
             <param name="shiftPressed">Helps identify which <see cref="F:SadConsole.Input.AsciiKey.Character"/> to use while the key is pressed. For example, if <see cref="F:Microsoft.Xna.Framework.Input.Keys.A"/> is used the <see cref="F:SadConsole.Input.AsciiKey.Character"/> field will be either 'A' if <paramref name="shiftPressed"/> is true or 'a' if false.</param>
         </member>
-        <member name="M:SadConsole.Input.AsciiKey.Get(Microsoft.Xna.Framework.Input.Keys)">
+        <member name="M:SadConsole.Input.AsciiKey.Get(Microsoft.Xna.Framework.Input.Keys,Microsoft.Xna.Framework.Input.KeyboardState)">
             <summary>
             Shortcut to get the <see cref="T:SadConsole.Input.AsciiKey"/> for a specific MonoGame/XNA <see cref="T:Microsoft.Xna.Framework.Input.Keys"/> type. Shift is considered not pressed.
             </summary>
             <param name="key">The key.</param>
             <returns>The <see cref="T:SadConsole.Input.AsciiKey"/> of the <see cref="T:Microsoft.Xna.Framework.Input.Keys"/>.</returns>
         </member>
-        <member name="M:SadConsole.Input.AsciiKey.Get(Microsoft.Xna.Framework.Input.Keys,System.Boolean)">
+        <member name="M:SadConsole.Input.AsciiKey.Get(Microsoft.Xna.Framework.Input.Keys,System.Boolean,Microsoft.Xna.Framework.Input.KeyboardState)">
             <summary>
             Shortcut to get the <see cref="T:SadConsole.Input.AsciiKey"/> for a specific MonoGame/XNA <see cref="T:Microsoft.Xna.Framework.Input.Keys"/> type.
             </summary>

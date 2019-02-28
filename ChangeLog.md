@@ -5,6 +5,7 @@
 - NuGet package supports **.snuget** and **SourceLink**
 - Rectangle extensions added: `ToPixels`, `ToConsole`
 - Keyboard methods like IsKeyPressed now ignore SHIFT and support checking AsciiKey for SHIFT state
+- CAPSLOCK and NUMLOCK no longer use windows dll
 
 ## 02/24/2019 V8.0
 Special thanks to the SadConsole Discord on all the feedback provided.
