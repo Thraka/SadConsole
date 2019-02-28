@@ -625,6 +625,12 @@ namespace SadConsole
                         case Keys.F10:
                         case Keys.F11:
                         case Keys.F12:
+                        case Keys.CapsLock:
+                        case Keys.NumLock:
+                        case Keys.PageUp:
+                        case Keys.PageDown:
+                        case Keys.Home:
+                        case Keys.End:
                         case Keys.LeftShift:
                         case Keys.RightShift:
                         case Keys.LeftAlt:
