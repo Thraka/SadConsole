@@ -132,7 +132,6 @@ namespace StarterProject.CustomConsoles
             {
                 layeredSurface.Save("layeredObject.layered");
                 var layers = LayeredConsole.Load("layeredObject.layered");
-                layers.GetLayer(1).IsVisible = false;
                 loadedView.Children.Add(layers);
             }
             else if (optionButtonAnimated.IsSelected)

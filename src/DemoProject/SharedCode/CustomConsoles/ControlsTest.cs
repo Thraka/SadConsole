@@ -108,6 +108,7 @@ namespace StarterProject.CustomConsoles
                 Position = new Point(1, 5),
                 Theme = new Button3dTheme()
             };
+            button.AlternateFont = SadConsole.Global.LoadFont("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.One);
             Add(button);
 
             button = new SadConsole.Controls.Button(11, 3)

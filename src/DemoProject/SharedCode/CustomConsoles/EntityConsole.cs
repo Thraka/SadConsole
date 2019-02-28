@@ -49,6 +49,12 @@ namespace StarterProject.CustomConsoles
             bool keyHit = false;
             var oldPosition = player.Position;
 
+            if (info.IsKeyPressed(Keys.W))
+            {
+                player.Position = new Point(0, 0);
+                keyHit = true;  
+            }
+
             if (info.IsKeyReleased(Keys.Up))
             {
                 player.Position = new Point(player.Position.X, player.Position.Y - 1);
