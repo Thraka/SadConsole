@@ -15,6 +15,8 @@ namespace SadConsole.Input
     /// </summary>
     public class Keyboard
     {
+        private KeyboardState _state;
+
         /// <summary>
         /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. 
         /// Uses the <see cref="RepeatDelay"/> and <see cref="InitialRepeatDelay"/> settings.
@@ -77,7 +79,7 @@ namespace SadConsole.Input
         /// <returns>True when the key is not being pressed.</returns>
         public bool IsKeyUp(Keys key)
         {
-            return !KeysDownInternal.Contains(AsciiKey.Get(key)) && !KeysDownInternal.Contains(AsciiKey.Get(key, true));
+            return !KeysDownInternal.Contains(AsciiKey.Get(key, _state)) && !KeysDownInternal.Contains(AsciiKey.Get(key, true, _state));
         }
 
         /// <summary>
@@ -97,7 +99,7 @@ namespace SadConsole.Input
         /// <returns>True when the key is being pressed.</returns>
         public bool IsKeyDown(Keys key)
         {
-            return KeysDownInternal.Contains(AsciiKey.Get(key)) || KeysDownInternal.Contains(AsciiKey.Get(key, true));
+            return KeysDownInternal.Contains(AsciiKey.Get(key, _state)) || KeysDownInternal.Contains(AsciiKey.Get(key, true, _state));
         }
 
         /// <summary>
@@ -117,7 +119,7 @@ namespace SadConsole.Input
         /// <returns>True when the key was released this update frame.</returns>
         public bool IsKeyReleased(Keys key)
         {
-            return KeysReleasedInternal.Contains(AsciiKey.Get(key)) || KeysReleasedInternal.Contains(AsciiKey.Get(key, true));
+            return KeysReleasedInternal.Contains(AsciiKey.Get(key, _state)) || KeysReleasedInternal.Contains(AsciiKey.Get(key, true, _state));
         }
 
         /// <summary>
@@ -137,7 +139,7 @@ namespace SadConsole.Input
         /// <returns>True when the key was considered first pressed.</returns>
         public bool IsKeyPressed(Keys key)
         {
-            return KeysPressedInternal.Contains(AsciiKey.Get(key)) || KeysPressedInternal.Contains(AsciiKey.Get(key, true));
+            return KeysPressedInternal.Contains(AsciiKey.Get(key, _state)) || KeysPressedInternal.Contains(AsciiKey.Get(key, true, _state));
         }
 
         /// <summary>
@@ -174,13 +176,13 @@ namespace SadConsole.Input
             KeysReleasedInternal.Clear();
 
             // Cycle all the keys down known if any are up currently, remove them from KeysDownInternal
-            KeyboardState state = Microsoft.Xna.Framework.Input.Keyboard.GetState();
-            bool shiftPressed = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
-            var unmappedVirtualKeys = state.GetPressedKeys();
+            _state = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+            bool shiftPressed = _state.IsKeyDown(Keys.LeftShift) || _state.IsKeyDown(Keys.RightShift);
+            var unmappedVirtualKeys = _state.GetPressedKeys();
 
-			for (int i = 0; i < KeysDownInternal.Count;)
+            for (int i = 0; i < KeysDownInternal.Count;)
             {
-                if (state.IsKeyUp(UnmappedVirtualKeysDown[i]))
+                if (_state.IsKeyUp(UnmappedVirtualKeysDown[i]))
                 {
                     KeysReleasedInternal.Add(KeysDownInternal[i]);
                     RemoveKeyDownAt(i);
@@ -203,8 +205,8 @@ namespace SadConsole.Input
                 int activeKeyIndex = -1;
 
                 // These keys will be mapped since Fill does the mapping automatically
-                key.Fill(unmappedVirtualKey, shiftPressed);
-                keyOppositeShift.Fill(unmappedVirtualKey, !shiftPressed);
+                key.Fill(unmappedVirtualKey, shiftPressed, _state);
+                keyOppositeShift.Fill(unmappedVirtualKey, !shiftPressed, _state);
 
                 if (KeysDownInternal.Contains(key))
                 {

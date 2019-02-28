@@ -12,15 +12,9 @@ namespace SadConsole.Input
     /// </summary>
     public struct AsciiKey
     {
-        private const int VK_NUMLOCK = 0x90;
-        private const int VK_SCROLLLOCK = 0x91; // Don't need it now, but who knows what tomorrow brings?
-        private const int VK_CAPSLOCK = 0x14;
-
         private const int CapOffset = (int) 'A' - (int) Keys.A;
         private const int LowerOffset = (int) 'a' - (int) Keys.A;
 
-        [DllImport("user32.dll")]
-        static extern short GetKeyState(int keyCode);
 
         // It will be nice when we can use modern Tuples here.
         static readonly Dictionary<Keys, scases> shiftKeyMappings = new Dictionary<Keys, scases>
@@ -94,9 +88,9 @@ namespace SadConsole.Input
 		/// </summary>
 		/// <param name="key"> The key to be remapped. </param>
 		/// <returns> The remapped key. </returns>
-		public static Keys RemapVirtualKeys(Keys key)
+		public static Keys RemapVirtualKeys(Keys key, KeyboardState state)
         {
-            var numLock = (((ushort) GetKeyState(VK_NUMLOCK)) & 0xffff) != 0;
+            var numLock = state.NumLock;
             if (numLock)
             {
                 return key;
@@ -115,14 +109,14 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="shiftPressed">Helps identify which <see cref="Character"/> to use while the key is pressed. For example, if <see cref="Keys.A"/> is used the <see cref="Character"/> field will be either 'A' if <paramref name="shiftPressed"/> is true or 'a' if false.</param>
-        public void Fill(Keys key, bool shiftPressed)
+        public void Fill(Keys key, bool shiftPressed, KeyboardState state)
         {
             Key = key;
-            var numLock = (((ushort) GetKeyState(VK_NUMLOCK)) & 0xffff) != 0;
+            var numLock = state.NumLock;
 
             if (key >= Keys.A && key <= Keys.Z)
             {
-                var capsLock = (((ushort)GetKeyState(VK_CAPSLOCK)) & 0xffff) != 0;
+                var capsLock = state.CapsLock;
 				Character = (char) (Key + (shiftPressed || capsLock ? CapOffset : LowerOffset));
                 return;
             }
@@ -138,7 +132,7 @@ namespace SadConsole.Input
             {
                 var casesCur = numKeyMappings[Key];
                 Character = numLock ? casesCur.Item1 : (char) 0;
-                Key = RemapVirtualKeys(Key);
+                Key = RemapVirtualKeys(Key, state);
                 return;
             }
 
@@ -150,10 +144,10 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
-        public static AsciiKey Get(Keys key)
+        public static AsciiKey Get(Keys key, KeyboardState state)
         {
             AsciiKey asciiKey = new AsciiKey();
-            asciiKey.Fill(key, false);
+            asciiKey.Fill(key, false, state);
             return asciiKey;
         }
 
@@ -163,10 +157,10 @@ namespace SadConsole.Input
         /// <param name="key">The key.</param>
         /// <param name="shiftPressed">If shift should be considered pressed or not.</param>
         /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
-        public static AsciiKey Get(Keys key, bool shiftPressed)
+        public static AsciiKey Get(Keys key, bool shiftPressed, KeyboardState state)
         {
             AsciiKey asciiKey = new AsciiKey();
-            asciiKey.Fill(key, shiftPressed);
+            asciiKey.Fill(key, shiftPressed, state);
             return asciiKey;
         }
 
