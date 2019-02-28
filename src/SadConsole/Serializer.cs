@@ -10,10 +10,8 @@
     /// <summary>
     /// Common serialization tasks for SadConsole.
     /// </summary>
-    public static partial class Serializer
+    public static class Serializer
     {
-        public static Dictionary<Type, Type> ConversionMappings = new Dictionary<Type, Type>();
-
         /// <summary>
         /// Serializes the <paramref name="instance"/> instance to the specified file.
         /// </summary>
@@ -32,7 +30,8 @@
                 {
                     using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
                     {
-                        var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
+                        //var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
+                        var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
                         sw.Write(bytes, 0, bytes.Length);
                     }
                 }
@@ -40,7 +39,8 @@
                 {
                     using (var sw = new System.IO.StreamWriter(stream))
                     {
-                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
+                        //sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
+                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
                     }
                 }
             }
@@ -66,13 +66,15 @@
                         using (var sr = new System.IO.StreamReader(sw, Encoding.UTF32))
                         {
                             string value = sr.ReadToEnd();
-                            return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
+                            //return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
+                            return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
                         }
                     }
                 }
                 else
                     using (var sr = new System.IO.StreamReader(fileObject))
-                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
+                        //return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
+                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
             }
         }
 
