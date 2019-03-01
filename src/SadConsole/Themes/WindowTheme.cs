@@ -81,9 +81,9 @@ namespace SadConsole.Themes
                 FillStyle = FillStyle.Clone(),
                 TitleAreaY = TitleAreaY,
                 TitleAreaX = TitleAreaX,
-                TitleAreaLength =  TitleAreaLength,
+                TitleAreaLength = TitleAreaLength,
                 ModalTint = ModalTint,
-                BorderLineStyle = (int[])BorderLineStyle.Clone()
+                BorderLineStyle = (int[])BorderLineStyle?.Clone()
             };
         }
 
