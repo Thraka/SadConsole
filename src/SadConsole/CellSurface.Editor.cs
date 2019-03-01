@@ -405,7 +405,9 @@ namespace SadConsole
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators)
         {
-            if (!IsValidCell(x, y, out var index) || index + count >= Cells.Length) return;
+            if (count <= 0) return;
+            if (!IsValidCell(x, y, out var index)) return;
+            if (index + count > Cells.Length) count = Cells.Length - index;
 
             SetDecorator(index, count, decorators);
         }
@@ -419,8 +421,10 @@ namespace SadConsole
         public void SetDecorator(int index, int count, params CellDecorator[] decorators)
         {
             // TODO: Setting decorators to an empty array causes a lot of GC when you FILL/CLEAR a surface. Need a better way
-            if (!IsValidCell(index) || index + count >= Cells.Length) return;
-            
+            if (count <= 0) return;
+            if (!IsValidCell(index)) return;
+            if (index + count > Cells.Length) count = Cells.Length - index;
+
             for (var i = index; i < index + count; i++)
             {
                 switch (decorators)
@@ -453,7 +457,9 @@ namespace SadConsole
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         public void AddDecorator(int x, int y, int count, CellDecorator[] decorators)
         {
-            if (!IsValidCell(x, y, out var index) || index + count >= Cells.Length) return;
+            if (count <= 0) return;
+            if (!IsValidCell(x, y, out var index)) return;
+            if (index + count > Cells.Length) count = Cells.Length - index;
 
             AddDecorator(index, count, decorators);
         }
@@ -466,7 +472,9 @@ namespace SadConsole
         /// <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
         public void AddDecorator(int index, int count, CellDecorator[] decorators)
         {
-            if (!IsValidCell(index) || index + count >= Cells.Length) return;
+            if (count <= 0) return;
+            if (!IsValidCell(index)) return;
+            if (index + count > Cells.Length) count = Cells.Length - index;
 
             if (decorators == null || decorators.Length == 0)
                 return;
