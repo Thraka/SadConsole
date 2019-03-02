@@ -41,7 +41,7 @@ namespace SadConsole.SerializedTypes
                 Glyph = cell.Glyph,
                 IsVisible = cell.IsVisible,
                 Mirror = cell.Mirror,
-                Decorators = cell.Decorators.ToArray(),
+                Decorators = cell.Decorators,
                 CellState = cell.State
             };
         }
@@ -51,8 +51,7 @@ namespace SadConsole.SerializedTypes
             var newCell = new Cell(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
             {
                 IsVisible = cell.IsVisible,
-                Decorators = cell.Decorators != null ? cell.Decorators.ToArray() 
-                                                     : new CellDecorator[0]
+                Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : System.Array.Empty<CellDecorator>()
             };
 
             if (cell.CellState != null)
@@ -99,7 +98,7 @@ namespace SadConsole.SerializedTypes
         public static implicit operator CellState(CellStateSerialized cell)
         {
             return new CellState(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror, 
-                                 cell.IsVisible, cell.Decorators);
+                                 cell.IsVisible, cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : System.Array.Empty<CellDecorator>());
         }
     }
 }

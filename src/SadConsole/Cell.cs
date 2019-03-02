@@ -19,7 +19,7 @@ namespace SadConsole
         /// Modifies the look of a cell with additional character. 
         /// </summary>
         [DataMember]
-        public CellDecorator[] Decorators { get; internal set; } = new CellDecorator[0];
+        public CellDecorator[] Decorators { get; internal set; } = Array.Empty<CellDecorator>();
 
         /// <summary>
         /// The foreground color of this cell.
@@ -104,11 +104,11 @@ namespace SadConsole
         /// <param name="cell">The target cell to copy to.</param>
         public void CopyAppearanceTo(Cell cell)
         {
-            cell.Foreground = this.Foreground;
-            cell.Background = this.Background;
-            cell.Glyph = this.Glyph;
-            cell.Mirror = this.Mirror;
-            cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : new CellDecorator[0];
+            cell.Foreground = Foreground;
+            cell.Background = Background;
+            cell.Glyph = Glyph;
+            cell.Mirror = Mirror;
+            cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>();
         }
 
         /// <summary>
@@ -117,11 +117,11 @@ namespace SadConsole
         /// <param name="cell">The target cell to copy from.</param>
         public void CopyAppearanceFrom(Cell cell)
         {
-            this.Foreground = cell.Foreground;
-            this.Background = cell.Background;
-            this.Glyph = cell.Glyph;
-            this.Mirror = cell.Mirror;
-            this.Decorators = cell.Decorators.ToArray();
+            Foreground = cell.Foreground;
+            Background = cell.Background;
+            Glyph = cell.Glyph;
+            Mirror = cell.Mirror;
+            Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : Array.Empty<CellDecorator>();
         }
 
         /// <summary>
@@ -133,9 +133,7 @@ namespace SadConsole
             Background = Color.Black;
             Glyph = 0;
             Mirror = SpriteEffects.None;
-
-            if (Decorators.Length != 0)
-                Decorators = new CellDecorator[0];
+            Decorators = Array.Empty<CellDecorator>();
         }
 
         /// <summary>
@@ -191,7 +189,7 @@ namespace SadConsole
                 Glyph = State.Value.Glyph;
                 Mirror = State.Value.Mirror;
                 IsVisible = State.Value.IsVisible;
-                Decorators = State.Value.Decorators.ToArray();
+                Decorators = State.Value.Decorators;
                 State = null;
             }
         }
@@ -206,7 +204,7 @@ namespace SadConsole
             Glyph = state.Glyph;
             Mirror = state.Mirror;
             IsVisible = state.IsVisible;
-            Decorators = state.Decorators.ToArray();
+            Decorators = state.Decorators;
         }
 
         /// <summary>
@@ -218,8 +216,8 @@ namespace SadConsole
         /// Returns a new cell with the same properties as this one.
         /// </summary>
         /// <returns>The new cell.</returns>
-        public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = this.IsVisible, Decorators = Decorators.ToArray() };
-
+        public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = IsVisible, Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>() };
+        
         /// <summary>
         /// Compares if the cell is the same as the state.
         /// </summary>

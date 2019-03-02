@@ -25,7 +25,7 @@ namespace MyProject
         static void Main(string[] args)
         {
             // Setup the engine and create the main window.
-            SadConsole.Game.Create("IBM.font", Width, Height);
+            SadConsole.Game.Create(Width, Height);
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Game.OnInitialize = Init;

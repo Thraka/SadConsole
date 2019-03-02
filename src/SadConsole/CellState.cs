@@ -61,14 +61,14 @@ namespace SadConsole
         /// <param name="mirror">Mirror setting.</param>
         /// <param name="isVisible">Visbility setting.</param>
         /// <param name="decorators">Decorators setting.</param>
-        public CellState(Color foreground, Color background, int glyph, SpriteEffects mirror, bool isVisible, IEnumerable<CellDecorator> decorators)
+        public CellState(Color foreground, Color background, int glyph, SpriteEffects mirror, bool isVisible, CellDecorator[] decorators)
         {
             Foreground = foreground;
             Background = background;
             Glyph = glyph;
             Mirror = mirror;
             IsVisible = isVisible;
-            Decorators = decorators == null ? new CellDecorator[0] { } : decorators.ToArray();
+            Decorators = decorators ?? Array.Empty<CellDecorator>();
         }
 
         /// <summary>

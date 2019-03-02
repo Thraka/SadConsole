@@ -764,7 +764,7 @@
             Visible setting of the state.
             </summary>
         </member>
-        <member name="M:SadConsole.CellState.#ctor(Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Boolean,System.Collections.Generic.IEnumerable{SadConsole.CellDecorator})">
+        <member name="M:SadConsole.CellState.#ctor(Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Boolean,SadConsole.CellDecorator[])">
             <summary>
             Creates a new state with the specified colors, glyph, visiblity, and mirror settings.
             </summary>
@@ -1139,6 +1139,21 @@
             <param name="index">The index of the cell to start applying.</param>
             <param name="count">The count of cells to use from the index (inclusive).</param>
             <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.ClearDecorators(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Clears the decorators of the specified cells.
+            </summary>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.ClearDecorators(System.Int32,System.Int32)">
+            <summary>
+            Clears the decorators of the specified cells.
+            </summary>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
         </member>
         <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String)">
             <summary>
