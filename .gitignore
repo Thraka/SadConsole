@@ -89,6 +89,7 @@ project.lock.json
 *.scc
 *.sln.ide
 *.nupkg
+*.snupkg
 
 # Visual C++ cache files
 ipch/

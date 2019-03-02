@@ -1,8 +1,6 @@
-## 02/27/2019 V8.1
+## 03/01/2019 V8.2.0
 
-- Reenabled `Control.AlternativeFont`
-- Rebuilt repo structure
-- NuGet package supports **.snuget** and **SourceLink**
-- Rectangle extensions added: `ToPixels`, `ToConsole`
-- Keyboard methods like IsKeyPressed now ignore SHIFT and support checking AsciiKey for SHIFT state
-- CAPSLOCK and NUMLOCK no longer use windows dll
+- Fixed a bug in `WindowTheme.Clone`
+- Trimmed Cell.Decorators memory usage
+- Various Decorator bugs.
+- Added `surface.ClearDecorators`

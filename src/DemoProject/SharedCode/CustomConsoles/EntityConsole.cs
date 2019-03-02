@@ -24,6 +24,7 @@ namespace StarterProject.CustomConsoles
             var animation = new AnimatedConsole("default", 1, 1);
             var frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
+            frame.SetDecorator(0, 2, new CellDecorator(Color.Yellow, 69, SpriteEffects.None));
 
             player = new Entity(animation);
             player.Position = new Point(Width / 2, Height / 2);
@@ -51,8 +52,13 @@ namespace StarterProject.CustomConsoles
 
             if (info.IsKeyPressed(Keys.W))
             {
-                player.Position = new Point(0, 0);
+                player.Animation.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, SpriteEffects.None) });
                 keyHit = true;  
+            }
+            if (info.IsKeyPressed(Keys.Q))
+            {
+                player.Animation.ClearDecorators(0, 1);
+                keyHit = true;
             }
 
             if (info.IsKeyReleased(Keys.Up))

@@ -20,7 +20,7 @@ namespace StarterProject
             
             // Setup the engine and create the main window.
             SadConsole.Game.Create(80, 25);
-            //SadConsole.Engine.Initialize("IBM.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
+            //SadConsole.Engine.Initialize("Fonts/Cheepicus12.font", 80, 25, (g) => { g.GraphicsDeviceManager.HardwareModeSwitch = false; g.Window.AllowUserResizing = true; });
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Game.OnInitialize = Init;
