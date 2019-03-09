@@ -10,6 +10,9 @@ namespace SadConsole
     public static class Settings
     {
         internal static bool LoadingEmbeddedFont = false;
+        private static int _preFullScreenWidth;
+        private static int _preFullScreenHeight;
+        private static bool _handleResizeNone;
 
         /// <summary>
         /// The color to automatically clear the device with.
@@ -83,28 +86,36 @@ namespace SadConsole
             // Coming back from fullscreen
             if (Global.GraphicsDeviceManager.IsFullScreen)
             {
-                Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
+                 Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
 
-                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
-                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
-                Global.GraphicsDeviceManager.ApplyChanges();
-
-                Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth;
-                Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight;
+                Global.GraphicsDeviceManager.PreferredBackBufferWidth = _preFullScreenWidth;
+                Global.GraphicsDeviceManager.PreferredBackBufferHeight = _preFullScreenHeight;
                 Global.GraphicsDeviceManager.ApplyChanges();
             }
 
             // Going full screen
             else
             {
-                Global.WindowWidth = Global.GraphicsDeviceManager.PreferredBackBufferWidth;
-                Global.WindowHeight = Global.GraphicsDeviceManager.PreferredBackBufferHeight;
+                _preFullScreenWidth = Global.GraphicsDevice.PresentationParameters.BackBufferWidth;
+                _preFullScreenHeight = Global.GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+                if (Settings.ResizeMode == WindowResizeOptions.None)
+                {
+                    _handleResizeNone = true;
+                    Settings.ResizeMode = WindowResizeOptions.Scale;
+                }
 
                 Global.GraphicsDeviceManager.PreferredBackBufferWidth = Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
                 Global.GraphicsDeviceManager.PreferredBackBufferHeight = Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
                 Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
                 Global.GraphicsDeviceManager.ApplyChanges();
+
+                if (_handleResizeNone)
+                {
+                    _handleResizeNone = false;
+                    Settings.ResizeMode = WindowResizeOptions.None;
+                }
             }
         }
 
@@ -119,8 +130,6 @@ namespace SadConsole
             Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
             Global.GraphicsDeviceManager.ApplyChanges();
 
-            Global.WindowWidth = width;
-            Global.WindowHeight = height;
             Global.ResetRendering();
         }
 
@@ -169,6 +178,11 @@ namespace SadConsole
             /// Fits <see cref="Global.RenderOutput"/> to the window using padding to maintain aspect ratio.
             /// </summary>
             Fit,
+
+            /// <summary>
+            /// <see cref="Global.RenderOutput"/> always matches the window.
+            /// </summary>
+            None,
         }
     }
 }

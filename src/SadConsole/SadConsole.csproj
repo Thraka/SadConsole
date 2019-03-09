@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>8.2.0-debug</Version>
+    <Version>8.3.0-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -43,8 +43,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>SadConsole.xml</DocumentationFile>
     <DefineConstants>TRACE;XNA</DefineConstants>
+    <DocumentationFile>SadConsole.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -80,5 +80,9 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <Target Name="MyPostCompileTarget" AfterTargets="Build">
+    <Exec Command="InheritDoc.exe -o" />
+  </Target>
 
 </Project>

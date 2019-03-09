@@ -108,12 +108,12 @@ namespace SadConsole
         /// <summary>
         /// The current game window width.
         /// </summary>
-        public static int WindowWidth { get; set; }
+        public static int WindowWidth { get => GraphicsDevice.PresentationParameters.BackBufferWidth; }
 
         /// <summary>
         /// The current game window height.
         /// </summary>
-        public static int WindowHeight { get; set; }
+        public static int WindowHeight { get => GraphicsDevice.PresentationParameters.BackBufferHeight; }
 
         /// <summary>
         /// Where on the screen the engine will be rendered.
@@ -217,15 +217,15 @@ namespace SadConsole
         /// </summary>
         public static void ResetRendering()
         {
-            RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
-
             if (Settings.ResizeMode == Settings.WindowResizeOptions.Center)
             {
+                RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
                 RenderRect = new Rectangle((GraphicsDevice.PresentationParameters.BackBufferWidth - RenderWidth) / 2, (GraphicsDevice.PresentationParameters.BackBufferHeight - RenderHeight) / 2, RenderWidth, RenderHeight);
                 RenderScale = new Vector2(1);
             }
             else if (Settings.ResizeMode == Settings.WindowResizeOptions.Scale)
             {
+                RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
                 int multiple = 2;
 
                 // Find the bounds
@@ -245,7 +245,7 @@ namespace SadConsole
             }
             else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
             {
-
+                RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
                 var heightRatio = (float)GraphicsDevice.PresentationParameters.BackBufferHeight / (float)RenderHeight;
                 var widthRatio = (float)GraphicsDevice.PresentationParameters.BackBufferWidth / (float)RenderWidth;
 
@@ -269,8 +269,17 @@ namespace SadConsole
                     RenderScale = new Vector2(RenderWidth / (float)fitWidth, RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
                 }
             }
+            else if (Settings.ResizeMode == Settings.WindowResizeOptions.None)
+            {
+                RenderWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+                RenderHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+                RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
+                RenderRect = GraphicsDevice.Viewport.Bounds;
+                RenderScale = new Vector2(1);
+            }
             else
             {
+                RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
                 RenderRect = GraphicsDevice.Viewport.Bounds;
                 RenderScale = new Vector2(RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             }

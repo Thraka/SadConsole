@@ -3761,6 +3761,14 @@
             <param name="position">The destination of the cursor.</param>
             <returns>This cursor object.</returns>
         </member>
+        <member name="M:SadConsole.Cursor.Move(System.Int32,System.Int32)">
+            <summary>
+            Moves the cursor to the specified position.
+            </summary>
+            <param name="x">The x (horizontal) of the position.</param>
+            <param name="y">The x (vertical) of the position.</param>
+            <returns></returns>
+        </member>
         <member name="M:SadConsole.Cursor.Up(System.Int32)">
             <summary>
             Moves the cusor up by the specified amount of lines.
@@ -4682,7 +4690,7 @@
         </member>
         <member name="P:SadConsole.Font.Name">
             <summary>
-            The name of the font used when it is registered with the <see cref="!:Engine.Fonts"/> collection.
+            The name of the font used when it is registered with the <see cref="P:SadConsole.Global.Fonts"/> collection.
             </summary>
         </member>
         <member name="P:SadConsole.Font.Master">
@@ -4699,6 +4707,29 @@
             <param name="height">The height glyphs.</param>
             <param name="additionalWidth">Additional pixel width to add to the resize.</param>
             <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        </member>
+        <member name="M:SadConsole.Font.GetRenderRect(System.Int32,System.Int32)">
+            <summary>
+            Returns a rectangle that is positioned and sized based on the font and the cell position specified.
+            </summary>
+            <param name="x">The x-axis of the cell position.</param>
+            <param name="y">The y-axis of the cell position.</param>
+            <returns>A new rectangle.</returns>
+        </member>
+        <member name="M:SadConsole.Font.GetWorldPosition(System.Int32,System.Int32)">
+            <summary>
+            Gets the pixel position of a cell position based on the font size.
+            </summary>
+            <param name="x">The x coordinate of the position.</param>
+            <param name="y">The y coordinate of the position.</param>
+            <returns>A new pixel point.</returns>
+        </member>
+        <member name="M:SadConsole.Font.GetWorldPosition(Microsoft.Xna.Framework.Point)">
+            <summary>
+            Gets the pixel position of a cell position based on the font size.
+            </summary>
+            <param name="position">The position to convert.</param>
+            <returns>A new pixel point.</returns>
         </member>
         <member name="T:SadConsole.FontMaster">
             <summary>
@@ -6443,6 +6474,11 @@
         <member name="F:SadConsole.Settings.WindowResizeOptions.Fit">
             <summary>
             Fits <see cref="F:SadConsole.Global.RenderOutput"/> to the window using padding to maintain aspect ratio.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Settings.WindowResizeOptions.None">
+            <summary>
+            <see cref="F:SadConsole.Global.RenderOutput"/> always matches the window.
             </summary>
         </member>
         <member name="T:SadConsole.StringParser.CommandTypes">

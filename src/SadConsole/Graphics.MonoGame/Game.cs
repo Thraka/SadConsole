@@ -85,12 +85,12 @@ namespace SadConsole
             {
                 if (!Global.GraphicsDeviceManager.IsFullScreen && Settings.WindowMinimumSize != Point.Zero)
                 {
-                    if (GraphicsDeviceManager.PreferredBackBufferWidth < Settings.WindowMinimumSize.X
-                        || GraphicsDeviceManager.PreferredBackBufferHeight < Settings.WindowMinimumSize.Y)
+                    if (GraphicsDevice.PresentationParameters.BackBufferWidth < Settings.WindowMinimumSize.X
+                        || GraphicsDevice.PresentationParameters.BackBufferHeight < Settings.WindowMinimumSize.Y)
                     {
                         ResizeBusy = true;
-                        GraphicsDeviceManager.PreferredBackBufferWidth = Global.WindowWidth = Settings.WindowMinimumSize.X;
-                        GraphicsDeviceManager.PreferredBackBufferHeight = Global.WindowHeight = Settings.WindowMinimumSize.Y;
+                        GraphicsDeviceManager.PreferredBackBufferWidth = Settings.WindowMinimumSize.X;
+                        GraphicsDeviceManager.PreferredBackBufferHeight = Settings.WindowMinimumSize.Y;
                         GraphicsDeviceManager.ApplyChanges();
                     }
                 }

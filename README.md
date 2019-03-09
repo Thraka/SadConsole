@@ -10,11 +10,6 @@ SadConsole is an MonoGame 3.7 and FNA game library that provides an engine to em
 
 SadConsole targets .NET Standard 2.0
 
-Some sample games are provided in the [SampleGames](./SampleGames) folder and are now part of the Visual Studio solution file.
-
-* [Features](#features)
-* [Demo video](#demo-video)
-
 ## Features
 
 Here are some of the features SadConsole supports.

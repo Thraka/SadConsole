@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace SadConsole
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Represents a specific font size from a <see cref="FontMaster"/>.
@@ -98,7 +99,7 @@ namespace SadConsole
         public FontSizes SizeMultiple { get; private set; }
 
         /// <summary>
-        /// The name of the font used when it is registered with the <see cref="Engine.Fonts"/> collection.
+        /// The name of the font used when it is registered with the <see cref="Global.Fonts"/> collection.
         /// </summary>
         public string Name { get; private set; }
 
@@ -165,36 +166,46 @@ namespace SadConsole
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
         public void ResizeGraphicsDeviceManager(GraphicsDeviceManager manager, int width, int height, int additionalWidth, int additionalHeight)
         {
-            int oldWidth = manager.PreferredBackBufferWidth;
-            int oldHeight = manager.PreferredBackBufferHeight;
-
             manager.PreferredBackBufferWidth = (Size.X * width) + additionalWidth;
             manager.PreferredBackBufferHeight = (Size.Y * height) + additionalHeight;
 
-            Global.WindowWidth = Global.RenderWidth = manager.PreferredBackBufferWidth;
-            Global.WindowHeight = Global.RenderHeight = manager.PreferredBackBufferHeight;
+            Global.RenderWidth = manager.PreferredBackBufferWidth;
+            Global.RenderHeight = manager.PreferredBackBufferHeight;
 
-            int diffWidth = (Global.RenderWidth - oldWidth) / 2;
-            int diffHeight = (Global.RenderHeight - oldHeight) / 2;
-
-            //Center screen
-#if MONOGAME
-            if (Game.Instance != null)
-                Game.Instance.Window.Position = new Point(Game.Instance.Window.Position.X - diffWidth, Game.Instance.Window.Position.Y - diffHeight);
-#endif
             manager.ApplyChanges();
         }
+
+        /// <summary>
+        /// Returns a rectangle that is positioned and sized based on the font and the cell position specified.
+        /// </summary>
+        /// <param name="x">The x-axis of the cell position.</param>
+        /// <param name="y">The y-axis of the cell position.</param>
+        /// <returns>A new rectangle.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
 
         public Rectangle GetRenderRect(int x, int y)
         {
             return new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
         }
 
+        /// <summary>
+        /// Gets the pixel position of a cell position based on the font size.
+        /// </summary>
+        /// <param name="x">The x coordinate of the position.</param>
+        /// <param name="y">The y coordinate of the position.</param>
+        /// <returns>A new pixel point.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point GetWorldPosition(int x, int y)
         {
             return GetWorldPosition(new Point(x, y));
         }
 
+        /// <summary>
+        /// Gets the pixel position of a cell position based on the font size.
+        /// </summary>
+        /// <param name="position">The position to convert.</param>
+        /// <returns>A new pixel point.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point GetWorldPosition(Point position)
         {
             return new Point(position.X * Size.X, position.Y * Size.Y);
