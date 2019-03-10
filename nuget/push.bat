@@ -1,1 +1,2 @@
-nuget push SadConsole.%1.nupkg -Source https://api.nuget.org/v3/index.json
+nuget push SadConsole.%1.nupkg -Source nuget.org
+nuget push SadConsole.%1-debug.nupkg -Source nuget.org
