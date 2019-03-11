@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GoRogue, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\GoRogue.2.0.0-pre3\lib\netstandard2.0\GoRogue.dll</HintPath>
+      <HintPath>..\..\packages\GoRogue.2.0.0\lib\netstandard2.0\GoRogue.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MonoGame.Framework.WindowsDX.3.7.1.189\lib\net45\MonoGame.Framework.dll</HintPath>

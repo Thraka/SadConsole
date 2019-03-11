@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="2.0.0-pre3" />
+    <PackageReference Include="GoRogue" Version="2.0.0-pre11-debug" />
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" PrivateAssets="All" />
   </ItemGroup>
 

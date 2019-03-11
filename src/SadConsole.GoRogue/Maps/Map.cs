@@ -174,14 +174,14 @@ namespace SadConsole.Maps
         /// <summary>
         /// Translates FOV values between GoRogue and our game tiles.
         /// </summary>
-        public class TranslationFOV : GoRogue.MapViews.TranslationMap<Tile, double>
+        public class TranslationFOV : GoRogue.MapViews.TranslationMap<Tile, bool>
         {
             public TranslationFOV(GoRogue.MapViews.IMapView<Tile> map) : base(map) { }
 
-            protected override double TranslateGet(Tile value)
+            protected override bool TranslateGet(Tile value)
             {
-                // 1 = blocked; 0 = see thru
-                return Helpers.HasFlag(value.Flags, (int)TileFlags.BlockLOS)  ? 1.0 : 0.0;
+                // true = blocked
+                return !Helpers.HasFlag(value.Flags, (int)TileFlags.BlockLOS);
             }
         }
 
