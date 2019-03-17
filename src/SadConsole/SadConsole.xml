@@ -1745,6 +1745,22 @@
             <param name="string2">The right-side of the string.</param>
             <returns></returns>
         </member>
+        <member name="M:SadConsole.ColoredString.op_Addition(SadConsole.ColoredString,System.String)">
+            <summary>
+            Combines a colored string and string. The last colored glyph in the colored string is used for all of the characters in the added string.
+            </summary>
+            <param name="string1">The colored string.</param>
+            <param name="string2">The string.</param>
+            <returns>A new colored string instance.</returns>
+        </member>
+        <member name="M:SadConsole.ColoredString.op_Addition(System.String,SadConsole.ColoredString)">
+            <summary>
+            Combines a string and a colored string. The first colored glyph in the colored string is used for all of the characters in the added string.
+            </summary>
+            <param name="string1">The string.</param>
+            <param name="string2">The colored string.</param>
+            <returns>A new colored string instance.</returns>
+        </member>
         <member name="T:SadConsole.Components.EntityViewSyncComponent">
             <summary>
             Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
@@ -6853,6 +6869,11 @@
             </summary>
             <param name="control">The control instance</param>
             <returns>A theme that is associated with the control.</returns>
+        </member>
+        <member name="M:SadConsole.Themes.Library.OnColorsChanged">
+            <summary>
+            Refreshes the theme colors of every control. Called when the <see cref="P:SadConsole.Themes.Library.Colors"/> property has changed.
+            </summary>
         </member>
         <member name="M:SadConsole.Themes.Library.Clone">
             <summary>
