@@ -124,7 +124,7 @@
         /// <returns>True when the mouse is over this console and processing should stop.</returns>
         public virtual bool ProcessMouse(MouseConsoleState state)
         {
-            foreach (var component in ComponentsMouse)
+            foreach (var component in ComponentsMouse.ToArray())
             {
                 component.ProcessMouse(this, state, out bool isHandled);
 
@@ -168,7 +168,7 @@
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
         public virtual bool ProcessKeyboard(Keyboard info)
         {
-            foreach (var component in ComponentsKeyboard)
+            foreach (var component in ComponentsKeyboard.ToArray())
             {
                 component.ProcessKeyboard(this, info, out bool isHandled);
 

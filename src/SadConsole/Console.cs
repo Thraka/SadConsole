@@ -454,25 +454,25 @@ namespace SadConsole
             {
                 if (component.IsDraw)
                 {
-                    if (!ComponentsDraw.Contains(component))
+                    if (ComponentsDraw.Contains(component))
                         ComponentsDraw.Remove(component);
                 }
 
                 if (component.IsUpdate)
                 {
-                    if (!ComponentsUpdate.Contains(component))
+                    if (ComponentsUpdate.Contains(component))
                         ComponentsUpdate.Remove(component);
                 }
 
                 if (component.IsKeyboard)
                 {
-                    if (!ComponentsKeyboard.Contains(component))
+                    if (ComponentsKeyboard.Contains(component))
                         ComponentsKeyboard.Remove(component);
                 }
 
                 if (component.IsMouse)
                 {
-                    if (!ComponentsMouse.Contains(component))
+                    if (ComponentsMouse.Contains(component))
                         ComponentsMouse.Remove(component);
                 }
 
