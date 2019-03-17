@@ -1,4 +1,11 @@
-﻿## 03/09/2019 V8.3.0
+﻿## 03/17/2019 V8.4.0
+
+- Added a + operator for ColoredString and string.
+- Removing components from a console works now.
+- Added OnColorsChanged to library so you can update control colors on custom controls
+- Fixed being able to set Window/Console theme to null.
+
+## 03/09/2019 V8.3.0
 
 - `Cursor.Move` now has an overload for `int x, int y`.
 - The `Global.CurrentScreen` defaults to a new `Console` instead of a `ContainerConsole`.
