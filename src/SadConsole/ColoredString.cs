@@ -161,6 +161,7 @@ namespace SadConsole
             }
             return returnObject;
         }
+
         /// <summary>
         /// Returns a new <see cref="ColoredString"/> object using a substring of this instance from the index to the end.
         /// </summary>
@@ -274,6 +275,55 @@ namespace SadConsole
             returnString.IgnoreEffect = string1.IgnoreEffect && string2.IgnoreEffect;
 
             return returnString;
+        }
+
+        /// <summary>
+        /// Combines a colored string and string. The last colored glyph in the colored string is used for all of the characters in the added string.
+        /// </summary>
+        /// <param name="string1">The colored string.</param>
+        /// <param name="string2">The string.</param>
+        /// <returns>A new colored string instance.</returns>
+        public static ColoredString operator +(ColoredString string1, string string2)
+        {
+            
+            var returnString = new ColoredString(string1.Count + string2.Length);
+
+            for (int i = 0; i < string1.Count; i++)
+                returnString._characters[i] = string1._characters[i].Clone();
+
+            var templateCharacter = string1[string1.Count - 1];
+
+            for (int i = 0; i < string2.Length; i++)
+            {
+                var newChar = templateCharacter.Clone();
+                newChar.GlyphCharacter = string2[i];
+                returnString._characters[i + string1.Count] = newChar;
+            }
+
+            returnString.IgnoreGlyph = string1.IgnoreGlyph;
+            returnString.IgnoreForeground = string1.IgnoreForeground;
+            returnString.IgnoreBackground = string1.IgnoreBackground;
+            returnString.IgnoreEffect = string1.IgnoreEffect;
+
+            return returnString;
+        }
+
+        /// <summary>
+        /// Combines a string and a colored string. The first colored glyph in the colored string is used for all of the characters in the added string.
+        /// </summary>
+        /// <param name="string1">The string.</param>
+        /// <param name="string2">The colored string.</param>
+        /// <returns>A new colored string instance.</returns>
+        public static ColoredString operator +(string string1, ColoredString string2)
+        {
+            var returnString = new ColoredString(string1, string2[0]);
+
+            returnString.IgnoreGlyph = string2.IgnoreGlyph;
+            returnString.IgnoreForeground = string2.IgnoreForeground;
+            returnString.IgnoreBackground = string2.IgnoreBackground;
+            returnString.IgnoreEffect = string2.IgnoreEffect;
+
+            return returnString + string2;
         }
     }
 }
