@@ -28,18 +28,7 @@
                 if (_colors == null) throw new System.NullReferenceException("Colors cannot be set to null");
                 _colors = value;
 
-                ControlsConsoleTheme.RefreshTheme(value);
-                WindowTheme.RefreshTheme(value);
-
-                ScrollBarTheme.RefreshTheme(value);
-                ButtonTheme.RefreshTheme(value);
-                CheckBoxTheme.RefreshTheme(value);
-                ListBoxTheme.RefreshTheme(value);
-                ProgressBarTheme.RefreshTheme(value);
-                RadioButtonTheme.RefreshTheme(value);
-                TextBoxTheme.RefreshTheme(value);
-                SelectionButtonTheme.RefreshTheme(value);
-                DrawingSurfaceTheme.RefreshTheme(value);
+                OnColorsChanged();
             }
         }
 
@@ -191,6 +180,25 @@
                 default:
                     throw new System.Exception("Control does not have an associated theme.");
             }
+        }
+
+        /// <summary>
+        /// Refreshes the theme colors of every control. Called when the <see cref="Colors"/> property has changed.
+        /// </summary>
+        protected virtual void OnColorsChanged()
+        {
+            ControlsConsoleTheme.RefreshTheme(Colors);
+            WindowTheme.RefreshTheme(Colors);
+
+            ScrollBarTheme.RefreshTheme(Colors);
+            ButtonTheme.RefreshTheme(Colors);
+            CheckBoxTheme.RefreshTheme(Colors);
+            ListBoxTheme.RefreshTheme(Colors);
+            ProgressBarTheme.RefreshTheme(Colors);
+            RadioButtonTheme.RefreshTheme(Colors);
+            TextBoxTheme.RefreshTheme(Colors);
+            SelectionButtonTheme.RefreshTheme(Colors);
+            DrawingSurfaceTheme.RefreshTheme(Colors);
         }
 
         /// <summary>
