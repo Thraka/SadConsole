@@ -47,16 +47,16 @@ namespace SadConsole.Themes
         /// </summary>
         public Color ModalBackground = new Color(20, 20, 20, 200);
 
-        public Color MenuBack;
-        public Color MenuLines;
         public Color TitleText;
 
+        public Color Lines;
         public Color TextBright;
         public Color Text;
         public Color TextSelected;
         public Color TextSelectedDark;
         public Color TextLight;
         public Color TextDark;
+        public Color TextFocused;
         public Color ControlBack;
         public Color ControlBackLight;
         public Color ControlBackSelected;
@@ -74,8 +74,6 @@ namespace SadConsole.Themes
 
         public Colors()
         {
-            MenuBack = BlueDark;
-            MenuLines = Gray;
             TitleText = Orange;
 
             TextBright = White;
@@ -84,25 +82,31 @@ namespace SadConsole.Themes
             TextSelectedDark = Green;
             TextLight = Gray;
             TextDark = Green;
+            TextFocused = Cyan;
+
+            Lines = Gray;
+
+            ControlBack = BlueDark;
+            ControlBackLight = (ControlBack * 1.3f).FillAlpha();
+            ControlBackSelected = GreenDark;
+            ControlBackDark = (ControlBack * 0.7f).FillAlpha();
+            ControlHostBack = BlueDark;
+            ControlHostFore = Text;
 
             RebuildAppearances();
         }
 
+        /// <summary>
+        /// Sets all Appearance* properties based on the existing colors and settings.
+        /// </summary>
         public void RebuildAppearances()
         {
-            ControlBack = MenuBack;
-            ControlBackLight = (ControlBack * 1.3f).FillAlpha();
-            ControlBackSelected = GreenDark;
-            ControlBackDark = (ControlBack * 0.7f).FillAlpha();
-            ControlHostBack = MenuBack;
-            ControlHostFore = Text;
-
             Appearance_ControlNormal = new Cell(Text, ControlBack);
             Appearance_ControlDisabled = new Cell(TextLight, ControlBackDark);
             Appearance_ControlOver = new Cell(TextSelectedDark, ControlBackSelected);
             Appearance_ControlSelected = new Cell(TextSelected, ControlBackSelected);
-            Appearance_ControlMouseDown = new Cell(Appearance_ControlSelected.Background, Appearance_ControlSelected.Foreground);
-            Appearance_ControlFocused = new Cell(Cyan, ControlBackLight);
+            Appearance_ControlMouseDown = new Cell(ControlBackSelected, TextSelected);
+            Appearance_ControlFocused = new Cell(TextFocused, ControlBackLight);
         }
 
         /// <summary>
@@ -145,9 +149,9 @@ namespace SadConsole.Themes
 
                 ModalBackground = ModalBackground,
 
-                MenuBack = MenuBack,
-                MenuLines = MenuLines,
                 TitleText = TitleText,
+
+                Lines = Lines,
 
                 TextBright = TextBright,
                 Text = Text,

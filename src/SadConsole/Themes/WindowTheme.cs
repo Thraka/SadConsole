@@ -136,7 +136,7 @@ namespace SadConsole.Themes
         {
             FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
             TitleStyle = new Cell(themeColors.TitleText, FillStyle.Background, FillStyle.Glyph);
-            BorderStyle = new Cell(themeColors.MenuLines, FillStyle.Background, 0);
+            BorderStyle = new Cell(themeColors.Lines, FillStyle.Background, 0);
             ModalTint = themeColors.ModalBackground;
         }
     }
