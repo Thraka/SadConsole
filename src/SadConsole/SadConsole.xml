@@ -6717,6 +6717,11 @@
             The color used to darken the background when <see cref="o:Window.Show"/> is called and <see cref="P:SadConsole.Window.IsModal"/> is <see langword="true"/>.
             </summary>
         </member>
+        <member name="M:SadConsole.Themes.Colors.RebuildAppearances">
+            <summary>
+            Sets all Appearance* properties based on the existing colors and settings.
+            </summary>
+        </member>
         <member name="M:SadConsole.Themes.Colors.Clone">
             <summary>
             Returns a clone of this object.

@@ -1,4 +1,8 @@
-## ## 03/17/2019 V8.4.0
+## 03/18/2019 V8.4.1
+
+- Updated Themes.Colors to work a little better.
+
+## 03/17/2019 V8.4.0
 
 - Added a + operator for ColoredString and string.
 - Removing components from a console works now.
