@@ -105,7 +105,7 @@ namespace SadConsole
         /// <param name="font">The font used with rendering.</param>
         /// <param name="viewPort">Initial value for the viewport if this console will scroll.</param>
         /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        public ScrollingConsole(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells): base (width, height, font, initialCells)
+        public ScrollingConsole(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells): base (width, height, initialCells, font, true)
         {
             ViewPortRectangle = viewPort;
 
@@ -126,12 +126,8 @@ namespace SadConsole
             if (ViewPortRectangle.Y + ViewPortRectangle.Height > Height)
                 ViewPortRectangle.Y = Height - ViewPortRectangle.Height;
 
-
-            if (RenderCells.Length != ViewPortRectangle.Width * ViewPortRectangle.Height)
-            {
-                RenderRects = new Rectangle[ViewPortRectangle.Width * ViewPortRectangle.Height];
-                RenderCells = new Cell[ViewPortRectangle.Width * ViewPortRectangle.Height];
-            }
+            RenderRects = new Rectangle[ViewPortRectangle.Width * ViewPortRectangle.Height];
+            RenderCells = new Cell[ViewPortRectangle.Width * ViewPortRectangle.Height];
 
             var index = 0;
 
@@ -146,12 +142,7 @@ namespace SadConsole
             }
 
             AbsoluteArea = new Rectangle(0, 0, ViewPortRectangle.Width * Font.Size.X, ViewPortRectangle.Height * Font.Size.Y);
-
-            if (LastRenderResult != null && (LastRenderResult.Bounds.Width != AbsoluteArea.Width || LastRenderResult.Bounds.Height != AbsoluteArea.Height))
-            {
-                LastRenderResult.Dispose();
-                LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
-            }
+            LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
         
         /// <summary>

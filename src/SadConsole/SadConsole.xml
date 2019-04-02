@@ -1766,6 +1766,11 @@
             Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
             </summary>
         </member>
+        <member name="P:SadConsole.Components.EntityViewSyncComponent.HandleIsVisible">
+            <summary>
+            If set to true, controls the <see cref="P:SadConsole.Console.IsVisible"/> property of the attached object.
+            </summary>
+        </member>
         <member name="M:SadConsole.Components.EntityViewSyncComponent.Update(SadConsole.Console,System.TimeSpan)">
             <inheritdoc />
         </member>
@@ -2051,6 +2056,11 @@
             Entities to draw on each console this component is added to.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.MultipleConsoleEntityDrawingComponent.HandleIsVisible">
+            <summary>
+            If set to true, controls the <see cref="P:SadConsole.Console.IsVisible"/> property of the attached object.
+            </summary>
+        </member>
         <member name="M:SadConsole.Components.MultipleConsoleEntityDrawingComponent.Update(SadConsole.Console,System.TimeSpan)">
             <inheritdoc />
         </member>
@@ -2169,6 +2179,16 @@
             <param name="height">The height of the console.</param>
             <param name="font">The font used with rendering.</param>
             <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        </member>
+        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.Cell[],SadConsole.Font,System.Boolean)">
+            <summary>
+            Creates a new console. This is a custom constructor that leaves the creation of leaves <see cref="P:SadConsole.Console.RenderCells"/> and <see cref="P:SadConsole.Console.LastRenderResult"/> creation up to the the child class.
+            </summary>
+            <param name="width">The width of the console.</param>
+            <param name="height">The height of the console.</param>
+            <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+            <param name="font">The font used with rendering.</param>
+            <param name="skipRenderCreation">Must be set to true.</param>
         </member>
         <member name="M:SadConsole.Console.OnCellsReset">
             <summary>

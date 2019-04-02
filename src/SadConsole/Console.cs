@@ -269,7 +269,34 @@ namespace SadConsole
             LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             Cursor = new Cursor(this);
         }
-        
+
+        /// <summary>
+        /// Creates a new console. This is a custom constructor that leaves the creation of leaves <see cref="RenderCells"/> and <see cref="LastRenderResult"/> creation up to the the child class.
+        /// </summary>
+        /// <param name="width">The width of the console.</param>
+        /// <param name="height">The height of the console.</param>
+        /// <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
+        /// <param name="font">The font used with rendering.</param>
+        /// <param name="skipRenderCreation">Must be set to true.</param>
+        protected Console(int width, int height, Cell[] cells, Font font, bool skipRenderCreation) : base(width, height, cells)
+        {
+            if (skipRenderCreation == false)
+                throw new Exception($"{nameof(skipRenderCreation)} must be set to true. This is a special constructor that should not be called unless you know what you're doing.");
+
+            Components = new ObservableCollection<IConsoleComponent>();
+            Components.CollectionChanged += Components_CollectionChanged;
+
+            ComponentsKeyboard = new List<IConsoleComponent>();
+            ComponentsDraw = new List<IConsoleComponent>();
+            ComponentsUpdate = new List<IConsoleComponent>();
+            ComponentsMouse = new List<IConsoleComponent>();
+
+            Children = new ConsoleCollection(this);
+            Renderer = new Renderers.Console();
+            Cursor = new Cursor(this);
+            _font = font;
+        }
+
         internal Console(): base(1, 1)
         {
             IsCursorDisabled = true;
