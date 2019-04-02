@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>8.4.1-debug</Version>
+    <Version>8.5.0-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -24,7 +24,7 @@
 - EntityManager removed and will be added to GoRogue-SadConsole integration lib.
 - Reenabled Control.AlternativeFont
 - Trimmed Cell.Decorators memory usage; various Decorator bugs.</PackageReleaseNotes>
-    <AssemblyVersion>8.3.0.0</AssemblyVersion>
+    <AssemblyVersion>8.5.0.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
