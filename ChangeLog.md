@@ -1,4 +1,9 @@
-﻿## 03/18/2019 V8.4.1
+﻿## 03/29/2019 V8.5.0
+
+- `ScrollingConsole` no longer crashes when creating a big console on DirectX (Thanks Chris3606)
+- `EntityViewSyncComponent` and `MultipleConsoleEntityDrawingComponent` both have a `HandleIsVisible` property that if set to `false` will cause the component to **not** set `entity.IsVisible` at all. It still syncs the render offset though. (Thanks Nelson, Chris3606)
+
+## 03/18/2019 V8.4.1
 
 - Updated Themes.Colors to work a little better.
 

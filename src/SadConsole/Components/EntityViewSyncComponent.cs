@@ -15,9 +15,15 @@ namespace SadConsole.Components
         private Point _oldPosition;
         private Rectangle _oldView;
 
+        /// <summary>
+        /// If set to true, controls the <see cref="Console.IsVisible"/> property of the attached object.
+        /// </summary>
+        public bool HandleIsVisible { get; set; } = true;
+
         /// <inheritdoc />
         public override void Update(Console console, TimeSpan delta)
         {
+
             if (console.Parent is IConsoleViewPort parent)
             {
                 var parentViewPort = parent.ViewPort;
@@ -25,7 +31,9 @@ namespace SadConsole.Components
                 if (parentViewPort != _oldView || console.Position != _oldPosition)
                 {
                     ((Entity)console).PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y).TranslateFont(console.Parent.Font, console.Font);
-                    console.IsVisible = console.Parent.AbsoluteArea.Contains(console.CalculatedPosition);
+
+                    if (HandleIsVisible)
+                        console.IsVisible = console.Parent.AbsoluteArea.Contains(console.CalculatedPosition);
 
                     _oldPosition = console.Position;
                     _oldView = parentViewPort;

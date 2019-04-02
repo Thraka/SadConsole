@@ -19,6 +19,11 @@ namespace SadConsole.Components
         /// </summary>
         public List<Entity> Entities { get; } = new List<Entity>();
 
+        /// <summary>
+        /// If set to true, controls the <see cref="Console.IsVisible"/> property of the attached object.
+        /// </summary>
+        public bool HandleIsVisible { get; set; } = true;
+
         /// <inheritdoc />
         public override void Update(Console console, TimeSpan delta)
         {
@@ -36,12 +41,16 @@ namespace SadConsole.Components
                     var parentViewPort = scroller.ViewPort;
 
                     entity.PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y).TranslateFont(console.Font, entity.Font) + console.CalculatedPosition.PixelLocationToConsole(entity.Font);
-                    entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
+
+                    if (HandleIsVisible)
+                        entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
                 }
                 else
                 {
                     entity.PositionOffset = console.CalculatedPosition.PixelLocationToConsole(entity.Font);
-                    entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
+
+                    if (HandleIsVisible)
+                        entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
                 }
 
 
