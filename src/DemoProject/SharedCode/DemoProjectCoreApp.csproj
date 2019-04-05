@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole.Shared\SadConsole.csproj" />
+    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +43,12 @@
     </None>
     <None Update="Ansi\ROY-DGZN.ANS">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\Cheepicus12.font">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\Cheepicus_12x12.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="sad.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

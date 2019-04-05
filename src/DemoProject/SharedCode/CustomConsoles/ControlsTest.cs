@@ -185,7 +185,7 @@ namespace StarterProject.CustomConsoles
                     backIndex = 0;
 
                 var theme = Theme.Clone();
-                theme.Colors.MenuBack = backgroundcycle[backIndex];
+                theme.Colors.ControlBack = backgroundcycle[backIndex];
                 theme.Colors.RebuildAppearances();
                 Theme = theme;
 
