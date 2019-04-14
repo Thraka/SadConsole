@@ -39,7 +39,10 @@ namespace StarterProject.CustomConsoles
             slider.Maximum = 6;
             Add(slider);
 
-            progressTimer = new Timer(0.5, (timer, time) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; });
+            progressTimer = new Timer(TimeSpan.FromSeconds(0.5));
+            progressTimer.TimerElapsed += (timer, e) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; };
+
+            Components.Add(progressTimer);
 
             var listbox = new SadConsole.Controls.ListBox(20, 6);
             listbox.Position = new Point(28, 3);
@@ -202,7 +205,6 @@ namespace StarterProject.CustomConsoles
 
         public override void Update(TimeSpan time)
         {
-            progressTimer.Update(time.TotalSeconds);
             base.Update(time);
         }
 

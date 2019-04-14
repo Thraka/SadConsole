@@ -146,16 +146,20 @@ namespace StarterProject.CustomConsoles
 
             surfacePal.Print(0, 0, "Hello from printing!");
 
-            timer = new Timer(100, (t, a) => pal.ShiftRight(0, 5));
-            timer5 = new Timer(2000, (t, a) => pal.ShiftLeft());
+            timer = new Timer(TimeSpan.FromMilliseconds(100));
+            timer.TimerElapsed += (t, e) => pal.ShiftRight(0, 5);
+
+            timer5 = new Timer(TimeSpan.FromMilliseconds(2000));
+            timer5.TimerElapsed += (t, e) => pal.ShiftLeft();
+
+            Components.Add(timer);
+            Components.Add(timer5);
         }
 
         public override void Update(TimeSpan delta)
         {
             base.Update(delta);
             //pal.ShiftLeft(0, 5);
-            timer.Update(delta.TotalMilliseconds);
-            timer5.Update(delta.TotalMilliseconds);
         }
 
         bool showMouse = false;
