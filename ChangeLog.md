@@ -1,4 +1,9 @@
-﻿## 03/29/2019 V8.5.0
+﻿## 04/13/2019 V8.6.0
+
+- `SadConsole.Timer` is a component now. The callbacks were changed to events.
+- `FontMaster.GetGlyphDefinition` added.
+
+## 03/29/2019 V8.5.0
 
 - `ScrollingConsole` no longer crashes when creating a big console on DirectX (Thanks Chris3606)
 - `EntityViewSyncComponent` and `MultipleConsoleEntityDrawingComponent` both have a `HandleIsVisible` property that if set to `false` will cause the component to **not** set `entity.IsVisible` at all. It still syncs the render offset though. (Thanks Nelson, Chris3606)

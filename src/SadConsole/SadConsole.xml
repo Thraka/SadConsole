@@ -4849,16 +4849,29 @@
         </member>
         <member name="M:SadConsole.FontMaster.GetDecorator(System.String,Microsoft.Xna.Framework.Color)">
             <summary>
-            Gets a <see cref="T:SadConsole.CellDecorator"/> by name from the <see cref="P:SadConsole.FontMaster.GlyphDefinitions"/> dictionary.
+            Gets a <see cref="T:SadConsole.CellDecorator"/> by the <see cref="T:SadConsole.FontMaster.GlyphDefinition"/> defined by the font file.
             </summary>
             <param name="name">The name of the decorator to get.</param>
             <param name="color">The color to apply to the decorator.</param>
             <returns>The decorator instance.</returns>
             <remarks>If the decorator does not exist, <see cref="P:SadConsole.CellDecorator.Empty"/> is returned.</remarks>
         </member>
+        <member name="M:SadConsole.FontMaster.GetGlyphDefinition(System.String)">
+            <summary>
+            Gets a <see cref="T:SadConsole.FontMaster.GlyphDefinition"/> by name that is defined by the font file.
+            </summary>
+            <param name="name">The name of the glyph definition.</param>
+            <returns>The glyph definition.</returns>
+            <remarks>If the glyph definition doesn't exist, return s<see cref="P:SadConsole.FontMaster.GlyphDefinition.Empty"/>.</remarks>
+        </member>
         <member name="T:SadConsole.FontMaster.GlyphDefinition">
             <summary>
             Represents a decorator (glyph and mirror) defined by a font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.FontMaster.GlyphDefinition.Empty">
+            <summary>
+            Gets a glyph definition that has -1 for the glyph.
             </summary>
         </member>
         <member name="P:SadConsole.FontMaster.GlyphDefinition.Glyph">
@@ -7285,9 +7298,14 @@
             A simple timer with callback.
             </summary>
         </member>
-        <member name="F:SadConsole.Timer.TriggeredCallback">
+        <member name="E:SadConsole.Timer.TimerElapsed">
             <summary>
-            Callback to trigger when the time elapses.
+            Called when the timer elapses.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Timer.TimerRestart">
+            <summary>
+            Called when the timer restarts.
             </summary>
         </member>
         <member name="P:SadConsole.Timer.Repeat">
@@ -7300,27 +7318,27 @@
             How many milliseconds to cause the timer to trigger.
             </summary>
         </member>
-        <member name="P:SadConsole.Timer.IsOff">
+        <member name="P:SadConsole.Timer.IsPaused">
             <summary>
             When true, the timer does not count time.
             </summary>
         </member>
-        <member name="M:SadConsole.Timer.#ctor(System.Double,System.Action{SadConsole.Timer,System.Double})">
+        <member name="M:SadConsole.Timer.#ctor(System.TimeSpan)">
             <summary>
             Creates a new timer.
             </summary>
-            <param name="triggerTime">How many milliseconds to trigger the callback.</param>
-            <param name="callback">The callback that is called when the trigger time has passed.</param>
+            <param name="triggerTime">Duration of the timer.</param>
         </member>
-        <member name="M:SadConsole.Timer.Update(System.Double)">
+        <member name="M:SadConsole.Timer.Update(SadConsole.Console,System.TimeSpan)">
             <summary>
             Updates the timer with the time since the last call.
             </summary>
-            <param name="timeElapsed"></param>
+            <param name="console">The parent object.</param>
+            <param name="delta">The time since the last frame update.</param>
         </member>
         <member name="M:SadConsole.Timer.Restart">
             <summary>
-            Restarts the timer; sets <see cref="P:SadConsole.Timer.IsOff"/> to false.
+            Restarts the timer; sets <see cref="P:SadConsole.Timer.IsPaused"/> to false.
             </summary>
         </member>
         <member name="T:SadConsole.Window">
