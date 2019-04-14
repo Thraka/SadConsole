@@ -118,7 +118,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets a <see cref="CellDecorator"/> by name from the <see cref="GlyphDefinitions"/> dictionary.
+        /// Gets a <see cref="CellDecorator"/> by the <see cref="GlyphDefinition"/> defined by the font file.
         /// </summary>
         /// <param name="name">The name of the decorator to get.</param>
         /// <param name="color">The color to apply to the decorator.</param>
@@ -129,14 +129,34 @@ namespace SadConsole
             if (GlyphDefinitions.ContainsKey(name))
                 return GlyphDefinitions[name].CreateCellDecorator(color);
 
-            throw new Exception("Cell decorator does not exist");
+            return CellDecorator.Empty;
         }
+
+        /// <summary>
+        /// Gets a <see cref="GlyphDefinition"/> by name that is defined by the font file.
+        /// </summary>
+        /// <param name="name">The name of the glyph definition.</param>
+        /// <returns>The glyph definition.</returns>
+        /// <remarks>If the glyph definition doesn't exist, return s<see cref="GlyphDefinition.Empty"/>.</remarks>
+        public GlyphDefinition GetGlyphDefinition(string name)
+        {
+            if (GlyphDefinitions.ContainsKey(name))
+                return GlyphDefinitions[name];
+
+            return GlyphDefinition.Empty;
+        }
+
 
         /// <summary>
         /// Represents a decorator (glyph and mirror) defined by a font.
         /// </summary>
         public readonly struct GlyphDefinition
         {
+            /// <summary>
+            /// Gets a glyph definition that has -1 for the glyph.
+            /// </summary>
+            public static GlyphDefinition Empty { get; } = new GlyphDefinition(-1, 0);
+
             /// <summary>
             /// The glyph of the decorator.
             /// </summary>
