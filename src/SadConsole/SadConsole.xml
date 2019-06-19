@@ -6408,6 +6408,11 @@
             Various settings for SadConsole.
             </summary>
         </member>
+        <member name="F:SadConsole.Settings.DefaultConsoleUseKeyboard">
+            <summary>
+            Gets and sets the default value for <see cref="P:SadConsole.Console.UseKeyboard"/> when the console is created.
+            </summary>
+        </member>
         <member name="F:SadConsole.Settings.ClearColor">
             <summary>
             The color to automatically clear the device with.

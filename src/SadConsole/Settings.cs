@@ -15,6 +15,11 @@ namespace SadConsole
         private static bool _handleResizeNone;
 
         /// <summary>
+        /// Gets and sets the default value for <see cref="Console.UseKeyboard"/> when the console is created.
+        /// </summary>
+        public static bool DefaultConsoleUseKeyboard = true;
+
+        /// <summary>
         /// The color to automatically clear the device with.
         /// </summary>
         public static Color ClearColor = Color.Black;

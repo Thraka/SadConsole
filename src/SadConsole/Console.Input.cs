@@ -43,7 +43,7 @@
         /// <summary>
         /// Allows this console to accept keyboard input.
         /// </summary>
-        public bool UseKeyboard { get; set; } = true;
+        public bool UseKeyboard { get; set; } = Settings.DefaultConsoleUseKeyboard;
 
         /// <summary>
         /// Allows this console to accept mouse input.
