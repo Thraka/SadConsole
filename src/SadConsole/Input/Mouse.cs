@@ -80,7 +80,7 @@ namespace SadConsole.Input
         /// <summary>
         /// Indicates that the mouse is currently within the bounds of the rendering area.
         /// </summary>
-        public bool IsOnScreen => Global.RenderRect.Contains(ScreenPosition);
+        public bool IsOnScreen => Global.RenderRect.Contains(ScreenPosition + Global.RenderRect.Location);
 
         /// <summary>
         /// Updates the state of the mouse.
