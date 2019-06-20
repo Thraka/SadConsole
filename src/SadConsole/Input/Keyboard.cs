@@ -243,11 +243,13 @@ namespace SadConsole.Input
                     activeKey.PostInitialDelay = true;
                     activeKey.TimeHeld = 0f;
                     KeysPressedInternal.Add(activeKey);
+                    KeysDownInternal[activeKeyIndex] = activeKey;
                 }
                 else if (activeKey.PostInitialDelay && activeKey.TimeHeld >= RepeatDelay)
                 {
                     activeKey.TimeHeld = 0f;
                     KeysPressedInternal.Add(activeKey);
+                    KeysDownInternal[activeKeyIndex] = activeKey;
                 }
             }
 		}
