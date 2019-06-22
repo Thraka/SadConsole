@@ -124,6 +124,8 @@
         /// <returns>True when the mouse is over this console and processing should stop.</returns>
         public virtual bool ProcessMouse(MouseConsoleState state)
         {
+            if (!IsVisible) return false;
+
             foreach (var component in ComponentsMouse.ToArray())
             {
                 component.ProcessMouse(this, state, out bool isHandled);
@@ -131,7 +133,7 @@
                 if (isHandled) return true;
             }
 
-            if (!IsVisible || !UseMouse) return false;
+            if (!UseMouse) return false;
 
             if (state.IsOnConsole)
             {

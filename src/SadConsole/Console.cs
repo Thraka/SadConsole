@@ -127,6 +127,10 @@ namespace SadConsole
             {
                 if (_isVisible == value) return;
                 _isVisible = value;
+
+                if (!value && IsMouseOver)
+                    OnMouseExit(new Input.MouseConsoleState(this, Global.MouseState));
+
                 OnVisibleChanged();
             }
         }

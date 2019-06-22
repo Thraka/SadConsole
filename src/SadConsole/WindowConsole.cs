@@ -181,7 +181,9 @@ namespace SadConsole
         /// <inheritdoc />
         public override bool ProcessMouse(MouseConsoleState state)
         {
-            if (!CanDrag || Theme.WindowTheme.TitleAreaLength == 0 || !IsVisible)
+            if (!IsVisible) return false;
+
+            if (!CanDrag || Theme.WindowTheme.TitleAreaLength == 0)
             {
                 PreviousMouseInfo = state;
                 return base.ProcessMouse(state);
