@@ -72,6 +72,9 @@ namespace StarterProject.Windows
                 Permanent = true
             };
 
+            Theme = SadConsole.Themes.Library.Default.Clone();
+            Theme.WindowTheme.BorderLineStyle = CellSurface.ConnectedLineThick;
+
             // The frame will have been drawn by the base class, so redraw and our close button will be put on top of it
             //Invalidate();
         }
@@ -239,6 +242,11 @@ namespace StarterProject.Windows
             if (IsVisible)
                 return;
 
+            Center();
+
+            base.Show(modal);
+
+
             UpdateCharSheetColors();
 
 
@@ -254,10 +262,6 @@ namespace StarterProject.Windows
             text.IgnoreEffect = true;
 
             Print(1, Height - 2, text);
-
-            Center();
-
-            base.Show(modal);
         }
 
     }
