@@ -1,4 +1,11 @@
-﻿## 04/13/2019 V8.6.0
+﻿## 06/22/2019 V8.7.0
+
+- Added `Settings.DefaultConsoleUseKeyboard` to control if consoles (when created) will use the keyboard or not. Current value is `true`.
+- Fixed mouse not being processed correctly when the screen bounds don't align with the game window.
+- Fixed bug with holding down a key on the keyboard not respecting RepeatDelay. (thanks Aunel)
+- Fixed mouse processing when the parent is not visible but a child is. (thanks hootless) Fixes #216
+
+## 04/13/2019 V8.6.0
 
 - `SadConsole.Timer` is a component now. The callbacks were changed to events.
 - `FontMaster.GetGlyphDefinition` added.

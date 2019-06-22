@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>8.6.0-debug</Version>
+    <Version>8.7.0-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -13,18 +13,8 @@
     <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
-    <PackageReleaseNotes>[BREAKING CHANGES] from version 7.X
-[This list is just some of the major changes]
-[See the documentation on NuGet for more information]
-- Overhaul of the theme system.
-- Overhaul of the SurfaceBase/ScreenObject/Console system.
-- Overhaul of Instruction system.
-- Added new ConsoleComponents system.
-- Upgraded to MonoGame 3.7
-- EntityManager removed and will be added to GoRogue-SadConsole integration lib.
-- Reenabled Control.AlternativeFont
-- Trimmed Cell.Decorators memory usage; various Decorator bugs.</PackageReleaseNotes>
-    <AssemblyVersion>8.6.0.0</AssemblyVersion>
+    <PackageReleaseNotes>Bug fixes and new Settings.DefaultConsoleUseKeyboard setting. See NuGet Documentation page for more information.</PackageReleaseNotes>
+    <AssemblyVersion>8.7.0.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
