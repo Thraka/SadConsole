@@ -40,6 +40,9 @@ namespace SadConsole
             var yesButton = new Button(yesPrompt.Length + 2, 1);
             var noButton = new Button(noPrompt.Length + 2, 1);
 
+            yesButton.Theme = library.ButtonTheme;
+            noButton.Theme = library.ButtonTheme;
+
             var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
             window.Theme = library;
 
@@ -55,9 +58,12 @@ namespace SadConsole
             yesButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); };
             noButton.Click += (o, e) => { window.DialogResult = false; window.Hide(); };
 
+            yesButton.Theme = null;
+            noButton.Theme = null;
+
+            window.Add(printArea);
             window.Add(yesButton);
             window.Add(noButton);
-            window.Add(printArea);
 
             noButton.IsFocused = true;
 
