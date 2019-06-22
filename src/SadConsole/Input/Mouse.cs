@@ -211,6 +211,8 @@ namespace SadConsole.Input
 
         private void GetConsoles(Console screen, ref List<Console> list)
         {
+            if (!screen.IsVisible) return;
+
             if (screen.UseMouse)
                 list.Add(screen);
 
