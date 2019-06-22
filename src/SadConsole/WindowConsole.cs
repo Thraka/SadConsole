@@ -284,6 +284,8 @@ namespace SadConsole
         /// <param name="modal">When true, the window will be displayed as modal; otherwise false.</param>
         public virtual void Show(bool modal)
         {
+            Invalidate();
+
             if (Parent != null && IsVisible)
             {
                 Parent.Children.MoveToTop(this);

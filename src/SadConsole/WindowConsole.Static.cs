@@ -40,13 +40,11 @@ namespace SadConsole
             var yesButton = new Button(yesPrompt.Length + 2, 1);
             var noButton = new Button(noPrompt.Length + 2, 1);
 
-            yesButton.Theme = library.ButtonTheme.Clone();
-            noButton.Theme = library.ButtonTheme.Clone();
-
             var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
             window.Theme = library;
 
-            window.Print(2, 2, message);
+            var printArea = new DrawingSurface(window.Width, window.Height);
+            printArea.OnDraw = (ds) => ds.Surface.Print(2, 2, message);
             
             yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.Height);
             noButton.Position = new Point(window.Width - noButton.Width - 2, window.Height - 1 - yesButton.Surface.Height);
@@ -59,6 +57,7 @@ namespace SadConsole
 
             window.Add(yesButton);
             window.Add(noButton);
+            window.Add(printArea);
 
             noButton.IsFocused = true;
 
@@ -107,19 +106,21 @@ namespace SadConsole
             var closeButton = new Button(buttonWidth, 1)
             {
                 Text = closeButtonText,
-                Theme = library.ButtonTheme.Clone()
+                Theme = library.ButtonTheme
             };
-
 
             var window = new Window(width, 5 + closeButton.Surface.Height);
             window.Theme = library;
 
             message.IgnoreBackground = true;
 
-            window.Print(2, 2, message);
-            
+            var printArea = new DrawingSurface(window.Width, window.Height);
+            printArea.OnDraw = (ds) => ds.Surface.Print(2, 2, message);
+            window.Add(printArea);
+
             closeButton.Position = new Point(2, window.Height - 1 - closeButton.Surface.Height);
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
+            closeButton.Theme = null;
 
             window.Add(closeButton);
             closeButton.IsFocused = true;
