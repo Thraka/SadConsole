@@ -418,7 +418,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Signals that the console should be considered dirty and reapplies the <see cref="Theme"/>.
+        /// Signals that the console should be considered dirty and reapplies the <see cref="Theme"/>. When overridden, call this method first.
         /// </summary>
         public virtual void Invalidate()
         {

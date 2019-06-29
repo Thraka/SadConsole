@@ -166,7 +166,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Causes the window to be redrawn with the selected <see cref="Theme"/>.
+        /// Causes the window to be redrawn with the selected <see cref="Theme"/>. When overridden, call this method first.
         /// </summary>
         public new virtual void Invalidate()
         {
