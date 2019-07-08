@@ -146,6 +146,12 @@ namespace SadConsole
             return GlyphDefinition.Empty;
         }
 
+        /// <summary>
+        /// Returns <see langword="true"/> when the glyph has been defined by name.
+        /// </summary>
+        /// <param name="name">The name of the glyph</param>
+        /// <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
+        public bool HasGlyphDefinition(string name) => GlyphDefinitions.ContainsKey(name);
 
         /// <summary>
         /// Represents a decorator (glyph and mirror) defined by a font.
