@@ -151,11 +151,13 @@ namespace SadConsole
         /// <param name="font">THe font to use with the window.</param>
         public Window(int width, int height, Font font): base(width, height, font)
         {
+            _isVisibleProcessing = true;
             IsVisible = false;
+            _isVisibleProcessing = false;
             CanDrag = true;
             MoveToFrontOnMouseClick = true;
         }
-        
+
         /// <inheritdoc />
         public override void Draw(TimeSpan drawTime)
         {
