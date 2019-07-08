@@ -117,24 +117,6 @@ namespace SadConsole
                 Invalidate();
             }
         }
-
-        /// <summary>
-        /// Gets or sets the theme of the window.
-        /// </summary>
-        public new Library Theme
-        {
-            get => _theme ?? Library.Default;
-            set
-            {
-                _theme = value;
-
-                foreach (var control in Controls)
-                    control.RefreshParentTheme();
-
-                IsDirty = true;
-                Invalidate();
-            }
-        }
         
         /// <summary>
         /// Creates a new window with the specified with and height in cells.

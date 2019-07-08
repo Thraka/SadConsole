@@ -7507,11 +7507,6 @@
             Gets or sets the title displayed on the window.
             </summary>
         </member>
-        <member name="P:SadConsole.Window.Theme">
-            <summary>
-            Gets or sets the theme of the window.
-            </summary>
-        </member>
         <member name="M:SadConsole.Window.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new window with the specified with and height in cells.
@@ -7532,7 +7527,7 @@
         </member>
         <member name="M:SadConsole.Window.Invalidate">
             <summary>
-            Causes the window to be redrawn with the selected <see cref="P:SadConsole.Window.Theme"/>. When overridden, call this method first.
+            Causes the window to be redrawn with the selected <see cref="!:Theme"/>. When overridden, call this method first.
             </summary>
         </member>
         <member name="M:SadConsole.Window.ProcessMouse(SadConsole.Input.MouseConsoleState)">
