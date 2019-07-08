@@ -73,6 +73,7 @@ namespace SadConsole.Themes
                 MouseDown = MouseDown.Clone(),
                 Selected = Selected.Clone(),
                 Focused = Focused.Clone(),
+                UseNormalStateOnly = UseNormalStateOnly
             };
         }
     }

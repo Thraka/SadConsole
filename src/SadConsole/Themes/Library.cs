@@ -87,6 +87,12 @@
         public DrawingSurfaceTheme DrawingSurfaceTheme { get; set; }
 
         /// <summary>
+        /// Theme for <see cref="Label"/>.
+        /// </summary>
+        [DataMember]
+        public LabelTheme LabelTheme { get; set; }
+
+        /// <summary>
         /// Theme for <see cref="ControlsConsole"/>.
         /// </summary>
         [DataMember]
@@ -121,6 +127,7 @@
             TextBoxTheme = new TextBoxTheme();
             SelectionButtonTheme = new ButtonTheme();
             DrawingSurfaceTheme = new DrawingSurfaceTheme();
+            LabelTheme = new LabelTheme();
         }
 
         /// <summary>
@@ -177,6 +184,9 @@
                 case Button c:
                     return ButtonTheme.Clone();
 
+                case Label c:
+                    return LabelTheme.Clone();
+
                 default:
                     throw new System.Exception("Control does not have an associated theme.");
             }
@@ -199,6 +209,7 @@
             TextBoxTheme.RefreshTheme(Colors);
             SelectionButtonTheme.RefreshTheme(Colors);
             DrawingSurfaceTheme.RefreshTheme(Colors);
+            LabelTheme.RefreshTheme(Colors);
         }
 
         /// <summary>
@@ -211,15 +222,16 @@
             {
                 Colors = Colors.Clone(),
 
-                ButtonTheme = (ButtonTheme) ButtonTheme.Clone(),
-                SelectionButtonTheme = (ButtonTheme) SelectionButtonTheme.Clone(),
-                ScrollBarTheme = (ScrollBarTheme) ScrollBarTheme.Clone(),
-                RadioButtonTheme = (RadioButtonTheme) RadioButtonTheme.Clone(),
-                ListBoxTheme = (ListBoxTheme) ListBoxTheme.Clone(),
-                CheckBoxTheme = (CheckBoxTheme) CheckBoxTheme.Clone(),
-                TextBoxTheme = (TextBoxTheme) TextBoxTheme.Clone(),
-                ProgressBarTheme = (ProgressBarTheme) ProgressBarTheme.Clone(),
-                DrawingSurfaceTheme = (DrawingSurfaceTheme) DrawingSurfaceTheme.Clone(),
+                ButtonTheme = (ButtonTheme)ButtonTheme.Clone(),
+                SelectionButtonTheme = (ButtonTheme)SelectionButtonTheme.Clone(),
+                ScrollBarTheme = (ScrollBarTheme)ScrollBarTheme.Clone(),
+                RadioButtonTheme = (RadioButtonTheme)RadioButtonTheme.Clone(),
+                ListBoxTheme = (ListBoxTheme)ListBoxTheme.Clone(),
+                CheckBoxTheme = (CheckBoxTheme)CheckBoxTheme.Clone(),
+                TextBoxTheme = (TextBoxTheme)TextBoxTheme.Clone(),
+                ProgressBarTheme = (ProgressBarTheme)ProgressBarTheme.Clone(),
+                DrawingSurfaceTheme = (DrawingSurfaceTheme)DrawingSurfaceTheme.Clone(),
+                LabelTheme = (LabelTheme)LabelTheme.Clone(),
 
                 ControlsConsoleTheme = ControlsConsoleTheme.Clone(),
                 WindowTheme = WindowTheme.Clone(),
