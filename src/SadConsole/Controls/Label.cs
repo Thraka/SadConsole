@@ -56,7 +56,16 @@
             _text = displayText;
             TabStop = false;
         }
-        
+
+        /// <summary>
+        /// A control to display simple one-line text.
+        /// </summary>
+        /// <param name="length">The initial length of the label without any text.</param>
+        public Label(int length) : base(length, 1)
+        {
+            TabStop = false;
+        }
+
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
