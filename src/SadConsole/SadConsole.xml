@@ -3217,6 +3217,12 @@
             </summary>
             <param name="displayText">The text to display. Sets the width based on the length.</param>
         </member>
+        <member name="M:SadConsole.Controls.Label.#ctor(System.Int32)">
+            <summary>
+            A control to display simple one-line text.
+            </summary>
+            <param name="length">The initial length of the label without any text.</param>
+        </member>
         <member name="E:SadConsole.Controls.ListBox.SelectedItemChanged">
             <summary>
             An event that triggers when the <see cref="P:SadConsole.Controls.ListBox.SelectedItem"/> changes.

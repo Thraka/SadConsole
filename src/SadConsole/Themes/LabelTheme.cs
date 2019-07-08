@@ -67,7 +67,7 @@ namespace SadConsole.Themes
             else
                 appearance = Normal;
 
-            label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, null);
+            label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, 0);
             label.Surface.Print(0, 0, label.DisplayText);
 
             var font = GetFontUsed(label);
