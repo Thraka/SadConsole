@@ -166,7 +166,9 @@ namespace SadConsole
 
         private void ControlOnIsDirtyChanged(object sender, EventArgs e)
         {
-            IsDirty = true;
+            // TODO: This is ineffecient and causes the listbox to hold mouse over visual status. Fix below
+            //if (sender is ControlBase control && control.IsDirty)
+                IsDirty = true;
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ namespace SadConsole.Entities
     /// Defines an area for a scene.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("Zone")]
     public class Zone: Console
     {
         private const string DefaultDebugTitle = "Zone";

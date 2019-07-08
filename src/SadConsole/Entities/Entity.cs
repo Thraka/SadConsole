@@ -12,6 +12,7 @@ namespace SadConsole.Entities
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Entity")]
     [JsonConverter(typeof(EntityJsonConverter))]
     public class Entity : Console
     {

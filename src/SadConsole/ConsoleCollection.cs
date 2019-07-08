@@ -10,7 +10,6 @@ namespace SadConsole
     /// <summary>
     /// Manages the parent and children relationship for <see cref="Console"/>.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("IScreen Collection")]
     public class ConsoleCollection : IEnumerable<Console>, System.Collections.IEnumerable
     {
         protected List<Console> screens;

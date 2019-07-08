@@ -16,6 +16,7 @@ namespace SadConsole
     /// <summary>
     /// A <see cref="CellSurface"/> that has a font and can be drawn to the screen.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Console")]
     [JsonConverter(typeof(SerializedTypes.ConsoleJsonConverter))]
     public partial class Console : CellSurface
     {

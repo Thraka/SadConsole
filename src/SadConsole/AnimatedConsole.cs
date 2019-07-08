@@ -12,7 +12,7 @@ namespace SadConsole
     /// <summary>
     /// Animates a list of frames.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Animated Surface")]
+    [System.Diagnostics.DebuggerDisplay("Console (Animated)")]
     [JsonConverter(typeof(SerializedTypes.AnimatedConsoleConverterJson))]
     public class AnimatedConsole : Console
     {

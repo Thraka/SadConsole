@@ -12,7 +12,7 @@ namespace SadConsole
     /// A <see cref="Console"/> that implements <see cref="IConsoleViewPort"/> to provide a scrolling capability.
     /// </summary>
     [JsonConverter(typeof(SerializedTypes.ScrollingConsoleJsonConverter))]
-    [System.Diagnostics.DebuggerDisplay("Console")]
+    [System.Diagnostics.DebuggerDisplay("Console (Scrolling)")]
     public class ScrollingConsole: Console, IConsoleViewPort
     {
         /// <summary>

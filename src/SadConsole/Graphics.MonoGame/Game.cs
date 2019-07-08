@@ -6,11 +6,15 @@ using System.Text;
 namespace SadConsole
 {
     /// <summary>
-    /// A MonoGame <see cref="Game"/> instance that runs SadConsole. This is used when you don't provide one and call <see cref="Engine.Initialize(string, int, int)"/>.
+    /// A MonoGame <see cref="Game"/> instance that runs SadConsole.
     /// </summary>
     public partial class Game : Microsoft.Xna.Framework.Game
     {
         #region Static
+
+        /// <summary>
+        /// The game instance.
+        /// </summary>
         public static Microsoft.Xna.Framework.Game Instance { get; set; }
 
         /// <summary>

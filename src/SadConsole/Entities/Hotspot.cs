@@ -14,6 +14,7 @@ namespace SadConsole.Entities
     /// A group of positions with a set of settings.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("Hotspot")]
     public class Hotspot : Console
     {
         private CellSurface _debugSurface;
