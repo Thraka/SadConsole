@@ -136,7 +136,7 @@ namespace SadConsole
             Cells[index].Glyph = glyph;
             IsDirty = true;
         }
-
+        
         /// <summary>
         /// Changes the glyph and foreground of a cell.
         /// </summary>
@@ -1762,6 +1762,7 @@ namespace SadConsole
                 }
             }
 
+            IsDirty = true;
             OnCellsReset();
         }
 
@@ -1777,6 +1778,7 @@ namespace SadConsole
             Height = height;
             Cells = cells;
 
+            IsDirty = true;
             OnCellsReset();
         }
 
