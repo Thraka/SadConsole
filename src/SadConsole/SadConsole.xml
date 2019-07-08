@@ -2434,6 +2434,14 @@
             <param name="timeElapsed">Time since the last call.</param>
             <remarks>Only processes if <see cref="P:SadConsole.Console.IsPaused"/> is <see langword="false"/>.</remarks>
         </member>
+        <member name="M:SadConsole.Console.SetGlyph(System.Int32,System.Int32,System.String)">
+            <summary>
+            Changes the glyph of a specified cell to a glyph definition from the font.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyphName">The name of the glyph definition to use. If invalid, sets it to 0.</param>
+        </member>
         <member name="M:SadConsole.Console.SetRenderCells">
             <summary>
             Configures <see cref="P:SadConsole.Console.RenderCells"/>, <see cref="P:SadConsole.Console.RenderRects"/>, and <see cref="P:SadConsole.Console.LastRenderResult"/> for rendering.

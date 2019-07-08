@@ -168,6 +168,22 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Changes the glyph of a specified cell to a glyph definition from the font.
+        /// </summary>
+        /// <param name="x">The x location of the cell.</param>
+        /// <param name="y">The y location of the cell.</param>
+        /// <param name="glyphName">The name of the glyph definition to use. If invalid, sets it to 0.</param>
+        public void SetGlyph(int x, int y, string glyphName)
+        {
+            if (!IsValidCell(x, y, out var index)) return;
+
+            var definition = Font.Master.GetGlyphDefinition(glyphName);
+
+            Cells[index].Glyph = definition.Glyph == -1 ? 0 : definition.Glyph;
+            IsDirty = true;
+        }
+
+        /// <summary>
         /// Configures <see cref="RenderCells"/>, <see cref="RenderRects"/>, and <see cref="LastRenderResult"/> for rendering.
         /// </summary>
         public virtual void SetRenderCells()
