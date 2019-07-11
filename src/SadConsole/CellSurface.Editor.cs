@@ -1637,6 +1637,16 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Copies an area of this cell surface to the destination surface.
+        /// </summary>
+        /// <param name="area">The area to copy.</param>
+        /// <param name="destination">The destination surface.</param>
+        /// <param name="destinationX">The x coordinate to copy to.</param>
+        /// <param name="destinationY">The y coordinate to copy to.</param>
+        public void Copy(Rectangle area, CellSurface destination, int destinationX, int destinationY) =>
+            Copy(area.X, area.Y, area.Width, area.Height, destination, destinationX, destinationY);
+
+        /// <summary>
         /// Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
         /// </summary>
         /// <param name="x">The x coordinate to start from.</param>
