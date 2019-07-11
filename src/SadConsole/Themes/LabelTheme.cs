@@ -68,7 +68,7 @@ namespace SadConsole.Themes
                 appearance = Normal;
 
             label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, 0);
-            label.Surface.Print(0, 0, label.DisplayText);
+            label.Surface.Print(0, 0, label.DisplayText.Align(label.Alignment, label.Surface.Width));
 
             var font = GetFontUsed(label);
             var color = label.TextColor ?? appearance.Foreground;
@@ -77,15 +77,15 @@ namespace SadConsole.Themes
             {
                 if (label.ShowUnderline && label.ShowStrikethrough)
                 {
-                    label.Surface.SetDecorator(0, label.DisplayText.Length, GetStrikethrough(font, color), GetUnderline(font, color));
+                    label.Surface.SetDecorator(0, label.Surface.Width, GetStrikethrough(font, color), GetUnderline(font, color));
                 }
                 else if (label.ShowUnderline)
                 {
-                    label.Surface.SetDecorator(0, label.DisplayText.Length, GetUnderline(font, color));
+                    label.Surface.SetDecorator(0, label.Surface.Width, GetUnderline(font, color));
                 }
                 else if (label.ShowStrikethrough)
                 {
-                    label.Surface.SetDecorator(0, label.DisplayText.Length, GetStrikethrough(font, color));
+                    label.Surface.SetDecorator(0, label.Surface.Width, GetStrikethrough(font, color));
                 }
             }
 

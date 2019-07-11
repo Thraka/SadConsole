@@ -31,6 +31,11 @@
         public Color? TextColor { get; set; }
 
         /// <summary>
+        /// Sets the horizontal alignment of the label. Defaults to <see cref="HorizontalAlignment.Left"/>.
+        /// </summary>
+        public HorizontalAlignment Alignment { get; set; }
+
+        /// <summary>
         /// The text to display on the label. The label size is set in the constructor and cannot be changed.
         /// </summary>
         public string DisplayText

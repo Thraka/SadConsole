@@ -3214,6 +3214,11 @@
             Optional text color for the label. Otherwise the theme controls the color.
             </summary>
         </member>
+        <member name="P:SadConsole.Controls.Label.Alignment">
+            <summary>
+            Sets the horizontal alignment of the label. Defaults to <see cref="F:SadConsole.HorizontalAlignment.Left"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.Controls.Label.DisplayText">
             <summary>
             The text to display on the label. The label size is set in the constructor and cannot be changed.
