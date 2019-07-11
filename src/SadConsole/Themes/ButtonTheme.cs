@@ -134,7 +134,7 @@ namespace SadConsole.Themes
 
             //TODO shade should not hard code the glyph
             Shade = new Cell(themeColors.ControlBackDark, Color.Transparent, 176);
-            Normal = new Cell(themeColors.CyanDark, themeColors.ControlBackLight);
+            Normal = new Cell(themeColors.Appearance_ControlNormal.Foreground, themeColors.ControlBackLight);
         }
 
         /// <inheritdoc />
