@@ -19,7 +19,10 @@
         public override void Draw(TimeSpan timeElapsed)
         {
             if (!IsVisible) return;
-            
+
+            foreach (var component in ComponentsDraw.ToArray())
+                component.Draw(this, timeElapsed);
+
             var copyList = new List<Console>(Children);
 
             foreach (var child in copyList)
@@ -30,6 +33,9 @@
         {
             if (IsPaused) return;
 
+            foreach (var component in ComponentsUpdate.ToArray())
+                component.Update(this, timeElapsed);
+
             var copyList = new List<Console>(Children);
 
             foreach (var child in copyList)
@@ -38,11 +44,27 @@
 
         public override bool ProcessMouse(MouseConsoleState state)
         {
+            if (!IsVisible) return false;
+
+            foreach (var component in ComponentsMouse.ToArray())
+            {
+                component.ProcessMouse(this, state, out bool isHandled);
+
+                if (isHandled) return true;
+            }
+
             return false;
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
+            foreach (var component in ComponentsKeyboard.ToArray())
+            {
+                component.ProcessKeyboard(this, info, out bool isHandled);
+
+                if (isHandled) return true;
+            }
+
             return false;
         }
     }
