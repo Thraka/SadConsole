@@ -403,14 +403,8 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators)
-        {
-            if (count <= 0) return;
-            if (!IsValidCell(x, y, out var index)) return;
-            if (index + count > Cells.Length) count = Cells.Length - index;
-
-            SetDecorator(index, count, decorators);
-        }
+        public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators) => 
+            SetDecorator(GetIndexFromPoint(x, y), count, decorators);
 
         /// <summary>
         /// Sets the decorator of one or more cells.
@@ -445,14 +439,8 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        public void AddDecorator(int x, int y, int count, params CellDecorator[] decorators)
-        {
-            if (count <= 0) return;
-            if (!IsValidCell(x, y, out var index)) return;
-            if (index + count > Cells.Length) count = Cells.Length - index;
-
-            AddDecorator(index, count, decorators);
-        }
+        public void AddDecorator(int x, int y, int count, params CellDecorator[] decorators) =>
+            AddDecorator(GetIndexFromPoint(x, y), count, decorators);
 
         /// <summary>
         /// Appends the decorators to one or more cells
@@ -507,7 +495,7 @@ namespace SadConsole
             
             if (!UsePrintProcessor)
             {
-                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
                 int charIndex = 0;
                 for (; index < end; index++)
                 {
@@ -537,7 +525,7 @@ namespace SadConsole
 
             if (!UsePrintProcessor)
             {
-                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
                 int charIndex = 0;
                 for (; index < end; index++)
                 {
@@ -572,7 +560,7 @@ namespace SadConsole
 
             if (!UsePrintProcessor)
             {
-                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
                 int charIndex = 0;
                 for (; index < end; index++)
                 {
@@ -612,7 +600,7 @@ namespace SadConsole
 
             if (!UsePrintProcessor)
             {
-                int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                int end = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
                 int charIndex = 0;
                 for (; index < end; index++)
                 {
@@ -653,7 +641,7 @@ namespace SadConsole
 
             if (!UsePrintProcessor)
             {
-                var total = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+                var total = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
                 var charIndex = 0;
                 for (; index < total; index++)
                 {
@@ -688,7 +676,7 @@ namespace SadConsole
 
             if (!IsValidCell(x, y, out var index)) return;
 
-            int end = index + text.Length > Cells.Length ? Cells.Length - index : index + text.Length;
+            int end = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
             int charIndex = 0;
 
             for (; index < end; index++)
@@ -1212,7 +1200,7 @@ namespace SadConsole
                 if (mirror.HasValue)
                     Cells[i].Mirror = mirror.Value;
 
-                SetDecorator(i, 1, null);
+                Cells[i].Decorators = Array.Empty<CellDecorator>();
             }
 
             IsDirty = true;
@@ -1250,7 +1238,7 @@ namespace SadConsole
                 if (mirror.HasValue)
                     c.Mirror = mirror.Value;
 
-                SetDecorator(index, 1, null);
+                c.Decorators = Array.Empty<CellDecorator>();
 
                 result[resultIndex] = c;
                 resultIndex++;
@@ -1294,7 +1282,7 @@ namespace SadConsole
                     if (mirror.HasValue)
                         cell.Mirror = mirror.Value;
 
-                    SetDecorator(resultIndex, 1, null);
+                    cell.Decorators = Array.Empty<CellDecorator>();
 
                     result[resultIndex] = cell;
                     resultIndex++;
