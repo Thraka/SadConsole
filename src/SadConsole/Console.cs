@@ -106,9 +106,10 @@ namespace SadConsole
                 else
                 {
                     var oldParent = _parentScreen;
+                    _parentScreen = null;
+                    oldParent.Children.Remove(this);
                     _parentScreen = value;
 
-                    oldParent.Children.Remove(this);
 
                     _parentScreen?.Children.Add(this);
 
