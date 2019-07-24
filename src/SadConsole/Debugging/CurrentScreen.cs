@@ -465,7 +465,7 @@ namespace SadConsole.Debug
 
                                 var cellRenderPosition = i.ToPoint(childControl.Surface.Width) + childControl.Position;
 
-                                if (!scroller.SurfaceView.ViewPort.Contains(cellRenderPosition)) continue;
+                                if (!scroller.SurfaceView.ViewPort.Contains(cellRenderPosition - new Point(1))) continue;
 
                                 cell.CopyAppearanceTo(scroller.Surface[(cellRenderPosition - scroller.SurfaceView.ViewPort.Location).ToIndex(scroller.Surface.Width)]);
                             }
