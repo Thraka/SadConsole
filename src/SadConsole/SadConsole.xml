@@ -2592,6 +2592,11 @@
             </summary>
             <param name="console">The console to remove.</param>
         </member>
+        <member name="M:SadConsole.ConsoleStack.Pop">
+            <summary>
+            Removes the top console from the stack.
+            </summary>
+        </member>
         <member name="T:SadConsole.ContainerConsole">
             <summary>
             A <see cref="T:SadConsole.Console"/> that only processes children and does not render anything.

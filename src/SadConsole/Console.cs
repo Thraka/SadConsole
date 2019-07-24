@@ -172,19 +172,10 @@ namespace SadConsole
                             Global.FocusedConsoles.Push(this);
                         else
                             Global.FocusedConsoles.Set(this);
-
-                        OnFocused();
                     }
-
-                    else if (value && Global.FocusedConsoles.Console == this)
-                        OnFocused();
-
-                    else if (!value)
+                    else if (!value && Global.FocusedConsoles.Console == this)
                     {
-                        if (Global.FocusedConsoles.Console == this)
-                            Global.FocusedConsoles.Pop(this);
-
-                        OnFocusLost();
+                        Global.FocusedConsoles.Pop(this);
                     }
                 }
                 else
@@ -195,11 +186,7 @@ namespace SadConsole
                             Global.FocusedConsoles.Push(this);
                         else
                             Global.FocusedConsoles.Set(this);
-
-                        OnFocused();
                     }
-                    else
-                        OnFocusLost();
                 }
             }
         }
@@ -365,7 +352,7 @@ namespace SadConsole
         /// <summary>
         /// Called when this console's focus has been lost. Hides the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
-        protected virtual void OnFocusLost()
+        public virtual void OnFocusLost()
         {
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = false;
@@ -374,7 +361,7 @@ namespace SadConsole
         /// <summary>
         /// Called when this console is focused. Shows the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
-        protected virtual void OnFocused()
+        public virtual void OnFocused()
         {
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = true;

@@ -38,6 +38,10 @@ namespace SadConsole
         public void Clear()
         {
             consoles.Clear();
+
+            if (activeConsole != null)
+                activeConsole.OnFocusLost();
+
             activeConsole = null;
         }
 
@@ -52,8 +56,12 @@ namespace SadConsole
                 if (consoles.Contains(console))
                     consoles.Remove(console);
 
-                activeConsole = console;
+                if (activeConsole != null)
+                    activeConsole.OnFocusLost();
+
                 consoles.Add(console);
+                activeConsole = console;
+                activeConsole.OnFocused();
             }
         }
 
@@ -80,15 +88,28 @@ namespace SadConsole
         {
             if (console == activeConsole)
             {
+                activeConsole.OnFocusLost();
                 consoles.Remove(console);
 
                 if (consoles.Count != 0)
+                {
                     activeConsole = consoles.Last();
+                    activeConsole.OnFocused();
+                }
                 else
                     activeConsole = null;
             }
             else
                 consoles.Remove(console);
+        }
+
+        /// <summary>
+        /// Removes the top console from the stack.
+        /// </summary>
+        public void Pop()
+        {
+            if (consoles.Count != 0)
+                Pop(consoles.Last());
         }
 
         public static bool operator !=(ConsoleStack left, Console right)

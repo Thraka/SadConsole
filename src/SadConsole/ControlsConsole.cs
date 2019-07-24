@@ -609,7 +609,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        protected override void OnFocused()
+        public override void OnFocused()
         {
             base.OnFocused();
 
@@ -617,7 +617,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        protected override void OnFocusLost()
+        public override void OnFocusLost()
         {
             base.OnFocusLost();
 
