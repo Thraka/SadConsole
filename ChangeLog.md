@@ -1,9 +1,29 @@
-﻿## 06/22/2019 V8.7.0
+﻿## XX/XX/2019 V8.8
+
+#### Engine
+
+- Added built-in CurrentScreen debugger. Invoke with `SadConsole.Debug.CurrentScreen.Show()`.
+- Fixed ContainerConsole not processing components (thanks Chris3606).
+- Fixed bug with `Console.SetSurface` not marking the console as `IsDirty = true`.
+- `Console.SetGlyph` now accepts a `GlyphDefinition` name.
+- Minor speed improvement to `console.Fill`.
+- Fixed **really bad bug** that caused `console.Print` to skip printing if the length of the text ran off the end of the console.
+- Fixed **really bad bug** that caused `console.Parent` assignment to result in `console.Parent` becoming null.
+- **BREAKING CHANGE** `Console.OnFocused` and `Console.OnFocusLost` are now public. 
+- Console no longer calls `OnFocused` and `OnFocusLost` when `IsFocused` is set. Instead, `Global.FocusedConsole` calls the appropriate focused callback. Fixes #218 (thanks Aezoc)
+
+#### Controls
+- Fixed minor bugs related to themes.
+- Added a Label control.
+- The `ButtonLinesTheme` uses decorators when the extended font is enabled. This enables clean 1 height buttons that don't have cells drawing over others.
+
+## 06/22/2019 V8.7.1
 
 - Added `Settings.DefaultConsoleUseKeyboard` to control if consoles (when created) will use the keyboard or not. Current value is `true`.
 - Fixed mouse not being processed correctly when the screen bounds don't align with the game window.
 - Fixed bug with holding down a key on the keyboard not respecting RepeatDelay. (thanks Aunel)
 - Fixed mouse processing when the parent is not visible but a child is. (thanks hootless) Fixes #216
+- Minor bug fix introduced with 8.7.0
 
 ## 04/13/2019 V8.6.0
 
