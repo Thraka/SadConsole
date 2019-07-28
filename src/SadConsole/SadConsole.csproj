@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
+    <DocumentationFile>SadConsole.xml</DocumentationFile>
     <Version>8.8.1-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -29,12 +30,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;XNA</DefineConstants>
-    <DocumentationFile>SadConsole.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;XNA</DefineConstants>
-    <DocumentationFile>SadConsole.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -73,7 +72,7 @@
 
   <Target Name="MyPostCompileTarget" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="dotnet tool restore" />
-    <Exec Command="dotnet inheritdoc -o" />
+    <Exec Command="dotnet inheritdoc -o -b $(OutDir)" />
   </Target>
 
 </Project>
