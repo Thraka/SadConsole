@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
-    <Version>8.8.0-debug</Version>
+    <Version>8.8.1-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -13,7 +13,7 @@
     <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
-    <PackageReleaseNotes>Bug fixes and new Settings.DefaultConsoleUseKeyboard setting. See NuGet Documentation page for more information.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix xml docs</PackageReleaseNotes>
     <AssemblyVersion>8.8.0.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
@@ -72,7 +72,8 @@
   </ItemGroup>
 
   <Target Name="MyPostCompileTarget" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
-    <Exec Command="InheritDoc.exe -o" />
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet inheritdoc -o" />
   </Target>
 
 </Project>
