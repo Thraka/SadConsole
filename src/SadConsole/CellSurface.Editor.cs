@@ -1162,32 +1162,76 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Starting at the specified coordinate, erases the specified amount of glyphs and decorators.
+        /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of cells.
         /// </summary>
         /// <param name="x">The x position.</param>
         /// <param name="y">The y position.</param>
         /// <param name="count">The count of glyphs to erase.</param>
         /// <returns>The cells processed by this method.</returns>
         /// <remarks>
-        /// Cells touched by this method have the <see cref="Cell.Glyph"/> property set to the value of <see cref="EraseGlyph"/>, and the <see cref="Cell.Decorators"/> array reset.
+        /// Cells altered by this method has the <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="SpriteEffects.None"/>.
         /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Cell[] Erase(int x, int y, int count) =>
-            Fill(x, y, count, null, null, EraseGlyph);
+        public Cell[] Erase(int x, int y, int count)
+        {
+            if (!IsValidCell(x, y, out int index)) return Array.Empty<Cell>();
+
+            int end = index + count > Cells.Length ? Cells.Length - index : index + count;
+            int total = end - index;
+            Cell[] result = new Cell[total];
+            int resultIndex = 0;
+            for (; index < end; index++)
+            {
+                var c = Cells[index];
+
+                c.Glyph = EraseGlyph;
+                c.Mirror = SpriteEffects.None;
+                c.Decorators = Array.Empty<CellDecorator>();
+
+                result[resultIndex] = c;
+                resultIndex++;
+            }
+
+            IsDirty = true;
+            return result;
+        }
 
         /// <summary>
-        /// Starting at the specified coordinate, erases the specified amount of glyphs and decorators.
+        /// Clears the glyph, mirror, and decorators, for the specified cell.
         /// </summary>
         /// <param name="x">The x position.</param>
         /// <param name="y">The y position.</param>
-        /// <param name="count">The count of glyphs to erase.</param>
-        /// <returns>The cells processed by this method.</returns>
         /// <remarks>
-        /// Cells touched by this method have the <see cref="Cell.Glyph"/> property set to the value of <see cref="EraseGlyph"/>, and the <see cref="Cell.Decorators"/> array reset.
+        /// The cell altered by this method has the <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="SpriteEffects.None"/>.
         /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Erase(int x, int y) =>
-            SetGlyph(x, y, EraseGlyph);
+        public void Erase(int x, int y)
+        {
+            if (!IsValidCell(x, y, out var index)) return;
+
+            Cells[index].Glyph = EraseGlyph;
+            Cells[index].Mirror = SpriteEffects.None;
+            Cells[index].Decorators = Array.Empty<CellDecorator>();
+
+            IsDirty = true;
+        }
+
+        /// <summary>
+        /// Erases all cells which clears the glyph, mirror, and decorators.
+        /// </summary>
+        /// <remarks>
+        /// All cells have <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="SpriteEffects.None"/>.
+        /// </remarks>
+        public void Erase()
+        {
+            for (var i = 0; i < Cells.Length; i++)
+            {
+                Cells[i].Glyph = EraseGlyph;
+                Cells[i].Mirror = SpriteEffects.None;
+                Cells[i].Decorators = Array.Empty<CellDecorator>();
+            }
+
+            IsDirty = true;
+        }
+
 
         /// <summary>
         /// Clears the console data. Characters are reset to 0, the foreground and background are set to default, and effect set to none. Clears cell decorators.
