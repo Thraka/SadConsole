@@ -14,6 +14,12 @@ namespace StarterProject.CustomConsoles
         ///<summary>Scroll bar position.</summary>
         public int ScrollOffset { get; private set; } = 0;
 
+        public bool ScrollbarIsVisible
+        {
+            get => _controlsContainer.IsVisible;
+            set => _controlsContainer.IsVisible = value;
+        }
+
         public ScrollableConsole(int width, int height, int bufferHeight) :
             base(
                 width: width - 1, 
@@ -35,7 +41,6 @@ namespace StarterProject.CustomConsoles
 
             Cursor.IsVisible = true;
             Cursor.Print("Just start typing!");
-            IsVisible = false;
         }
 
         private void ScrollBar_ValueChanged(object sender, EventArgs e)
