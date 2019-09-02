@@ -75,7 +75,7 @@ namespace StarterProject.CustomConsoles
 
             //If cursor position exceeds our displayable content viewport, 
             //move the ScrollOffset automatically to display new content.
-            if (TimesShiftedUp != 0 | Cursor.Position.Y == ViewPort.Height + ScrollOffset)
+            if (TimesShiftedUp != 0 | Cursor.Position.Y >= ViewPort.Height + ScrollOffset)
             {
                 //Scollbar has to be enabled to read previous content.
                 _scrollBar.IsEnabled = true;
