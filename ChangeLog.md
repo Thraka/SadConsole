@@ -1,6 +1,8 @@
 ﻿## 08/20/2019 V8.9.0
 
-- Add Console.Erase.
+- Add `Console.Erase`
+- Add `Console.GetComponent` and `Console.GetComponents` to find components added to a console.
+- Add `CellSurface.CreateLine` to create an array of int's for a line.
 
 ## 07/27/2019 V8.8.1
 
