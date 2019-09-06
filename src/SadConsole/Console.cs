@@ -46,6 +46,11 @@ namespace SadConsole
         protected List<IConsoleComponent> ComponentsKeyboard;
 
         /// <summary>
+        /// A filtered list from <see cref="Components"/> that is not set for update, draw, mouse, or keyboard.
+        /// </summary>
+        protected List<IConsoleComponent> ComponentsEmpty;
+
+        /// <summary>
         /// A collection of components processed by this console.
         /// </summary>
         public ObservableCollection<IConsoleComponent> Components { get; private set; }
@@ -239,6 +244,7 @@ namespace SadConsole
             ComponentsDraw = new List<IConsoleComponent>();
             ComponentsUpdate = new List<IConsoleComponent>();
             ComponentsMouse = new List<IConsoleComponent>();
+            ComponentsEmpty = new List<IConsoleComponent>();
 
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
@@ -283,6 +289,7 @@ namespace SadConsole
             ComponentsDraw = new List<IConsoleComponent>();
             ComponentsUpdate = new List<IConsoleComponent>();
             ComponentsMouse = new List<IConsoleComponent>();
+            ComponentsEmpty = new List<IConsoleComponent>();
 
             Children = new ConsoleCollection(this);
             Renderer = new Renderers.Console();
@@ -301,6 +308,7 @@ namespace SadConsole
             ComponentsDraw = new List<IConsoleComponent>();
             ComponentsUpdate = new List<IConsoleComponent>();
             ComponentsMouse = new List<IConsoleComponent>();
+            ComponentsEmpty = new List<IConsoleComponent>();
 
             Children = new ConsoleCollection(this);
             RenderCells = new Cell[Cells.Length];
@@ -400,6 +408,38 @@ namespace SadConsole
         /// </summary>
         protected virtual void OnPausedChanged() { }
 
+        /// <summary>
+        /// Gets components of the specified types.
+        /// </summary>
+        /// <typeparam name="TComponent">THe component to find</typeparam>
+        /// <returns>The components found.</returns>
+        public IEnumerable<IConsoleComponent> GetComponents<TComponent>()
+            where TComponent : IConsoleComponent
+        {
+            foreach (var component in Components)
+            {
+                if (component is TComponent)
+                    yield return component;
+            }
+        }
+
+        /// <summary>
+        /// Gets the first component of the specified type.
+        /// </summary>
+        /// <typeparam name="TComponent">THe component to find</typeparam>
+        /// <returns>The component if found, otherwise null.</returns>
+        public IConsoleComponent GetComponent<TComponent>()
+            where TComponent : IConsoleComponent
+        {
+            foreach (var component in Components)
+            {
+                if (component is TComponent)
+                    return component;
+            }
+
+            return null;
+        }
+
         private void Components_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -464,6 +504,12 @@ namespace SadConsole
                         ComponentsMouse.Add(component);
                 }
 
+                if (!component.IsDraw && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
+                {
+                    if (!ComponentsEmpty.Contains(component))
+                        ComponentsEmpty.Add(component);
+                }
+
                 ComponentsDraw.Sort(CompareComponent);
                 ComponentsUpdate.Sort(CompareComponent);
                 ComponentsKeyboard.Sort(CompareComponent);
@@ -494,6 +540,12 @@ namespace SadConsole
                 {
                     if (ComponentsMouse.Contains(component))
                         ComponentsMouse.Remove(component);
+                }
+
+                if (!component.IsDraw && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
+                {
+                    if (!ComponentsEmpty.Contains(component))
+                        ComponentsEmpty.Remove(component);
                 }
 
                 ComponentsDraw.Sort(CompareComponent);
