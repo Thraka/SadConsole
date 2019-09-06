@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Container.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\AnsiConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\BorderedConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\ControlsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\DOSConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomConsoles\EntityConsole.cs" />
