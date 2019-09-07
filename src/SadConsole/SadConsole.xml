@@ -5846,6 +5846,11 @@
             Raised when the instruction completes but is going to repeat.
             </summary>
         </member>
+        <member name="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished">
+            <summary>
+            When true, this instruction will automatically remove itself from the parent's <see cref="P:SadConsole.Console.Components"/> collection.
+            </summary>
+        </member>
         <member name="P:SadConsole.Instructions.InstructionBase.IsFinished">
             <summary>
             Flags the instruction as completed or not. If completed, the <see cref="E:SadConsole.Instructions.InstructionBase.Finished"/> event will be raised.
