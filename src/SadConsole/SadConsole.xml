@@ -5873,7 +5873,7 @@
             Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.InstructionBase.OnFinished">
+        <member name="M:SadConsole.Instructions.InstructionBase.OnFinished(SadConsole.Console)">
             <summary>
             Called when the instruction finishes.
             </summary>

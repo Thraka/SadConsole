@@ -5,7 +5,7 @@
     <LangVersion>7.2</LangVersion>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>8.8.1-debug</Version>
+    <Version>8.9.0-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
