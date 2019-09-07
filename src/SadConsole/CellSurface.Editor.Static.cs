@@ -52,16 +52,24 @@
             0,    0,
                0};
 
+        /// <summary>
+        /// Creates an array of glyphs that can be used as a connected line.
+        /// </summary>
+        /// <param name="singleGlyph">The glyph to use for the connected line array.</param>
+        /// <returns>An array of glyphs.</returns>
+        public static int[] CreateLine(int singleGlyph) =>
+            new int[] { singleGlyph, singleGlyph, singleGlyph,
+                        singleGlyph, singleGlyph, singleGlyph,
+                        singleGlyph, singleGlyph, singleGlyph,
+                        singleGlyph, singleGlyph, singleGlyph, singleGlyph };
 
         /// <summary>
         /// Returns a value that indicates a line style array is not null and contains the required number of elements.
         /// </summary>
         /// <param name="connectedLineStyle">The array to check based on the <see cref="ConnectedLineIndex"/> enum.</param>
         /// <returns>True when the line style is correct.</returns>
-        public static bool ValidateLineStyle(in int[] connectedLineStyle)
-        {
-            return connectedLineStyle != null && connectedLineStyle.Length == Enum.GetValues(typeof(ConnectedLineIndex)).Length;
-        }
+        public static bool ValidateLineStyle(in int[] connectedLineStyle) =>
+            connectedLineStyle != null && connectedLineStyle.Length == Enum.GetValues(typeof(ConnectedLineIndex)).Length;
 
         /// <summary>
         /// Array index enum for line glyphs.

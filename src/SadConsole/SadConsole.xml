@@ -903,6 +903,11 @@
             Processes the effects added to cells with <see cref="o:SetEffect"/>
             </summary>
         </member>
+        <member name="P:SadConsole.CellSurface.EraseGlyph">
+            <summary>
+            The glyph used by the <see cref="M:SadConsole.CellSurface.Erase(System.Int32,System.Int32,System.Int32)"/> method. Defaults to 0.
+            </summary>
+        </member>
         <member name="M:SadConsole.CellSurface.SetPixels(Microsoft.Xna.Framework.Color[])">
             <summary>
             Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
@@ -1315,6 +1320,36 @@
             <param name="amount">How much to scroll.</param>
             <param name="wrap">When false, a blank line appears at the right. When true, the left line appears at the right.</param>
         </member>
+        <member name="M:SadConsole.CellSurface.Erase(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of cells.
+            </summary>
+            <param name="x">The x position.</param>
+            <param name="y">The y position.</param>
+            <param name="count">The count of glyphs to erase.</param>
+            <returns>The cells processed by this method.</returns>
+            <remarks>
+            Cells altered by this method has the <see cref="F:SadConsole.Cell.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.Cell.Decorators"/> array reset, and the <see cref="F:SadConsole.Cell.Mirror"/> set to <see cref="F:Microsoft.Xna.Framework.Graphics.SpriteEffects.None"/>.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.CellSurface.Erase(System.Int32,System.Int32)">
+            <summary>
+            Clears the glyph, mirror, and decorators, for the specified cell.
+            </summary>
+            <param name="x">The x position.</param>
+            <param name="y">The y position.</param>
+            <remarks>
+            The cell altered by this method has the <see cref="F:SadConsole.Cell.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.Cell.Decorators"/> array reset, and the <see cref="F:SadConsole.Cell.Mirror"/> set to <see cref="F:Microsoft.Xna.Framework.Graphics.SpriteEffects.None"/>.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.CellSurface.Erase">
+            <summary>
+            Erases all cells which clears the glyph, mirror, and decorators.
+            </summary>
+            <remarks>
+            All cells have <see cref="F:SadConsole.Cell.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.Cell.Decorators"/> array reset, and the <see cref="F:SadConsole.Cell.Mirror"/> set to <see cref="F:Microsoft.Xna.Framework.Graphics.SpriteEffects.None"/>.
+            </remarks>
+        </member>
         <member name="M:SadConsole.CellSurface.Clear">
             <summary>
             Clears the console data. Characters are reset to 0, the foreground and background are set to default, and effect set to none. Clears cell decorators.
@@ -1340,7 +1375,7 @@
             <summary>
             Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
             </summary>
-            <param name="area"></param>
+            <param name="area">The area to clear.</param>
         </member>
         <member name="M:SadConsole.CellSurface.Fill(System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{Microsoft.Xna.Framework.Color},System.Nullable{System.Int32},System.Nullable{Microsoft.Xna.Framework.Graphics.SpriteEffects})">
             <summary>
@@ -1529,6 +1564,13 @@
             <summary>
             Glyph indexes for an empty line 0. 
             </summary>
+        </member>
+        <member name="M:SadConsole.CellSurface.CreateLine(System.Int32)">
+            <summary>
+            Creates an array of glyphs that can be used as a connected line.
+            </summary>
+            <param name="singleGlyph">The glyph to use for the connected line array.</param>
+            <returns>An array of glyphs.</returns>
         </member>
         <member name="M:SadConsole.CellSurface.ValidateLineStyle(System.Int32[]@)">
             <summary>
@@ -2101,6 +2143,11 @@
             A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.Components.IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
             </summary>
         </member>
+        <member name="F:SadConsole.Console.ComponentsEmpty">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.Console.Components"/> that is not set for update, draw, mouse, or keyboard.
+            </summary>
+        </member>
         <member name="P:SadConsole.Console.Components">
             <summary>
             A collection of components processed by this console.
@@ -2247,6 +2294,20 @@
             <summary>
             Called when the paused status of the object changes.
             </summary>
+        </member>
+        <member name="M:SadConsole.Console.GetComponents``1">
+            <summary>
+            Gets components of the specified types.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The components found.</returns>
+        </member>
+        <member name="M:SadConsole.Console.GetComponent``1">
+            <summary>
+            Gets the first component of the specified type.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The component if found, otherwise null.</returns>
         </member>
         <member name="M:SadConsole.Console.Save(System.String)">
             <summary>
@@ -5785,6 +5846,11 @@
             Raised when the instruction completes but is going to repeat.
             </summary>
         </member>
+        <member name="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished">
+            <summary>
+            When true, this instruction will automatically remove itself from the parent's <see cref="P:SadConsole.Console.Components"/> collection.
+            </summary>
+        </member>
         <member name="P:SadConsole.Instructions.InstructionBase.IsFinished">
             <summary>
             Flags the instruction as completed or not. If completed, the <see cref="E:SadConsole.Instructions.InstructionBase.Finished"/> event will be raised.
@@ -5812,7 +5878,7 @@
             Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.InstructionBase.OnFinished">
+        <member name="M:SadConsole.Instructions.InstructionBase.OnFinished(SadConsole.Console)">
             <summary>
             Called when the instruction finishes.
             </summary>

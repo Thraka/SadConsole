@@ -45,6 +45,11 @@ namespace SadConsole
         public EffectsManager Effects { get; protected set; }
 
         /// <summary>
+        /// The glyph used by the <see cref="Erase(int, int, int)"/> method. Defaults to 0.
+        /// </summary>
+        public int EraseGlyph { get; set; } = 0;
+
+        /// <summary>
         /// Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
         /// </summary>
         /// <param name="pixels">The colors to place.</param>
@@ -90,10 +95,8 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the cell to test.</param>
         /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsValidCell(int x, int y)
-        {
-            return x >= 0 && x < Width && y >= 0 && y < Height;
-        }
+        public bool IsValidCell(int x, int y) =>
+            x >= 0 && x < Width && y >= 0 && y < Height;
 
         /// <summary>
         /// Tests if a cell is valid based on its x,y position.
@@ -121,7 +124,8 @@ namespace SadConsole
         /// <param name="index">The index to test.</param>
         /// <returns>A true value indicating the cell index is in this cell surface.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsValidCell(int index) => index >= 0 && index < Cells.Length;
+        public bool IsValidCell(int index) => 
+            index >= 0 && index < Cells.Length;
 
         /// <summary>
         /// Changes the glyph of a specified cell to a new value.
@@ -221,7 +225,9 @@ namespace SadConsole
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The glyph index.</returns>
-        public int GetGlyph(int x, int y) => Cells[y * Width + x].Glyph;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetGlyph(int x, int y) => 
+            Cells[y * Width + x].Glyph;
 
         /// <summary>
         /// Changes the foreground of a specified cell to a new color.
@@ -243,7 +249,9 @@ namespace SadConsole
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
-        public Color GetForeground(int x, int y) => Cells[y * Width + x].Foreground;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Color GetForeground(int x, int y) => 
+            Cells[y * Width + x].Foreground;
 
         /// <summary>
         /// Changes the background of a cell to the specified color.
@@ -265,7 +273,9 @@ namespace SadConsole
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
-        public Color GetBackground(int x, int y) => Cells[y * Width + x].Background;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Color GetBackground(int x, int y) => 
+            Cells[y * Width + x].Background;
 
         /// <summary>
         /// Changes the effect of a cell to the specified effect.
@@ -322,7 +332,9 @@ namespace SadConsole
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The effect.</returns>
-        public ICellEffect GetEffect(int x, int y) => Effects.GetEffect(Cells[GetIndexFromPoint(x, y)]);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ICellEffect GetEffect(int x, int y) =>
+            Effects.GetEffect(Cells[GetIndexFromPoint(x, y)]);
 
         /// <summary>
         /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -380,7 +392,9 @@ namespace SadConsole
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
-        public SpriteEffects GetMirror(int x, int y) => Cells[y * Width + x].Mirror;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public SpriteEffects GetMirror(int x, int y) => 
+            Cells[y * Width + x].Mirror;
 
         /// <summary>
         /// Sets the sprite effect of a specified cell.
@@ -403,7 +417,8 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators) => 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetDecorator(int x, int y, int count, params CellDecorator[] decorators) =>
             SetDecorator(GetIndexFromPoint(x, y), count, decorators);
 
         /// <summary>
@@ -439,6 +454,7 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddDecorator(int x, int y, int count, params CellDecorator[] decorators) =>
             AddDecorator(GetIndexFromPoint(x, y), count, decorators);
 
@@ -469,16 +485,18 @@ namespace SadConsole
         /// <param name="x">The x coordinate of the cell.</param>
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
-        public void ClearDecorators(int x, int y, int count) 
-            => SetDecorator(x, y, count, null);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ClearDecorators(int x, int y, int count) => 
+            SetDecorator(x, y, count, null);
 
         /// <summary>
         /// Clears the decorators of the specified cells.
         /// </summary>
         /// <param name="index">The index of the cell to start applying.</param>
         /// <param name="count">The count of cells to use from the index (inclusive).</param>
-        public void ClearDecorators(int index, int count)
-            => SetDecorator(index, count, null);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ClearDecorators(int index, int count) => 
+            SetDecorator(index, count, null);
 
         /// <summary>
         /// Draws the string on the console at the specified location, wrapping if needed.
@@ -753,10 +771,9 @@ namespace SadConsole
         /// <param name="y">The y position of the surface to start at.</param>
         /// <param name="length">How many characters to fill the string with.</param>
         /// <returns>A string built from the text surface data.</returns>
-        public string GetString(int x, int y, int length)
-        {
-            return GetString(y * Width + x, length);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string GetString(int x, int y, int length) =>
+            GetString(y * Width + x, length);
 
         /// <summary>
         /// Builds a string from the text surface.
@@ -790,10 +807,9 @@ namespace SadConsole
         /// <param name="y">The y position of the surface to start at.</param>
         /// <param name="length">How many characters to fill the string with.</param>
         /// <returns>A string built from the text surface data.</returns>
-        public ColoredString GetStringColored(int x, int y, int length)
-        {
-            return GetStringColored(y * Width + x, length);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ColoredString GetStringColored(int x, int y, int length) =>
+            GetStringColored(y * Width + x, length);
 
         /// <summary>
         /// Builds a string from the text surface.
@@ -832,10 +848,9 @@ namespace SadConsole
         /// <summary>
         /// Scrolls all the console data up by one.
         /// </summary>
-        public void ShiftUp()
-        {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ShiftUp() =>
             ShiftUp(1);
-        }
 
         /// <summary>
         /// Scrolls all the console data up by the specified amount of rows.
@@ -912,7 +927,9 @@ namespace SadConsole
         /// <summary>
         /// Scrolls all the console data down by one.
         /// </summary>
-        public void ShiftDown() => ShiftDown(1);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ShiftDown() => 
+            ShiftDown(1);
 
         /// <summary>
         /// Scrolls all the console data down by the specified amount of rows.
@@ -989,7 +1006,9 @@ namespace SadConsole
         /// <summary>
         /// Scrolls all the console data right by one.
         /// </summary>
-        public void ShiftRight() => ShiftRight(1);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ShiftRight() => 
+            ShiftRight(1);
 
         /// <summary>
         /// Scrolls all the console data right by the specified amount.
@@ -1067,7 +1086,9 @@ namespace SadConsole
         /// <summary>
         /// Scrolls all the console data left by one.
         /// </summary>
-        public void ShiftLeft() => ShiftLeft(1);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ShiftLeft() => 
+            ShiftLeft(1);
 
         /// <summary>
         /// Scrolls all the console data left by the specified amount.
@@ -1141,9 +1162,83 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of cells.
+        /// </summary>
+        /// <param name="x">The x position.</param>
+        /// <param name="y">The y position.</param>
+        /// <param name="count">The count of glyphs to erase.</param>
+        /// <returns>The cells processed by this method.</returns>
+        /// <remarks>
+        /// Cells altered by this method has the <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="SpriteEffects.None"/>.
+        /// </remarks>
+        public Cell[] Erase(int x, int y, int count)
+        {
+            if (!IsValidCell(x, y, out int index)) return Array.Empty<Cell>();
+
+            int end = index + count > Cells.Length ? Cells.Length - index : index + count;
+            int total = end - index;
+            Cell[] result = new Cell[total];
+            int resultIndex = 0;
+            for (; index < end; index++)
+            {
+                var c = Cells[index];
+
+                c.Glyph = EraseGlyph;
+                c.Mirror = SpriteEffects.None;
+                c.Decorators = Array.Empty<CellDecorator>();
+
+                result[resultIndex] = c;
+                resultIndex++;
+            }
+
+            IsDirty = true;
+            return result;
+        }
+
+        /// <summary>
+        /// Clears the glyph, mirror, and decorators, for the specified cell.
+        /// </summary>
+        /// <param name="x">The x position.</param>
+        /// <param name="y">The y position.</param>
+        /// <remarks>
+        /// The cell altered by this method has the <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="SpriteEffects.None"/>.
+        /// </remarks>
+        public void Erase(int x, int y)
+        {
+            if (!IsValidCell(x, y, out var index)) return;
+
+            Cells[index].Glyph = EraseGlyph;
+            Cells[index].Mirror = SpriteEffects.None;
+            Cells[index].Decorators = Array.Empty<CellDecorator>();
+
+            IsDirty = true;
+        }
+
+        /// <summary>
+        /// Erases all cells which clears the glyph, mirror, and decorators.
+        /// </summary>
+        /// <remarks>
+        /// All cells have <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="SpriteEffects.None"/>.
+        /// </remarks>
+        public void Erase()
+        {
+            for (var i = 0; i < Cells.Length; i++)
+            {
+                Cells[i].Glyph = EraseGlyph;
+                Cells[i].Mirror = SpriteEffects.None;
+                Cells[i].Decorators = Array.Empty<CellDecorator>();
+            }
+
+            IsDirty = true;
+        }
+
+
+        /// <summary>
         /// Clears the console data. Characters are reset to 0, the foreground and background are set to default, and effect set to none. Clears cell decorators.
         /// </summary>
-        public void Clear() => Fill(DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Clear() => 
+            Fill(DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
 
         /// <summary>
         /// Clears a cell. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
@@ -1168,16 +1263,16 @@ namespace SadConsole
         /// <param name="y">The y position of the segment.</param>
         /// <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
         /// <remarks>This works similarly to printing a string of whitespace</remarks>
-        public void Clear(int x, int y, int length) 
-        {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Clear(int x, int y, int length) =>
             Fill(x, y, length, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
-        }
 
         /// <summary>
         /// Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
-        /// <param name="area"></param>
-        public void Clear(Rectangle area) => Fill(area, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
+        /// <param name="area">The area to clear.</param>
+        public void Clear(Rectangle area) => 
+            Fill(area, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
 
         /// <summary>
         /// Fills the console. Clears cell decorators.
@@ -1221,7 +1316,7 @@ namespace SadConsole
         public Cell[] Fill(int x, int y, int length, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null) {
 
 
-            if (!IsValidCell(x, y, out int index)) return new Cell[0];
+            if (!IsValidCell(x, y, out int index)) return Array.Empty<Cell>();
 
             int end = index + length > Cells.Length ? Cells.Length - index : index + length;
             int total = end - index;
@@ -1436,6 +1531,7 @@ namespace SadConsole
         /// <summary>
         /// Connects all lines in a surface for both <see cref="ConnectedLineThin"/> and <see cref="ConnectedLineThick"/> styles.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ConnectLines()
         {
             ConnectLines(ConnectedLineThin);
@@ -1631,6 +1727,7 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         /// <param name="destinationX">The x coordinate to copy to.</param>
         /// <param name="destinationY">The y coordinate to copy to.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Copy(Rectangle area, CellSurface destination, int destinationX, int destinationY) =>
             Copy(area.X, area.Y, area.Width, area.Height, destination, destinationX, destinationY);
 
@@ -1810,7 +1907,9 @@ namespace SadConsole
         /// </summary>
         /// <param name="location">The location of the index to get.</param>
         /// <returns>The cell index.</returns>
-        public int GetIndexFromPoint(Point location) => Helpers.GetIndexFromPoint(location.X, location.Y, Width);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetIndexFromPoint(Point location) => 
+            Helpers.GetIndexFromPoint(location.X, location.Y, Width);
 
         /// <summary>
         /// Gets the index of a location on the surface by coordinate.
@@ -1818,13 +1917,17 @@ namespace SadConsole
         /// <param name="x">The x of the location.</param>
         /// <param name="y">The y of the location.</param>
         /// <returns>The cell index.</returns>
-        public int GetIndexFromPoint(int x, int y) => Helpers.GetIndexFromPoint(x, y, Width);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetIndexFromPoint(int x, int y) => 
+            Helpers.GetIndexFromPoint(x, y, Width);
 
         /// <summary>
         /// Gets the x,y of an index on the surface.
         /// </summary>
         /// <param name="index">The index to get.</param>
         /// <returns>The x,y as a <see cref="Point"/>.</returns>
-        public Point GetPointFromIndex(int index) => Helpers.GetPointFromIndex(index, Width);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point GetPointFromIndex(int index) => 
+            Helpers.GetPointFromIndex(index, Width);
     }
 }

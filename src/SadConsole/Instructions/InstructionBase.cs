@@ -24,6 +24,11 @@
         public event EventHandler Repeating;
 
         /// <summary>
+        /// When true, this instruction will automatically remove itself from the parent's <see cref="SadConsole.Console.Components"/> collection.
+        /// </summary>
+        public bool RemoveOnFinished { get; set; }
+
+        /// <summary>
         /// Flags the instruction as completed or not. If completed, the <see cref="Finished"/> event will be raised.
         /// </summary>
         public bool IsFinished { get; set; }
@@ -66,15 +71,20 @@
                 if (RepeatCount > 0 || RepeatCount == -1)
                     Repeat();
                 else
-                    OnFinished();
+                    OnFinished(console);
             }
         }
 
         /// <summary>
         /// Called when the instruction finishes.
         /// </summary>
-        protected virtual void OnFinished() =>
+        protected virtual void OnFinished(SadConsole.Console componentHost)
+        {
             Finished?.Invoke(this, EventArgs.Empty);
+
+            if (RemoveOnFinished)
+                componentHost.Components.Remove(this);
+        }
 
         /// <summary>
         /// Called when the instruction repeats.
