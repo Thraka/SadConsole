@@ -1,5 +1,5 @@
 Thank you for trying out SadConsole. Please visit the documentation:
-http://sadconsole.com/docs/
+http://sadconsole.com/
 
 Questions? Join the Discord channel
 https://discord.gg/mttxqAs
