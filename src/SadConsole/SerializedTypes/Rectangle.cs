@@ -18,20 +18,14 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public int Height;
 
-        public static implicit operator RectangleSerialized(Rectangle rect)
+        public static implicit operator RectangleSerialized(Rectangle rect) => new RectangleSerialized()
         {
-            return new RectangleSerialized()
-            {
-                X = rect.Left,
-                Y = rect.Top,
-                Width = rect.Width,
-                Height = rect.Height
-            };
-        }
+            X = rect.Left,
+            Y = rect.Top,
+            Width = rect.Width,
+            Height = rect.Height
+        };
 
-        public static implicit operator Rectangle(RectangleSerialized rect)
-        {
-            return new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
-        }
+        public static implicit operator Rectangle(RectangleSerialized rect) => new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
     }
 }

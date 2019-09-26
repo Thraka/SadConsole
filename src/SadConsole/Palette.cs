@@ -13,7 +13,7 @@ namespace SadConsole
     /// </summary>
     public class Palette : IEnumerable<Color>
     {
-        Color[] colors;
+        private readonly Color[] colors;
 
         /// <summary>
         /// How many colors the palette has.
@@ -40,17 +40,16 @@ namespace SadConsole
             this.colors = new Color[colors];
 
             for (int i = 0; i < colors; i++)
+            {
                 this.colors[i] = new Color();
+            }
         }
 
         /// <summary>
         /// Creates a new palette of colors from a list of existing colors.
         /// </summary>
         /// <param name="colors">The list of colors this palette is made from.</param>
-        public Palette(IEnumerable<Color> colors)
-        {
-            this.colors = new List<Color>(colors).ToArray();
-        }
+        public Palette(IEnumerable<Color> colors) => this.colors = new List<Color>(colors).ToArray();
 
         /// <summary>
         /// Shifts the entire palette once to the left.
@@ -130,18 +129,12 @@ namespace SadConsole
         /// Gets the list of colors in the palette.
         /// </summary>
         /// <returns>The colors in the palette.</returns>
-        public IEnumerator<Color> GetEnumerator()
-        {
-            return ((IEnumerable<Color>)colors).GetEnumerator();
-        }
+        public IEnumerator<Color> GetEnumerator() => ((IEnumerable<Color>)colors).GetEnumerator();
 
         /// <summary>
         /// Gets the list of colors in the palette.
         /// </summary>
         /// <returns>The colors in the palette.</returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return colors.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => colors.GetEnumerator();
     }
 }

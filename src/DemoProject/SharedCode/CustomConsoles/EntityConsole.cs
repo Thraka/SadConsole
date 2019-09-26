@@ -1,33 +1,32 @@
-﻿using System;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-
-using ScrollingConsole = SadConsole.ScrollingConsole;
+using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Entities;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 
 
 namespace StarterProject.CustomConsoles
 {
-    class EntityConsole: ScrollingConsole
+    internal class EntityConsole : ScrollingConsole
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
-        private SadConsole.Entities.Entity player;
+        private readonly SadConsole.Entities.Entity player;
         private Point playerPreviousPosition;
-        
+
         public EntityConsole()
             : base(80, 23)
         {
             var animation = new AnimatedConsole("default", 1, 1);
-            var frame = animation.CreateFrame();
+            CellSurface frame = animation.CreateFrame();
             frame.Cells[0].Glyph = 1;
             frame.SetDecorator(0, 2, new CellDecorator(Color.Yellow, 69, SpriteEffects.None));
 
-            player = new Entity(animation);
-            player.Position = new Point(Width / 2, Height / 2);
+            player = new Entity(animation)
+            {
+                Position = new Point(Width / 2, Height / 2)
+            };
             player.Components.Add(new SadConsole.Components.EntityViewSyncComponent());
             playerPreviousPosition = player.Position;
 
@@ -48,12 +47,12 @@ namespace StarterProject.CustomConsoles
 
             // Process logic for moving the entity.
             bool keyHit = false;
-            var oldPosition = player.Position;
+            Point oldPosition = player.Position;
 
             if (info.IsKeyPressed(Keys.W))
             {
                 player.Animation.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, SpriteEffects.None) });
-                keyHit = true;  
+                keyHit = true;
             }
             if (info.IsKeyPressed(Keys.Q))
             {
@@ -96,7 +95,9 @@ namespace StarterProject.CustomConsoles
                     return true;
                 }
                 else  // New position was not in the area of the console, move back
+                {
                     player.Position = oldPosition;
+                }
             }
 
             // You could have multiple entities in the game for example, and change

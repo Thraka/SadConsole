@@ -1,7 +1,7 @@
 ﻿namespace SadConsole
 {
-    using SadConsole.Input;
     using System;
+    using SadConsole.Input;
 
     public partial class Console
     {
@@ -54,10 +54,7 @@
         /// Raises the <see cref="MouseEnter"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseEnter(MouseConsoleState state)
-        {
-            MouseEnter?.Invoke(this, new MouseEventArgs(state));
-        }
+        protected virtual void OnMouseEnter(MouseConsoleState state) => MouseEnter?.Invoke(this, new MouseEventArgs(state));
 
         /// <summary>
         /// Raises the <see cref="MouseExit"/> event.
@@ -80,10 +77,14 @@
             if (state.Mouse.LeftButtonDown)
             {
                 if (MoveToFrontOnMouseClick && Parent != null && Parent.Children.IndexOf(this) != Parent.Children.Count - 1)
+                {
                     Parent.Children.MoveToTop(this);
+                }
 
                 if (FocusOnMouseClick && !IsFocused)
+                {
                     IsFocused = true;
+                }
             }
 
             MouseMove?.Invoke(this, new MouseEventArgs(state));
@@ -93,19 +94,13 @@
         /// Raises the <see cref="MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseLeftClicked(MouseConsoleState state)
-        {
-            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
-        }
+        protected virtual void OnMouseLeftClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
 
         /// <summary>
         /// Raises the <see cref="MouseButtonClicked"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnRightMouseClicked(MouseConsoleState state)
-        {
-            MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
-        }
+        protected virtual void OnRightMouseClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
 
         /// <summary>
         /// If the mouse is not over the console, causes the protected <see cref="OnMouseExit"/> method to run which raises the <see cref="MouseExit"/> event.
@@ -114,7 +109,9 @@
         public void LostMouse(MouseConsoleState state)
         {
             if (IsMouseOver)
+            {
                 OnMouseExit(state);
+            }
         }
 
         /// <summary>
@@ -124,16 +121,25 @@
         /// <returns>True when the mouse is over this console and processing should stop.</returns>
         public virtual bool ProcessMouse(MouseConsoleState state)
         {
-            if (!IsVisible) return false;
+            if (!IsVisible)
+            {
+                return false;
+            }
 
-            foreach (var component in ComponentsMouse.ToArray())
+            foreach (Components.IConsoleComponent component in ComponentsMouse.ToArray())
             {
                 component.ProcessMouse(this, state, out bool isHandled);
 
-                if (isHandled) return true;
+                if (isHandled)
+                {
+                    return true;
+                }
             }
 
-            if (!UseMouse) return false;
+            if (!UseMouse)
+            {
+                return false;
+            }
 
             if (state.IsOnConsole)
             {
@@ -146,10 +152,14 @@
                 OnMouseMove(state);
 
                 if (state.Mouse.LeftClicked)
+                {
                     OnMouseLeftClicked(state);
+                }
 
                 if (state.Mouse.RightClicked)
+                {
                     OnRightMouseClicked(state);
+                }
 
                 return true;
             }
@@ -162,7 +172,7 @@
 
             return false;
         }
-        
+
         /// <summary>
         /// Called by the engine to process the keyboard.
         /// </summary>
@@ -170,14 +180,20 @@
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
         public virtual bool ProcessKeyboard(Keyboard info)
         {
-            foreach (var component in ComponentsKeyboard.ToArray())
+            foreach (Components.IConsoleComponent component in ComponentsKeyboard.ToArray())
             {
                 component.ProcessKeyboard(this, info, out bool isHandled);
 
-                if (isHandled) return true;
+                if (isHandled)
+                {
+                    return true;
+                }
             }
 
-            if (!UseKeyboard) return false;
+            if (!UseKeyboard)
+            {
+                return false;
+            }
 
             return !IsCursorDisabled && Cursor.IsEnabled && Cursor.ProcessKeyboard(info);
         }

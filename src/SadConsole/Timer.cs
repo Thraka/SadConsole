@@ -59,7 +59,9 @@ namespace SadConsole
                     TimerElapsed?.Invoke(this, EventArgs.Empty);
 
                     if (Repeat)
+                    {
                         Restart();
+                    }
                 }
             }
         }

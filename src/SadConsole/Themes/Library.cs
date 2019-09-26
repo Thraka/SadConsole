@@ -25,7 +25,11 @@
             get => _colors;
             set
             {
-                if (_colors == null) throw new System.NullReferenceException("Colors cannot be set to null");
+                if (_colors == null)
+                {
+                    throw new System.NullReferenceException("Colors cannot be set to null");
+                }
+
                 _colors = value;
 
                 OnColorsChanged();
@@ -143,10 +147,7 @@
         /// Create the instance for the singleton.
         /// </summary>
         /// <param name="_">Not used.</param>
-        private Library(bool _)
-        {
-            _colors = new Colors();
-        }
+        private Library(bool _) => _colors = new Colors();
 
         /// <summary>
         /// Gets a new control theme based on the control passed.
@@ -159,7 +160,7 @@
             {
                 case SelectionButton c:
                     return SelectionButtonTheme.Clone();
-                    
+
                 case ScrollBar c:
                     return ScrollBarTheme.Clone();
 
@@ -216,26 +217,23 @@
         /// Clonse this library.
         /// </summary>
         /// <returns>A new instance of a library.</returns>
-        public virtual Library Clone()
+        public virtual Library Clone() => new Library()
         {
-            return new Library()
-            {
-                Colors = Colors.Clone(),
+            Colors = Colors.Clone(),
 
-                ButtonTheme = (ButtonTheme)ButtonTheme.Clone(),
-                SelectionButtonTheme = (ButtonTheme)SelectionButtonTheme.Clone(),
-                ScrollBarTheme = (ScrollBarTheme)ScrollBarTheme.Clone(),
-                RadioButtonTheme = (RadioButtonTheme)RadioButtonTheme.Clone(),
-                ListBoxTheme = (ListBoxTheme)ListBoxTheme.Clone(),
-                CheckBoxTheme = (CheckBoxTheme)CheckBoxTheme.Clone(),
-                TextBoxTheme = (TextBoxTheme)TextBoxTheme.Clone(),
-                ProgressBarTheme = (ProgressBarTheme)ProgressBarTheme.Clone(),
-                DrawingSurfaceTheme = (DrawingSurfaceTheme)DrawingSurfaceTheme.Clone(),
-                LabelTheme = (LabelTheme)LabelTheme.Clone(),
+            ButtonTheme = (ButtonTheme)ButtonTheme.Clone(),
+            SelectionButtonTheme = (ButtonTheme)SelectionButtonTheme.Clone(),
+            ScrollBarTheme = (ScrollBarTheme)ScrollBarTheme.Clone(),
+            RadioButtonTheme = (RadioButtonTheme)RadioButtonTheme.Clone(),
+            ListBoxTheme = (ListBoxTheme)ListBoxTheme.Clone(),
+            CheckBoxTheme = (CheckBoxTheme)CheckBoxTheme.Clone(),
+            TextBoxTheme = (TextBoxTheme)TextBoxTheme.Clone(),
+            ProgressBarTheme = (ProgressBarTheme)ProgressBarTheme.Clone(),
+            DrawingSurfaceTheme = (DrawingSurfaceTheme)DrawingSurfaceTheme.Clone(),
+            LabelTheme = (LabelTheme)LabelTheme.Clone(),
 
-                ControlsConsoleTheme = ControlsConsoleTheme.Clone(),
-                WindowTheme = WindowTheme.Clone(),
-            };
-        }
+            ControlsConsoleTheme = ControlsConsoleTheme.Clone(),
+            WindowTheme = WindowTheme.Clone(),
+        };
     }
 }

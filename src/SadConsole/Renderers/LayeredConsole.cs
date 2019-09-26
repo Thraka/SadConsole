@@ -25,7 +25,7 @@ namespace SadConsole.Renderers
         /// <param name="force">When <see langword="true"/> draws the surface even if <see cref="CellSurface.IsDirty"/> is <see langword="false"/>.</param>
         public override void Render(SadConsole.Console surface, bool force = false)
         {
-            foreach (var layer in Layers)
+            foreach (CellSurfaceLayer layer in Layers)
             {
                 if (layer.IsDirty)
                 {
@@ -37,9 +37,13 @@ namespace SadConsole.Renderers
             RenderBegin(surface, force);
             RenderCells(surface, force);
 
-            foreach (var layer in Layers)
+            foreach (CellSurfaceLayer layer in Layers)
+            {
                 if (layer.IsVisible)
+                {
                     RenderLayer(layer, surface, surface.IsDirty || force);
+                }
+            }
 
             //RenderControls(surface, force);
             RenderTint(surface, force);
@@ -54,26 +58,38 @@ namespace SadConsole.Renderers
         /// <param name="draw">If <see langword="false"/>, skips rendering.</param>
         public void RenderLayer(CellSurfaceLayer layer, SadConsole.Console drawingHost, bool draw = true)
         {
-            if (!draw) return;
+            if (!draw)
+            {
+                return;
+            }
 
             if (drawingHost.Tint.A != 255)
             {
-                for (var i = 0; i < layer.Cells.Length; i++)
+                for (int i = 0; i < layer.Cells.Length; i++)
                 {
-                    ref var cell = ref layer.Cells[i];
+                    ref Cell cell = ref layer.Cells[i];
 
-                    if (!cell.IsVisible) continue;
+                    if (!cell.IsVisible)
+                    {
+                        continue;
+                    }
 
                     if (cell.Background != Color.Transparent)
+                    {
                         Global.SpriteBatch.Draw(drawingHost.Font.FontImage, drawingHost.RenderRects[i], drawingHost.Font.GlyphRects[drawingHost.Font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    }
 
                     if (cell.Foreground != Color.Transparent)
+                    {
                         Global.SpriteBatch.Draw(drawingHost.Font.FontImage, drawingHost.RenderRects[i], drawingHost.Font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
+                    }
 
-                    foreach (var decorator in cell.Decorators)
+                    foreach (CellDecorator decorator in cell.Decorators)
                     {
                         if (decorator.Color != Color.Transparent)
+                        {
                             Global.SpriteBatch.Draw(drawingHost.Font.FontImage, drawingHost.RenderRects[i], drawingHost.Font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+                        }
                     }
                 }
             }

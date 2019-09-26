@@ -5,12 +5,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole
 {
-    using Newtonsoft.Json;
-    using SadConsole.DrawCalls;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using Newtonsoft.Json;
     using SadConsole.Components;
 
     /// <summary>
@@ -24,7 +23,7 @@ namespace SadConsole
         private Point _position;
         private bool _isVisible = true;
         private bool _isPaused;
-        
+
         /// <summary>
         /// A filtered list from <see cref="Components"/> where <see cref="IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
         /// </summary>
@@ -69,7 +68,7 @@ namespace SadConsole
             get => _position;
             set
             {
-                var oldPosition = _position;
+                Point oldPosition = _position;
                 _position = value;
                 OnCalculateRenderPosition();
                 OnPositionChanged(oldPosition);
@@ -99,8 +98,16 @@ namespace SadConsole
             get => _parentScreen;
             set
             {
-                if (value == this) throw new Exception("Cannot set parent to itself.");
-                if (_parentScreen == value) return;
+                if (value == this)
+                {
+                    throw new Exception("Cannot set parent to itself.");
+                }
+
+                if (_parentScreen == value)
+                {
+                    return;
+                }
+
                 if (_parentScreen == null)
                 {
                     _parentScreen = value;
@@ -110,7 +117,7 @@ namespace SadConsole
                 }
                 else
                 {
-                    var oldParent = _parentScreen;
+                    Console oldParent = _parentScreen;
                     _parentScreen = null;
                     oldParent.Children.Remove(this);
                     _parentScreen = value;
@@ -132,11 +139,17 @@ namespace SadConsole
             get => _isVisible;
             set
             {
-                if (_isVisible == value) return;
+                if (_isVisible == value)
+                {
+                    return;
+                }
+
                 _isVisible = value;
 
                 if (!value && IsMouseOver)
+                {
                     OnMouseExit(new Input.MouseConsoleState(this, Global.MouseState));
+                }
 
                 OnVisibleChanged();
             }
@@ -150,7 +163,11 @@ namespace SadConsole
             get => _isPaused;
             set
             {
-                if (_isPaused == value) return;
+                if (_isPaused == value)
+                {
+                    return;
+                }
+
                 _isPaused = value;
                 OnPausedChanged();
             }
@@ -174,9 +191,13 @@ namespace SadConsole
                     if (value && Global.FocusedConsoles.Console != this)
                     {
                         if (FocusedMode == ActiveBehavior.Push)
+                        {
                             Global.FocusedConsoles.Push(this);
+                        }
                         else
+                        {
                             Global.FocusedConsoles.Set(this);
+                        }
                     }
                     else if (!value && Global.FocusedConsoles.Console == this)
                     {
@@ -188,9 +209,13 @@ namespace SadConsole
                     if (value)
                     {
                         if (FocusedMode == ActiveBehavior.Push)
+                        {
                             Global.FocusedConsoles.Push(this);
+                        }
                         else
+                        {
                             Global.FocusedConsoles.Set(this);
+                        }
                     }
                 }
             }
@@ -201,9 +226,9 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The width of the console.</param>
         /// <param name="height">The height of the console.</param>
-        public Console(int width, int height): this(width, height, Global.FontDefault)
+        public Console(int width, int height) : this(width, height, Global.FontDefault)
         {
-            
+
         }
 
         /// <summary>
@@ -223,9 +248,9 @@ namespace SadConsole
         /// <param name="width">The width of the console.</param>
         /// <param name="height">The height of the conosle.</param>
         /// <param name="font">The font used with rendering.</param>
-        public Console(int width, int height, Font font): this(width, height, font, null)
+        public Console(int width, int height, Font font) : this(width, height, font, null)
         {
-            
+
         }
 
         /// <summary>
@@ -239,7 +264,7 @@ namespace SadConsole
         {
             Components = new ObservableCollection<IConsoleComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
-            
+
             ComponentsKeyboard = new List<IConsoleComponent>();
             ComponentsDraw = new List<IConsoleComponent>();
             ComponentsUpdate = new List<IConsoleComponent>();
@@ -252,11 +277,11 @@ namespace SadConsole
             Renderer = new Renderers.Console();
             _font = font;
 
-            var index = 0;
+            int index = 0;
 
-            for (var y = 0; y < Height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = this[x, y];
@@ -280,7 +305,9 @@ namespace SadConsole
         protected Console(int width, int height, Cell[] cells, Font font, bool skipRenderCreation) : base(width, height, cells)
         {
             if (skipRenderCreation == false)
+            {
                 throw new Exception($"{nameof(skipRenderCreation)} must be set to true. This is a special constructor that should not be called unless you know what you're doing.");
+            }
 
             Components = new ObservableCollection<IConsoleComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
@@ -297,13 +324,13 @@ namespace SadConsole
             _font = font;
         }
 
-        internal Console(): base(1, 1)
+        internal Console() : base(1, 1)
         {
             IsCursorDisabled = true;
 
             Components = new ObservableCollection<IConsoleComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
-            
+
             ComponentsKeyboard = new List<IConsoleComponent>();
             ComponentsDraw = new List<IConsoleComponent>();
             ComponentsUpdate = new List<IConsoleComponent>();
@@ -316,11 +343,11 @@ namespace SadConsole
             Renderer = new Renderers.Console();
             _font = Global.FontDefault;
 
-            var index = 0;
+            int index = 0;
 
-            for (var y = 0; y < Height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = this[x, y];
@@ -330,14 +357,11 @@ namespace SadConsole
 
             AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
         }
-        
+
         /// <summary>
         /// Calls <see cref="SetRenderCells"/>.
         /// </summary>
-        protected override void OnCellsReset()
-        {
-            SetRenderCells();
-        }
+        protected override void OnCellsReset() => SetRenderCells();
 
         /// <summary>
         /// Sets a value for <see cref="CalculatedPosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
@@ -345,13 +369,17 @@ namespace SadConsole
         public virtual void OnCalculateRenderPosition()
         {
             if (UsePixelPositioning)
+            {
                 CalculatedPosition = Position + (Parent?.CalculatedPosition ?? Point.Zero);
+            }
             else
+            {
                 CalculatedPosition = Position.ConsoleLocationToPixel(Font) + (Parent?.CalculatedPosition ?? Point.Zero);
+            }
 
             AbsoluteArea = new Rectangle(CalculatedPosition.X, CalculatedPosition.Y, AbsoluteArea.Width, AbsoluteArea.Height);
 
-            foreach (var child in Children)
+            foreach (Console child in Children)
             {
                 child.OnCalculateRenderPosition();
             }
@@ -363,7 +391,9 @@ namespace SadConsole
         public virtual void OnFocusLost()
         {
             if (AutoCursorOnFocus)
+            {
                 Cursor.IsVisible = false;
+            }
         }
 
         /// <summary>
@@ -372,9 +402,11 @@ namespace SadConsole
         public virtual void OnFocused()
         {
             if (AutoCursorOnFocus)
+            {
                 Cursor.IsVisible = true;
+            }
         }
-        
+
         /// <summary>
         /// Called when the renderer renders the text view.
         /// </summary>
@@ -382,7 +414,9 @@ namespace SadConsole
         protected virtual void OnBeforeRender(SpriteBatch batch)
         {
             if (Cursor.IsVisible && IsValidCell(Cursor.Position.X, Cursor.Position.Y))
+            {
                 Cursor.Render(batch, Font, Font.GetRenderRect(Cursor.Position.X, Cursor.Position.Y));
+            }
         }
 
         /// <summary>
@@ -416,10 +450,12 @@ namespace SadConsole
         public IEnumerable<IConsoleComponent> GetComponents<TComponent>()
             where TComponent : IConsoleComponent
         {
-            foreach (var component in Components)
+            foreach (IConsoleComponent component in Components)
             {
                 if (component is TComponent)
+                {
                     yield return component;
+                }
             }
         }
 
@@ -431,10 +467,12 @@ namespace SadConsole
         public IConsoleComponent GetComponent<TComponent>()
             where TComponent : IConsoleComponent
         {
-            foreach (var component in Components)
+            foreach (IConsoleComponent component in Components)
             {
                 if (component is TComponent)
+                {
                     return component;
+                }
             }
 
             return null;
@@ -445,26 +483,26 @@ namespace SadConsole
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (var item in e.NewItems)
+                    foreach (object item in e.NewItems)
                     {
                         FilterAddItem((IConsoleComponent)item);
                         ((IConsoleComponent)item).OnAdded(this);
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (var item in e.OldItems)
+                    foreach (object item in e.OldItems)
                     {
                         FilterRemoveItem((IConsoleComponent)item);
                         ((IConsoleComponent)item).OnRemoved(this);
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    foreach (var item in e.NewItems)
+                    foreach (object item in e.NewItems)
                     {
                         FilterAddItem((IConsoleComponent)item);
                         ((IConsoleComponent)item).OnAdded(this);
                     }
-                    foreach (var item in e.OldItems)
+                    foreach (object item in e.OldItems)
                     {
                         FilterRemoveItem((IConsoleComponent)item);
                         ((IConsoleComponent)item).OnRemoved(this);
@@ -483,31 +521,41 @@ namespace SadConsole
                 if (component.IsDraw)
                 {
                     if (!ComponentsDraw.Contains(component))
+                    {
                         ComponentsDraw.Add(component);
+                    }
                 }
 
                 if (component.IsUpdate)
                 {
                     if (!ComponentsUpdate.Contains(component))
+                    {
                         ComponentsUpdate.Add(component);
+                    }
                 }
 
                 if (component.IsKeyboard)
                 {
                     if (!ComponentsKeyboard.Contains(component))
+                    {
                         ComponentsKeyboard.Add(component);
+                    }
                 }
 
                 if (component.IsMouse)
                 {
                     if (!ComponentsMouse.Contains(component))
+                    {
                         ComponentsMouse.Add(component);
+                    }
                 }
 
                 if (!component.IsDraw && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
                 {
                     if (!ComponentsEmpty.Contains(component))
+                    {
                         ComponentsEmpty.Add(component);
+                    }
                 }
 
                 ComponentsDraw.Sort(CompareComponent);
@@ -521,31 +569,41 @@ namespace SadConsole
                 if (component.IsDraw)
                 {
                     if (ComponentsDraw.Contains(component))
+                    {
                         ComponentsDraw.Remove(component);
+                    }
                 }
 
                 if (component.IsUpdate)
                 {
                     if (ComponentsUpdate.Contains(component))
+                    {
                         ComponentsUpdate.Remove(component);
+                    }
                 }
 
                 if (component.IsKeyboard)
                 {
                     if (ComponentsKeyboard.Contains(component))
+                    {
                         ComponentsKeyboard.Remove(component);
+                    }
                 }
 
                 if (component.IsMouse)
                 {
                     if (ComponentsMouse.Contains(component))
+                    {
                         ComponentsMouse.Remove(component);
+                    }
                 }
 
                 if (!component.IsDraw && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
                 {
                     if (!ComponentsEmpty.Contains(component))
+                    {
                         ComponentsEmpty.Remove(component);
+                    }
                 }
 
                 ComponentsDraw.Sort(CompareComponent);
@@ -557,10 +615,14 @@ namespace SadConsole
             int CompareComponent(IConsoleComponent left, IConsoleComponent right)
             {
                 if (left.SortOrder > right.SortOrder)
+                {
                     return 1;
+                }
 
                 if (left.SortOrder < right.SortOrder)
+                {
                     return -1;
+                }
 
                 return 0;
             }

@@ -6,7 +6,7 @@
     /// An effect that doesn't do anything but delays. Usually used with the <see cref="EffectsChain"/> effect.
     /// </summary>
     [DataContract]
-    public class Delay: CellEffectBase
+    public class Delay : CellEffectBase
     {
         /// <inheritdoc />
         public override void Update(double gameTimeSeconds)
@@ -25,10 +25,7 @@
         }
 
         /// <inheritdoc />
-        public override bool UpdateCell(Cell cell)
-        {
-            return false;
-        }
+        public override bool UpdateCell(Cell cell) => false;
 
         /// <inheritdoc />
         public override void ClearCell(Cell cell)
@@ -36,19 +33,16 @@
         }
 
         /// <inheritdoc />
-        public override ICellEffect Clone()
+        public override ICellEffect Clone() => new Delay()
         {
-            return new Delay()
-            {
-                IsFinished = IsFinished,
-                StartDelay = StartDelay,
-                CloneOnApply = CloneOnApply,
-                RemoveOnFinished = RemoveOnFinished,
-                DiscardCellState = DiscardCellState,
-                Permanent = Permanent,
-                _timeElapsed = _timeElapsed,
-            };
-        }
+            IsFinished = IsFinished,
+            StartDelay = StartDelay,
+            CloneOnApply = CloneOnApply,
+            RemoveOnFinished = RemoveOnFinished,
+            DiscardCellState = DiscardCellState,
+            Permanent = Permanent,
+            _timeElapsed = _timeElapsed,
+        };
 
         //public override bool Equals(ICellEffect effect)
         //{
@@ -62,14 +56,11 @@
         //                   DelayTime == effect2.DelayTime;
         //        }
         //    }
-            
+
         //    return false;
         //}
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return string.Format("DELAY-{0}", StartDelay);
-        }
+        public override string ToString() => string.Format("DELAY-{0}", StartDelay);
     }
 }

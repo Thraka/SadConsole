@@ -63,7 +63,9 @@
         public virtual void AddCell(Cell cell)
         {
             if (cell.State == null)
+            {
                 cell.SaveState();
+            }
         }
 
         /// <inheritdoc />
@@ -91,7 +93,9 @@
         public virtual void ClearCell(Cell cell)
         {
             if (!DiscardCellState)
+            {
                 cell.RestoreState();
+            }
         }
 
         /// <inheritdoc />

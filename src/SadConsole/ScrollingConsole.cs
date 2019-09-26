@@ -5,15 +5,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole
 {
-    using SadConsole.Effects;
     using Newtonsoft.Json;
+    using SadConsole.Effects;
 
     /// <summary>
     /// A <see cref="Console"/> that implements <see cref="IConsoleViewPort"/> to provide a scrolling capability.
     /// </summary>
     [JsonConverter(typeof(SerializedTypes.ScrollingConsoleJsonConverter))]
     [System.Diagnostics.DebuggerDisplay("Console (Scrolling)")]
-    public class ScrollingConsole: Console, IConsoleViewPort
+    public class ScrollingConsole : Console, IConsoleViewPort
     {
         /// <summary>
         /// Sets the viewport without triggering <see cref="SetRenderCells"/>.
@@ -31,21 +31,39 @@ namespace SadConsole
                 ViewPortRectangle = value;
 
                 if (ViewPortRectangle == default)
+                {
                     ViewPortRectangle = new Rectangle(0, 0, Width, Height);
+                }
+
                 if (ViewPortRectangle.Width > Width)
+                {
                     ViewPortRectangle.Width = Width;
+                }
+
                 if (ViewPortRectangle.Height > Height)
+                {
                     ViewPortRectangle.Height = Height;
+                }
 
                 if (ViewPortRectangle.X < 0)
+                {
                     ViewPortRectangle.X = 0;
+                }
+
                 if (ViewPortRectangle.Y < 0)
+                {
                     ViewPortRectangle.Y = 0;
+                }
 
                 if (ViewPortRectangle.X + ViewPortRectangle.Width > Width)
+                {
                     ViewPortRectangle.X = Width - ViewPortRectangle.Width;
+                }
+
                 if (ViewPortRectangle.Y + ViewPortRectangle.Height > Height)
+                {
                     ViewPortRectangle.Y = Height - ViewPortRectangle.Height;
+                }
 
                 IsDirty = true;
                 SetRenderCells();
@@ -105,35 +123,53 @@ namespace SadConsole
         /// <param name="font">The font used with rendering.</param>
         /// <param name="viewPort">Initial value for the viewport if this console will scroll.</param>
         /// <param name="initialCells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        public ScrollingConsole(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells): base (width, height, initialCells, font, true)
+        public ScrollingConsole(int width, int height, Font font, Rectangle viewPort, Cell[] initialCells) : base(width, height, initialCells, font, true)
         {
             ViewPortRectangle = viewPort;
 
             if (ViewPortRectangle == default)
+            {
                 ViewPortRectangle = new Rectangle(0, 0, Width, Height);
+            }
+
             if (ViewPortRectangle.Width > Width)
+            {
                 ViewPortRectangle.Width = Width;
+            }
+
             if (ViewPortRectangle.Height > Height)
+            {
                 ViewPortRectangle.Height = Height;
+            }
 
             if (ViewPortRectangle.X < 0)
+            {
                 ViewPortRectangle.X = 0;
+            }
+
             if (ViewPortRectangle.Y < 0)
+            {
                 ViewPortRectangle.Y = 0;
+            }
 
             if (ViewPortRectangle.X + ViewPortRectangle.Width > Width)
+            {
                 ViewPortRectangle.X = Width - ViewPortRectangle.Width;
+            }
+
             if (ViewPortRectangle.Y + ViewPortRectangle.Height > Height)
+            {
                 ViewPortRectangle.Y = Height - ViewPortRectangle.Height;
+            }
 
             RenderRects = new Rectangle[ViewPortRectangle.Width * ViewPortRectangle.Height];
             RenderCells = new Cell[ViewPortRectangle.Width * ViewPortRectangle.Height];
 
-            var index = 0;
+            int index = 0;
 
-            for (var y = 0; y < ViewPortRectangle.Height; y++)
+            for (int y = 0; y < ViewPortRectangle.Height; y++)
             {
-                for (var x = 0; x < ViewPortRectangle.Width; x++)
+                for (int x = 0; x < ViewPortRectangle.Width; x++)
                 {
                     RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = Cells[(y + ViewPortRectangle.Top) * Width + (x + ViewPortRectangle.Left)];
@@ -144,7 +180,7 @@ namespace SadConsole
             AbsoluteArea = new Rectangle(0, 0, ViewPortRectangle.Width * Font.Size.X, ViewPortRectangle.Height * Font.Size.Y);
             LastRenderResult = new RenderTarget2D(Global.GraphicsDevice, AbsoluteArea.Width, AbsoluteArea.Height, false, Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
-        
+
         /// <summary>
         /// Calculates which cells to draw based on <see cref="ViewPort"/>.
         /// </summary>
@@ -156,11 +192,11 @@ namespace SadConsole
                 RenderCells = new Cell[ViewPortRectangle.Width * ViewPortRectangle.Height];
             }
 
-            var index = 0;
+            int index = 0;
 
-            for (var y = 0; y < ViewPortRectangle.Height; y++)
+            for (int y = 0; y < ViewPortRectangle.Height; y++)
             {
-                for (var x = 0; x < ViewPortRectangle.Width; x++)
+                for (int x = 0; x < ViewPortRectangle.Width; x++)
                 {
                     RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = Cells[(y + ViewPortRectangle.Top) * Width + (x + ViewPortRectangle.Left)];
@@ -197,9 +233,9 @@ namespace SadConsole
         {
             var newCells = new Cell[width * height];
 
-            for (var y = 0; y < height; y++)
+            for (int y = 0; y < height; y++)
             {
-                for (var x = 0; x < width; x++)
+                for (int x = 0; x < width; x++)
                 {
                     if (IsValidCell(x, y))
                     {
@@ -214,7 +250,9 @@ namespace SadConsole
                         }
                     }
                     else
+                    {
                         newCells[new Point(x, y).ToIndex(width)] = new Cell(DefaultForeground, DefaultBackground, 0);
+                    }
                 }
             }
 
@@ -225,7 +263,7 @@ namespace SadConsole
             ViewPortRectangle = viewPort;
             OnCellsReset();
         }
-        
+
         /// <summary>
         /// Called when the <see cref="ViewPort"/> property changes.
         /// </summary>
@@ -238,7 +276,9 @@ namespace SadConsole
         protected override void OnBeforeRender(SpriteBatch batch)
         {
             if (Cursor.IsVisible && ViewPort.Contains(Cursor.Position))
+            {
                 Cursor.Render(batch, Font, Font.GetRenderRect(Cursor.Position.X - ViewPort.Location.X, Cursor.Position.Y - ViewPort.Location.Y));
+            }
         }
 
         /// <summary>
@@ -247,10 +287,7 @@ namespace SadConsole
         /// <param name="surface">The source console to convert to a scrolling console.</param>
         /// <param name="viewPort">The view port to apply to the new scrolling console.</param>
         /// <returns>A new scrolling console.</returns>
-        public static ScrollingConsole FromSurface(Console surface, Rectangle viewPort)
-        {
-            return new ScrollingConsole(surface.Width, surface.Height, surface.Font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
-        }
+        public static ScrollingConsole FromSurface(Console surface, Rectangle viewPort) => new ScrollingConsole(surface.Width, surface.Height, surface.Font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
 
         /// <summary>
         /// Creates a new console from an existing surface.
@@ -258,9 +295,6 @@ namespace SadConsole
         /// <param name="surface">The source console to convert to a scrolling console.</param>
         /// <param name="font">The font to associate with the new console.</param>
         /// <returns>A new scrolling console.</returns>
-        public new static ScrollingConsole FromSurface(CellSurface surface, Font font)
-        {
-            return new ScrollingConsole(surface.Width, surface.Height, font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
-        }
+        public static new ScrollingConsole FromSurface(CellSurface surface, Font font) => new ScrollingConsole(surface.Width, surface.Height, font, new Rectangle(0, 0, surface.Width, surface.Height), surface.Cells);
     }
 }

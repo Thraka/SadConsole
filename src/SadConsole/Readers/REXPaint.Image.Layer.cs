@@ -9,7 +9,7 @@
         /// </summary>
         public class Layer
         {
-            private Cell[] cells;
+            private readonly Cell[] cells;
 
             /// <summary>
             /// The width of the layer.
@@ -64,16 +64,22 @@
             private void CheckForIndexBounds(int index)
             {
                 if (index < 0 || index >= cells.Length)
+                {
                     throw new IndexOutOfRangeException();
+                }
             }
 
             private void CheckForBounds(int x, int y)
             {
                 if (x < 0 || x >= Width)
+                {
                     throw new ArgumentOutOfRangeException("x");
+                }
 
                 if (y < 0 || y >= Height)
+                {
                     throw new ArgumentOutOfRangeException("y");
+                }
             }
         }
     }

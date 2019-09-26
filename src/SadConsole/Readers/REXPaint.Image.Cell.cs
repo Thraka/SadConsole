@@ -33,10 +33,7 @@
             /// Returns true when the current color is considered transparent.
             /// </summary>
             /// <returns>True when transparent.</returns>
-            public bool IsTransparent()
-            {
-                return Background == Color.Transparent;
-            }
+            public bool IsTransparent() => Background == Color.Transparent;
         }
     }
 }

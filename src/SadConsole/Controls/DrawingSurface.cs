@@ -7,7 +7,7 @@
     /// A simple surface for drawing text that can be moved and sized like a control.
     /// </summary>
     [DataContract]
-    public class DrawingSurface: ControlBase
+    public class DrawingSurface : ControlBase
     {
         /// <summary>
         /// 
@@ -19,15 +19,9 @@
         /// </summary>
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
-        public DrawingSurface(int width, int height) : base(width, height)
-        {
-            base.TabStop = false;
-        }
-        
+        public DrawingSurface(int width, int height) : base(width, height) => base.TabStop = false;
+
         [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            base.TabStop = false;
-        }
+        private void AfterDeserialized(StreamingContext context) => base.TabStop = false;
     }
 }

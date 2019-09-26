@@ -1,24 +1,18 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-
 using SadConsole;
-
 using ScrollingConsole = SadConsole.ScrollingConsole;
-using System;
-using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
-    class RandomScrollingConsole : ScrollingConsole
+    internal class RandomScrollingConsole : ScrollingConsole
     {
-        private ScrollingConsole mainData;
-        private ScrollingConsole messageData;
+        private readonly ScrollingConsole mainData;
+        private readonly ScrollingConsole messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
-        
+
         public RandomScrollingConsole() : base(80, 23)
         {
             messageData = new ScrollingConsole(80, 1);
@@ -47,8 +41,9 @@ namespace StarterProject.CustomConsoles
             if (IsVisible)
             {
                 if (!initialized)
+                {
                     base.Draw(delta);
-
+                }
                 else if (!initializedStep2)
                 {
                     initializedStep2 = true;
@@ -86,9 +81,6 @@ namespace StarterProject.CustomConsoles
             }
         }
 
-        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
-        {
-            return mainData.ProcessKeyboard(info);
-        }
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info) => mainData.ProcessKeyboard(info);
     }
 }

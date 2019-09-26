@@ -29,7 +29,7 @@ namespace SadConsole.Controls
         protected bool _isMouseDown;
         protected Cell _currentAppearanceButton;
         protected Cell _currentAppearanceText;
-        
+
         /// <summary>
         /// The text displayed on the control.
         /// </summary>
@@ -89,7 +89,7 @@ namespace SadConsole.Controls
         public CheckBox(int width, int height) : base(width, height)
         {
         }
-        
+
         protected override void OnMouseIn(Input.MouseConsoleState state)
         {
             isMouseOver = true;
@@ -130,10 +130,13 @@ namespace SadConsole.Controls
             else if (Parent != null)
             {
                 if (info.IsKeyReleased(Keys.Up))
+                {
                     Parent.TabPreviousControl();
-
+                }
                 else if (info.IsKeyReleased(Keys.Down))
+                {
                     Parent.TabNextControl();
+                }
 
                 return true;
             }

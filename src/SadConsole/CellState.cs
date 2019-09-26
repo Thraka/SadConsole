@@ -6,9 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 namespace SadConsole
 {
     using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
     using System.Linq;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A cell in structure format for temporary storage.
@@ -77,69 +76,48 @@ namespace SadConsole
         /// <param name="source">The source cell to create a state from.</param>
         public CellState(Cell source) : this(source.Foreground, source.Background, source.Glyph, source.Mirror, source.IsVisible, source.Decorators) { }
 
-        public static bool operator ==(CellState left, CellState right)
-        {
-            return left.Background == right.Background &&
+        public static bool operator ==(CellState left, CellState right) => left.Background == right.Background &&
                    left.Foreground == right.Foreground &&
                    left.Glyph == right.Glyph &&
                    left.Mirror == right.Mirror &&
                    left.IsVisible == right.IsVisible &&
                    left.Decorators.SequenceEqual(right.Decorators);
-        }
 
-        public static bool operator !=(CellState left, CellState right)
-        {
-            return left.Background != right.Background ||
+        public static bool operator !=(CellState left, CellState right) => left.Background != right.Background ||
                    left.Foreground != right.Foreground ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror ||
                    left.IsVisible != right.IsVisible &&
                    !left.Decorators.SequenceEqual(right.Decorators);
-        }
 
-        public static bool operator ==(CellState left, Cell right)
-        {
-            return left.Background == right.Background &&
+        public static bool operator ==(CellState left, Cell right) => left.Background == right.Background &&
                    left.Foreground == right.Foreground &&
                    left.Glyph == right.Glyph &&
                    left.Mirror == right.Mirror &&
                    left.IsVisible == right.IsVisible &&
                    left.Decorators.SequenceEqual(right.Decorators);
-        }
 
-        public static bool operator !=(CellState left, Cell right)
-        {
-            return left.Background != right.Background ||
+        public static bool operator !=(CellState left, Cell right) => left.Background != right.Background ||
                    left.Foreground != right.Foreground ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror ||
                    left.IsVisible != right.IsVisible &&
                    !left.Decorators.SequenceEqual(right.Decorators);
-        }
 
-        public static bool operator ==(Cell right, CellState left)
-        {
-            return left.Background == right.Background &&
+        public static bool operator ==(Cell right, CellState left) => left.Background == right.Background &&
                    left.Foreground == right.Foreground &&
                    left.Glyph == right.Glyph &&
                    left.Mirror == right.Mirror &&
                    left.IsVisible == right.IsVisible &&
                    left.Decorators.SequenceEqual(right.Decorators);
-        }
 
-        public static bool operator !=(Cell left, CellState right)
-        {
-            return left.Background != right.Background ||
+        public static bool operator !=(Cell left, CellState right) => left.Background != right.Background ||
                    left.Foreground != right.Foreground ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror ||
                    left.IsVisible != right.IsVisible &&
                    !left.Decorators.SequenceEqual(right.Decorators);
-        }
 
-        public bool Equals(CellState other)
-        {
-            return this == other;
-        }
+        public bool Equals(CellState other) => this == other;
     }
 }

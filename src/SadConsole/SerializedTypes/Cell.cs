@@ -1,12 +1,11 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
 
 namespace SadConsole.SerializedTypes
 {
-    using System.Runtime.Serialization;
     using System.Linq;
+    using System.Runtime.Serialization;
 
     [DataContract]
     public class CellSerialized
@@ -31,20 +30,17 @@ namespace SadConsole.SerializedTypes
 
         [DataMember]
         public CellStateSerialized CellState;
-        
-        public static implicit operator CellSerialized(Cell cell)
+
+        public static implicit operator CellSerialized(Cell cell) => new CellSerialized()
         {
-            return new CellSerialized()
-            {
-                Foreground = cell.Foreground,
-                Background = cell.Background,
-                Glyph = cell.Glyph,
-                IsVisible = cell.IsVisible,
-                Mirror = cell.Mirror,
-                Decorators = cell.Decorators,
-                CellState = cell.State
-            };
-        }
+            Foreground = cell.Foreground,
+            Background = cell.Background,
+            Glyph = cell.Glyph,
+            IsVisible = cell.IsVisible,
+            Mirror = cell.Mirror,
+            Decorators = cell.Decorators,
+            CellState = cell.State
+        };
 
         public static implicit operator Cell(CellSerialized cell)
         {
@@ -55,7 +51,9 @@ namespace SadConsole.SerializedTypes
             };
 
             if (cell.CellState != null)
+            {
                 newCell.State = cell.CellState;
+            }
 
             return newCell;
         }
@@ -82,23 +80,17 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public bool IsVisible = true;
 
-        public static implicit operator CellStateSerialized(CellState cell)
+        public static implicit operator CellStateSerialized(CellState cell) => new CellStateSerialized()
         {
-            return new CellStateSerialized()
-            {
-                Foreground = cell.Foreground,
-                Background = cell.Background,
-                Glyph = cell.Glyph,
-                IsVisible = cell.IsVisible,
-                Mirror = cell.Mirror,
-                Decorators = cell.Decorators
-            };
-        }
+            Foreground = cell.Foreground,
+            Background = cell.Background,
+            Glyph = cell.Glyph,
+            IsVisible = cell.IsVisible,
+            Mirror = cell.Mirror,
+            Decorators = cell.Decorators
+        };
 
-        public static implicit operator CellState(CellStateSerialized cell)
-        {
-            return new CellState(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror, 
+        public static implicit operator CellState(CellStateSerialized cell) => new CellState(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror,
                                  cell.IsVisible, cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : System.Array.Empty<CellDecorator>());
-        }
     }
 }

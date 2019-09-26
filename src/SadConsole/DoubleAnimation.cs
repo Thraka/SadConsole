@@ -1,5 +1,4 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
 #endif
 
 namespace SadConsole
@@ -11,13 +10,13 @@ namespace SadConsole
     public sealed class DoubleAnimation
     {
         [DataMember]
-        TimeSpan _totalTimeAtStart;
+        private TimeSpan _totalTimeAtStart;
 
-        [DataMember(Name="EasingFunction")]
-        EasingFunctions.EasingBase _easingFunction = new EasingFunctions.Linear();
+        [DataMember(Name = "EasingFunction")]
+        private EasingFunctions.EasingBase _easingFunction = new EasingFunctions.Linear();
 
         [DataMember]
-        double _finishedValue;
+        private double _finishedValue;
 
         [DataMember]
         public bool IsFinished { get; private set; }
@@ -33,12 +32,16 @@ namespace SadConsole
             get
             {
                 if (IsFinished)
+                {
                     return _finishedValue;
+                }
 
                 double value = GetValueForDuration((Global.GameTimeUpdate.TotalGameTime - _totalTimeAtStart).TotalMilliseconds);
 
                 if (CheckEnd())
+                {
                     _finishedValue = value;
+                }
 
                 return value;
             }
@@ -56,14 +59,22 @@ namespace SadConsole
         public EasingFunctions.EasingBase EasingFunction
         {
             get => _easingFunction;
-            set { _easingFunction = value; if (_easingFunction == null) _easingFunction = new EasingFunctions.Linear(); }
+            set
+            {
+                _easingFunction = value; if (_easingFunction == null)
+                {
+                    _easingFunction = new EasingFunctions.Linear();
+                }
+            }
         }
 
         public double GetValueForDuration(double time)
         {
             double timeDuration = Duration.TotalMilliseconds;
             if (time > timeDuration)
+            {
                 time = timeDuration;
+            }
 
             return _easingFunction.Ease(time, StartingValue, EndingValue - StartingValue, timeDuration);
         }

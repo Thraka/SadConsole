@@ -22,14 +22,22 @@ namespace SadConsole.StringParser
             string[] paramArray = parameters.Split(':');
 
             if (paramArray.Length == 2)
+            {
                 Counter = int.Parse(paramArray[1], CultureInfo.InvariantCulture);
+            }
             else
+            {
                 Counter = -1;
+            }
 
             if (Enum.TryParse(paramArray[0], out Mirror))
+            {
                 CommandType = CommandTypes.Mirror;
+            }
             else
+            {
                 throw badCommandException;
+            }
         }
 
         public ParseCommandMirror()
@@ -37,7 +45,7 @@ namespace SadConsole.StringParser
 
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex,
             CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             glyphState.Mirror = Mirror;
@@ -47,7 +55,9 @@ namespace SadConsole.StringParser
                 Counter--;
 
                 if (Counter == 0)
+                {
                     commandStack.RemoveSafe(this);
+                }
             }
         }
     }

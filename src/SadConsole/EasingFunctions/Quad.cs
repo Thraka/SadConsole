@@ -20,13 +20,17 @@ namespace SadConsole.EasingFunctions
 
                 case EasingMode.InOut:
                     if ((time /= duration / 2) < 1)
+                    {
                         return currentValue / 2 * time * time + startingValue;
+                    }
 
                     return -currentValue / 2 * ((--time) * (time - 2) - 1) + startingValue;
 
                 case EasingMode.OutIn:
                     if (time < duration / 2)
+                    {
                         return QuadEaseOut(time * 2, startingValue, currentValue / 2, duration);
+                    }
 
                     return QuadEaseIn((time * 2) - duration, startingValue + currentValue / 2, currentValue / 2, duration);
 
@@ -36,14 +40,8 @@ namespace SadConsole.EasingFunctions
 
         }
 
-        private double QuadEaseOut(double time, double startingValue, double currentValue, double duration)
-        {
-            return -currentValue * (time /= duration) * (time - 2) + startingValue;
-        }
+        private double QuadEaseOut(double time, double startingValue, double currentValue, double duration) => -currentValue * (time /= duration) * (time - 2) + startingValue;
 
-        private double QuadEaseIn(double time, double startingValue, double currentValue, double duration)
-        {
-            return currentValue * (time /= duration) * time + startingValue;
-        }
+        private double QuadEaseIn(double time, double startingValue, double currentValue, double duration) => currentValue * (time /= duration) * time + startingValue;
     }
 }

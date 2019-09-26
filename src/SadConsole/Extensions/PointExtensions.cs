@@ -44,7 +44,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="font">The font to use in calculating the position.</param>
         /// <returns>The cell position on the screen.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point PixelLocationToConsole(this Point point, Font font) => 
+        public static Point PixelLocationToConsole(this Point point, Font font) =>
             new Point(point.X / font.Size.X, point.Y / font.Size.Y);
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="rowWidth">How many columns in a row.</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int ToIndex(this Point point, int rowWidth) => 
+        public static int ToIndex(this Point point, int rowWidth) =>
             Helpers.GetIndexFromPoint(point.X, point.Y, rowWidth);
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="rowWidth">How many columns in a row.</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point ToPoint(this int index, int rowWidth) => 
+        public static Point ToPoint(this int index, int rowWidth) =>
             Helpers.GetPointFromIndex(index, rowWidth);
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="targetFont">The target font translating to.</param>
         /// <returns>The position of the cell in the <paramref name="targetFont"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point TranslateFont(this Point point, Font sourceFont, Font targetFont) => 
+        public static Point TranslateFont(this Point point, Font sourceFont, Font targetFont) =>
             point.ConsoleLocationToPixel(sourceFont.Size.X, sourceFont.Size.Y).PixelLocationToConsole(targetFont.Size.X, targetFont.Size.Y);
 
         /// <summary>
@@ -90,9 +90,13 @@ namespace Microsoft.Xna.Framework
             Point worldLocation;
 
             if (absolutePositioning)
+            {
                 worldLocation = position;
+            }
             else
+            {
                 worldLocation = position.ConsoleLocationToPixel(cellSize.X, cellSize.Y);
+            }
 
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
         }

@@ -143,10 +143,7 @@ namespace SadConsole
         /// <param name="position">Pixel position on the screen to render.</param>
         /// <param name="size">Rendering size of the cell.</param>
         /// <param name="font">Font used to draw the cell.</param>
-        public void Draw(SpriteBatch batch, Point position, Point size, Font font)
-        {
-            Draw(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
-        }
+        public void Draw(SpriteBatch batch, Point position, Point size, Font font) => Draw(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
 
         /// <summary>
         /// Draws a single cell using the specified SpriteBatch.
@@ -157,14 +154,22 @@ namespace SadConsole
         public void Draw(SpriteBatch batch, Rectangle drawingRectangle, Font font)
         {
             if (Background != Color.Transparent)
+            {
                 batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[font.SolidGlyphIndex], Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+            }
 
             if (Foreground != Color.Transparent)
+            {
                 batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[Glyph], Foreground, 0f, Vector2.Zero, Mirror, 0.4f);
+            }
 
-            foreach (var decorator in Decorators)
+            foreach (CellDecorator decorator in Decorators)
+            {
                 if (decorator.Color != Color.Transparent)
+                {
                     batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+                }
+            }
         }
 
         /// <summary>
@@ -217,23 +222,20 @@ namespace SadConsole
         /// </summary>
         /// <returns>The new cell.</returns>
         public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = IsVisible, Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>() };
-        
+
         /// <summary>
         /// Compares if the cell is the same as the state.
         /// </summary>
         /// <param name="left">A cell.</param>
         /// <param name="right">A cell state.</param>
         /// <returns>True when they match.</returns>
-        public static bool operator ==(Cell left, CellState right)
-        {
-            return left != null &&
+        public static bool operator ==(Cell left, CellState right) => left != null &&
                    left.Background == right.Background &&
                    left.Foreground == right.Foreground &&
                    left.Glyph == right.Glyph &&
                    left.Mirror == right.Mirror &&
                    left.IsVisible == right.IsVisible &&
                    left.Decorators.SequenceEqual(right.Decorators);
-        }
 
         /// <summary>
         /// Compares if the cell is different from the state.
@@ -241,15 +243,12 @@ namespace SadConsole
         /// <param name="left">A cell.</param>
         /// <param name="right">A cell state.</param>
         /// <returns>True when are different.</returns>
-        public static bool operator !=(Cell left, CellState right)
-        {
-            return left == null ||
+        public static bool operator !=(Cell left, CellState right) => left == null ||
                    left.Background != right.Background ||
                    left.Foreground != right.Foreground ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror ||
                    left.IsVisible != right.IsVisible &&
                    !left.Decorators.SequenceEqual(right.Decorators);
-        }
     }
 }

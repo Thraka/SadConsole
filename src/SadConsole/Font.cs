@@ -70,8 +70,11 @@ namespace SadConsole
         /// <summary>
         /// Which glyph index is considered completely solid. Used for shading.
         /// </summary>
-        public int SolidGlyphIndex { get => solidGlyphIndex;
-            set { solidGlyphIndex = value; solidGlyphRect = GlyphRects[value]; } }
+        public int SolidGlyphIndex
+        {
+            get => solidGlyphIndex;
+            set { solidGlyphIndex = value; solidGlyphRect = GlyphRects[value]; }
+        }
 
         /// <summary>
         /// The rectangle associated with the <see cref="SolidGlyphIndex"/>.
@@ -110,10 +113,7 @@ namespace SadConsole
 
         internal Font() { }
 
-        internal Font(FontMaster masterFont, FontSizes fontMultiple)
-        {
-            Initialize(masterFont, fontMultiple);
-        }
+        internal Font(FontMaster masterFont, FontSizes fontMultiple) => Initialize(masterFont, fontMultiple);
 
         private void Initialize(FontMaster masterFont, FontSizes fontMultiple)
         {
@@ -146,7 +146,9 @@ namespace SadConsole
             }
 
             if (Size.X == 0 || Size.Y == 0)
+            {
                 throw new ArgumentException($"This font cannot use size {fontMultiple.ToString()}, at least one axis is 0.", "fontMultiple");
+            }
 
             SizeMultiple = fontMultiple;
             Name = masterFont.Name;
@@ -183,10 +185,7 @@ namespace SadConsole
         /// <returns>A new rectangle.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 
-        public Rectangle GetRenderRect(int x, int y)
-        {
-            return new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
-        }
+        public Rectangle GetRenderRect(int x, int y) => new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
 
         /// <summary>
         /// Gets the pixel position of a cell position based on the font size.
@@ -195,10 +194,7 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the position.</param>
         /// <returns>A new pixel point.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point GetWorldPosition(int x, int y)
-        {
-            return GetWorldPosition(new Point(x, y));
-        }
+        public Point GetWorldPosition(int x, int y) => GetWorldPosition(new Point(x, y));
 
         /// <summary>
         /// Gets the pixel position of a cell position based on the font size.
@@ -206,9 +202,6 @@ namespace SadConsole
         /// <param name="position">The position to convert.</param>
         /// <returns>A new pixel point.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point GetWorldPosition(Point position)
-        {
-            return new Point(position.X * Size.X, position.Y * Size.Y);
-        }
+        public Point GetWorldPosition(Point position) => new Point(position.X * Size.X, position.Y * Size.Y);
     }
 }

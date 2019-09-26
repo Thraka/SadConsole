@@ -26,14 +26,16 @@ namespace SadConsole.Components
 
             if (console.Parent is IConsoleViewPort parent)
             {
-                var parentViewPort = parent.ViewPort;
+                Rectangle parentViewPort = parent.ViewPort;
 
                 if (parentViewPort != _oldView || console.Position != _oldPosition)
                 {
                     ((Entity)console).PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y).TranslateFont(console.Parent.Font, console.Font);
 
                     if (HandleIsVisible)
+                    {
                         console.IsVisible = console.Parent.AbsoluteArea.Contains(console.CalculatedPosition);
+                    }
 
                     _oldPosition = console.Position;
                     _oldView = parentViewPort;
@@ -49,7 +51,9 @@ namespace SadConsole.Components
         public override void OnAdded(Console console)
         {
             if (!(console is Entity ent))
+            {
                 throw new Exception($"{nameof(EntityViewSyncComponent)} can only be added to an entity.");
+            }
         }
 
         /// <inheritdoc />

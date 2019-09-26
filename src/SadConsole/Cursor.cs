@@ -1,13 +1,13 @@
 ﻿#if XNA
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 #endif
 
 namespace SadConsole
 {
-    using SadConsole.Effects;
     using System;
+    using SadConsole.Effects;
 
     /// <summary>
     /// A cursor that is attached to a <see cref="Console"/> used for printing.
@@ -17,7 +17,7 @@ namespace SadConsole
         private CellSurface editor;
         private Point position = new Point();
 
-        private int cursorCharacter = 219;
+        private readonly int cursorCharacter = 219;
 
         /// <summary>
         /// Cell used to render the cursor on the screen.
@@ -64,15 +64,22 @@ namespace SadConsole
             {
                 if (editor != null)
                 {
-                    var old = position;
+                    Point old = position;
 
                     if (!(value.X < 0 || value.X >= editor.Width))
+                    {
                         position.X = value.X;
+                    }
+
                     if (!(value.Y < 0 || value.Y >= editor.Height))
+                    {
                         position.Y = value.Y;
+                    }
 
                     if (position != null)
+                    {
                         editor.IsDirty = true;
+                    }
                 }
             }
         }
@@ -159,8 +166,10 @@ namespace SadConsole
         /// </summary>
         public Cursor ResetCursorEffect()
         {
-            SadConsole.Effects.Blink blinkEffect = new Effects.Blink();
-            blinkEffect.BlinkSpeed = 0.35f;
+            SadConsole.Effects.Blink blinkEffect = new Effects.Blink
+            {
+                BlinkSpeed = 0.35f
+            };
             CursorEffect = blinkEffect;
             CursorEffect.AddCell(CursorRenderCell);
             return this;
@@ -174,9 +183,13 @@ namespace SadConsole
         public Cursor ResetAppearanceToConsole()
         {
             if (editor != null)
+            {
                 PrintAppearance = new Cell(editor.DefaultForeground, editor.DefaultBackground, 0);
+            }
             else
+            {
                 throw new Exception("Attached console is null. Cannot reset appearance.");
+            }
 
             return this;
         }
@@ -194,24 +207,39 @@ namespace SadConsole
 
         private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
         {
-            var cell = editor.Cells[position.Y * editor.Width + position.X];
+            Cell cell = editor.Cells[position.Y * editor.Width + position.X];
 
             if (!PrintOnlyCharacterData)
             {
                 if (!settings.IgnoreGlyph)
+                {
                     cell.Glyph = glyph.GlyphCharacter;
+                }
+
                 if (!settings.IgnoreBackground)
+                {
                     cell.Background = glyph.Background;
+                }
+
                 if (!settings.IgnoreForeground)
+                {
                     cell.Foreground = glyph.Foreground;
+                }
+
                 if (!settings.IgnoreMirror)
+                {
                     cell.Mirror = glyph.Mirror;
+                }
+
                 if (!settings.IgnoreEffect)
+                {
                     editor.SetEffect(cell, glyph.Effect);
+                }
             }
             else if (!settings.IgnoreGlyph)
+            {
                 cell.Glyph = glyph.GlyphCharacter;
-
+            }
 
             position.X += 1;
             if (position.X >= editor.Width)
@@ -276,7 +304,9 @@ namespace SadConsole
         public Cursor Print(ColoredString text)
         {
             if (text.Count == 0)
+            {
                 return this;
+            }
 
             CursorEffect?.Restart();
 
@@ -291,14 +321,18 @@ namespace SadConsole
                 string stringText = text.String.TrimEnd(' ');
 
                 // Pull any starting spaces off
-                var newStringText = stringText.TrimStart(' ');
+                string newStringText = stringText.TrimStart(' ');
                 int spaceCount = stringText.Length - newStringText.Length;
 
                 for (int i = 0; i < spaceCount; i++)
+                {
                     PrintGlyph(spaceGlyph, text);
+                }
 
                 if (spaceCount != 0)
+                {
                     text = text.SubString(spaceCount, text.Count - spaceCount);
+                }
 
                 stringText = newStringText;
                 string[] parts = stringText.Split(' ');
@@ -328,11 +362,13 @@ namespace SadConsole
                                     // If the text we'll print will move off the edge, fill with spaces to get a fresh line
                                     if (returnParts[indexR].Length > editor.Width - position.X && position.X != 0)
                                     {
-                                        var spaces = editor.Width - position.X;
+                                        int spaces = editor.Width - position.X;
 
                                         // Fill rest of line with spaces
                                         for (int i = 0; i < spaces; i++)
+                                        {
                                             PrintGlyph(spaceGlyph, text);
+                                        }
                                     }
 
                                     // Print the rest of the text as normal.
@@ -350,9 +386,14 @@ namespace SadConsole
                                     {
                                         // Wrapped to a new line through print glyph, which triggerd \r\n. We don't want the \n so return back.
                                         if (position.X == 0 && position.Y != currentLine)
+                                        {
                                             position.Y -= 1;
+                                        }
                                         else
+                                        {
                                             CarriageReturn();
+                                        }
+
                                         c++;
                                     }
                                 }
@@ -362,9 +403,14 @@ namespace SadConsole
                             if (newlineParts.Length != 1 && indexNL != newlineParts.Length - 1)
                             {
                                 if (!UseLinuxLineEndings)
+                                {
                                     LineFeed();
+                                }
                                 else
+                                {
                                     NewLine();
+                                }
+
                                 c++;
                             }
                         }
@@ -377,7 +423,9 @@ namespace SadConsole
                         c++;
                     }
                     else
+                    {
                         c++;
+                    }
                 }
             }
             else
@@ -385,7 +433,7 @@ namespace SadConsole
                 bool movedLines = false;
                 int oldLine = position.Y;
 
-                foreach (var glyph in text)
+                foreach (ColoredGlyph glyph in text)
                 {
                     // Check if the previous print moved us down a line (from print at end of the line) and move use back for the \r
                     if (movedLines)
@@ -396,18 +444,25 @@ namespace SadConsole
                             continue;
                         }
                         else
+                        {
                             movedLines = false;
+                        }
                     }
 
                     if (glyph.GlyphCharacter == '\r')
+                    {
                         CarriageReturn();
-
+                    }
                     else if (glyph.GlyphCharacter == '\n')
                     {
                         if (!UseLinuxLineEndings)
+                        {
                             LineFeed();
+                        }
                         else
+                        {
                             NewLine();
+                        }
                     }
                     else
                     {
@@ -444,7 +499,9 @@ namespace SadConsole
                 //    _position.Y++;
             }
             else
+            {
                 position.Y++;
+            }
 
             return this;
         }
@@ -453,10 +510,7 @@ namespace SadConsole
         /// Calls the <see cref="CarriageReturn"/> and <see cref="LineFeed"/> methods in a single call.
         /// </summary>
         /// <returns>The current cursor object.</returns>
-        public Cursor NewLine()
-        {
-            return CarriageReturn().LineFeed();
-        }
+        public Cursor NewLine() => CarriageReturn().LineFeed();
 
         /// <summary>
         /// Moves the cursor to the specified position.
@@ -492,7 +546,9 @@ namespace SadConsole
             int newY = position.Y - amount;
 
             if (newY < 0)
+            {
                 newY = 0;
+            }
 
             Position = new Point(position.X, newY);
             return this;
@@ -508,7 +564,9 @@ namespace SadConsole
             int newY = position.Y + amount;
 
             if (newY >= editor.Height)
+            {
                 newY = editor.Height - 1;
+            }
 
             Position = new Point(position.X, newY);
             return this;
@@ -524,7 +582,9 @@ namespace SadConsole
             int newX = position.X - amount;
 
             if (newX < 0)
+            {
                 newX = 0;
+            }
 
             Position = new Point(newX, position.Y);
             return this;
@@ -537,12 +597,14 @@ namespace SadConsole
         /// <returns>This cursor object.</returns>
         public Cursor LeftWrap(int amount)
         {
-            int index = editor.GetIndexFromPoint(this.position) - amount;
+            int index = editor.GetIndexFromPoint(position) - amount;
 
             if (index < 0)
+            {
                 index = 0;
+            }
 
-            this.position = editor.GetPointFromIndex(index);
+            position = editor.GetPointFromIndex(index);
 
             return this;
         }
@@ -557,7 +619,9 @@ namespace SadConsole
             int newX = position.X + amount;
 
             if (newX >= editor.Width)
+            {
                 newX = editor.Width - 1;
+            }
 
             Position = new Point(newX, position.Y);
             return this;
@@ -570,12 +634,14 @@ namespace SadConsole
         /// <returns>This cursor object.</returns>
         public Cursor RightWrap(int amount)
         {
-            int index = editor.GetIndexFromPoint(this.position) + amount;
+            int index = editor.GetIndexFromPoint(position) + amount;
 
             if (index > editor.Cells.Length)
+            {
                 index = editor.Cells.Length - 1;
+            }
 
-            this.position = editor.GetPointFromIndex(index);
+            position = editor.GetPointFromIndex(index);
 
             return this;
         }
@@ -594,7 +660,9 @@ namespace SadConsole
                 CursorEffect.Update(elapsed.TotalSeconds);
 
                 if (CursorEffect.UpdateCell(CursorRenderCell))
+                {
                     editor.IsDirty = true;
+                }
             }
         }
 
@@ -605,11 +673,14 @@ namespace SadConsole
         /// <returns>Returns true when the keyboard caused the cursor to do something.</returns>
         public virtual bool ProcessKeyboard(Input.Keyboard info)
         {
-            if (!IsEnabled) return false;
+            if (!IsEnabled)
+            {
+                return false;
+            }
 
-            var didSomething = false;
+            bool didSomething = false;
 
-            foreach (var key in info.KeysPressed)
+            foreach (Input.AsciiKey key in info.KeysPressed)
             {
                 if (key.Character == '\0')
                 {

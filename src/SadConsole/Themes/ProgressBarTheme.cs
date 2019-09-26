@@ -4,15 +4,15 @@ using Microsoft.Xna.Framework;
 
 namespace SadConsole.Themes
 {
-    using SadConsole.Controls;
     using System;
     using System.Runtime.Serialization;
+    using SadConsole.Controls;
 
     /// <summary>
     /// The theme of a radio button control.
     /// </summary>
     [DataContract]
-    public class ProgressBarTheme: ThemeBase
+    public class ProgressBarTheme : ThemeBase
     {
         /// <summary>
         /// The theme of the unprogressed part of the bar.
@@ -37,8 +37,10 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new CellSurface(control.Width, control.Height);
-            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface = new CellSurface(control.Width, control.Height)
+            {
+                DefaultBackground = Color.Transparent
+            };
             control.Surface.Clear();
 
             base.Attached(control);
@@ -64,9 +66,15 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is ProgressBar progressbar)) return;
-            
-            if (!control.IsDirty) return;
+            if (!(control is ProgressBar progressbar))
+            {
+                return;
+            }
+
+            if (!control.IsDirty)
+            {
+                return;
+            }
 
             Cell foregroundAppearance;
             Cell backgroundAppearance;
@@ -111,9 +119,13 @@ namespace SadConsole.Themes
                 Rectangle fillRect;
 
                 if (progressbar.HorizontalAlignment == HorizontalAlignment.Left)
+                {
                     fillRect = new Rectangle(0, 0, progressbar.fillSize, progressbar.Height);
+                }
                 else
+                {
                     fillRect = new Rectangle(progressbar.Width - progressbar.fillSize, 0, progressbar.fillSize, progressbar.Height);
+                }
 
                 progressbar.Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
             }
@@ -123,9 +135,13 @@ namespace SadConsole.Themes
                 Rectangle fillRect;
 
                 if (progressbar.VerticalAlignment == VerticalAlignment.Top)
+                {
                     fillRect = new Rectangle(0, 0, progressbar.Width, progressbar.fillSize);
+                }
                 else
+                {
                     fillRect = new Rectangle(0, progressbar.Height - progressbar.fillSize, progressbar.Width, progressbar.fillSize);
+                }
 
                 progressbar.Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
             }
@@ -134,19 +150,16 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new ProgressBarTheme()
         {
-            return new ProgressBarTheme()
-            {
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                Foreground = Foreground.Clone(),
-                Background = Background.Clone()
-            };
-        }
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            Foreground = Foreground.Clone(),
+            Background = Background.Clone()
+        };
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole
 {
-    using SadConsole.DrawCalls;
     using System;
     using System.Collections.Generic;
 
@@ -33,7 +32,9 @@ namespace SadConsole
                 if (value)
                 {
                     if (_renderer != null && _renderer.BeforeRenderTintCallback == null)
+                    {
                         _renderer.BeforeRenderTintCallback = OnBeforeRender;
+                    }
                 }
             }
         }
@@ -47,12 +48,16 @@ namespace SadConsole
             set
             {
                 if (_renderer?.BeforeRenderTintCallback == OnBeforeRender)
+                {
                     _renderer.BeforeRenderTintCallback = null;
+                }
 
                 _renderer = value;
 
                 if (!IsCursorDisabled)
+                {
                     _renderer.BeforeRenderTintCallback = OnBeforeRender;
+                }
             }
         }
 
@@ -64,7 +69,11 @@ namespace SadConsole
             get => _font;
             set
             {
-                if (_font == value) return;
+                if (_font == value)
+                {
+                    return;
+                }
+
                 _font = value;
                 OnFontChanged();
                 SetRenderCells();
@@ -119,7 +128,7 @@ namespace SadConsole
         /// Disposes <see cref="LastRenderResult"/>.
         /// </summary>
         ~Console() => LastRenderResult?.Dispose();
-        
+
         /// <summary>
         /// Draws all <see cref="Children"/>.
         /// </summary>
@@ -127,7 +136,10 @@ namespace SadConsole
         /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
         public virtual void Draw(TimeSpan timeElapsed)
         {
-            if (!IsVisible) return;
+            if (!IsVisible)
+            {
+                return;
+            }
 
             if (LastRenderResult != null)
             {
@@ -136,12 +148,16 @@ namespace SadConsole
                 Global.DrawCalls.Add(new DrawCalls.DrawCallScreenObject(this, CalculatedPosition, true));
             }
 
-            foreach (var component in ComponentsDraw.ToArray())
+            foreach (Components.IConsoleComponent component in ComponentsDraw.ToArray())
+            {
                 component.Draw(this, timeElapsed);
+            }
 
             var copyList = new List<Console>(Children);
-            foreach (var child in copyList)
+            foreach (Console child in copyList)
+            {
                 child.Draw(timeElapsed);
+            }
         }
 
         /// <summary>
@@ -151,20 +167,29 @@ namespace SadConsole
         /// <remarks>Only processes if <see cref="IsPaused"/> is <see langword="false"/>.</remarks>
         public virtual void Update(TimeSpan timeElapsed)
         {
-            if (IsPaused) return;
-            
+            if (IsPaused)
+            {
+                return;
+            }
+
             Effects.UpdateEffects(timeElapsed.TotalSeconds);
 
             if (!IsCursorDisabled && Cursor.IsVisible)
+            {
                 Cursor.Update(timeElapsed);
+            }
 
-            foreach (var component in ComponentsUpdate.ToArray())
+            foreach (Components.IConsoleComponent component in ComponentsUpdate.ToArray())
+            {
                 component.Update(this, timeElapsed);
+            }
 
             var copyList = new List<Console>(Children);
 
-            foreach (var child in copyList)
+            foreach (Console child in copyList)
+            {
                 child.Update(timeElapsed);
+            }
         }
 
         /// <summary>
@@ -175,9 +200,12 @@ namespace SadConsole
         /// <param name="glyphName">The name of the glyph definition to use. If invalid, sets it to 0.</param>
         public void SetGlyph(int x, int y, string glyphName)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
-            var definition = Font.Master.GetGlyphDefinition(glyphName);
+            FontMaster.GlyphDefinition definition = Font.Master.GetGlyphDefinition(glyphName);
 
             Cells[index].Glyph = definition.Glyph == -1 ? 0 : definition.Glyph;
             IsDirty = true;
@@ -194,11 +222,11 @@ namespace SadConsole
                 RenderCells = new Cell[Width * Height];
             }
 
-            var index = 0;
+            int index = 0;
 
-            for (var y = 0; y < Height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     RenderRects[index] = Font.GetRenderRect(x, y);
                     RenderCells[index] = this[x, y];
@@ -216,7 +244,7 @@ namespace SadConsole
 
             IsDirty = true;
         }
-        
+
         /// <summary>
         /// Called when the <see cref="Font"/> property changes.
         /// </summary>
@@ -228,9 +256,6 @@ namespace SadConsole
         /// <param name="surface"></param>
         /// <param name="font">The font to associate with the new console.</param>
         /// <returns>A new console.</returns>
-        public static Console FromSurface(CellSurface surface, Font font)
-        {
-            return new Console(surface.Width, surface.Height, font, surface.Cells);
-        }
+        public static Console FromSurface(CellSurface surface, Font font) => new Console(surface.Width, surface.Height, font, surface.Cells);
     }
 }

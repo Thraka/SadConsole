@@ -21,13 +21,17 @@ namespace SadConsole.EasingFunctions
 
                 case EasingMode.InOut:
                     if ((time /= duration / 2) < 1)
+                    {
                         return -currentValue / 2 * (Math.Sqrt(1 - time * time) - 1) + startingValue;
+                    }
 
                     return currentValue / 2 * (Math.Sqrt(1 - (time -= 2) * time) + 1) + startingValue;
 
                 case EasingMode.OutIn:
                     if (time < duration / 2)
+                    {
                         return CircleEaseOut(time * 2, startingValue, currentValue / 2, duration);
+                    }
 
                     return CircleEaseIn((time * 2) - duration, startingValue + currentValue / 2, currentValue / 2, duration);
 
@@ -37,14 +41,8 @@ namespace SadConsole.EasingFunctions
 
         }
 
-        private double CircleEaseOut(double time, double startingValue, double currentValue, double duration)
-        {
-            return currentValue * Math.Sqrt(1 - (time = time / duration - 1) * time) + startingValue;
-        }
+        private double CircleEaseOut(double time, double startingValue, double currentValue, double duration) => currentValue * Math.Sqrt(1 - (time = time / duration - 1) * time) + startingValue;
 
-        private double CircleEaseIn(double time, double startingValue, double currentValue, double duration)
-        {
-            return -currentValue * (Math.Sqrt(1 - (time /= duration) * time) - 1) + startingValue;
-        }
+        private double CircleEaseIn(double time, double startingValue, double currentValue, double duration) => -currentValue * (Math.Sqrt(1 - (time /= duration) * time) - 1) + startingValue;
     }
 }

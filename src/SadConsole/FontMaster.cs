@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole
 {
-    using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
 
@@ -127,7 +126,9 @@ namespace SadConsole
         public CellDecorator GetDecorator(string name, Color color)
         {
             if (GlyphDefinitions.ContainsKey(name))
+            {
                 return GlyphDefinitions[name].CreateCellDecorator(color);
+            }
 
             return CellDecorator.Empty;
         }
@@ -141,7 +142,9 @@ namespace SadConsole
         public GlyphDefinition GetGlyphDefinition(string name)
         {
             if (GlyphDefinitions.ContainsKey(name))
+            {
                 return GlyphDefinitions[name];
+            }
 
             return GlyphDefinition.Empty;
         }
@@ -213,7 +216,9 @@ namespace SadConsole
             if (!Settings.LoadingEmbeddedFont)
             {
                 using (System.IO.Stream fontStream = TitleContainer.OpenStream(LoadedFilePath))
+                {
                     Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+                }
 
                 ConfigureRects();
             }
@@ -228,14 +233,18 @@ namespace SadConsole
 
             for (int i = 0; i < GlyphIndexRects.Length; i++)
             {
-                var cx = i % Columns;
-                var cy = i / Columns;
+                int cx = i % Columns;
+                int cy = i / Columns;
 
                 if (GlyphPadding != 0)
+                {
                     GlyphIndexRects[i] = new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
                         (cy * GlyphHeight) + ((cy + 1) * GlyphPadding), GlyphWidth, GlyphHeight);
+                }
                 else
+                {
                     GlyphIndexRects[i] = new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
+                }
             }
         }
 
@@ -247,7 +256,9 @@ namespace SadConsole
         public Font GetFont(Font.FontSizes multiple)
         {
             if (cachedFonts.ContainsKey(multiple))
+            {
                 return cachedFonts[multiple];
+            }
 
             var font = new Font(this, multiple);
             cachedFonts.Add(multiple, font);
@@ -258,7 +269,9 @@ namespace SadConsole
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {
             if (Columns == 0)
+            {
                 Columns = 16;
+            }
 
             Generate();
         }

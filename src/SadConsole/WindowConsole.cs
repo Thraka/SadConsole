@@ -19,20 +19,20 @@ namespace SadConsole
     /// </summary>
     [DataContract]
     [DebuggerDisplay("Window")]
-    public partial class Window: ControlsConsole
+    public partial class Window : ControlsConsole
     {
         /// <summary>
         /// Raised when the window is closed.
         /// </summary>
         public event EventHandler Closed;
 
-        [DataMember(Name="Title")]
+        [DataMember(Name = "Title")]
         private string _title;
 
-        [DataMember(Name="Theme")]
-        private Library _theme;
-        
-        [DataMember(Name="TitleAlignment")]
+        [DataMember(Name = "Theme")]
+        private readonly Library _theme;
+
+        [DataMember(Name = "TitleAlignment")]
         private HorizontalAlignment _titleAlignment;
 
         private bool _isVisibleProcessing;
@@ -86,19 +86,19 @@ namespace SadConsole
         /// </summary>
         [DataMember]
         public bool CanDrag { get; set; }
-        
+
         /// <summary>
         /// Gets or sets whether or not this window can be closed when the escape key is pressed.
         /// </summary>
         [DataMember]
         public bool CloseOnEscKey { get; set; }
-        
+
         /// <summary>
         /// Gets or set the dialog result status of the window.
         /// </summary>
         [DataMember]
         public bool DialogResult { get; set; }
-        
+
         /// <summary>
         /// Indicates that when this window is shown by the <see cref="Show()"/> method or by setting the <see cref="Console.IsVisible"/> property to true, the window will be shown as modal.
         /// </summary>
@@ -117,13 +117,13 @@ namespace SadConsole
                 Invalidate();
             }
         }
-        
+
         /// <summary>
         /// Creates a new window with the specified with and height in cells.
         /// </summary>
         /// <param name="width">The width of the window in cells.</param>
         /// <param name="height">The height of the window in cells.</param>
-        public Window(int width, int height): this(width, height, Global.FontDefault) { }
+        public Window(int width, int height) : this(width, height, Global.FontDefault) { }
 
         /// <summary>
         /// Creates a new window with the specified with and height in cells.
@@ -131,7 +131,7 @@ namespace SadConsole
         /// <param name="width">The width of the window in cells.</param>
         /// <param name="height">The height of the window in cells.</param>
         /// <param name="font">THe font to use with the window.</param>
-        public Window(int width, int height, Font font): base(width, height, font)
+        public Window(int width, int height, Font font) : base(width, height, font)
         {
             _isVisibleProcessing = true;
             IsVisible = false;
@@ -144,7 +144,9 @@ namespace SadConsole
         public override void Draw(TimeSpan drawTime)
         {
             if (IsModal && Theme.WindowTheme.ModalTint.A != 0)
+            {
                 Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), Theme.WindowTheme.ModalTint));
+            }
 
             base.Draw(drawTime);
         }
@@ -158,14 +160,19 @@ namespace SadConsole
             Theme.WindowTheme.Draw(this, this);
             IsDirty = true;
 
-            foreach (var control in ControlsList)
+            foreach (Controls.ControlBase control in ControlsList)
+            {
                 control.IsDirty = true;
+            }
         }
 
         /// <inheritdoc />
         public override bool ProcessMouse(MouseConsoleState state)
         {
-            if (!IsVisible) return false;
+            if (!IsVisible)
+            {
+                return false;
+            }
 
             if (!CanDrag || Theme.WindowTheme.TitleAreaLength == 0)
             {
@@ -178,9 +185,14 @@ namespace SadConsole
                 if (state.Mouse.IsOnScreen)
                 {
                     if (UsePixelPositioning)
+                    {
                         Position = state.Mouse.ScreenPosition - CellAtDragPosition;
+                    }
                     else
+                    {
                         Position = state.WorldCellPosition - CellAtDragPosition;
+                    }
+
                     PreviousMouseInfo = state;
                     return true;
                 }
@@ -207,9 +219,13 @@ namespace SadConsole
                     IsDragging = true;
 
                     if (UsePixelPositioning)
+                    {
                         CellAtDragPosition = state.ConsolePixelPosition;
+                    }
                     else
+                    {
                         CellAtDragPosition = state.ConsoleCellPosition;
+                    }
 
                     if (MoveToFrontOnMouseClick)
                     {
@@ -233,10 +249,10 @@ namespace SadConsole
                 Hide();
                 return true;
             }
-            
+
             return base.ProcessKeyboard(info);
         }
-        
+
         /// <summary>
         /// Depending on if the window is visible, calls <see cref="Show(bool)"/> or <see cref="Hide"/>.
         /// </summary>
@@ -244,23 +260,28 @@ namespace SadConsole
         {
             base.OnVisibleChanged();
 
-            if (_isVisibleProcessing) return;
+            if (_isVisibleProcessing)
+            {
+                return;
+            }
 
             _isVisibleProcessing = true;
             if (IsVisible)
+            {
                 Show();
+            }
             else
+            {
                 Hide();
+            }
+
             _isVisibleProcessing = false;
         }
 
         /// <summary>
         /// Displays this window using the modal value of the <see cref="IsModalDefault"/> property.
         /// </summary>
-        public void Show()
-        {
-            Show(IsModalDefault);
-        }
+        public void Show() => Show(IsModalDefault);
 
         /// <summary>
         /// Displays this window.
@@ -275,9 +296,11 @@ namespace SadConsole
                 Parent.Children.MoveToTop(this);
                 return;
             }
-            
+
             if (IsVisible && !_isVisibleProcessing)
+            {
                 return;
+            }
 
             _isVisibleProcessing = true;
             IsVisible = true;
@@ -307,17 +330,24 @@ namespace SadConsole
         /// </summary>
         public virtual void Hide()
         {
-            if (!IsVisible && !_isVisibleProcessing) return;
+            if (!IsVisible && !_isVisibleProcessing)
+            {
+                return;
+            }
 
             _isVisibleProcessing = true;
             IsVisible = false;
             IsExclusiveMouse = false;
 
             if (IsModal)
+            {
                 Global.FocusedConsoles.Pop(this);
+            }
 
             if (AddedToParent && Parent != null)
+            {
                 Parent = null;
+            }
 
             Closed?.Invoke(this, new EventArgs());
             _isVisibleProcessing = false;
@@ -328,21 +358,20 @@ namespace SadConsole
         /// </summary>
         public void Center()
         {
-            var screenWidth = Global.RenderWidth;
-            var screenHeight = Global.RenderHeight;
+            int screenWidth = Global.RenderWidth;
+            int screenHeight = Global.RenderHeight;
 
             if (UsePixelPositioning)
+            {
                 Position = new Point((screenWidth / 2) - ((Width * Font.Size.X) / 2), (screenHeight / 2) - ((Height * Font.Size.Y) / 2));
+            }
             else
+            {
                 Position = new Point(((screenWidth / Font.Size.X) / 2) - (Width / 2), ((screenHeight / Font.Size.Y) / 2) - (Height / 2));
-            
+            }
         }
 
         [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            PreviousMouseInfo = new MouseConsoleState(null, new Mouse());
-            //Redraw();
-        }
+        private void AfterDeserialized(StreamingContext context) => PreviousMouseInfo = new MouseConsoleState(null, new Mouse());//Redraw();
     }
 }

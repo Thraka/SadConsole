@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
-using scases = System.Tuple<char, char>;
 using ncases = System.Tuple<char, Microsoft.Xna.Framework.Input.Keys>;
+using scases = System.Tuple<char, char>;
 
 namespace SadConsole.Input
 {
@@ -12,12 +10,12 @@ namespace SadConsole.Input
     /// </summary>
     public struct AsciiKey
     {
-        private const int CapOffset = (int) 'A' - (int) Keys.A;
-        private const int LowerOffset = (int) 'a' - (int) Keys.A;
+        private const int CapOffset = 'A' - (int)Keys.A;
+        private const int LowerOffset = 'a' - (int)Keys.A;
 
 
         // It will be nice when we can use modern Tuples here.
-        static readonly Dictionary<Keys, scases> shiftKeyMappings = new Dictionary<Keys, scases>
+        private static readonly Dictionary<Keys, scases> shiftKeyMappings = new Dictionary<Keys, scases>
         {
             {Keys.OemComma, new scases(',', '<')},
             {Keys.OemMinus, new scases('-', '_')},
@@ -83,14 +81,14 @@ namespace SadConsole.Input
         /// </summary>
         public bool PostInitialDelay;
 
-		/// <summary>
-		///  Does any necessary remapping for virtual keys.
-		/// </summary>
-		/// <param name="key"> The key to be remapped. </param>
-		/// <returns> The remapped key. </returns>
-		public static Keys RemapVirtualKeys(Keys key, KeyboardState state)
+        /// <summary>
+        ///  Does any necessary remapping for virtual keys.
+        /// </summary>
+        /// <param name="key"> The key to be remapped. </param>
+        /// <returns> The remapped key. </returns>
+        public static Keys RemapVirtualKeys(Keys key, KeyboardState state)
         {
-            var numLock = state.NumLock;
+            bool numLock = state.NumLock;
             if (numLock)
             {
                 return key;
@@ -112,31 +110,31 @@ namespace SadConsole.Input
         public void Fill(Keys key, bool shiftPressed, KeyboardState state)
         {
             Key = key;
-            var numLock = state.NumLock;
+            bool numLock = state.NumLock;
 
             if (key >= Keys.A && key <= Keys.Z)
             {
-                var capsLock = state.CapsLock;
-				Character = (char) (Key + (shiftPressed || capsLock ? CapOffset : LowerOffset));
+                bool capsLock = state.CapsLock;
+                Character = (char)(Key + (shiftPressed || capsLock ? CapOffset : LowerOffset));
                 return;
             }
 
             if (shiftKeyMappings.ContainsKey(Key))
             {
-                var casesCur = shiftKeyMappings[Key];
+                scases casesCur = shiftKeyMappings[Key];
                 Character = shiftPressed ? casesCur.Item2 : casesCur.Item1;
                 return;
             }
 
             if (numKeyMappings.ContainsKey(Key))
             {
-                var casesCur = numKeyMappings[Key];
-                Character = numLock ? casesCur.Item1 : (char) 0;
+                ncases casesCur = numKeyMappings[Key];
+                Character = numLock ? casesCur.Item1 : (char)0;
                 Key = RemapVirtualKeys(Key, state);
                 return;
             }
 
-            Character = (char) 0;
+            Character = (char)0;
         }
 
         /// <summary>
@@ -172,8 +170,11 @@ namespace SadConsole.Input
         /// <returns></returns>
         public static bool operator ==(AsciiKey left, AsciiKey right)
         {
-            if (left.Character == (char) 0 && left.Character == right.Character)
+            if (left.Character == (char)0 && left.Character == right.Character)
+            {
                 return left.Key == right.Key;
+            }
+
             return left.Character == right.Character;
         }
 
@@ -183,10 +184,7 @@ namespace SadConsole.Input
         /// <param name="left">First item to compare.</param>
         /// <param name="right">Second item to compare.</param>
         /// <returns></returns>
-        public static bool operator !=(AsciiKey left, AsciiKey right)
-        {
-            return left.Character != right.Character;
-        }
+        public static bool operator !=(AsciiKey left, AsciiKey right) => left.Character != right.Character;
 
 
         /// <summary>
@@ -195,10 +193,7 @@ namespace SadConsole.Input
         /// <param name="left">The <see cref="AsciiKey"/> to compare.</param>
         /// <param name="right">The <see cref="Key"/> to compare.</param>
         /// <returns>True when <see cref="AsciiKey.Key"/> matches.</returns>
-        public static bool operator ==(AsciiKey left, Keys right)
-        {
-            return left.Key == right;
-        }
+        public static bool operator ==(AsciiKey left, Keys right) => left.Key == right;
 
         /// <summary>
         /// Checks if the a <see cref="AsciiKey"/> type does not use the indicated <see cref="Key"/>.
@@ -206,10 +201,7 @@ namespace SadConsole.Input
         /// <param name="left">The <see cref="AsciiKey"/> to compare.</param>
         /// <param name="right">The <see cref="Key"/> to compare.</param>
         /// <returns>True when <see cref="AsciiKey.Key"/> does not match.</returns>
-        public static bool operator !=(AsciiKey left, Keys right)
-        {
-            return left.Key != right;
-        }
+        public static bool operator !=(AsciiKey left, Keys right) => left.Key != right;
 
         /// <summary>
         /// Checks if the a <see cref="AsciiKey"/> type uses the indicated <see cref="Key"/>.
@@ -217,10 +209,7 @@ namespace SadConsole.Input
         /// <param name="left">The <see cref="Key"/> to compare.</param>
         /// <param name="right">The <see cref="AsciiKey"/> to compare.</param>
         /// <returns>True when <see cref="AsciiKey.Key"/> matches.</returns>
-        public static bool operator ==(Keys left, AsciiKey right)
-        {
-            return left == right.Key;
-        }
+        public static bool operator ==(Keys left, AsciiKey right) => left == right.Key;
 
         /// <summary>
         /// Checks if the a <see cref="AsciiKey"/> type does not use the indicated <see cref="Key"/>.
@@ -228,10 +217,7 @@ namespace SadConsole.Input
         /// <param name="left">The <see cref="Key"/> to compare.</param>
         /// <param name="right">The <see cref="AsciiKey"/> to compare.</param>
         /// <returns>True when <see cref="AsciiKey.Key"/> does not match.</returns>
-        public static bool operator !=(Keys left, AsciiKey right)
-        {
-            return left != right.Key;
-        }
+        public static bool operator !=(Keys left, AsciiKey right) => left != right.Key;
 
         /// <summary>
         /// Compares references.
@@ -241,7 +227,9 @@ namespace SadConsole.Input
         public override bool Equals(object obj)
         {
             if (obj is AsciiKey key)
+            {
                 return key == this;
+            }
 
             return base.Equals(obj);
         }

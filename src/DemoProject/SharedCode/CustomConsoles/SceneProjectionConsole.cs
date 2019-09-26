@@ -1,30 +1,26 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ScrollingConsole = SadConsole.ScrollingConsole;
-using SadConsole.Input;
 
 namespace StarterProject.CustomConsoles
 {
     // TODO: Something in here causes a lot of GC when this is toggled on.
-    class SceneProjectionConsole : ScrollingConsole
+    internal class SceneProjectionConsole : ScrollingConsole
     {
-        private RenderTarget2D _renderTexture;
+        private readonly RenderTarget2D _renderTexture;
         private Vector3 _boxPosition;
         private Vector3 _trianglePosition;
-        private VertexPositionColorNormal[] _vertices;
-        private VertexPositionColorNormal[] _triangle;
-        private BasicEffect _effect;
-        private RasterizerState rasterizerState = new RasterizerState();
+        private readonly VertexPositionColorNormal[] _vertices;
+        private readonly VertexPositionColorNormal[] _triangle;
+        private readonly BasicEffect _effect;
+        private readonly RasterizerState rasterizerState = new RasterizerState();
         private float _angle = 0f;
         private bool toggle = true;
-        private bool blockMode = false;
-        Color[] pixels;
-        SadConsole.Readers.TextureToSurfaceReader reader1;
-        
+        private readonly bool blockMode = false;
+        private readonly Color[] pixels;
+        private readonly SadConsole.Readers.TextureToSurfaceReader reader1;
+
         public SceneProjectionConsole() : base(80, 25)
         {
             PresentationParameters pp = SadConsole.Global.GraphicsDevice.PresentationParameters;
@@ -36,11 +32,13 @@ namespace StarterProject.CustomConsoles
             _boxPosition = new Vector3(1.5f, 0.0f, -0.0f);
             _trianglePosition = new Vector3(-1.5f, 0.0f, -0.0f);
 
-            _effect = new BasicEffect(SadConsole.Global.GraphicsDevice);
-            _effect.FogEnabled = false;
-            _effect.TextureEnabled = false;
-            _effect.LightingEnabled = false;
-            _effect.VertexColorEnabled = true;
+            _effect = new BasicEffect(SadConsole.Global.GraphicsDevice)
+            {
+                FogEnabled = false,
+                TextureEnabled = false,
+                LightingEnabled = false,
+                VertexColorEnabled = true
+            };
             //_effect.EnableDefaultLighting();
             pixels = new Color[_renderTexture.Width * _renderTexture.Height];
             rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
@@ -59,7 +57,9 @@ namespace StarterProject.CustomConsoles
 
             _angle -= MathHelper.ToRadians(0.5f);
             if (_angle < 0.0f)
+            {
                 _angle += MathHelper.TwoPi;
+            }
 
             if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.T))
             {
@@ -72,7 +72,7 @@ namespace StarterProject.CustomConsoles
                 reader1.UseBlockMode = !reader1.UseBlockMode;
             }
         }
-        
+
 
         public override void Draw(TimeSpan time)
         {
@@ -83,7 +83,7 @@ namespace StarterProject.CustomConsoles
 
                 SadConsole.Global.GraphicsDevice.RasterizerState = rasterizerState;
 
-                var worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateRotationX(-_angle) * Matrix.CreateTranslation(_boxPosition);
+                Matrix worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateRotationX(-_angle) * Matrix.CreateTranslation(_boxPosition);
 
                 _effect.World = worldMatrix;
                 var camera = new Vector3(0, 0, 5);
@@ -91,7 +91,7 @@ namespace StarterProject.CustomConsoles
                 _effect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)_renderTexture.Width / _renderTexture.Height, 0.1f, 100.0f);
 
                 // Calculate scene
-                foreach (var pass in _effect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
 
@@ -102,7 +102,7 @@ namespace StarterProject.CustomConsoles
                 worldMatrix = Matrix.CreateRotationY(_angle) * Matrix.CreateTranslation(_trianglePosition);
                 _effect.World = worldMatrix;
 
-                foreach (var pass in _effect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
 
@@ -116,8 +116,9 @@ namespace StarterProject.CustomConsoles
                     base.Draw(time);
                 }
                 else
+                {
                     SadConsole.Global.DrawCalls.Add(new SadConsole.DrawCalls.DrawCallTexture(_renderTexture, Position.ToVector2()));
-
+                }
             }
         }
 
@@ -218,7 +219,7 @@ namespace StarterProject.CustomConsoles
                 Normal = normal;
             }
 
-            public readonly static VertexDeclaration VertexDeclaration = new VertexDeclaration
+            public static readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
             (
                 new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
                 new VertexElement(sizeof(float) * 3, VertexElementFormat.Color, VertexElementUsage.Color, 0),

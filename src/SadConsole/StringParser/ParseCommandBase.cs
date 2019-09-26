@@ -56,7 +56,7 @@
         /// <param name="stringIndex">Where in the original string this glyph is from.</param>
         /// <param name="processedString">The entire string being processed.</param>
         /// <param name="commandStack">The state of commands.</param>
-        public abstract void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+        public abstract void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex,
             CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack);
     }
 }

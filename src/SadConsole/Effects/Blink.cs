@@ -10,7 +10,7 @@ namespace SadConsole.Effects
     /// Switches between the normal foreground of a cell and a specified color for an amount of time, and then repeats.
     /// </summary>
     [DataContract]
-    public class Blink: CellEffectBase
+    public class Blink : CellEffectBase
     {
         [DataMember]
         private int _blinkCounter = 0;
@@ -53,14 +53,18 @@ namespace SadConsole.Effects
 
         public override bool UpdateCell(Cell cell)
         {
-            var oldColor = cell.Foreground;
+            Color oldColor = cell.Foreground;
 
             if (!_isOn)
             {
                 if (UseCellBackgroundColor)
+                {
                     cell.Foreground = cell.State.Value.Background;
+                }
                 else
+                {
                     cell.Foreground = BlinkOutColor;
+                }
             }
             else
             {
@@ -101,27 +105,24 @@ namespace SadConsole.Effects
 
             base.Restart();
         }
-        
 
-        public override ICellEffect Clone()
+
+        public override ICellEffect Clone() => new Blink()
         {
-            return new Blink()
-            {
-                BlinkOutColor = this.BlinkOutColor,
-                BlinkSpeed = this.BlinkSpeed,
-                _isOn = this._isOn,
-                UseCellBackgroundColor = this.UseCellBackgroundColor,
-                BlinkCount = this.BlinkCount,
+            BlinkOutColor = BlinkOutColor,
+            BlinkSpeed = BlinkSpeed,
+            _isOn = _isOn,
+            UseCellBackgroundColor = UseCellBackgroundColor,
+            BlinkCount = BlinkCount,
 
-                IsFinished = IsFinished,
-                StartDelay = StartDelay,
-                CloneOnApply = CloneOnApply,
-                RemoveOnFinished = RemoveOnFinished,
-                DiscardCellState = DiscardCellState,
-                Permanent = Permanent,
-                _timeElapsed = _timeElapsed,
-            };
-        }
+            IsFinished = IsFinished,
+            StartDelay = StartDelay,
+            CloneOnApply = CloneOnApply,
+            RemoveOnFinished = RemoveOnFinished,
+            DiscardCellState = DiscardCellState,
+            Permanent = Permanent,
+            _timeElapsed = _timeElapsed,
+        };
 
         //public override bool Equals(ICellEffect effect)
         //{
@@ -139,13 +140,10 @@ namespace SadConsole.Effects
         //                   BlinkCount == effect2.BlinkCount;
         //        }
         //    }
-            
+
         //    return false;
         //}
 
-        public override string ToString()
-        {
-            return string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.ToInteger(), BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
-        }
+        public override string ToString() => string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.ToInteger(), BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
     }
 }

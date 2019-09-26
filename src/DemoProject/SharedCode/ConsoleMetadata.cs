@@ -1,13 +1,8 @@
-﻿using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ScrollingConsole = SadConsole.ScrollingConsole;
-using Console = SadConsole.Console;
+﻿using Console = SadConsole.Console;
 
 namespace StarterProject
 {
-    class CustomConsole
+    internal class CustomConsole
     {
         public string Title;
         public string Summary;

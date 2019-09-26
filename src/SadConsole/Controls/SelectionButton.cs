@@ -10,7 +10,7 @@ namespace SadConsole.Controls
     /// Provides a button-like control that changes focus to a designated previous or next selection button when the arrow keys are pushed.
     /// </summary>
     [DataContract]
-    public class SelectionButton: Button
+    public class SelectionButton : Button
     {
         /// <summary>
         /// The selection button to focus when the UP key is pressed or the SelectPrevious() method is called.
@@ -42,7 +42,9 @@ namespace SadConsole.Controls
             NextSelection = nextSelection;
 
             if (setPreviousOnNext)
+            {
                 nextSelection.PreviousSelection = this;
+            }
 
             return nextSelection;
         }
@@ -77,7 +79,9 @@ namespace SadConsole.Controls
         public SelectionButton SelectPrevious()
         {
             if (PreviousSelection != null)
+            {
                 PreviousSelection.IsFocused = true;
+            }
 
             return PreviousSelection;
         }
@@ -89,7 +93,9 @@ namespace SadConsole.Controls
         public SelectionButton SelectNext()
         {
             if (NextSelection != null)
+            {
                 NextSelection.IsFocused = true;
+            }
 
             return NextSelection;
         }

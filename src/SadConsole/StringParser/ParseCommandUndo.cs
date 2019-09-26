@@ -47,7 +47,9 @@
             }
 
             if (parts.Length >= 1 && parts[0] != "")
+            {
                 times = int.Parse(parts[0], CultureInfo.InvariantCulture);
+            }
 
             for (int i = 0; i < times; i++)
             {
@@ -81,7 +83,9 @@
                         }
                     }
                     else
+                    {
                         break;
+                    }
                 }
                 else
                 {
@@ -89,23 +93,38 @@
                     {
                         case CommandTypes.Foreground:
                             if (stacks.Foreground.Count != 0)
+                            {
                                 behavior = stacks.Foreground.Pop();
+                            }
+
                             break;
                         case CommandTypes.Background:
                             if (stacks.Background.Count != 0)
+                            {
                                 behavior = stacks.Background.Pop();
+                            }
+
                             break;
                         case CommandTypes.Glyph:
                             if (stacks.Glyph.Count != 0)
+                            {
                                 behavior = stacks.Glyph.Pop();
+                            }
+
                             break;
                         case CommandTypes.Mirror:
                             if (stacks.Mirror.Count != 0)
+                            {
                                 behavior = stacks.Mirror.Pop();
+                            }
+
                             break;
                         case CommandTypes.Effect:
                             if (stacks.Effect.Count != 0)
+                            {
                                 behavior = stacks.Effect.Pop();
+                            }
+
                             break;
                         default:
                             break;
@@ -123,7 +142,7 @@
             CommandType = CommandTypes.PureCommand;
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex,
             CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
 

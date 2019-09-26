@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace SadConsole
 {
     using SadConsole.Effects;
-    
+
     /// <summary>
     /// Represents a single character that has a foreground and background color.
     /// </summary>
@@ -17,12 +17,9 @@ namespace SadConsole
         public char GlyphCharacter
         {
             get => (char)Glyph;
-            set
-            {
-                Glyph = value;
-            }
+            set => Glyph = value;
         }
-        
+
         /// <summary>
         /// The effect for the glyph.
         /// </summary>
@@ -37,10 +34,7 @@ namespace SadConsole
         /// Creates a new colored glyph based on the provided cell.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        public ColoredGlyph(Cell cell) : base(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
-        {
-            GlyphCharacter = (char)cell.Glyph;
-        }
+        public ColoredGlyph(Cell cell) : base(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror) => GlyphCharacter = (char)cell.Glyph;
 
         /// <summary>
         /// Creates a new colored glyph with a white foreground and black background.
@@ -60,18 +54,15 @@ namespace SadConsole
         /// Creates a new copy of this cell appearance.
         /// </summary>
         /// <returns>The cloned cell appearance.</returns>
-        public new ColoredGlyph Clone()
+        public new ColoredGlyph Clone() => new ColoredGlyph()
         {
-            return new ColoredGlyph()
-            {
-                Foreground = Foreground,
-                Background = Background,
-                Effect = Effect != null ? 
+            Foreground = Foreground,
+            Background = Background,
+            Effect = Effect != null ?
                             (Effect.CloneOnApply ? Effect.Clone() : Effect)
                             : null,
-                GlyphCharacter = GlyphCharacter,
-                Mirror = Mirror
-            };
-        }
+            GlyphCharacter = GlyphCharacter,
+            Mirror = Mirror
+        };
     }
 }

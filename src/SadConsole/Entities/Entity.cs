@@ -78,7 +78,10 @@ namespace SadConsole.Entities
             get => positionOffset;
             set
             {
-                if (positionOffset == value) return;
+                if (positionOffset == value)
+                {
+                    return;
+                }
 
                 positionOffset = value;
                 OnCalculateRenderPosition();
@@ -126,26 +129,27 @@ namespace SadConsole.Entities
             Animation = animation;
             Animations.Add("default", animation);
         }
-        
+
         /// <summary>
         /// Called when the current <see cref="Animation"/> raises the <see cref="AnimatedConsole.AnimationStateChanged"/> event and then raises the <see cref="AnimationStateChanged"/> event for the entity.
         /// </summary>
         /// <param name="sender">The animation calling this method.</param>
         /// <param name="e">The state of the animation.</param>
-        protected void OnAnimationStateChanged(object sender, AnimatedConsole.AnimationStateChangedEventArgs e)
-        {
-            AnimationStateChanged?.Invoke(this, e);
-        }
+        protected void OnAnimationStateChanged(object sender, AnimatedConsole.AnimationStateChangedEventArgs e) => AnimationStateChanged?.Invoke(this, e);
 
         /// <inheritdoc />
         public override void OnCalculateRenderPosition()
         {
             if (UsePixelPositioning)
+            {
                 CalculatedPosition = Position + PositionOffset + (Parent?.CalculatedPosition ?? Point.Zero);
+            }
             else
+            {
                 CalculatedPosition = Position.ConsoleLocationToPixel(Font) + PositionOffset.ConsoleLocationToPixel(Font) + (Parent?.CalculatedPosition ?? Point.Zero);
+            }
 
-            foreach (var child in Children)
+            foreach (Console child in Children)
             {
                 child.OnCalculateRenderPosition();
             }
@@ -155,7 +159,9 @@ namespace SadConsole.Entities
         protected override void OnFontChanged()
         {
             if (animation != null)
+            {
                 animation.Font = Font;
+            }
         }
 
         /// <summary>

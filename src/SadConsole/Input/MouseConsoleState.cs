@@ -1,9 +1,7 @@
 ﻿#if XNA
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 #endif
 
-using System;
 
 namespace SadConsole.Input
 {
@@ -56,7 +54,7 @@ namespace SadConsole.Input
         /// <param name="mouseData">The current mouse state.</param>
         public MouseConsoleState(Console console, Mouse mouseData)
         {
-            var isNegative = false;
+            bool isNegative = false;
             Mouse = mouseData.Clone();
             Console = console;
 
@@ -66,9 +64,11 @@ namespace SadConsole.Input
                 {
                     WorldCellPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.Font);
                     ConsolePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
-                    
+
                     if (ConsolePixelPosition.X < 0 || ConsolePixelPosition.Y < 0)
+                    {
                         isNegative = true;
+                    }
 
                     ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.Font);
                 }
@@ -78,7 +78,9 @@ namespace SadConsole.Input
                     ConsolePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
 
                     if (ConsolePixelPosition.X < 0 || ConsolePixelPosition.Y < 0)
+                    {
                         isNegative = true;
+                    }
 
                     ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.Font);
                 }
@@ -91,7 +93,7 @@ namespace SadConsole.Input
 
                 if (console is IConsoleViewPort viewObject)
                 {
-                    var tempCellPosition = ConsoleCellPosition + viewObject.ViewPort.Location;
+                    Point tempCellPosition = ConsoleCellPosition + viewObject.ViewPort.Location;
                     IsOnConsole = viewObject.ViewPort.Contains(tempCellPosition);
 
                     if (IsOnConsole)
@@ -128,9 +130,6 @@ namespace SadConsole.Input
         /// Creates a copy.
         /// </summary>
         /// <returns>A copy of this class instance.</returns>
-        public MouseConsoleState Clone()
-        {
-            return new MouseConsoleState(this);
-        }
+        public MouseConsoleState Clone() => new MouseConsoleState(this);
     }
 }

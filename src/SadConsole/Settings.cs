@@ -91,7 +91,7 @@ namespace SadConsole
             // Coming back from fullscreen
             if (Global.GraphicsDeviceManager.IsFullScreen)
             {
-                 Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
+                Global.GraphicsDeviceManager.IsFullScreen = !Global.GraphicsDeviceManager.IsFullScreen;
 
                 Global.GraphicsDeviceManager.PreferredBackBufferWidth = _preFullScreenWidth;
                 Global.GraphicsDeviceManager.PreferredBackBufferHeight = _preFullScreenHeight;

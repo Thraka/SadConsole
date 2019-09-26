@@ -31,7 +31,7 @@ namespace SadConsole.Effects
             _effectCells = new Dictionary<Cell, CellEffectData>(50);
             backingSurface = surface;
         }
-        
+
         /// <summary>
         /// Changes the effect of a specific cell.
         /// </summary>
@@ -41,7 +41,9 @@ namespace SadConsole.Effects
         {
             var list = new List<Cell>(backingSurface.Cells);
             if (!list.Contains(cell))
+            {
                 throw new Exception("Cell is not part of the surface used to create this effects manager.");
+            }
 
             if (effect != null)
             {
@@ -57,7 +59,9 @@ namespace SadConsole.Effects
                 {
                     // Is the effect unknown? Add it.
                     if (GetKnownEffect(effect, out workingEffect) == false)
+                    {
                         _effects.Add(workingEffect.Effect, workingEffect);
+                    }
                     else
                     {
                         if (workingEffect.Cells.Contains(cell))
@@ -77,7 +81,9 @@ namespace SadConsole.Effects
                 workingEffect.Effect.AddCell(cell);
             }
             else
+            {
                 ClearCellEffect(cell);
+            }
         }
 
         /// <summary>
@@ -88,10 +94,12 @@ namespace SadConsole.Effects
         public void SetEffect(IEnumerable<Cell> cells, ICellEffect effect)
         {
             var list = new List<Cell>(backingSurface.Cells);
-            foreach (var cell in cells)
+            foreach (Cell cell in cells)
             {
                 if (!list.Contains(cell))
+                {
                     throw new Exception("Cell is not part of the surface used to create this effects manager.");
+                }
             }
 
 
@@ -109,10 +117,12 @@ namespace SadConsole.Effects
                 {
                     // Is the effect unknown? Add it.
                     if (GetKnownEffect(effect, out workingEffect) == false)
+                    {
                         _effects.Add(workingEffect.Effect, workingEffect);
+                    }
                 }
 
-                foreach (var cell in cells)
+                foreach (Cell cell in cells)
                 {
                     if (!workingEffect.Cells.Contains(cell))
                     {
@@ -128,8 +138,10 @@ namespace SadConsole.Effects
             }
             else
             {
-                foreach (var cell in cells)
+                foreach (Cell cell in cells)
+                {
                     ClearCellEffect(cell);
+                }
             }
         }
 
@@ -139,16 +151,15 @@ namespace SadConsole.Effects
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The effect.</returns>
-        public Effects.ICellEffect GetEffect(Cell cell)
-        {
-            return _effectCells.ContainsKey(cell) ? _effectCells[cell].Effect : null;
-        }
+        public Effects.ICellEffect GetEffect(Cell cell) => _effectCells.ContainsKey(cell) ? _effectCells[cell].Effect : null;
 
         public IEnumerable<ICellEffect> GetEffects()
         {
             if (_effects.Keys.Count == 0)
+            {
                 return null;
-            
+            }
+
             return _effects.Keys;
         }
 
@@ -162,8 +173,10 @@ namespace SadConsole.Effects
             {
                 Cell[] cells = _effects[effect].Cells.ToArray();
 
-                foreach (var cell in cells)
+                foreach (Cell cell in cells)
+                {
                     ClearCellEffect(cell);
+                }
             }
         }
 
@@ -174,8 +187,10 @@ namespace SadConsole.Effects
         {
             ICellEffect[] effects = _effects.Keys.ToArray();
 
-            foreach (var effect in effects)
+            foreach (ICellEffect effect in effects)
+            {
                 Remove(effect);
+            }
 
             _effectCells.Clear();
             _effects.Clear();
@@ -198,16 +213,17 @@ namespace SadConsole.Effects
 
         protected void ClearCellEffect(Cell cell)
         {
-            CellEffectData oldEffectData;
 
-            if (_effectCells.TryGetValue(cell, out oldEffectData))
+            if (_effectCells.TryGetValue(cell, out CellEffectData oldEffectData))
             {
                 oldEffectData.Effect.ClearCell(cell);
                 oldEffectData.Cells.Remove(cell);
                 _effectCells.Remove(cell);
 
                 if (oldEffectData.Cells.Count == 0)
+                {
                     _effects.Remove(oldEffectData.Effect);
+                }
 
                 backingSurface.IsDirty = true;
             }
@@ -222,21 +238,25 @@ namespace SadConsole.Effects
         {
             List<ICellEffect> effectsToRemove = new List<ICellEffect>();
 
-            foreach (var effectData in _effects.Values)
+            foreach (CellEffectData effectData in _effects.Values)
             {
                 List<Cell> cellsToRemove = new List<Cell>();
                 effectData.Effect.Update(timeElapsed);
 
-                foreach (var cell in effectData.Cells)
+                foreach (Cell cell in effectData.Cells)
                 {
                     if (effectData.Effect.UpdateCell(cell))
+                    {
                         backingSurface.IsDirty = true;
+                    }
 
                     if (effectData.Effect.IsFinished && effectData.Effect.RemoveOnFinished)
+                    {
                         cellsToRemove.Add(cell);
+                    }
                 }
 
-                foreach (var cell in cellsToRemove)
+                foreach (Cell cell in cellsToRemove)
                 {
                     effectData.Effect.ClearCell(cell);
                     effectData.Cells.Remove(cell);
@@ -245,11 +265,15 @@ namespace SadConsole.Effects
                 }
 
                 if (effectData.Cells.Count == 0)
+                {
                     effectsToRemove.Add(effectData.Effect);
+                }
             }
 
-            foreach (var effect in effectsToRemove)
+            foreach (ICellEffect effect in effectsToRemove)
+            {
                 _effects.Remove(effect);
+            }
         }
         #endregion
 
@@ -257,10 +281,7 @@ namespace SadConsole.Effects
         /// Saves the effects and the associated cell indexes from the backing surface.
         /// </summary>
         /// <param name="file">The file to save the effects to.</param>
-        public void Save(string file)
-        {
-            EffectsManagerSerialized.Save(this, backingSurface, file);
-        }
+        public void Save(string file) => EffectsManagerSerialized.Save(this, backingSurface, file);
 
         /// <summary>
         /// Loads effects from a file.
@@ -268,10 +289,7 @@ namespace SadConsole.Effects
         /// <param name="file">The file to load from.</param>
         /// <param name="backingSurface">The surface the effects were originally (or will be) associated with.</param>
         /// <returns></returns>
-        public static EffectsManager Load(string file, CellSurface backingSurface)
-        {
-            return EffectsManagerSerialized.Load(file, backingSurface);
-        }
+        public static EffectsManager Load(string file, CellSurface backingSurface) => EffectsManagerSerialized.Load(file, backingSurface);
 
 
 
@@ -295,22 +313,25 @@ namespace SadConsole.Effects
         internal class EffectsManagerSerialized
         {
             [DataMember]
-            Dictionary<ICellEffect, int[]> Effects;
+            private Dictionary<ICellEffect, int[]> Effects;
 
 
             public static void Save(EffectsManager effectsManager, CellSurface surface, string file)
             {
-                EffectsManagerSerialized data = new EffectsManagerSerialized();
-
-                data.Effects = new Dictionary<ICellEffect, int[]>(effectsManager._effects.Count);
+                EffectsManagerSerialized data = new EffectsManagerSerialized
+                {
+                    Effects = new Dictionary<ICellEffect, int[]>(effectsManager._effects.Count)
+                };
                 List<Cell> currentCells = new List<Cell>(surface.Cells);
 
-                foreach (var effectData in effectsManager._effects.Values)
+                foreach (CellEffectData effectData in effectsManager._effects.Values)
                 {
                     List<int> effectCellPositions = new List<int>(effectData.Cells.Count);
 
-                    foreach (var cell in effectData.Cells)
+                    foreach (Cell cell in effectData.Cells)
+                    {
                         effectCellPositions.Add(currentCells.IndexOf(cell));
+                    }
 
                     data.Effects.Add(effectData.Effect, effectCellPositions.ToArray());
                 }
@@ -323,21 +344,25 @@ namespace SadConsole.Effects
                 EffectsManagerSerialized data = Serializer.Load<EffectsManagerSerialized>(file, Settings.SerializationIsCompressed);
                 EffectsManager manager = new EffectsManager(surface);
 
-                foreach (var effect in data.Effects.Keys)
+                foreach (ICellEffect effect in data.Effects.Keys)
                 {
                     int[] effectCellIndexes = data.Effects[effect];
 
                     List<Cell> cells = new List<Cell>(effectCellIndexes.Length);
 
-                    foreach (var index in effectCellIndexes)
+                    foreach (int index in effectCellIndexes)
+                    {
                         cells.Add(surface.Cells[index]);
+                    }
 
                     var effectData = new CellEffectData(effect) { Cells = cells };
 
                     manager._effects.Add(effect, effectData);
 
-                    foreach (var cell in cells)
+                    foreach (Cell cell in cells)
+                    {
                         manager._effectCells.Add(cell, effectData);
+                    }
                 }
 
                 return manager;

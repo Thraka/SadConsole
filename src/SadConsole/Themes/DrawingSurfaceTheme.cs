@@ -20,8 +20,10 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new CellSurface(control.Width, control.Height);
-            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface = new CellSurface(control.Width, control.Height)
+            {
+                DefaultBackground = Color.Transparent
+            };
             control.Surface.Clear();
 
             base.Attached(control);
@@ -30,32 +32,46 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!control.IsDirty) return;
+            if (!control.IsDirty)
+            {
+                return;
+            }
 
-            if (!(control is DrawingSurface drawingSurface)) return;
+            if (!(control is DrawingSurface drawingSurface))
+            {
+                return;
+            }
 
             Cell appearance;
 
             if (!UseNormalStateOnly)
             {
                 if (Helpers.HasFlag(control.State, ControlStates.Disabled))
+                {
                     appearance = Disabled;
-
+                }
                 else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) ||
                          Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
+                {
                     appearance = MouseDown;
-
+                }
                 else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
+                {
                     appearance = MouseOver;
-
+                }
                 else if (Helpers.HasFlag(control.State, ControlStates.Focused))
+                {
                     appearance = Focused;
-
+                }
                 else
+                {
                     appearance = Normal;
+                }
             }
             else
+            {
                 appearance = Normal;
+            }
 
             control.Surface.Fill(appearance.Foreground, appearance.Background, null);
             drawingSurface?.OnDraw(drawingSurface);
@@ -63,18 +79,15 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new DrawingSurfaceTheme()
         {
-            return new DrawingSurfaceTheme()
-            {
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                UseNormalStateOnly = UseNormalStateOnly
-            };
-        }
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            UseNormalStateOnly = UseNormalStateOnly
+        };
     }
 }

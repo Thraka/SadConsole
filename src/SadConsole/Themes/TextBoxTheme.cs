@@ -1,19 +1,19 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #endif
 
 namespace SadConsole.Themes
 {
-    using SadConsole.Controls;
     using System;
     using System.Runtime.Serialization;
+    using SadConsole.Controls;
 
     /// <summary>
     /// A theme for the input box control.
     /// </summary>
     [DataContract]
-    public class TextBoxTheme: ThemeBase
+    public class TextBoxTheme : ThemeBase
     {
         private int _oldCaretPosition;
         private ControlStates _oldState;
@@ -28,20 +28,19 @@ namespace SadConsole.Themes
         /// <summary>
         /// Creates a new theme used by the <see cref="TextBox"/>.
         /// </summary>
-        public TextBoxTheme()
+        public TextBoxTheme() => CaretEffect = new Effects.BlinkGlyph()
         {
-            CaretEffect = new Effects.BlinkGlyph()
-            {
-                GlyphIndex = 95,
-                BlinkSpeed = 0.4f
-            };
-        }
+            GlyphIndex = 95,
+            BlinkSpeed = 0.4f
+        };
 
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new CellSurface(control.Width, control.Height);
-            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface = new CellSurface(control.Width, control.Height)
+            {
+                DefaultBackground = Color.Transparent
+            };
             control.Surface.Clear();
 
             base.Attached(control);
@@ -58,7 +57,10 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is TextBox textbox)) return;
+            if (!(control is TextBox textbox))
+            {
+                return;
+            }
 
             if (textbox.Surface.Effects.Count != 0)
             {
@@ -66,7 +68,10 @@ namespace SadConsole.Themes
                 textbox.IsDirty = true;
             }
 
-            if (!textbox.IsDirty) return;
+            if (!textbox.IsDirty)
+            {
+                return;
+            }
 
             Cell appearance = GetStateAppearance(textbox.State);
 
@@ -110,7 +115,7 @@ namespace SadConsole.Themes
                     _oldState = control.State;
                     _editingText = textbox.EditingText;
                 }
-			}
+            }
             else
             {
                 textbox.Surface.Effects.RemoveAll();
@@ -131,18 +136,15 @@ namespace SadConsole.Themes
 
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new TextBoxTheme()
         {
-            return new TextBoxTheme()
-            {
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                CaretEffect = CaretEffect.Clone()
-            };
-        }
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            CaretEffect = CaretEffect.Clone()
+        };
     }
 }

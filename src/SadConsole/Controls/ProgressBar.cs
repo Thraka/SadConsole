@@ -1,6 +1,4 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 #endif
 
 using System;
@@ -19,8 +17,8 @@ namespace SadConsole.Controls
         /// </summary>
         public event EventHandler ProgressChanged;
 
-        private Cell _currentAppearanceForeground;
-        private Cell _currentAppearanceBackground;
+        private readonly Cell _currentAppearanceForeground;
+        private readonly Cell _currentAppearanceBackground;
 
         /// <summary>
         /// The progress bar fill value. Between 0f and 1f.
@@ -68,7 +66,9 @@ namespace SadConsole.Controls
             set
             {
                 if (value == HorizontalAlignment.Center || value == HorizontalAlignment.Stretch)
+                {
                     throw new InvalidOperationException("HorizontalAlignment.Center or HorizontalAlignment.Stretch is invalid for the progress bar control.");
+                }
 
                 horizontalAlignment = value;
                 IsDirty = true;
@@ -85,7 +85,9 @@ namespace SadConsole.Controls
             set
             {
                 if (value == VerticalAlignment.Center || value == VerticalAlignment.Stretch)
+                {
                     throw new InvalidOperationException("VerticalAlignment.Center or VerticalAlignment.Stretch is invalid for the progress bar control.");
+                }
 
                 verticalAlignment = value;
                 IsDirty = true;
@@ -101,7 +103,7 @@ namespace SadConsole.Controls
             set
             {
                 isHorizontal = value;
-                var temp = progressValue;
+                float temp = progressValue;
                 progressValue = -1f;
                 Progress = temp;
             }
@@ -120,18 +122,28 @@ namespace SadConsole.Controls
                     progressValue = value;
 
                     if (progressValue < 0)
+                    {
                         progressValue = 0;
+                    }
                     else if (progressValue > 1)
+                    {
                         progressValue = 1;
+                    }
 
                     if (progressValue == 0)
+                    {
                         fillSize = 0;
+                    }
                     else if (progressValue == 1)
+                    {
                         fillSize = controlSize;
+                    }
                     else
+                    {
                         fillSize = (int)(controlSize * progressValue);
+                    }
 
-                    this.IsDirty = true;
+                    IsDirty = true;
 
                     ProgressChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -148,7 +160,9 @@ namespace SadConsole.Controls
         public ProgressBar(int width, int height, HorizontalAlignment horizontalAlignment) : base(width, height)
         {
             if (horizontalAlignment == HorizontalAlignment.Center || horizontalAlignment == HorizontalAlignment.Stretch)
+            {
                 throw new InvalidOperationException("HorizontalAlignment.Center or HorizontalAlignment.Stretch is invalid for the progress bar control.");
+            }
 
             this.horizontalAlignment = horizontalAlignment;
             isHorizontal = true;
@@ -168,7 +182,9 @@ namespace SadConsole.Controls
         public ProgressBar(int width, int height, VerticalAlignment verticalAlignment) : base(width, height)
         {
             if (verticalAlignment == VerticalAlignment.Center || verticalAlignment == VerticalAlignment.Stretch)
+            {
                 throw new InvalidOperationException("VerticalAlignment.Center or VerticalAlignment.Stretch is invalid for the progress bar control.");
+            }
 
             this.verticalAlignment = verticalAlignment;
             isHorizontal = false;
@@ -183,15 +199,12 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="info">The keyboard information.</param>
         /// <returns>True if the keyboard was handled by this control.</returns>
-        public override bool ProcessKeyboard(Input.Keyboard info)
-        {
-            return false;
-        }
-        
+        public override bool ProcessKeyboard(Input.Keyboard info) => false;
+
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
-            var temp = progressValue;
+            float temp = progressValue;
             progressValue = -1;
             Progress = temp;
             DetermineState();

@@ -104,18 +104,34 @@ namespace SadConsole.Input
             bool newMiddleClicked = MiddleButtonDown && !middleDown;
 
             if (!newLeftClicked)
+            {
                 LeftDoubleClicked = false;
+            }
+
             if (!newRightClicked)
+            {
                 RightDoubleClicked = false;
+            }
+
             if (!newMiddleClicked)
+            {
                 MiddleDoubleClicked = false;
+            }
 
             if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+            {
                 LeftDoubleClicked = true;
+            }
+
             if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+            {
                 RightDoubleClicked = true;
+            }
+
             if (MiddleClicked && newMiddleClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+            {
                 MiddleDoubleClicked = true;
+            }
 
             LeftClicked = newLeftClicked;
             RightClicked = newRightClicked;
@@ -195,7 +211,9 @@ namespace SadConsole.Input
                     if (consoles[i].ProcessMouse(state))
                     {
                         if (_lastMouseConsole != null && _lastMouseConsole != consoles[i])
+                        {
                             _lastMouseConsole.LostMouse(state);
+                        }
 
                         foundMouseTarget = true;
                         _lastMouseConsole = consoles[i];
@@ -204,19 +222,26 @@ namespace SadConsole.Input
                 }
 
                 if (!foundMouseTarget)
+                {
                     _lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
+                }
             }
 
         }
 
         private void GetConsoles(Console screen, ref List<Console> list)
         {
-            if (!screen.IsVisible) return;
+            if (!screen.IsVisible)
+            {
+                return;
+            }
 
             if (screen.UseMouse)
+            {
                 list.Add(screen);
+            }
 
-            foreach (var child in screen.Children)
+            foreach (Console child in screen.Children)
             {
                 GetConsoles(child, ref list);
             }
@@ -236,32 +261,26 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="console">The console to check.</param>
         /// <returns>True or false indicating if the mouse is over the console.</returns>
-        public bool IsMouseOverConsole(Console console)
-        {
-            return new MouseConsoleState(console, this).IsOnConsole;
-        }
+        public bool IsMouseOverConsole(Console console) => new MouseConsoleState(console, this).IsOnConsole;
 
         /// <summary>
         /// Clones this mouse into a new object.
         /// </summary>
         /// <returns>A clone.</returns>
-        public Mouse Clone()
+        public Mouse Clone() => new Mouse()
         {
-            return new Mouse()
-            {
-                ScreenPosition = this.ScreenPosition,
-                LeftButtonDown = this.LeftButtonDown,
-                LeftClicked = this.LeftClicked,
-                LeftDoubleClicked = this.LeftDoubleClicked,
-                RightButtonDown = this.RightButtonDown,
-                RightClicked = this.RightClicked,
-                RightDoubleClicked = this.RightDoubleClicked,
-                MiddleButtonDown = this.MiddleButtonDown,
-                MiddleClicked = this.MiddleClicked,
-                MiddleDoubleClicked = this.MiddleDoubleClicked,
-                ScrollWheelValue = this.ScrollWheelValue,
-                ScrollWheelValueChange = this.ScrollWheelValueChange
-            };
-        }
+            ScreenPosition = ScreenPosition,
+            LeftButtonDown = LeftButtonDown,
+            LeftClicked = LeftClicked,
+            LeftDoubleClicked = LeftDoubleClicked,
+            RightButtonDown = RightButtonDown,
+            RightClicked = RightClicked,
+            RightDoubleClicked = RightDoubleClicked,
+            MiddleButtonDown = MiddleButtonDown,
+            MiddleClicked = MiddleClicked,
+            MiddleDoubleClicked = MiddleDoubleClicked,
+            ScrollWheelValue = ScrollWheelValue,
+            ScrollWheelValueChange = ScrollWheelValueChange
+        };
     }
 }

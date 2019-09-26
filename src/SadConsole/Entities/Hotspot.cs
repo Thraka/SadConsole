@@ -17,10 +17,10 @@ namespace SadConsole.Entities
     [System.Diagnostics.DebuggerDisplay("Hotspot")]
     public class Hotspot : Console
     {
-        private CellSurface _debugSurface;
-        private CellSurface _parentSurface;
+        private readonly CellSurface _debugSurface;
+        private readonly CellSurface _parentSurface;
         private Cell _debugAppearance = new Cell(Color.White, Color.Black, 0);
-        
+
         /// <summary>
         /// The hotspot position on the map.
         /// </summary>
@@ -50,20 +50,14 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new hotspot object.
         /// </summary>
-        public Hotspot(): base(1, 1)
-        {
-            IsVisible = false;
-        }
+        public Hotspot() : base(1, 1) => IsVisible = false;
 
         /// <summary>
         /// Return true when the specified point is in the list of <see cref="Positions"/>.
         /// </summary>
         /// <param name="point">The position to check for.</param>
         /// <returns>True or false based on if the position is associated with the Hotspot.</returns>
-        public bool Contains(Point point)
-        {
-            return Positions.Contains(point);
-        }
+        public bool Contains(Point point) => Positions.Contains(point);
 
         /// <inheritdoc />
         protected override void OnParentChanged(Console oldParent, Console newParent)
@@ -72,10 +66,7 @@ namespace SadConsole.Entities
         }
 
         /// <inheritdoc />
-        protected override void OnVisibleChanged()
-        {
-            Rebuild();
-        }
+        protected override void OnVisibleChanged() => Rebuild();
 
         public override void Draw(TimeSpan timeElapsed)
         {

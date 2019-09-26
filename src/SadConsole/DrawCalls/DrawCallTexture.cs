@@ -18,9 +18,6 @@ namespace SadConsole.DrawCalls
             Position = position;
         }
 
-        public void Draw()
-        {
-            Global.SpriteBatch.Draw(Texture, Position, Color.White);
-        }
+        public void Draw() => Global.SpriteBatch.Draw(Texture, Position, Color.White);
     }
 }

@@ -17,7 +17,7 @@ namespace SadConsole.Controls
         /// Raised when the button is clicked.
         /// </summary>
         public event EventHandler Click;
-        
+
         /// <summary>
         /// The display text of the button.
         /// </summary>
@@ -29,7 +29,7 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember(Name = "TextAlignment")]
         protected HorizontalAlignment textAlignment = HorizontalAlignment.Center;
-        
+
         /// <summary>
         /// The text displayed on the control.
         /// </summary>
@@ -58,11 +58,8 @@ namespace SadConsole.Controls
         /// <summary>
         /// Raises the <see cref="Click"/> event.
         /// </summary>
-        public virtual void DoClick()
-        {
-            Click?.Invoke(this, new EventArgs());
-        }
-        
+        public virtual void DoClick() => Click?.Invoke(this, new EventArgs());
+
         /// <summary>
         /// Detects if the SPACE and ENTER keys are pressed and calls the <see cref="Click"/> method.
         /// </summary>
@@ -77,7 +74,7 @@ namespace SadConsole.Controls
 
             return false;
         }
-        
+
         /// <summary>
         /// Called when the left-mouse button is clicked.
         /// </summary>
@@ -87,7 +84,9 @@ namespace SadConsole.Controls
             base.OnLeftMouseClicked(state);
 
             if (isEnabled)
+            {
                 DoClick();
+            }
         }
     }
 
@@ -106,7 +105,7 @@ namespace SadConsole.Controls
             : base(width, height)
         {
         }
-        
+
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {

@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 namespace SadConsole.Instructions
 {
     using System;
-    using System.Runtime.Serialization;
     using Console = SadConsole.Console;
 
     /// <summary>
@@ -88,7 +87,9 @@ namespace SadConsole.Instructions
                 _textIndex = 0;
 
                 if (_target == null)
+                {
                     _target = console;
+                }
 
                 Cursor.AttachSurface(_target);
                 Cursor.DisableWordBreak = true;
@@ -103,7 +104,9 @@ namespace SadConsole.Instructions
                 _tempLocation = Position;
 
                 if (TotalTimeToPrint > 0f)
+                {
                     _timePerCharacter = TotalTimeToPrint / _textCopy.Length;
+                }
             }
 
 
@@ -129,7 +132,7 @@ namespace SadConsole.Instructions
                         IsFinished = true;
                     }
 
-                    var textToPrint = Text.SubString(_textIndex, charCount);
+                    ColoredString textToPrint = Text.SubString(_textIndex, charCount);
                     Cursor.Print(textToPrint);
                     _textIndex += (short)charCount;
 

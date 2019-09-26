@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole
 {
-    using SadConsole.Effects;
-    using SadConsole.StringParser;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
+    using SadConsole.Effects;
+    using SadConsole.StringParser;
 
     /// <summary>
     /// Represents a string that has foreground and background colors for each character in the string.
@@ -38,12 +38,16 @@ namespace SadConsole
             get
             {
                 if (_characters.Length == 0)
+                {
                     return "";
+                }
 
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(_characters.Length);
 
                 for (int i = 0; i < _characters.Length; i++)
+                {
                     sb.Append(_characters[i].GlyphCharacter);
+                }
 
                 return sb.ToString();
             }
@@ -103,12 +107,12 @@ namespace SadConsole
                 _characters[i] = new ColoredGlyph() { GlyphCharacter = ' ' };
             }
         }
-        
+
         /// <summary>
         /// Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="Parse(string, int, CellSurface, ParseCommandStacks)"/> first to process the string.
         /// </summary>
         /// <param name="value">The backing string.</param>
-        public ColoredString(string value) { String = value; }
+        public ColoredString(string value) => String = value;
 
         /// <summary>
         /// Creates a new instance of the ColoredString class with the specified string value, foreground and background colors, and a cell effect.
@@ -137,10 +141,7 @@ namespace SadConsole
         /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.
         /// </summary>
         /// <param name="glyphs">The glyphs to combine.</param>
-        public ColoredString(params ColoredGlyph[] glyphs)
-        {
-            _characters = glyphs.ToArray();
-        }
+        public ColoredString(params ColoredGlyph[] glyphs) => _characters = glyphs.ToArray();
 
         /// <summary>
         /// Returns a new <see cref="ColoredString"/> object by cloning this instance.
@@ -156,7 +157,8 @@ namespace SadConsole
                 IgnoreEffect = IgnoreEffect
             };
 
-            for (int i = 0; i < _characters.Length; i++) {
+            for (int i = 0; i < _characters.Length; i++)
+            {
                 returnObject._characters[i] = _characters[i].Clone();
             }
             return returnObject;
@@ -167,10 +169,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="index">The index to copy the contents from.</param>
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
-        public ColoredString SubString(int index)
-        {
-            return SubString(index, _characters.Length - index);
-        }
+        public ColoredString SubString(int index) => SubString(index, _characters.Length - index);
 
         /// <summary>
         /// Returns a new <see cref="ColoredString"/> object using a substring of this instance.
@@ -181,7 +180,9 @@ namespace SadConsole
         public ColoredString SubString(int index, int count)
         {
             if (index + count > _characters.Length)
+            {
                 throw new System.IndexOutOfRangeException();
+            }
 
             ColoredString returnObject = new ColoredString(count)
             {
@@ -264,10 +265,14 @@ namespace SadConsole
             ColoredString returnString = new ColoredString(string1.Count + string2.Count);
 
             for (int i = 0; i < string1.Count; i++)
+            {
                 returnString._characters[i] = string1._characters[i].Clone();
+            }
 
             for (int i = 0; i < string2.Count; i++)
+            {
                 returnString._characters[i + string1.Count] = string2._characters[i].Clone();
+            }
 
             returnString.IgnoreGlyph = string1.IgnoreGlyph && string2.IgnoreGlyph;
             returnString.IgnoreForeground = string1.IgnoreForeground && string2.IgnoreForeground;
@@ -285,17 +290,19 @@ namespace SadConsole
         /// <returns>A new colored string instance.</returns>
         public static ColoredString operator +(ColoredString string1, string string2)
         {
-            
+
             var returnString = new ColoredString(string1.Count + string2.Length);
 
             for (int i = 0; i < string1.Count; i++)
+            {
                 returnString._characters[i] = string1._characters[i].Clone();
+            }
 
-            var templateCharacter = string1[string1.Count - 1];
+            ColoredGlyph templateCharacter = string1[string1.Count - 1];
 
             for (int i = 0; i < string2.Length; i++)
             {
-                var newChar = templateCharacter.Clone();
+                ColoredGlyph newChar = templateCharacter.Clone();
                 newChar.GlyphCharacter = string2[i];
                 returnString._characters[i + string1.Count] = newChar;
             }
@@ -316,12 +323,13 @@ namespace SadConsole
         /// <returns>A new colored string instance.</returns>
         public static ColoredString operator +(string string1, ColoredString string2)
         {
-            var returnString = new ColoredString(string1, string2[0]);
-
-            returnString.IgnoreGlyph = string2.IgnoreGlyph;
-            returnString.IgnoreForeground = string2.IgnoreForeground;
-            returnString.IgnoreBackground = string2.IgnoreBackground;
-            returnString.IgnoreEffect = string2.IgnoreEffect;
+            var returnString = new ColoredString(string1, string2[0])
+            {
+                IgnoreGlyph = string2.IgnoreGlyph,
+                IgnoreForeground = string2.IgnoreForeground,
+                IgnoreBackground = string2.IgnoreBackground,
+                IgnoreEffect = string2.IgnoreEffect
+            };
 
             return returnString + string2;
         }

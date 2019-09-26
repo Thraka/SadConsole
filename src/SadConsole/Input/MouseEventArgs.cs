@@ -12,9 +12,6 @@
         /// </summary>
         public MouseConsoleState MouseState;
 
-        public MouseEventArgs(MouseConsoleState state)
-        {
-            MouseState = state;
-        }
+        public MouseEventArgs(MouseConsoleState state) => MouseState = state;
     }
 }

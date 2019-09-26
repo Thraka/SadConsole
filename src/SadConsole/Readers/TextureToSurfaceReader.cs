@@ -10,12 +10,12 @@ namespace SadConsole.Readers
     /// </summary>
     public class TextureToSurfaceReader
     {
-        int width;
-        int height;
-        Console surface;
-        Color[] pixels;
-        int[] indexes;
-        int fontPixels;
+        private readonly int width;
+        private readonly int height;
+        private readonly Console surface;
+        private readonly Color[] pixels;
+        private readonly int[] indexes;
+        private readonly int fontPixels;
 
         /// <summary>
         /// Renders the cells as blocks instead of characters.
@@ -30,8 +30,8 @@ namespace SadConsole.Readers
         /// <param name="font">Font used for rendering.</param>
         public TextureToSurfaceReader(int pixelWidth, int pixelHeight, Font font)
         {
-            this.width = pixelWidth;
-            this.height = pixelHeight;
+            width = pixelWidth;
+            height = pixelHeight;
             pixels = new Color[pixelWidth * pixelHeight];
             indexes = new int[pixelWidth * pixelHeight];
             surface = new Console(pixelWidth / font.Size.X, pixelHeight / font.Size.Y, font);
@@ -58,7 +58,7 @@ namespace SadConsole.Readers
                             currentIndex++;
                         }
                     }
-                    
+
                 }
             }
         }
@@ -106,44 +106,76 @@ namespace SadConsole.Readers
                 if (UseBlockMode)
                 {
                     if (sbri > 204)
+                    {
                         surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
+                    }
                     else if (sbri > 152)
+                    {
                         surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
+                    }
                     else if (sbri > 100)
+                    {
                         surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
+                    }
                     else if (sbri > 48)
+                    {
                         surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
+                    }
                     else
+                    {
                         surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                    }
                 }
                 else
                 {
                     if (sbri > 230)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'#', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '#', newColor);
+                    }
                     else if (sbri > 207)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'&', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '&', newColor);
+                    }
                     else if (sbri > 184)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'$', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '$', newColor);
+                    }
                     else if (sbri > 161)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'X', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'X', newColor);
+                    }
                     else if (sbri > 138)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'x', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'x', newColor);
+                    }
                     else if (sbri > 115)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'=', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '=', newColor);
+                    }
                     else if (sbri > 92)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'+', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '+', newColor);
+                    }
                     else if (sbri > 69)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)';', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ';', newColor);
+                    }
                     else if (sbri > 46)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)':', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ':', newColor);
+                    }
                     else if (sbri > 23)
-                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, (int)'.', newColor);
+                    {
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '.', newColor);
+                    }
                     else
+                    {
                         surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, Color.Black);
+                    }
                 }
             }
             );
-            
+
             return surface;
         }
 

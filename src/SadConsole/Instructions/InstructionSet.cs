@@ -30,8 +30,10 @@
         /// <inheritdoc />
         public override void Reset()
         {
-            foreach (var item in Instructions)
+            foreach (InstructionBase item in Instructions)
+            {
                 item.Reset();
+            }
 
             _currentInstructionNode = null;
 
@@ -46,7 +48,9 @@
             if (!IsFinished && Instructions.Count != 0)
             {
                 if (_currentInstructionNode == null)
+                {
                     _currentInstructionNode = Instructions.First;
+                }
 
                 _currentInstructionNode.Value.Update(console, delta);
 
@@ -55,11 +59,15 @@
                     _currentInstructionNode = _currentInstructionNode.Next;
 
                     if (_currentInstructionNode == null)
+                    {
                         IsFinished = true;
+                    }
                 }
             }
             else
+            {
                 IsFinished = true;
+            }
 
             base.Update(console, delta);
         }
@@ -116,7 +124,9 @@
         public InstructionSet InstructConcurrent(params InstructionBase[] instructions)
         {
             if (instructions.Length == 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(instructions), "Two or more instruction must be provided.");
+            }
 
             Instructions.AddLast(new ConcurrentInstructions(instructions));
             return this;

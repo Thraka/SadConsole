@@ -37,10 +37,7 @@ namespace SadConsole.Ansi
         /// <summary>
         /// Creates a new object to track the state of the ansi cursor.
         /// </summary>
-        public State()
-        {
-            AnsiResetVideo();
-        }
+        public State() => AnsiResetVideo();
 
         /// <summary>
         /// Forces the Background of the print appearance to be the darkened color and the foreground to be bright or not based on the <see cref="Bold"/> property.

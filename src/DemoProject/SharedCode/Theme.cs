@@ -18,7 +18,7 @@ namespace StarterProject
         public static Color Orange = new Color(255, 153, 0);
         public static Color Cyan = new Color(82, 242, 234);
         public static Color Brown = new Color(100, 59, 15);
-        
+
         public static Color RedDark = new Color(153, 51, 51);
         public static Color BlueDark = new Color(51, 102, 153);
         public static Color GreenDark = new Color(110, 166, 23);

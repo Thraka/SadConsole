@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace SadConsole
 {
@@ -37,24 +35,18 @@ namespace SadConsole
         /// </summary>
         public static Action OnDestroy;
 
-        public static void Create(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null)
-        {
-            Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
-        }
+        public static void Create(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null) => Instance = new Game(font, consoleWidth, consoleHeight, ctorCallback);
 
-        public static void Create(int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null)
-        {
-            Instance = new Game("", consoleWidth, consoleHeight, ctorCallback);
-        }
+        public static void Create(int consoleWidth, int consoleHeight, Action<Game> ctorCallback = null) => Instance = new Game("", consoleWidth, consoleHeight, ctorCallback);
         #endregion
 
         /// <summary>
         /// Indicates the window is going to resize itself.
         /// </summary>
         public bool ResizeBusy = false;
-        private string font;
-        private int consoleWidth;
-        private int consoleHeight;
+        private readonly string font;
+        private readonly int consoleWidth;
+        private readonly int consoleHeight;
         public GraphicsDeviceManager GraphicsDeviceManager;
 
 
@@ -66,10 +58,14 @@ namespace SadConsole
         protected Game(string font, int consoleWidth, int consoleHeight, Action<Game> ctorCallback)
         {
             if (Instance == null)
+            {
                 Instance = this;
+            }
 
-            GraphicsDeviceManager = new GraphicsDeviceManager(this);
-            GraphicsDeviceManager.GraphicsProfile = Settings.GraphicsProfile;
+            GraphicsDeviceManager = new GraphicsDeviceManager(this)
+            {
+                GraphicsProfile = Settings.GraphicsProfile
+            };
             Content.RootDirectory = "Content";
 
             this.font = font;
@@ -100,7 +96,9 @@ namespace SadConsole
                 }
             }
             else
+            {
                 ResizeBusy = false;
+            }
 
             //if (!resizeBusy && Settings.IsExitingFullscreen)
             //{
@@ -120,13 +118,12 @@ namespace SadConsole
             Global.ResetRendering();
 
             if (!ResizeBusy)
+            {
                 WindowResized?.Invoke(this, EventArgs.Empty);
+            }
         }
 
-        protected override void UnloadContent()
-        {
-            OnDestroy?.Invoke();
-        }
+        protected override void UnloadContent() => OnDestroy?.Invoke();
 
         protected override void Initialize()
         {
@@ -155,9 +152,13 @@ namespace SadConsole
             Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
 
             if (string.IsNullOrEmpty(font))
+            {
                 Global.LoadEmbeddedFont();
+            }
             else
+            {
                 Global.FontDefault = Global.LoadFont(font).GetFont(Font.FontSizes.One);
+            }
 
             Global.FontDefault.ResizeGraphicsDeviceManager(GraphicsDeviceManager, consoleWidth, consoleHeight, 0, 0);
             Global.ResetRendering();

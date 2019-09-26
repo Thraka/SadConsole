@@ -113,67 +113,64 @@ namespace SadConsole.Themes
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>A new Colors object.</returns>
-        public Colors Clone()
+        public Colors Clone() => new Colors()
         {
-            return new Colors()
-            {
-                White = White,
-                Black = Black,
-                Gray = Gray,
-                GrayDark = GrayDark,
+            White = White,
+            Black = Black,
+            Gray = Gray,
+            GrayDark = GrayDark,
 
-                Red = Red,
-                Green = Green,
-                Blue = Blue,
-                Purple = Purple,
-                Yellow = Yellow,
-                Orange = Orange,
-                Cyan = Cyan,
-                Brown = Brown,
+            Red = Red,
+            Green = Green,
+            Blue = Blue,
+            Purple = Purple,
+            Yellow = Yellow,
+            Orange = Orange,
+            Cyan = Cyan,
+            Brown = Brown,
 
-                RedDark = RedDark,
-                GreenDark = GreenDark,
-                BlueDark = BlueDark,
-                PurpleDark = PurpleDark,
-                YellowDark = YellowDark,
-                OrangeDark = OrangeDark,
-                CyanDark = CyanDark,
-                BrownDark = BrownDark,
+            RedDark = RedDark,
+            GreenDark = GreenDark,
+            BlueDark = BlueDark,
+            PurpleDark = PurpleDark,
+            YellowDark = YellowDark,
+            OrangeDark = OrangeDark,
+            CyanDark = CyanDark,
+            BrownDark = BrownDark,
 
-                Gold = Gold,
-                GoldDark = GoldDark,
-                Silver = Silver,
-                SilverDark = SilverDark,
-                Bronze = Bronze,
-                BronzeDark = BronzeDark,
+            Gold = Gold,
+            GoldDark = GoldDark,
+            Silver = Silver,
+            SilverDark = SilverDark,
+            Bronze = Bronze,
+            BronzeDark = BronzeDark,
 
-                ModalBackground = ModalBackground,
+            ModalBackground = ModalBackground,
 
-                TitleText = TitleText,
+            TitleText = TitleText,
 
-                Lines = Lines,
+            Lines = Lines,
 
-                TextBright = TextBright,
-                Text = Text,
-                TextSelected = TextSelected,
-                TextSelectedDark = TextSelectedDark,
-                TextLight = TextLight,
-                TextDark = TextDark,
-                ControlBack = ControlBack,
-                ControlBackLight = ControlBackLight,
-                ControlBackSelected = ControlBackSelected,
-                ControlBackDark = ControlBackDark,
-                ControlHostBack = ControlHostBack,
-                ControlHostFore = ControlHostFore,
+            TextBright = TextBright,
+            Text = Text,
+            TextSelected = TextSelected,
+            TextSelectedDark = TextSelectedDark,
+            TextLight = TextLight,
+            TextDark = TextDark,
+            ControlBack = ControlBack,
+            ControlBackLight = ControlBackLight,
+            ControlBackSelected = ControlBackSelected,
+            ControlBackDark = ControlBackDark,
+            ControlHostBack = ControlHostBack,
+            ControlHostFore = ControlHostFore,
 
-                Appearance_ControlNormal = Appearance_ControlNormal.Clone(),
-                Appearance_ControlDisabled = Appearance_ControlDisabled.Clone(),
-                Appearance_ControlOver = Appearance_ControlOver.Clone(),
-                Appearance_ControlSelected = Appearance_ControlSelected.Clone(),
-                Appearance_ControlMouseDown = Appearance_ControlMouseDown.Clone(),
-                Appearance_ControlFocused = Appearance_ControlFocused.Clone(),
-            };
-        }
+            Appearance_ControlNormal = Appearance_ControlNormal.Clone(),
+            Appearance_ControlDisabled = Appearance_ControlDisabled.Clone(),
+            Appearance_ControlOver = Appearance_ControlOver.Clone(),
+            Appearance_ControlSelected = Appearance_ControlSelected.Clone(),
+            Appearance_ControlMouseDown = Appearance_ControlMouseDown.Clone(),
+            Appearance_ControlFocused = Appearance_ControlFocused.Clone(),
+        };
     }
 }
 

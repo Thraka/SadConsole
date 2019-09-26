@@ -1,13 +1,10 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 #endif
 
 namespace SadConsole
 {
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// A stack of consoles. The top-most of the stack is considered active and represented by the <see cref="Console"/> property.
@@ -24,7 +21,7 @@ namespace SadConsole
         /// <summary>
         /// The stack of consoles for input processing.
         /// </summary>
-        private List<Console> consoles;
+        private readonly List<Console> consoles;
 
         internal ConsoleStack()
         {
@@ -40,7 +37,9 @@ namespace SadConsole
             consoles.Clear();
 
             if (activeConsole != null)
+            {
                 activeConsole.OnFocusLost();
+            }
 
             activeConsole = null;
         }
@@ -54,10 +53,14 @@ namespace SadConsole
             if (console != activeConsole && console != null)
             {
                 if (consoles.Contains(console))
+                {
                     consoles.Remove(console);
+                }
 
                 if (activeConsole != null)
+                {
                     activeConsole.OnFocusLost();
+                }
 
                 consoles.Add(console);
                 activeConsole = console;
@@ -72,10 +75,14 @@ namespace SadConsole
         public void Set(Console console)
         {
             if (activeConsole == console)
+            {
                 return;
+            }
 
             if (consoles.Count != 0)
+            {
                 consoles.Remove(consoles.Last());
+            }
 
             Push(console);
         }
@@ -97,10 +104,14 @@ namespace SadConsole
                     activeConsole.OnFocused();
                 }
                 else
+                {
                     activeConsole = null;
+                }
             }
             else
+            {
                 consoles.Remove(console);
+            }
         }
 
         /// <summary>
@@ -109,17 +120,13 @@ namespace SadConsole
         public void Pop()
         {
             if (consoles.Count != 0)
+            {
                 Pop(consoles.Last());
+            }
         }
 
-        public static bool operator !=(ConsoleStack left, Console right)
-        {
-            return left.activeConsole != right;
-        }
+        public static bool operator !=(ConsoleStack left, Console right) => left.activeConsole != right;
 
-        public static bool operator ==(ConsoleStack left, Console right)
-        {
-            return left.activeConsole == right;
-        }
+        public static bool operator ==(ConsoleStack left, Console right) => left.activeConsole == right;
     }
 }
