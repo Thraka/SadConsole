@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SadConsole.Host.Console\SadConsole.Host.Console.csproj" />
     <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
   </ItemGroup>
 

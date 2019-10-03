@@ -24,7 +24,9 @@ namespace SadConsole.Renderers
 
     public class ConsoleRenderSurface : IRenderSurface
     {
-        
+        internal IntPtr _window;
+
+        internal ConsoleRenderSurface() { }
 
         public void DrawCell(ref Cell cell, SadRogue.Primitives.Point pixelPosition)
         {
