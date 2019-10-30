@@ -5,15 +5,14 @@ using SadRogue.Primitives;
 
 namespace SadConsole.Renderers
 {
-    public interface IRenderer
+    public interface IRenderer: IDisposable
     {
-        IRenderSurface Surface { get; set; }
-    }
+        void Attach(Console console);
 
-    public interface IRenderSurface
-    {
-        void DrawCellSurface();
+        void Detatch(Console console);
 
-        void DrawCell(ref Cell cell, Point pixelPosition);
+        void Refresh(Console console);
+
+        void Render();
     }
 }

@@ -1,11 +1,61 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>SadConsole</AssemblyName>
+    <DocumentationFile>SadConsole.xml</DocumentationFile>
+    <Version>9.0.0</Version>
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyTitle>SadConsole (.NET Standard) for MonoGame</AssemblyTitle>
+    <Description>A MonoGame library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.0</Description>
+    <Copyright>Copyright © 2019 Steve De George JR (Thraka)</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SadConsole</PackageId>
+    <PackageReleaseNotes>Fix xml docs</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii;standard</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="SerializedTypes\AnimatedConsole.cs" />
+    <Compile Remove="SerializedTypes\CellSurfaceLayer.cs" />
+    <Compile Remove="SerializedTypes\Entity.cs" />
+    <Compile Remove="SerializedTypes\LayeredConsole.cs" />
+    <Compile Remove="SerializedTypes\ScrollingConsole.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives\TheSadRogue.Primitives.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\IBM8x16_NoPadding_extended.png" />
+    <None Remove="Resources\IBM_ext.font" />
+    <None Remove="SadConsole.xml" />
+    <None Remove="Resources\IBM8x16.png" />
+    <None Remove="Resources\IBM.font" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\IBM8x16_NoPadding_extended.png" />
+    <EmbeddedResource Include="Resources\IBM_ext.font" />
+    <EmbeddedResource Include="Resources\IBM8x16.png" />
+    <EmbeddedResource Include="Resources\IBM.font" />
+    <None Include="Resources\readme.txt" pack="true" PackagePath="." />
   </ItemGroup>
 
 </Project>

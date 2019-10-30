@@ -3,6 +3,7 @@
     /// <summary>
     /// The mirroring mode
     /// </summary>
+    [System.Flags]
     public enum Mirror
     {
         /// <summary>

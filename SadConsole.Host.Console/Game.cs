@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Mindmagma.Curses;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
 
@@ -14,13 +13,9 @@ namespace SadConsole
         public int ScreenWidth { get; private set; }
         public int ScreenHeight { get; private set; }
         
-        private IntPtr _screen;
-
         public void Create(int width, int height, Action onInit)
         {
             (ScreenWidth, ScreenHeight) = (width, height);
-
-            _screen = NCurses.InitScreen();
 
             Instance = this;
 
@@ -31,49 +26,15 @@ namespace SadConsole
 
         public void Run()
         {
-            NCurses.NoDelay(_screen, true);
-            NCurses.NoEcho();
-            NCurses.ResizeTerminal(ScreenHeight, ScreenWidth);
-            //NCurses.MoveAddString(0, 0, "Click a button or press any key to exit.");
-
             bool run = true;
+            System.Console.Clear();
+            System.Console.CursorVisible = false;
 
             while (run)
             {
-                switch (NCurses.GetChar())
-                {
-                    case -1:
-                        break;
-                    default:
-                        run = false;
-                        break;
-                }
-
                 Global.Screen.Draw();
-
-                foreach (var item in _drawCalls)
-                {
-                    item.Draw();
-                }
-
-                NCurses.Refresh();
+                Global.Screen.Renderer.Render();
             }
-
-            NCurses.EndWin();
-        }
-
-        public void AddDrawCallSurface(CellSurface surface, Point location)
-        {
-            _drawCalls.Enqueue(new DrawCalls.DrawCallSurface(surface, location));
-        }
-
-
-        public override IRenderSurface CreateSurface(int width, int height)
-        {
-            var surface = new ConsoleRenderSurface();
-            surface._window = NCurses.NewWindow(width, height, 0, 0);
-
-            return surface;
         }
 
         #region IDisposable Support
@@ -112,7 +73,5 @@ namespace SadConsole
         }
 
         #endregion
-
-
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using Mindmagma.Curses;
 using SadRogue.Primitives;
 
 namespace SadConsole.DrawCalls
@@ -17,15 +16,13 @@ namespace SadConsole.DrawCalls
 
         public void Draw()
         {
-            NCurses.Move(_position.Y, _position.X);
             int index = 0;
             foreach (var cell in _surface)
             {
                 index++;
                 if (cell.Glyph == 0)
                 { }
-                else
-                    NCurses.AddChar(cell.Glyph);
+                
             }
         }
     }

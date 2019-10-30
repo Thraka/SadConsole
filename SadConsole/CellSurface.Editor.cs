@@ -417,7 +417,7 @@ namespace SadConsole
         {
             area = Rectangle.GetIntersection(area, new Rectangle(0, 0, Width, Height));
 
-            if (area == Rectangle.EMPTY)
+            if (area == Rectangle.Empty)
             {
                 yield break;
             }
@@ -1569,7 +1569,7 @@ namespace SadConsole
         {
             area = Rectangle.GetIntersection(area, new Rectangle(0, 0, Width, Height));
 
-            if (area == Rectangle.EMPTY)
+            if (area == Rectangle.Empty)
             {
                 return new Cell[0];
             }
@@ -2094,7 +2094,7 @@ namespace SadConsole
         /// <param name="surface">The target surface to map cells from.</param>
         public void SetSurface<T>(in T surface, Rectangle view = default) where T : CellSurface
         {
-            Rectangle rect = view == Rectangle.EMPTY ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
+            Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
 
             if (!new Rectangle(0, 0, surface.Width, surface.Height).Contains(rect))
             {

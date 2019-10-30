@@ -1,0 +1,236 @@
+{
+  "Name": "IBM_16x8_ext",
+  "FilePath": "IBM8x16_NoPadding_extended.png",
+  "GlyphHeight": 16,
+  "GlyphWidth": 8,
+  "GlyphPadding": 0,
+  "SolidGlyphIndex": 219,
+  "Columns": 16,
+  "IsSadExtended": true,
+  "GlyphDefinitions": {
+    "underline": {
+      "Glyph": 95,
+      "Mirror": 0
+    },
+    "strikethrough": {
+      "Glyph": 196,
+      "Mirror": 0
+    },
+    "box-edge-left": {
+      "Glyph": 256,
+      "Mirror": 0
+    },
+    "box-edge-top": {
+      "Glyph": 257,
+      "Mirror": 0
+    },
+    "box-edge-right": {
+      "Glyph": 258,
+      "Mirror": 0
+    },
+    "box-edge-bottom": {
+      "Glyph": 259,
+      "Mirror": 0
+    },
+    "box": {
+      "Glyph": 260,
+      "Mirror": 0
+    },
+    "box-edge-left-top": {
+      "Glyph": 261,
+      "Mirror": 0
+    },
+    "box-edge-top-right": {
+      "Glyph": 262,
+      "Mirror": 0
+    },
+    "box-edge-right-bottom": {
+      "Glyph": 263,
+      "Mirror": 0
+    },
+    "box-edge-left-bottom": {
+      "Glyph": 264,
+      "Mirror": 0
+    },
+    "box-edge-left-top-bottom": {
+      "Glyph": 265,
+      "Mirror": 0
+    },
+    "box-edge-top-right-bottom": {
+      "Glyph": 266,
+      "Mirror": 0
+    },
+    "box-edge-left-top-right": {
+      "Glyph": 267,
+      "Mirror": 0
+    },
+    "box-edge-left-right-bottom": {
+      "Glyph": 268,
+      "Mirror": 0
+    },
+    "line-x-leftleg": {
+      "Glyph": 269,
+      "Mirror": 0
+    },
+    "line-x-rightleg": {
+      "Glyph": 270,
+      "Mirror": 0
+    },
+    "line-x": {
+      "Glyph": 271,
+      "Mirror": 0
+    },
+    "box-edge-left+halftop": {
+      "Glyph": 272,
+      "Mirror": 0
+    },
+    "box-edge-left+halfbottom": {
+      "Glyph": 273,
+      "Mirror": 0
+    },
+    "box-edge-right+halfbottom": {
+      "Glyph": 274,
+      "Mirror": 0
+    },
+    "box-edge-right+halftop": {
+      "Glyph": 275,
+      "Mirror": 0
+    },
+    "box-edge-top+halfleft": {
+      "Glyph": 276,
+      "Mirror": 0
+    },
+    "box-edge-top+halfright": {
+      "Glyph": 277,
+      "Mirror": 0
+    },
+    "box-edge-bottom+halfleft": {
+      "Glyph": 278,
+      "Mirror": 0
+    },
+    "box-edge-bottom+halfright": {
+      "Glyph": 279,
+      "Mirror": 0
+    },
+    "box-edge-left+halftop-top+halfleft": {
+      "Glyph": 280,
+      "Mirror": 0
+    },
+    "box-edge-left+halfbottom-bottom+halfleft": {
+      "Glyph": 281,
+      "Mirror": 0
+    },
+    "box-edge-top+halfright-right+halftop": {
+      "Glyph": 282,
+      "Mirror": 0
+    },
+    "box-edge-right+halfbottom-bottom+halfright": {
+      "Glyph": 283,
+      "Mirror": 0
+    },
+    "box-edge-left+halftop-top-right+halftop": {
+      "Glyph": 284,
+      "Mirror": 0
+    },
+    "box-edge-left+halfbottom-right+halfbottom-bottom": {
+      "Glyph": 285,
+      "Mirror": 0
+    },
+    "box-edge-left-top+halfleft-bottom+halfleft": {
+      "Glyph": 286,
+      "Mirror": 0
+    },
+    "box-edge-top+halfright-right-bottom+halfright": {
+      "Glyph": 287,
+      "Mirror": 0
+    },
+    "box-mini-top": {
+      "Glyph": 288,
+      "Mirror": 0
+    },
+    "box-mini-bottom": {
+      "Glyph": 289,
+      "Mirror": 0
+    },
+    "box-mini-top-bottom": {
+      "Glyph": 290,
+      "Mirror": 0
+    },
+    "line-x-leftleg+halftop": {
+      "Glyph": 291,
+      "Mirror": 0
+    },
+    "line-x-rightleg+halftop": {
+      "Glyph": 292,
+      "Mirror": 0
+    },
+    "line-x-rightleg+halfbottom": {
+      "Glyph": 293,
+      "Mirror": 0
+    },
+    "line-x-leftleg+halfbottom": {
+      "Glyph": 294,
+      "Mirror": 0
+    },
+    "box-fill+bottom1": {
+      "Glyph": 304,
+      "Mirror": 0
+    },
+    "box-fill+bottom2": {
+      "Glyph": 305,
+      "Mirror": 0
+    },
+    "box-fill+bottom3": {
+      "Glyph": 306,
+      "Mirror": 0
+    },
+    "box-fill+bottom4": {
+      "Glyph": 307,
+      "Mirror": 0
+    },
+    "box-fill+bottom5": {
+      "Glyph": 308,
+      "Mirror": 0
+    },
+    "box-fill+bottom6": {
+      "Glyph": 309,
+      "Mirror": 0
+    },
+    "box-fill+bottom7": {
+      "Glyph": 310,
+      "Mirror": 0
+    },
+    "box-fill": {
+      "Glyph": 311,
+      "Mirror": 0
+    },
+    "box-fill+left1": {
+      "Glyph": 312,
+      "Mirror": 0
+    },
+    "box-fill+left2": {
+      "Glyph": 313,
+      "Mirror": 0
+    },
+    "box-fill+left3": {
+      "Glyph": 314,
+      "Mirror": 0
+    },
+    "box-fill+left4": {
+      "Glyph": 315,
+      "Mirror": 0
+    },
+    "box-fill+left5": {
+      "Glyph": 316,
+      "Mirror": 0
+    },
+    "box-fill+left6": {
+      "Glyph": 317,
+      "Mirror": 0
+    },
+    "box-fill+left7": {
+      "Glyph": 318,
+      "Mirror": 0
+    }
+  }
+}

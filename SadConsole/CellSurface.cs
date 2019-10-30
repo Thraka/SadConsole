@@ -4,34 +4,6 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
-    public abstract class ConsoleBase : CellSurface
-    {
-        private Point _position;
-        public Point Position
-        {
-            get => _position;
-            set
-            {
-                _position = value;
-                OnPositionChanged();
-            }
-        }
-
-        public Renderers.IRenderSurface RenderSurface { get; protected set; }
-
-        protected ConsoleBase(int width, int height) : base(width, height) { }
-
-        protected ConsoleBase(int width, int height, Cell[] cells) : base(width, height, cells) { }
-
-        public abstract void Draw();
-
-        protected void OnPositionChanged()
-        {
-            
-        }
-    }
-
-
     /// <summary>
     /// An array of <see cref="Cell"/> objects used to represent a 2D surface.
     /// </summary>

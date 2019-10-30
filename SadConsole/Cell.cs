@@ -222,8 +222,6 @@ namespace SadConsole
         /// <returns>The new cell.</returns>
         public Cell Clone() => new Cell(Foreground, Background, Glyph, Mirror) { IsVisible = IsVisible, Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>() };
 
-        
-
         /// <summary>
         /// Compares if the cell is the same as the state.
         /// </summary>
@@ -282,6 +280,16 @@ namespace SadConsole
         public static bool operator !=(Cell left, Cell right)
         {
             return !(left == right);
+        }
+
+        public static Cell[] CreateArray(int size)
+        {
+            Cell[] cells = new Cell[size];
+
+            for (int i = 0; i < size; i++)
+                cells[i] = new Cell();
+
+            return cells;
         }
     }
 }
