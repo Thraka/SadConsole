@@ -23,11 +23,11 @@ namespace ConsoleTest
         /// </summary>
         private static void Init()
         {
-            SadConsole.MonoGame.Game.Instance.Components.Add(new SadConsole.MonoGame.Game.FPSCounterComponent(SadConsole.MonoGame.Game.Instance));
+            ((Game)SadConsole.Game.Instance).MonoGameInstance.Components.Add(new SadConsole.MonoGame.Game.FPSCounterComponent(((Game)SadConsole.Game.Instance).MonoGameInstance));
             SadConsole.Global.Screen.Print(1, 1, "Hello from SadConsole 9.0");
             SadConsole.Global.Screen.Print(10, 10, "Hello from SadConsole 9.0", SadRogue.Primitives.Color.AnsiCyan);
-
             SadConsole.Global.Screen.Print(5, 18, new ColorGradient(Color.AliceBlue, Color.DarkOrange, Color.LightPink, Color.Red.GetRandomColor(Global.Random)).ToColoredString("Some color is fun to play with when you got it!"));
         }
+
     }
 }

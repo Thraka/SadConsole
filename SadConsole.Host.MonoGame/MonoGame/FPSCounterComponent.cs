@@ -25,7 +25,7 @@ namespace SadConsole.MonoGame
                 surface = new Console(30, 1) { DefaultBackground = Color.Black };
                 surface.Clear();
                 DrawOrder = 8;
-                Instance.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+                Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
             }
 
 
@@ -50,9 +50,9 @@ namespace SadConsole.MonoGame
                 surface.Draw(gameTime.ElapsedGameTime);
                 
                 Game.GraphicsDevice.SetRenderTarget(null);
-                MonoGame.Game.Instance.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-                MonoGame.Game.Instance.SpriteBatch.Draw(((Renderers.ConsoleRenderer)surface.Renderer).BackingTexture, Vector2.Zero, XnaColor.White);
-                MonoGame.Game.Instance.SpriteBatch.End();
+                Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+                Global.SharedSpriteBatch.Draw(((Renderers.ConsoleRenderer)surface.Renderer).BackingTexture, Vector2.Zero, XnaColor.White);
+                Global.SharedSpriteBatch.End();
             }
         }
     }

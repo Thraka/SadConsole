@@ -13,26 +13,6 @@ namespace SadConsole.MonoGame
         internal Action<Game> _initCallback;
 
         /// <summary>
-        /// Global instance of the MonoGame Game.
-        /// </summary>
-        public static Game Instance { get; private set; }
-
-        /// <summary>
-        /// Graphics device manager used by MonoGame.
-        /// </summary>
-        public GraphicsDeviceManager GraphicsDeviceManager;
-
-        /// <summary>
-        /// Sprite batch used for rendering.
-        /// </summary>
-        public SpriteBatch SpriteBatch;
-
-        /// <summary>
-        /// The render target of SadConsole. This is generally rendered to the screen as the final step of drawing.
-        /// </summary>
-        public RenderTarget2D RenderOutput;
-
-        /// <summary>
         /// The current game window width.
         /// </summary>
         public int WindowWidth => GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -49,18 +29,16 @@ namespace SadConsole.MonoGame
 
         internal Game(Action<Game> ctorCallback, Action<Game> initCallback)
         {
-            Instance = this;
-
             _initCallback = initCallback;
 
-            GraphicsDeviceManager = new GraphicsDeviceManager(this)
+            Global.GraphicsDeviceManager = new GraphicsDeviceManager(this)
             {
                 GraphicsProfile = Microsoft.Xna.Framework.Graphics.GraphicsProfile.Reach
             };
 
             Content.RootDirectory = "Content";
 
-            GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
+            Global.GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
             ctorCallback?.Invoke(this);
         }
 
@@ -68,15 +46,15 @@ namespace SadConsole.MonoGame
         {
             if (!_resizeBusy)
             {
-                if (!GraphicsDeviceManager.IsFullScreen && SadConsole.Settings.WindowMinimumSize != Point.Zero.ToPoint())
+                if (!Global.GraphicsDeviceManager.IsFullScreen && SadConsole.Settings.WindowMinimumSize != Point.Zero.ToPoint())
                 {
                     if (GraphicsDevice.PresentationParameters.BackBufferWidth < SadConsole.Settings.WindowMinimumSize.X
                         || GraphicsDevice.PresentationParameters.BackBufferHeight < SadConsole.Settings.WindowMinimumSize.Y)
                     {
                         _resizeBusy = true;
-                        GraphicsDeviceManager.PreferredBackBufferWidth = SadConsole.Settings.WindowMinimumSize.X;
-                        GraphicsDeviceManager.PreferredBackBufferHeight = SadConsole.Settings.WindowMinimumSize.Y;
-                        GraphicsDeviceManager.ApplyChanges();
+                        Global.GraphicsDeviceManager.PreferredBackBufferWidth = SadConsole.Settings.WindowMinimumSize.X;
+                        Global.GraphicsDeviceManager.PreferredBackBufferHeight = SadConsole.Settings.WindowMinimumSize.Y;
+                        Global.GraphicsDeviceManager.ApplyChanges();
                     }
                 }
             }
@@ -110,9 +88,10 @@ namespace SadConsole.MonoGame
 
         protected override void Initialize()
         {
+            Global.GraphicsDevice = GraphicsDevice;
             if (SadConsole.Settings.UnlimitedFPS)
             {
-                GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+                Global.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
                 IsFixedTimeStep = false;
             }
 
@@ -130,8 +109,7 @@ namespace SadConsole.MonoGame
             //Window.ClientSizeChanged += Window_ClientSizeChanged;
             Window.AllowUserResizing = SadConsole.Settings.AllowWindowResize;
 
-            Instance.GraphicsDeviceManager = GraphicsDeviceManager;
-            Instance.SpriteBatch = new SpriteBatch(GraphicsDevice);
+            Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice);
 
             _initCallback?.Invoke(this);
 
@@ -151,13 +129,13 @@ namespace SadConsole.MonoGame
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
         public void ResizeGraphicsDeviceManager(Font font, int width, int height, int additionalWidth, int additionalHeight)
         {
-            GraphicsDeviceManager.PreferredBackBufferWidth = (font.Size.X * width) + additionalWidth;
-            GraphicsDeviceManager.PreferredBackBufferHeight = (font.Size.Y * height) + additionalHeight;
+            Global.GraphicsDeviceManager.PreferredBackBufferWidth = (font.Size.X * width) + additionalWidth;
+            Global.GraphicsDeviceManager.PreferredBackBufferHeight = (font.Size.Y * height) + additionalHeight;
 
-            SadConsole.Settings.Rendering.RenderWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
-            SadConsole.Settings.Rendering.RenderHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
+            SadConsole.Settings.Rendering.RenderWidth = Global.GraphicsDeviceManager.PreferredBackBufferWidth;
+            SadConsole.Settings.Rendering.RenderHeight = Global.GraphicsDeviceManager.PreferredBackBufferHeight;
 
-            GraphicsDeviceManager.ApplyChanges();
+            Global.GraphicsDeviceManager.ApplyChanges();
         }
 
         /// <summary>
@@ -165,9 +143,11 @@ namespace SadConsole.MonoGame
         /// </summary>
         public void ResetRendering()
         {
+            Global.RenderOutput?.Dispose();
+
             if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Center)
             {
-                RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = new Rectangle(
                                                             (GraphicsDevice.PresentationParameters.BackBufferWidth - SadConsole.Settings.Rendering.RenderWidth) / 2,
                                                             (GraphicsDevice.PresentationParameters.BackBufferHeight - SadConsole.Settings.Rendering.RenderHeight) / 2,
@@ -178,7 +158,7 @@ namespace SadConsole.MonoGame
             }
             else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Scale)
             {
-                RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 int multiple = 2;
 
                 // Find the bounds
@@ -201,7 +181,7 @@ namespace SadConsole.MonoGame
             }
             else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
             {
-                RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 float heightRatio = GraphicsDevice.PresentationParameters.BackBufferHeight / (float)SadConsole.Settings.Rendering.RenderHeight;
                 float widthRatio = GraphicsDevice.PresentationParameters.BackBufferWidth / (float)SadConsole.Settings.Rendering.RenderWidth;
 
@@ -235,13 +215,13 @@ namespace SadConsole.MonoGame
             {
                 SadConsole.Settings.Rendering.RenderWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
                 SadConsole.Settings.Rendering.RenderHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-                RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
                 SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(1);
             }
             else
             {
-                RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
                 SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             }

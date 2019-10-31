@@ -19,36 +19,36 @@ namespace SadConsole.MonoGame
                 {
                     MonoGame.Game game = (MonoGame.Game)Game;
 
-                    Global.DrawFrameDelta = gameTime.ElapsedGameTime;
+                    SadConsole.Global.DrawFrameDelta = gameTime.ElapsedGameTime;
 
                     // Clear draw calls for next run
                     SadConsole.Game.Instance.DrawCalls.Clear();
 
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    Global.Screen?.Draw(gameTime.ElapsedGameTime);
+                    SadConsole.Global.Screen?.Draw(gameTime.ElapsedGameTime);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
 
                     // Render to the global output texture
-                    GraphicsDevice.SetRenderTarget(game.RenderOutput);
+                    GraphicsDevice.SetRenderTarget(Global.RenderOutput);
                     GraphicsDevice.Clear(SadRogue.Primitives.SadRogueColorExtensions.ToMonoColor(SadConsole.Settings.ClearColor));
 
                     // Render each draw call
-                    game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                    Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
                     foreach (DrawCalls.IDrawCall call in SadConsole.Game.Instance.DrawCalls)
                     {
                         call.Draw();
                     }
 
-                    game.SpriteBatch.End();
+                    Global.SharedSpriteBatch.End();
                     GraphicsDevice.SetRenderTarget(null);
 
                     // If we're going to draw to the screen, do it.
                     if (SadConsole.Settings.DoFinalDraw)
                     {
-                        game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-                        game.SpriteBatch.Draw(game.RenderOutput, SadRogue.Primitives.SadRogueRectangleExtensions.ToMonoRectangle(SadConsole.Settings.Rendering.RenderRect), Color.White);
-                        game.SpriteBatch.End();
+                        Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                        Global.SharedSpriteBatch.Draw(Global.RenderOutput, SadRogue.Primitives.SadRogueRectangleExtensions.ToMonoRectangle(SadConsole.Settings.Rendering.RenderRect), Color.White);
+                        Global.SharedSpriteBatch.End();
                     }
                 }
             }
@@ -57,9 +57,9 @@ namespace SadConsole.MonoGame
             {
                 if (SadConsole.Settings.DoUpdate)
                 {
-                    MonoGame.Game game = (MonoGame.Game)Game;
+                    var game = (Game)Game;
 
-                    Global.UpdateFrameDelta = gameTime.ElapsedGameTime;
+                    SadConsole.Global.UpdateFrameDelta = gameTime.ElapsedGameTime;
 
                     if (Game.IsActive)
                     {
@@ -76,7 +76,7 @@ namespace SadConsole.MonoGame
                         }
                     }
 
-                    Global.Screen?.Update(gameTime.ElapsedGameTime);
+                    SadConsole.Global.Screen?.Update(gameTime.ElapsedGameTime);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
                 }

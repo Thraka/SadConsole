@@ -13,7 +13,6 @@ namespace SadConsole.MonoGame
             {
                 Game.GraphicsDevice.SetRenderTarget(null);
                 Game.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToMonoColor());
-
             }
         }
     }
