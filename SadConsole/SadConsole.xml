@@ -1343,6 +1343,368 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
+        <member name="T:SadConsole.Components.ComponentHostObject">
+            <summary>
+            A generic component object.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Components.ComponentHostObject.ParentChanged">
+            <summary>
+            Raised when the component's <see cref="P:SadConsole.Components.ComponentHostObject.Parent"/> changes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsUpdate">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsDraw">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsMouse">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsKeyboard">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsEmpty">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> that is not set for update, draw, mouse, or keyboard.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ComponentHostObject.Children">
+            <summary>
+            The child objects of this instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ComponentHostObject.Components">
+            <summary>
+            A collection of components processed by this console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ComponentHostObject.Parent">
+            <summary>
+            The parent object that this instance is a child of.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObject.#ctor">
+            <summary>
+            Creates a new instance of this class.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObject.GetComponents``1">
+            <summary>
+            Gets components of the specified types.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The components found.</returns>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObject.GetComponent``1">
+            <summary>
+            Gets the first component of the specified type.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The component if found, otherwise null.</returns>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObject.OnParentChanged(SadConsole.Components.ComponentHostObject,SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Raises the <see cref="E:SadConsole.Components.ComponentHostObject.ParentChanged"/> event.
+            </summary>
+            <param name="previousParent">The previous parent.</param>
+            <param name="newParent">The new parent.</param>
+        </member>
+        <member name="T:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs">
+            <summary>
+            Provides reference to the old and new parents.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs.OldParent">
+            <summary>
+            The previous parent.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs.NewParent">
+            <summary>
+            The new parent.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs.#ctor(SadConsole.Components.ComponentHostObject,SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Creates a new instance of this object with the specified old and new parent.
+            </summary>
+            <param name="oldParent">The old parent.</param>
+            <param name="newParent">The new parent.</param>
+        </member>
+        <member name="T:SadConsole.Components.ComponentHostObjectCollection">
+            <summary>
+            Manages the parent and children relationship for <see cref="T:SadConsole.Components.ComponentHostObject"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObjectCollection.objects">
+            <summary>
+            Internal list of objects.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ComponentHostObjectCollection.owningObject">
+            <summary>
+            The parent object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ComponentHostObjectCollection.Count">
+            <summary>
+            Returns the total number of objects in this collection.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked">
+            <summary>
+            When true, the collection cannot be modified.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ComponentHostObjectCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets a child object for this collection.
+            </summary>
+            <param name="index">The index of the child object.</param>
+            <returns>The wanted object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.#ctor(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Creates a new object collection and parents it to the <paramref name="owner"/> object.
+            </summary>
+            <param name="owner">The owning object of this collection.</param>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Clear">
+            <summary>
+            Removes all consoles.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Contains(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Returns true if this console list contains the specified <paramref name="obj"/>.
+            </summary>
+            <param name="obj">The console to search for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.IsTop(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
+            </summary>
+            <param name="obj">The obj object to check.</param>
+            <returns>True when the object is on top.</returns>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Add(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Adds a new child object to this collection.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked"/> property is set to true.</exception>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Insert(System.Int32,SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Inserts a child object at the specified <paramref name="index"/>.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked"/> property is set to true.</exception>
+            <param name="index">The 0-based index to insert the object at.</param>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Remove(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Removes a new child object from this collection.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked"/> property is set to true.</exception>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.MoveToTop(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Moves the specified <paramref name="obj"/>  to the top of the collection.
+            </summary>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.MoveToBottom(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Moves the specified <paramref name="obj"/>  to the bottom of the collection.
+            </summary>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.IndexOf(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Gets the 0-based index of the <paramref name="obj"/>.
+            </summary>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.Components.ComponentHostObjectCollection.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.IComponent">
+            <summary>
+            A component that can be added to a <see cref="T:SadConsole.Components.ComponentHostObject"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.IComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.IComponent.IsUpdate">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.IComponent.IsDraw">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.IComponent.IsMouse">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessMouse(ComponentHostObject, MouseConsoleState, out bool)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.IComponent.IsKeyboard">
+            <summary>
+            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessKeyboard(ComponentHostObject, Keyboard, out bool)"/> method.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.IComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the update frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the draw frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.Components.IComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Called when the component is added to a host.
+            </summary>
+            <param name="host">The host that added the component.</param>
+        </member>
+        <member name="M:SadConsole.Components.IComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+            <summary>
+            Called when the component is removed from the host.
+            </summary>
+            <param name="host">The host that removed the component.</param>
+        </member>
+        <member name="T:SadConsole.Components.UpdateComponent">
+            <summary>
+            A base class that implements <see cref="!:IComponent.Update(SadConsole.Console, TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.UpdateComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the update frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.DrawComponent">
+            <summary>
+            A base class that implements <see cref="!:IComponent.Draw(Console, TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.DrawComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the draw frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.DrawComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.LogicComponent">
+            <summary>
+            A base class that implements <see cref="!:IComponent.Update(SadConsole.Console, TimeSpan)"/> and <see cref="!:IComponent.Draw(Console, TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.LogicComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the draw frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the update frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.Components.LogicComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.LogicComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.ComponentBase">
+            <summary>
+            A base class that implements all of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ComponentBase.SortOrder">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Components.ComponentBase.IsUpdate">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Components.ComponentBase.IsDraw">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Components.ComponentBase.IsMouse">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Components.ComponentBase.IsKeyboard">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.Components.ComponentHostObject)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Components.IConsoleComponent">
             <summary>
             A component that can be added to a <see cref="T:SadConsole.Console"/>.
@@ -1771,89 +2133,89 @@
             Called when the <see cref="P:SadConsole.Console.Font"/> property changes.
             </summary>
         </member>
-        <member name="T:SadConsole.ConsoleCollection">
+        <member name="T:SadConsole.ComponentObjectCollection">
             <summary>
             Manages the parent and children relationship for <see cref="T:SadConsole.Console"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.ConsoleCollection.IsLocked">
+        <member name="P:SadConsole.ComponentObjectCollection.IsLocked">
             <summary>
             When true, the collection cannot be modified.
             </summary>
         </member>
-        <member name="P:SadConsole.ConsoleCollection.Item(System.Int32)">
+        <member name="P:SadConsole.ComponentObjectCollection.Item(System.Int32)">
             <summary>
             Gets or sets a child object for this collection.
             </summary>
             <param name="index">The index of the child object.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.#ctor(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.#ctor(SadConsole.Console)">
             <summary>
             Creates a new screen object collection and parents it to the <paramref name="owner"/> object.
             </summary>
             <param name="owner">The owning object of this collection.</param>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.Clear">
+        <member name="M:SadConsole.ComponentObjectCollection.Clear">
             <summary>
             Removes all consoles.
             </summary>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.Contains(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.Contains(SadConsole.Console)">
             <summary>
             Returns true if this console list contains the specified <paramref name="screen"/>.
             </summary>
             <param name="screen">The console to search for.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.IsTop(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.IsTop(SadConsole.Console)">
             <summary>
             When true, indicates that the <paramref name="screen"/> is at the top of the collection stack.
             </summary>
             <param name="screen">The screen object to check.</param>
             <returns>True when the object is on top.</returns>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.Add(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.Add(SadConsole.Console)">
             <summary>
             Adds a new child object to this collection.
             </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ConsoleCollection.IsLocked"/> property is set to true.</exception>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ComponentObjectCollection.IsLocked"/> property is set to true.</exception>
             <param name="screen">The child object.</param>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.Insert(System.Int32,SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.Insert(System.Int32,SadConsole.Console)">
             <summary>
             Inserts a child object at the specified <paramref name="index"/>.
             </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ConsoleCollection.IsLocked"/> property is set to true.</exception>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ComponentObjectCollection.IsLocked"/> property is set to true.</exception>
             <param name="index">The 0-based index to insert the object at.</param>
             <param name="screen">The child object.</param>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.Remove(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.Remove(SadConsole.Console)">
             <summary>
             Removes a new child object from this collection.
             </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ConsoleCollection.IsLocked"/> property is set to true.</exception>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ComponentObjectCollection.IsLocked"/> property is set to true.</exception>
             <param name="screen">The child object.</param>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.MoveToTop(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.MoveToTop(SadConsole.Console)">
             <summary>
             Moves the specified <paramref name="screen"/>  to the top of the collection.
             </summary>
             <param name="screen">The child object.</param>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.MoveToBottom(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.MoveToBottom(SadConsole.Console)">
             <summary>
             Moves the specified <paramref name="screen"/>  to the bottom of the collection.
             </summary>
             <param name="screen">The child object.</param>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.IndexOf(SadConsole.Console)">
+        <member name="M:SadConsole.ComponentObjectCollection.IndexOf(SadConsole.Console)">
             <summary>
             Gets the 0-based index of the <paramref name="screen"/>.
             </summary>
             <param name="screen">The child object.</param>
         </member>
-        <member name="M:SadConsole.ConsoleCollection.GetEnumerator">
+        <member name="M:SadConsole.ComponentObjectCollection.GetEnumerator">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Font">

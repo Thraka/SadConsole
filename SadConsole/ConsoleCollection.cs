@@ -6,7 +6,7 @@ namespace SadConsole
     /// <summary>
     /// Manages the parent and children relationship for <see cref="Console"/>.
     /// </summary>
-    public class ConsoleCollection : IEnumerable<Console>, System.Collections.IEnumerable
+    public class ComponentObjectCollection : IEnumerable<Console>, System.Collections.IEnumerable
     {
         protected List<Console> screens;
         protected Console owningScreen;
@@ -49,7 +49,7 @@ namespace SadConsole
         /// Creates a new screen object collection and parents it to the <paramref name="owner"/> object.
         /// </summary>
         /// <param name="owner">The owning object of this collection.</param>
-        public ConsoleCollection(Console owner)
+        public ComponentObjectCollection(Console owner)
         {
             screens = new List<Console>();
             owningScreen = owner;

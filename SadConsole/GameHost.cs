@@ -40,12 +40,17 @@ namespace SadConsole
         /// <summary>
         /// Collection of fonts. Used mainly by the deserialization system.
         /// </summary>
-        public Dictionary<string, FontMaster> Fonts { get; } = new Dictionary<string, FontMaster>();
+        public Dictionary<string, Font> Fonts { get; } = new Dictionary<string, Font>();
 
         /// <summary>
         /// The default font for any type that does not provide a font.
         /// </summary>
         public Font DefaultFont { get; set; }
+
+        /// <summary>
+        /// The default font to use with <see cref="DefaultFont"/>.
+        /// </summary>
+        public Font.Sizes DefaultFontSize { get; set; }
 
         /// <summary>
         /// Draw calls registered for the next drawing frame.
@@ -82,7 +87,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="font">The font file to load.</param>
         /// <returns>A master font that you can generate a usable font from.</returns>
-        public FontMaster LoadFont(string font)
+        public Font LoadFont(string font)
         {
             //if (!File.Exists(font))
             //{
@@ -94,7 +99,7 @@ namespace SadConsole
             //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
             try
             {
-                FontMaster masterFont = SadConsole.Serializer.Load<FontMaster>(font, false);
+                Font masterFont = SadConsole.Serializer.Load<Font>(font, false);
 
                 if (Fonts.ContainsKey(masterFont.Name))
                 {
@@ -153,9 +158,9 @@ namespace SadConsole
             {
                 LoadingEmbeddedFont = true;
                 SerializerPathHint = "";
-                var masterFont = (FontMaster)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                var masterFont = (Font)Newtonsoft.Json.JsonConvert.DeserializeObject(
                     sr.ReadToEnd(),
-                    typeof(FontMaster),
+                    typeof(Font),
                     new Newtonsoft.Json.JsonSerializerSettings()
                     {
                         TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
@@ -166,7 +171,7 @@ namespace SadConsole
 
                 masterFont.ConfigureRects();
                 Instance.Fonts.Add(masterFont.Name, masterFont);
-                Instance.DefaultFont = masterFont.GetFont(Font.FontSizes.One);
+                Instance.DefaultFont = masterFont;
 
                 LoadingEmbeddedFont = false;
             }

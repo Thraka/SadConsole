@@ -7,12 +7,12 @@ namespace SadConsole.Renderers
 {
     public interface IRenderer: IDisposable
     {
-        void Attach(Console console);
+        void Attach(ScreenObjectSurface surfaceObject);
 
-        void Detatch(Console console);
+        void Detatch(ScreenObjectSurface surfaceObject);
 
-        void Refresh(Console console);
+        void Refresh(ScreenObjectSurface surfaceObject);
 
-        void Render();
+        void Render(ScreenObjectSurface surfaceObject);
     }
 }

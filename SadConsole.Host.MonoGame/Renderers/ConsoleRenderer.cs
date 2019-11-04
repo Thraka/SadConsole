@@ -13,11 +13,23 @@ namespace SadConsole.Renderers
 {
     public class ConsoleRenderer : IRenderer
     {
+
+
+
+
+
+
+
+
+
+
+
+
         public RenderTarget2D BackingTexture;
 
         private XnaRectangle[] _rectangles;
 
-        public void Attach(Console console)
+        public void Attach(ScreenObjectSurface console)
         {
             // Update rectangles only
             if (BackingTexture != null && (console.AbsoluteArea.Width != BackingTexture.Width || console.AbsoluteArea.Height != BackingTexture.Height))
@@ -39,64 +51,67 @@ namespace SadConsole.Renderers
             BackingTexture = new RenderTarget2D(MonoGame.Global.GraphicsDevice, console.AbsoluteArea.Width, console.AbsoluteArea.Height, false, MonoGame.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
 
-        public void Detatch(Console console)
+        public void Detatch(ScreenObjectSurface console)
         {
             BackingTexture.Dispose();
         }
 
-        public void Render()
+        public void Render(ScreenObjectSurface surface)
         {
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, Vector2.Zero));
         }
 
-        public void Refresh(Console console)
+        public void Refresh(ScreenObjectSurface surface)
         {
+            
+
 
             // Rendering code from sadconsole
-            RenderBegin(console);
-            RenderCells(console);
-            RenderTint(console);
-            RenderEnd(console);
+            RenderBegin(surface);
+            RenderCells(surface);
+            RenderTint(surface);
+            RenderEnd(surface);
         }
 
 
-        protected virtual void RenderBegin(SadConsole.Console surface)
+        protected virtual void RenderBegin(ScreenObjectSurface surface)
         {
             MonoGame.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
             MonoGame.Global.GraphicsDevice.Clear(Color.Transparent);
             MonoGame.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
         }
 
-        protected virtual void RenderEnd(SadConsole.Console surface)
+        protected virtual void RenderEnd(ScreenObjectSurface surface)
         {
             MonoGame.Global.SharedSpriteBatch.End();
             MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
         }
 
-        protected virtual void RenderCells(SadConsole.Console surface)
+        protected virtual void RenderCells(ScreenObjectSurface surface)
         {
+            var cellSurface = surface.Surface;
             if (surface.Tint.A != 255)
             {
                 var font = ((SadConsole.MonoGame.GameTexture)surface.Font.FontImage).Texture;
 
-                if (surface.DefaultBackground.A != 0)
+                if (cellSurface.DefaultBackground.A != 0)
                 {
-                    MonoGame.Global.SharedSpriteBatch.Draw(font, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToMonoRectangle(), surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                    MonoGame.Global.SharedSpriteBatch.Draw(font, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
                 }
 
-                for (int i = 0; i < surface.RenderCells.Length; i++)
+                for (int i = 0; i < cellSurface.RenderCells.Length; i++)
                 {
-                    ref Cell cell = ref surface.RenderCells[i];
+                    ref Cell cell = ref cellSurface.RenderCells[i];
 
                     if (!cell.IsVisible)
                     {
                         continue;
                     }
 
-                    if (!cell.Background.Equals(Color.Transparent) && cell.Background != surface.DefaultBackground)
+                    if (!cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground)
                     {
-                        MonoGame.Global.SharedSpriteBatch.Draw(font, _rectangles[i], surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        MonoGame.Global.SharedSpriteBatch.Draw(font, _rectangles[i], surface.Font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                     }
 
                     if (!cell.Foreground.Equals(Color.Transparent))
@@ -115,7 +130,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RenderTint(SadConsole.Console surface)
+        protected virtual void RenderTint(ScreenObjectSurface surface)
         {
             if (surface.Tint.A != 0)
             {

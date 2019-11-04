@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using SadRogue.Primitives;
 
@@ -9,13 +10,13 @@ namespace SadConsole
     /// </summary>
     public sealed class Font
     {
-        private int solidGlyphIndex;
-        private Rectangle solidGlyphRect;
+        private int _solidGlyphIndex;
+        private Rectangle _solidGlyphRect;
 
         /// <summary>
         /// The size options of a font.
         /// </summary>
-        public enum FontSizes
+        public enum Sizes
         {
             /// <summary>
             /// One quater the size of the font. (Original Width and Height * 0.25)
@@ -54,28 +55,18 @@ namespace SadConsole
         public ITexture FontImage { get; private set; }
 
         /// <summary>
-        /// The width and height of each glyph.
-        /// </summary>
-        public Point Size { get; private set; }
-
-        /// <summary>
-        /// The maximum upper inclusive glyph index of the font.
-        /// </summary>
-        public int MaxGlyphIndex { get; private set; }
-
-        /// <summary>
         /// Which glyph index is considered completely solid. Used for shading.
         /// </summary>
         public int SolidGlyphIndex
         {
-            get => solidGlyphIndex;
-            set { solidGlyphIndex = value; solidGlyphRect = GlyphRects[value]; }
+            get => _solidGlyphIndex;
+            set { _solidGlyphIndex = value; _solidGlyphRect = GlyphRects[value]; }
         }
 
         /// <summary>
         /// The rectangle associated with the <see cref="SolidGlyphIndex"/>.
         /// </summary>
-        public Rectangle SolidGlyphRectangle => solidGlyphRect;
+        public Rectangle SolidGlyphRectangle => _solidGlyphRect;
 
         /// <summary>
         /// A cached array of rectangles of individual glyphs.
@@ -90,12 +81,7 @@ namespace SadConsole
         /// <summary>
         /// How many rows are in this font.
         /// </summary>
-        public int Rows { get; private set; }
-
-        /// <summary>
-        /// The size originally used to create the font from a <see cref="FontMaster"/>.
-        /// </summary>
-        public FontSizes SizeMultiple { get; private set; }
+        public int Rows => (int)System.Math.Ceiling((double)Image.Height / (GlyphHeight + GlyphPadding));
 
         /// <summary>
         /// The name of the font used when it is registered with the <see cref="Global.Fonts"/> collection.
@@ -103,75 +89,160 @@ namespace SadConsole
         public string Name { get; private set; }
 
         /// <summary>
-        /// The <see cref="FontMaster"/> that created this <see cref="Font"/> instance.
+        /// The name of the image file as defined in the .font file.
         /// </summary>
-        public FontMaster Master { get; private set; }
+        public string FilePath { get; set; }
 
-        internal Font() { }
+        /// <summary>
+        /// The path to the .font definition file.
+        /// </summary>
+        public string LoadedFilePath { get; private set; }
 
-        internal Font(FontMaster masterFont, FontSizes fontMultiple) => Initialize(masterFont, fontMultiple);
+        /// <summary>
+        /// The height of each glyph in pixels.
+        /// </summary>
+        public int GlyphHeight { get; set; }
 
-        private void Initialize(FontMaster masterFont, FontSizes fontMultiple)
+        /// <summary>
+        /// The width of each glyph in pixels.
+        /// </summary>
+        public int GlyphWidth { get; set; }
+
+        /// <summary>
+        /// The amount of pixels between glyphs.
+        /// </summary>
+        public int GlyphPadding { get; set; }
+
+        /// <summary>
+        /// True when the font supports SadConsole extended decorators; otherwise false.
+        /// </summary>
+        public bool IsSadExtended { get; set; }
+        
+        /// <summary>
+        /// The texture used by the font.
+        /// </summary>
+        public ITexture Image { get; set; }
+
+        /// <summary>
+        /// Standard decorators used by your app.
+        /// </summary>
+        private Dictionary<string, GlyphDefinition> GlyphDefinitions { get; } = new Dictionary<string, GlyphDefinition>();
+
+        /// <summary>
+        /// Gets a <see cref="CellDecorator"/> by the <see cref="GlyphDefinition"/> defined by the font file.
+        /// </summary>
+        /// <param name="name">The name of the decorator to get.</param>
+        /// <param name="color">The color to apply to the decorator.</param>
+        /// <returns>The decorator instance.</returns>
+        /// <remarks>If the decorator does not exist, <see cref="CellDecorator.Empty"/> is returned.</remarks>
+        public CellDecorator GetDecorator(string name, Color color)
         {
-            Master = masterFont;
-            FontImage = masterFont.Image;
-            MaxGlyphIndex = masterFont.Rows * masterFont.Columns - 1;
-
-            switch (fontMultiple)
+            if (GlyphDefinitions.ContainsKey(name))
             {
-                case FontSizes.Quarter:
-                    Size = new Point((int)(masterFont.GlyphWidth * 0.25), (int)(masterFont.GlyphHeight * 0.25));
-                    break;
-                case FontSizes.Half:
-                    Size = new Point((int)(masterFont.GlyphWidth * 0.5), (int)(masterFont.GlyphHeight * 0.5));
-                    break;
-                case FontSizes.One:
-                    Size = new Point(masterFont.GlyphWidth, masterFont.GlyphHeight);
-                    break;
-                case FontSizes.Two:
-                    Size = new Point(masterFont.GlyphWidth * 2, masterFont.GlyphHeight * 2);
-                    break;
-                case FontSizes.Three:
-                    Size = new Point(masterFont.GlyphWidth * 3, masterFont.GlyphHeight * 3);
-                    break;
-                case FontSizes.Four:
-                    Size = new Point(masterFont.GlyphWidth * 4, masterFont.GlyphHeight * 4);
-                    break;
-                default:
-                    break;
+                return GlyphDefinitions[name].CreateCellDecorator(color);
             }
 
-            if (Size.X == 0 || Size.Y == 0)
-            {
-                throw new ArgumentException($"This font cannot use size {fontMultiple.ToString()}, at least one axis is 0.", "fontMultiple");
-            }
-
-            SizeMultiple = fontMultiple;
-            Name = masterFont.Name;
-            GlyphRects = masterFont.GlyphIndexRects;
-            SolidGlyphIndex = masterFont.SolidGlyphIndex;
-            Rows = masterFont.Rows;
-            Columns = masterFont.Columns;
+            return CellDecorator.Empty;
         }
 
         /// <summary>
-        /// Returns a rectangle that is positioned and sized based on the font and the cell position specified.
+        /// Gets a <see cref="GlyphDefinition"/> by name that is defined by the font file.
         /// </summary>
-        /// <param name="x">The x-axis of the cell position.</param>
-        /// <param name="y">The y-axis of the cell position.</param>
-        /// <returns>A new rectangle.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        /// <param name="name">The name of the glyph definition.</param>
+        /// <returns>The glyph definition.</returns>
+        /// <remarks>If the glyph definition doesn't exist, return s<see cref="GlyphDefinition.Empty"/>.</remarks>
+        public GlyphDefinition GetGlyphDefinition(string name)
+        {
+            if (GlyphDefinitions.ContainsKey(name))
+            {
+                return GlyphDefinitions[name];
+            }
 
-        public Rectangle GetRenderRect(int x, int y) => new Rectangle(x * Size.X, y * Size.Y, Size.X, Size.Y);
+            return GlyphDefinition.Empty;
+        }
 
         /// <summary>
-        /// Gets the pixel position of a cell position based on the font size.
+        /// Gets the pixel size of a font based on a <see cref="Sizes"/>.
         /// </summary>
-        /// <param name="x">The x coordinate of the position.</param>
-        /// <param name="y">The y coordinate of the position.</param>
-        /// <returns>A new pixel point.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point GetWorldPosition(int x, int y) => GetWorldPosition(new Point(x, y));
+        /// <param name="size">The desired size.</param>
+        /// <returns>The width and height of a font cell.</returns>
+        public Point GetFontSize(Sizes size)
+        {
+            switch (size)
+            {
+                case Sizes.Quarter:
+                    return new Point((int)(GlyphWidth * 0.25), (int)(GlyphHeight * 0.25));
+                case Sizes.Half:
+                    return new Point((int)(GlyphWidth * 0.5), (int)(GlyphHeight * 0.5));
+                case Sizes.Two:
+                    return new Point(GlyphWidth * 2, GlyphHeight * 2);
+                case Sizes.Three:
+                    return new Point(GlyphWidth * 3, GlyphHeight * 3);
+                case Sizes.Four:
+                    return new Point(GlyphWidth * 4, GlyphHeight * 4);
+                case Sizes.One:
+                default:
+                    return new Point(GlyphWidth, GlyphHeight);
+            }
+        }
+
+        /// <summary>
+        /// Returns <see langword="true"/> when the glyph has been defined by name.
+        /// </summary>
+        /// <param name="name">The name of the glyph</param>
+        /// <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
+        public bool HasGlyphDefinition(string name) => GlyphDefinitions.ContainsKey(name);
+
+        /// <summary>
+        /// After the font has been loaded, (with the <see cref="FilePath"/>, <see cref="GlyphHeight"/>, and <see cref="GlyphWidth"/> fields filled out) this method will create the actual texture.
+        /// </summary>
+        public void Generate()
+        {
+            //LoadedFilePath = System.IO.Path.Combine(SadConsole.Global.SerializerPathHint, FilePath);
+
+            // I know.. bad way to do this.. yuck
+            //if (!GameHost.LoadingEmbeddedFont)
+            //{
+            //    Image = GameHost.Instance.GetTexture(LoadedFilePath);
+
+            //    ConfigureRects();
+            //}
+        }
+
+        /// <summary>
+        /// Builds the <see cref="GlyphRects"/> array based on the current font settings.
+        /// </summary>
+        public void ConfigureRects()
+        {
+            GlyphRects = new Rectangle[Rows * Columns];
+
+            for (int i = 0; i < GlyphRects.Length; i++)
+            {
+                int cx = i % Columns;
+                int cy = i / Columns;
+
+                if (GlyphPadding != 0)
+                {
+                    GlyphRects[i] = new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
+                        (cy * GlyphHeight) + ((cy + 1) * GlyphPadding), GlyphWidth, GlyphHeight);
+                }
+                else
+                {
+                    GlyphRects[i] = new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
+                }
+            }
+        }
+
+        [System.Runtime.Serialization.OnDeserialized]
+        private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
+        {
+            if (Columns == 0)
+            {
+                Columns = 16;
+            }
+
+            Generate();
+        }
 
         /// <summary>
         /// Gets the pixel position of a cell position based on the font size.
@@ -179,6 +250,6 @@ namespace SadConsole
         /// <param name="position">The position to convert.</param>
         /// <returns>A new pixel point.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point GetWorldPosition(Point position) => new Point(position.X * Size.X, position.Y * Size.Y);
+        public Point GetWorldPosition(Point position, Point size) => new Point(position.X * size.X, position.Y * size.Y);
     }
 }
