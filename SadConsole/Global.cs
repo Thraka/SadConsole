@@ -26,5 +26,20 @@ namespace SadConsole
         /// The elapsed time between now and the last draw call.
         /// </summary>
         public static TimeSpan DrawFrameDelta { get; set; }
+
+        /// <summary>
+        /// Collection of fonts. Used mainly by the deserialization system.
+        /// </summary>
+        public static Dictionary<string, Font> Fonts { get; } = new Dictionary<string, Font>();
+
+        /// <summary>
+        /// The default font for any type that does not provide a font.
+        /// </summary>
+        public static Font DefaultFont { get; set; }
+
+        /// <summary>
+        /// The default font to use with <see cref="DefaultFont"/>.
+        /// </summary>
+        public static Font.Sizes DefaultFontSize { get; set; } = Font.Sizes.One;
     }
 }

@@ -113,16 +113,16 @@ namespace SadConsole
         public ScreenObjectSurface(int width, int height)
         {
             Surface = new CellSurface(width, height);
-            Font = GameHost.Instance.DefaultFont;
-            FontSize = Font.GetFontSize(GameHost.Instance.DefaultFontSize);
+            Font = Global.DefaultFont;
+            FontSize = Font.GetFontSize(Global.DefaultFontSize);
             Renderer = GameHost.Instance.GetDefaultRenderer();
         }
 
         public ScreenObjectSurface(int width, int height, Cell[] initialCells)
         {
             Surface = new CellSurface(width, height, initialCells);
-            Font = GameHost.Instance.DefaultFont;
-            FontSize = Font.GetFontSize(GameHost.Instance.DefaultFontSize);
+            Font = Global.DefaultFont;
+            FontSize = Font.GetFontSize(Global.DefaultFontSize);
             Renderer = GameHost.Instance.GetDefaultRenderer();
         }
 

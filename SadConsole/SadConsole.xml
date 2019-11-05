@@ -1722,7 +1722,7 @@
         </member>
         <member name="P:SadConsole.Font.Name">
             <summary>
-            The name of the font used when it is registered with the <see cref="!:Global.Fonts"/> collection.
+            The name of the font used when it is registered with the <see cref="P:SadConsole.Global.Fonts"/> collection.
             </summary>
         </member>
         <member name="P:SadConsole.Font.FilePath">
@@ -1851,21 +1851,6 @@
             A callback to run after the <see cref="M:SadConsole.GameHost.Run"/> method is called;
             </summary>
         </member>
-        <member name="P:SadConsole.GameHost.Fonts">
-            <summary>
-            Collection of fonts. Used mainly by the deserialization system.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.DefaultFont">
-            <summary>
-            The default font for any type that does not provide a font.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.DefaultFontSize">
-            <summary>
-            The default font to use with <see cref="P:SadConsole.GameHost.DefaultFont"/>.
-            </summary>
-        </member>
         <member name="P:SadConsole.GameHost.DrawCalls">
             <summary>
             Draw calls registered for the next drawing frame.
@@ -1908,7 +1893,7 @@
         </member>
         <member name="M:SadConsole.GameHost.LoadFont(System.String)">
             <summary>
-            Loads a font from a file and adds it to the <see cref="P:SadConsole.GameHost.Fonts"/> collection.
+            Loads a font from a file and adds it to the <see cref="!:Fonts"/> collection.
             </summary>
             <param name="font">The font file to load.</param>
             <returns>A master font that you can generate a usable font from.</returns>
@@ -1945,6 +1930,21 @@
         <member name="P:SadConsole.Global.DrawFrameDelta">
             <summary>
             The elapsed time between now and the last draw call.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.Fonts">
+            <summary>
+            Collection of fonts. Used mainly by the deserialization system.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.DefaultFont">
+            <summary>
+            The default font for any type that does not provide a font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.DefaultFontSize">
+            <summary>
+            The default font to use with <see cref="P:SadConsole.Global.DefaultFont"/>.
             </summary>
         </member>
         <member name="T:SadConsole.GlyphDefinition">

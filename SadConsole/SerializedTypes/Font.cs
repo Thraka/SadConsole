@@ -10,6 +10,6 @@ namespace SadConsole.SerializedTypes
 
         public static implicit operator FontSerialized(Font font) => new FontSerialized() { Name = font.Name };
 
-        public static implicit operator Font(FontSerialized font) => GameHost.Instance.Fonts.ContainsKey(font.Name) ? GameHost.Instance.Fonts[font.Name] : GameHost.Instance.DefaultFont;
+        public static implicit operator Font(FontSerialized font) => Global.Fonts.ContainsKey(font.Name) ? Global.Fonts[font.Name] : Global.DefaultFont;
     }
 }

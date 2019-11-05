@@ -42,21 +42,6 @@ namespace SadConsole
         public Action OnEnd;
 
         /// <summary>
-        /// Collection of fonts. Used mainly by the deserialization system.
-        /// </summary>
-        public Dictionary<string, Font> Fonts { get; } = new Dictionary<string, Font>();
-
-        /// <summary>
-        /// The default font for any type that does not provide a font.
-        /// </summary>
-        public Font DefaultFont { get; set; }
-
-        /// <summary>
-        /// The default font to use with <see cref="DefaultFont"/>.
-        /// </summary>
-        public Font.Sizes DefaultFontSize { get; set; } = Font.Sizes.One;
-
-        /// <summary>
         /// Draw calls registered for the next drawing frame.
         /// </summary>
         public Queue<DrawCalls.IDrawCall> DrawCalls { get; } = new Queue<DrawCalls.IDrawCall>();
@@ -64,6 +49,7 @@ namespace SadConsole
         public Point WindowSize { get; }
 
         public int ScreenCellsX { get; protected set; }
+
         public int ScreenCellsY { get; protected set; }
 
         /// <summary>
@@ -122,12 +108,12 @@ namespace SadConsole
             {
                 Font masterFont = SadConsole.Serializer.Load<Font>(font, false);
 
-                if (Fonts.ContainsKey(masterFont.Name))
+                if (Global.Fonts.ContainsKey(masterFont.Name))
                 {
-                    Fonts.Remove(masterFont.Name);
+                    Global.Fonts.Remove(masterFont.Name);
                 }
 
-                Fonts.Add(masterFont.Name, masterFont);
+                Global.Fonts.Add(masterFont.Name, masterFont);
                 return masterFont;
             }
             catch (System.Runtime.Serialization.SerializationException)
@@ -175,8 +161,8 @@ namespace SadConsole
                         TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
                     });
 
-                Instance.Fonts.Add(masterFont.Name, masterFont);
-                Instance.DefaultFont = masterFont;
+                Global.Fonts.Add(masterFont.Name, masterFont);
+                Global.DefaultFont = masterFont;
 
                 LoadingEmbeddedFont = false;
             }
@@ -191,7 +177,7 @@ namespace SadConsole
             {
                 if (disposing)
                 {
-                    foreach (var font in Fonts.Values)
+                    foreach (var font in Global.Fonts.Values)
                     {
                         font.Image.Dispose();
                     }
