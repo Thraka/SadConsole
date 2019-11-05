@@ -6,7 +6,7 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
-    public class Console : ScreenObjectSurface
+    public partial class Console : ScreenObjectSurface
     {
         /// <summary>
         /// How the console should handle becoming active.
@@ -48,6 +48,9 @@ namespace SadConsole
         /// </summary>
         public bool AutoCursorOnFocus { get; set; }
 
+        public Console(int width, int height): base(width, height) { }
+
+        public Console(int width, int height, Cell[] initialCells) : base(width, height, initialCells) { }
 
         protected override void OnVisibleChanged()
         {
@@ -102,12 +105,6 @@ namespace SadConsole
         //    }
         //}
 
-        /// <summary>
-        /// Calls <see cref="SetRenderCells"/>.
-        /// </summary>
-        protected override void OnCellsReset() =>
-            SetRenderCells();
-
         ///  <inheritdoc/>
         public override void Update()
         {
@@ -119,36 +116,6 @@ namespace SadConsole
             //{
             //    Cursor.Update(timeElapsed);
             //}
-        }
-
-        /// <summary>
-        /// Configures <see cref="RenderCells"/>, <see cref="RenderRects"/>, and <see cref="LastRenderResult"/> for rendering.
-        /// </summary>
-        public virtual void SetRenderCells()
-        {
-            if (RenderCells.Length != Width * Height)
-            {
-                RenderRects = new Rectangle[Width * Height];
-                RenderCells = new Cell[Width * Height];
-            }
-
-            int index = 0;
-
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    RenderRects[index] = Font.GetRenderRect(x, y);
-                    RenderCells[index] = this[x, y];
-                    index++;
-                }
-            }
-
-            AbsoluteArea = new Rectangle(0, 0, Width * Font.Size.X, Height * Font.Size.Y);
-
-            _renderer?.Attach(this);
-
-            IsDirty = true;
         }
 
         /// <summary>

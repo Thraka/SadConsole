@@ -1343,207 +1343,9 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
-        <member name="T:SadConsole.Components.ComponentHostObject">
-            <summary>
-            A generic component object.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Components.ComponentHostObject.ParentChanged">
-            <summary>
-            Raised when the component's <see cref="P:SadConsole.Components.ComponentHostObject.Parent"/> changes.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsUpdate">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsDraw">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsMouse">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsKeyboard">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObject.ComponentsEmpty">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Components.ComponentHostObject.Components"/> that is not set for update, draw, mouse, or keyboard.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.ComponentHostObject.Children">
-            <summary>
-            The child objects of this instance.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.ComponentHostObject.Components">
-            <summary>
-            A collection of components processed by this console.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.ComponentHostObject.Parent">
-            <summary>
-            The parent object that this instance is a child of.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObject.#ctor">
-            <summary>
-            Creates a new instance of this class.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObject.GetComponents``1">
-            <summary>
-            Gets components of the specified types.
-            </summary>
-            <typeparam name="TComponent">THe component to find</typeparam>
-            <returns>The components found.</returns>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObject.GetComponent``1">
-            <summary>
-            Gets the first component of the specified type.
-            </summary>
-            <typeparam name="TComponent">THe component to find</typeparam>
-            <returns>The component if found, otherwise null.</returns>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObject.OnParentChanged(SadConsole.Components.ComponentHostObject,SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Raises the <see cref="E:SadConsole.Components.ComponentHostObject.ParentChanged"/> event.
-            </summary>
-            <param name="previousParent">The previous parent.</param>
-            <param name="newParent">The new parent.</param>
-        </member>
-        <member name="T:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs">
-            <summary>
-            Provides reference to the old and new parents.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs.OldParent">
-            <summary>
-            The previous parent.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs.NewParent">
-            <summary>
-            The new parent.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObject.ParentChangedEventArgs.#ctor(SadConsole.Components.ComponentHostObject,SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Creates a new instance of this object with the specified old and new parent.
-            </summary>
-            <param name="oldParent">The old parent.</param>
-            <param name="newParent">The new parent.</param>
-        </member>
-        <member name="T:SadConsole.Components.ComponentHostObjectCollection">
-            <summary>
-            Manages the parent and children relationship for <see cref="T:SadConsole.Components.ComponentHostObject"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObjectCollection.objects">
-            <summary>
-            Internal list of objects.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Components.ComponentHostObjectCollection.owningObject">
-            <summary>
-            The parent object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.ComponentHostObjectCollection.Count">
-            <summary>
-            Returns the total number of objects in this collection.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked">
-            <summary>
-            When true, the collection cannot be modified.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.ComponentHostObjectCollection.Item(System.Int32)">
-            <summary>
-            Gets or sets a child object for this collection.
-            </summary>
-            <param name="index">The index of the child object.</param>
-            <returns>The wanted object.</returns>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.#ctor(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Creates a new object collection and parents it to the <paramref name="owner"/> object.
-            </summary>
-            <param name="owner">The owning object of this collection.</param>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Clear">
-            <summary>
-            Removes all consoles.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Contains(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Returns true if this console list contains the specified <paramref name="obj"/>.
-            </summary>
-            <param name="obj">The console to search for.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.IsTop(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
-            </summary>
-            <param name="obj">The obj object to check.</param>
-            <returns>True when the object is on top.</returns>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Add(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Adds a new child object to this collection.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="obj">The child object.</param>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Insert(System.Int32,SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Inserts a child object at the specified <paramref name="index"/>.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="index">The 0-based index to insert the object at.</param>
-            <param name="obj">The child object.</param>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.Remove(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Removes a new child object from this collection.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.Components.ComponentHostObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="obj">The child object.</param>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.MoveToTop(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Moves the specified <paramref name="obj"/>  to the top of the collection.
-            </summary>
-            <param name="obj">The child object.</param>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.MoveToBottom(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Moves the specified <paramref name="obj"/>  to the bottom of the collection.
-            </summary>
-            <param name="obj">The child object.</param>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.IndexOf(SadConsole.Components.ComponentHostObject)">
-            <summary>
-            Gets the 0-based index of the <paramref name="obj"/>.
-            </summary>
-            <param name="obj">The child object.</param>
-        </member>
-        <member name="M:SadConsole.Components.ComponentHostObjectCollection.GetEnumerator">
-            <inheritdoc />
-        </member>
         <member name="T:SadConsole.Components.IComponent">
             <summary>
-            A component that can be added to a <see cref="T:SadConsole.Components.ComponentHostObject"/>.
+            A component that can be added to a <see cref="T:SadConsole.ScreenObject"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.SortOrder">
@@ -1553,45 +1355,45 @@
         </member>
         <member name="P:SadConsole.Components.IComponent.IsUpdate">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="!:Update(ScreenObject, TimeSpan)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsDraw">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="!:Draw(ScreenObject, TimeSpan)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsMouse">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessMouse(ComponentHostObject, MouseConsoleState, out bool)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessMouse(ScreenObject, MouseConsoleState, out bool)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsKeyboard">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessKeyboard(ComponentHostObject, Keyboard, out bool)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessKeyboard(ScreenObject, Keyboard, out bool)"/> method.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.IComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">Time since the last call.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">Time since the last call.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.IComponent.OnAdded(SadConsole.ScreenObject)">
             <summary>
             Called when the component is added to a host.
             </summary>
             <param name="host">The host that added the component.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.IComponent.OnRemoved(SadConsole.ScreenObject)">
             <summary>
             Called when the component is removed from the host.
             </summary>
@@ -1607,17 +1409,17 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">Time since the last call.</param>
         </member>
-        <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.DrawComponent">
@@ -1630,17 +1432,17 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">Time since the last call.</param>
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.DrawComponent.OnRemoved(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.LogicComponent">
@@ -1653,24 +1455,24 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">Time since the last call.</param>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">Time since the last call.</param>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.OnAdded(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.LogicComponent.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.OnRemoved(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.LogicComponent.OnRemoved(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.ComponentBase">
@@ -1693,294 +1495,30 @@
         <member name="P:SadConsole.Components.ComponentBase.IsKeyboard">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.Components.ComponentHostObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.Components.ComponentHostObject)">
+        <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.IConsoleComponent">
-            <summary>
-            A component that can be added to a <see cref="T:SadConsole.Console"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.IConsoleComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.IConsoleComponent.IsUpdate">
-            <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)"/> method.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.IConsoleComponent.IsDraw">
-            <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)"/> method.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.IConsoleComponent.IsMouse">
-            <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessMouse(Console, MouseConsoleState, out bool)"/> method.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.IConsoleComponent.IsKeyboard">
-            <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessKeyboard(Console, Keyboard, out bool)"/> method.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)">
-            <summary>
-            Called by a host on the update frame.
-            </summary>
-            <param name="console">The console calling the component.</param>
-            <param name="delta">Time since the last call.</param>
-        </member>
-        <member name="M:SadConsole.Components.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)">
-            <summary>
-            Called by a host on the draw frame.
-            </summary>
-            <param name="console">The console calling the component.</param>
-            <param name="delta">Time since the last call.</param>
-        </member>
-        <member name="M:SadConsole.Components.IConsoleComponent.OnAdded(SadConsole.Console)">
-            <summary>
-            Called when the component is added to a host.
-            </summary>
-            <param name="console">The host that added the component.</param>
-        </member>
-        <member name="M:SadConsole.Components.IConsoleComponent.OnRemoved(SadConsole.Console)">
-            <summary>
-            Called when the component is removed from the host.
-            </summary>
-            <param name="console">The host that removed the component.</param>
-        </member>
-        <member name="T:SadConsole.Components.UpdateConsoleComponent">
-            <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IConsoleComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.UpdateConsoleComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.UpdateConsoleComponent.Update(SadConsole.Console,System.TimeSpan)">
-            <summary>
-            Called by a host on the update frame.
-            </summary>
-            <param name="console">The console calling the component.</param>
-            <param name="delta">Time since the last call.</param>
-        </member>
-        <member name="M:SadConsole.Components.UpdateConsoleComponent.OnAdded(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.UpdateConsoleComponent.OnRemoved(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.DrawConsoleComponent">
-            <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IConsoleComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.DrawConsoleComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.DrawConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)">
-            <summary>
-            Called by a host on the draw frame.
-            </summary>
-            <param name="console">The console calling the component.</param>
-            <param name="delta">Time since the last call.</param>
-        </member>
-        <member name="M:SadConsole.Components.DrawConsoleComponent.OnAdded(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.DrawConsoleComponent.OnRemoved(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.LogicConsoleComponent">
-            <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IConsoleComponent.Update(SadConsole.Console,System.TimeSpan)"/> and <see cref="M:SadConsole.Components.IConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IConsoleComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.LogicConsoleComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.LogicConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)">
-            <summary>
-            Called by a host on the draw frame.
-            </summary>
-            <param name="console">The console calling the component.</param>
-            <param name="delta">Time since the last call.</param>
-        </member>
-        <member name="M:SadConsole.Components.LogicConsoleComponent.Update(SadConsole.Console,System.TimeSpan)">
-            <summary>
-            Called by a host on the update frame.
-            </summary>
-            <param name="console">The console calling the component.</param>
-            <param name="delta">Time since the last call.</param>
-        </member>
-        <member name="M:SadConsole.Components.LogicConsoleComponent.OnAdded(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.LogicConsoleComponent.OnRemoved(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.ConsoleComponent">
-            <summary>
-            A base class that implements all of <see cref="T:SadConsole.Components.IConsoleComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.ConsoleComponent.SortOrder">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Components.ConsoleComponent.IsUpdate">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Components.ConsoleComponent.IsDraw">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Components.ConsoleComponent.IsMouse">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Components.ConsoleComponent.IsKeyboard">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ConsoleComponent.Draw(SadConsole.Console,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ConsoleComponent.Update(SadConsole.Console,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ConsoleComponent.OnRemoved(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ConsoleComponent.OnAdded(SadConsole.Console)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Console">
-            <summary>
-            A <see cref="T:SadConsole.CellSurface"/> that has a font and can be drawn to the screen.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ComponentsUpdate">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.Components.IConsoleComponent.IsUpdate"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ComponentsDraw">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.Components.IConsoleComponent.IsDraw"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ComponentsMouse">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.Components.IConsoleComponent.IsMouse"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ComponentsKeyboard">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Console.Components"/> where <see cref="P:SadConsole.Components.IConsoleComponent.IsKeyboard"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ComponentsEmpty">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.Console.Components"/> that is not set for update, draw, mouse, or keyboard.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Components">
-            <summary>
-            A collection of components processed by this console.
-            </summary>
         </member>
         <member name="P:SadConsole.Console.FocusedMode">
             <summary>
             How the console should handle becoming active.
             </summary>
         </member>
-        <member name="P:SadConsole.Console.Position">
+        <member name="P:SadConsole.Console.AutoCursorOnFocus">
             <summary>
-            The position of the screen object.
-            </summary>
-            <remarks>This position has no substance.</remarks>
-        </member>
-        <member name="P:SadConsole.Console.CalculatedPosition">
-            <summary>
-            A position that is based on the current <see cref="P:SadConsole.Console.Position"/> and <see cref="P:SadConsole.Console.Parent"/> position, in pixels.
+            Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
             </summary>
         </member>
-        <member name="P:SadConsole.Console.UsePixelPositioning">
-            <summary>
-            Treats the <see cref="P:SadConsole.Console.Position"/> of the console as if it is pixels and not cells.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Children">
-            <summary>
-            The child objects of this instance.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Parent">
-            <summary>
-            The parent object that this instance is a child of.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.IsVisible">
-            <summary>
-            Gets or sets the visibility of this object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.IsPaused">
-            <summary>
-            Gets or sets the paused status of this object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.IsExclusiveMouse">
-            <summary>
-            Gets or sets whether or not this console has exclusive access to the mouse events.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Creates a new console with the specified width and height. Uses <see cref="!:Global.FontDefault"/> as the font.
-            </summary>
-            <param name="width">The width of the console.</param>
-            <param name="height">The height of the console.</param>
-        </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.Cell[])">
-            <summary>
-            Creates a new console with the specified width and height. Uses <see cref="!:Global.FontDefault"/> as the font.
-            </summary>
-            <param name="width">The width of the console.</param>
-            <param name="height">The height of the console.</param>
-        </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.Cell[],SadConsole.Font)">
-            <summary>
-            Creates a new console with the specified width, height, and the cells backing the console. Uses <see cref="!:Global.FontDefault"/> as the font.
-            </summary>
-            <param name="width">The width of the console.</param>
-            <param name="height">The height of the console.</param>
-            <param name="cells">Seeds the cells with existing values. Array size must match <paramref name="width"/> * <paramref name="height"/>.</param>
-        </member>
-        <member name="M:SadConsole.Console.OnCellsReset">
-            <summary>
-            Calls <see cref="M:SadConsole.Console.SetRenderCells"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.OnCalculateRenderPosition">
-            <summary>
-            Sets a value for <see cref="P:SadConsole.Console.CalculatedPosition"/> based on the <see cref="P:SadConsole.Console.Position"/> of this instance and the <see cref="P:SadConsole.Console.Parent"/> instance.
-            </summary>
+        <member name="M:SadConsole.Console.Update">
+             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Console.OnFocusLost">
             <summary>
@@ -1991,43 +1529,6 @@
             <summary>
             Called when this console is focused. Shows the <see cref="!:Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
-        </member>
-        <member name="M:SadConsole.Console.OnParentChanged(SadConsole.Console,SadConsole.Console)">
-            <summary>
-            Called when the parent console changes for this console.
-            </summary>
-            <param name="oldParent">The previous parent.</param>
-            <param name="newParent">The new parent.</param>
-        </member>
-        <member name="M:SadConsole.Console.OnPositionChanged(SadRogue.Primitives.Point)">
-            <summary>
-            Called when the <see cref="P:SadConsole.Console.Position" /> property changes.
-            </summary>
-            <param name="oldLocation">The location before the change.</param>
-        </member>
-        <member name="M:SadConsole.Console.OnVisibleChanged">
-            <summary>
-            Called when the visibility of the object changes.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.OnPausedChanged">
-            <summary>
-            Called when the paused status of the object changes.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.GetComponents``1">
-            <summary>
-            Gets components of the specified types.
-            </summary>
-            <typeparam name="TComponent">THe component to find</typeparam>
-            <returns>The components found.</returns>
-        </member>
-        <member name="M:SadConsole.Console.GetComponent``1">
-            <summary>
-            Gets the first component of the specified type.
-            </summary>
-            <typeparam name="TComponent">THe component to find</typeparam>
-            <returns>The component if found, otherwise null.</returns>
         </member>
         <member name="F:SadConsole.Console.IsMouseOver">
             <summary>
@@ -2067,70 +1568,6 @@
         <member name="F:SadConsole.Console.ActiveBehavior.Push">
             <summary>
             Pushes to the top of the stack when it becomes the active input object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Renderer">
-            <summary>
-            The renderer used to draw this surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Font">
-            <summary>
-            Font used with rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.RenderRects">
-            <summary>
-            Destination rectangles for rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.RenderCells">
-            <summary>
-            Cells that will be rendered.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Tint">
-            <summary>
-            A tint used in rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.AbsoluteArea">
-            <summary>
-            Pixel area of the render cells.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.AutoCursorOnFocus">
-            <summary>
-            Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.Finalize">
-            <summary>
-            Disposes <see cref="!:LastRenderResult"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.Draw(System.TimeSpan)">
-            <summary>
-            Draws all <see cref="P:SadConsole.Console.Children"/>.
-            </summary>
-            <param name="timeElapsed">Time since the last call.</param>
-            <remarks>Only processes if <see cref="P:SadConsole.Console.IsVisible"/> is <see langword="true"/>.</remarks>
-        </member>
-        <member name="M:SadConsole.Console.Update(System.TimeSpan)">
-            <summary>
-            Updates all <see cref="P:SadConsole.Console.Children"/>.
-            </summary>
-            <param name="timeElapsed">Time since the last call.</param>
-            <remarks>Only processes if <see cref="P:SadConsole.Console.IsPaused"/> is <see langword="false"/>.</remarks>
-        </member>
-        <member name="M:SadConsole.Console.SetRenderCells">
-            <summary>
-            Configures <see cref="P:SadConsole.Console.RenderCells"/>, <see cref="P:SadConsole.Console.RenderRects"/>, and <see cref="!:LastRenderResult"/> for rendering.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.OnFontChanged">
-            <summary>
-            Called when the <see cref="P:SadConsole.Console.Font"/> property changes.
             </summary>
         </member>
         <member name="T:SadConsole.ComponentObjectCollection">
@@ -2220,57 +1657,42 @@
         </member>
         <member name="T:SadConsole.Font">
             <summary>
-            Represents a specific font size from a <see cref="T:SadConsole.FontMaster"/>.
+            Represents a specific font size from a <see cref="!:FontMaster"/>.
             </summary>
         </member>
-        <member name="T:SadConsole.Font.FontSizes">
+        <member name="T:SadConsole.Font.Sizes">
             <summary>
             The size options of a font.
             </summary>
         </member>
-        <member name="F:SadConsole.Font.FontSizes.Quarter">
+        <member name="F:SadConsole.Font.Sizes.Quarter">
             <summary>
             One quater the size of the font. (Original Width and Height * 0.25)
             </summary>
         </member>
-        <member name="F:SadConsole.Font.FontSizes.Half">
+        <member name="F:SadConsole.Font.Sizes.Half">
             <summary>
             Half the size of the font. (Original Width and Height * 0.50)
             </summary>
         </member>
-        <member name="F:SadConsole.Font.FontSizes.One">
+        <member name="F:SadConsole.Font.Sizes.One">
             <summary>
             Exact size of the font. (Original Width and Height * 1.0)
             </summary>
         </member>
-        <member name="F:SadConsole.Font.FontSizes.Two">
+        <member name="F:SadConsole.Font.Sizes.Two">
             <summary>
             Two times the size of the font. (Original Width and Height * 2.0)
             </summary>
         </member>
-        <member name="F:SadConsole.Font.FontSizes.Three">
+        <member name="F:SadConsole.Font.Sizes.Three">
             <summary>
             Two times the size of the font. (Original Width and Height * 3.0)
             </summary>
         </member>
-        <member name="F:SadConsole.Font.FontSizes.Four">
+        <member name="F:SadConsole.Font.Sizes.Four">
             <summary>
             Two times the size of the font. (Original Width and Height * 4.0)
-            </summary>
-        </member>
-        <member name="P:SadConsole.Font.FontImage">
-            <summary>
-            The texture of the font.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Font.Size">
-            <summary>
-            The width and height of each glyph.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Font.MaxGlyphIndex">
-            <summary>
-            The maximum upper inclusive glyph index of the font.
             </summary>
         </member>
         <member name="P:SadConsole.Font.SolidGlyphIndex">
@@ -2298,125 +1720,52 @@
             How many rows are in this font.
             </summary>
         </member>
-        <member name="P:SadConsole.Font.SizeMultiple">
-            <summary>
-            The size originally used to create the font from a <see cref="T:SadConsole.FontMaster"/>.
-            </summary>
-        </member>
         <member name="P:SadConsole.Font.Name">
             <summary>
             The name of the font used when it is registered with the <see cref="!:Global.Fonts"/> collection.
             </summary>
         </member>
-        <member name="P:SadConsole.Font.Master">
-            <summary>
-            The <see cref="T:SadConsole.FontMaster"/> that created this <see cref="T:SadConsole.Font"/> instance.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Font.GetRenderRect(System.Int32,System.Int32)">
-            <summary>
-            Returns a rectangle that is positioned and sized based on the font and the cell position specified.
-            </summary>
-            <param name="x">The x-axis of the cell position.</param>
-            <param name="y">The y-axis of the cell position.</param>
-            <returns>A new rectangle.</returns>
-        </member>
-        <member name="M:SadConsole.Font.GetWorldPosition(System.Int32,System.Int32)">
-            <summary>
-            Gets the pixel position of a cell position based on the font size.
-            </summary>
-            <param name="x">The x coordinate of the position.</param>
-            <param name="y">The y coordinate of the position.</param>
-            <returns>A new pixel point.</returns>
-        </member>
-        <member name="M:SadConsole.Font.GetWorldPosition(SadRogue.Primitives.Point)">
-            <summary>
-            Gets the pixel position of a cell position based on the font size.
-            </summary>
-            <param name="position">The position to convert.</param>
-            <returns>A new pixel point.</returns>
-        </member>
-        <member name="T:SadConsole.FontMaster">
-            <summary>
-            The font stored by the engine. Used to generate the <see cref="T:SadConsole.Font"/> type used by the engine.
-            </summary>
-        </member>
-        <member name="P:SadConsole.FontMaster.Name">
-            <summary>
-            The name of this font family.
-            </summary>
-        </member>
-        <member name="P:SadConsole.FontMaster.FilePath">
+        <member name="P:SadConsole.Font.FilePath">
             <summary>
             The name of the image file as defined in the .font file.
             </summary>
         </member>
-        <member name="P:SadConsole.FontMaster.LoadedFilePath">
+        <member name="P:SadConsole.Font.LoadedFilePath">
             <summary>
-            The path to the file per <see cref="!:SadConsole.Global.SerializerPathHint"/>.
+            The path to the .font definition file.
             </summary>
         </member>
-        <member name="P:SadConsole.FontMaster.GlyphHeight">
+        <member name="P:SadConsole.Font.GlyphHeight">
             <summary>
             The height of each glyph in pixels.
             </summary>
         </member>
-        <member name="P:SadConsole.FontMaster.GlyphWidth">
+        <member name="P:SadConsole.Font.GlyphWidth">
             <summary>
             The width of each glyph in pixels.
             </summary>
         </member>
-        <member name="P:SadConsole.FontMaster.GlyphPadding">
+        <member name="P:SadConsole.Font.GlyphPadding">
             <summary>
             The amount of pixels between glyphs.
             </summary>
         </member>
-        <member name="P:SadConsole.FontMaster.SolidGlyphIndex">
-            <summary>
-            Which glyph index is considered completely solid. Used for shading.
-            </summary>
-        </member>
-        <member name="P:SadConsole.FontMaster.Columns">
-            <summary>
-            The amount of columns the font uses, defaults to 16.
-            </summary>
-        </member>
-        <member name="P:SadConsole.FontMaster.IsSadExtended">
+        <member name="P:SadConsole.Font.IsSadExtended">
             <summary>
             True when the font supports SadConsole extended decorators; otherwise false.
             </summary>
         </member>
-        <member name="P:SadConsole.FontMaster.Rows">
-            <summary>
-            The total rows in the font.
-            </summary>
-        </member>
-        <member name="P:SadConsole.FontMaster.Image">
+        <member name="P:SadConsole.Font.Image">
             <summary>
             The texture used by the font.
             </summary>
         </member>
-        <member name="F:SadConsole.FontMaster.GlyphIndexRects">
-            <summary>
-            A cached array of rectangles of individual glyphs.
-            </summary>
-        </member>
-        <member name="P:SadConsole.FontMaster.GlyphDefinitions">
+        <member name="P:SadConsole.Font.GlyphDefinitions">
             <summary>
             Standard decorators used by your app.
             </summary>
         </member>
-        <member name="M:SadConsole.FontMaster.#ctor(SadConsole.ITexture,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Creates a SadConsole font using an existing image.
-            </summary>
-            <param name="fontImage">The image for the font.</param>
-            <param name="glyphWidth">The width of each glyph.</param>
-            <param name="glyphHeight">The height of each glyph.</param>
-            <param name="totalColumns">Glyph columns in the font texture, defaults to 16.</param>
-            <param name="glyphPadding">Pixels between each glyph, defaults to 0.</param>
-        </member>
-        <member name="M:SadConsole.FontMaster.GetDecorator(System.String,SadRogue.Primitives.Color)">
+        <member name="M:SadConsole.Font.GetDecorator(System.String,SadRogue.Primitives.Color)">
             <summary>
             Gets a <see cref="T:SadConsole.CellDecorator"/> by the <see cref="T:SadConsole.GlyphDefinition"/> defined by the font file.
             </summary>
@@ -2425,7 +1774,7 @@
             <returns>The decorator instance.</returns>
             <remarks>If the decorator does not exist, <see cref="P:SadConsole.CellDecorator.Empty"/> is returned.</remarks>
         </member>
-        <member name="M:SadConsole.FontMaster.GetGlyphDefinition(System.String)">
+        <member name="M:SadConsole.Font.GetGlyphDefinition(System.String)">
             <summary>
             Gets a <see cref="T:SadConsole.GlyphDefinition"/> by name that is defined by the font file.
             </summary>
@@ -2433,29 +1782,44 @@
             <returns>The glyph definition.</returns>
             <remarks>If the glyph definition doesn't exist, return s<see cref="P:SadConsole.GlyphDefinition.Empty"/>.</remarks>
         </member>
-        <member name="M:SadConsole.FontMaster.HasGlyphDefinition(System.String)">
+        <member name="M:SadConsole.Font.GetFontSize(SadConsole.Font.Sizes)">
+            <summary>
+            Gets the pixel size of a font based on a <see cref="T:SadConsole.Font.Sizes"/>.
+            </summary>
+            <param name="size">The desired size.</param>
+            <returns>The width and height of a font cell.</returns>
+        </member>
+        <member name="M:SadConsole.Font.HasGlyphDefinition(System.String)">
             <summary>
             Returns <see langword="true"/> when the glyph has been defined by name.
             </summary>
             <param name="name">The name of the glyph</param>
             <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.FontMaster.Generate">
+        <member name="M:SadConsole.Font.Generate">
             <summary>
-            After the font has been loaded, (with the <see cref="P:SadConsole.FontMaster.FilePath"/>, <see cref="P:SadConsole.FontMaster.GlyphHeight"/>, and <see cref="P:SadConsole.FontMaster.GlyphWidth"/> fields filled out) this method will create the actual texture.
+            After the font has been loaded, (with the <see cref="P:SadConsole.Font.FilePath"/>, <see cref="P:SadConsole.Font.GlyphHeight"/>, and <see cref="P:SadConsole.Font.GlyphWidth"/> fields filled out) this method will create the actual texture.
             </summary>
         </member>
-        <member name="M:SadConsole.FontMaster.ConfigureRects">
+        <member name="M:SadConsole.Font.ConfigureRects">
             <summary>
-            Builds the <see cref="F:SadConsole.FontMaster.GlyphIndexRects"/> array based on the current font settings.
+            Builds the <see cref="P:SadConsole.Font.GlyphRects"/> array based on the current font settings.
             </summary>
         </member>
-        <member name="M:SadConsole.FontMaster.GetFont(SadConsole.Font.FontSizes)">
+        <member name="M:SadConsole.Font.GetRenderRect(System.Int32,System.Int32,SadRogue.Primitives.Point)">
             <summary>
-            Gets a sized font.
+            Returns a rectangle that is positioned and sized based on the font and the cell position specified.
             </summary>
-            <param name="multiple">How much to multiple the font size by.</param>
-            <returns>A font.</returns>
+            <param name="x">The x-axis of the cell position.</param>
+            <param name="y">The y-axis of the cell position.</param>
+            <returns>A new rectangle.</returns>
+        </member>
+        <member name="M:SadConsole.Font.GetWorldPosition(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Gets the pixel position of a cell position based on the font size.
+            </summary>
+            <param name="position">The position to convert.</param>
+            <returns>A new pixel point.</returns>
         </member>
         <member name="P:SadConsole.GameHost.Instance">
             <summary>
@@ -2490,6 +1854,11 @@
         <member name="P:SadConsole.GameHost.DefaultFont">
             <summary>
             The default font for any type that does not provide a font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.DefaultFontSize">
+            <summary>
+            The default font to use with <see cref="P:SadConsole.GameHost.DefaultFont"/>.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.DrawCalls">
@@ -2589,6 +1958,348 @@
             <param name="foreground">The foreground color of the cell.</param>
             <param name="background">The background color of the cell.</param>
             <returns>A new cell instance.</returns>
+        </member>
+        <member name="T:SadConsole.NewOldValueEventArgs`1">
+            <summary>
+            Provides reference to the old and new objects.
+            </summary>
+        </member>
+        <member name="F:SadConsole.NewOldValueEventArgs`1.OldObject">
+            <summary>
+            The previous object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.NewOldValueEventArgs`1.NewObject">
+            <summary>
+            The new object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.NewOldValueEventArgs`1.#ctor(`0,`0)">
+            <summary>
+            Creates a new instance of this object with the specified old and new parent.
+            </summary>
+            <param name="oldObject">The old parent.</param>
+            <param name="newObject">The new parent.</param>
+        </member>
+        <member name="T:SadConsole.ScreenObject">
+            <summary>
+            A generic object processed by SadConsole. Provides parent/child, components, and position.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObject.ParentChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.ScreenObject.Parent"/> property changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObject.PositionChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.ScreenObject.Position"/> property changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObject.VisibleChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.ScreenObject.IsVisible"/> property changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObject.EnabledChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.ScreenObject.IsEnabled"/> property changes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObject.ComponentsUpdate">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObject.ComponentsDraw">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObject.ComponentsMouse">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObject.ComponentsKeyboard">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObject.ComponentsEmpty">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> that is not set for update, draw, mouse, or keyboard.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.Components">
+            <summary>
+            A collection of components processed by this console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.Children">
+            <summary>
+            The child objects of this instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.Parent">
+            <summary>
+            The parent object that this instance is a child of.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.Position">
+            <summary>
+            The position of the object on the screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.AbsolutePosition">
+            <summary>
+            A position that is based on the current <see cref="P:SadConsole.ScreenObject.Position"/> and <see cref="P:SadConsole.ScreenObject.Parent"/> position, in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.IsVisible">
+            <summary>
+            Gets or sets the visibility of this object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.IsEnabled">
+            <summary>
+            Gets or sets the visibility of this object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObject.#ctor">
+            <summary>
+            Creates a new instance of this class.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Draw">
+            <summary>
+            Draws all <see cref="P:SadConsole.ScreenObject.Components"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
+            </summary>
+            <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Update">
+            <summary>
+            Updates all <see cref="P:SadConsole.ScreenObject.Components"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
+            </summary>
+            <remarks>Only processes if <see cref="!:IsPaused"/> is <see langword="false"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.ScreenObject.GetComponents``1">
+            <summary>
+            Gets components of the specified types.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The components found.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObject.GetComponent``1">
+            <summary>
+            Gets the first component of the specified type.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The component if found, otherwise null.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObject.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObject.ParentChanged"/> event.
+            </summary>
+            <param name="oldParent">The previous parent.</param>
+            <param name="newParent">The new parent.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObject.PositionChanged"/> event.
+            </summary>
+            <param name="oldPosition">The previous position.</param>
+            <param name="newPosition">The new position.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.OnVisibleChanged">
+            <summary>
+            Called when the visibility of the object changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObject.OnEnabledChanged">
+            <summary>
+            Called when the paused status of the object changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObject.SetAbsolutePosition">
+            <summary>
+            Sets a value for <see cref="P:SadConsole.ScreenObject.AbsolutePosition"/> based on the <see cref="P:SadConsole.ScreenObject.Position"/> of this instance and the <see cref="P:SadConsole.ScreenObject.Parent"/> instance.
+            </summary>
+        </member>
+        <member name="T:SadConsole.ScreenObjectCollection">
+            <summary>
+            Manages the parent and children relationship for <see cref="T:SadConsole.ScreenObject"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectCollection.objects">
+            <summary>
+            Internal list of objects.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectCollection.owningObject">
+            <summary>
+            The parent object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectCollection.Count">
+            <summary>
+            Returns the total number of objects in this collection.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectCollection.IsLocked">
+            <summary>
+            When true, the collection cannot be modified.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets a child object for this collection.
+            </summary>
+            <param name="index">The index of the child object.</param>
+            <returns>The wanted object.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.#ctor(SadConsole.ScreenObject)">
+            <summary>
+            Creates a new object collection and parents it to the <paramref name="owner"/> object.
+            </summary>
+            <param name="owner">The owning object of this collection.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.Clear">
+            <summary>
+            Removes all consoles.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.Contains(SadConsole.ScreenObject)">
+            <summary>
+            Returns true if this console list contains the specified <paramref name="obj"/>.
+            </summary>
+            <param name="obj">The console to search for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.IsTop(SadConsole.ScreenObject)">
+            <summary>
+            When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
+            </summary>
+            <param name="obj">The obj object to check.</param>
+            <returns>True when the object is on top.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.Add(SadConsole.ScreenObject)">
+            <summary>
+            Adds a new child object to this collection.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.Insert(System.Int32,SadConsole.ScreenObject)">
+            <summary>
+            Inserts a child object at the specified <paramref name="index"/>.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
+            <param name="index">The 0-based index to insert the object at.</param>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.Remove(SadConsole.ScreenObject)">
+            <summary>
+            Removes a new child object from this collection.
+            </summary>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.MoveToTop(SadConsole.ScreenObject)">
+            <summary>
+            Moves the specified <paramref name="obj"/>  to the top of the collection.
+            </summary>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.MoveToBottom(SadConsole.ScreenObject)">
+            <summary>
+            Moves the specified <paramref name="obj"/>  to the bottom of the collection.
+            </summary>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.IndexOf(SadConsole.ScreenObject)">
+            <summary>
+            Gets the 0-based index of the <paramref name="obj"/>.
+            </summary>
+            <param name="obj">The child object.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.ScreenObjectSurface">
+            <summary>
+            An object that renders a <see cref="T:SadConsole.CellSurface"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Surface">
+            <summary>
+            The surface used by the screen object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.IsDirty">
+            <summary>
+            Indicates the <see cref="P:SadConsole.ScreenObjectSurface.Surface"/> has changed and needs to be rendered.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Renderer">
+            <summary>
+            The renderer used to draw this surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Font">
+            <summary>
+            Font used with rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.FontSize">
+            <summary>
+            The size of the <see cref="P:SadConsole.ScreenObjectSurface.Font"/> cells applied to the <see cref="P:SadConsole.ScreenObjectSurface.Surface"/> when rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Tint">
+            <summary>
+            A tint used in rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.AbsoluteArea">
+            <summary>
+            The area on the screen this surface occupies. In pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.UsePixelPositioning">
+            <summary>
+            Treats the <see cref="P:SadConsole.ScreenObject.Position"/> of the console as if it is pixels and not cells.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.WidthPixels">
+            <summary>
+            The width of the surface in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.HeightPixels">
+            <summary>
+            The height of the surface in pixels.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.SetAbsolutePosition">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.Draw">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.Update">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.Finalize">
+            <summary>
+            Disposes <see cref="P:SadConsole.ScreenObjectSurface.Renderer"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.Serializer">
             <summary>

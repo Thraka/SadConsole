@@ -25,7 +25,7 @@ namespace SadConsole.MonoGame
                     SadConsole.Game.Instance.DrawCalls.Clear();
 
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    SadConsole.Global.Screen?.Draw(gameTime.ElapsedGameTime);
+                    SadConsole.Global.Screen?.Draw();
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
 
@@ -76,7 +76,7 @@ namespace SadConsole.MonoGame
                         }
                     }
 
-                    SadConsole.Global.Screen?.Update(gameTime.ElapsedGameTime);
+                    SadConsole.Global.Screen?.Update();
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
                 }

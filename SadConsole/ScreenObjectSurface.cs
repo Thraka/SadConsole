@@ -8,12 +8,12 @@ namespace SadConsole
     /// <summary>
     /// An object that renders a <see cref="CellSurface"/>.
     /// </summary>
-    public class ScreenObjectSurface: ScreenObject
+    public class ScreenObjectSurface: ScreenObject, IDisposable
     {
         private Font _font;
         private Point _fontSize;
         private Renderers.IRenderer _renderer;
-        private Color _tint;
+        private Color _tint = Color.Transparent;
         private bool _usePixelPositioning;
 
         /// <summary>
@@ -110,6 +110,22 @@ namespace SadConsole
         /// </summary>
         public int WidthPixels => Surface.Width * FontSize.X;
 
+        public ScreenObjectSurface(int width, int height)
+        {
+            Surface = new CellSurface(width, height);
+            Font = GameHost.Instance.DefaultFont;
+            FontSize = Font.GetFontSize(GameHost.Instance.DefaultFontSize);
+            Renderer = GameHost.Instance.GetDefaultRenderer();
+        }
+
+        public ScreenObjectSurface(int width, int height, Cell[] initialCells)
+        {
+            Surface = new CellSurface(width, height, initialCells);
+            Font = GameHost.Instance.DefaultFont;
+            FontSize = Font.GetFontSize(GameHost.Instance.DefaultFontSize);
+            Renderer = GameHost.Instance.GetDefaultRenderer();
+        }
+
         /// <summary>
         /// The height of the surface in pixels.
         /// </summary>
@@ -156,10 +172,39 @@ namespace SadConsole
             base.Update();
         }
 
+
+        #region IDisposable Support
+        private bool _disposedValue = false; // To detect redundant calls
+
+        /// <inheritdoc/>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                _renderer?.Dispose();
+                _renderer = null;
+
+                _disposedValue = true;
+            }
+        }
+
         /// <summary>
         /// Disposes <see cref="Renderer"/>.
         /// </summary>
         ~ScreenObjectSurface() =>
-            _renderer?.Dispose();
+            Dispose(false);
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

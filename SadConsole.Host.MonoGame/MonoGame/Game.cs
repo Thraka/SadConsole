@@ -127,10 +127,10 @@ namespace SadConsole.MonoGame
         /// <param name="height">The height glyphs.</param>
         /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
-        public void ResizeGraphicsDeviceManager(Font font, int width, int height, int additionalWidth, int additionalHeight)
+        public void ResizeGraphicsDeviceManager(Point fontSize, int width, int height, int additionalWidth, int additionalHeight)
         {
-            Global.GraphicsDeviceManager.PreferredBackBufferWidth = (font.Size.X * width) + additionalWidth;
-            Global.GraphicsDeviceManager.PreferredBackBufferHeight = (font.Size.Y * height) + additionalHeight;
+            Global.GraphicsDeviceManager.PreferredBackBufferWidth = (fontSize.X * width) + additionalWidth;
+            Global.GraphicsDeviceManager.PreferredBackBufferHeight = (fontSize.Y * height) + additionalHeight;
 
             SadConsole.Settings.Rendering.RenderWidth = Global.GraphicsDeviceManager.PreferredBackBufferWidth;
             SadConsole.Settings.Rendering.RenderHeight = Global.GraphicsDeviceManager.PreferredBackBufferHeight;

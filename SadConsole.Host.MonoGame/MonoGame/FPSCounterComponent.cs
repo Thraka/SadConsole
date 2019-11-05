@@ -22,8 +22,9 @@ namespace SadConsole.MonoGame
             public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
                 : base(game)
             {
-                surface = new Console(30, 1) { DefaultBackground = Color.Black };
-                surface.Clear();
+                surface = new Console(30, 1);
+                surface.Surface.DefaultBackground = Color.Black;
+                surface.Surface.Clear();
                 DrawOrder = 8;
                 Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
             }
@@ -45,9 +46,9 @@ namespace SadConsole.MonoGame
             public override void Draw(GameTime gameTime)
             {
                 frameCounter++;
-                surface.Clear();
-                surface.Print(0, 0, $"fps: {frameRate}", Color.White, Color.Black);
-                surface.Draw(gameTime.ElapsedGameTime);
+                surface.Surface.Clear();
+                surface.Surface.Print(0, 0, $"fps: {frameRate}", Color.White, Color.Black);
+                surface.Draw();
                 
                 Game.GraphicsDevice.SetRenderTarget(null);
                 Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);

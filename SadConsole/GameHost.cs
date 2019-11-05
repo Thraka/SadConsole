@@ -50,7 +50,7 @@ namespace SadConsole
         /// <summary>
         /// The default font to use with <see cref="DefaultFont"/>.
         /// </summary>
-        public Font.Sizes DefaultFontSize { get; set; }
+        public Font.Sizes DefaultFontSize { get; set; } = Font.Sizes.One;
 
         /// <summary>
         /// Draw calls registered for the next drawing frame.
@@ -166,10 +166,6 @@ namespace SadConsole
                         TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
                     });
 
-                using (Stream fontStream = assembly.GetManifestResourceStream(resourceNameImage))
-                    masterFont.Image = GetTexture(fontStream);
-
-                masterFont.ConfigureRects();
                 Instance.Fonts.Add(masterFont.Name, masterFont);
                 Instance.DefaultFont = masterFont;
 

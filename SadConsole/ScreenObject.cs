@@ -159,6 +159,10 @@ namespace SadConsole
         public ScreenObject()
         {
             Components = new ObservableCollection<IComponent>();
+            ComponentsUpdate = new List<IComponent>();
+            ComponentsDraw = new List<IComponent>();
+            ComponentsKeyboard = new List<IComponent>();
+            ComponentsMouse = new List<IComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
             Children = new ScreenObjectCollection(this);
         }

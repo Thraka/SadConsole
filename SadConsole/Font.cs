@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using SadRogue.Primitives;
 
 namespace SadConsole
@@ -8,6 +10,7 @@ namespace SadConsole
     /// <summary>
     /// Represents a specific font size from a <see cref="FontMaster"/>.
     /// </summary>
+    [DataContract]
     public sealed class Font
     {
         private int _solidGlyphIndex;
@@ -50,17 +53,18 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// The texture of the font.
-        /// </summary>
-        public ITexture FontImage { get; private set; }
-
-        /// <summary>
         /// Which glyph index is considered completely solid. Used for shading.
         /// </summary>
+        [DataMember]
         public int SolidGlyphIndex
         {
             get => _solidGlyphIndex;
-            set { _solidGlyphIndex = value; _solidGlyphRect = GlyphRects[value]; }
+            set
+            {
+                _solidGlyphIndex = value;
+                if (GlyphRects != null)
+                    _solidGlyphRect = GlyphRects[value];
+            }
         }
 
         /// <summary>
@@ -76,6 +80,7 @@ namespace SadConsole
         /// <summary>
         /// How many columns are in the this font.
         /// </summary>
+        [DataMember]
         public int Columns { get; private set; }
 
         /// <summary>
@@ -86,11 +91,13 @@ namespace SadConsole
         /// <summary>
         /// The name of the font used when it is registered with the <see cref="Global.Fonts"/> collection.
         /// </summary>
+        [DataMember]
         public string Name { get; private set; }
 
         /// <summary>
         /// The name of the image file as defined in the .font file.
         /// </summary>
+        [DataMember]
         public string FilePath { get; set; }
 
         /// <summary>
@@ -101,23 +108,27 @@ namespace SadConsole
         /// <summary>
         /// The height of each glyph in pixels.
         /// </summary>
+        [DataMember]
         public int GlyphHeight { get; set; }
 
         /// <summary>
         /// The width of each glyph in pixels.
         /// </summary>
+        [DataMember]
         public int GlyphWidth { get; set; }
 
         /// <summary>
         /// The amount of pixels between glyphs.
         /// </summary>
+        [DataMember]
         public int GlyphPadding { get; set; }
 
         /// <summary>
         /// True when the font supports SadConsole extended decorators; otherwise false.
         /// </summary>
+        [DataMember]
         public bool IsSadExtended { get; set; }
-        
+
         /// <summary>
         /// The texture used by the font.
         /// </summary>
@@ -126,6 +137,7 @@ namespace SadConsole
         /// <summary>
         /// Standard decorators used by your app.
         /// </summary>
+        [DataMember]
         private Dictionary<string, GlyphDefinition> GlyphDefinitions { get; } = new Dictionary<string, GlyphDefinition>();
 
         /// <summary>
@@ -231,18 +243,36 @@ namespace SadConsole
                     GlyphRects[i] = new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
                 }
             }
+
+            _solidGlyphRect = GlyphRects[SolidGlyphIndex];
         }
 
         [System.Runtime.Serialization.OnDeserialized]
         private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
         {
             if (Columns == 0)
-            {
                 Columns = 16;
-            }
 
-            Generate();
+            if (FilePath.StartsWith("res:"))
+            {
+                using (Stream fontStream = typeof(Font).Assembly.GetManifestResourceStream(FilePath.Substring(4)))
+                    Image = GameHost.Instance.GetTexture(fontStream);
+            }
+            else
+                Image = GameHost.Instance.GetTexture(FilePath);
+            
+
+            ConfigureRects();
         }
+
+        /// <summary>
+        /// Returns a rectangle that is positioned and sized based on the font and the cell position specified.
+        /// </summary>
+        /// <param name="x">The x-axis of the cell position.</param>
+        /// <param name="y">The y-axis of the cell position.</param>
+        /// <returns>A new rectangle.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Rectangle GetRenderRect(int x, int y, Point size) => new Rectangle(x * size.X, y * size.Y, size.X, size.Y);
 
         /// <summary>
         /// Gets the pixel position of a cell position based on the font size.
