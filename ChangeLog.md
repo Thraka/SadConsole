@@ -1,4 +1,8 @@
-﻿## 08/20/2019 V8.9.0
+## ??/??/2019 V???
+
+- Fix `FontMaster.Rows` calculation (Thanks Kaev)
+
+## 08/20/2019 V8.9.0
 
 - Add `Console.Erase`
 - Add `Console.GetComponent` and `Console.GetComponents` to find components added to a console.
