@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using SadConsole.Controls;
@@ -31,8 +30,10 @@ namespace SadConsole.Renderers
             RenderBegin(surface, force);
             RenderCells(surface, force);
 
-            foreach (var control in Controls)
+            foreach (ControlBase control in Controls)
+            {
                 RenderControlCells(control, surface.IsDirty || force);
+            }
 
             //RenderControls(surface, force);
             RenderTint(surface, force);
@@ -41,7 +42,10 @@ namespace SadConsole.Renderers
 
         public void RenderControlCells(ControlBase control, bool draw = false)
         {
-            if (!draw || !control.IsVisible) return;
+            if (!draw || !control.IsVisible)
+            {
+                return;
+            }
 
             // This disabled code supported drawing alternative fonts IN the size they defined. This did not play
             // well with mouse handling and requires a much bigger investment to get that working.
@@ -49,37 +53,49 @@ namespace SadConsole.Renderers
 
             //if (control.AlternateFont == null || control.AlternateFont.Size == control.Parent.Font.Size)
             {
-                var font = control.AlternateFont ?? control.Parent.Font;
+                Font font = control.AlternateFont ?? control.Parent.Font;
 
                 if (control.Surface.DefaultBackground.A != 0)
                 {
-                    var (x, y) = (control.Position - control.Parent.ViewPort.Location).ConsoleLocationToPixel(font);
-                    var (width, height) = new Point(control.Surface.Width, control.Surface.Height) * font.Size;
+                    (int x, int y) = (control.Position - control.Parent.ViewPort.Location).ConsoleLocationToPixel(font);
+                    (int width, int height) = new Point(control.Surface.Width, control.Surface.Height) * font.Size;
                     Global.SpriteBatch.Draw(font.FontImage, new Rectangle(x, y, width, height), font.GlyphRects[font.SolidGlyphIndex], control.Surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
                 }
 
-                for (var i = 0; i < control.Surface.Cells.Length; i++)
+                for (int i = 0; i < control.Surface.Cells.Length; i++)
                 {
-                    ref var cell = ref control.Surface.Cells[i];
+                    ref Cell cell = ref control.Surface.Cells[i];
 
-                    if (!cell.IsVisible) continue;
+                    if (!cell.IsVisible)
+                    {
+                        continue;
+                    }
 
-                    var cellRenderPosition = i.ToPoint(control.Surface.Width) + control.Position;
+                    Point cellRenderPosition = i.ToPoint(control.Surface.Width) + control.Position;
 
-                    if (!control.Parent.ViewPort.Contains(cellRenderPosition)) continue;
+                    if (!control.Parent.ViewPort.Contains(cellRenderPosition))
+                    {
+                        continue;
+                    }
 
                     Rectangle renderRect = control.Parent.RenderRects[(cellRenderPosition - control.Parent.ViewPort.Location).ToIndex(control.Parent.Width)];
 
                     if (cell.Background != Color.Transparent && cell.Background != control.Surface.DefaultBackground)
+                    {
                         Global.SpriteBatch.Draw(font.FontImage, renderRect, font.GlyphRects[font.SolidGlyphIndex], cell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    }
 
                     if (cell.Foreground != Color.Transparent)
+                    {
                         Global.SpriteBatch.Draw(font.FontImage, renderRect, font.GlyphRects[cell.Glyph], cell.Foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
+                    }
 
-                    foreach (var decorator in cell.Decorators)
+                    foreach (CellDecorator decorator in cell.Decorators)
                     {
                         if (decorator.Color != Color.Transparent)
+                        {
                             Global.SpriteBatch.Draw(font.FontImage, renderRect, font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
+                        }
                     }
                 }
             }

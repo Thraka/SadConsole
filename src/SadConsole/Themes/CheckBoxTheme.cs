@@ -39,14 +39,16 @@ namespace SadConsole.Themes
         /// </summary>
         public CheckBoxTheme()
         {
-            
+
         }
 
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new CellSurface(control.Width, control.Height);
-            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface = new CellSurface(control.Width, control.Height)
+            {
+                DefaultBackground = Color.Transparent
+            };
             control.Surface.Clear();
 
             base.Attached(control);
@@ -70,12 +72,18 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is CheckBox checkbox)) return;
-            
-            if (!control.IsDirty) return;
+            if (!(control is CheckBox checkbox))
+            {
+                return;
+            }
+
+            if (!control.IsDirty)
+            {
+                return;
+            }
 
             Cell appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
-                
+
             if (Helpers.HasFlag(checkbox.State, ControlStates.Disabled))
             {
                 appearance = Disabled;
@@ -133,21 +141,19 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new CheckBoxTheme()
         {
-            return new CheckBoxTheme()
-            {
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                CheckedIcon = CheckedIcon.Clone(),
-                UncheckedIcon = UncheckedIcon.Clone(),
-                LeftBracket = LeftBracket.Clone(),
-                RightBracket = RightBracket.Clone(),
-            };
-        }
+            Colors = Colors?.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            CheckedIcon = CheckedIcon.Clone(),
+            UncheckedIcon = UncheckedIcon.Clone(),
+            LeftBracket = LeftBracket.Clone(),
+            RightBracket = RightBracket.Clone(),
+        };
     }
 }

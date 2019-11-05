@@ -12,7 +12,7 @@ namespace SadConsole
     /// An array of <see cref="Cell"/> objects used to represent a 2D surface.
     /// </summary>
     [JsonConverter(typeof(SerializedTypes.CellSurfaceJsonConverter))]
-    public partial class CellSurface: IEnumerable<Cell>
+    public partial class CellSurface : IEnumerable<Cell>
     {
         private bool _isDirty = true;
         private Color _defaultBackground;
@@ -31,8 +31,11 @@ namespace SadConsole
             get => _isDirty;
             set
             {
-                if (_isDirty == value) return;
-                
+                if (_isDirty == value)
+                {
+                    return;
+                }
+
                 _isDirty = value;
                 OnDirtyChanged();
             }
@@ -93,15 +96,15 @@ namespace SadConsole
             get => Cells[index];
             protected set => Cells[index] = value;
         }
-        
+
         /// <summary>
         /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
-        public CellSurface(int width, int height): this(width, height, null)
+        public CellSurface(int width, int height) : this(width, height, null)
         {
-            
+
         }
 
         /// <summary>
@@ -121,12 +124,18 @@ namespace SadConsole
             {
                 Cells = new Cell[width * height];
 
-                for (var i = 0; i < Cells.Length; i++)
+                for (int i = 0; i < Cells.Length; i++)
+                {
                     Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+                }
             }
             else
             {
-                if (initialCells.Length != Width * Height) throw new Exception("Width * Height does not match initialCells.Length");
+                if (initialCells.Length != Width * Height)
+                {
+                    throw new Exception("Width * Height does not match initialCells.Length");
+                }
+
                 Cells = initialCells;
             }
 

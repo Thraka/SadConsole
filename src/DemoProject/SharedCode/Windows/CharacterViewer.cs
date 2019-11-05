@@ -1,24 +1,23 @@
-﻿using Microsoft.Xna.Framework;
-
-using System;
+﻿using System;
+using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Effects;
 
 namespace StarterProject.Windows
 {
-    class CharacterViewer : Window
+    internal class CharacterViewer : Window
     {
 
-#region Control Declares
-        private SadConsole.Controls.ScrollBar _charScrollBar;
-        private Button _closeButton;
-#endregion
+        #region Control Declares
+        private readonly SadConsole.Controls.ScrollBar _charScrollBar;
+        private readonly Button _closeButton;
+        #endregion
 
         private Rectangle trackedRegion = new Rectangle(1, 1, 16, 16);
         private SadConsole.Input.MouseConsoleState lastMouseState = null;
-        private SadConsole.Effects.Recolor highlightedEffect;
-        private SadConsole.Effects.Fade unhighlightEffect;
+        private readonly SadConsole.Effects.Recolor highlightedEffect;
+        private readonly SadConsole.Effects.Fade unhighlightEffect;
         private int fontRowOffset = 0;
 
         public event EventHandler ColorsChanged;
@@ -27,7 +26,7 @@ namespace StarterProject.Windows
         public Color Foreground = Color.White;
         public Color Background = Color.Black;
 
-#region Constructors
+        #region Constructors
         public CharacterViewer()
             : base(27, 20)
         {
@@ -40,23 +39,27 @@ namespace StarterProject.Windows
             UsePixelPositioning = true;
 
             // CHARACTER SCROLL
-            _charScrollBar = new ScrollBar(Orientation.Vertical, 16);
-            _charScrollBar.Position = new Point(17, 1);
-            _charScrollBar.Name = "ScrollBar";
-            _charScrollBar.Maximum = Font.Rows - 16;
-            _charScrollBar.Value = 0;
+            _charScrollBar = new ScrollBar(Orientation.Vertical, 16)
+            {
+                Position = new Point(17, 1),
+                Name = "ScrollBar",
+                Maximum = Font.Rows - 16,
+                Value = 0
+            };
             _charScrollBar.ValueChanged += new EventHandler(_charScrollBar_ValueChanged);
             _charScrollBar.IsEnabled = Font.Rows > 16;
 
             // Add all controls
-            this.Add(_charScrollBar);
+            Add(_charScrollBar);
 
             _closeButton = new Button(6, 1) { Text = "Ok", Position = new Point(19, 1) }; Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
 
             // Effects
-            highlightedEffect = new Recolor();
-            highlightedEffect.Foreground = Color.Blue;
-            highlightedEffect.Background = Color.DarkGray;
+            highlightedEffect = new Recolor
+            {
+                Foreground = Color.Blue,
+                Background = Color.DarkGray
+            };
 
             unhighlightEffect = new SadConsole.Effects.Fade()
             {
@@ -79,10 +82,10 @@ namespace StarterProject.Windows
             //Invalidate();
         }
 
-#endregion
+        #endregion
 
 
-        void _charScrollBar_ValueChanged(object sender, EventArgs e)
+        private void _charScrollBar_ValueChanged(object sender, EventArgs e)
         {
             fontRowOffset = ((SadConsole.Controls.ScrollBar)sender).Value;
 
@@ -128,7 +131,9 @@ namespace StarterProject.Windows
                 SelectedCharacterIndex = state.Cell.Glyph;
             }
             else if (state.ConsoleCellPosition.X == Width - 1 && state.ConsoleCellPosition.Y == 0)
+            {
                 Hide();
+            }
 
             base.OnMouseLeftClicked(state);
         }
@@ -142,7 +147,7 @@ namespace StarterProject.Windows
 
                 items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
 
-                var text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
+                ColoredString text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
                            items[1].CreateColored(Color.LightCoral, Color.Black, null) +
                            items[2].CreateColored(Color.LightCyan, Color.Black, null);
 
@@ -189,7 +194,7 @@ namespace StarterProject.Windows
             string[] items = new string[] { "Selected: ", ((char)SelectedCharacterIndex).ToString(), " (", SelectedCharacterIndex.ToString(), ")" };
             items[4] = items[4].PadRight(Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
 
-            var text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
+            ColoredString text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
                        items[1].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
                        items[2].CreateColored(Color.LightCyan, Theme.WindowTheme.BorderStyle.Background, null) +
                        items[3].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
@@ -205,7 +210,7 @@ namespace StarterProject.Windows
         {
             if (lastMouseState != null)
             {
-//                _lastInfo.Cell.Effect = null;
+                //                _lastInfo.Cell.Effect = null;
             }
 
             DrawSelectedItemString();
@@ -217,7 +222,7 @@ namespace StarterProject.Windows
         {
             if (lastMouseState != null)
             {
-//                _lastInfo.Cell.Effect = null;
+                //                _lastInfo.Cell.Effect = null;
             }
 
             base.OnMouseEnter(state);
@@ -240,7 +245,9 @@ namespace StarterProject.Windows
         public override void Show(bool modal)
         {
             if (IsVisible)
+            {
                 return;
+            }
 
             Center();
 
@@ -254,7 +261,7 @@ namespace StarterProject.Windows
 
             items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
 
-            var text = items[0].CreateColored(Color.LightBlue, Color.Black, null) +
+            ColoredString text = items[0].CreateColored(Color.LightBlue, Color.Black, null) +
                        items[1].CreateColored(Color.LightCoral, Color.Black, null) +
                        items[2].CreateColored(Color.LightCyan, Color.Black, null);
 

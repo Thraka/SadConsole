@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SadConsole
 {
@@ -37,7 +34,7 @@ namespace SadConsole
 
                     // Render each draw call
                     Global.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-                    foreach (var call in Global.DrawCalls)
+                    foreach (DrawCalls.IDrawCall call in Global.DrawCalls)
                     {
                         call.Draw();
                     }

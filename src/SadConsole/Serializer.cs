@@ -1,11 +1,10 @@
 ﻿namespace SadConsole
 {
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Common serialization tasks for SadConsole.
@@ -22,16 +21,18 @@
         public static void Save<T>(T instance, string file, bool compress)
         {
             if (System.IO.File.Exists(file))
+            {
                 System.IO.File.Delete(file);
+            }
 
-            using (var stream = System.IO.File.OpenWrite(file))
+            using (System.IO.FileStream stream = System.IO.File.OpenWrite(file))
             {
                 if (compress)
                 {
                     using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
                     {
                         //var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
-                        var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
+                        byte[] bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
                         sw.Write(bytes, 0, bytes.Length);
                     }
                 }
@@ -57,7 +58,7 @@
         {
             Global.SerializerPathHint = System.IO.Path.GetDirectoryName(file);
 
-            using (var fileObject = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
+            using (System.IO.Stream fileObject = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
             {
                 if (isCompressed)
                 {
@@ -72,9 +73,13 @@
                     }
                 }
                 else
+                {
                     using (var sr = new System.IO.StreamReader(fileObject))
+                    {
                         //return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
                         return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
+                    }
+                }
             }
         }
 

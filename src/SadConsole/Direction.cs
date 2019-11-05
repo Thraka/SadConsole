@@ -5,8 +5,6 @@ using Microsoft.Xna.Framework;
 namespace SadConsole
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     /// <summary>
     /// Direction related types and methods.
@@ -21,7 +19,7 @@ namespace SadConsole
         private static Point northeast = north + east;
         private static Point southwest = south + west;
         private static Point southeast = south + east;
-        private static Point[] points = new Point[] { north, south, west, east, northwest, northeast, southwest, southeast };
+        private static readonly Point[] points = new Point[] { north, south, west, east, northwest, northeast, southwest, southeast };
 
         /// <summary>
         /// Returns a point that faces north (0, -1);
@@ -71,7 +69,7 @@ namespace SadConsole
         /// <summary>
         /// A compass direction enumeration.
         /// </summary>
-        public enum DirectionEnum: int
+        public enum DirectionEnum : int
         {
             North = 0,
             South = 1,
@@ -278,10 +276,7 @@ namespace SadConsole
         /// <param name="width">The width of the area.</param>
         /// <param name="height">The height of the area.</param>
         /// <returns>An array of bool values indicating if the direction is valid or not; indexed with the value of a <see cref="DirectionEnum"/>.</returns>
-        public static bool[] GetValidDirections(this Point position, int width, int height)
-        {
-            return GetValidDirections(position, new Rectangle(0, 0, width, height));
-        }
+        public static bool[] GetValidDirections(this Point position, int width, int height) => GetValidDirections(position, new Rectangle(0, 0, width, height));
 
         /// <summary>
         /// Gets a list of indexed boolean values to indicate if the direction from the <paramref name="position"/> falls in the <paramref name="area"/>.
@@ -289,9 +284,7 @@ namespace SadConsole
         /// <param name="position">The position to test from.</param>
         /// <param name="area">The area to test.</param>
         /// <returns>An array of bool values indicating if the direction is valid or not; indexed with the value of a <see cref="DirectionEnum"/>.</returns>
-        public static bool[] GetValidDirections(this Point position, Rectangle area)
-        {
-            return new bool[] 
+        public static bool[] GetValidDirections(this Point position, Rectangle area) => new bool[]
             {
                     area.Contains(position + north),
                     area.Contains(position + south),
@@ -302,7 +295,6 @@ namespace SadConsole
                     area.Contains(position + southwest),
                     area.Contains(position + southeast),
             };
-        }
 
         /// <summary>
         /// Gets a list of indexed boolean values to indicate if the direction from the <paramref name="position"/> falls in the <paramref name="area"/>.
@@ -310,19 +302,14 @@ namespace SadConsole
         /// <param name="position">The position to test from.</param>
         /// <param name="area">The area to test.</param>
         /// <returns>An array of bool values indicating if the direction is valid or not; indexed with the value of a <see cref="DirectionEnum"/>.</returns>
-        public static bool[] GetValidDirections(this Rectangle area, Point position)
-        {
-            return GetValidDirections(position, area);
-        }
+        public static bool[] GetValidDirections(this Rectangle area, Point position) => GetValidDirections(position, area);
 
         /// <summary>
         /// Gets an indexed array of direction positions based on the <paramref name="position"/>.
         /// </summary>
         /// <param name="position">The source position.</param>
         /// <returns>An array of positions indexed with the value of a <see cref="DirectionEnum"/>.</returns>
-        public static Point[] GetDirectionPoints(this Point position)
-        {
-            return new Point[]
+        public static Point[] GetDirectionPoints(this Point position) => new Point[]
             {
                 position + north,
                 position + south,
@@ -333,7 +320,6 @@ namespace SadConsole
                 position + southwest,
                 position + southeast,
             };
-        }
 
         /// <summary>
         /// Gets an array of <see cref="SadConsole.Surfaces.ISurface.Cells"/> indexes of each <see cref="DirectionEnum"/> from the current <paramref name="position"/>.
@@ -342,10 +328,7 @@ namespace SadConsole
         /// <param name="areaWidth">The width of the area.</param>
         /// <param name="areaHeight">The height of the area.</param>
         /// <returns>The index of each position. A value of -1 represents an invalid position.</returns>
-        public static int[] GetDirectionIndexes(this Point position, int areaWidth, int areaHeight)
-        {
-            return GetDirectionIndexes(position, new Rectangle(0, 0, areaWidth, areaHeight));
-        }
+        public static int[] GetDirectionIndexes(this Point position, int areaWidth, int areaHeight) => GetDirectionIndexes(position, new Rectangle(0, 0, areaWidth, areaHeight));
 
         /// <summary>
         /// Gets an array of <see cref="SadConsole.Surfaces.ISurface.Cells"/> indexes of each <see cref="DirectionEnum"/> from the current <paramref name="position"/>.
@@ -357,8 +340,8 @@ namespace SadConsole
         {
             if (area.Contains(position))
             {
-                var valids = GetValidDirections(position, area);
-                var points = GetDirectionPoints(position);
+                bool[] valids = GetValidDirections(position, area);
+                Point[] points = GetDirectionPoints(position);
 
                 return new int[]
                 {
@@ -373,7 +356,9 @@ namespace SadConsole
                 };
             }
             else
+            {
                 return new int[] { -1, -1, -1, -1, -1, -1, -1, -1 };
+            }
         }
 
         /// <summary>
@@ -415,9 +400,13 @@ namespace SadConsole
         public static DirectionEnum FromHeading(float heading, float compensationHeading = 0f)
         {
             if (compensationHeading != 0)
+            {
                 heading = MathHelper.Wrap(heading + (90 /* north */ - compensationHeading), 0, 359);
+            }
             else
+            {
                 heading = MathHelper.Wrap(heading, 0, 359);
+            }
 
             // S
             if (heading > 240 && heading < 300)

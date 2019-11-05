@@ -29,7 +29,7 @@
         /// When true, the effect should not call <see cref="Cell.RestoreState"/> when it has finished processing.
         /// </summary>
         bool DiscardCellState { get; set; }
-        
+
         /// <summary>
         /// When true, indicates the effect this effect has on a cell should remain after this effect is cleared from the cell.
         /// </summary>

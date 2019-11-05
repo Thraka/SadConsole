@@ -1,18 +1,12 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 using ScrollingConsole = SadConsole.ScrollingConsole;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using SadConsole;
-using SadConsole.Input;
-using StarterProject.CustomConsoles;
 
 namespace StarterProject
 {
     [System.Diagnostics.DebuggerDisplay("Header Area")]
-    class HeaderConsole : ScrollingConsole
+    internal class HeaderConsole : ScrollingConsole
     {
-        public HeaderConsole(): base(80, 2)
+        public HeaderConsole() : base(80, 2)
         {
             DefaultBackground = Color.Transparent;
             DefaultForeground = Theme.Yellow;

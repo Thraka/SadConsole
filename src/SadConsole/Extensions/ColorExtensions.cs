@@ -1,5 +1,4 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
 #endif
 
 using System;
@@ -110,10 +109,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static uint ToInteger(this Color color)
-        {
-            return color.PackedValue;
-        }
+        public static uint ToInteger(this Color color) => color.PackedValue;
 
         /// <summary>
         /// Creates an array of colors that includes the <paramref name="color"/> and <paramref name="endingColor"/> and <paramref name="steps"/> of colors between them.
@@ -165,9 +161,13 @@ namespace Microsoft.Xna.Framework
                 float var_1;
 
                 if (l < 0.5)
+                {
                     var_2 = l * (1 + s);
+                }
                 else
+                {
                     var_2 = (l + s) - (s * l);
+                }
 
                 var_1 = 2 * l - var_2;
 
@@ -179,11 +179,31 @@ namespace Microsoft.Xna.Framework
 
         private static float Hue_2_RGB(float v1, float v2, float vH)
         {
-            if (vH < 0) vH += 1;
-            if (vH > 1) vH -= 1;
-            if ((6 * vH) < 1) return (v1 + (v2 - v1) * 6 * vH);
-            if ((2 * vH) < 1) return (v2);
-            if ((3 * vH) < 2) return (v1 + (v2 - v1) * ((2 / 3) - vH) * 6);
+            if (vH < 0)
+            {
+                vH += 1;
+            }
+
+            if (vH > 1)
+            {
+                vH -= 1;
+            }
+
+            if ((6 * vH) < 1)
+            {
+                return (v1 + (v2 - v1) * 6 * vH);
+            }
+
+            if ((2 * vH) < 1)
+            {
+                return (v2);
+            }
+
+            if ((3 * vH) < 2)
+            {
+                return (v1 + (v2 - v1) * ((2 / 3) - vH) * 6);
+            }
+
             return (v1);
         }
 
@@ -193,10 +213,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="color">The color object to start with. Will be overridden.</param>
         /// <param name="random">A random object to get numbers from.</param>
         /// <returns>A new color.</returns>
-        public static Color GetRandomColor(this Color color, Random random)
-        {
-            return new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
-        }
+        public static Color GetRandomColor(this Color color, Random random) => new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
 
         /// <summary>
         /// Returns a new Color using only the Red value of this color.
@@ -289,10 +306,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="color">The color to calculate the luma from.</param>
         /// <returns>A value based on this code: (color.R + color.R + color.B + color.G + color.G + color.G) / 6f</returns>
-        public static float GetLuma(this Color color)
-        {
-            return (color.R + color.R + color.B + color.G + color.G + color.G) / 6f;
-        }
+        public static float GetLuma(this Color color) => (color.R + color.R + color.B + color.G + color.G + color.G) / 6f;
 
         /// <summary>
         /// Gets the brightness of a color.
@@ -316,18 +330,20 @@ namespace Microsoft.Xna.Framework
         /// <remarks>Taken from the mono source code.</remarks>
         public static float GetSaturation(this Color color)
         {
-            byte minval = (byte)Math.Min(color.R, Math.Min(color.G, color.B));
-            byte maxval = (byte)Math.Max(color.R, Math.Max(color.G, color.B));
+            byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
+            byte maxval = Math.Max(color.R, Math.Max(color.G, color.B));
 
 
             if (maxval == minval)
+            {
                 return 0.0f;
-
+            }
 
             int sum = maxval + minval;
             if (sum > 255)
+            {
                 sum = 510 - sum;
-
+            }
 
             return (float)(maxval - minval) / sum;
         }
@@ -348,10 +364,11 @@ namespace Microsoft.Xna.Framework
 
 
             if (maxval == minval)
+            {
                 return 0.0f;
+            }
 
-
-            float diff = (float)(maxval - minval);
+            float diff = maxval - minval;
             float rnorm = (maxval - r) / diff;
             float gnorm = (maxval - g) / diff;
             float bnorm = (maxval - b) / diff;
@@ -359,14 +376,24 @@ namespace Microsoft.Xna.Framework
 
             float hue = 0.0f;
             if (r == maxval)
+            {
                 hue = 60.0f * (6.0f + bnorm - gnorm);
-            if (g == maxval)
-                hue = 60.0f * (2.0f + rnorm - bnorm);
-            if (b == maxval)
-                hue = 60.0f * (4.0f + gnorm - rnorm);
-            if (hue > 360.0f)
-                hue = hue - 360.0f;
+            }
 
+            if (g == maxval)
+            {
+                hue = 60.0f * (2.0f + rnorm - bnorm);
+            }
+
+            if (b == maxval)
+            {
+                hue = 60.0f * (4.0f + gnorm - rnorm);
+            }
+
+            if (hue > 360.0f)
+            {
+                hue = hue - 360.0f;
+            }
 
             return hue;
         }
@@ -376,10 +403,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="color">The color to convert.</param>
         /// <returns>A string in this format R,G,B,A so for <see cref="Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
-        public static string ToParser(this Color color)
-        {
-            return $"{color.R},{color.G},{color.B},{color.A}";
-        }
+        public static string ToParser(this Color color) => $"{color.R},{color.G},{color.B},{color.A}";
 
         /// <summary>
         /// Gets a color in the format of <see cref="SadConsole.ParseCommandRecolor"/>.
@@ -409,45 +433,73 @@ namespace Microsoft.Xna.Framework
 
                     // Red
                     if (channels[0] == "x")
+                    {
                         keepR = true;
+                    }
                     else if (byte.TryParse(channels[0], out colorValue))
+                    {
                         returnColor.R = colorValue;
+                    }
                     else
+                    {
                         throw exception;
+                    }
 
                     // Green
                     if (channels[1] == "x")
+                    {
                         keepG = true;
+                    }
                     else if (byte.TryParse(channels[1], out colorValue))
+                    {
                         returnColor.G = colorValue;
+                    }
                     else
+                    {
                         throw exception;
+                    }
 
                     // Blue
                     if (channels[2] == "x")
+                    {
                         keepB = true;
+                    }
                     else if (byte.TryParse(channels[2], out colorValue))
+                    {
                         returnColor.B = colorValue;
+                    }
                     else
+                    {
                         throw exception;
+                    }
 
                     if (channels.Length == 4)
                     {
                         // Alpha
                         if (channels[3] == "x")
+                        {
                             keepA = true;
+                        }
                         else if (byte.TryParse(channels[3], out colorValue))
+                        {
                             returnColor.A = colorValue;
+                        }
                         else
+                        {
                             throw exception;
+                        }
                     }
                     else
+                    {
                         returnColor.A = 255;
+                    }
 
                     return returnColor;
                 }
                 else
+                {
                     throw exception;
+                }
             }
             else if (value == "default")
             {
@@ -459,23 +511,29 @@ namespace Microsoft.Xna.Framework
                 value = value.ToLower();
 
                 if (ColorMappings.ContainsKey(value))
+                {
                     return ColorMappings[value];
+                }
                 else
                 {
                     // Lookup color in framework
 
                     TypeInfo colorType = typeof(Color).GetTypeInfo();
 
-                    foreach (var item in colorType.DeclaredProperties)
+                    foreach (PropertyInfo item in colorType.DeclaredProperties)
                     {
                         if (item.Name.ToLower() == value)
+                        {
                             return (Color)item.GetValue(null);
+                        }
                     }
 
-                    foreach (var item in colorType.DeclaredFields)
+                    foreach (FieldInfo item in colorType.DeclaredFields)
                     {
                         if (item.Name.ToLower() == value)
+                        {
                             return (Color)item.GetValue(null);
+                        }
                     }
 
 

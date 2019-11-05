@@ -1,24 +1,19 @@
-﻿using Microsoft.Xna.Framework;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-
-using ScrollingConsole = SadConsole.ScrollingConsole;
-using SadConsole;
-using System;
-using System.Linq;
+﻿
 using SadConsole.Input;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 
 
 namespace StarterProject.CustomConsoles
 {
-    class TextCursorConsole : ScrollingConsole
+    internal class TextCursorConsole : ScrollingConsole
     {
-        SadConsole.Console mouseCursor;
-        
+        private readonly SadConsole.Console mouseCursor;
+
         public TextCursorConsole()
             : base(80, 23)
         {
             mouseCursor = new SadConsole.Console(1, 1);
-            mouseCursor.SetGlyph(0,0, 178);
+            mouseCursor.SetGlyph(0, 0, 178);
             mouseCursor.UseMouse = false;
 
             Children.Add(mouseCursor);
@@ -31,5 +26,5 @@ namespace StarterProject.CustomConsoles
 
             return base.ProcessMouse(state);
         }
-    } 
+    }
 }

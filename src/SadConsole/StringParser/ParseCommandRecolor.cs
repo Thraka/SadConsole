@@ -32,9 +32,13 @@ namespace SadConsole.StringParser
             string[] parametersArray = parameters.Split(':');
 
             if (parametersArray.Length == 3)
+            {
                 Counter = int.Parse(parametersArray[2], CultureInfo.InvariantCulture);
+            }
             else
+            {
                 Counter = -1;
+            }
 
             if (parametersArray.Length >= 2)
             {
@@ -47,7 +51,9 @@ namespace SadConsole.StringParser
                 A = color.A;
             }
             else
+            {
                 throw badCommandException;
+            }
         }
 
         public ParseCommandRecolor()
@@ -55,7 +61,7 @@ namespace SadConsole.StringParser
 
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex,
             CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             Color newColor;
@@ -63,38 +69,63 @@ namespace SadConsole.StringParser
             if (Default)
             {
                 if (CommandType == CommandTypes.Background)
+                {
                     newColor = surface != null ? surface.DefaultBackground : Color.Transparent;
+                }
                 else
+                {
                     newColor = surface != null ? surface.DefaultForeground : Color.White;
+                }
             }
             else
             {
                 if (CommandType == CommandTypes.Background)
+                {
                     newColor = glyphState.Background;
+                }
                 else
+                {
                     newColor = glyphState.Foreground;
+                }
 
                 if (!KeepRed)
+                {
                     newColor.R = R;
+                }
+
                 if (!KeepGreen)
+                {
                     newColor.G = G;
+                }
+
                 if (!KeepBlue)
+                {
                     newColor.B = B;
+                }
+
                 if (!KeepAlpha)
+                {
                     newColor.A = A;
+                }
             }
 
             if (CommandType == CommandTypes.Background)
+            {
                 glyphState.Background = newColor;
+            }
             else
+            {
                 glyphState.Foreground = newColor;
+            }
 
             if (Counter != -1)
             {
                 Counter--;
 
                 if (Counter == 0)
+                {
                     commandStack.RemoveSafe(this);
+                }
             }
         }
     }

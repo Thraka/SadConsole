@@ -1,7 +1,7 @@
 ﻿namespace SadConsole.StringParser
 {
     using System.Collections.Generic;
-    
+
     /// <summary>
     /// A list of behaviors applied as a string is processed.
     /// </summary>
@@ -73,23 +73,38 @@
             {
                 case CommandTypes.Foreground:
                     if (Foreground.Count != 0)
+                    {
                         commands = new List<ParseCommandBase>(Foreground);
+                    }
+
                     break;
                 case CommandTypes.Background:
                     if (Background.Count != 0)
+                    {
                         commands = new List<ParseCommandBase>(Background);
+                    }
+
                     break;
                 case CommandTypes.Mirror:
                     if (Mirror.Count != 0)
+                    {
                         commands = new List<ParseCommandBase>(Mirror);
+                    }
+
                     break;
                 case CommandTypes.Effect:
                     if (Effect.Count != 0)
+                    {
                         commands = new List<ParseCommandBase>(Effect);
+                    }
+
                     break;
                 case CommandTypes.Glyph:
                     if (Glyph.Count != 0)
+                    {
                         commands = new List<ParseCommandBase>(Glyph);
+                    }
+
                     break;
                 default:
                     return;

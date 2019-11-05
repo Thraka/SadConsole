@@ -11,14 +11,14 @@ namespace SadConsole.Controls
     /// Represents a button that can be toggled on/off within a group of other buttons.
     /// </summary>
     [DataContract]
-    public class RadioButton: ControlBase
+    public class RadioButton : ControlBase
     {
         /// <summary>
         /// Raised when the selected state of the radio button is changed.
         /// </summary>
         public event EventHandler IsSelectedChanged;
 
-        [DataMember(Name="Group")]
+        [DataMember(Name = "Group")]
         protected string _groupName = "";
         [DataMember(Name = "Text")]
         protected string _text;
@@ -57,7 +57,7 @@ namespace SadConsole.Controls
                 IsDirty = true;
             }
         }
-        
+
         /// <summary>
         /// The group of the radio button. All radio buttons with the same group name will work together to keep one radio button selected at a time.
         /// </summary>
@@ -69,7 +69,9 @@ namespace SadConsole.Controls
                 _groupName = value.Trim();
 
                 if (_groupName == null)
-                    _groupName = String.Empty;
+                {
+                    _groupName = string.Empty;
+                }
             }
         }
 
@@ -90,12 +92,12 @@ namespace SadConsole.Controls
                     {
                         if (Parent != null)
                         {
-                            foreach (var child in Parent.Controls)
+                            foreach (ControlBase child in Parent.Controls)
                             {
                                 if (child is RadioButton && child != this)
                                 {
                                     RadioButton button = (RadioButton)child;
-                                    if (button.GroupName.Equals(this.GroupName, StringComparison.OrdinalIgnoreCase))
+                                    if (button.GroupName.Equals(GroupName, StringComparison.OrdinalIgnoreCase))
                                     {
                                         button.IsSelected = false;
                                     }
@@ -119,10 +121,10 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
-        public RadioButton(int width, int height): base(width, height)
+        public RadioButton(int width, int height) : base(width, height)
         {
         }
-        
+
         protected override void OnLeftMouseClicked(Input.MouseConsoleState state)
         {
             base.OnLeftMouseClicked(state);
@@ -149,17 +151,20 @@ namespace SadConsole.Controls
             else if (Parent != null)
             {
                 if (info.IsKeyReleased(Keys.Up))
+                {
                     Parent.TabPreviousControl();
-
+                }
                 else if (info.IsKeyReleased(Keys.Down))
+                {
                     Parent.TabNextControl();
+                }
 
                 return true;
             }
 
             return false;
         }
-        
+
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {

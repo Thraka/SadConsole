@@ -1,5 +1,4 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endif
 
@@ -12,11 +11,11 @@ namespace SadConsole.Controls
     /// InputBox control that allows text input.
     /// </summary>
     [DataContract]
-    public class TextBox: ControlBase
+    public class TextBox : ControlBase
     {
         private string _editingText;
         private bool _disableKeyboardEdit;
-        
+
         /// <summary>
         /// Mask input with a certain character.
         /// </summary>
@@ -60,7 +59,7 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember(Name = "IsNumeric")]
         protected bool _isNumeric;
-        
+
         /// <summary>
         /// Indicates that the input box (when numeric) will accept decimal points.
         /// </summary>
@@ -105,7 +104,9 @@ namespace SadConsole.Controls
                 _disableKeyboardEdit = value;
 
                 if (!_disableKeyboardEdit)
+                {
                     _caretPos = Text.Length;
+                }
             }
         }
 
@@ -122,7 +123,9 @@ namespace SadConsole.Controls
                 if (MaxLength != 0)
                 {
                     if (_editingText.Length >= MaxLength)
+                    {
                         _editingText = _editingText.Substring(0, MaxLength);
+                    }
                 }
 
                 ValidateCursorPosition();
@@ -180,9 +183,9 @@ namespace SadConsole.Controls
                     TextChangedPreview?.Invoke(this, args);
 
                     _text = args.NewValue ?? "";
-					_text = MaxLength != 0 && _text.Length > MaxLength ? _text.Substring(0, MaxLength) : _text;
+                    _text = MaxLength != 0 && _text.Length > MaxLength ? _text.Substring(0, MaxLength) : _text;
 
-					Validate();
+                    Validate();
                     EditingText = _text;
                     _caretPos = Text.Length;
 
@@ -229,20 +232,30 @@ namespace SadConsole.Controls
             {
                 if (_allowDecimalPoint)
                 {
-                    if (_text != null & double.TryParse(_text, out var value))
+                    if (_text != null & double.TryParse(_text, out double value))
+                    {
                         _text = value.ToString();
+                    }
                     else
+                    {
                         _text = "0.0";
+                    }
 
                     if (!_text.Contains("."))
+                    {
                         _text = _text + ".0";
+                    }
                 }
                 else
                 {
                     if (_text != null & int.TryParse(_text, out int value))
+                    {
                         _text = value.ToString();
+                    }
                     else
+                    {
                         _text = "0";
+                    }
                 }
             }
             DetermineState();
@@ -257,33 +270,42 @@ namespace SadConsole.Controls
             if (MaxLength != 0)
             {
                 if (_caretPos > EditingText.Length)
+                {
                     _caretPos = EditingText.Length - 1;
+                }
             }
             else if (_caretPos > EditingText.Length)
+            {
                 _caretPos = EditingText.Length;
-            
+            }
+
 
             // Test to see if caret is off edge of box
             if (_caretPos >= Width)
-			{
-				LeftDrawOffset = EditingText.Length - Width + 1;
+            {
+                LeftDrawOffset = EditingText.Length - Width + 1;
 
-				if (LeftDrawOffset < 0)
-				    LeftDrawOffset = 0;
-			}
-			else
-			{
-			    LeftDrawOffset = 0;
-			}
+                if (LeftDrawOffset < 0)
+                {
+                    LeftDrawOffset = 0;
+                }
+            }
+            else
+            {
+                LeftDrawOffset = 0;
+            }
 
             DetermineState();
             IsDirty = true;
-		}
+        }
 
 
         private bool TriggerKeyPressEvent(Input.AsciiKey key)
         {
-            if (KeyPressed == null) return false;
+            if (KeyPressed == null)
+            {
+                return false;
+            }
 
             var args = new KeyPressEventArgs(key);
             KeyPressed(this, args);
@@ -307,7 +329,10 @@ namespace SadConsole.Controls
                     {
                         if (info.KeysPressed[i].Key == Keys.Enter)
                         {
-                            if (TriggerKeyPressEvent(info.KeysPressed[i])) return false;
+                            if (TriggerKeyPressEvent(info.KeysPressed[i]))
+                            {
+                                return false;
+                            }
 
                             IsDirty = true;
                             DisableKeyboard = false;
@@ -322,19 +347,24 @@ namespace SadConsole.Controls
 
                     IsDirty = true;
 
-					for (int i = 0; i < info.KeysPressed.Count; i++)
-					{
-                        if (TriggerKeyPressEvent(info.KeysPressed[i])) return false;
-                        
+                    for (int i = 0; i < info.KeysPressed.Count; i++)
+                    {
+                        if (TriggerKeyPressEvent(info.KeysPressed[i]))
+                        {
+                            return false;
+                        }
+
                         if (_isNumeric)
-						{
+                        {
                             if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
                             {
                                 newText.Remove(newText.Length - 1, 1);
                                 _caretPos -= 1;
 
                                 if (_caretPos == -1)
+                                {
                                     _caretPos = 0;
+                                }
                             }
                             else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
@@ -356,85 +386,101 @@ namespace SadConsole.Controls
 
                         }
 
-						else
-						{
+                        else
+                        {
                             if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _caretPos != 0)
                             {
                                 if (_caretPos == newText.Length)
-									newText.Remove(newText.Length - 1, 1);
-								else
-									newText.Remove(_caretPos - 1, 1);
+                                {
+                                    newText.Remove(newText.Length - 1, 1);
+                                }
+                                else
+                                {
+                                    newText.Remove(_caretPos - 1, 1);
+                                }
 
-								_caretPos -= 1;
+                                _caretPos -= 1;
 
-								if (_caretPos == -1)
-									_caretPos = 0;
-							}
-							else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
-							{
-								newText.Insert(_caretPos, ' ');
-								_caretPos++;
+                                if (_caretPos == -1)
+                                {
+                                    _caretPos = 0;
+                                }
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+                            {
+                                newText.Insert(_caretPos, ' ');
+                                _caretPos++;
 
-								if (_caretPos > newText.Length)
-									_caretPos = newText.Length;
-							}
+                                if (_caretPos > newText.Length)
+                                {
+                                    _caretPos = newText.Length;
+                                }
+                            }
 
-							else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
-							{
-								newText.Remove(_caretPos, 1);
+                            else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
+                            {
+                                newText.Remove(_caretPos, 1);
 
-								if (_caretPos > newText.Length)
-									_caretPos = newText.Length;
-							}
+                                if (_caretPos > newText.Length)
+                                {
+                                    _caretPos = newText.Length;
+                                }
+                            }
 
-							else if (info.KeysPressed[i].Key == Keys.Enter)
+                            else if (info.KeysPressed[i].Key == Keys.Enter)
                             {
                                 Text = EditingText;
-								DisableKeyboard = true;
-								return true;
-							}
-							else if (info.KeysPressed[i].Key == Keys.Escape)
-							{
-								DisableKeyboard = true;
-								return true;
-							}
-							else if (info.KeysPressed[i].Key == Keys.Left)
-							{
-								_caretPos -= 1;
+                                DisableKeyboard = true;
+                                return true;
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Escape)
+                            {
+                                DisableKeyboard = true;
+                                return true;
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Left)
+                            {
+                                _caretPos -= 1;
 
-								if (_caretPos == -1)
-									_caretPos = 0;
-							}
-							else if (info.KeysPressed[i].Key == Keys.Right)
-							{
-								_caretPos += 1;
+                                if (_caretPos == -1)
+                                {
+                                    _caretPos = 0;
+                                }
+                            }
+                            else if (info.KeysPressed[i].Key == Keys.Right)
+                            {
+                                _caretPos += 1;
 
-								if (_caretPos > newText.Length)
-									_caretPos = newText.Length;
-							}
+                                if (_caretPos > newText.Length)
+                                {
+                                    _caretPos = newText.Length;
+                                }
+                            }
 
-							else if (info.KeysPressed[i].Key == Keys.Home)
-							{
-								_caretPos = 0;
-							}
+                            else if (info.KeysPressed[i].Key == Keys.Home)
+                            {
+                                _caretPos = 0;
+                            }
 
-							else if (info.KeysPressed[i].Key == Keys.End)
-							{
-								_caretPos = newText.Length;
-							}
+                            else if (info.KeysPressed[i].Key == Keys.End)
+                            {
+                                _caretPos = newText.Length;
+                            }
 
-							else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
-							{
-								newText.Insert(_caretPos, info.KeysPressed[i].Character);
-								_caretPos++;
+                            else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+                            {
+                                newText.Insert(_caretPos, info.KeysPressed[i].Character);
+                                _caretPos++;
 
-								if (_caretPos > newText.Length)
-									_caretPos = newText.Length;
-							}
-						}
-					}
+                                if (_caretPos > newText.Length)
+                                {
+                                    _caretPos = newText.Length;
+                                }
+                            }
+                        }
+                    }
 
-	                EditingText = newText.ToString();
+                    EditingText = newText.ToString();
                 }
 
                 return true;
@@ -475,12 +521,14 @@ namespace SadConsole.Controls
                 DisableKeyboard = false;
 
                 if (!IsFocused)
+                {
                     Parent.FocusedControl = this;
+                }
 
-                IsDirty = true;    
+                IsDirty = true;
             }
         }
-        
+
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
@@ -514,7 +562,7 @@ namespace SadConsole.Controls
                 OldValue = oldValue;
                 NewValue = newValue;
             }
-                
+
         }
 
         /// <summary>

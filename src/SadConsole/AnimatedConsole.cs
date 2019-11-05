@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework;
 
 namespace SadConsole
 {
-    using System.Collections.Generic;
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Newtonsoft.Json;
 
@@ -34,17 +34,17 @@ namespace SadConsole
         /// Time counter for the animation
         /// </summary>
         protected double AddedTime;
-        
+
         /// <summary>
         /// The current frame index being animated.
         /// </summary>
         protected int CurrentFrameIndexValue;
-        
+
         /// <summary>
         /// How much time per animated frame should be used.
         /// </summary>
         protected float TimePerFrame;
-        
+
         /// <summary>
         /// All frames of the animation
         /// </summary>
@@ -83,14 +83,18 @@ namespace SadConsole
             set
             {
                 if (value < 0 || value >= FramesList.Count)
+                {
                     CurrentFrameIndexValue = 0;
+                }
                 else
+                {
                     CurrentFrameIndexValue = value;
+                }
 
                 UpdateFrameReferences();
             }
         }
-        
+
         /// <summary>
         /// Indicates the animation is empty.
         /// </summary>
@@ -100,7 +104,7 @@ namespace SadConsole
         /// Gets the name of this animation.
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
@@ -114,7 +118,7 @@ namespace SadConsole
             get => _state;
             set
             {
-                var oldState = _state;
+                AnimationState oldState = _state;
 
                 if (value != _state)
                 {
@@ -142,10 +146,7 @@ namespace SadConsole
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
         /// <param name="font">The font used with this animation.</param>
-        public AnimatedConsole(string name, int width, int height, Font font): base(width, height, font)
-        {
-            Name = name;
-        }
+        public AnimatedConsole(string name, int width, int height, Font font) : base(width, height, font) => Name = name;
         #endregion
 
         /// <summary>
@@ -156,7 +157,9 @@ namespace SadConsole
             base.SetRenderCells();
 
             if (FramesList.Count > 0)
+            {
                 UpdateFrameReferences();
+            }
         }
 
         /// <summary>
@@ -164,7 +167,7 @@ namespace SadConsole
         /// </summary>
         protected void UpdateFrameReferences()
         {
-            var frame = FramesList[CurrentFrameIndexValue];
+            CellSurface frame = FramesList[CurrentFrameIndexValue];
             Cells = RenderCells = frame.Cells;
             DefaultBackground = frame.DefaultBackground;
             DefaultForeground = frame.DefaultForeground;
@@ -178,9 +181,11 @@ namespace SadConsole
         public CellSurface CreateFrame()
         {
             if (FramesList == null)
+            {
                 FramesList = new List<CellSurface>();
+            }
 
-            var frame = new CellSurface(Width, Height) {DefaultBackground = DefaultBackground, DefaultForeground = DefaultForeground};
+            var frame = new CellSurface(Width, Height) { DefaultBackground = DefaultBackground, DefaultForeground = DefaultForeground };
             frame.Clear();
             FramesList.Add(frame);
             UpdateFrameReferences();
@@ -193,11 +198,15 @@ namespace SadConsole
         private void CalculateFrameDuration()
         {
             if (IsEmpty || _animatedTime == 0)
+            {
                 TimePerFrame = 0f;
+            }
             else
+            {
                 TimePerFrame = _animatedTime / FramesList.Count;
+            }
         }
-        
+
         /// <summary>
         /// Stops animating.
         /// </summary>
@@ -272,21 +281,24 @@ namespace SadConsole
         /// Returns the name of the animation.
         /// </summary>
         /// <returns>The name.</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         /// <inheritdoc />
         public override void OnCalculateRenderPosition()
         {
             if (UsePixelPositioning)
+            {
                 CalculatedPosition = Position - Center + (Parent?.CalculatedPosition ?? Point.Zero);
+            }
             else
+            {
                 CalculatedPosition = Position.ConsoleLocationToPixel(Font) - Center.ConsoleLocationToPixel(Font) + (Parent?.CalculatedPosition ?? Point.Zero);
+            }
 
-            foreach (var child in Children)
+            foreach (Console child in Children)
+            {
                 child.OnCalculateRenderPosition();
+            }
         }
 
         /// <summary>
@@ -299,11 +311,13 @@ namespace SadConsole
         /// <returns>An animation.</returns>
         public static AnimatedConsole CreateStatic(int width, int height, int frames, double blankChance)
         {
-            var animation = new AnimatedConsole("default", width, height, Global.FontDefault);
-            animation.DefaultBackground = Color.Black;
+            var animation = new AnimatedConsole("default", width, height, Global.FontDefault)
+            {
+                DefaultBackground = Color.Black
+            };
             for (int f = 0; f < frames; f++)
             {
-                var frame = animation.CreateFrame();
+                CellSurface frame = animation.CreateFrame();
 
                 for (int x = 0; x < width; x++)
                 {
@@ -312,7 +326,9 @@ namespace SadConsole
                         int character = Global.Random.Next(48, 168);
 
                         if (Global.Random.NextDouble() <= blankChance)
+                        {
                             character = 32;
+                        }
 
                         frame.SetGlyph(x, y, character);
                         frame.SetForeground(x, y, Color.White * (float)(Global.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
@@ -340,7 +356,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public new static AnimatedConsole Load(string file) => Serializer.Load<AnimatedConsole>(file, Settings.SerializationIsCompressed);
+        public static new AnimatedConsole Load(string file) => Serializer.Load<AnimatedConsole>(file, Settings.SerializationIsCompressed);
 
         /// <summary>
         /// Event args for when the animation state changes

@@ -82,29 +82,20 @@ namespace SadConsole.Readers
         /// Adds an existing layer (must be the same width/height) to the image.
         /// </summary>
         /// <param name="layer">The layer to add.</param>
-        public void Add(Layer layer)
-        {
-            _layers.Add(layer);
-        }
+        public void Add(Layer layer) => _layers.Add(layer);
 
         /// <summary>
         /// Adds an existing layer (must be the same width/height) to the image and inserts it at the specified position (0-based).
         /// </summary>
         /// <param name="layer">The layer to add.</param>
         /// <param name="index">The position to add the layer.</param>
-        public void Add(Layer layer, int index)
-        {
-            _layers.Insert(index, layer);
-        }
+        public void Add(Layer layer, int index) => _layers.Insert(index, layer);
 
         /// <summary>
         /// Removes the specified layer.
         /// </summary>
         /// <param name="layer">The layer.</param>
-        public void Remove(Layer layer)
-        {
-            _layers.Remove(layer);
-        }
+        public void Remove(Layer layer) => _layers.Remove(layer);
 
         /// <summary>
         /// Converts this REXPaint image to a <see cref="LayeredConsole"/>.
@@ -114,17 +105,21 @@ namespace SadConsole.Readers
         {
             var console = new LayeredConsole(Width, Height, LayerCount);
 
-            for (var i = 0; i < LayerCount; i++)
+            for (int i = 0; i < LayerCount; i++)
             {
-                var layer = console.GetLayer(i);
+                CellSurfaceLayer layer = console.GetLayer(i);
 
-                for (var y = 0; y < Height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    for (var x = 0; x < Width; x++)
+                    for (int x = 0; x < Width; x++)
                     {
-                        var rexCell = _layers[i][x, y];
-                        if (rexCell.IsTransparent()) continue;
-                        var newCell = layer[x, y];
+                        Cell rexCell = _layers[i][x, y];
+                        if (rexCell.IsTransparent())
+                        {
+                            continue;
+                        }
+
+                        SadConsole.Cell newCell = layer[x, y];
                         newCell.Foreground = new FrameworkColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
                         newCell.Background = new FrameworkColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
                         newCell.Glyph = rexCell.Character;
@@ -149,14 +144,14 @@ namespace SadConsole.Readers
             {
                 using (var reader = new BinaryReader(deflatedStream))
                 {
-                    var version = reader.ReadInt32();
-                    var layerCount = reader.ReadInt32();
+                    int version = reader.ReadInt32();
+                    int layerCount = reader.ReadInt32();
                     REXPaintImage image = null;
 
-                    for (var currentLayer = 0; currentLayer < layerCount; currentLayer++)
+                    for (int currentLayer = 0; currentLayer < layerCount; currentLayer++)
                     {
-                        var width = reader.ReadInt32();
-                        var height = reader.ReadInt32();
+                        int width = reader.ReadInt32();
+                        int height = reader.ReadInt32();
 
                         Layer layer;
 
@@ -166,12 +161,14 @@ namespace SadConsole.Readers
                             layer = image._layers[0];
                         }
                         else
+                        {
                             layer = image.Create();
+                        }
 
                         // Process cells (could probably be streamlined into index processing instead of x,y...
-                        for (var x = 0; x < width; x++)
+                        for (int x = 0; x < width; x++)
                         {
-                            for (var y = 0; y < height; y++)
+                            for (int y = 0; y < height; y++)
                             {
 
                                 var cell = new Cell(reader.ReadInt32(),                                                  // character

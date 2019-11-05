@@ -9,7 +9,7 @@ namespace SadConsole
 #if XNA
         public static Matrix GetPositionTransform(this Console surface, Point position, bool usePixelPositioning = false)
         {
-            var worldLocation = usePixelPositioning ? position : new Point(position.X * surface.Font.Size.X, position.Y * surface.Font.Size.Y);
+            Point worldLocation = usePixelPositioning ? position : new Point(position.X * surface.Font.Size.X, position.Y * surface.Font.Size.Y);
             return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
         }
 #else

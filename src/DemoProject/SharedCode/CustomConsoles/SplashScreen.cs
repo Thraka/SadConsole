@@ -1,18 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-using System;
-using SadConsole;
-
-using Console = SadConsole.Console;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using SadConsole;
 using SadConsole.DrawCalls;
-using SadConsole.Instructions;
 using SadConsole.Effects;
+using SadConsole.Instructions;
+using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
-    class SplashScreen : ScrollingConsole
+    internal class SplashScreen : ScrollingConsole
     {
         public Action SplashCompleted { get; set; }
 
@@ -31,19 +29,19 @@ namespace StarterProject.CustomConsoles
             const string textTemplate = "sole SadCon";
             var text = new System.Text.StringBuilder(Width * Height);
 
-            for (var i = 0; i < Width * Height; i++)
+            for (int i = 0; i < Width * Height; i++)
             {
                 text.Append(textTemplate);
             }
             Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
 
             // Load the logo and convert to a console
-            using (var imageStream = Microsoft.Xna.Framework.TitleContainer.OpenStream("sad.png"))
+            using (System.IO.Stream imageStream = Microsoft.Xna.Framework.TitleContainer.OpenStream("sad.png"))
             {
                 using (var image = Texture2D.FromStream(Global.GraphicsDevice, imageStream))
                 {
-                    var logo = image.ToSurface(Global.FontDefault, false);
-                    
+                    CellSurface logo = image.ToSurface(Global.FontDefault, false);
+
                     _consoleImage = Console.FromSurface(logo, Global.FontDefault);
                     _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, -1);
                     _consoleImage.Tint = Color.Black;
@@ -65,7 +63,7 @@ namespace StarterProject.CustomConsoles
             });
 
             // Configure the animation
-            var animation = new InstructionSet()
+            InstructionSet animation = new InstructionSet()
 
                     .Wait(TimeSpan.FromSeconds(0.3d))
 
@@ -81,16 +79,16 @@ namespace StarterProject.CustomConsoles
 
                     // Draw the SadConsole text at the bottom
                     .Instruct(new DrawString(logoText)
-                        {
-                            Position = new Point(26, this.Height - 1),
-                            TotalTimeToPrint = 1f
-                        })
+                    {
+                        Position = new Point(26, Height - 1),
+                        TotalTimeToPrint = 1f
+                    })
 
                     // Fade in the logo
                     .Instruct(new FadeTextSurfaceTint(_consoleImage,
-                                                      new ColorGradient(Color.Black, Color.Transparent), 
+                                                      new ColorGradient(Color.Black, Color.Transparent),
                                                       TimeSpan.FromSeconds(2)))
-                    
+
                     // Blink SadConsole text at the bottom
                     .Code(SetBlinkOnLogoText)
 
@@ -110,15 +108,17 @@ namespace StarterProject.CustomConsoles
                     .Code((con, delta) => { SplashCompleted?.Invoke(); return true; })
                 ;
 
-            animation.Finished += (s, e) => Components.Remove(animation);
-            
+            animation.RemoveOnFinished = true;
+
             Components.Add(animation);
         }
 
         public override void Update(TimeSpan delta)
         {
             if (!IsVisible)
+            {
                 return;
+            }
 
             base.Update(delta);
         }
@@ -135,23 +135,24 @@ namespace StarterProject.CustomConsoles
             }
         }
 
-
-        bool MoveGradient(Console console, TimeSpan delta)
+        private bool MoveGradient(Console console, TimeSpan delta)
         {
             _gradientPositionX += 1;
 
             if (_gradientPositionX > Width + 50)
+            {
                 return true;
+            }
 
-            var colors = new[] { Color.Black, Color.Blue, Color.White, Color.Blue, Color.Black };
-            var colorStops = new[] { 0f, 0.2f, 0.5f, 0.8f, 1f };
+            Color[] colors = new[] { Color.Black, Color.Blue, Color.White, Color.Blue, Color.Black };
+            float[] colorStops = new[] { 0f, 0.2f, 0.5f, 0.8f, 1f };
 
             Algorithms.GradientFill(Font.Size, new Point(_gradientPositionX, 12), 10, 45, new Rectangle(0, 0, Width, Height), new ColorGradient(colors, colorStops), SetForeground);
 
             return false;
         }
 
-        bool SetBlinkOnLogoText(Console console, TimeSpan delta)
+        private bool SetBlinkOnLogoText(Console console, TimeSpan delta)
         {
             var fadeEffect = new Fade
             {
@@ -165,9 +166,9 @@ namespace StarterProject.CustomConsoles
             };
 
             var cells = new List<Cell>();
-            for (var index = 0; index < 10; index++)
+            for (int index = 0; index < 10; index++)
             {
-                var point = new Point(26, this.Height - 1).ToIndex(this.Width) + 14 + index;
+                int point = new Point(26, Height - 1).ToIndex(Width) + 14 + index;
                 cells.Add(Cells[point]);
             }
 

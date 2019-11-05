@@ -1,21 +1,20 @@
-﻿using Microsoft.Xna.Framework;
-
-using System;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace StarterProject.CustomConsoles
 {
-    class DOSConsole: SadConsole.ScrollingConsole
+    internal class DOSConsole : SadConsole.ScrollingConsole
     {
         public string Prompt { get; set; }
 
-        private InputHandling.ClassicConsoleKeyboardHandler _keyboardHandlerObject;
-        
+        private readonly InputHandling.ClassicConsoleKeyboardHandler _keyboardHandlerObject;
+
 
         // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
         public DOSConsole()
             : base(80, 23)
         {
-            this.IsVisible = false;
+            IsVisible = false;
 
             // This is our cusotmer keyboard handler we'll be using to process the cursor on this console.
             _keyboardHandlerObject = new InputHandling.ClassicConsoleKeyboardHandler();
@@ -69,14 +68,17 @@ namespace StarterProject.CustomConsoles
                               Print("  ").NewLine();
             }
             else if (value.ToLower() == "ver")
+            {
                 Cursor.Print("  SadConsole for MonoGame").NewLine();
-
+            }
             else if (value.ToLower() == "cls")
+            {
                 ClearText();
-
+            }
             else if (value.ToLower() == "look")
+            {
                 Cursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
-
+            }
             else if (value.ToLower() == "exit" || value.ToLower() == "quit")
             {
 #if WINDOWS_UAP
@@ -87,7 +89,9 @@ namespace StarterProject.CustomConsoles
             }
 
             else
+            {
                 Cursor.Print("  Unknown command").NewLine();
+            }
         }
     }
 }

@@ -10,7 +10,7 @@
     public class EffectsChain : CellEffectBase
     {
         [DataMember]
-        private List<Cell> _addedCells = new List<Cell>();
+        private readonly List<Cell> _addedCells = new List<Cell>();
 
         [DataMember]
         public List<ICellEffect> Effects = new List<ICellEffect>();
@@ -39,13 +39,12 @@
                 _enabled = true;
             }
             else
+            {
                 _enabled = false;
+            }
         }
 
-        public void End()
-        {
-            _enabled = false;
-        }
+        public void End() => _enabled = false;
 
         public override void AddCell(Cell cell)
         {
@@ -62,9 +61,13 @@
         public override bool UpdateCell(Cell cell)
         {
             if (_activeEffect != null)
+            {
                 return _activeEffect.UpdateCell(cell);
+            }
             else
+            {
                 return false;
+            }
         }
 
         public override void Update(double gameTimeSeconds)
@@ -84,8 +87,10 @@
                         // If the effect finished, we move on to the next effect
                         if (_activeEffect.IsFinished)
                         {
-                            foreach (var cell in _addedCells)
+                            foreach (Cell cell in _addedCells)
+                            {
                                 _activeEffect.ClearCell(cell);
+                            }
 
                             _activeIndex++;
 
@@ -93,8 +98,10 @@
                             {
                                 _activeEffect = Effects[_activeIndex];
 
-                                foreach (var cell in _addedCells)
+                                foreach (Cell cell in _addedCells)
+                                {
                                     _activeEffect.AddCell(cell);
+                                }
 
                                 // When moving to the next effect, check and see if we have a delay. If so, flag and wait.
                                 if (DelayBetweenEffects != 0f)
@@ -116,7 +123,9 @@
                         if (_activeEffect == null)
                         {
                             if (!Repeat)
+                            {
                                 End();
+                            }
                             else
                             {
                                 _inChainDelay = true;
@@ -134,13 +143,15 @@
                             // If we do not have another effect to move on to and repeat is enabled, start over.
                             // We can only do this if the effects have ended with repeat, otherwise End() is called which instantly disables the chain
                             if (_activeEffect == null && Repeat)
+                            {
                                 Restart();
+                            }
                         }
                     }
                 }
             }
         }
-        
+
         /// <summary>
         /// Restarts the cell effect but does not reset it.
         /// </summary>
@@ -150,8 +161,10 @@
 
             _inChainDelay = false;
 
-            foreach (var item in Effects)
+            foreach (ICellEffect item in Effects)
+            {
                 item.Restart();
+            }
 
             Start();
 
@@ -162,10 +175,10 @@
         {
             EffectsChain chain = new EffectsChain()
             {
-                _enabled = this._enabled,
-                _activeIndex = this._activeIndex,
-                DelayBetweenEffects = this.DelayBetweenEffects,
-                Repeat = this.Repeat,
+                _enabled = _enabled,
+                _activeIndex = _activeIndex,
+                DelayBetweenEffects = DelayBetweenEffects,
+                Repeat = Repeat,
 
                 IsFinished = IsFinished,
                 StartDelay = StartDelay,
@@ -176,8 +189,10 @@
                 _timeElapsed = _timeElapsed,
             };
 
-            foreach (var item in Effects)
+            foreach (ICellEffect item in Effects)
+            {
                 chain.Effects.Add(item.CloneOnApply ? item.Clone() : item);
+            }
 
             chain._activeEffect = chain.Effects[chain._activeIndex];
             return chain;
@@ -197,20 +212,19 @@
         //                   Repeat == effect2.Repeat;
         //        }
         //    }
-                
+
         //    return false;
         //}
 
-        public override string ToString()
-        {
-            return string.Format("EFFECTSCHAIN-{0}-{1}-{2}-{3}", StartDelay, RemoveOnFinished, DelayBetweenEffects, Repeat);
-        }
+        public override string ToString() => string.Format("EFFECTSCHAIN-{0}-{1}-{2}-{3}", StartDelay, RemoveOnFinished, DelayBetweenEffects, Repeat);
 
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
             if (_enabled)
+            {
                 Start();
+            }
         }
     }
 }

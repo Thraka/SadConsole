@@ -15,9 +15,6 @@ namespace SadConsole.DrawCalls
             Shade = shade;
         }
 
-        public void Draw()
-        {
-            Global.SpriteBatch.Draw(Global.FontDefault.FontImage, Rectangle, Global.FontDefault.SolidGlyphRectangle, Shade);
-        }
+        public void Draw() => Global.SpriteBatch.Draw(Global.FontDefault.FontImage, Rectangle, Global.FontDefault.SolidGlyphRectangle, Shade);
     }
 }

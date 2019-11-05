@@ -1,5 +1,4 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
 #endif
 
 namespace SadConsole
@@ -32,10 +31,17 @@ namespace SadConsole
             get => screens[index];
             set
             {
-                if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
-                if (screens[index] == value) return;
+                if (IsLocked)
+                {
+                    throw new Exception("The collection is locked and cannot be modified.");
+                }
 
-                var oldConsole = screens[index];
+                if (screens[index] == value)
+                {
+                    return;
+                }
+
+                Console oldConsole = screens[index];
                 screens[index] = value;
                 RemoveScreenParent(oldConsole);
                 SetScreenParent(value);
@@ -57,7 +63,11 @@ namespace SadConsole
         /// </summary>
         public void Clear()
         {
-            if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
+            if (IsLocked)
+            {
+                throw new Exception("The collection is locked and cannot be modified.");
+            }
+
             screens.Clear();
         }
 
@@ -66,10 +76,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="screen">The console to search for.</param>
         /// <returns></returns>
-        public bool Contains(Console screen)
-        {
-            return screens.Contains(screen);
-        }
+        public bool Contains(Console screen) => screens.Contains(screen);
 
         /// <summary>
         /// When true, indicates that the <paramref name="screen"/> is at the top of the collection stack.
@@ -79,7 +86,9 @@ namespace SadConsole
         public bool IsTop(Console screen)
         {
             if (screens.Contains(screen))
+            {
                 return screens.IndexOf(screen) == screens.Count - 1;
+            }
 
             return false;
         }
@@ -91,10 +100,15 @@ namespace SadConsole
         /// <param name="screen">The child object.</param>
         public void Add(Console screen)
         {
-            if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
+            if (IsLocked)
+            {
+                throw new Exception("The collection is locked and cannot be modified.");
+            }
 
             if (!screens.Contains(screen))
+            {
                 screens.Add(screen);
+            }
 
             SetScreenParent(screen);
         }
@@ -107,10 +121,15 @@ namespace SadConsole
         /// <param name="screen">The child object.</param>
         public void Insert(int index, Console screen)
         {
-            if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
+            if (IsLocked)
+            {
+                throw new Exception("The collection is locked and cannot be modified.");
+            }
 
             if (!screens.Contains(screen))
+            {
                 screens.Insert(index, screen);
+            }
 
             SetScreenParent(screen);
         }
@@ -122,10 +141,15 @@ namespace SadConsole
         /// <param name="screen">The child object.</param>
         public void Remove(Console screen)
         {
-            if (IsLocked) throw new Exception("The collection is locked and cannot be modified.");
+            if (IsLocked)
+            {
+                throw new Exception("The collection is locked and cannot be modified.");
+            }
 
             if (screens.Contains(screen))
+            {
                 screens.Remove(screen);
+            }
 
             RemoveScreenParent(screen);
         }
@@ -160,10 +184,7 @@ namespace SadConsole
         /// Gets the 0-based index of the <paramref name="screen"/>.
         /// </summary>
         /// <param name="screen">The child object.</param>
-        public int IndexOf(Console screen)
-        {
-            return screens.IndexOf(screen);
-        }
+        public int IndexOf(Console screen) => screens.IndexOf(screen);
 
         //public IConsole NextValidConsole(IConsole currentConsole)
         //{
@@ -215,25 +236,13 @@ namespace SadConsole
         //    return null;
         //}
 
-        private void SetScreenParent(Console screen)
-        {
-            screen.Parent = owningScreen;
-        }
+        private void SetScreenParent(Console screen) => screen.Parent = owningScreen;
 
-        private void RemoveScreenParent(Console screen)
-        {
-            screen.Parent = null;
-        }
+        private void RemoveScreenParent(Console screen) => screen.Parent = null;
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return screens.GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => screens.GetEnumerator();
 
         /// <inheritdoc />
-        public IEnumerator<Console> GetEnumerator()
-        {
-            return screens.GetEnumerator();
-        }
+        public IEnumerator<Console> GetEnumerator() => screens.GetEnumerator();
     }
 }

@@ -10,7 +10,7 @@ namespace SadConsole.Effects
     /// Recors the foreground or the background of a cell.
     /// </summary>
     [DataContract]
-    public class Recolor: CellEffectBase
+    public class Recolor : CellEffectBase
     {
         /// <summary>
         /// The foreground color applied to a cell.
@@ -23,7 +23,7 @@ namespace SadConsole.Effects
         /// </summary>
         [DataMember]
         public Color Background { get; set; }
-        
+
         /// <summary>
         /// When true, the <see cref="Foreground"/> color will be applied to the cell.
         /// </summary>
@@ -43,15 +43,22 @@ namespace SadConsole.Effects
             DoBackground = true;
             DoForeground = true;
         }
-        
+
         /// <inheritdoc />
         public override bool UpdateCell(Cell cell)
         {
-            var oldForeground = cell.Foreground;
-            var oldBackground = cell.Background;
+            Color oldForeground = cell.Foreground;
+            Color oldBackground = cell.Background;
 
-            if (DoBackground) cell.Background = Background;
-            if (DoForeground) cell.Foreground = Foreground;
+            if (DoBackground)
+            {
+                cell.Background = Background;
+            }
+
+            if (DoForeground)
+            {
+                cell.Foreground = Foreground;
+            }
 
             return oldForeground != cell.Foreground || oldBackground != cell.Background;
         }
@@ -64,31 +71,32 @@ namespace SadConsole.Effects
             if (Permanent)
             {
                 if (DoBackground)
+                {
                     cell.Background = Background;
+                }
 
                 if (DoForeground)
+                {
                     cell.Foreground = Foreground;
+                }
             }
         }
 
-        public override ICellEffect Clone()
+        public override ICellEffect Clone() => new Recolor()
         {
-            return new Recolor()
-            {
-                Foreground = this.Foreground,
-                Background = this.Background,
-                DoForeground = this.DoForeground,
-                DoBackground = this.DoBackground,
+            Foreground = Foreground,
+            Background = Background,
+            DoForeground = DoForeground,
+            DoBackground = DoBackground,
 
-                IsFinished = IsFinished,
-                StartDelay = StartDelay,
-                CloneOnApply = CloneOnApply,
-                RemoveOnFinished = RemoveOnFinished,
-                DiscardCellState = DiscardCellState,
-                Permanent = Permanent,
-                _timeElapsed = _timeElapsed,
-            };
-        }
+            IsFinished = IsFinished,
+            StartDelay = StartDelay,
+            CloneOnApply = CloneOnApply,
+            RemoveOnFinished = RemoveOnFinished,
+            DiscardCellState = DiscardCellState,
+            Permanent = Permanent,
+            _timeElapsed = _timeElapsed,
+        };
 
         //public override bool Equals(ICellEffect effect)
         //{
@@ -107,13 +115,10 @@ namespace SadConsole.Effects
         //                   DoBackground == effect2.DoBackground;
         //        }
         //    }
-                
+
         //    return false;
         //}
 
-        public override string ToString()
-        {
-            return string.Format("RECOLOR-{0}-{1}-{2}-{3}-{4}", Foreground.ToInteger(), Background.ToInteger(), Permanent, StartDelay, RemoveOnFinished);
-        }
+        public override string ToString() => string.Format("RECOLOR-{0}-{1}-{2}-{3}-{4}", Foreground.ToInteger(), Background.ToInteger(), Permanent, StartDelay, RemoveOnFinished);
     }
 }

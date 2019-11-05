@@ -21,7 +21,7 @@ namespace SadConsole
 
             for (int i = 0; i < items.Length; i++)
             {
-               var point = i.ToPoint(width);
+                var point = i.ToPoint(width);
                 result[point.X, point.Y] = items[i];
             }
 
@@ -37,7 +37,7 @@ namespace SadConsole
         public static TCell[] Flatten<TCell>(this TCell[,] items)
         {
             var result = new TCell[items.Length];
-            var width = items.GetUpperBound(0) + 1;
+            int width = items.GetUpperBound(0) + 1;
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y <= items.GetUpperBound(1); y++)

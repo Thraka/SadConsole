@@ -37,15 +37,9 @@
                 B = b;
             }
 
-            public static bool operator ==(Color left, Color right)
-            {
-                return left.R == right.R && left.G == right.G && left.B == right.B;
-            }
+            public static bool operator ==(Color left, Color right) => left.R == right.R && left.G == right.G && left.B == right.B;
 
-            public static bool operator !=(Color left, Color right)
-            {
-                return left.R != right.R || left.G != right.G || left.B != right.B;
-            }
+            public static bool operator !=(Color left, Color right) => left.R != right.R || left.G != right.G || left.B != right.B;
 
             /// <summary>
             /// Returns the transparent color used by RexPaint: rgb(255, 0, 255).

@@ -1,20 +1,17 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
-
 using ScrollingConsole = SadConsole.ScrollingConsole;
-using SadConsole.Input;
-using System.Linq;
 
 namespace StarterProject.CustomConsoles
 {
-    class AnsiConsole: ScrollingConsole
+    internal class AnsiConsole : ScrollingConsole
     {
-        int fileIndex = -1;
-        string[] files;
+        private int fileIndex = -1;
+        private readonly string[] files;
         private ScrollingConsole ansiSurface;
-        
-        public AnsiConsole(): base(80, 23)
+
+        public AnsiConsole() : base(80, 23)
         {
             IsVisible = false;
             UseKeyboard = true;
@@ -30,7 +27,9 @@ namespace StarterProject.CustomConsoles
             fileIndex++;
 
             if (fileIndex >= files.Length)
+            {
                 fileIndex = 0;
+            }
 
             doc = new SadConsole.Ansi.Document($"{files[fileIndex]}");
         }
@@ -59,16 +58,24 @@ namespace StarterProject.CustomConsoles
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if (info.IsKeyDown(Keys.Left))
+            {
                 ViewPort = new Rectangle(ViewPort.Left - 1, ViewPort.Top, 80, 23);
+            }
 
             if (info.IsKeyDown(Keys.Right))
+            {
                 ViewPort = new Rectangle(ViewPort.Left + 1, ViewPort.Top, 80, 23);
+            }
 
             if (info.IsKeyDown(Keys.Up))
+            {
                 ViewPort = new Rectangle(ViewPort.Left, ViewPort.Top - 1, 80, 23);
+            }
 
             if (info.IsKeyDown(Keys.Down))
+            {
                 ViewPort = new Rectangle(ViewPort.Left, ViewPort.Top + 1, 80, 23);
+            }
 
             if (info.IsKeyReleased(Keys.Space))
             {
@@ -92,7 +99,9 @@ namespace StarterProject.CustomConsoles
                 lineCounter++;
 
                 if (lineCounter > lines.Length)
+                {
                     writer = null;
+                }
             }
 
             return true;

@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework;
 namespace SadConsole.Themes
 {
     using System.Runtime.Serialization;
-    
+
     /// <summary>
     /// A theme for a Window object.
     /// </summary>
     [DataContract]
-    public class WindowTheme: ControlsConsoleTheme
+    public class WindowTheme : ControlsConsoleTheme
     {
         /// <summary>
         /// The style of the title.
@@ -72,20 +72,17 @@ namespace SadConsole.Themes
         /// Returns a clone of this object. <see cref="BorderLineStyle"/> is referenced.
         /// </summary>
         /// <returns>The cloned object.</returns>
-        public new WindowTheme Clone()
+        public new WindowTheme Clone() => new WindowTheme
         {
-            return new WindowTheme
-            {
-                TitleStyle = TitleStyle.Clone(),
-                BorderStyle = BorderStyle.Clone(),
-                FillStyle = FillStyle.Clone(),
-                TitleAreaY = TitleAreaY,
-                TitleAreaX = TitleAreaX,
-                TitleAreaLength = TitleAreaLength,
-                ModalTint = ModalTint,
-                BorderLineStyle = (int[])BorderLineStyle?.Clone()
-            };
-        }
+            TitleStyle = TitleStyle.Clone(),
+            BorderStyle = BorderStyle.Clone(),
+            FillStyle = FillStyle.Clone(),
+            TitleAreaY = TitleAreaY,
+            TitleAreaX = TitleAreaX,
+            TitleAreaLength = TitleAreaLength,
+            ModalTint = ModalTint,
+            BorderLineStyle = (int[])BorderLineStyle?.Clone()
+        };
 
         /// <inheritdoc />
         public override void Draw(ControlsConsole console, CellSurface hostSurface)
@@ -94,24 +91,33 @@ namespace SadConsole.Themes
             hostSurface.DefaultBackground = FillStyle.Background;
             hostSurface.Fill(hostSurface.DefaultForeground, hostSurface.DefaultBackground, FillStyle.Glyph, null);
 
-            if (!(console is Window window)) return;
+            if (!(console is Window window))
+            {
+                return;
+            }
 
             if (BorderLineStyle != null)
+            {
                 hostSurface.DrawBox(new Rectangle(0, 0, hostSurface.Width, hostSurface.Height), new Cell(BorderStyle.Foreground,
                     BorderStyle.Background, 0), null, BorderLineStyle);
+            }
 
             // Draw title
-            var adjustedText = "";
-            var adjustedWidth = hostSurface.Width - 2;
+            string adjustedText = "";
+            int adjustedWidth = hostSurface.Width - 2;
             TitleAreaLength = 0;
             TitleAreaX = 0;
 
             if (!string.IsNullOrEmpty(window.Title))
             {
                 if (window.Title.Length > adjustedWidth)
+                {
                     adjustedText = window.Title.Substring(0, window.Title.Length - (window.Title.Length - adjustedWidth));
+                }
                 else
+                {
                     adjustedText = window.Title;
+                }
             }
 
             if (!string.IsNullOrEmpty(adjustedText))
@@ -119,13 +125,17 @@ namespace SadConsole.Themes
                 TitleAreaLength = adjustedText.Length;
 
                 if (window.TitleAlignment == HorizontalAlignment.Left)
+                {
                     TitleAreaX = 1;
-
+                }
                 else if (window.TitleAlignment == HorizontalAlignment.Center)
+                {
                     TitleAreaX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
-
+                }
                 else
+                {
                     TitleAreaX = hostSurface.Width - 1 - adjustedText.Length;
+                }
 
                 hostSurface.Print(TitleAreaX, TitleAreaY, adjustedText, TitleStyle);
             }

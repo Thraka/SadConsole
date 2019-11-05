@@ -30,14 +30,16 @@
         /// <inheritdoc />
         public override void Update(Console console, TimeSpan delta)
         {
-            var stillRunning = false;
+            bool stillRunning = false;
 
-            foreach (var item in _instructions)
+            foreach (InstructionBase item in _instructions)
             {
                 item.Update(console, delta);
 
                 if (!item.IsFinished)
+                {
                     stillRunning = true;
+                }
             }
 
             IsFinished = !stillRunning;
@@ -48,8 +50,10 @@
         /// <inheritdoc />
         public override void Repeat()
         {
-            foreach (var item in _instructions)
+            foreach (InstructionBase item in _instructions)
+            {
                 item.Repeat();
+            }
 
             base.Repeat();
         }
@@ -57,8 +61,10 @@
         /// <inheritdoc />
         public override void Reset()
         {
-            foreach (var item in _instructions)
+            foreach (InstructionBase item in _instructions)
+            {
                 item.Reset();
+            }
 
             base.Reset();
         }

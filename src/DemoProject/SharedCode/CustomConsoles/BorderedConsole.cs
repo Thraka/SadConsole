@@ -8,11 +8,11 @@ using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
-    class BorderComponent : IConsoleComponent
+    public class BorderComponent : IConsoleComponent
     {
         private Console _borderConsole;
-        private Cell _borderCellStyle;
-        private int[] _borderGlyphs;
+        private readonly Cell _borderCellStyle;
+        private readonly int[] _borderGlyphs;
 
         public int SortOrder => 0;
 
@@ -27,7 +27,9 @@ namespace StarterProject.CustomConsoles
         public BorderComponent(int[] connectedLineStyle, Color foreground, Color background)
         {
             if (!CellSurface.ValidateLineStyle(connectedLineStyle))
+            {
                 throw new ArgumentException("The connected line array is invalid.", nameof(connectedLineStyle));
+            }
 
             _borderGlyphs = connectedLineStyle;
             _borderCellStyle = new Cell(foreground, background);
@@ -56,7 +58,9 @@ namespace StarterProject.CustomConsoles
         public void OnRemoved(Console console)
         {
             if (_borderConsole.Parent != null)
+            {
                 _borderConsole.Parent = null;
+            }
 
             _borderConsole = null;
         }
@@ -70,12 +74,12 @@ namespace StarterProject.CustomConsoles
         public void Update(Console console, TimeSpan delta) => throw new NotImplementedException();
     }
 
-    class BorderedConsole: Console
+    internal class BorderedConsole : Console
     {
         public BorderedConsole()
             : base(80, 25)
         {
-            this.IsVisible = false;
+            IsVisible = false;
 
             Print(1, 1, "Example of using a component to draw a border around consoles");
 

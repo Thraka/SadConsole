@@ -6,7 +6,6 @@ using SadConsole.Effects;
 using System;
 using System.Linq;
 using System.Text;
-using Console = SadConsole.ScrollingConsole;
 
 namespace SadConsole.Ansi
 {
@@ -52,7 +51,9 @@ namespace SadConsole.Ansi
             set
             {
                 if (value != 0)
+                {
                     _timePerCharacter = 1d / value;
+                }
 
                 _charsPerSecond = value;
             }
@@ -67,7 +68,7 @@ namespace SadConsole.Ansi
         {
             AnsiDocument = ansiDocument;
             _editor = editor;
-            Cursor = new Cursor(editor) {UseStringParser = false, DisableWordBreak = true};
+            Cursor = new Cursor(editor) { UseStringParser = false, DisableWordBreak = true };
 
             CharactersPerSecond = 800;
 
@@ -99,15 +100,17 @@ namespace SadConsole.Ansi
                     // Process a character
                     if (_totalTime >= _timePerCharacter)
                     {
-                        var charCount = (int)(_totalTime / _timePerCharacter);
+                        int charCount = (int)(_totalTime / _timePerCharacter);
                         _totalTime -= _timePerCharacter * charCount;
 
                         if (_readerIndex + charCount > _bytes.Length - 1)
-                            charCount = _bytes.Length - _readerIndex - 1;
-
-                        for (var i = 0; i < charCount; i++)
                         {
-                            var character = (char)_bytes[_readerIndex];
+                            charCount = _bytes.Length - _readerIndex - 1;
+                        }
+
+                        for (int i = 0; i < charCount; i++)
+                        {
+                            char character = (char)_bytes[_readerIndex];
                             _readerIndex++;
 
                             if (_inEscapeCode)
@@ -119,7 +122,9 @@ namespace SadConsole.Ansi
                                     _inEscapeCode = false;
                                 }
                                 else
+                                {
                                     _ansiCodeBuilder.Append(character);
+                                }
                             }
 
                             else if (character == (char)26)
@@ -138,7 +143,7 @@ namespace SadConsole.Ansi
                             }
                         }
                     }
-                    
+
                     //if (_totalTime >= 1d )
                     //{
                     //    _totalTime = 0d;
@@ -158,8 +163,8 @@ namespace SadConsole.Ansi
         {
             if (code[0] == (char)27 && code[1] == '[')
             {
-                var data = code.Substring(2, code.Length - 3);
-                var values = data.Split(';');
+                string data = code.Substring(2, code.Length - 3);
+                string[] values = data.Split(';');
 
                 switch (code[code.Length - 1])
                 {
@@ -193,35 +198,41 @@ namespace SadConsole.Ansi
                         break;
                     case 'B':
                     case 'b':
-                        Cursor.Down(data.Length == 0 
-                            ? 1 
+                        Cursor.Down(data.Length == 0
+                            ? 1
                             : Convert.ToInt32(data)
                         );
                         break;
                     case 'C':
                     case 'c':
-                        Cursor.Right(data.Length == 0 
-                            ? 1 
+                        Cursor.Right(data.Length == 0
+                            ? 1
                             : Convert.ToInt32(data)
                         );
                         break;
                     case 'D':
                     case 'd':
-                        Cursor.Left(data.Length == 0 
-                            ? 1 
+                        Cursor.Left(data.Length == 0
+                            ? 1
                             : Convert.ToInt32(data)
                         );
                         break;
                     case 'J':
                     case 'j':
                         if (data == "" || data == "0")
-                            for (var i = Cursor.Position.X; i < _editor.Width; i++)
+                        {
+                            for (int i = Cursor.Position.X; i < _editor.Width; i++)
+                            {
                                 _editor.Clear(i, Cursor.Position.Y);
-
+                            }
+                        }
                         else if (data == "1")
-                            for (var i = Cursor.Position.X; i >= 0; i--)
+                        {
+                            for (int i = Cursor.Position.X; i >= 0; i--)
+                            {
                                 _editor.Clear(i, Cursor.Position.Y);
-
+                            }
+                        }
                         else if (data == "2")
                         {
                             _editor.Clear();
@@ -232,17 +243,25 @@ namespace SadConsole.Ansi
                     case 'K':
                     case 'k':
                         if (data == "" || data == "0")
-                            for (var i = Cursor.Position.X; i < _editor.Width; i++)
+                        {
+                            for (int i = Cursor.Position.X; i < _editor.Width; i++)
+                            {
                                 _editor.Clear(i, Cursor.Position.Y);
-
+                            }
+                        }
                         else if (data == "1")
-                            for (var i = Cursor.Position.X; i >= 0; i--)
+                        {
+                            for (int i = Cursor.Position.X; i >= 0; i--)
+                            {
                                 _editor.Clear(i, Cursor.Position.Y);
-
+                            }
+                        }
                         else if (data == "2")
                         {
-                            for (var i = 0; i < _editor.Width; i++)
+                            for (int i = 0; i < _editor.Width; i++)
+                            {
                                 _editor.Clear(i, Cursor.Position.Y);
+                            }
                         }
 
                         break;
@@ -259,13 +278,14 @@ namespace SadConsole.Ansi
                     case 'm':
 
                         if (data == "")
+                        {
                             _ansiState.AnsiResetVideo();
-
+                        }
                         else
                         {
-                            foreach (var v in values)
+                            foreach (string v in values)
                             {
-                                var value = Convert.ToInt32(v);
+                                int value = Convert.ToInt32(v);
                                 switch (value)
                                 {
                                     case 0:
@@ -279,7 +299,7 @@ namespace SadConsole.Ansi
                                         //Appearance.Effect = BlinkEffect;
                                         break;
                                     case 7:
-                                        var tempFore = _ansiState.Foreground;
+                                        Color tempFore = _ansiState.Foreground;
                                         _ansiState.Foreground = Helpers.AnsiAdjustColor(_ansiState.Background, _ansiState.Bold);
                                         _ansiState.Background = Helpers.AnsiJustNormalColor(tempFore);
                                         break;
@@ -323,7 +343,7 @@ namespace SadConsole.Ansi
         /// <returns>Returns false when character 26 is encountered; otherwise true.</returns>
         public bool AnsiReadLine(string line, bool moreLines = false)
         {
-            var inEscape = false;
+            bool inEscape = false;
             var stringValue = new StringBuilder();
             var stringEscape = new StringBuilder(5);
 
@@ -334,9 +354,9 @@ namespace SadConsole.Ansi
                 return true;
             }
 
-            var onLastLine = Cursor.Position.Y == _editor.Height - 1;
+            bool onLastLine = Cursor.Position.Y == _editor.Height - 1;
 
-            foreach (var item in line)
+            foreach (char item in line)
             {
                 if (inEscape)
                 {
@@ -347,12 +367,15 @@ namespace SadConsole.Ansi
                         inEscape = false;
                     }
                     else
+                    {
                         stringEscape.Append(item);
+                    }
                 }
 
                 else if (item == (char)26)
+                {
                     return false;
-
+                }
 
                 else if (item == (char)27)
                 {
@@ -383,7 +406,9 @@ namespace SadConsole.Ansi
             Cursor.CarriageReturn();
 
             if ((onLastLine && moreLines) || !onLastLine)
+            {
                 Cursor.LineFeed();
+            }
 
             return true;
         }
@@ -408,9 +433,9 @@ namespace SadConsole.Ansi
 
             _ansiState.AnsiResetVideo();
 
-            for (var i = 0; i < _bytes.Length; i++)
+            for (int i = 0; i < _bytes.Length; i++)
             {
-                var character = (char)_bytes[_readerIndex];
+                char character = (char)_bytes[_readerIndex];
                 _readerIndex++;
 
                 if (_inEscapeCode)
@@ -422,7 +447,9 @@ namespace SadConsole.Ansi
                         _inEscapeCode = false;
                     }
                     else
+                    {
                         _ansiCodeBuilder.Append(character);
+                    }
                 }
 
                 else if (character == (char)26)
@@ -445,9 +472,6 @@ namespace SadConsole.Ansi
         /// <summary>
         /// Moves the reader back to the start of the file so that the source can .
         /// </summary>
-        public void Restart()
-        {
-            _readerIndex = 0;
-        }
+        public void Restart() => _readerIndex = 0;
     }
 }

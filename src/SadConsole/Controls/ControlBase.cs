@@ -73,10 +73,10 @@ namespace SadConsole.Controls
             get => position;
             set
             {
-                var oldPosition = position;
+                Point oldPosition = position;
                 position = value;
                 Bounds = new Rectangle(position.X, position.Y, Width, Height);
-                var mouseBoundsPosition = MouseBounds.Location + value - oldPosition;
+                Point mouseBoundsPosition = MouseBounds.Location + value - oldPosition;
                 MouseBounds = new Rectangle(mouseBoundsPosition.X, mouseBoundsPosition.Y, MouseBounds.Width, MouseBounds.Height);
                 OnPositionChanged();
             }
@@ -152,14 +152,18 @@ namespace SadConsole.Controls
                     if (value)
                     {
                         if (Parent.FocusedControl != this)
+                        {
                             Parent.FocusedControl = this;
+                        }
                     }
                     else if (Parent.FocusedControl == this)
                     {
                         Parent.TabNextControl();
 
                         if (Parent.FocusedControl == this)
+                        {
                             Parent.FocusedControl = null;
+                        }
                     }
 
                     DetermineState();
@@ -230,7 +234,7 @@ namespace SadConsole.Controls
                 }
             }
         }
-        
+
         /// <summary>
         /// The state of the control.
         /// </summary>
@@ -281,12 +285,12 @@ namespace SadConsole.Controls
         /// <summary>
         /// Called when the control loses focus. Calls DetermineAppearance.
         /// </summary>
-        public virtual void FocusLost() { DetermineState(); }
+        public virtual void FocusLost() => DetermineState();
 
         /// <summary>
         /// Called when the control is focused. Calls DetermineAppearance.
         /// </summary>
-        public virtual void Focused() { DetermineState(); }
+        public virtual void Focused() => DetermineState();
 
 
         /// <summary>
@@ -299,7 +303,10 @@ namespace SadConsole.Controls
         /// </summary>
         public void RefreshParentTheme()
         {
-            if (parent == null) return;
+            if (parent == null)
+            {
+                return;
+            }
 
             if (IsCustomTheme && ActiveTheme != null)
             {
@@ -316,17 +323,14 @@ namespace SadConsole.Controls
         /// Gets the theme colors associated with this control.
         /// </summary>
         /// <returns>Theme colors.</returns>
-        public Themes.Colors GetThemeColors()
-        {
-            return ActiveTheme.Colors ?? Parent?.Theme.Colors ?? Themes.Library.Default.Colors;
-        }
+        public Themes.Colors GetThemeColors() => ActiveTheme.Colors ?? Parent?.Theme.Colors ?? Themes.Library.Default.Colors;
 
         #region Input
         /// <summary>
         /// Called when the keyboard is used on this control.
         /// </summary>
         /// <param name="state">The state of the keyboard.</param>
-        public virtual bool ProcessKeyboard(Keyboard state) { return false; }
+        public virtual bool ProcessKeyboard(Keyboard state) => false;
 
         /// <summary>
         /// Checks if the mouse is the control and calls the appropriate mouse methods.
@@ -348,10 +352,14 @@ namespace SadConsole.Controls
                     OnMouseIn(state);
 
                     if (state.Mouse.LeftClicked)
+                    {
                         OnLeftMouseClicked(state);
+                    }
 
                     if (state.Mouse.RightClicked)
+                    {
                         OnRightMouseClicked(state);
+                    }
                 }
                 else
                 {
@@ -370,10 +378,7 @@ namespace SadConsole.Controls
         /// Called to trigger the state of losing mouse focus.
         /// </summary>
         /// <param name="state">The mouse state.</param>
-        public void LostMouse(MouseConsoleState state)
-        {
-            OnMouseExit(state);
-        }
+        public void LostMouse(MouseConsoleState state) => OnMouseExit(state);
         #endregion
 
         /// <summary>
@@ -395,29 +400,49 @@ namespace SadConsole.Controls
             ControlStates oldState = state;
 
             if (!isEnabled)
+            {
                 Helpers.SetFlag(ref state, ControlStates.Disabled);
+            }
             else
+            {
                 Helpers.UnsetFlag(ref state, ControlStates.Disabled);
+            }
 
             if (isMouseOver)
+            {
                 Helpers.SetFlag(ref state, ControlStates.MouseOver);
+            }
             else
+            {
                 Helpers.UnsetFlag(ref state, ControlStates.MouseOver);
+            }
 
             if (IsFocused)
+            {
                 Helpers.SetFlag(ref state, ControlStates.Focused);
+            }
             else
+            {
                 Helpers.UnsetFlag(ref state, ControlStates.Focused);
+            }
 
             if (isMouseLeftDown)
+            {
                 Helpers.SetFlag(ref state, ControlStates.MouseLeftButtonDown);
+            }
             else
+            {
                 Helpers.UnsetFlag(ref state, ControlStates.MouseLeftButtonDown);
+            }
 
             if (isMouseRightDown)
+            {
                 Helpers.SetFlag(ref state, ControlStates.MouseRightButtonDown);
+            }
             else
+            {
                 Helpers.UnsetFlag(ref state, ControlStates.MouseRightButtonDown);
+            }
 
             if (oldState != state)
             {
@@ -431,11 +456,8 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="oldState">The original state.</param>
         /// <param name="newState">The new state.</param>
-        protected virtual void OnStateChanged(ControlStates oldState, ControlStates newState)
-        {
-            IsDirty = true;
-        }
-        
+        protected virtual void OnStateChanged(ControlStates oldState, ControlStates newState) => IsDirty = true;
+
         /// <summary>
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.
         /// </summary>
@@ -485,7 +507,9 @@ namespace SadConsole.Controls
             MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
 
             if (FocusOnClick)
-                this.IsFocused = true;
+            {
+                IsFocused = true;
+            }
 
             DetermineState();
         }
@@ -506,10 +530,7 @@ namespace SadConsole.Controls
         /// </summary>
         /// <param name="consolePosition">Position of the console to get the relative control position from.</param>
         /// <returns>The x,y position of the mouse over the control.</returns>
-        protected Point TransformConsolePositionByControlPosition(Point consolePosition)
-        {
-            return consolePosition - position;
-        }
+        protected Point TransformConsolePositionByControlPosition(Point consolePosition) => consolePosition - position;
 
         /// <summary>
         /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.

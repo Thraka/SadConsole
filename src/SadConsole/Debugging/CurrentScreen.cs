@@ -17,20 +17,20 @@ namespace SadConsole.Debug
         {
             private Console _originalScreen;
             private ContainerConsole _wrapperScreen;
-            private ConsoleStack _inputConsoles;
+            private readonly ConsoleStack _inputConsoles;
 
-            private Label _labelConsoleTitle;
-            private Label _labelConsoleWidth;
-            private Label _labelConsoleHeight;
-            private Label _labelConsolePosition;
-            private Button _buttonSetPosition;
-            private ListBox _listConsoles;
-            private CheckBox _checkIsVisible;
-            private ScrollingSurfaceView _surfaceView;
+            private readonly Label _labelConsoleTitle;
+            private readonly Label _labelConsoleWidth;
+            private readonly Label _labelConsoleHeight;
+            private readonly Label _labelConsolePosition;
+            private readonly Button _buttonSetPosition;
+            private readonly ListBox _listConsoles;
+            private readonly CheckBox _checkIsVisible;
+            private readonly ScrollingSurfaceView _surfaceView;
 
             private bool _isReadingConsole;
 
-            public DebugWindow(Font font) : base (78, 22, font)
+            public DebugWindow(Font font) : base(78, 22, font)
             {
                 Theme = Theme.Clone();
                 Theme.ListBoxTheme.DrawBorder = true;
@@ -43,7 +43,7 @@ namespace SadConsole.Debug
                 _listConsoles.SelectedItemChanged += Listbox_SelectedItemChanged;
                 Add(_listConsoles);
 
-                var label = CreateLabel("Current Screen", new Point(_listConsoles.Bounds.Left, _listConsoles.Bounds.Top - 1));
+                Label label = CreateLabel("Current Screen", new Point(_listConsoles.Bounds.Left, _listConsoles.Bounds.Top - 1));
                 label = CreateLabel("Selected Console: ", new Point(_listConsoles.Bounds.Right + 1, label.Bounds.Top));
                 {
                     _labelConsoleTitle = new Label(Width - label.Bounds.Right - 1) { Position = new Point(label.Bounds.Right, label.Bounds.Top) };
@@ -64,9 +64,11 @@ namespace SadConsole.Debug
                     Add(_labelConsoleHeight);
                 }
 
-                _checkIsVisible = new CheckBox(15, 1);
-                _checkIsVisible.Text = "Is Visible";
-                _checkIsVisible.Position = new Point(_listConsoles.Bounds.Right + 1, label.Bounds.Bottom);
+                _checkIsVisible = new CheckBox(15, 1)
+                {
+                    Text = "Is Visible",
+                    Position = new Point(_listConsoles.Bounds.Right + 1, label.Bounds.Bottom)
+                };
                 _checkIsVisible.IsSelectedChanged += _checkIsVisible_IsSelectedChanged;
                 Add(_checkIsVisible);
 
@@ -84,14 +86,16 @@ namespace SadConsole.Debug
                 Add(_buttonSetPosition);
                 _buttonSetPosition.Click += _buttonSetPosition_Click;
 
-                _surfaceView = new ScrollingSurfaceView(Width - 3 - _listConsoles.Bounds.Right + 1, Height - 6 - _checkIsVisible.Bounds.Bottom + 1);
-                _surfaceView.Theme = new ScrollingSurfaceView.ScrollingSurfaceViewTheme();
-                _surfaceView.Position = new Point(_listConsoles.Bounds.Right + 1, _checkIsVisible.Bounds.Bottom);
+                _surfaceView = new ScrollingSurfaceView(Width - 3 - _listConsoles.Bounds.Right + 1, Height - 6 - _checkIsVisible.Bounds.Bottom + 1)
+                {
+                    Theme = new ScrollingSurfaceView.ScrollingSurfaceViewTheme(),
+                    Position = new Point(_listConsoles.Bounds.Right + 1, _checkIsVisible.Bounds.Bottom)
+                };
                 Add(_surfaceView);
 
                 // Position EDIT
                 // Map View of surface
-                
+
 
 
                 // Cell peek of surface
@@ -117,17 +121,19 @@ namespace SadConsole.Debug
                 _wrapperScreen = new ContainerConsole();
                 _inputConsoles = Global.FocusedConsoles;
                 Global.FocusedConsoles = new ConsoleStack();
-                
+
                 AddConsoleToList(_originalScreen);
                 void AddConsoleToList(Console console, int indent = 0)
                 {
-                    var debugger = console.GetType().GetTypeInfo().GetCustomAttributes<System.Diagnostics.DebuggerDisplayAttribute>().FirstOrDefault();
-                    var text = debugger != null ? debugger.Value : console.ToString();
+                    System.Diagnostics.DebuggerDisplayAttribute debugger = console.GetType().GetTypeInfo().GetCustomAttributes<System.Diagnostics.DebuggerDisplayAttribute>().FirstOrDefault();
+                    string text = debugger != null ? debugger.Value : console.ToString();
 
                     _listConsoles.Items.Add(new ConsoleListboxItem(new string('-', indent) + text, console));
 
-                    foreach (var child in console.Children)
+                    foreach (Console child in console.Children)
+                    {
                         AddConsoleToList(child, indent + 1);
+                    }
                 }
 
                 _wrapperScreen.Children.Add(_originalScreen);
@@ -140,26 +146,32 @@ namespace SadConsole.Debug
 
             private void _buttonSetPosition_Click(object sender, EventArgs e)
             {
-                var window = new Window(16, 7);
-                window.Title = "Set Position";
-                window.CloseOnEscKey = true;
+                var window = new Window(16, 7)
+                {
+                    Title = "Set Position",
+                    CloseOnEscKey = true
+                };
                 TextBox widthBox;
                 TextBox heightBox;
 
-                var label = CreateLabel("X: ", new Point(1, 2));
-                widthBox = new TextBox(4);
-                widthBox.Position = new Point(label.Bounds.Right + 3, label.Bounds.Top);
-                widthBox.IsNumeric = true;
-                widthBox.AllowDecimal = false;
-                widthBox.Text = ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.X.ToString();
+                Label label = CreateLabel("X: ", new Point(1, 2));
+                widthBox = new TextBox(4)
+                {
+                    Position = new Point(label.Bounds.Right + 3, label.Bounds.Top),
+                    IsNumeric = true,
+                    AllowDecimal = false,
+                    Text = ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.X.ToString()
+                };
                 window.Add(widthBox);
 
                 label = CreateLabel("Y: ", new Point(1, 3));
-                heightBox = new TextBox(4);
-                heightBox.Position = new Point(label.Bounds.Right + 3, label.Bounds.Top);
-                heightBox.IsNumeric = true;
-                heightBox.AllowDecimal = false;
-                heightBox.Text = ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.Y.ToString();
+                heightBox = new TextBox(4)
+                {
+                    Position = new Point(label.Bounds.Right + 3, label.Bounds.Top),
+                    IsNumeric = true,
+                    AllowDecimal = false,
+                    Text = ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.Y.ToString()
+                };
                 window.Add(heightBox);
 
                 var buttonSave = new Button(4, 1)
@@ -201,7 +213,10 @@ namespace SadConsole.Debug
 
             private void SetEditCell(Cell cell)
             {
-                if (cell == null) return;
+                if (cell == null)
+                {
+                    return;
+                }
 
                 cell.CopyAppearanceTo(this[Width - 3, Height - 3]);
 
@@ -210,9 +225,10 @@ namespace SadConsole.Debug
 
             private void _checkIsVisible_IsSelectedChanged(object sender, System.EventArgs e)
             {
-                if (_isReadingConsole) return;
-
-                ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.IsVisible = ((CheckBox)sender).IsSelected;
+                if (_isReadingConsole)
+                {
+                    return;
+                } ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.IsVisible = ((CheckBox)sender).IsSelected;
             }
 
             private void Listbox_SelectedItemChanged(object sender, ListBox.SelectedItemEventArgs e)
@@ -234,12 +250,12 @@ namespace SadConsole.Debug
             {
                 if (state.IsOnConsole)
                 {
-                    var mouseArea = _surfaceView.MouseArea;
+                    Rectangle mouseArea = _surfaceView.MouseArea;
                     mouseArea.Offset(_surfaceView.Position);
                     if (mouseArea.Contains(state.ConsoleCellPosition))
                     {
                         _cellTrackOnControl = true;
-                        var pos = state.ConsoleCellPosition - _surfaceView.Position;
+                        Point pos = state.ConsoleCellPosition - _surfaceView.Position;
                         if (_surfaceView.MouseArea.Contains(pos))
                         {
                             SetEditCell(_surfaceView.Surface[pos.X, pos.Y]);
@@ -255,10 +271,7 @@ namespace SadConsole.Debug
                 return base.ProcessMouse(state);
             }
 
-            public override string ToString()
-            {
-                return "Debug Window";
-            }
+            public override string ToString() => "Debug Window";
 
             public override void Hide()
             {
@@ -295,7 +308,7 @@ namespace SadConsole.Debug
 
         private class ConsoleListboxItem
         {
-            private string Title;
+            private readonly string Title;
             public Console Console;
 
             public ConsoleListboxItem(string title, Console console)
@@ -341,7 +354,10 @@ namespace SadConsole.Debug
 
             private void VerticalBar_ValueChanged(object sender, EventArgs e)
             {
-                if (!((ScrollBar)sender).IsEnabled) return;
+                if (!((ScrollBar)sender).IsEnabled)
+                {
+                    return;
+                }
 
                 SurfaceView.ViewPort = new Rectangle(SurfaceView.ViewPort.X, ((ScrollBar)sender).Value, SurfaceView.ViewPort.Width, SurfaceView.ViewPort.Height);
                 IsDirty = true;
@@ -349,7 +365,10 @@ namespace SadConsole.Debug
 
             private void HorizontalBar_ValueChanged(object sender, EventArgs e)
             {
-                if (!((ScrollBar)sender).IsEnabled) return;
+                if (!((ScrollBar)sender).IsEnabled)
+                {
+                    return;
+                }
 
                 SurfaceView.ViewPort = new Rectangle(((ScrollBar)sender).Value, SurfaceView.ViewPort.Y, SurfaceView.ViewPort.Width, SurfaceView.ViewPort.Height);
                 IsDirty = true;
@@ -376,8 +395,10 @@ namespace SadConsole.Debug
 
                 SurfaceReference = surface;
                 SurfaceView = new ScrollingConsole(surface.Width, surface.Height, surface.Font, new Rectangle(0, 0, Width - 2 > surface.Width ? surface.Width : Width - 2,
-                                                                                                                    Height - 2 > surface.Height ? surface.Height : Height - 2), surface.Cells);
-                SurfaceView.DefaultBackground = surface.DefaultBackground;
+                                                                                                                    Height - 2 > surface.Height ? surface.Height : Height - 2), surface.Cells)
+                {
+                    DefaultBackground = surface.DefaultBackground
+                };
 
                 if (SurfaceView.ViewPort.Width != SurfaceView.Width)
                 {
@@ -385,7 +406,9 @@ namespace SadConsole.Debug
                     HorizontalBar.Maximum = SurfaceView.Width - SurfaceView.ViewPort.Width;
                 }
                 else
+                {
                     HorizontalBar.IsEnabled = false;
+                }
 
                 if (SurfaceView.ViewPort.Height != SurfaceView.Height)
                 {
@@ -393,7 +416,9 @@ namespace SadConsole.Debug
                     VerticalBar.Maximum = SurfaceView.Height - SurfaceView.ViewPort.Height;
                 }
                 else
+                {
                     VerticalBar.IsEnabled = false;
+                }
 
                 VerticalBar.Value = 0;
                 HorizontalBar.Value = 0;
@@ -407,7 +432,7 @@ namespace SadConsole.Debug
                 {
                     if (isMouseOver)
                     {
-                        var mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
+                        Point mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
 
                         if (mouseControlPosition.X == VerticalBarX)
                         {
@@ -420,7 +445,9 @@ namespace SadConsole.Debug
                         }
                     }
                     else
+                    {
                         base.ProcessMouse(state);
+                    }
                 }
 
                 return false;
@@ -440,11 +467,20 @@ namespace SadConsole.Debug
 
                 public override void UpdateAndDraw(ControlBase control, TimeSpan time)
                 {
-                    if (!(control is ScrollingSurfaceView scroller)) return;
+                    if (!(control is ScrollingSurfaceView scroller))
+                    {
+                        return;
+                    }
 
-                    if (!scroller.IsDirty) return;
+                    if (!scroller.IsDirty)
+                    {
+                        return;
+                    }
 
-                    if (scroller.SurfaceView == null) return;
+                    if (scroller.SurfaceView == null)
+                    {
+                        return;
+                    }
 
                     Cell appearance = GetStateAppearance(scroller.State);
 
@@ -452,20 +488,26 @@ namespace SadConsole.Debug
                     scroller.Surface.Clear();
                     scroller.Surface.DrawBox(new Rectangle(0, 0, scroller.Surface.Width, scroller.Surface.Height), appearance, null, CellSurface.ConnectedLineThin);
                     scroller.SurfaceView.Copy(scroller.SurfaceView.ViewPort, scroller.Surface, 1, 1);
-                    
+
                     if (scroller.SurfaceReference is ControlsConsole controlsConsole)
                     {
-                        foreach (var childControl in controlsConsole.Controls)
+                        foreach (ControlBase childControl in controlsConsole.Controls)
                         {
-                            for (var i = 0; i < childControl.Surface.Cells.Length; i++)
+                            for (int i = 0; i < childControl.Surface.Cells.Length; i++)
                             {
-                                ref var cell = ref childControl.Surface.Cells[i];
+                                ref Cell cell = ref childControl.Surface.Cells[i];
 
-                                if (!cell.IsVisible) continue;
+                                if (!cell.IsVisible)
+                                {
+                                    continue;
+                                }
 
-                                var cellRenderPosition = i.ToPoint(childControl.Surface.Width) + childControl.Position;
+                                Point cellRenderPosition = i.ToPoint(childControl.Surface.Width) + childControl.Position;
 
-                                if (!scroller.SurfaceView.ViewPort.Contains(cellRenderPosition - new Point(1))) continue;
+                                if (!scroller.SurfaceView.ViewPort.Contains(cellRenderPosition - new Point(1)))
+                                {
+                                    continue;
+                                }
 
                                 cell.CopyAppearanceTo(scroller.Surface[(cellRenderPosition - scroller.SurfaceView.ViewPort.Location).ToIndex(scroller.Surface.Width)]);
                             }
@@ -478,13 +520,13 @@ namespace SadConsole.Debug
                     scroller.HorizontalBar.IsDirty = true;
                     scroller.HorizontalBar.Update(time);
 
-                    for (var y = 0; y < scroller.VerticalBar.Height; y++)
+                    for (int y = 0; y < scroller.VerticalBar.Height; y++)
                     {
                         scroller.Surface.SetGlyph(scroller.VerticalBarX, y, scroller.VerticalBar.Surface[0, y].Glyph);
                         scroller.Surface.SetCellAppearance(scroller.VerticalBarX, y, scroller.VerticalBar.Surface[0, y]);
                     }
 
-                    for (var x = 0; x < scroller.HorizontalBar.Width; x++)
+                    for (int x = 0; x < scroller.HorizontalBar.Width; x++)
                     {
                         scroller.Surface.SetGlyph(x, scroller.HorizontalBarY, scroller.HorizontalBar.Surface[x, 0].Glyph);
                         scroller.Surface.SetCellAppearance(x, scroller.HorizontalBarY, scroller.HorizontalBar.Surface[x, 0]);
@@ -493,19 +535,16 @@ namespace SadConsole.Debug
                     scroller.IsDirty = false;
                 }
 
-                public override ThemeBase Clone()
+                public override ThemeBase Clone() => new ScrollingSurfaceViewTheme()
                 {
-                    return new ScrollingSurfaceViewTheme()
-                    {
-                        Colors = Colors?.Clone(),
-                        Normal = Normal.Clone(),
-                        Disabled = Disabled.Clone(),
-                        MouseOver = MouseOver.Clone(),
-                        MouseDown = MouseDown.Clone(),
-                        Selected = Selected.Clone(),
-                        Focused = Focused.Clone(),
-                    };
-                }
+                    Colors = Colors?.Clone(),
+                    Normal = Normal.Clone(),
+                    Disabled = Disabled.Clone(),
+                    MouseOver = MouseOver.Clone(),
+                    MouseDown = MouseDown.Clone(),
+                    Selected = Selected.Clone(),
+                    Focused = Focused.Clone(),
+                };
 
                 public override void RefreshTheme(Colors themeColors)
                 {

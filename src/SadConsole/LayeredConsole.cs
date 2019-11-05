@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework;
 
 namespace SadConsole
 {
-    using Newtonsoft.Json;
-    using SadConsole.SerializedTypes;
     using System;
     using System.Collections.Generic;
+    using Newtonsoft.Json;
+    using SadConsole.SerializedTypes;
 
     public class CellSurfaceLayer : CellSurface
     {
-        public CellSurfaceLayer(int width, int height): base(width, height) { }
+        public CellSurfaceLayer(int width, int height) : base(width, height) { }
 
         public CellSurfaceLayer(int width, int height, Cell[] initialCells) : base(width, height, initialCells) { }
 
@@ -19,10 +19,7 @@ namespace SadConsole
 
         public string Name { get; set; }
 
-        protected override void OnCellsReset()
-        {
-            throw new Exception("This surface cannot be resized");
-        }
+        protected override void OnCellsReset() => throw new Exception("This surface cannot be resized");
     }
 
     /// <summary>
@@ -41,14 +38,18 @@ namespace SadConsole
         public LayeredConsole(int width, int height, int layers, Font font, Rectangle viewPort) : base(width, height, font, viewPort)
         {
             IsCursorDisabled = true;
-            
+
             if (layers <= 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(layers), "Layer count must be 1 or more.");
+            }
 
             _layers = new List<CellSurfaceLayer>(layers);
 
             for (int i = 0; i < layers; i++)
+            {
                 AddLayer(new CellSurfaceLayer(width, height));
+            }
 
             Renderer = new Renderers.LayeredConsole() { Layers = _layers };
 
@@ -64,30 +65,43 @@ namespace SadConsole
             IsCursorDisabled = true;
 
             if (layers == null)
+            {
                 _layers = new List<CellSurfaceLayer>();
+            }
             else
+            {
                 _layers = new List<CellSurfaceLayer>(layers);
+            }
 
-            foreach (var layer in layers)
+            foreach (CellSurfaceLayer layer in layers)
             {
                 if (layer.Width != width || layer.Height != height)
+                {
                     throw new ArgumentException(nameof(layers), "One of the layers in the array does not match the size of the layered console.");
+                }
             }
-            
+
             Renderer = new Renderers.LayeredConsole() { Layers = _layers };
         }
 
         public override void Update(TimeSpan timeElapsed)
         {
-            if (IsPaused) return;
+            if (IsPaused)
+            {
+                return;
+            }
 
-            foreach (var layer in _layers)
+            foreach (CellSurfaceLayer layer in _layers)
+            {
                 layer.Effects.UpdateEffects(timeElapsed.TotalSeconds);
+            }
 
             var copyList = new List<Console>(Children);
 
-            foreach (var child in copyList)
+            foreach (Console child in copyList)
+            {
                 child.Update(timeElapsed);
+            }
         }
 
         public CellSurfaceLayer GetLayer(int index) => _layers[index];
@@ -105,41 +119,44 @@ namespace SadConsole
 
             Cells = new Cell[Width * Height];
 
-            for (var i = 0; i < Cells.Length; i++)
+            for (int i = 0; i < Cells.Length; i++)
+            {
                 Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+            }
 
             OnCellsReset();
 
             IsDirty = true;
         }
 
-        public bool ContainsLayer(CellSurfaceLayer item) =>_layers.Contains(item);
+        public bool ContainsLayer(CellSurfaceLayer item) => _layers.Contains(item);
 
         public bool RemoveLayer(CellSurfaceLayer item)
         {
-            var result = _layers.Remove(item);
+            bool result = _layers.Remove(item);
 
             if (_layers.Count == 0)
             {
                 Cells = new Cell[Width * Height];
 
-                for (var i = 0; i < Cells.Length; i++)
+                for (int i = 0; i < Cells.Length; i++)
+                {
                     Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+                }
 
                 OnCellsReset();
             }
             else
+            {
                 Cells = _layers[0].Cells;
+            }
 
             IsDirty = true;
 
             return result;
         }
 
-        public int IndexOf(CellSurfaceLayer item)
-        {
-            return _layers.IndexOf(item);
-        }
+        public int IndexOf(CellSurfaceLayer item) => _layers.IndexOf(item);
 
         public void InsertLayer(int index, CellSurfaceLayer item)
         {
@@ -156,13 +173,17 @@ namespace SadConsole
             {
                 Cells = new Cell[Width * Height];
 
-                for (var i = 0; i < Cells.Length; i++)
+                for (int i = 0; i < Cells.Length; i++)
+                {
                     Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+                }
 
                 OnCellsReset();
             }
             else
+            {
                 Cells = _layers[0].Cells;
+            }
 
             IsDirty = true;
         }

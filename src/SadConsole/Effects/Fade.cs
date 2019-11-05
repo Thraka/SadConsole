@@ -30,7 +30,7 @@ namespace SadConsole.Effects
         /// </summary>
         [DataMember]
         public double FadeDuration { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value to indicate that the fade effect should repeat.
         /// </summary>
@@ -92,13 +92,15 @@ namespace SadConsole.Effects
         /// <inheritdoc />
         public override bool UpdateCell(Cell cell)
         {
-            var oldForeground = cell.Foreground;
-            var oldBackground = cell.Background;
+            Color oldForeground = cell.Foreground;
+            Color oldBackground = cell.Background;
 
             if (FadeForeground)
             {
                 if (UseCellForeground)
+                {
                     DestinationForeground.Stops[UseCellDestinationReverse ? DestinationForeground.Stops.Length - 1 : 0].Color = cell.State.Value.Foreground;
+                }
 
                 cell.Foreground = DestinationForeground.Lerp((float)_calculatedValue);
             }
@@ -106,7 +108,9 @@ namespace SadConsole.Effects
             if (FadeBackground)
             {
                 if (UseCellBackground)
+                {
                     DestinationBackground.Stops[UseCellDestinationReverse ? DestinationBackground.Stops.Length - 1 : 0].Color = cell.State.Value.Background;
+                }
 
                 cell.Background = DestinationBackground.Lerp((float)_calculatedValue);
             }
@@ -117,60 +121,66 @@ namespace SadConsole.Effects
         /// <inheritdoc />
         public override void Update(double gameTimeSeconds)
         {
-           base.Update(gameTimeSeconds);
+            base.Update(gameTimeSeconds);
 
-           if (_delayFinished)
-           {
-               if (Repeat || !IsFinished)
-               {
-                   if (_timeElapsed >= FadeDuration)
-                   {
-                       if (AutoReverse)
-                       {
-                           if (!_goingDown)
-                           {
-                               _goingDown = !_goingDown;
-                               _timeElapsed = 0.0d;
-                           }
-                           else
-                           {
-                               if (!Repeat)
-                               {
-                                   _calculatedValue = 0f;
-                                   IsFinished = true;
-                                   _timeElapsed = 0.0d;
-                                   return;
-                               }
-                               else
-                               {
-                                   _timeElapsed = 0.0d;
-                                   _goingDown = !_goingDown;
-                               }
-                           }
-                       }
-                       else
-                       {
-                           // Last color, kill self, quit
-                           if (!Repeat)
-                           {
-                               _calculatedValue = 1f;
-                               IsFinished = true;
-                               _timeElapsed = 0.0d;
-                               return;
-                           }
-                           else
-                               _timeElapsed = 0.0d;
-                       }
-                   }
+            if (_delayFinished)
+            {
+                if (Repeat || !IsFinished)
+                {
+                    if (_timeElapsed >= FadeDuration)
+                    {
+                        if (AutoReverse)
+                        {
+                            if (!_goingDown)
+                            {
+                                _goingDown = !_goingDown;
+                                _timeElapsed = 0.0d;
+                            }
+                            else
+                            {
+                                if (!Repeat)
+                                {
+                                    _calculatedValue = 0f;
+                                    IsFinished = true;
+                                    _timeElapsed = 0.0d;
+                                    return;
+                                }
+                                else
+                                {
+                                    _timeElapsed = 0.0d;
+                                    _goingDown = !_goingDown;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Last color, kill self, quit
+                            if (!Repeat)
+                            {
+                                _calculatedValue = 1f;
+                                IsFinished = true;
+                                _timeElapsed = 0.0d;
+                                return;
+                            }
+                            else
+                            {
+                                _timeElapsed = 0.0d;
+                            }
+                        }
+                    }
 
-                   if (!_goingDown)
-                       _calculatedValue = _timeElapsed / FadeDuration;
-                   else
-                       _calculatedValue = 1f - (_timeElapsed / FadeDuration);
-               }
-           }
+                    if (!_goingDown)
+                    {
+                        _calculatedValue = _timeElapsed / FadeDuration;
+                    }
+                    else
+                    {
+                        _calculatedValue = 1f - (_timeElapsed / FadeDuration);
+                    }
+                }
+            }
         }
-        
+
         /// <inheritdoc />
         public override void ClearCell(Cell cell)
         {
@@ -179,37 +189,38 @@ namespace SadConsole.Effects
             if (Permanent)
             {
                 if (FadeForeground)
+                {
                     cell.Foreground = DestinationForeground.Stops[DestinationForeground.Stops.Length - 1].Color;
+                }
 
                 if (FadeBackground)
+                {
                     cell.Background = DestinationBackground.Stops[DestinationBackground.Stops.Length - 1].Color;
+                }
             }
         }
 
         /// <inheritdoc />
-        public override ICellEffect Clone()
+        public override ICellEffect Clone() => new Fade()
         {
-            return new Fade()
-            {
-                DestinationBackground = this.DestinationBackground,
-                DestinationForeground = this.DestinationForeground,
-                FadeForeground = this.FadeForeground,
-                FadeBackground = this.FadeBackground,
-                UseCellForeground = this.UseCellForeground,
-                UseCellBackground = this.UseCellBackground,
-                FadeDuration = this.FadeDuration,
-                Repeat = this.Repeat,
-                UseCellDestinationReverse = this.UseCellDestinationReverse,
+            DestinationBackground = DestinationBackground,
+            DestinationForeground = DestinationForeground,
+            FadeForeground = FadeForeground,
+            FadeBackground = FadeBackground,
+            UseCellForeground = UseCellForeground,
+            UseCellBackground = UseCellBackground,
+            FadeDuration = FadeDuration,
+            Repeat = Repeat,
+            UseCellDestinationReverse = UseCellDestinationReverse,
 
-                IsFinished = IsFinished,
-                StartDelay = StartDelay,
-                CloneOnApply = CloneOnApply,
-                RemoveOnFinished = RemoveOnFinished,
-                DiscardCellState = DiscardCellState,
-                Permanent = Permanent,
-                _timeElapsed = _timeElapsed,
-            };
-        }
+            IsFinished = IsFinished,
+            StartDelay = StartDelay,
+            CloneOnApply = CloneOnApply,
+            RemoveOnFinished = RemoveOnFinished,
+            DiscardCellState = DiscardCellState,
+            Permanent = Permanent,
+            _timeElapsed = _timeElapsed,
+        };
 
         //public override bool Equals(ICellEffect effect)
         //{
@@ -236,9 +247,6 @@ namespace SadConsole.Effects
         //}
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return string.Format("FADE-{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", DestinationBackground.ToString(), DestinationForeground.ToString(), FadeBackground, FadeForeground, FadeDuration, Permanent, StartDelay, RemoveOnFinished);
-        }
+        public override string ToString() => string.Format("FADE-{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", DestinationBackground.ToString(), DestinationForeground.ToString(), FadeBackground, FadeForeground, FadeDuration, Permanent, StartDelay, RemoveOnFinished);
     }
 }

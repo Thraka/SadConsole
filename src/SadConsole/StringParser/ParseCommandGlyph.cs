@@ -1,15 +1,14 @@
 ﻿#if XNA
-using Microsoft.Xna.Framework;
 #endif
 
 namespace SadConsole.StringParser
 {
     using System.Globalization;
-    
+
     /// <summary>
     /// Prints a glyph.
     /// </summary>
-    class ParseCommandSetGlyph : ParseCommandBase
+    internal class ParseCommandSetGlyph : ParseCommandBase
     {
         public int Counter;
         public char Glyph;
@@ -26,9 +25,13 @@ namespace SadConsole.StringParser
             {
                 RandomGlyph = true;
                 if (parts[0] == "*")
+                {
                     Counter = -1;
+                }
                 else
+                {
                     Counter = int.Parse(parts[0], CultureInfo.InvariantCulture);
+                }
 
                 RandomGlyphMin = int.Parse(parts[1], CultureInfo.InvariantCulture);
                 RandomGlyphMax = int.Parse(parts[2], CultureInfo.InvariantCulture);
@@ -37,9 +40,13 @@ namespace SadConsole.StringParser
             else if (parts.Length == 2)
             {
                 if (parts[1] == "*")
+                {
                     Counter = -1;
+                }
                 else
+                {
                     Counter = int.Parse(parts[1], CultureInfo.InvariantCulture);
+                }
 
                 Glyph = (char)int.Parse(parts[0], CultureInfo.InvariantCulture);
             }
@@ -53,13 +60,17 @@ namespace SadConsole.StringParser
             CommandType = CommandTypes.Glyph;
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex,
             CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             if (RandomGlyph)
+            {
                 glyphState.GlyphCharacter = (char)SadConsole.Global.Random.Next(RandomGlyphMin, RandomGlyphMax);
+            }
             else
+            {
                 glyphState.GlyphCharacter = Glyph;
+            }
 
             if (Counter != -1)
             {
@@ -67,7 +78,9 @@ namespace SadConsole.StringParser
             }
 
             if (Counter == 0)
+            {
                 commandStack.RemoveSafe(this);
+            }
         }
     }
 }

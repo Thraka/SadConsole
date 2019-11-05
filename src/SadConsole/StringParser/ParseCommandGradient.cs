@@ -29,21 +29,21 @@ namespace SadConsole.StringParser
                 CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
                 Counter = Length = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
 
-                bool keep;
-                bool useDefault;
 
                 List<Color> steps = new List<Color>();
 
                 for (int i = 1; i < parametersArray.Length - 1; i++)
                 {
-                    steps.Add(Color.White.FromParser(parametersArray[i], out keep, out keep, out keep, out keep, out useDefault));
+                    steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
                 }
 
                 GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));
             }
 
             else
+            {
                 throw badCommandException;
+            }
         }
 
         public ParseCommandGradient()
@@ -51,18 +51,24 @@ namespace SadConsole.StringParser
 
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, 
+        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex,
             CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             if (CommandType == CommandTypes.Background)
+            {
                 glyphState.Background = GradientString[Length - Counter].Foreground;
+            }
             else
+            {
                 glyphState.Foreground = GradientString[Length - Counter].Foreground;
+            }
 
             Counter--;
 
             if (Counter == 0)
+            {
                 commandStack.RemoveSafe(this);
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SadConsole.Entities
     /// </summary>
     [DataContract]
     [System.Diagnostics.DebuggerDisplay("Zone")]
-    public class Zone: Console
+    public class Zone : Console
     {
         private const string DefaultDebugTitle = "Zone";
 
@@ -31,7 +31,8 @@ namespace SadConsole.Entities
         /// <summary>
         /// A title for the area.
         /// </summary>
-        [DataMember] public string DebugTitle
+        [DataMember]
+        public string DebugTitle
         {
             get => _title;
             set
@@ -39,7 +40,9 @@ namespace SadConsole.Entities
                 _title = value;
 
                 if (string.IsNullOrWhiteSpace(_title))
+                {
                     _title = DefaultDebugTitle;
+                }
 
                 Rebuild();
             }
@@ -48,7 +51,8 @@ namespace SadConsole.Entities
         /// <summary>
         /// A visual for the area to help debug.
         /// </summary>
-        [DataMember] public Cell DebugAppearance
+        [DataMember]
+        public Cell DebugAppearance
         {
             get => _debugAppearance;
             set
@@ -62,12 +66,12 @@ namespace SadConsole.Entities
         /// Key-value pairs for the zone.
         /// </summary>
         [DataMember] public Dictionary<string, string> Settings = new Dictionary<string, string>();
-        
+
         /// <summary>
         /// Creates a new zone object with the specified area.
         /// </summary>
         /// <param name="area">The area of the zone.</param>
-        public Zone(Rectangle area): base(DefaultDebugTitle.Length, 1)
+        public Zone(Rectangle area) : base(DefaultDebugTitle.Length, 1)
         {
             IsVisible = false;
             UseMouse = false;
@@ -75,12 +79,9 @@ namespace SadConsole.Entities
 
             Area = area;
         }
-        
+
         /// <inheritdoc />
-        protected override void OnVisibleChanged()
-        {
-            Rebuild();
-        }
+        protected override void OnVisibleChanged() => Rebuild();
 
         /// <inheritdoc />
         public override void Draw(TimeSpan timeElapsed)
@@ -128,16 +129,13 @@ namespace SadConsole.Entities
                 DefaultForeground = DebugAppearance.Foreground;
                 Resize(_title.Length, 1, true);
                 Print(0, 0, _title);
-                
+
                 _drawCallScreenObject = new DrawCallScreenObject(this, Point.Zero, UsePixelPositioning);
                 _drawCallZone = new DrawCallColoredRect(Area, DebugAppearance.Background);
             }
         }
 
         /// <inheritdoc />
-        protected override void OnParentChanged(Console oldParent, Console newParent)
-        {
-            Font = newParent?.Font ?? SadConsole.Global.FontDefault;
-        }
+        protected override void OnParentChanged(Console oldParent, Console newParent) => Font = newParent?.Font ?? SadConsole.Global.FontDefault;
     }
 }

@@ -12,7 +12,7 @@ namespace SadConsole.Themes
     /// The theme of the slider control.
     /// </summary>
     [DataContract]
-    public class ScrollBarTheme: ThemeBase
+    public class ScrollBarTheme : ThemeBase
     {
         /// <summary>
         /// The theme part fot the start button.
@@ -67,8 +67,10 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new CellSurface(control.Width, control.Height);
-            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface = new CellSurface(control.Width, control.Height)
+            {
+                DefaultBackground = Color.Transparent
+            };
             control.Surface.Clear();
 
             base.Attached(control);
@@ -88,26 +90,38 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is ScrollBar scrollbar)) return;
-            
-            if (!scrollbar.IsDirty) return;
+            if (!(control is ScrollBar scrollbar))
+            {
+                return;
+            }
+
+            if (!scrollbar.IsDirty)
+            {
+                return;
+            }
 
             Cell appearance;
 
             if (Helpers.HasFlag(scrollbar.State, ControlStates.Disabled))
+            {
                 appearance = Disabled;
-
+            }
             else if (Helpers.HasFlag(scrollbar.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(scrollbar.State, ControlStates.MouseRightButtonDown))
+            {
                 appearance = MouseDown;
-
+            }
             else if (Helpers.HasFlag(scrollbar.State, ControlStates.MouseOver))
+            {
                 appearance = MouseOver;
-
+            }
             else if (Helpers.HasFlag(scrollbar.State, ControlStates.Focused))
+            {
                 appearance = Focused;
-
+            }
             else
+            {
                 appearance = Normal;
+            }
 
             scrollbar.Surface.Clear();
 
@@ -156,30 +170,28 @@ namespace SadConsole.Themes
                         scrollbar.Surface.SetGlyph(0, 1 + scrollbar.CurrentSliderPosition, SliderGlyph);
                     }
                 }
-                    
+
             }
 
             scrollbar.IsDirty = false;
         }
-        
+
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new ScrollBarTheme()
         {
-            return new ScrollBarTheme()
-            {
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                StartButtonVerticalGlyph = StartButtonVerticalGlyph,
-                EndButtonVerticalGlyph = EndButtonVerticalGlyph,
-                StartButtonHorizontalGlyph = StartButtonHorizontalGlyph,
-                EndButtonHorizontalGlyph = EndButtonHorizontalGlyph,
-                BarGlyph = BarGlyph,
-                SliderGlyph = SliderGlyph
-            };
-        }
+            Colors = Colors?.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            StartButtonVerticalGlyph = StartButtonVerticalGlyph,
+            EndButtonVerticalGlyph = EndButtonVerticalGlyph,
+            StartButtonHorizontalGlyph = StartButtonHorizontalGlyph,
+            EndButtonHorizontalGlyph = EndButtonHorizontalGlyph,
+            BarGlyph = BarGlyph,
+            SliderGlyph = SliderGlyph
+        };
     }
 }

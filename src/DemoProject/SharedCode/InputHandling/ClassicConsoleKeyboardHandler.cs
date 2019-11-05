@@ -1,15 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
+using SadConsole.Components;
 using SadConsole.Input;
 using ScrollingConsole = SadConsole.ScrollingConsole;
-using SadConsole;
-using System;
-using SadConsole.Components;
 
 namespace StarterProject.InputHandling
 {
-    class ClassicConsoleKeyboardHandler: KeyboardConsoleComponent
+    internal class ClassicConsoleKeyboardHandler : KeyboardConsoleComponent
     {
         // This holds the row that the virtual cursor is starting from when someone is typing.
         public int CursorLastY;
@@ -23,11 +21,13 @@ namespace StarterProject.InputHandling
             var console = (ScrollingConsole)consoleObject;
 
             // Check each key pressed.
-            foreach (var key in info.KeysPressed)
+            foreach (AsciiKey key in info.KeysPressed)
             {
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
+                {
                     console.Cursor.Print(key.Character.ToString());
+                }
 
                 // Special character - BACKSPACE
                 else if (key.Key == Keys.Back)
@@ -44,7 +44,9 @@ namespace StarterProject.InputHandling
 
                     // Do not let them backspace into the prompt
                     if (console.Cursor.Position.Y != CursorLastY || console.Cursor.Position.X > prompt.Length)
+                    {
                         console.Cursor.LeftWrap(1).Print(" ").LeftWrap(1);
+                    }
                 }
 
                 // Special character - ENTER
@@ -60,7 +62,7 @@ namespace StarterProject.InputHandling
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
                     int startingIndex = console.GetIndexFromPoint(new Point(prompt.Length, CursorLastY));
-                    string data = ((ScrollingConsole)console).GetString(startingIndex, console.GetIndexFromPoint(console.Cursor.Position) - startingIndex);
+                    string data = console.GetString(startingIndex, console.GetIndexFromPoint(console.Cursor.Position) - startingIndex);
 
                     // Move the cursor to the next line before we send the string data to the processor
                     console.Cursor.CarriageReturn().LineFeed();
@@ -82,6 +84,6 @@ namespace StarterProject.InputHandling
 
             handled = true;
         }
-        
+
     }
 }

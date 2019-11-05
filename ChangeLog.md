@@ -1,6 +1,7 @@
-## ??/??/2019 V???
+## 11/04/2019 V8.9.1
 
 - Fix `FontMaster.Rows` calculation (Thanks Kaev)
+- Fix `Themes.ButtonLinesTheme` and all other themes not cloning colors properly. (Thanks Venomaus)
 
 ## 08/20/2019 V8.9.0
 

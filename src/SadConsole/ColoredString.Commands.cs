@@ -1,8 +1,8 @@
 ﻿namespace SadConsole
 {
-    using SadConsole.StringParser;
     using System;
     using System.Collections.Generic;
+    using SadConsole.StringParser;
 
     public partial class ColoredString
     {
@@ -21,15 +21,17 @@
         /// <returns></returns>
         public static ColoredString Parse(string value, int surfaceIndex = -1, CellSurface surface = null, ParseCommandStacks initialBehaviors = null)
         {
-            var commandStacks = initialBehaviors ?? new ParseCommandStacks();
+            ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
             List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);
 
             for (int i = 0; i < value.Length; i++)
             {
-                var existingGlyphs = glyphs.ToArray();
+                ColoredGlyph[] existingGlyphs = glyphs.ToArray();
 
                 if (value[i] == '`' && i + 1 < value.Length && value[i + 1] == '[')
+                {
                     continue;
+                }
 
                 if (value[i] == '[' && (i == 0 || value[i - 1] != '`'))
                 {
@@ -43,7 +45,7 @@
 
                             if (command.Contains(" "))
                             {
-                                var commandSections = command.Split(new char[] { ' ' }, 2);
+                                string[] commandSections = command.Split(new char[] { ' ' }, 2);
                                 command = commandSections[0].ToLower();
                                 commandParams = commandSections[1];
                             }
@@ -53,6 +55,7 @@
 
                             // No custom command found, run build in ones
                             if (commandObject == null)
+                            {
                                 switch (command)
                                 {
                                     case "recolor":
@@ -82,6 +85,7 @@
                                     default:
                                         break;
                                 }
+                            }
 
                             if (commandObject != null && commandObject.CommandType != CommandTypes.Invalid)
                             {
@@ -91,7 +95,7 @@
                                 continue;
                             }
                         }
-                        
+
                     }
                     catch (Exception e1)
                     {
@@ -104,37 +108,54 @@
                 int fixedSurfaceIndex;
 
                 if (surfaceIndex == -1 || surface == null)
+                {
                     fixedSurfaceIndex = -1;
+                }
                 else
+                {
                     fixedSurfaceIndex = i + surfaceIndex < surface.Cells.Length ? i + surfaceIndex : -1;
-
+                }
 
                 ColoredGlyph newGlyph;
 
                 if (fixedSurfaceIndex != -1)
+                {
                     newGlyph = new ColoredGlyph(surface[i + surfaceIndex]) { Glyph = value[i] };
+                }
                 else
+                {
                     newGlyph = new ColoredGlyph(new Cell()) { Glyph = value[i] };
+                }
 
 
                 // Foreground
                 if (commandStacks.Foreground.Count != 0)
+                {
                     commandStacks.Foreground.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                }
 
                 // Background
                 if (commandStacks.Background.Count != 0)
+                {
                     commandStacks.Background.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                }
 
                 if (commandStacks.Glyph.Count != 0)
+                {
                     commandStacks.Glyph.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                }
 
                 // SpriteEffect
                 if (commandStacks.Mirror.Count != 0)
+                {
                     commandStacks.Mirror.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                }
 
                 // Effect
                 if (commandStacks.Effect.Count != 0)
+                {
                     commandStacks.Effect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                }
 
                 glyphs.Add(newGlyph);
             }

@@ -6,11 +6,8 @@ namespace SadConsole.DrawCalls
     {
         public Action DrawCallback;
 
-        public DrawCallCustom(Action draw) { DrawCallback = draw; }
+        public DrawCallCustom(Action draw) => DrawCallback = draw;
 
-        public void Draw()
-        {
-            DrawCallback();
-        }
+        public void Draw() => DrawCallback();
     }
 }

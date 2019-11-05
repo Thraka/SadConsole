@@ -89,7 +89,7 @@ namespace SadConsole
         /// </summary>
         public static Input.Keyboard KeyboardState { get; set; } = new Input.Keyboard();
 
-#region Rendering
+        #region Rendering
         /// <summary>
         /// The render target of SadConsole. This is generally rendered to the screen as the final step of drawing.
         /// </summary>
@@ -108,12 +108,12 @@ namespace SadConsole
         /// <summary>
         /// The current game window width.
         /// </summary>
-        public static int WindowWidth { get => GraphicsDevice.PresentationParameters.BackBufferWidth; }
+        public static int WindowWidth => GraphicsDevice.PresentationParameters.BackBufferWidth;
 
         /// <summary>
         /// The current game window height.
         /// </summary>
-        public static int WindowHeight { get => GraphicsDevice.PresentationParameters.BackBufferHeight; }
+        public static int WindowHeight => GraphicsDevice.PresentationParameters.BackBufferHeight;
 
         /// <summary>
         /// Where on the screen the engine will be rendered.
@@ -129,7 +129,7 @@ namespace SadConsole
         /// Draw calls to render to <see cref="RenderOutput"/>.
         /// </summary>
         public static List<IDrawCall> DrawCalls = new List<IDrawCall>(5);
-#endregion
+        #endregion
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
@@ -148,22 +148,24 @@ namespace SadConsole
             //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
             try
             {
-                var masterFont = SadConsole.Serializer.Load<FontMaster>(font, false);
+                FontMaster masterFont = SadConsole.Serializer.Load<FontMaster>(font, false);
 
                 if (Fonts.ContainsKey(masterFont.Name))
+                {
                     Fonts.Remove(masterFont.Name);
+                }
 
                 Fonts.Add(masterFont.Name, masterFont);
                 return masterFont;
             }
-            catch (System.Runtime.Serialization.SerializationException e)
+            catch (System.Runtime.Serialization.SerializationException)
             {
 
                 throw;
             }
 
         }
-        
+
         internal static void LoadEmbeddedFont()
         {
             //var auxList = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
@@ -192,7 +194,7 @@ namespace SadConsole
             {
                 Settings.LoadingEmbeddedFont = true;
                 Global.SerializerPathHint = "";
-                var masterFont = (FontMaster) Newtonsoft.Json.JsonConvert.DeserializeObject(
+                var masterFont = (FontMaster)Newtonsoft.Json.JsonConvert.DeserializeObject(
                     sr.ReadToEnd(),
                     typeof(FontMaster),
                     new Newtonsoft.Json.JsonSerializerSettings()
@@ -201,7 +203,9 @@ namespace SadConsole
                     });
 
                 using (Stream fontStream = assembly.GetManifestResourceStream(resourceNameImage))
+                {
                     masterFont.Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+                }
 
                 masterFont.ConfigureRects();
                 Fonts.Add(masterFont.Name, masterFont);
@@ -246,11 +250,11 @@ namespace SadConsole
             else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
             {
                 RenderOutput = new RenderTarget2D(GraphicsDevice, RenderWidth, RenderHeight);
-                var heightRatio = (float)GraphicsDevice.PresentationParameters.BackBufferHeight / (float)RenderHeight;
-                var widthRatio = (float)GraphicsDevice.PresentationParameters.BackBufferWidth / (float)RenderWidth;
+                float heightRatio = GraphicsDevice.PresentationParameters.BackBufferHeight / (float)RenderHeight;
+                float widthRatio = GraphicsDevice.PresentationParameters.BackBufferWidth / (float)RenderWidth;
 
-                var fitHeight = RenderHeight * widthRatio;
-                var fitWidth = RenderWidth * heightRatio;
+                float fitHeight = RenderHeight * widthRatio;
+                float fitWidth = RenderWidth * heightRatio;
 
                 if (fitHeight <= GraphicsDevice.PresentationParameters.BackBufferHeight)
                 {
@@ -258,7 +262,7 @@ namespace SadConsole
 
                     RenderRect = new Rectangle(0, (int)((GraphicsDevice.PresentationParameters.BackBufferHeight - fitHeight) / 2), GraphicsDevice.PresentationParameters.BackBufferWidth, (int)fitHeight);
 
-                    RenderScale = new Vector2(RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, RenderHeight / (float)fitHeight);
+                    RenderScale = new Vector2(RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, RenderHeight / fitHeight);
                 }
                 else
                 {
@@ -266,7 +270,7 @@ namespace SadConsole
 
                     RenderRect = new Rectangle((int)((GraphicsDevice.PresentationParameters.BackBufferWidth - fitWidth) / 2), 0, (int)fitWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
 
-                    RenderScale = new Vector2(RenderWidth / (float)fitWidth, RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
+                    RenderScale = new Vector2(RenderWidth / fitWidth, RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
                 }
             }
             else if (Settings.ResizeMode == Settings.WindowResizeOptions.None)

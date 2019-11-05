@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using System;
 using SadConsole.Entities;
 using System.Collections.Generic;
-using Console = SadConsole.Console;
 
 namespace SadConsole.Components
 {
@@ -27,35 +26,43 @@ namespace SadConsole.Components
         /// <inheritdoc />
         public override void Update(Console console, TimeSpan delta)
         {
-            foreach (var entity in Entities)
+            foreach (Entity entity in Entities)
+            {
                 entity.Update(delta);
+            }
         }
 
         /// <inheritdoc />
         public override void Draw(Console console, TimeSpan delta)
         {
-            foreach (var entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 if (console is IConsoleViewPort scroller)
                 {
-                    var parentViewPort = scroller.ViewPort;
+                    Rectangle parentViewPort = scroller.ViewPort;
 
                     entity.PositionOffset = new Point(-parentViewPort.Location.X, -parentViewPort.Location.Y).TranslateFont(console.Font, entity.Font) + console.CalculatedPosition.PixelLocationToConsole(entity.Font);
 
                     if (HandleIsVisible)
+                    {
                         entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
+                    }
                 }
                 else
                 {
                     entity.PositionOffset = console.CalculatedPosition.PixelLocationToConsole(entity.Font);
 
                     if (HandleIsVisible)
+                    {
                         entity.IsVisible = console.AbsoluteArea.Contains(entity.CalculatedPosition);
+                    }
                 }
 
 
                 if (entity.IsVisible)
+                {
                     entity.Draw(delta);
+                }
             }
         }
     }

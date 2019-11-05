@@ -20,7 +20,7 @@ namespace SadConsole
         /// <typeparam name="T">The type being swapped.</typeparam>
         /// <param name="lhs">Left value.</param>
         /// <param name="rhs">Right value.</param>
-        private static void Swap<T>(ref T lhs, ref T rhs) {var temp = lhs; lhs = rhs; rhs = temp; }
+        private static void Swap<T>(ref T lhs, ref T rhs) { T temp = lhs; lhs = rhs; rhs = temp; }
 
         /// <summary>
         /// Plot the line from (x0, y0) to (x1, y1) using steep.
@@ -32,16 +32,24 @@ namespace SadConsole
         /// <param name="plot">The plotting function, taking x and y. (if this returns false, the algorithm stops early)</param>
         public static void Line(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
         {
-            var steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
+            bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
             if (steep) { Swap<int>(ref x0, ref y0); Swap<int>(ref x1, ref y1); }
             if (x0 > x1) { Swap<int>(ref x0, ref x1); Swap<int>(ref y0, ref y1); }
             int dX = (x1 - x0), dY = Math.Abs(y1 - y0), err = (dX / 2), ystep = (y0 < y1 ? 1 : -1), y = y0;
 
-            for (var x = x0; x <= x1; ++x)
+            for (int x = x0; x <= x1; ++x)
             {
-                if (!(steep ? plot(y, x) : plot(x, y))) return;
+                if (!(steep ? plot(y, x) : plot(x, y)))
+                {
+                    return;
+                }
+
                 err = err - dY;
-                if (err >= 0) continue;
+                if (err >= 0)
+                {
+                    continue;
+                }
+
                 y += ystep; err += dX;
             }
         }
@@ -56,12 +64,12 @@ namespace SadConsole
         /// <param name="plot">The plotting function (if this returns false, the algorithm stops early)</param>
         public static void Line2(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
         {
-            var len = Math.Max(Math.Abs(x1 - x0), Math.Abs(y1 - y0));
-            for (var i = 0; i < len; i++)
+            int len = Math.Max(Math.Abs(x1 - x0), Math.Abs(y1 - y0));
+            for (int i = 0; i < len; i++)
             {
-                var t = (float)i / len;
-                var x = Math.Round(x0 * (1.0 - t) + x1 * t);
-                var y = Math.Round(y0 * (1.0 - t) + y1 * t);
+                float t = (float)i / len;
+                double x = Math.Round(x0 * (1.0 - t) + x1 * t);
+                double y = Math.Round(y0 * (1.0 - t) + y1 * t);
                 plot((int)x, (int)y);
             }
         }
@@ -75,13 +83,16 @@ namespace SadConsole
         /// <param name="changeNode">After it is determined if the node should change, this changes the node.</param>
         /// <param name="getNodeConnections">Gets any other nodes connected to this node.</param>
         public static void FloodFill<TNode>(TNode node, Func<TNode, bool> shouldNodeChange, Action<TNode> changeNode, Func<TNode, NodeConnections<TNode>> getNodeConnections)
-            where TNode: class
+            where TNode : class
         {
             var queue = new Queue<TNode>();
 
-            var workingNode = node;
+            TNode workingNode = node;
 
-            if (!shouldNodeChange(workingNode)) return;
+            if (!shouldNodeChange(workingNode))
+            {
+                return;
+            }
 
             queue.Enqueue(workingNode);
 
@@ -93,23 +104,33 @@ namespace SadConsole
                 {
                     changeNode(workingNode);
 
-                    var connections = getNodeConnections(workingNode);
+                    NodeConnections<TNode> connections = getNodeConnections(workingNode);
 
                     if (connections.West != null)
+                    {
                         queue.Enqueue(connections.West);
+                    }
 
                     if (connections.East != null)
+                    {
                         queue.Enqueue(connections.East);
+                    }
 
                     if (connections.North != null)
+                    {
                         queue.Enqueue(connections.North);
+                    }
 
                     if (connections.South != null)
+                    {
                         queue.Enqueue(connections.South);
+                    }
                 }
 
                 if (queue.Count == 0)
+                {
                     break;
+                }
             }
         }
 
@@ -126,18 +147,21 @@ namespace SadConsole
         public static void GradientFill(Point cellSize, Point position, int strength, int angle, Rectangle area, ColorGradient gradient, Action<int, int, Color> applyAction)
         {
             double radians = angle * Math.PI / 180; // = Math.Atan2(x1 - x2, y1 - y2);
-            
-            var angleVector = new Vector2((float)(Math.Sin(radians) * strength), (float)(Math.Cos(radians) * strength)) / 2;
+
+            Vector2 angleVector = new Vector2((float)(Math.Sin(radians) * strength), (float)(Math.Cos(radians) * strength)) / 2;
             var location = new Vector2(position.X, position.Y);
 
             if (cellSize.X > cellSize.Y)
+            {
                 angleVector.Y *= cellSize.X / cellSize.Y;
-
+            }
             else if (cellSize.X < cellSize.Y)
+            {
                 angleVector.X *= cellSize.Y / cellSize.X;
+            }
 
-            var endingPoint = location + angleVector;
-            var startingPoint = location - angleVector;
+            Vector2 endingPoint = location + angleVector;
+            Vector2 startingPoint = location - angleVector;
 
             double x1 = (startingPoint.X / (double)area.Width) * 2.0f - 1.0f;
             double y1 = (startingPoint.Y / (double)area.Height) * 2.0f - 1.0f;
@@ -165,7 +189,10 @@ namespace SadConsole
                     lerp = MathHelper.Clamp((float)lerp, 0f, 1.0f);
 
                     int counter;
-                    for (counter = 0; counter < gradient.Stops.Length && gradient.Stops[counter].Stop < (float)lerp; counter++) ;
+                    for (counter = 0; counter < gradient.Stops.Length && gradient.Stops[counter].Stop < (float)lerp; counter++)
+                    {
+                        ;
+                    }
 
                     counter--;
                     counter = (int)MathHelper.Clamp(counter, 0, gradient.Stops.Length - 2);
@@ -194,8 +221,15 @@ namespace SadConsole
                 plot(centerX + xi, centerY - yi); /* III. Quadrant */
                 plot(centerX + yi, centerY + xi); /*  IV. Quadrant */
                 radius = err;
-                if (radius <= yi) err += ++yi * 2 + 1;           /* e_xy+e_y < 0 */
-                if (radius > xi || err > yi) err += ++xi * 2 + 1; /* e_xy+e_x > 0 or no 2nd y-step */
+                if (radius <= yi)
+                {
+                    err += ++yi * 2 + 1;           /* e_xy+e_y < 0 */
+                }
+
+                if (radius > xi || err > yi)
+                {
+                    err += ++xi * 2 + 1; /* e_xy+e_x > 0 or no 2nd y-step */
+                }
             } while (xi < 0);
         }
 
@@ -214,7 +248,11 @@ namespace SadConsole
             long err = dx + dy + b1 * a * a, e2; /* error of 1.step */
 
             if (x0 > x1) { x0 = x1; x1 += a; } /* if called with swapped points */
-            if (y0 > y1) y0 = y1; /* .. exchange them */
+            if (y0 > y1)
+            {
+                y0 = y1; /* .. exchange them */
+            }
+
             y0 += (b + 1) / 2; y1 = y0 - b1;   /* starting pixel */
             a *= 8 * a; b1 = 8 * b * b;
 
@@ -243,7 +281,7 @@ namespace SadConsole
         /// </summary>
         /// <typeparam name="TNode">The type of object the node and its connections are.</typeparam>
         public class NodeConnections<TNode>
-            where TNode: class
+            where TNode : class
         {
             public TNode West;
             public TNode East;

@@ -1,7 +1,7 @@
 ﻿namespace SadConsole.Themes
 {
     using System.Runtime.Serialization;
-    
+
     /// <summary>
     /// A theme for a Window object.
     /// </summary>
@@ -18,10 +18,7 @@
         /// Creates a new controls console theme with the specified colors.
         /// </summary>
         /// <param name="themeColors">The colors used with this theme.</param>
-        public ControlsConsoleTheme(Colors themeColors)
-        {
-            RefreshTheme(themeColors);
-        }
+        public ControlsConsoleTheme(Colors themeColors) => RefreshTheme(themeColors);
 
         /// <summary>
         /// Creates a new theme without specifying the colors.
@@ -34,8 +31,10 @@
         /// <returns>The cloned object.</returns>
         public ControlsConsoleTheme Clone()
         {
-            var newItem = new ControlsConsoleTheme();
-            newItem.FillStyle = this.FillStyle.Clone();
+            var newItem = new ControlsConsoleTheme
+            {
+                FillStyle = FillStyle.Clone()
+            };
             return newItem;
         }
 
@@ -55,9 +54,6 @@
         /// Updates the theme with a color scheme.
         /// </summary>
         /// <param name="themeColors">The colors to update with.</param>
-        public virtual void RefreshTheme(Colors themeColors)
-        {
-            FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
-        }
+        public virtual void RefreshTheme(Colors themeColors) => FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
     }
 }

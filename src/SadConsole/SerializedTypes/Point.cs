@@ -15,14 +15,8 @@ namespace SadConsole.SerializedTypes
         [DataMember]
         public int Y;
 
-        public static implicit operator PointSerialized(Point point)
-        {
-            return new PointSerialized() { X = point.X, Y = point.Y };
-        }
+        public static implicit operator PointSerialized(Point point) => new PointSerialized() { X = point.X, Y = point.Y };
 
-        public static implicit operator Point(PointSerialized point)
-        {
-            return new Point(point.X, point.Y);
-        }
+        public static implicit operator Point(PointSerialized point) => new Point(point.X, point.Y);
     }
 }

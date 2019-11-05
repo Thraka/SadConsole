@@ -1,5 +1,5 @@
-﻿using SadConsole.Input;
-using System;
+﻿using System;
+using SadConsole.Input;
 
 namespace SadConsole.Components
 {
@@ -98,7 +98,7 @@ namespace SadConsole.Components
 
         /// <inheritdoc />
         public virtual void OnRemoved(Console console) { }
-        
+
         int IConsoleComponent.SortOrder => SortOrder;
 
         bool IConsoleComponent.IsUpdate => true;
@@ -382,7 +382,7 @@ namespace SadConsole.Components
         /// <inheritdoc />
         public virtual void OnRemoved(Console console) { }
 
-        
+
         /// <inheritdoc />
         public virtual void OnAdded(Console console) { }
     }

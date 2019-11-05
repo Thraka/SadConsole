@@ -5,8 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.Themes
 {
-    using SadConsole.Controls;
     using System.Runtime.Serialization;
+    using SadConsole.Controls;
 
     /// <summary>
     /// Has the basic appearances of each control state.
@@ -124,19 +124,29 @@ namespace SadConsole.Themes
         public Cell GetStateAppearance(ControlStates state)
         {
             if (Helpers.HasFlag(state, ControlStates.Disabled))
+            {
                 return Disabled;
+            }
 
             if (Helpers.HasFlag(state, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(state, ControlStates.MouseRightButtonDown))
+            {
                 return MouseDown;
+            }
 
             if (Helpers.HasFlag(state, ControlStates.MouseOver))
+            {
                 return MouseOver;
+            }
 
             if (Helpers.HasFlag(state, ControlStates.Focused))
+            {
                 return Focused;
+            }
 
             if (Helpers.HasFlag(state, ControlStates.Selected))
+            {
                 return Selected;
+            }
 
             return Normal;
         }
@@ -145,18 +155,15 @@ namespace SadConsole.Themes
         /// Performs a deep copy of this theme.
         /// </summary>
         /// <returns>A new instance of the theme.</returns>
-        public ThemeStates Clone()
+        public ThemeStates Clone() => new ThemeStates()
         {
-            return new ThemeStates()
-            {
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-            };
-        }
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+        };
 
         /// <summary>
         /// Reloads the theme values based on the colors provided.
@@ -197,7 +204,7 @@ namespace SadConsole.Themes
         /// <param name="control">The control that will use this theme instance.</param>
         public virtual void Attached(ControlBase control)
         {
-            var colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
+            Colors colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
 
             RefreshTheme(colors);
         }

@@ -1,14 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-
-using ScrollingConsole = SadConsole.ScrollingConsole;
-using SadConsole;
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using SadConsole;
+using ColorHelper = Microsoft.Xna.Framework.Color;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 
 namespace StarterProject.CustomConsoles
 {
-    class StretchedConsole: ScrollingConsole
+    internal class StretchedConsole : ScrollingConsole
     {
         public StretchedConsole()
             : base(40, 11)

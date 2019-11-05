@@ -109,7 +109,7 @@ namespace SadConsole.Input
             bool handled = false;
             if (console is IConsoleViewPort viewPortObject && console.IsVisible && console.UseKeyboard && CanMoveWithKeyboard)
             {
-                var view = viewPortObject.ViewPort;
+                Rectangle view = viewPortObject.ViewPort;
 
                 if (info.IsKeyDown(MoveLeftKey))
                 {

@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
-    public class ConsoleJsonConverter: JsonConverter<Console>
+    public class ConsoleJsonConverter : JsonConverter<Console>
     {
-        public override void WriteJson(JsonWriter writer, Console value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, (ConsoleSerialized)value);
-        }
+        public override void WriteJson(JsonWriter writer, Console value, JsonSerializer serializer) => serializer.Serialize(writer, (ConsoleSerialized)value);
 
-        public override Console ReadJson(JsonReader reader, Type objectType, Console existingValue, 
-                                         bool hasExistingValue, JsonSerializer serializer)
-        {
-            return serializer.Deserialize<ConsoleSerialized>(reader);
-        }
+        public override Console ReadJson(JsonReader reader, Type objectType, Console existingValue,
+                                         bool hasExistingValue, JsonSerializer serializer) => serializer.Deserialize<ConsoleSerialized>(reader);
     }
 
     [DataContract]
@@ -36,41 +30,35 @@ namespace SadConsole.SerializedTypes
         [DataMember] public ColorSerialized DefaultBackground;
         [DataMember] public CellSerialized[] Cells;
 
-        public static implicit operator ConsoleSerialized(Console surface)
+        public static implicit operator ConsoleSerialized(Console surface) => new ConsoleSerialized()
         {
-            return new ConsoleSerialized()
-            {
-                Font = surface.Font,
-                Cells = surface.Cells.Select(c => (CellSerialized)c).ToArray(),
-                Width = surface.Width,
-                Height = surface.Height,
-                DefaultForeground = surface.DefaultForeground,
-                DefaultBackground = surface.DefaultBackground,
-                Tint = surface.Tint,
-                UsePixelPositioning = surface.UsePixelPositioning,
-                UseMouse = surface.UseMouse,
-                UseKeyboard = surface.UseKeyboard,
-                Position = surface.Position,
-                IsVisible = surface.IsVisible,
-                IsPaused = surface.IsPaused
-                
-            };
-        }
-        
-        public static implicit operator Console(ConsoleSerialized surface)
+            Font = surface.Font,
+            Cells = surface.Cells.Select(c => (CellSerialized)c).ToArray(),
+            Width = surface.Width,
+            Height = surface.Height,
+            DefaultForeground = surface.DefaultForeground,
+            DefaultBackground = surface.DefaultBackground,
+            Tint = surface.Tint,
+            UsePixelPositioning = surface.UsePixelPositioning,
+            UseMouse = surface.UseMouse,
+            UseKeyboard = surface.UseKeyboard,
+            Position = surface.Position,
+            IsVisible = surface.IsVisible,
+            IsPaused = surface.IsPaused
+
+        };
+
+        public static implicit operator Console(ConsoleSerialized surface) => new Console(surface.Width, surface.Height, surface.Font ?? Global.FontDefault, surface.Cells.Select(c => (Cell)c).ToArray())
         {
-            return new Console(surface.Width, surface.Height, surface.Font ?? Global.FontDefault, surface.Cells.Select(c => (Cell) c).ToArray())
-            {
-                Tint = surface.Tint,
-                DefaultForeground = surface.DefaultForeground,
-                DefaultBackground = surface.DefaultBackground,
-                Position = surface.Position,
-                IsVisible = surface.IsVisible,
-                IsPaused = surface.IsPaused,
-                UsePixelPositioning = surface.UsePixelPositioning,
-                UseKeyboard = surface.UseKeyboard,
-                UseMouse = surface.UseMouse,
-            };
-        }
+            Tint = surface.Tint,
+            DefaultForeground = surface.DefaultForeground,
+            DefaultBackground = surface.DefaultBackground,
+            Position = surface.Position,
+            IsVisible = surface.IsVisible,
+            IsPaused = surface.IsPaused,
+            UsePixelPositioning = surface.UsePixelPositioning,
+            UseKeyboard = surface.UseKeyboard,
+            UseMouse = surface.UseMouse,
+        };
     }
 }

@@ -1,23 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-
-
-using System;
-using ScrollingConsole = SadConsole.ScrollingConsole;
-using SadConsole;
 using SadConsole.Input;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 
 namespace StarterProject.CustomConsoles
 {
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class ViewsAndSubViews: ScrollingConsole
+    internal class ViewsAndSubViews : ScrollingConsole
     {
-        ScrollingConsole mainView;
-        ScrollingConsole subView;
-        
-        public ViewsAndSubViews(): base(1,1)
+        private readonly ScrollingConsole mainView;
+        private readonly ScrollingConsole subView;
+
+        public ViewsAndSubViews() : base(1, 1)
         {
             mainView = new ScrollingConsole(60, 23);
             subView = ScrollingConsole.FromSurface(mainView.GetSubSurface(new Rectangle(0, 0, 20, 23)), Font);
@@ -49,12 +44,16 @@ namespace StarterProject.CustomConsoles
             var childState = new MouseConsoleState(mainView, state.Mouse);
 
             if (childState.IsOnConsole)
+            {
                 return mainView.ProcessMouse(childState);
+            }
 
             childState = new MouseConsoleState(subView, state.Mouse);
 
             if (childState.IsOnConsole)
+            {
                 return subView.ProcessMouse(childState);
+            }
 
             return false;
         }

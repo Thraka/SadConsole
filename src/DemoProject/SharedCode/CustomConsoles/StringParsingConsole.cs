@@ -6,9 +6,9 @@ using SadConsole.StringParser;
 
 namespace StarterProject.CustomConsoles
 {
-    class StringParsingConsole: ScrollingConsole
+    internal class StringParsingConsole : ScrollingConsole
     {
-        public StringParsingConsole():base(80, 23)
+        public StringParsingConsole() : base(80, 23)
         {
             UsePrintProcessor = true;
             IsVisible = false;
@@ -81,7 +81,7 @@ namespace StarterProject.CustomConsoles
             Print(c + 2, r, "[c:g f:red:green:18][c:g b:green:red:18]Some text to print");
         }
 
-        ParseCommandBase CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
+        private ParseCommandBase CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
                                                           CellSurface surface, ParseCommandStacks commandStacks)
         {
             switch (command)
@@ -93,7 +93,7 @@ namespace StarterProject.CustomConsoles
             }
         }
 
-        class ParseCommandRetext : ParseCommandBase
+        private class ParseCommandRetext : ParseCommandBase
         {
             public int Counter;
             public char Glyph;
@@ -104,9 +104,13 @@ namespace StarterProject.CustomConsoles
 
                 // Count and glyph type provided
                 if (parts.Length == 2)
+                {
                     Counter = int.Parse(parts[1]);
+                }
                 else
+                {
                     Counter = -1;
+                }
 
                 // Get character
                 Glyph = parts[0][0];
@@ -124,7 +128,9 @@ namespace StarterProject.CustomConsoles
                     Counter--;
 
                     if (Counter == 0)
+                    {
                         commandStack.RemoveSafe(this);
+                    }
                 }
             }
         }

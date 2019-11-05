@@ -13,7 +13,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             CellSurface surface = new CellSurface(imageWidth / font.Size.X, imageHeight / font.Size.Y);
 
-            global::System.Threading.Tasks.Parallel.For((int) 0, (int)(imageHeight / font.Size.Y), (h) =>
+            global::System.Threading.Tasks.Parallel.For(0, imageHeight / font.Size.Y, (h) =>
             //for (int h = 0; h < imageHeight / font.Size.Y; h++)
             {
                 int startY = (h * font.Size.Y);
@@ -52,36 +52,64 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (blockMode)
                     {
                         if (sbri > 204)
+                        {
                             surface.SetGlyph(w, h, 219, newColor); //█
+                        }
                         else if (sbri > 152)
+                        {
                             surface.SetGlyph(w, h, 178, newColor); //▓
+                        }
                         else if (sbri > 100)
+                        {
                             surface.SetGlyph(w, h, 177, newColor); //▒
+                        }
                         else if (sbri > 48)
+                        {
                             surface.SetGlyph(w, h, 176, newColor); //░
+                        }
                     }
                     else
                     {
                         if (sbri > 230)
-                            surface.SetGlyph(w, h, (int)'#', newColor);
+                        {
+                            surface.SetGlyph(w, h, '#', newColor);
+                        }
                         else if (sbri > 207)
-                            surface.SetGlyph(w, h, (int)'&', newColor);
+                        {
+                            surface.SetGlyph(w, h, '&', newColor);
+                        }
                         else if (sbri > 184)
-                            surface.SetGlyph(w, h, (int)'$', newColor);
+                        {
+                            surface.SetGlyph(w, h, '$', newColor);
+                        }
                         else if (sbri > 161)
-                            surface.SetGlyph(w, h, (int)'X', newColor);
+                        {
+                            surface.SetGlyph(w, h, 'X', newColor);
+                        }
                         else if (sbri > 138)
-                            surface.SetGlyph(w, h, (int)'x', newColor);
+                        {
+                            surface.SetGlyph(w, h, 'x', newColor);
+                        }
                         else if (sbri > 115)
-                            surface.SetGlyph(w, h, (int)'=', newColor);
+                        {
+                            surface.SetGlyph(w, h, '=', newColor);
+                        }
                         else if (sbri > 92)
-                            surface.SetGlyph(w, h, (int)'+', newColor);
+                        {
+                            surface.SetGlyph(w, h, '+', newColor);
+                        }
                         else if (sbri > 69)
-                            surface.SetGlyph(w, h, (int)';', newColor);
+                        {
+                            surface.SetGlyph(w, h, ';', newColor);
+                        }
                         else if (sbri > 46)
-                            surface.SetGlyph(w, h, (int)':', newColor);
+                        {
+                            surface.SetGlyph(w, h, ':', newColor);
+                        }
                         else if (sbri > 23)
-                            surface.SetGlyph(w, h, (int)'.', newColor);
+                        {
+                            surface.SetGlyph(w, h, '.', newColor);
+                        }
                     }
                 }
             }
@@ -136,36 +164,64 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (blockMode)
                     {
                         if (sbri > 204)
+                        {
                             surface.SetGlyph(w, h, 219, newColor); //█
+                        }
                         else if (sbri > 152)
+                        {
                             surface.SetGlyph(w, h, 178, newColor); //▓
+                        }
                         else if (sbri > 100)
+                        {
                             surface.SetGlyph(w, h, 177, newColor); //▒
+                        }
                         else if (sbri > 48)
+                        {
                             surface.SetGlyph(w, h, 176, newColor); //░
+                        }
                     }
                     else
                     {
                         if (sbri > 230)
-                            surface.SetGlyph(w, h, (int)'#', newColor);
+                        {
+                            surface.SetGlyph(w, h, '#', newColor);
+                        }
                         else if (sbri > 207)
-                            surface.SetGlyph(w, h, (int)'&', newColor);
+                        {
+                            surface.SetGlyph(w, h, '&', newColor);
+                        }
                         else if (sbri > 184)
-                            surface.SetGlyph(w, h, (int)'$', newColor);
+                        {
+                            surface.SetGlyph(w, h, '$', newColor);
+                        }
                         else if (sbri > 161)
-                            surface.SetGlyph(w, h, (int)'X', newColor);
+                        {
+                            surface.SetGlyph(w, h, 'X', newColor);
+                        }
                         else if (sbri > 138)
-                            surface.SetGlyph(w, h, (int)'x', newColor);
+                        {
+                            surface.SetGlyph(w, h, 'x', newColor);
+                        }
                         else if (sbri > 115)
-                            surface.SetGlyph(w, h, (int)'=', newColor);
+                        {
+                            surface.SetGlyph(w, h, '=', newColor);
+                        }
                         else if (sbri > 92)
-                            surface.SetGlyph(w, h, (int)'+', newColor);
+                        {
+                            surface.SetGlyph(w, h, '+', newColor);
+                        }
                         else if (sbri > 69)
-                            surface.SetGlyph(w, h, (int)';', newColor);
+                        {
+                            surface.SetGlyph(w, h, ';', newColor);
+                        }
                         else if (sbri > 46)
-                            surface.SetGlyph(w, h, (int)':', newColor);
+                        {
+                            surface.SetGlyph(w, h, ':', newColor);
+                        }
                         else if (sbri > 23)
-                            surface.SetGlyph(w, h, (int)'.', newColor);
+                        {
+                            surface.SetGlyph(w, h, '.', newColor);
+                        }
                     }
                 }
             }
@@ -174,8 +230,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public static void Save(this Texture2D target, string path)
         {
-            using (var stream = System.IO.File.OpenWrite(path))
+            using (System.IO.FileStream stream = System.IO.File.OpenWrite(path))
+            {
                 target.SaveAsPng(stream, target.Bounds.Width, target.Bounds.Height);
+            }
         }
     }
 }

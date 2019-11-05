@@ -21,13 +21,17 @@ namespace SadConsole.EasingFunctions
 
                 case EasingMode.InOut:
                     if ((time /= duration / 2) < 1)
+                    {
                         return currentValue / 2 * (Math.Sin(Math.PI * time / 2)) + startingValue;
+                    }
 
                     return -currentValue / 2 * (Math.Cos(Math.PI * --time / 2) - 2) + startingValue;
 
                 case EasingMode.OutIn:
                     if (time < duration / 2)
+                    {
                         return SineEaseOut(time * 2, startingValue, currentValue / 2, duration);
+                    }
 
                     return SineEaseIn((time * 2) - duration, startingValue + currentValue / 2, currentValue / 2, duration);
 
@@ -37,14 +41,8 @@ namespace SadConsole.EasingFunctions
 
         }
 
-        private double SineEaseOut(double time, double startingValue, double currentValue, double duration)
-        {
-            return currentValue * Math.Sin(time / duration * (Math.PI / 2)) + startingValue;
-        }
+        private double SineEaseOut(double time, double startingValue, double currentValue, double duration) => currentValue * Math.Sin(time / duration * (Math.PI / 2)) + startingValue;
 
-        private double SineEaseIn(double time, double startingValue, double currentValue, double duration)
-        {
-            return -currentValue * Math.Cos(time / duration * (Math.PI / 2)) + currentValue + startingValue;
-        }
+        private double SineEaseIn(double time, double startingValue, double currentValue, double duration) => -currentValue * Math.Cos(time / duration * (Math.PI / 2)) + currentValue + startingValue;
     }
 }

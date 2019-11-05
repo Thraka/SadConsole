@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents an instruction to pause for a specified duration.
     /// </summary>
-    public class Wait: InstructionBase
+    public class Wait : InstructionBase
     {
         private bool _started = false;
         private TimeSpan _lastUpdateTime = TimeSpan.Zero;
@@ -15,12 +15,12 @@
         /// The duration of the wait.
         /// </summary>
         public TimeSpan Duration { get; set; }
-        
+
         /// <summary>
         /// Creates a new wait timer with the specified duration.
         /// </summary>
         /// <param name="duration">How long this instruction waits until it signals <see cref="InstructionBase.IsFinished"/>.</param>
-        public Wait(TimeSpan duration) 
+        public Wait(TimeSpan duration)
             => Duration = duration;
 
         /// <summary>
@@ -38,10 +38,14 @@
                 _started = true;
             }
             else
+            {
                 _lastUpdateTime += delta;
+            }
 
             if (_lastUpdateTime > Duration)
+            {
                 IsFinished = true;
+            }
 
             base.Update(console, delta);
         }

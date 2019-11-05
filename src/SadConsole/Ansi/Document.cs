@@ -8,7 +8,7 @@ namespace SadConsole.Ansi
     /// <summary>
     /// Represents an ANSI.SYS formatted document.
     /// </summary>
-    public class Document: IDisposable
+    public class Document : IDisposable
     {
         private byte[] _ansiBytes;
 
@@ -33,7 +33,7 @@ namespace SadConsole.Ansi
         /// <summary>
         /// A string representing the <see cref="AnsiBytes"/>.
         /// </summary>
-        public string AnsiString {get; private set; }
+        public string AnsiString { get; private set; }
 
         /// <summary>
         /// A stream that points to the <see cref="AnsiBytes"/>.
@@ -48,9 +48,11 @@ namespace SadConsole.Ansi
         /// <param name="file">The file to load.</param>
         public Document(string file)
         {
-            using (var stream = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
-                using (var reader = new BinaryReader(stream))
-                    AnsiBytes = reader.ReadBytes((int)stream.Length);
+            using (Stream stream = Microsoft.Xna.Framework.TitleContainer.OpenStream(file))
+            using (var reader = new BinaryReader(stream))
+            {
+                AnsiBytes = reader.ReadBytes((int)stream.Length);
+            }
 
             Stream = new MemoryStream(AnsiBytes);
         }
@@ -63,7 +65,7 @@ namespace SadConsole.Ansi
         /// </summary>
         /// <param name="ansiContent">The ANSI.SYS encoded string.</param>
         /// <returns>A new document.</returns>
-        public static Document FromAsciiString(string ansiContent) => new Document {AnsiBytes = Encoding.ASCII.GetBytes(ansiContent)};
+        public static Document FromAsciiString(string ansiContent) => new Document { AnsiBytes = Encoding.ASCII.GetBytes(ansiContent) };
 
         /// <summary>
         /// Creates a new document from an existing byte array representing ANSI.SYS codes and characters.

@@ -50,14 +50,22 @@ namespace SadConsole.Controls
                     _value = value;
 
                     if (_value < 0)
+                    {
                         _value = 0;
+                    }
                     else if (_value > _maxValue)
+                    {
                         _value = _maxValue;
+                    }
 
                     if (_value == 0)
+                    {
                         CurrentSliderPosition = 0;
+                    }
                     else if (_value == _maxValue)
+                    {
                         CurrentSliderPosition = SliderBarSize - 1;
+                    }
                     else
                     {
                         // Find which slot is < value where the slot after is > value
@@ -93,7 +101,9 @@ namespace SadConsole.Controls
             {
                 _maxValue = value;
                 if (_maxValue <= 0)
+                {
                     _maxValue = 1;
+                }
 
                 DetermineSliderPositions();
                 IsDirty = true;
@@ -111,19 +121,21 @@ namespace SadConsole.Controls
             get => _valueStep;
             set => _valueStep = value;
         }
-        
+
         /// <summary>
         /// Creates a new ScrollBar control.
         /// </summary>
         /// <param name="orientation">Sets the control to either horizontal or vertical.</param>
         /// <param name="size">The height or width of the control.</param>
         /// <returns>The new control instance.</returns>
-        public ScrollBar(Orientation orientation, int size): base(orientation == Orientation.Horizontal ? size : 1,
+        public ScrollBar(Orientation orientation, int size) : base(orientation == Orientation.Horizontal ? size : 1,
                                                                   orientation == Orientation.Vertical ? size : 1)
         {
             if (size <= 2)
+            {
                 throw new Exception("The scroll bar must be 4 or more in size.");
-            
+            }
+
             _initialized = true;
             Orientation = orientation;
 
@@ -143,9 +155,13 @@ namespace SadConsole.Controls
             }
 
             if (Width > Height)
+            {
                 SliderBarSize = Width - 2;
+            }
             else
+            {
                 SliderBarSize = Height - 2;
+            }
 
             _sliderPositionValues = new int[SliderBarSize];
             DetermineSliderPositions();
@@ -161,13 +177,13 @@ namespace SadConsole.Controls
                 base.ProcessMouse(state);
 
 
-                var mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
+                var mouseControlPosition = new Point(state.CellPosition.X - Position.X, state.CellPosition.Y - Position.Y);
 
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.CapturedControl == null)
                 {
-                    if (state.CellPosition.X >= this.Position.X && state.CellPosition.X < this.Position.X + Width &&
-                        state.CellPosition.Y >= this.Position.Y && state.CellPosition.Y < this.Position.Y + Height)
+                    if (state.CellPosition.X >= Position.X && state.CellPosition.X < Position.X + Width &&
+                        state.CellPosition.Y >= Position.Y && state.CellPosition.Y < Position.Y + Height)
                     {
                         if (state.Mouse.ScrollWheelValueChange != 0)
                         {
@@ -180,16 +196,26 @@ namespace SadConsole.Controls
                             if (Orientation == Orientation.Horizontal)
                             {
                                 if (mouseControlPosition.X == 0)
+                                {
                                     Value -= Step;
+                                }
+
                                 if (mouseControlPosition.X == Width - 1)
+                                {
                                     Value += Step;
+                                }
                             }
                             else
                             {
                                 if (mouseControlPosition.Y == 0)
+                                {
                                     Value -= Step;
+                                }
+
                                 if (mouseControlPosition.Y == Height - 1)
+                                {
                                     Value += Step;
+                                }
                             }
 
                             Parent.FocusedControl = this;
@@ -202,23 +228,27 @@ namespace SadConsole.Controls
                             if (Orientation == Orientation.Horizontal)
                             {
                                 if (mouseControlPosition.Y == 0)
+                                {
                                     if (mouseControlPosition.X == CurrentSliderPosition + 1)
                                     {
                                         Parent.CaptureControl(this);
                                     }
+                                }
                             }
                             else
                             {
                                 if (mouseControlPosition.X == 0)
+                                {
                                     if (mouseControlPosition.Y == CurrentSliderPosition + 1)
                                     {
                                         Parent.CaptureControl(this);
                                     }
+                                }
                             }
 
                             Parent.FocusedControl = this;
                         }
-                        
+
                         return true;
                     }
                 }
@@ -230,8 +260,8 @@ namespace SadConsole.Controls
                         return false;
                     }
 
-                    if (state.CellPosition.X >= this.Position.X - 2 && state.CellPosition.X < this.Position.X + Width + 2 &&
-                        state.CellPosition.Y >= this.Position.Y - 3 && state.CellPosition.Y < this.Position.Y + Height + 3)
+                    if (state.CellPosition.X >= Position.X - 2 && state.CellPosition.X < Position.X + Width + 2 &&
+                        state.CellPosition.Y >= Position.Y - 3 && state.CellPosition.Y < Position.Y + Height + 3)
                     {
 
                         if (Orientation == Orientation.Horizontal)
@@ -252,9 +282,11 @@ namespace SadConsole.Controls
                                 {
                                     _value = _sliderPositionValues[CurrentSliderPosition];
                                     if (ValueChanged != null)
+                                    {
                                         ValueChanged.Invoke(this, EventArgs.Empty);
+                                    }
 
-                                    this.IsDirty = true;
+                                    IsDirty = true;
                                 }
                             }
 
@@ -270,9 +302,11 @@ namespace SadConsole.Controls
                                 {
                                     _value = _sliderPositionValues[CurrentSliderPosition];
                                     if (ValueChanged != null)
+                                    {
                                         ValueChanged.Invoke(this, EventArgs.Empty);
+                                    }
 
-                                    this.IsDirty = true;
+                                    IsDirty = true;
                                 }
                             }
                         }
@@ -280,7 +314,7 @@ namespace SadConsole.Controls
                         return true;
                     }
                 }
-                
+
                 //else if(Parent.CapturedControl == this && !info.LeftButtonDown)
                 //{
                 //    Parent.ReleaseControl();
@@ -294,10 +328,7 @@ namespace SadConsole.Controls
         /// Not Used.
         /// </summary>
         /// <param name="state"></param>
-        public override bool ProcessKeyboard(Input.Keyboard state)
-        {
-            return false;
-        }
+        public override bool ProcessKeyboard(Input.Keyboard state) => false;
 
         private void DetermineSliderPositions()
         {
@@ -320,11 +351,17 @@ namespace SadConsole.Controls
             else if (_maxValue == 2)
             {
                 if (rest == 1)
+                {
                     _sliderPositionValues[1] = _maxValue - 1;
+                }
                 else if (rest % 2 != 0)
+                {
                     _sliderPositionValues[((rest - 1) / 2) + 1] = _maxValue - 1;
+                }
                 else
+                {
                     _sliderPositionValues[rest / 2] = _maxValue - 1;
+                }
             }
 
             else if (rest >= _maxValue - 1)
@@ -340,17 +377,17 @@ namespace SadConsole.Controls
 
                 for (int i = 1; i < SliderBarSize - 1; i++)
                 {
-                    _sliderPositionValues[i] = (int)((float)i * itemValue);
+                    _sliderPositionValues[i] = (int)(i * itemValue);
                 }
             }
         }
-        
+
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
             _initialized = true;
 
-            var temp = _value;
+            int temp = _value;
             _value = -22;
             Value = temp;
 

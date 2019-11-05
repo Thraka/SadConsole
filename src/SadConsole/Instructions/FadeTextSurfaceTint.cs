@@ -76,17 +76,21 @@ namespace SadConsole.Instructions
                 FadeAnimationSettings.Start();
 
                 if (_console == null)
+                {
                     _console = console;
+                }
             }
 
             if (FadeAnimationSettings.IsFinished)
+            {
                 IsFinished = true;
+            }
 
             _console.Tint = Colors.Lerp((float)FadeAnimationSettings.CurrentValue);
 
             base.Update(console, delta);
         }
-        
+
         /// <summary>
         /// Starts the instruction over.
         /// </summary>

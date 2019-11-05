@@ -7,7 +7,7 @@
         /// <summary>
         /// Glyph indexes for a thin line.
         /// </summary>
-        public static readonly int[] ConnectedLineThin = 
+        public static readonly int[] ConnectedLineThin =
           { 218, 196, 191,
             179, 197, 179,
             192, 196, 217,
@@ -19,7 +19,7 @@
         /// <summary>
         /// Glyph indexes for a thick line.
         /// </summary>
-        public static readonly int[] ConnectedLineThick = 
+        public static readonly int[] ConnectedLineThick =
           { 201, 205, 187,
             186, 206, 186,
             200, 205, 188,

@@ -17,14 +17,11 @@ namespace SadConsole.Controls
         {
             public object Item;
 
-            public SelectedItemEventArgs(object item)
-            {
-                Item = item;
-            }
+            public SelectedItemEventArgs(object item) => Item = item;
         }
 
         protected bool initialized;
-        [DataMember(Name="SelectedIndex")]
+        [DataMember(Name = "SelectedIndex")]
         protected int selectedIndex;
 
         protected object selectedItem;
@@ -46,7 +43,7 @@ namespace SadConsole.Controls
         /// An event that triggers when an item is double clicked or the Enter key is pressed while the listbox has focus.
         /// </summary>
         public event EventHandler<SelectedItemEventArgs> SelectedItemExecuted;
-        
+
         /// <summary>
         /// The theme used by the listbox items.
         /// </summary>
@@ -84,7 +81,7 @@ namespace SadConsole.Controls
         /// </summary>
         [DataMember]
         public bool SingleClickItemExecute { get; set; }
-        
+
         [DataMember]
         public ObservableCollection<object> Items { get; private set; }
 
@@ -115,42 +112,44 @@ namespace SadConsole.Controls
                         }
                     }
                 }
-                
+
                 return index;
             }
         }
 
-	    public object SelectedItem
-	    {
-		    get => selectedItem;
-		    set
-		    {
-			    if (value == null)
-			    {
-				    selectedIndex = -1;
-				    selectedItem = null;
-				    IsDirty = true;
-				    OnSelectedItemChanged();
-			    }
-			    else
-			    {
-				    var index = Items.IndexOf(value);
+        public object SelectedItem
+        {
+            get => selectedItem;
+            set
+            {
+                if (value == null)
+                {
+                    selectedIndex = -1;
+                    selectedItem = null;
+                    IsDirty = true;
+                    OnSelectedItemChanged();
+                }
+                else
+                {
+                    int index = Items.IndexOf(value);
 
-				    if (index == -1)
-					    throw new ArgumentOutOfRangeException("Item does not exist in collection.");
+                    if (index == -1)
+                    {
+                        throw new ArgumentOutOfRangeException("Item does not exist in collection.");
+                    }
 
-				    selectedIndex = index;
-				    selectedItem = Items[index];
-				    IsDirty = true;
-				    OnSelectedItemChanged();
-			    }
-		    }
-	    }
+                    selectedIndex = index;
+                    selectedItem = Items[index];
+                    IsDirty = true;
+                    OnSelectedItemChanged();
+                }
+            }
+        }
 
-		public Point ScrollBarOffset
+        public Point ScrollBarOffset
         {
             get => scrollBarOffset;
-            set { scrollBarOffset = value; SetupScrollBar();  }
+            set { scrollBarOffset = value; SetupScrollBar(); }
         }
 
         public int ScrollBarSizeAdjust
@@ -162,7 +161,7 @@ namespace SadConsole.Controls
         /// <summary>
         /// Creates a new instance of the listbox control.
         /// </summary>
-        public ListBox(int width, int height): base(width, height)
+        public ListBox(int width, int height) : base(width, height)
         {
             initialized = true;
             ScrollBarRenderLocation = new Point(width - 1, 0);
@@ -174,14 +173,11 @@ namespace SadConsole.Controls
             ItemTheme = new ListBoxItemTheme();
         }
 
-        public ListBox(int width, int height, ListBoxItemTheme itemTheme): this(width, height)
-        {
-            ItemTheme = itemTheme;
-        }
-        
-        protected override void OnParentChanged() => ScrollBar.Parent = this.Parent;
+        public ListBox(int width, int height, ListBoxItemTheme itemTheme) : this(width, height) => ItemTheme = itemTheme;
 
-        private void _scrollbar_ValueChanged(object sender, EventArgs e) => this.IsDirty = true;
+        protected override void OnParentChanged() => ScrollBar.Parent = Parent;
+
+        private void _scrollbar_ValueChanged(object sender, EventArgs e) => IsDirty = true;
 
         protected virtual void OnSelectedItemChanged() => SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(selectedItem));
 
@@ -191,25 +187,32 @@ namespace SadConsole.Controls
 
         protected void SetupScrollBar()
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
             //_scrollBar.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
             ScrollBar = new ScrollBar(Orientation.Vertical, Height);
             ScrollBar.ValueChanged += new EventHandler(_scrollbar_ValueChanged);
             ScrollBar.IsVisible = false;
             ScrollBar.Position = Position + new Point(Width - 1, 0);
-            
+
             DetermineState();
         }
 
         protected override void OnThemeChanged()
         {
             if (ActiveTheme is ListBoxTheme theme)
+            {
                 ScrollBar.Theme = theme.ScrollBarTheme;
+            }
             else
+            {
                 ScrollBar.Theme = null;
+            }
         }
 
-        void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
@@ -226,11 +229,13 @@ namespace SadConsole.Controls
             }
 
             if (SelectedItem != null && !Items.Contains(selectedItem))
+            {
                 SelectedItem = null;
+            }
 
-            this.IsDirty = true;
+            IsDirty = true;
         }
-        
+
         public override bool ProcessKeyboard(Input.Keyboard info)
         {
             //if (_hasFocus)
@@ -244,8 +249,9 @@ namespace SadConsole.Controls
                         SelectedItem = Items[index - 1];
 
                         if (index <= ScrollBar.Value)
+                        {
                             ScrollBar.Value -= 1;
-
+                        }
                     }
                 }
                 return true;
@@ -260,18 +266,24 @@ namespace SadConsole.Controls
                         SelectedItem = Items[index + 1];
 
                         if (index + 1 >= ScrollBar.Value + (Height - 2))
+                        {
                             ScrollBar.Value += 1;
-
+                        }
                     }
                 }
                 else if (Items.Count != 0)
+                {
                     SelectedItem = Items[0];
+                }
+
                 return true;
             }
             else if (info.IsKeyReleased(Keys.Enter))
             {
                 if (selectedItem != null)
+                {
                     OnItemAction();
+                }
 
                 return true;
             }
@@ -283,14 +295,14 @@ namespace SadConsole.Controls
         {
             base.OnMouseIn(state);
 
-            var rowOffset = ((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
-            var rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
-            var columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
+            int rowOffset = ((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
+            int rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
+            int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
+            Point mouseControlPosition = new Point(state.CellPosition.X - Position.X, state.CellPosition.Y - Position.Y);
 
-            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
-                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
             {
                 if (IsScrollBarVisible)
                 {
@@ -301,7 +313,9 @@ namespace SadConsole.Controls
                     RelativeIndexMouseOver = mouseControlPosition.Y - rowOffset;
                 }
                 else
+                {
                     RelativeIndexMouseOver = -1;
+                }
             }
             else
             {
@@ -313,7 +327,7 @@ namespace SadConsole.Controls
         {
             base.OnLeftMouseClicked(state);
 
-            var click = DateTime.Now;
+            DateTime click = DateTime.Now;
             bool doubleClicked = (click - leftMouseLastClick).TotalSeconds <= 0.5;
             leftMouseLastClick = click;
 
@@ -321,10 +335,10 @@ namespace SadConsole.Controls
             int rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
             int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(state.CellPosition.X - this.Position.X, state.CellPosition.Y - this.Position.Y);
+            Point mouseControlPosition = new Point(state.CellPosition.X - Position.X, state.CellPosition.Y - Position.Y);
 
-            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < this.Height - rowOffset &&
-                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < this.Width - columnOffsetEnd)
+            if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
+                mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
             {
                 object oldItem = selectedItem;
                 bool noItem = false;
@@ -340,7 +354,9 @@ namespace SadConsole.Controls
                     SelectedItem = Items[selectedIndex];
                 }
                 else
+                {
                     noItem = true;
+                }
 
                 if (!noItem && (SingleClickItemExecute || (doubleClicked && oldItem == SelectedItem)))
                 {
@@ -357,7 +373,7 @@ namespace SadConsole.Controls
             {
                 if (isMouseOver)
                 {
-                    var mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
+                    Point mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
 
                     if (mouseControlPosition.X == ScrollBarRenderLocation.X && IsScrollBarVisible)
                     {
@@ -375,8 +391,9 @@ namespace SadConsole.Controls
                     }
                 }
                 else
+                {
                     base.ProcessMouse(state);
-
+                }
             }
 
             return false;
@@ -386,11 +403,15 @@ namespace SadConsole.Controls
         private void BeforeSerializing(StreamingContext context)
         {
             if (selectedItem != null)
+            {
                 selectedIndex = Items.IndexOf(selectedItem);
+            }
             else
+            {
                 selectedIndex = -1;
+            }
         }
-        
+
         [OnDeserializedAttribute]
         private void AfterDeserialized(StreamingContext context)
         {
@@ -400,7 +421,9 @@ namespace SadConsole.Controls
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
 
             if (selectedIndex != -1)
+            {
                 SelectedItem = Items[selectedIndex];
+            }
 
             SetupScrollBar();
 

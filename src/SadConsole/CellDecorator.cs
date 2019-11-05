@@ -7,7 +7,7 @@ namespace SadConsole
 {
     using System;
     using System.Runtime.Serialization;
-    
+
     /// <summary>
     /// Decorates a cell with a colored glyph.
     /// </summary>
@@ -63,12 +63,9 @@ namespace SadConsole
         /// <param name="left">The first object to test.</param>
         /// <param name="right">The second object to test.</param>
         /// <returns>True when the <see cref="Color"/>, <see cref="Glyph"/>, and <see cref="Mirror"/> match.</returns>
-        public static bool operator ==(CellDecorator left, CellDecorator right)
-        {
-            return left.Color == right.Color &&
+        public static bool operator ==(CellDecorator left, CellDecorator right) => left.Color == right.Color &&
                    left.Glyph == right.Glyph &&
                    left.Mirror == right.Mirror;
-        }
 
         /// <summary>
         /// Checks that the left and right objects do not match.
@@ -76,17 +73,18 @@ namespace SadConsole
         /// <param name="left">The first object to test.</param>
         /// <param name="right">The second object to test.</param>
         /// <returns>True when the <see cref="Color"/>, <see cref="Glyph"/>, and <see cref="Mirror"/> do not match.</returns>
-        public static bool operator !=(CellDecorator left, CellDecorator right)
-        {
-            return left.Color != right.Color ||
+        public static bool operator !=(CellDecorator left, CellDecorator right) => left.Color != right.Color ||
                    left.Glyph != right.Glyph ||
                    left.Mirror != right.Mirror;
-        }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
             return obj is CellDecorator decorator && Equals(decorator);
         }
 
@@ -95,7 +93,7 @@ namespace SadConsole
         {
             unchecked
             {
-                var hashCode = Color.GetHashCode();
+                int hashCode = Color.GetHashCode();
                 hashCode = (hashCode * 397) ^ Glyph;
                 hashCode = (hashCode * 397) ^ (int)Mirror;
                 return hashCode;

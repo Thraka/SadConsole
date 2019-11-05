@@ -56,10 +56,14 @@ namespace SadConsole
         public void SetPixels(Color[] pixels)
         {
             if (pixels.Length != Cells.Length)
+            {
                 throw new ArgumentOutOfRangeException(nameof(pixels), "The amount of colors do not match the size of this cell surface.");
+            }
 
-            for (var i = 0; i < pixels.Length; i++)
+            for (int i = 0; i < pixels.Length; i++)
+            {
                 Cells[i].Background = pixels[i];
+            }
 
             IsDirty = true;
         }
@@ -72,16 +76,20 @@ namespace SadConsole
         public void SetPixels(Rectangle area, Color[] pixels)
         {
             if (pixels.Length != area.Width * area.Height)
-                throw new ArgumentOutOfRangeException(nameof(pixels), "The amount of colors do not match the size of the area.");
-
-            for (var x = area.Left; x < area.Left + area.Width; x++)
             {
-                for (var y = area.Top; y < area.Top + area.Height; y++)
+                throw new ArgumentOutOfRangeException(nameof(pixels), "The amount of colors do not match the size of the area.");
+            }
+
+            for (int x = area.Left; x < area.Left + area.Width; x++)
+            {
+                for (int y = area.Top; y < area.Top + area.Height; y++)
                 {
-                    var index = y * Width + x;
+                    int index = y * Width + x;
 
                     if (IsValidCell(index))
+                    {
                         Cells[y * Width + x].Background = pixels[(y - area.Top) * area.Width + (x - area.Left)];
+                    }
                 }
             }
 
@@ -124,7 +132,7 @@ namespace SadConsole
         /// <param name="index">The index to test.</param>
         /// <returns>A true value indicating the cell index is in this cell surface.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsValidCell(int index) => 
+        public bool IsValidCell(int index) =>
             index >= 0 && index < Cells.Length;
 
         /// <summary>
@@ -135,12 +143,15 @@ namespace SadConsole
         /// <param name="glyph">The desired glyph of the cell.</param>
         public void SetGlyph(int x, int y, int glyph)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             Cells[index].Glyph = glyph;
             IsDirty = true;
         }
-        
+
         /// <summary>
         /// Changes the glyph and foreground of a cell.
         /// </summary>
@@ -150,7 +161,10 @@ namespace SadConsole
         /// <param name="foreground">The desired foreground.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -167,8 +181,11 @@ namespace SadConsole
         /// <param name="background">The desired background.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background)
         {
-            if (!IsValidCell(x, y, out var index)) return;
-            
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
+
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -186,8 +203,11 @@ namespace SadConsole
         /// <param name="mirror">Sets how the glyph will be mirrored.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror)
         {
-            if (!IsValidCell(x, y, out var index)) return;
-            
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
+
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -208,8 +228,11 @@ namespace SadConsole
         /// <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
         public void SetGlyph(int x, int y, int glyph, Color foreground, Color background, SpriteEffects mirror, IEnumerable<CellDecorator> decorators)
         {
-            if (!IsValidCell(x, y, out var index)) return;
-            
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
+
             Cells[index].Background = background;
             Cells[index].Foreground = foreground;
             Cells[index].Glyph = glyph;
@@ -226,7 +249,7 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The glyph index.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int GetGlyph(int x, int y) => 
+        public int GetGlyph(int x, int y) =>
             Cells[y * Width + x].Glyph;
 
         /// <summary>
@@ -237,7 +260,10 @@ namespace SadConsole
         /// <param name="color">The desired color of the cell.</param>
         public void SetForeground(int x, int y, Color color)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             Cells[index].Foreground = color;
             IsDirty = true;
@@ -250,7 +276,7 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Color GetForeground(int x, int y) => 
+        public Color GetForeground(int x, int y) =>
             Cells[y * Width + x].Foreground;
 
         /// <summary>
@@ -261,7 +287,10 @@ namespace SadConsole
         /// <param name="color">The desired color of the cell.</param>
         public void SetBackground(int x, int y, Color color)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             Cells[index].Background = color;
             IsDirty = true;
@@ -274,7 +303,7 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Color GetBackground(int x, int y) => 
+        public Color GetBackground(int x, int y) =>
             Cells[y * Width + x].Background;
 
         /// <summary>
@@ -285,7 +314,10 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(int x, int y, ICellEffect effect)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             Effects.SetEffect(Cells[index], effect);
             IsDirty = true;
@@ -298,7 +330,10 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(int index, ICellEffect effect)
         {
-            if (!IsValidCell(index)) return;
+            if (!IsValidCell(index))
+            {
+                return;
+            }
 
             Effects.SetEffect(Cells[index], effect);
             IsDirty = true;
@@ -345,9 +380,14 @@ namespace SadConsole
         public void SetCellAppearance(int x, int y, Cell appearance)
         {
             if (appearance == null)
+            {
                 throw new NullReferenceException("Appearance may not be null.");
+            }
 
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             appearance.CopyAppearanceTo(Cells[index]);
             IsDirty = true;
@@ -374,12 +414,15 @@ namespace SadConsole
         public IEnumerable<Cell> GetCells(Rectangle area)
         {
             area = Rectangle.Intersect(area, new Rectangle(0, 0, Width, Height));
-            
-            if (area == Rectangle.Empty) yield break;
 
-            for (var y = 0; y < area.Height; y++)
+            if (area == Rectangle.Empty)
             {
-                for (var x = 0; x < area.Width; x++)
+                yield break;
+            }
+
+            for (int y = 0; y < area.Height; y++)
+            {
+                for (int x = 0; x < area.Width; x++)
                 {
                     yield return Cells[(y + area.Top) * Width + (x + area.Left)];
                 }
@@ -393,7 +436,7 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public SpriteEffects GetMirror(int x, int y) => 
+        public SpriteEffects GetMirror(int x, int y) =>
             Cells[y * Width + x].Mirror;
 
         /// <summary>
@@ -404,7 +447,10 @@ namespace SadConsole
         /// <param name="mirror">The mirror of the cell.</param>
         public void SetMirror(int x, int y, SpriteEffects mirror)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             Cells[index].Mirror = mirror;
             IsDirty = true;
@@ -429,19 +475,36 @@ namespace SadConsole
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         public void SetDecorator(int index, int count, params CellDecorator[] decorators)
         {
-            if (count <= 0) return;
-            if (!IsValidCell(index)) return;
-            if (index + count > Cells.Length) count = Cells.Length - index;
+            if (count <= 0)
+            {
+                return;
+            }
+
+            if (!IsValidCell(index))
+            {
+                return;
+            }
+
+            if (index + count > Cells.Length)
+            {
+                count = Cells.Length - index;
+            }
 
             if (decorators != null && decorators.Length == 0)
+            {
                 decorators = null;
+            }
 
-            for (var i = index; i < index + count; i++)
+            for (int i = index; i < index + count; i++)
             {
                 if (decorators == null)
+                {
                     Cells[i].Decorators = Array.Empty<CellDecorator>();
+                }
                 else
+                {
                     Cells[i].Decorators = (CellDecorator[])decorators.Clone();
+                }
             }
 
             IsDirty = true;
@@ -466,15 +529,30 @@ namespace SadConsole
         /// <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
         public void AddDecorator(int index, int count, params CellDecorator[] decorators)
         {
-            if (count <= 0) return;
-            if (!IsValidCell(index)) return;
-            if (index + count > Cells.Length) count = Cells.Length - index;
+            if (count <= 0)
+            {
+                return;
+            }
+
+            if (!IsValidCell(index))
+            {
+                return;
+            }
+
+            if (index + count > Cells.Length)
+            {
+                count = Cells.Length - index;
+            }
 
             if (decorators == null || decorators.Length == 0)
+            {
                 return;
+            }
 
-            for (var i = index; i < index + count; i++)
+            for (int i = index; i < index + count; i++)
+            {
                 Cells[i].Decorators = Cells[i].Decorators.Union(decorators).Distinct().ToArray();
+            }
 
             IsDirty = true;
         }
@@ -486,7 +564,7 @@ namespace SadConsole
         /// <param name="y">The y coordinate of the cell.</param>
         /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ClearDecorators(int x, int y, int count) => 
+        public void ClearDecorators(int x, int y, int count) =>
             SetDecorator(x, y, count, null);
 
         /// <summary>
@@ -495,7 +573,7 @@ namespace SadConsole
         /// <param name="index">The index of the cell to start applying.</param>
         /// <param name="count">The count of cells to use from the index (inclusive).</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ClearDecorators(int index, int count) => 
+        public void ClearDecorators(int index, int count) =>
             SetDecorator(index, count, null);
 
         /// <summary>
@@ -506,11 +584,16 @@ namespace SadConsole
         /// <param name="text">The string to display.</param>
         public void Print(int x, int y, string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
+            {
                 return;
+            }
 
-            if (!IsValidCell(x, y, out var index)) return;
-            
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
+
             if (!UsePrintProcessor)
             {
                 int end = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
@@ -522,7 +605,9 @@ namespace SadConsole
                 }
             }
             else
+            {
                 PrintNoCheck(index, ColoredString.Parse(text, index, this));
+            }
 
             IsDirty = true;
         }
@@ -536,10 +621,15 @@ namespace SadConsole
         /// <param name="foreground">Sets the foreground of all characters in the text.</param>
         public void Print(int x, int y, string text, Color foreground)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
+            {
                 return;
+            }
 
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             if (!UsePrintProcessor)
             {
@@ -572,9 +662,15 @@ namespace SadConsole
         /// <param name="background">Sets the background of all characters in the text.</param>
         public void Print(int x, int y, string text, Color foreground, Color background)
         {
-            if (string.IsNullOrEmpty(text)) return;
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
 
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             if (!UsePrintProcessor)
             {
@@ -612,9 +708,14 @@ namespace SadConsole
         public void Print(int x, int y, string text, Color foreground, Color background, SpriteEffects mirror)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return;
+            }
 
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             if (!UsePrintProcessor)
             {
@@ -624,9 +725,9 @@ namespace SadConsole
                 {
                     Cells[index].Glyph = text[charIndex];
 
-                        Cells[index].Background = background;
-                        Cells[index].Foreground = foreground;
-                        Cells[index].Mirror = mirror;
+                    Cells[index].Background = background;
+                    Cells[index].Foreground = foreground;
+                    Cells[index].Mirror = mirror;
 
                     charIndex++;
                 }
@@ -653,14 +754,19 @@ namespace SadConsole
         public void Print(int x, int y, string text, SpriteEffects mirror)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return;
+            }
 
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             if (!UsePrintProcessor)
             {
-                var total = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
-                var charIndex = 0;
+                int total = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
+                int charIndex = 0;
                 for (; index < total; index++)
                 {
                     Cells[index].Glyph = text[charIndex];
@@ -690,16 +796,21 @@ namespace SadConsole
         public void Print(int x, int y, string text, Cell appearance, ICellEffect effect = null)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return;
+            }
 
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             int end = index + text.Length > Cells.Length ? Cells.Length : index + text.Length;
             int charIndex = 0;
 
             for (; index < end; index++)
             {
-                var cell = Cells[index];
+                Cell cell = Cells[index];
                 appearance.CopyAppearanceTo(cell);
                 cell.Glyph = text[charIndex];
                 Effects.SetEffect(cell, effect);
@@ -707,7 +818,7 @@ namespace SadConsole
             }
             IsDirty = true;
         }
-        
+
         /// <summary>
         /// Draws a single glyph on the console at the specified location.
         /// </summary>
@@ -717,16 +828,21 @@ namespace SadConsole
         public void Print(int x, int y, ColoredGlyph glyph)
         {
             if (glyph == null)
+            {
                 return;
-            
-            if (!IsValidCell(x, y, out int index)) return;
-            
+            }
+
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
+
             Cell cell = Cells[index];
             cell.CopyAppearanceFrom(glyph);
             cell.Glyph = glyph.Glyph;
             IsDirty = true;
         }
-        
+
         /// <summary>
         /// Draws the string on the console at the specified location, wrapping if needed.
         /// </summary>
@@ -735,7 +851,10 @@ namespace SadConsole
         /// <param name="text">The string to display.</param>
         public void Print(int x, int y, ColoredString text)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             PrintNoCheck(index, text);
             IsDirty = true;
@@ -750,15 +869,30 @@ namespace SadConsole
             for (; index < end; index++)
             {
                 if (!text.IgnoreGlyph)
+                {
                     Cells[index].Glyph = text[charIndex].GlyphCharacter;
+                }
+
                 if (!text.IgnoreBackground)
+                {
                     Cells[index].Background = text[charIndex].Background;
+                }
+
                 if (!text.IgnoreForeground)
+                {
                     Cells[index].Foreground = text[charIndex].Foreground;
+                }
+
                 if (!text.IgnoreMirror)
+                {
                     Cells[index].Mirror = text[charIndex].Mirror;
+                }
+
                 if (!text.IgnoreEffect)
+                {
                     SetEffect(index, text[charIndex].Effect);
+                }
+
                 charIndex++;
             }
             IsDirty = true;
@@ -786,12 +920,14 @@ namespace SadConsole
             if (index >= 0 && index < Cells.Length)
             {
                 var sb = new StringBuilder(length);
-                for (var i = 0; i < length; i++)
+                for (int i = 0; i < length; i++)
                 {
-                    var tempIndex = i + index;
+                    int tempIndex = i + index;
 
                     if (tempIndex < Cells.Length)
+                    {
                         sb.Append((char)Cells[tempIndex].Glyph);
+                    }
                 }
 
                 return sb.ToString();
@@ -819,15 +955,21 @@ namespace SadConsole
         /// <returns>A string built from the text surface data.</returns>
         public ColoredString GetStringColored(int index, int length)
         {
-            if (index < 0 || index >= Cells.Length) return new ColoredString(string.Empty);
+            if (index < 0 || index >= Cells.Length)
+            {
+                return new ColoredString(string.Empty);
+            }
+
             var sb = new ColoredString(length);
 
-            for (var i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
-                var tempIndex = i + index;
+                int tempIndex = i + index;
                 var cell = (Cell)sb[i];
                 if (tempIndex < Cells.Length)
+                {
                     Cells[tempIndex].CopyAppearanceTo(cell);
+                }
             }
 
             return sb;
@@ -860,7 +1002,10 @@ namespace SadConsole
         public void ShiftUp(int amount, bool wrap = false)
         {
             if (amount == 0)
+            {
                 return;
+            }
+
             if (amount < 0)
             {
                 ShiftDown(Math.Abs(amount), wrap);
@@ -876,9 +1021,9 @@ namespace SadConsole
             {
                 wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
 
-                for (var y = 0; y < amount; y++)
+                for (int y = 0; y < amount; y++)
                 {
-                    for (var x = 0; x < Width; x++)
+                    for (int x = 0; x < Width; x++)
                     {
                         var tempCell = new Cell();
                         Cells[y * Width + x].CopyAppearanceTo(tempCell);
@@ -888,12 +1033,12 @@ namespace SadConsole
                 }
             }
 
-            for (var y = amount; y < Height; y++)
+            for (int y = amount; y < Height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
-                    var destination = Cells[(y - amount) * Width + x];
-                    var source = Cells[y * Width + x];
+                    Cell destination = Cells[(y - amount) * Width + x];
+                    Cell source = Cells[y * Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -904,23 +1049,28 @@ namespace SadConsole
 
 
             if (!wrap)
-                for (var y = Height - amount; y < Height; y++)
+            {
+                for (int y = Height - amount; y < Height; y++)
                 {
-                    for (var x = 0; x < Width; x++)
+                    for (int x = 0; x < Width; x++)
                     {
                         Clear(x, y);
                     }
                 }
+            }
             else
-                foreach (var cellTuple in wrappedCells)
+            {
+                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
                 {
-                    var destination = Cells[cellTuple.Item2];
+                    Cell destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
                 }
+            }
+
             IsDirty = true;
         }
 
@@ -928,7 +1078,7 @@ namespace SadConsole
         /// Scrolls all the console data down by one.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ShiftDown() => 
+        public void ShiftDown() =>
             ShiftDown(1);
 
         /// <summary>
@@ -939,7 +1089,10 @@ namespace SadConsole
         public void ShiftDown(int amount, bool wrap = false)
         {
             if (amount == 0)
+            {
                 return;
+            }
+
             if (amount < 0)
             {
                 ShiftUp(Math.Abs(amount), wrap);
@@ -955,9 +1108,9 @@ namespace SadConsole
             {
                 wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
 
-                for (var y = Height - amount; y < Height; y++)
+                for (int y = Height - amount; y < Height; y++)
                 {
-                    for (var x = 0; x < Width; x++)
+                    for (int x = 0; x < Width; x++)
                     {
                         var tempCell = new Cell();
                         Cells[y * Width + x].CopyAppearanceTo(tempCell);
@@ -967,12 +1120,12 @@ namespace SadConsole
                 }
             }
 
-            for (var y = (Height - 1) - amount; y >= 0; y--)
+            for (int y = (Height - 1) - amount; y >= 0; y--)
             {
-                for (var x = 0; x < Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
-                    var destination = Cells[(y + amount) * Width + x];
-                    var source = Cells[y * Width + x];
+                    Cell destination = Cells[(y + amount) * Width + x];
+                    Cell source = Cells[y * Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -982,24 +1135,29 @@ namespace SadConsole
             }
 
             if (!wrap)
-                for (var y = 0; y < amount; y++)
+            {
+                for (int y = 0; y < amount; y++)
                 {
-                    for (var x = 0; x < Width; x++)
+                    for (int x = 0; x < Width; x++)
                     {
-                        var source = Cells[y * Width + x];
+                        Cell source = Cells[y * Width + x];
                         source.Clear();
                     }
                 }
+            }
             else
-                foreach (var cellTuple in wrappedCells)
+            {
+                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
                 {
-                    var destination = Cells[cellTuple.Item2];
+                    Cell destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
                 }
+            }
+
             IsDirty = true;
         }
 
@@ -1007,7 +1165,7 @@ namespace SadConsole
         /// Scrolls all the console data right by one.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ShiftRight() => 
+        public void ShiftRight() =>
             ShiftRight(1);
 
         /// <summary>
@@ -1018,7 +1176,10 @@ namespace SadConsole
         public void ShiftRight(int amount, bool wrap = false)
         {
             if (amount == 0)
+            {
                 return;
+            }
+
             if (amount < 0)
             {
                 ShiftLeft(Math.Abs(amount), wrap);
@@ -1034,9 +1195,9 @@ namespace SadConsole
             {
                 wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
 
-                for (var x = Width - amount; x < Width; x++)
+                for (int x = Width - amount; x < Width; x++)
                 {
-                    for (var y = 0; y < Height; y++)
+                    for (int y = 0; y < Height; y++)
                     {
                         var tempCell = new Cell();
                         Cells[y * Width + x].CopyAppearanceTo(tempCell);
@@ -1047,12 +1208,12 @@ namespace SadConsole
             }
 
 
-            for (var x = Width - 1 - amount; x >= 0; x--)
+            for (int x = Width - 1 - amount; x >= 0; x--)
             {
-                for (var y = 0; y < Height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    var destination = Cells[y * Width + (x + amount)];
-                    var source = Cells[y * Width + x];
+                    Cell destination = Cells[y * Width + (x + amount)];
+                    Cell source = Cells[y * Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1062,24 +1223,29 @@ namespace SadConsole
             }
 
             if (!wrap)
-                for (var x = 0; x < amount; x++)
+            {
+                for (int x = 0; x < amount; x++)
                 {
-                    for (var y = 0; y < Height; y++)
+                    for (int y = 0; y < Height; y++)
                     {
                         Clear(x, y);
 
                     }
                 }
+            }
             else
-                foreach (var cellTuple in wrappedCells)
+            {
+                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
                 {
-                    var destination = Cells[cellTuple.Item2];
+                    Cell destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
                 }
+            }
+
             IsDirty = true;
         }
 
@@ -1087,7 +1253,7 @@ namespace SadConsole
         /// Scrolls all the console data left by one.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ShiftLeft() => 
+        public void ShiftLeft() =>
             ShiftLeft(1);
 
         /// <summary>
@@ -1098,7 +1264,10 @@ namespace SadConsole
         public void ShiftLeft(int amount, bool wrap = false)
         {
             if (amount == 0)
+            {
                 return;
+            }
+
             if (amount < 0)
             {
                 ShiftRight(Math.Abs(amount), wrap);
@@ -1114,9 +1283,9 @@ namespace SadConsole
             {
                 wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
 
-                for (var x = 0; x < amount; x++)
+                for (int x = 0; x < amount; x++)
                 {
-                    for (var y = 0; y < Height; y++)
+                    for (int y = 0; y < Height; y++)
                     {
                         var tempCell = new Cell();
                         Cells[y * Width + x].CopyAppearanceTo(tempCell);
@@ -1126,12 +1295,12 @@ namespace SadConsole
                 }
             }
 
-            for (var x = amount; x < Width; x++)
+            for (int x = amount; x < Width; x++)
             {
-                for (var y = 0; y < Height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    var destination = Cells[y * Width + (x - amount)];
-                    var source = Cells[y * Width + x];
+                    Cell destination = Cells[y * Width + (x - amount)];
+                    Cell source = Cells[y * Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1141,23 +1310,28 @@ namespace SadConsole
             }
 
             if (!wrap)
-                for (var x = Width - amount; x < Width; x++)
+            {
+                for (int x = Width - amount; x < Width; x++)
                 {
-                    for (var y = 0; y < Height; y++)
+                    for (int y = 0; y < Height; y++)
                     {
                         Clear(x, y);
                     }
                 }
+            }
             else
-                foreach (var cellTuple in wrappedCells)
+            {
+                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
                 {
-                    var destination = Cells[cellTuple.Item2];
+                    Cell destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
                 }
+            }
+
             IsDirty = true;
         }
 
@@ -1173,7 +1347,10 @@ namespace SadConsole
         /// </remarks>
         public Cell[] Erase(int x, int y, int count)
         {
-            if (!IsValidCell(x, y, out int index)) return Array.Empty<Cell>();
+            if (!IsValidCell(x, y, out int index))
+            {
+                return Array.Empty<Cell>();
+            }
 
             int end = index + count > Cells.Length ? Cells.Length - index : index + count;
             int total = end - index;
@@ -1181,7 +1358,7 @@ namespace SadConsole
             int resultIndex = 0;
             for (; index < end; index++)
             {
-                var c = Cells[index];
+                Cell c = Cells[index];
 
                 c.Glyph = EraseGlyph;
                 c.Mirror = SpriteEffects.None;
@@ -1205,7 +1382,10 @@ namespace SadConsole
         /// </remarks>
         public void Erase(int x, int y)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
             Cells[index].Glyph = EraseGlyph;
             Cells[index].Mirror = SpriteEffects.None;
@@ -1222,7 +1402,7 @@ namespace SadConsole
         /// </remarks>
         public void Erase()
         {
-            for (var i = 0; i < Cells.Length; i++)
+            for (int i = 0; i < Cells.Length; i++)
             {
                 Cells[i].Glyph = EraseGlyph;
                 Cells[i].Mirror = SpriteEffects.None;
@@ -1237,7 +1417,7 @@ namespace SadConsole
         /// Clears the console data. Characters are reset to 0, the foreground and background are set to default, and effect set to none. Clears cell decorators.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Clear() => 
+        public void Clear() =>
             Fill(DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
 
         /// <summary>
@@ -1247,9 +1427,12 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         public void Clear(int x, int y)
         {
-            if (!IsValidCell(x, y, out var index)) return;
+            if (!IsValidCell(x, y, out int index))
+            {
+                return;
+            }
 
-            var cell = Cells[index];
+            Cell cell = Cells[index];
             cell.Clear();
             cell.Foreground = DefaultForeground;
             cell.Background = DefaultBackground;
@@ -1271,7 +1454,7 @@ namespace SadConsole
         /// Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="area">The area to clear.</param>
-        public void Clear(Rectangle area) => 
+        public void Clear(Rectangle area) =>
             Fill(area, DefaultForeground, DefaultBackground, 0, SpriteEffects.None);
 
         /// <summary>
@@ -1284,16 +1467,27 @@ namespace SadConsole
         /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
         public Cell[] Fill(Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
         {
-            for (var i = 0; i < Cells.Length; i++)
+            for (int i = 0; i < Cells.Length; i++)
             {
                 if (background.HasValue)
+                {
                     Cells[i].Background = background.Value;
+                }
+
                 if (foreground.HasValue)
+                {
                     Cells[i].Foreground = foreground.Value;
+                }
+
                 if (glyph.HasValue)
+                {
                     Cells[i].Glyph = glyph.Value;
+                }
+
                 if (mirror.HasValue)
+                {
                     Cells[i].Mirror = mirror.Value;
+                }
 
                 Cells[i].Decorators = Array.Empty<CellDecorator>();
             }
@@ -1313,25 +1507,41 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
         /// <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
-        public Cell[] Fill(int x, int y, int length, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null) {
+        public Cell[] Fill(int x, int y, int length, Color? foreground, Color? background, int? glyph, SpriteEffects? mirror = null)
+        {
 
 
-            if (!IsValidCell(x, y, out int index)) return Array.Empty<Cell>();
+            if (!IsValidCell(x, y, out int index))
+            {
+                return Array.Empty<Cell>();
+            }
 
             int end = index + length > Cells.Length ? Cells.Length - index : index + length;
             int total = end - index;
             Cell[] result = new Cell[total];
             int resultIndex = 0;
-            for (; index < end; index++) {
+            for (; index < end; index++)
+            {
                 Cell c = Cells[index];
                 if (background.HasValue)
+                {
                     c.Background = background.Value;
+                }
+
                 if (foreground.HasValue)
+                {
                     c.Foreground = foreground.Value;
+                }
+
                 if (glyph.HasValue)
+                {
                     c.Glyph = glyph.Value;
+                }
+
                 if (mirror.HasValue)
+                {
                     c.Mirror = mirror.Value;
+                }
 
                 c.Decorators = Array.Empty<CellDecorator>();
 
@@ -1357,25 +1567,39 @@ namespace SadConsole
         {
             area = Rectangle.Intersect(area, new Rectangle(0, 0, Width, Height));
 
-            if (area == Rectangle.Empty) return new Cell[0];
-            
+            if (area == Rectangle.Empty)
+            {
+                return new Cell[0];
+            }
+
             var result = new Cell[area.Width * area.Height];
             int resultIndex = 0;
 
-            for (var x = area.Left; x < area.Left + area.Width; x++)
+            for (int x = area.Left; x < area.Left + area.Width; x++)
             {
-                for (var y = area.Top; y < area.Top + area.Height; y++)
+                for (int y = area.Top; y < area.Top + area.Height; y++)
                 {
-                    var cell = Cells[y * Width + x];
+                    Cell cell = Cells[y * Width + x];
 
                     if (background.HasValue)
+                    {
                         cell.Background = background.Value;
+                    }
+
                     if (foreground.HasValue)
+                    {
                         cell.Foreground = foreground.Value;
+                    }
+
                     if (glyph.HasValue)
+                    {
                         cell.Glyph = glyph.Value;
+                    }
+
                     if (mirror.HasValue)
+                    {
                         cell.Mirror = mirror.Value;
+                    }
 
                     cell.Decorators = Array.Empty<CellDecorator>();
 
@@ -1404,11 +1628,12 @@ namespace SadConsole
             Func<int, int, bool> processor;
 
             if (foreground.HasValue || background.HasValue || glyph.HasValue)
+            {
                 processor = (x, y) =>
                 {
-                    if (IsValidCell(x, y, out var index))
+                    if (IsValidCell(x, y, out int index))
                     {
-                        var cell = Cells[index];
+                        Cell cell = Cells[index];
                         result.Add(cell);
 
                         if (foreground.HasValue)
@@ -1432,11 +1657,12 @@ namespace SadConsole
 
                     return false;
                 };
-
+            }
             else
+            {
                 processor = (x, y) =>
                 {
-                    if (IsValidCell(x, y, out var index))
+                    if (IsValidCell(x, y, out int index))
                     {
                         result.Add(Cells[index]);
                         return true;
@@ -1444,7 +1670,7 @@ namespace SadConsole
 
                     return false;
                 };
-
+            }
 
             Algorithms.Line(start.X, start.Y, end.X, end.Y, processor);
 
@@ -1461,11 +1687,15 @@ namespace SadConsole
         public void DrawBox(Rectangle area, Cell border, Cell fill = null, int[] connectedLineStyle = null)
         {
             if (connectedLineStyle == null)
+            {
                 connectedLineStyle = Enumerable.Range(0, Enum.GetValues(typeof(ConnectedLineIndex)).Length)
                     .Select(_ => border.Glyph).ToArray();
+            }
 
             if (!ValidateLineStyle(connectedLineStyle))
+            {
                 throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
+            }
 
             // Draw the major sides
             DrawLine(area.Location, area.Location + new Point(area.Width - 1, 0), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Top]);
@@ -1474,13 +1704,17 @@ namespace SadConsole
             DrawLine(area.Location + new Point(area.Width - 1, 0), area.Location + new Point(area.Width - 1, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Right]);
 
             // Tweak the corners
-            SetGlyph(area.Left, area.Top, connectedLineStyle[(int) ConnectedLineIndex.TopLeft]);
-            SetGlyph(area.Right - 1, area.Top, connectedLineStyle[(int) ConnectedLineIndex.TopRight]);
-            SetGlyph(area.Left, area.Bottom - 1, connectedLineStyle[(int) ConnectedLineIndex.BottomLeft]);
-            SetGlyph(area.Right - 1, area.Bottom - 1, connectedLineStyle[(int) ConnectedLineIndex.BottomRight]);
+            SetGlyph(area.Left, area.Top, connectedLineStyle[(int)ConnectedLineIndex.TopLeft]);
+            SetGlyph(area.Right - 1, area.Top, connectedLineStyle[(int)ConnectedLineIndex.TopRight]);
+            SetGlyph(area.Left, area.Bottom - 1, connectedLineStyle[(int)ConnectedLineIndex.BottomLeft]);
+            SetGlyph(area.Right - 1, area.Bottom - 1, connectedLineStyle[(int)ConnectedLineIndex.BottomRight]);
 
             // Fill
-            if (fill == null) return;
+            if (fill == null)
+            {
+                return;
+            }
+
             area.Inflate(-1, -1);
             Fill(area, fill.Foreground, fill.Background, fill.Glyph);
         }
@@ -1496,7 +1730,8 @@ namespace SadConsole
             var cells = new List<Cell>(area.Width * area.Height);
             var masterCells = new List<Cell>(Cells);
 
-            Algorithms.Ellipse(area.X, area.Y, area.Right - 1, area.Bottom - 1, (x, y) => {
+            Algorithms.Ellipse(area.X, area.Y, area.Right - 1, area.Bottom - 1, (x, y) =>
+            {
                 if (IsValidCell(x, y))
                 {
                     SetCellAppearance(x, y, outer);
@@ -1507,19 +1742,21 @@ namespace SadConsole
             if (inner != null)
             {
                 Func<Cell, bool> isTargetCell = c => !cells.Contains(c);
-                Action<Cell> fillCell = c => { inner.CopyAppearanceTo(c);
+                Action<Cell> fillCell = c =>
+                {
+                    inner.CopyAppearanceTo(c);
                     cells.Add(c);
                 };
                 Func<Cell, Algorithms.NodeConnections<Cell>> getConnectedCells = c =>
                 {
                     var connections = new Algorithms.NodeConnections<Cell>();
 
-                    var (x, y) = GetPointFromIndex(masterCells.IndexOf(c));
+                    (int x, int y) = GetPointFromIndex(masterCells.IndexOf(c));
 
                     connections.West = IsValidCell(x - 1, y) ? this[x - 1, y] : null;
                     connections.East = IsValidCell(x + 1, y) ? this[x + 1, y] : null;
-                    connections.North = IsValidCell(x, y - 1)  ? this[x, y - 1] : null;
-                    connections.South = IsValidCell(x, y + 1)  ? this[x, y + 1] : null;
+                    connections.North = IsValidCell(x, y - 1) ? this[x, y - 1] : null;
+                    connections.South = IsValidCell(x, y + 1) ? this[x, y + 1] : null;
 
                     return connections;
                 };
@@ -1546,27 +1783,35 @@ namespace SadConsole
         {
             var area = new Rectangle(0, 0, Width, Height);
 
-            for (var x = 0; x < Width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (var y = 0; y < Height; y++)
+                for (int y = 0; y < Height; y++)
                 {
                     var pos = new Point(x, y);
-                    var index = GetIndexFromPoint(pos);
+                    int index = GetIndexFromPoint(pos);
 
                     // Check if this pos is a road
                     if (!lineStyle.Contains(Cells[index].Glyph))
+                    {
                         continue;
+                    }
 
                     // Get all valid positions and indexes around this point
-                    var valids = pos.GetValidDirections(area);
-                    var posIndexes = pos.GetDirectionIndexes(area);
-                    var roads = new[] { false, false, false, false, false, false, false, false, false };
+                    bool[] valids = pos.GetValidDirections(area);
+                    int[] posIndexes = pos.GetDirectionIndexes(area);
+                    bool[] roads = new[] { false, false, false, false, false, false, false, false, false };
 
-                    for (var i = 0; i < 8; i++)
+                    for (int i = 0; i < 8; i++)
                     {
-                        if (!valids[i]) continue;
+                        if (!valids[i])
+                        {
+                            continue;
+                        }
+
                         if (lineStyle.Contains(Cells[posIndexes[i]].Glyph))
+                        {
                             roads[i] = true;
+                        }
                     }
 
                     if (roads[(int)Directions.DirectionEnum.North] &&
@@ -1677,17 +1922,17 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         public void Copy(CellSurface destination)
         {
-            var maxX = Width >= destination.Width ? destination.Width : Width;
-            var maxY = Height >= destination.Height ? destination.Height : Height;
+            int maxX = Width >= destination.Width ? destination.Width : Width;
+            int maxY = Height >= destination.Height ? destination.Height : Height;
 
-            for (var x = 0; x < maxX; x++)
+            for (int x = 0; x < maxX; x++)
             {
-                for (var y = 0; y < maxY; y++)
+                for (int y = 0; y < maxY; y++)
                 {
-                    if (IsValidCell(x, y, out var sourceIndex) && destination.IsValidCell(x, y, out var destIndex))
+                    if (IsValidCell(x, y, out int sourceIndex) && destination.IsValidCell(x, y, out int destIndex))
                     {
-                        var sourceCell = Cells[sourceIndex];
-                        var desCell = destination.Cells[destIndex];
+                        Cell sourceCell = Cells[sourceIndex];
+                        Cell desCell = destination.Cells[destIndex];
                         sourceCell.CopyAppearanceTo(desCell);
                     }
                 }
@@ -1704,14 +1949,14 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         public void Copy(CellSurface destination, int x, int y)
         {
-            for (var curX = 0; curX < Width; curX++)
+            for (int curX = 0; curX < Width; curX++)
             {
-                for (var curY = 0; curY < Height; curY++)
+                for (int curY = 0; curY < Height; curY++)
                 {
-                    if (IsValidCell(curX, curY, out var sourceIndex) && destination.IsValidCell(x + curX, y + curY, out var destIndex))
+                    if (IsValidCell(curX, curY, out int sourceIndex) && destination.IsValidCell(x + curX, y + curY, out int destIndex))
                     {
-                        var sourceCell = Cells[sourceIndex];
-                        var desCell = destination.Cells[destIndex];
+                        Cell sourceCell = Cells[sourceIndex];
+                        Cell desCell = destination.Cells[destIndex];
                         sourceCell.CopyAppearanceTo(desCell);
                     }
                 }
@@ -1743,17 +1988,17 @@ namespace SadConsole
         /// <param name="destinationY">The y coordinate to copy to.</param>
         public void Copy(int x, int y, int width, int height, CellSurface destination, int destinationX, int destinationY)
         {
-            var destX = destinationX;
-            var destY = destinationY;
+            int destX = destinationX;
+            int destY = destinationY;
 
-            for (var curX = 0; curX < width; curX++)
+            for (int curX = 0; curX < width; curX++)
             {
-                for (var curY = 0; curY < height; curY++)
+                for (int curY = 0; curY < height; curY++)
                 {
-                    if (IsValidCell(curX + x, curY + y, out var sourceIndex) && destination.IsValidCell(destX, destY, out var destIndex))
+                    if (IsValidCell(curX + x, curY + y, out int sourceIndex) && destination.IsValidCell(destX, destY, out int destIndex))
                     {
-                        var sourceCell = Cells[sourceIndex];
-                        var desCell = destination.Cells[destIndex];
+                        Cell sourceCell = Cells[sourceIndex];
+                        Cell desCell = destination.Cells[destIndex];
                         sourceCell.CopyAppearanceTo(desCell);
                     }
                     destY++;
@@ -1764,7 +2009,7 @@ namespace SadConsole
 
             destination.IsDirty = true;
         }
-        
+
         /// <summary>
         /// Resizes the surface to the specified width and height.
         /// </summary>
@@ -1775,9 +2020,9 @@ namespace SadConsole
         {
             var newCells = new Cell[width * height];
 
-            for (var y = 0; y < height; y++)
+            for (int y = 0; y < height; y++)
             {
-                for (var x = 0; x < width; x++)
+                for (int x = 0; x < width; x++)
                 {
                     if (IsValidCell(x, y))
                     {
@@ -1792,7 +2037,9 @@ namespace SadConsole
                         }
                     }
                     else
+                    {
                         newCells[new Point(x, y).ToIndex(width)] = new Cell(DefaultForeground, DefaultBackground, 0);
+                    }
                 }
             }
 
@@ -1810,15 +2057,18 @@ namespace SadConsole
         /// <returns>A new surface</returns>
         public CellSurface GetSubSurface(Rectangle view)
         {
-            if (!new Rectangle(0, 0, Width, Height).Contains(view)) throw new Exception("View is outside of surface bounds.");
+            if (!new Rectangle(0, 0, Width, Height).Contains(view))
+            {
+                throw new Exception("View is outside of surface bounds.");
+            }
 
             var cells = new Cell[view.Width * view.Height];
 
-            var index = 0;
+            int index = 0;
 
-            for (var y = 0; y < view.Height; y++)
+            for (int y = 0; y < view.Height; y++)
             {
-                for (var x = 0; x < view.Width; x++)
+                for (int x = 0; x < view.Width; x++)
                 {
                     cells[index] = this[x + view.Left, y + view.Top];
                     index++;
@@ -1836,21 +2086,22 @@ namespace SadConsole
         /// <param name="surface">The target surface to map cells from.</param>
         public void SetSurface<T>(in T surface, Rectangle view = default) where T : CellSurface
         {
-            var rect = view == default ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
+            Rectangle rect = view == default ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
 
             if (!new Rectangle(0, 0, surface.Width, surface.Height).Contains(rect))
+            {
                 throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
-
+            }
 
             Width = rect.Width;
             Height = rect.Height;
             Cells = new Cell[rect.Width * rect.Height];
 
-            var index = 0;
+            int index = 0;
 
-            for (var y = 0; y < rect.Height; y++)
+            for (int y = 0; y < rect.Height; y++)
             {
-                for (var x = 0; x < rect.Width; x++)
+                for (int x = 0; x < rect.Width; x++)
                 {
                     Cells[index] = surface.Cells[(y + rect.Top) * surface.Width + (x + rect.Left)];
                     index++;
@@ -1883,10 +2134,10 @@ namespace SadConsole
         public void FillWithRandomGarbage(bool useEffect = false)
         {
             //pulse.Reset();
-            var charCounter = 0;
-            for (var y = 0; y < Height; y++)
+            int charCounter = 0;
+            for (int y = 0; y < Height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     SetGlyph(x, y, charCounter);
                     SetForeground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)255));
@@ -1895,20 +2146,22 @@ namespace SadConsole
                     SetMirror(x, y, (SpriteEffects)Global.Random.Next(0, 4));
                     charCounter++;
                     if (charCounter > 255)
+                    {
                         charCounter = 0;
+                    }
                 }
             }
 
             IsDirty = true;
         }
-        
+
         /// <summary>
         /// Gets the index of a location on the surface by point.
         /// </summary>
         /// <param name="location">The location of the index to get.</param>
         /// <returns>The cell index.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int GetIndexFromPoint(Point location) => 
+        public int GetIndexFromPoint(Point location) =>
             Helpers.GetIndexFromPoint(location.X, location.Y, Width);
 
         /// <summary>
@@ -1918,7 +2171,7 @@ namespace SadConsole
         /// <param name="y">The y of the location.</param>
         /// <returns>The cell index.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int GetIndexFromPoint(int x, int y) => 
+        public int GetIndexFromPoint(int x, int y) =>
             Helpers.GetIndexFromPoint(x, y, Width);
 
         /// <summary>
@@ -1927,7 +2180,7 @@ namespace SadConsole
         /// <param name="index">The index to get.</param>
         /// <returns>The x,y as a <see cref="Point"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point GetPointFromIndex(int index) => 
+        public Point GetPointFromIndex(int index) =>
             Helpers.GetPointFromIndex(index, Width);
     }
 }

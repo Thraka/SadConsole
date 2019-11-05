@@ -1,42 +1,46 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using SadConsole;
-using SadConsole.Input;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Themes;
 
 namespace StarterProject.CustomConsoles
 {
-    class ControlsTest: ControlsConsole
+    internal class ControlsTest : ControlsConsole
     {
-        Color[] backgroundcycle;
-        int backIndex = 0;
-        SadConsole.Timer progressTimer;
-        
-        public ControlsTest():base(80, 23)
+        private readonly Color[] backgroundcycle;
+        private int backIndex = 0;
+        private readonly SadConsole.Timer progressTimer;
+
+        public ControlsTest() : base(80, 23)
         {
-            var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left);
-            prog1.Position = new Point(16, 5);
+            var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
+            {
+                Position = new Point(16, 5)
+            };
             Add(prog1);
 
-            var prog2 = new ProgressBar(1, 6, VerticalAlignment.Bottom);
-            prog2.Position = new Point(18, 7);
+            var prog2 = new ProgressBar(1, 6, VerticalAlignment.Bottom)
+            {
+                Position = new Point(18, 7)
+            };
             Add(prog2);
 
-            var slider = new ScrollBar(Orientation.Horizontal, 10);
-            slider.Position = new Point(16, 3);
-            slider.Maximum = 18;
+            var slider = new ScrollBar(Orientation.Horizontal, 10)
+            {
+                Position = new Point(16, 3),
+                Maximum = 18
+            };
             Add(slider);
 
-            slider = new ScrollBar( Orientation.Vertical, 6);
-            slider.Position = new Point(16, 7);
-            slider.Maximum = 6;
+            slider = new ScrollBar(Orientation.Vertical, 6)
+            {
+                Position = new Point(16, 7),
+                Maximum = 6
+            };
             Add(slider);
 
             progressTimer = new Timer(TimeSpan.FromSeconds(0.5));
@@ -44,8 +48,10 @@ namespace StarterProject.CustomConsoles
 
             Components.Add(progressTimer);
 
-            var listbox = new SadConsole.Controls.ListBox(20, 6);
-            listbox.Position = new Point(28, 3);
+            var listbox = new SadConsole.Controls.ListBox(20, 6)
+            {
+                Position = new Point(28, 3)
+            };
             listbox.Items.Add("item 1");
             listbox.Items.Add("item 2");
             listbox.Items.Add("item 3");
@@ -56,29 +62,39 @@ namespace StarterProject.CustomConsoles
             listbox.Items.Add("item 8");
             Add(listbox);
 
-            var radioButton = new RadioButton(20, 1);
-            radioButton.Text = "Group 1 Option 1";
-            radioButton.Position = new Point(28, 12);
+            var radioButton = new RadioButton(20, 1)
+            {
+                Text = "Group 1 Option 1",
+                Position = new Point(28, 12)
+            };
             Add(radioButton);
 
-            radioButton = new RadioButton(20, 1);
-            radioButton.Text = "Group 1 Option 2";
-            radioButton.Position = new Point(28, 13);
+            radioButton = new RadioButton(20, 1)
+            {
+                Text = "Group 1 Option 2",
+                Position = new Point(28, 13)
+            };
             Add(radioButton);
-            
-            var selButton = new SadConsole.Controls.SelectionButton(24, 1);
-            selButton.Text = "Selection Button 1";
-            selButton.Position = new Point(51, 3);
+
+            var selButton = new SadConsole.Controls.SelectionButton(24, 1)
+            {
+                Text = "Selection Button 1",
+                Position = new Point(51, 3)
+            };
             Add(selButton);
 
-            var selButton1 = new SadConsole.Controls.SelectionButton(24, 1);
-            selButton1.Text = "Selection Button 2";
-            selButton1.Position = new Point(51, 4);
+            var selButton1 = new SadConsole.Controls.SelectionButton(24, 1)
+            {
+                Text = "Selection Button 2",
+                Position = new Point(51, 4)
+            };
             Add(selButton1);
 
-            var selButton2 = new SadConsole.Controls.SelectionButton(24, 1);
-            selButton2.Text = "Selection Button 3";
-            selButton2.Position = new Point(51, 5);
+            var selButton2 = new SadConsole.Controls.SelectionButton(24, 1)
+            {
+                Text = "Selection Button 3",
+                Position = new Point(51, 5)
+            };
             Add(selButton2);
 
             selButton.PreviousSelection = selButton2;
@@ -88,13 +104,17 @@ namespace StarterProject.CustomConsoles
             selButton2.PreviousSelection = selButton1;
             selButton2.NextSelection = selButton;
 
-            var input = new TextBox(10);
-            input.Position = new Point(51, 9);
+            var input = new TextBox(10)
+            {
+                Position = new Point(51, 9)
+            };
             Add(input);
 
-            var password = new TextBox(10);
-            password.PasswordChar = "*";
-            password.Position = new Point(65, 9);
+            var password = new TextBox(10)
+            {
+                PasswordChar = "*",
+                Position = new Point(65, 9)
+            };
             Add(password);
 
             var button = new SadConsole.Controls.Button(11, 1)
@@ -131,28 +151,30 @@ namespace StarterProject.CustomConsoles
 
             FocusedControl = null;
             //DisableControlFocusing = true;
-            
-            List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>();
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Red, "Red"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.RedDark, "DRed"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Purple, "Prp"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.PurpleDark, "DPrp"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Blue, "Blu"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.BlueDark, "DBlu"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Cyan, "Cya"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.CyanDark, "DCya"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Green, "Gre"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.GreenDark, "DGre"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Yellow, "Yel"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.YellowDark, "DYel"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Orange, "Ora"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.OrangeDark, "DOra"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Brown, "Bro"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.BrownDark, "DBrow"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Gray, "Gray"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.GrayDark, "DGray"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.White, "White"));
-            colors.Add(new Tuple<Color, string>(Library.Default.Colors.Black, "Black"));
+
+            List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>
+            {
+                new Tuple<Color, string>(Library.Default.Colors.Red, "Red"),
+                new Tuple<Color, string>(Library.Default.Colors.RedDark, "DRed"),
+                new Tuple<Color, string>(Library.Default.Colors.Purple, "Prp"),
+                new Tuple<Color, string>(Library.Default.Colors.PurpleDark, "DPrp"),
+                new Tuple<Color, string>(Library.Default.Colors.Blue, "Blu"),
+                new Tuple<Color, string>(Library.Default.Colors.BlueDark, "DBlu"),
+                new Tuple<Color, string>(Library.Default.Colors.Cyan, "Cya"),
+                new Tuple<Color, string>(Library.Default.Colors.CyanDark, "DCya"),
+                new Tuple<Color, string>(Library.Default.Colors.Green, "Gre"),
+                new Tuple<Color, string>(Library.Default.Colors.GreenDark, "DGre"),
+                new Tuple<Color, string>(Library.Default.Colors.Yellow, "Yel"),
+                new Tuple<Color, string>(Library.Default.Colors.YellowDark, "DYel"),
+                new Tuple<Color, string>(Library.Default.Colors.Orange, "Ora"),
+                new Tuple<Color, string>(Library.Default.Colors.OrangeDark, "DOra"),
+                new Tuple<Color, string>(Library.Default.Colors.Brown, "Bro"),
+                new Tuple<Color, string>(Library.Default.Colors.BrownDark, "DBrow"),
+                new Tuple<Color, string>(Library.Default.Colors.Gray, "Gray"),
+                new Tuple<Color, string>(Library.Default.Colors.GrayDark, "DGray"),
+                new Tuple<Color, string>(Library.Default.Colors.White, "White"),
+                new Tuple<Color, string>(Library.Default.Colors.Black, "Black")
+            };
 
             backgroundcycle = colors.Select(i => i.Item1).ToArray();
             backIndex = 5;
@@ -176,7 +198,7 @@ namespace StarterProject.CustomConsoles
 
         }
 
-        
+
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
@@ -185,9 +207,11 @@ namespace StarterProject.CustomConsoles
                 backIndex++;
 
                 if (backIndex == backgroundcycle.Length)
+                {
                     backIndex = 0;
+                }
 
-                var theme = Theme.Clone();
+                Library theme = Theme.Clone();
                 theme.Colors.ControlBack = backgroundcycle[backIndex];
                 theme.Colors.RebuildAppearances();
                 Theme = theme;
@@ -198,15 +222,9 @@ namespace StarterProject.CustomConsoles
             return base.ProcessKeyboard(info);
         }
 
-        public override bool ProcessMouse(SadConsole.Input.MouseConsoleState state)
-        {
-            return base.ProcessMouse(state);
-        }
+        public override bool ProcessMouse(SadConsole.Input.MouseConsoleState state) => base.ProcessMouse(state);
 
-        public override void Update(TimeSpan time)
-        {
-            base.Update(time);
-        }
+        public override void Update(TimeSpan time) => base.Update(time);
 
         public override void Invalidate()
         {
@@ -260,9 +278,6 @@ namespace StarterProject.CustomConsoles
             //Print(2, 23, CreateGradientExample("GOLD", Library.Default.Colors.Gold, Library.Default.Colors.GoldDark));
         }
 
-        private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7)
-        {
-            return text.PadRight(stringLength).Substring(0, stringLength).CreateColored(start) + new string((char)219, 15).CreateGradient(start, end) + text.PadLeft(stringLength).Substring(0, stringLength).CreateColored(end);
-        }
+        private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7) => text.PadRight(stringLength).Substring(0, stringLength).CreateColored(start) + new string((char)219, 15).CreateGradient(start, end) + text.PadLeft(stringLength).Substring(0, stringLength).CreateColored(end);
     }
 }

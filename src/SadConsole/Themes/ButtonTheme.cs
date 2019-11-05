@@ -37,8 +37,10 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new CellSurface(control.Width, control.Height);
-            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface = new CellSurface(control.Width, control.Height)
+            {
+                DefaultBackground = Color.Transparent
+            };
             control.Surface.Clear();
             base.Attached(control);
         }
@@ -46,28 +48,40 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is Button button)) return;
-            
-            if (!button.IsDirty) return;
+            if (!(control is Button button))
+            {
+                return;
+            }
+
+            if (!button.IsDirty)
+            {
+                return;
+            }
 
             Cell appearance;
 
             if (Helpers.HasFlag(button.State, ControlStates.Disabled))
+            {
                 appearance = Disabled;
-                
+            }
             else if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
+            {
                 appearance = MouseDown;
-
+            }
             else if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
+            {
                 appearance = MouseOver;
-
+            }
             else if (Helpers.HasFlag(button.State, ControlStates.Focused))
+            {
                 appearance = Focused;
-
+            }
             else
+            {
                 appearance = Normal;
+            }
 
-            var middle = (button.Height != 1 ? button.Height / 2 : 0);
+            int middle = (button.Height != 1 ? button.Height / 2 : 0);
 
             // Redraw the control
             button.Surface.Fill(
@@ -82,28 +96,27 @@ namespace SadConsole.Themes
                 button.Surface.SetGlyph(button.Width - 1, middle, EndCharacterRight);
             }
             else
+            {
                 button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width));
+            }
 
             button.IsDirty = false;
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new ButtonTheme()
         {
-            return new ButtonTheme()
-            {
-                Colors = Colors?.Clone(),
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                ShowEnds = ShowEnds,
-                EndCharacterLeft = EndCharacterLeft,
-                EndCharacterRight = EndCharacterRight
-            };
-        }
+            Colors = Colors?.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            ShowEnds = ShowEnds,
+            EndCharacterLeft = EndCharacterLeft,
+            EndCharacterRight = EndCharacterRight
+        };
     }
 
     /// <summary>
@@ -114,15 +127,17 @@ namespace SadConsole.Themes
     {
         [DataMember]
         public Cell Shade { get; set; }
-        
+
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            control.Surface = new CellSurface(control.Width + 2, control.Height + 1);
-            control.Surface.DefaultBackground = Color.Transparent;
+            control.Surface = new CellSurface(control.Width + 2, control.Height + 1)
+            {
+                DefaultBackground = Color.Transparent
+            };
             control.Surface.Clear();
 
-            var colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
+            Colors colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
 
             RefreshTheme(colors);
         }
@@ -140,29 +155,40 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is Button button)) return;
-            
-            if (!button.IsDirty) return;
+            if (!(control is Button button))
+            {
+                return;
+            }
+
+            if (!button.IsDirty)
+            {
+                return;
+            }
 
             Cell appearance;
 
             if (Helpers.HasFlag(button.State, ControlStates.Disabled))
+            {
                 appearance = Disabled;
-
+            }
             else if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
+            {
                 appearance = MouseDown;
-
+            }
             else if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
+            {
                 appearance = MouseOver;
-
+            }
             else if (Helpers.HasFlag(button.State, ControlStates.Focused))
+            {
                 appearance = Focused;
-
+            }
             else
+            {
                 appearance = Normal;
+            }
 
-
-            var middle = button.Height != 1 ? button.Height / 2 : 0;
+            int middle = button.Height != 1 ? button.Height / 2 : 0;
 
             var shadowBounds = new Rectangle(0, 0, button.Width, button.Height);
             shadowBounds.Location += new Point(2, 1);
@@ -214,20 +240,20 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new Button3dTheme()
         {
-            return new Button3dTheme()
-            {
-                Colors = Colors.Clone(),
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                Shade = Shade.Clone()
-            };
-        }
+            Colors = Colors.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            Shade = Shade.Clone(),
+            ShowEnds = ShowEnds,
+            EndCharacterLeft = EndCharacterLeft,
+            EndCharacterRight = EndCharacterRight
+        };
     }
 
     /// <summary>
@@ -245,11 +271,9 @@ namespace SadConsole.Themes
         [DataMember]
         public bool UseExtended;
 
-        public ButtonLinesTheme()
-        {            
+        public ButtonLinesTheme() =>
             UseExtended = true;
-        }
-        
+
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors)
         {
@@ -262,44 +286,66 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is Button button)) return;
-            
-            if (!button.IsDirty) return;
+            if (!(control is Button button))
+            {
+                return;
+            }
+
+            if (!button.IsDirty)
+            {
+                return;
+            }
 
             Cell appearance;
-            var mouseDown = false;
-            var mouseOver = false;
-            var focused = false;
+            bool mouseDown = false;
+            bool mouseOver = false;
+            bool focused = false;
 
             if (Helpers.HasFlag(button.State, ControlStates.Disabled))
+            {
                 appearance = Disabled;
+            }
             else
+            {
                 appearance = Normal;
+            }
 
             if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) ||
                 Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
+            {
                 mouseDown = true;
+            }
 
             if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
+            {
                 mouseOver = true;
+            }
 
             if (Helpers.HasFlag(button.State, ControlStates.Focused))
+            {
                 focused = true;
+            }
 
 
             // Middle part of the button for text.
-            var middle = button.Surface.Height != 1 ? button.Surface.Height / 2 : 0;
-            var topleftcolor = !mouseDown ? TopLeftLineColors.Foreground : BottomRightLineColors.Foreground;
-            var bottomrightcolor = !mouseDown ? BottomRightLineColors.Foreground : TopLeftLineColors.Foreground;
+            int middle = button.Surface.Height != 1 ? button.Surface.Height / 2 : 0;
+            Color topleftcolor = !mouseDown ? TopLeftLineColors.Foreground : BottomRightLineColors.Foreground;
+            Color bottomrightcolor = !mouseDown ? BottomRightLineColors.Foreground : TopLeftLineColors.Foreground;
             Color textColor = Normal.Foreground;
 
             if (button.Surface.Height > 1 && button.Surface.Height % 2 == 0)
+            {
                 middle -= 1;
+            }
 
             if (mouseOver)
+            {
                 textColor = MouseOver.Foreground;
+            }
             else if (focused)
+            {
                 textColor = Focused.Foreground;
+            }
 
             // Extended font draw
             if (button.Parent.Font.Master.IsSadExtended && UseExtended)
@@ -373,19 +419,21 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
+        public override ThemeBase Clone() => new ButtonLinesTheme()
         {
-            return new ButtonLinesTheme()
-            {
-                Normal = Normal.Clone(),
-                Disabled = Disabled.Clone(),
-                MouseOver = MouseOver.Clone(),
-                MouseDown = MouseDown.Clone(),
-                Selected = Selected.Clone(),
-                Focused = Focused.Clone(),
-                TopLeftLineColors = TopLeftLineColors.Clone(),
-                BottomRightLineColors = BottomRightLineColors.Clone()
-            };
-        }
+            Colors = Colors?.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            TopLeftLineColors = TopLeftLineColors.Clone(),
+            BottomRightLineColors = BottomRightLineColors.Clone(),
+            ShowEnds = ShowEnds,
+            EndCharacterLeft = EndCharacterLeft,
+            EndCharacterRight = EndCharacterRight,
+            UseExtended = UseExtended
+        };
     }
 }

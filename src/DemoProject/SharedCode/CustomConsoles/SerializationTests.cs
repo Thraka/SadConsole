@@ -1,32 +1,31 @@
-﻿using SadConsole;
-using System;
-using Console = SadConsole.Console;
+﻿using System;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole;
 using SadConsole.Input;
+using Console = SadConsole.Console;
 
 namespace StarterProject.CustomConsoles
 {
-    class SerializationTests : Console
+    internal class SerializationTests : Console
     {
-        ControlsConsole controlsConsole;
-        Console masterView;
-        SadConsole.Console loadedView;
+        private readonly ControlsConsole controlsConsole;
+        private readonly Console masterView;
+        private readonly SadConsole.Console loadedView;
 
         // Controls
-        SadConsole.Controls.RadioButton optionButtonSurface;
-        SadConsole.Controls.RadioButton optionButtonView;
-        SadConsole.Controls.RadioButton optionButtonLayered;
-        SadConsole.Controls.RadioButton optionButtonAnimated;
+        private readonly SadConsole.Controls.RadioButton optionButtonSurface;
+        private readonly SadConsole.Controls.RadioButton optionButtonView;
+        private readonly SadConsole.Controls.RadioButton optionButtonLayered;
+        private readonly SadConsole.Controls.RadioButton optionButtonAnimated;
+        private readonly SadConsole.Console basicSurface;
+        private readonly SadConsole.AnimatedConsole animatedSurface;
+        private readonly SadConsole.Console viewSurface;
+        private SadConsole.LayeredConsole layeredSurface;
+        private readonly SadConsole.Console emptySurface;
 
-        SadConsole.Console basicSurface;
-        SadConsole.AnimatedConsole animatedSurface;
-        SadConsole.Console viewSurface;
-        SadConsole.LayeredConsole layeredSurface;
-        SadConsole.Console emptySurface;
-        
-        public SerializationTests():base(80, 23)
+        public SerializationTests() : base(80, 23)
         {
             //Settings.SerializationIsCompressed = true;
             controlsConsole = new ControlsConsole(80, 4);
@@ -95,7 +94,7 @@ namespace StarterProject.CustomConsoles
             controlsConsole.Add(buttonSave);
 
             basicSurface = new SadConsole.Console(34, 15);
-            
+
             animatedSurface = SadConsole.AnimatedConsole.CreateStatic(34, 15, 15, 0.3d);
             viewSurface = new Console(1, 1);
             viewSurface.SetSurface(basicSurface, new Rectangle(5, 2, 34 - 10, 15 - 4));
@@ -172,7 +171,7 @@ namespace StarterProject.CustomConsoles
             {
                 //animatedSurface.Update(delta);
                 //(loadedView as SadConsole.Surfaces.Animated)?.Update(delta);
-                    
+
             }
 
             base.Update(delta);
@@ -184,15 +183,14 @@ namespace StarterProject.CustomConsoles
             var childState = new MouseConsoleState(controlsConsole, state.Mouse);
 
             if (childState.IsOnConsole)
+            {
                 return controlsConsole.ProcessMouse(childState);
+            }
 
             return false;
         }
 
-        public override bool ProcessKeyboard(Keyboard info)
-        {
-            return controlsConsole.ProcessKeyboard(info);
-        }
+        public override bool ProcessKeyboard(Keyboard info) => controlsConsole.ProcessKeyboard(info);
 
 
         private void MakeBasicSurface()
@@ -205,7 +203,7 @@ namespace StarterProject.CustomConsoles
             ColorGradient gradient = new ColorGradient(StarterProject.Theme.Blue, StarterProject.Theme.Yellow);
             for (int i = 0; i < 510; i += 10)
             {
-                var point = basicSurface.GetPointFromIndex(i);
+                Point point = basicSurface.GetPointFromIndex(i);
                 basicSurface.Print(point.X, point.Y, gradient.ToColoredString(basicSurface.GetString(i, 10)));
             }
 
@@ -231,7 +229,7 @@ namespace StarterProject.CustomConsoles
         {
             layeredSurface = new LayeredConsole(35, 15, 3);
 
-            var layer = layeredSurface.GetLayer(0);
+            CellSurfaceLayer layer = layeredSurface.GetLayer(0);
             layer.Fill(StarterProject.Theme.Gray, StarterProject.Theme.GrayDark, 0);
             layer.Print(14, 4, "Layer 0");
 
@@ -246,7 +244,8 @@ namespace StarterProject.CustomConsoles
             layer.Print(14, 0, "Layer 2");
         }
     }
-    static class StringHelpers
+
+    internal static class StringHelpers
     {
         public static string Repeat(this string value, int times)
         {

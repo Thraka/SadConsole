@@ -1,15 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-
-
-using System;
-using ScrollingConsole = SadConsole.ScrollingConsole;
-using SadConsole.Input;
-using SadConsole;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using SadConsole;
+using ScrollingConsole = SadConsole.ScrollingConsole;
 
 namespace StarterProject.CustomConsoles
 {
@@ -27,22 +22,25 @@ namespace StarterProject.CustomConsoles
         }
     }
 
-    public class PaletteSurface: ScrollingConsole
+    public class PaletteSurface : ScrollingConsole
     {
         private Palette palette;
 
         public Palette Palette
         {
-            get { return palette; }
-            set { palette = value;
-                ((PaletteSurfaceRenderer) Renderer).palette = value; ValidateCells(); }
+            get => palette;
+            set
+            {
+                palette = value;
+                ((PaletteSurfaceRenderer)Renderer).palette = value; ValidateCells();
+            }
         }
 
 
-        public PaletteSurface(int width, int height, Palette palette): base(width, height)
+        public PaletteSurface(int width, int height, Palette palette) : base(width, height)
         {
             this.palette = palette;
-            Renderer = new PaletteSurfaceRenderer() {palette = palette};
+            Renderer = new PaletteSurfaceRenderer() { palette = palette };
 
             for (int i = 0; i < Cells.Length; i++)
             {
@@ -56,7 +54,9 @@ namespace StarterProject.CustomConsoles
             Cells = new Cell[Width * Height];
 
             for (int i = 0; i < Cells.Length; i++)
+            {
                 Cells[i] = new CellPalette(0, 1, 0);
+            }
 
             RenderCells = (Cell[])Cells.Clone();
             RenderRects = new Rectangle[Cells.Length];
@@ -64,25 +64,26 @@ namespace StarterProject.CustomConsoles
 
         protected void ValidateCells()
         {
-            foreach (var cell in this.Cells.Cast<CellPalette>())
+            foreach (CellPalette cell in Cells.Cast<CellPalette>())
             {
                 if (cell.ForegroundIndex >= palette.Length)
+                {
                     cell.ForegroundIndex = 0;
+                }
 
                 if (cell.BackgroundIndex >= palette.Length)
+                {
                     cell.BackgroundIndex = 0;
+                }
             }
         }
     }
 
-    public class PaletteSurfaceRenderer: SadConsole.Renderers.Console
+    public class PaletteSurfaceRenderer : SadConsole.Renderers.Console
     {
         public Palette palette;
 
-        public override void Render(SadConsole.Console surface, bool force = false)
-        {
-            base.Render(surface, true);
-        }
+        public override void Render(SadConsole.Console surface, bool force = false) => base.Render(surface, true);
 
         protected override void RenderCells(SadConsole.Console surfacePreCast, bool force = false)
         {
@@ -97,7 +98,9 @@ namespace StarterProject.CustomConsoles
 
 
                     if (surface.DefaultBackground.A != 0)
+                    {
                         Global.SpriteBatch.Draw(surface.Font.FontImage, surface.AbsoluteArea, surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], surface.DefaultBackground, 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                    }
 
                     for (int i = 0; i < surface.RenderCells.Length; i++)
                     {
@@ -109,10 +112,14 @@ namespace StarterProject.CustomConsoles
                             foreground = palette[cell.ForegroundIndex];
 
                             if (background != Color.Transparent && background != surface.DefaultBackground)
+                            {
                                 Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[surface.Font.SolidGlyphIndex], background, 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            }
 
                             if (foreground != Color.Transparent)
+                            {
                                 Global.SpriteBatch.Draw(surface.Font.FontImage, surface.RenderRects[i], surface.Font.GlyphRects[cell.Glyph], foreground, 0f, Vector2.Zero, cell.Mirror, 0.4f);
+                            }
                         }
                     }
                 }
@@ -123,24 +130,25 @@ namespace StarterProject.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class MouseRenderingDebug : ScrollingConsole
+    internal class MouseRenderingDebug : ScrollingConsole
     {
-        SadConsole.Instructions.DrawString typingInstruction;
-        
-        Palette pal;
-        Timer timer;
-        Timer timer2;
-        Timer timer3;
-        Timer timer4;
-        Timer timer5;
+        private readonly SadConsole.Instructions.DrawString typingInstruction;
+        private readonly Palette pal;
+        private readonly Timer timer;
+        private readonly Timer timer2;
+        private readonly Timer timer3;
+        private readonly Timer timer4;
+        private readonly Timer timer5;
 
-        public MouseRenderingDebug(): base(80, 23)
+        public MouseRenderingDebug() : base(80, 23)
         {
             pal = new Palette(new ColorGradient(Color.White, Color.Violet, Color.Black, Color.White).ToColorArray(25));
             PaletteSurface surfacePal = new PaletteSurface(5, 5, pal);
 
             for (int i = 0; i < 25; i++)
+            {
                 ((CellPalette)surfacePal[i]).BackgroundIndex = i;
+            }
 
             Children.Add(surfacePal);
 
@@ -156,24 +164,27 @@ namespace StarterProject.CustomConsoles
             Components.Add(timer5);
         }
 
-        public override void Update(TimeSpan delta)
-        {
-            base.Update(delta);
-            //pal.ShiftLeft(0, 5);
-        }
+        public override void Update(TimeSpan delta) => base.Update(delta);//pal.ShiftLeft(0, 5);
 
-        bool showMouse = false;
-        bool DoClear = false;
+        private bool showMouse = false;
+        private bool DoClear = false;
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if (info.IsKeyReleased(Keys.Space))
+            {
                 showMouse = !showMouse;
-            if (info.IsKeyReleased(Keys.Enter))
-                UsePrintProcessor = !UsePrintProcessor;
-            if (info.IsKeyReleased(Keys.C))
-                DoClear = !DoClear;
+            }
 
+            if (info.IsKeyReleased(Keys.Enter))
+            {
+                UsePrintProcessor = !UsePrintProcessor;
+            }
+
+            if (info.IsKeyReleased(Keys.C))
+            {
+                DoClear = !DoClear;
+            }
 
             return true;
         }
@@ -183,7 +194,9 @@ namespace StarterProject.CustomConsoles
             //if (showMouse)
             {
                 if (DoClear)
+                {
                     Clear();
+                }
 
                 Print(0, 0, $"mouse:           {state.Mouse.ScreenPosition}");
                 Print(0, 1, $"adapter:         {SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width},{SadConsole.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height}");
