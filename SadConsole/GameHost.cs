@@ -7,6 +7,9 @@ using System.IO;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// Represents 
+    /// </summary>
     public abstract class GameHost : IDisposable
     {
         /// <summary>
@@ -15,6 +18,7 @@ namespace SadConsole
         public static GameHost Instance { get; set; }
 
         protected static bool LoadingEmbeddedFont = false;
+
         protected internal static string SerializerPathHint { get; set; }
 
         /// <summary>
@@ -74,12 +78,29 @@ namespace SadConsole
         protected virtual void OnFrameUpdate() =>
             FrameUpdate?.Invoke(this, this);
 
+        /// <summary>
+        /// Runs the game.
+        /// </summary>
         public abstract void Run();
 
+        /// <summary>
+        /// Gets a texture from the implemented host.
+        /// </summary>
+        /// <param name="resourcePath">The path to the texture to load.</param>
+        /// <returns></returns>
         public abstract ITexture GetTexture(string resourcePath);
 
+        /// <summary>
+        /// Gets a texture from the implemented host.
+        /// </summary>
+        /// <param name="textureStream">A stream containing the texture.</param>
+        /// <returns></returns>
         public abstract ITexture GetTexture(Stream textureStream);
 
+        /// <summary>
+        /// Gets the default <see cref="IRenderer"/> implemented by the host.
+        /// </summary>
+        /// <returns>A renderer.</returns>
         public abstract IRenderer GetDefaultRenderer();
 
         /// <summary>
@@ -132,25 +153,13 @@ namespace SadConsole
         /// </summary>
         protected void LoadEmbeddedFont()
         {
-            //var auxList = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
-//#if WINDOWS_UWP || WINDOWS_UAP
             System.Reflection.Assembly assembly = typeof(SadConsole.Font).Assembly;
-//#else
-            //var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-//#endif
             string resourceNameFont;
-            string resourceNameImage;
 
             if (Settings.UseDefaultExtendedFont)
-            {
                 resourceNameFont = "SadConsole.Resources.IBM_ext.font";
-                resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
-            }
             else
-            {
                 resourceNameFont = "SadConsole.Resources.IBM.font";
-                resourceNameImage = "SadConsole.Resources.IBM8x16.png";
-            }
 
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceNameFont))

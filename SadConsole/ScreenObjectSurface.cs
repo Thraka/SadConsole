@@ -156,7 +156,6 @@ namespace SadConsole
                     IsDirty = false;
                 }
                 _renderer.Render(this);
-                //Global.DrawCalls.Add(new DrawCalls.DrawCallScreenObject(this, CalculatedPosition, true));
             }
 
             base.Draw();

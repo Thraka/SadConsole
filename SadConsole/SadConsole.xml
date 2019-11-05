@@ -1821,6 +1821,11 @@
             <param name="position">The position to convert.</param>
             <returns>A new pixel point.</returns>
         </member>
+        <member name="T:SadConsole.GameHost">
+            <summary>
+            Represents 
+            </summary>
+        </member>
         <member name="P:SadConsole.GameHost.Instance">
             <summary>
             Instance of the game host.
@@ -1875,6 +1880,31 @@
             <summary>
             Raises the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
             </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.Run">
+            <summary>
+            Runs the game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.GetTexture(System.String)">
+            <summary>
+            Gets a texture from the implemented host.
+            </summary>
+            <param name="resourcePath">The path to the texture to load.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.GameHost.GetTexture(System.IO.Stream)">
+            <summary>
+            Gets a texture from the implemented host.
+            </summary>
+            <param name="textureStream">A stream containing the texture.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.GameHost.GetDefaultRenderer">
+            <summary>
+            Gets the default <see cref="T:SadConsole.Renderers.IRenderer"/> implemented by the host.
+            </summary>
+            <returns>A renderer.</returns>
         </member>
         <member name="M:SadConsole.GameHost.LoadFont(System.String)">
             <summary>

@@ -361,8 +361,11 @@ namespace SadConsole
         /// </summary>
         /// <param name="oldParent">The previous parent.</param>
         /// <param name="newParent">The new parent.</param>
-        protected virtual void OnParentChanged(ScreenObject oldParent, ScreenObject newParent) =>
+        protected virtual void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        {
+            SetAbsolutePosition();
             ParentChanged?.Invoke(this, new NewOldValueEventArgs<ScreenObject>(oldParent, newParent));
+        }
 
         /// <summary>
         /// Raises the <see cref="PositionChanged"/> event.
@@ -371,6 +374,7 @@ namespace SadConsole
         /// <param name="newPosition">The new position.</param>
         protected virtual void OnPositionChanged(Point oldPosition, Point newPosition)
         {
+            SetAbsolutePosition();
             PositionChanged?.Invoke(this, new NewOldValueEventArgs<Point>(oldPosition, newPosition));
         }
 

@@ -13,18 +13,9 @@ namespace SadConsole.Renderers
 {
     public class ConsoleRenderer : IRenderer
     {
-
-
-
-
-
-
-
-
         public RenderTarget2D BackingTexture;
 
         private XnaRectangle[] _renderRects;
-
 
         public void Attach(ScreenObjectSurface screenObject)
         {
@@ -39,11 +30,11 @@ namespace SadConsole.Renderers
         public void Render(ScreenObjectSurface screenObject)
         {
             // Draw call for texture
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, Vector2.Zero));
+            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y)));
         }
 
         public void Refresh(ScreenObjectSurface screenObject)
-        {
+        { 
             // Update texture if something is out of size.
             if (BackingTexture == null || screenObject.AbsoluteArea.Width != BackingTexture.Width || screenObject.AbsoluteArea.Height != BackingTexture.Height)
             {
