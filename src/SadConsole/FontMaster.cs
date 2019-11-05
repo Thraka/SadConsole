@@ -72,7 +72,7 @@ namespace SadConsole
         /// <summary>
         /// The total rows in the font.
         /// </summary>
-        public int Rows => (int)Math.Ceiling((double)Image.Height / (GlyphHeight + GlyphPadding));
+        public int Rows => (int)System.Math.Ceiling((double)Image.Height / (GlyphHeight + GlyphPadding));
 
         /// <summary>
         /// The texture used by the font.

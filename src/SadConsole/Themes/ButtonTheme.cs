@@ -249,7 +249,10 @@ namespace SadConsole.Themes
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
-            Shade = Shade.Clone()
+            Shade = Shade.Clone(),
+            ShowEnds = ShowEnds,
+            EndCharacterLeft = EndCharacterLeft,
+            EndCharacterRight = EndCharacterRight
         };
     }
 
@@ -268,7 +271,8 @@ namespace SadConsole.Themes
         [DataMember]
         public bool UseExtended;
 
-        public ButtonLinesTheme() => UseExtended = true;
+        public ButtonLinesTheme() =>
+            UseExtended = true;
 
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors)
@@ -417,6 +421,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new ButtonLinesTheme()
         {
+            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
@@ -424,7 +429,11 @@ namespace SadConsole.Themes
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
             TopLeftLineColors = TopLeftLineColors.Clone(),
-            BottomRightLineColors = BottomRightLineColors.Clone()
+            BottomRightLineColors = BottomRightLineColors.Clone(),
+            ShowEnds = ShowEnds,
+            EndCharacterLeft = EndCharacterLeft,
+            EndCharacterRight = EndCharacterRight,
+            UseExtended = UseExtended
         };
     }
 }

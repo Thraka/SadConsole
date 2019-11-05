@@ -4,17 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
+    <AssemblyVersion>8.9.0.0</AssemblyVersion>
     <Version>8.9.0</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole (.NET Standard) for MonoGame</AssemblyTitle>
     <Description>A MonoGame library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.0</Description>
-    <Copyright>Copyright © 2018 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2019 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
     <PackageReleaseNotes>Fix xml docs</PackageReleaseNotes>
-    <AssemblyVersion>8.8.0.0</AssemblyVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

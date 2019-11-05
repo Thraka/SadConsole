@@ -149,6 +149,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new RadioButtonTheme()
         {
+            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),

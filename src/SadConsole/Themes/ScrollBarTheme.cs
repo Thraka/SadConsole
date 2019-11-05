@@ -179,6 +179,7 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new ScrollBarTheme()
         {
+            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
