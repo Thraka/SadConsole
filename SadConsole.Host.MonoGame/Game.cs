@@ -18,6 +18,12 @@ namespace SadConsole
         /// </summary>
         public MonoGame.Game MonoGameInstance { get; private set; }
 
+        public new static Game Instance
+        {
+            get => (Game)GameHost.Instance;
+            protected set => GameHost.Instance = value;
+        }
+
         internal string _font;
 
 

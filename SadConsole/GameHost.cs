@@ -15,7 +15,7 @@ namespace SadConsole
         /// <summary>
         /// Instance of the game host.
         /// </summary>
-        public static GameHost Instance { get; set; }
+        public static GameHost Instance { get; protected set; }
 
         protected static bool LoadingEmbeddedFont = false;
 
