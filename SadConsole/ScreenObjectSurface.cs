@@ -110,6 +110,11 @@ namespace SadConsole
         /// </summary>
         public int WidthPixels => Surface.Width * FontSize.X;
 
+        /// <summary>
+        /// Creates a new screen object that can render a surface.
+        /// </summary>
+        /// <param name="width">The width in cells of the surface.</param>
+        /// <param name="height">The height in cells of the surface.</param>
         public ScreenObjectSurface(int width, int height)
         {
             Surface = new CellSurface(width, height);
@@ -118,9 +123,23 @@ namespace SadConsole
             Renderer = GameHost.Instance.GetDefaultRenderer();
         }
 
+        /// <summary>
+        /// Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
+        /// </summary>
+        /// <param name="width">The width in cells of the surface.</param>
+        /// <param name="height">The height in cells of the surface.</param>
+        /// <param name="initialCells">The initial cells to seed the surface.</param>
         public ScreenObjectSurface(int width, int height, Cell[] initialCells)
         {
             Surface = new CellSurface(width, height, initialCells);
+            Font = Global.DefaultFont;
+            FontSize = Font.GetFontSize(Global.DefaultFontSize);
+            Renderer = GameHost.Instance.GetDefaultRenderer();
+        }
+
+        public ScreenObjectSurface(CellSurface surface)
+        {
+            Surface = surface;
             Font = Global.DefaultFont;
             FontSize = Font.GetFontSize(Global.DefaultFontSize);
             Renderer = GameHost.Instance.GetDefaultRenderer();

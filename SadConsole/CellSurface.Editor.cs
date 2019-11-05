@@ -82,11 +82,11 @@ namespace SadConsole
             {
                 for (int y = area.Y; y < area.Y + area.Height; y++)
                 {
-                    int index = y * Width + x;
+                    int index = y * BufferWidth + x;
 
                     if (IsValidCell(index))
                     {
-                        Cells[y * Width + x].Background = pixels[(y - area.Y) * area.Width + (x - area.X)];
+                        Cells[y * BufferWidth + x].Background = pixels[(y - area.Y) * area.Width + (x - area.X)];
                     }
                 }
             }
@@ -102,7 +102,7 @@ namespace SadConsole
         /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsValidCell(int x, int y) =>
-            x >= 0 && x < Width && y >= 0 && y < Height;
+            x >= 0 && x < BufferWidth && y >= 0 && y < BufferHeight;
 
         /// <summary>
         /// Tests if a cell is valid based on its x,y position.
@@ -114,9 +114,9 @@ namespace SadConsole
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsValidCell(int x, int y, out int index)
         {
-            if (x >= 0 && x < Width && y >= 0 && y < Height)
+            if (x >= 0 && x < BufferWidth && y >= 0 && y < BufferHeight)
             {
-                index = y * Width + x;
+                index = y * BufferWidth + x;
                 return true;
             }
 
@@ -248,7 +248,7 @@ namespace SadConsole
         /// <returns>The glyph index.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetGlyph(int x, int y) =>
-            Cells[y * Width + x].Glyph;
+            Cells[y * BufferWidth + x].Glyph;
 
         /// <summary>
         /// Changes the foreground of a specified cell to a new color.
@@ -275,7 +275,7 @@ namespace SadConsole
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Color GetForeground(int x, int y) =>
-            Cells[y * Width + x].Foreground;
+            Cells[y * BufferWidth + x].Foreground;
 
         /// <summary>
         /// Changes the background of a cell to the specified color.
@@ -302,7 +302,7 @@ namespace SadConsole
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Color GetBackground(int x, int y) =>
-            Cells[y * Width + x].Background;
+            Cells[y * BufferWidth + x].Background;
 
         /*
 
@@ -404,7 +404,7 @@ namespace SadConsole
         public Cell GetCellAppearance(int x, int y)
         {
             var appearance = new Cell();
-            Cells[y * Width + x].CopyAppearanceTo(appearance);
+            Cells[y * BufferWidth + x].CopyAppearanceTo(appearance);
             return appearance;
         }
 
@@ -415,7 +415,7 @@ namespace SadConsole
         /// <returns>A new array with references to each cell in the area.</returns>
         public IEnumerable<Cell> GetCells(Rectangle area)
         {
-            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, Width, Height));
+            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, BufferWidth, BufferHeight));
 
             if (area == Rectangle.Empty)
             {
@@ -426,7 +426,7 @@ namespace SadConsole
             {
                 for (int x = 0; x < area.Width; x++)
                 {
-                    yield return Cells[(y + area.Y) * Width + (x + area.X)];
+                    yield return Cells[(y + area.Y) * BufferWidth + (x + area.X)];
                 }
             }
         }
@@ -439,7 +439,7 @@ namespace SadConsole
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Mirror GetMirror(int x, int y) =>
-            Cells[y * Width + x].Mirror;
+            Cells[y * BufferWidth + x].Mirror;
 
         /// <summary>
         /// Sets the sprite effect of a specified cell.
@@ -909,7 +909,7 @@ namespace SadConsole
         /// <returns>A string built from the text surface data.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string GetString(int x, int y, int length) =>
-            GetString(y * Width + x, length);
+            GetString(y * BufferWidth + x, length);
 
         /// <summary>
         /// Builds a string from the text surface.
@@ -947,7 +947,7 @@ namespace SadConsole
         /// <returns>A string built from the text surface data.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ColoredString GetStringColored(int x, int y, int length) =>
-            GetStringColored(y * Width + x, length);
+            GetStringColored(y * BufferWidth + x, length);
 
         /// <summary>
         /// Builds a string from the text surface.
@@ -1021,26 +1021,26 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
+                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
 
                 for (int y = 0; y < amount; y++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 0; x < BufferWidth; x++)
                     {
                         var tempCell = new Cell();
-                        Cells[y * Width + x].CopyAppearanceTo(tempCell);
+                        Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, (Height - amount + y) * Width + x));
+                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, (BufferHeight - amount + y) * BufferWidth + x));
                     }
                 }
             }
 
-            for (int y = amount; y < Height; y++)
+            for (int y = amount; y < BufferHeight; y++)
             {
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < BufferWidth; x++)
                 {
-                    Cell destination = Cells[(y - amount) * Width + x];
-                    Cell source = Cells[y * Width + x];
+                    Cell destination = Cells[(y - amount) * BufferWidth + x];
+                    Cell source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1052,9 +1052,9 @@ namespace SadConsole
 
             if (!wrap)
             {
-                for (int y = Height - amount; y < Height; y++)
+                for (int y = BufferHeight - amount; y < BufferHeight; y++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 0; x < BufferWidth; x++)
                     {
                         Clear(x, y);
                     }
@@ -1108,26 +1108,26 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
+                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
 
-                for (int y = Height - amount; y < Height; y++)
+                for (int y = BufferHeight - amount; y < BufferHeight; y++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 0; x < BufferWidth; x++)
                     {
                         var tempCell = new Cell();
-                        Cells[y * Width + x].CopyAppearanceTo(tempCell);
+                        Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, (amount - (Height - y)) * Width + x));
+                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, (amount - (BufferHeight - y)) * BufferWidth + x));
                     }
                 }
             }
 
-            for (int y = (Height - 1) - amount; y >= 0; y--)
+            for (int y = (BufferHeight - 1) - amount; y >= 0; y--)
             {
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < BufferWidth; x++)
                 {
-                    Cell destination = Cells[(y + amount) * Width + x];
-                    Cell source = Cells[y * Width + x];
+                    Cell destination = Cells[(y + amount) * BufferWidth + x];
+                    Cell source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1140,9 +1140,9 @@ namespace SadConsole
             {
                 for (int y = 0; y < amount; y++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 0; x < BufferWidth; x++)
                     {
-                        Cell source = Cells[y * Width + x];
+                        Cell source = Cells[y * BufferWidth + x];
                         source.Clear();
                     }
                 }
@@ -1195,27 +1195,27 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
+                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
 
-                for (int x = Width - amount; x < Width; x++)
+                for (int x = BufferWidth - amount; x < BufferWidth; x++)
                 {
-                    for (int y = 0; y < Height; y++)
+                    for (int y = 0; y < BufferHeight; y++)
                     {
                         var tempCell = new Cell();
-                        Cells[y * Width + x].CopyAppearanceTo(tempCell);
+                        Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * Width + amount - (Width - x)));
+                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * BufferWidth + amount - (BufferWidth - x)));
                     }
                 }
             }
 
 
-            for (int x = Width - 1 - amount; x >= 0; x--)
+            for (int x = BufferWidth - 1 - amount; x >= 0; x--)
             {
-                for (int y = 0; y < Height; y++)
+                for (int y = 0; y < BufferHeight; y++)
                 {
-                    Cell destination = Cells[y * Width + (x + amount)];
-                    Cell source = Cells[y * Width + x];
+                    Cell destination = Cells[y * BufferWidth + (x + amount)];
+                    Cell source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1228,7 +1228,7 @@ namespace SadConsole
             {
                 for (int x = 0; x < amount; x++)
                 {
-                    for (int y = 0; y < Height; y++)
+                    for (int y = 0; y < BufferHeight; y++)
                     {
                         Clear(x, y);
 
@@ -1283,26 +1283,26 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(Height * amount);
+                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
 
                 for (int x = 0; x < amount; x++)
                 {
-                    for (int y = 0; y < Height; y++)
+                    for (int y = 0; y < BufferHeight; y++)
                     {
                         var tempCell = new Cell();
-                        Cells[y * Width + x].CopyAppearanceTo(tempCell);
+                        Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * Width + (Width - amount + x)));
+                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * BufferWidth + (BufferWidth - amount + x)));
                     }
                 }
             }
 
-            for (int x = amount; x < Width; x++)
+            for (int x = amount; x < BufferWidth; x++)
             {
-                for (int y = 0; y < Height; y++)
+                for (int y = 0; y < BufferHeight; y++)
                 {
-                    Cell destination = Cells[y * Width + (x - amount)];
-                    Cell source = Cells[y * Width + x];
+                    Cell destination = Cells[y * BufferWidth + (x - amount)];
+                    Cell source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1313,9 +1313,9 @@ namespace SadConsole
 
             if (!wrap)
             {
-                for (int x = Width - amount; x < Width; x++)
+                for (int x = BufferWidth - amount; x < BufferWidth; x++)
                 {
-                    for (int y = 0; y < Height; y++)
+                    for (int y = 0; y < BufferHeight; y++)
                     {
                         Clear(x, y);
                     }
@@ -1567,7 +1567,7 @@ namespace SadConsole
         /// <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
         public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
         {
-            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, Width, Height));
+            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, BufferWidth, BufferHeight));
 
             if (area == Rectangle.Empty)
             {
@@ -1581,7 +1581,7 @@ namespace SadConsole
             {
                 for (int y = area.Y; y < area.Y + area.Height; y++)
                 {
-                    Cell cell = Cells[y * Width + x];
+                    Cell cell = Cells[y * BufferWidth + x];
 
                     if (background.HasValue)
                     {
@@ -1787,11 +1787,11 @@ namespace SadConsole
         /// <param name="lineStyle">The array of line styles indexed by <see cref="ConnectedLineIndex"/>.</param>
         public void ConnectLines(int[] lineStyle)
         {
-            var area = new Rectangle(0, 0, Width, Height);
+            var area = new Rectangle(0, 0, BufferWidth, BufferHeight);
 
-            for (int x = 0; x < Width; x++)
+            for (int x = 0; x < BufferWidth; x++)
             {
-                for (int y = 0; y < Height; y++)
+                for (int y = 0; y < BufferHeight; y++)
                 {
                     var pos = new Point(x, y);
                     int index = GetIndexFromPoint(pos);
@@ -1930,8 +1930,8 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         public void Copy(CellSurface destination)
         {
-            int maxX = Width >= destination.Width ? destination.Width : Width;
-            int maxY = Height >= destination.Height ? destination.Height : Height;
+            int maxX = BufferWidth >= destination.BufferWidth ? destination.BufferWidth : BufferWidth;
+            int maxY = BufferHeight >= destination.BufferHeight ? destination.BufferHeight : BufferHeight;
 
             for (int x = 0; x < maxX; x++)
             {
@@ -1957,9 +1957,9 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         public void Copy(CellSurface destination, int x, int y)
         {
-            for (int curX = 0; curX < Width; curX++)
+            for (int curX = 0; curX < BufferWidth; curX++)
             {
-                for (int curY = 0; curY < Height; curY++)
+                for (int curY = 0; curY < BufferHeight; curY++)
                 {
                     if (IsValidCell(curX, curY, out int sourceIndex) && destination.IsValidCell(x + curX, y + curY, out int destIndex))
                     {
@@ -1985,23 +1985,23 @@ namespace SadConsole
             Copy(area.X, area.Y, area.Width, area.Height, destination, destinationX, destinationY);
 
         /// <summary>
-        /// Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
+        /// Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified BufferWidth and BufferHeight, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
         /// </summary>
         /// <param name="x">The x coordinate to start from.</param>
         /// <param name="y">The y coordinate to start from.</param>
-        /// <param name="width">The width to copy from.</param>
-        /// <param name="height">The height to copy from.</param>
+        /// <param name="BufferWidth">The BufferWidth to copy from.</param>
+        /// <param name="BufferHeight">The BufferHeight to copy from.</param>
         /// <param name="destination">The destination surface.</param>
         /// <param name="destinationX">The x coordinate to copy to.</param>
         /// <param name="destinationY">The y coordinate to copy to.</param>
-        public void Copy(int x, int y, int width, int height, CellSurface destination, int destinationX, int destinationY)
+        public void Copy(int x, int y, int BufferWidth, int BufferHeight, CellSurface destination, int destinationX, int destinationY)
         {
             int destX = destinationX;
             int destY = destinationY;
 
-            for (int curX = 0; curX < width; curX++)
+            for (int curX = 0; curX < BufferWidth; curX++)
             {
-                for (int curY = 0; curY < height; curY++)
+                for (int curY = 0; curY < BufferHeight; curY++)
                 {
                     if (IsValidCell(curX + x, curY + y, out int sourceIndex) && destination.IsValidCell(destX, destY, out int destIndex))
                     {
@@ -2019,41 +2019,41 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Resizes the surface to the specified width and height.
+        /// Resizes the surface to the specified BufferWidth and BufferHeight.
         /// </summary>
-        /// <param name="width">The new width.</param>
-        /// <param name="height">The new height.</param>
+        /// <param name="BufferWidth">The new BufferWidth.</param>
+        /// <param name="BufferHeight">The new BufferHeight.</param>
         /// <param name="clear">When true, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
-        public void Resize(int width, int height, bool clear)
+        public void Resize(int BufferWidth, int BufferHeight, bool clear)
         {
-            var newCells = new Cell[width * height];
+            var newCells = new Cell[BufferWidth * BufferHeight];
 
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < BufferHeight; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < BufferWidth; x++)
                 {
                     if (IsValidCell(x, y))
                     {
-                        newCells[new Point(x, y).ToIndex(width)] = this[x, y];
+                        newCells[new Point(x, y).ToIndex(BufferWidth)] = this[x, y];
 
                         if (clear)
                         {
-                            newCells[new Point(x, y).ToIndex(width)].Foreground = DefaultForeground;
-                            newCells[new Point(x, y).ToIndex(width)].Background = DefaultBackground;
-                            newCells[new Point(x, y).ToIndex(width)].Glyph = 0;
-                            newCells[new Point(x, y).ToIndex(width)].ClearState();
+                            newCells[new Point(x, y).ToIndex(BufferWidth)].Foreground = DefaultForeground;
+                            newCells[new Point(x, y).ToIndex(BufferWidth)].Background = DefaultBackground;
+                            newCells[new Point(x, y).ToIndex(BufferWidth)].Glyph = 0;
+                            newCells[new Point(x, y).ToIndex(BufferWidth)].ClearState();
                         }
                     }
                     else
                     {
-                        newCells[new Point(x, y).ToIndex(width)] = new Cell(DefaultForeground, DefaultBackground, 0);
+                        newCells[new Point(x, y).ToIndex(BufferWidth)] = new Cell(DefaultForeground, DefaultBackground, 0);
                     }
                 }
             }
 
             Cells = newCells;
-            Width = width;
-            Height = height;
+            BufferWidth = BufferWidth;
+            BufferHeight = BufferHeight;
             //Effects = new EffectsManager(this);
             OnCellsReset();
         }
@@ -2065,7 +2065,7 @@ namespace SadConsole
         /// <returns>A new surface</returns>
         public CellSurface GetSubSurface(Rectangle view)
         {
-            if (!new Rectangle(0, 0, Width, Height).Contains(view))
+            if (!new Rectangle(0, 0, BufferWidth, BufferHeight).Contains(view))
             {
                 throw new Exception("View is outside of surface bounds.");
             }
@@ -2094,15 +2094,15 @@ namespace SadConsole
         /// <param name="surface">The target surface to map cells from.</param>
         public void SetSurface<T>(in T surface, Rectangle view = default) where T : CellSurface
         {
-            Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
+            Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight) : view;
 
-            if (!new Rectangle(0, 0, surface.Width, surface.Height).Contains(rect))
+            if (!new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight).Contains(rect))
             {
                 throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
             }
 
-            Width = rect.Width;
-            Height = rect.Height;
+            BufferWidth = rect.Width;
+            BufferHeight = rect.Height;
             Cells = new Cell[rect.Width * rect.Height];
 
             int index = 0;
@@ -2111,7 +2111,7 @@ namespace SadConsole
             {
                 for (int x = 0; x < rect.Width; x++)
                 {
-                    Cells[index] = surface.Cells[(y + rect.Y) * surface.Width + (x + rect.X)];
+                    Cells[index] = surface.Cells[(y + rect.Y) * surface.BufferWidth + (x + rect.X)];
                     index++;
                 }
             }
@@ -2124,12 +2124,12 @@ namespace SadConsole
         /// Changes the cells of the surface to the provided array.
         /// </summary>
         /// <param name="cells">The cells to replace in this surface.</param>
-        /// <param name="width">The width of the surface.</param>
-        /// <param name="height">The height of the surface.</param>
-        public void SetSurface(in Cell[] cells, int width, int height)
+        /// <param name="BufferWidth">The BufferWidth of the surface.</param>
+        /// <param name="BufferHeight">The BufferHeight of the surface.</param>
+        public void SetSurface(in Cell[] cells, int BufferWidth, int BufferHeight)
         {
-            Width = width;
-            Height = height;
+            BufferWidth = BufferWidth;
+            BufferHeight = BufferHeight;
             Cells = cells;
 
             IsDirty = true;
@@ -2143,9 +2143,9 @@ namespace SadConsole
         {
             //pulse.Reset();
             int charCounter = 0;
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < BufferHeight; y++)
             {
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < BufferWidth; x++)
                 {
                     SetGlyph(x, y, charCounter);
                     SetForeground(x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)255));
@@ -2170,7 +2170,7 @@ namespace SadConsole
         /// <returns>The cell index.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetIndexFromPoint(Point location) =>
-            location.ToIndex(Width);
+            location.ToIndex(BufferWidth);
 
         /// <summary>
         /// Gets the index of a location on the surface by coordinate.
@@ -2180,7 +2180,7 @@ namespace SadConsole
         /// <returns>The cell index.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetIndexFromPoint(int x, int y) =>
-            new Point(x, y).ToIndex(Width);
+            new Point(x, y).ToIndex(BufferWidth);
 
         /// <summary>
         /// Gets the x,y of an index on the surface.
@@ -2189,6 +2189,6 @@ namespace SadConsole
         /// <returns>The x,y as a <see cref="Point"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point GetPointFromIndex(int index) =>
-            Point.FromIndex(index, Width);
+            Point.FromIndex(index, BufferWidth);
     }
 }

@@ -406,6 +406,26 @@
             How many cells high the surface is.
             </summary>
         </member>
+        <member name="P:SadConsole.CellSurface.BufferWidth">
+            <summary>
+            Width of the surface buffer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.BufferHeight">
+            <summary>
+            Height of the surface buffer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.BufferPosition">
+            <summary>
+            The position of the buffer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.IsBufferLocked">
+            <summary>
+            When <see langword="true"/> indicates the buffer can not be moved or resized; otherwise <see langword="false"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.CellSurface.Cells">
             <summary>
             All cells of the surface.
@@ -439,6 +459,25 @@
             </summary>
             <param name="width">The width of the surface in cells.</param>
             <param name="height">The height of the surface in cells.</param>
+            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The visible width of the surface in cells.</param>
+            <param name="height">The visible height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.Cell[])">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
         <member name="M:SadConsole.CellSurface.OnDirtyChanged">
@@ -1019,22 +1058,22 @@
         </member>
         <member name="M:SadConsole.CellSurface.Copy(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.CellSurface,System.Int32,System.Int32)">
             <summary>
-            Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified width and height, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
+            Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified BufferWidth and BufferHeight, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
             </summary>
             <param name="x">The x coordinate to start from.</param>
             <param name="y">The y coordinate to start from.</param>
-            <param name="width">The width to copy from.</param>
-            <param name="height">The height to copy from.</param>
+            <param name="BufferWidth">The BufferWidth to copy from.</param>
+            <param name="BufferHeight">The BufferHeight to copy from.</param>
             <param name="destination">The destination surface.</param>
             <param name="destinationX">The x coordinate to copy to.</param>
             <param name="destinationY">The y coordinate to copy to.</param>
         </member>
         <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface to the specified width and height.
+            Resizes the surface to the specified BufferWidth and BufferHeight.
             </summary>
-            <param name="width">The new width.</param>
-            <param name="height">The new height.</param>
+            <param name="BufferWidth">The new BufferWidth.</param>
+            <param name="BufferHeight">The new BufferHeight.</param>
             <param name="clear">When true, resets every cell to the <see cref="P:SadConsole.CellSurface.DefaultForeground"/>, <see cref="P:SadConsole.CellSurface.DefaultBackground"/> and glyph 0.</param>
         </member>
         <member name="M:SadConsole.CellSurface.GetSubSurface(SadRogue.Primitives.Rectangle)">
@@ -1057,8 +1096,8 @@
             Changes the cells of the surface to the provided array.
             </summary>
             <param name="cells">The cells to replace in this surface.</param>
-            <param name="width">The width of the surface.</param>
-            <param name="height">The height of the surface.</param>
+            <param name="BufferWidth">The BufferWidth of the surface.</param>
+            <param name="BufferHeight">The BufferHeight of the surface.</param>
         </member>
         <member name="M:SadConsole.CellSurface.FillWithRandomGarbage(System.Boolean)">
             <summary>
@@ -2305,6 +2344,21 @@
             <summary>
             The width of the surface in pixels.
             </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new screen object that can render a surface.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,SadConsole.Cell[])">
+            <summary>
+            Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+            <param name="initialCells">The initial cells to seed the surface.</param>
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.HeightPixels">
             <summary>
