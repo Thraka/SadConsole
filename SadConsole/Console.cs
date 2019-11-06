@@ -50,7 +50,7 @@ namespace SadConsole
 
         public Console(int width, int height): base(width, height) { }
 
-        public Console(int width, int height, Cell[] initialCells) : base(width, height, initialCells) { }
+        public Console(int width, int height, ColoredGlyph[] initialCells) : base(width, height, initialCells) { }
 
         protected override void OnVisibleChanged()
         {

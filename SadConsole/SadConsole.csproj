@@ -27,6 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Input\ConsoleViewInputHandler.cs" />
+    <Compile Remove="Input\Mouse.cs" />
+    <Compile Remove="Input\MouseConsoleState.cs" />
+    <Compile Remove="Input\MouseEventArgs.cs" />
     <Compile Remove="SerializedTypes\AnimatedConsole.cs" />
     <Compile Remove="SerializedTypes\CellSurface.cs" />
     <Compile Remove="SerializedTypes\CellSurfaceLayer.cs" />

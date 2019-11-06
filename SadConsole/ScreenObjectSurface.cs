@@ -90,7 +90,7 @@ namespace SadConsole
         /// <summary>
         /// The area on the screen this surface occupies. In pixels.
         /// </summary>
-        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, Surface.Width * FontSize.X, Surface.Height * FontSize.Y);
+        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, Surface.ViewWidth * FontSize.X, Surface.ViewHeight * FontSize.Y);
 
         /// <summary>
         /// Treats the <see cref="ScreenObject.Position"/> of the console as if it is pixels and not cells.
@@ -108,7 +108,7 @@ namespace SadConsole
         /// <summary>
         /// The width of the surface in pixels.
         /// </summary>
-        public int WidthPixels => Surface.Width * FontSize.X;
+        public int WidthPixels => Surface.ViewWidth * FontSize.X;
 
         /// <summary>
         /// Creates a new screen object that can render a surface.
@@ -129,7 +129,7 @@ namespace SadConsole
         /// <param name="width">The width in cells of the surface.</param>
         /// <param name="height">The height in cells of the surface.</param>
         /// <param name="initialCells">The initial cells to seed the surface.</param>
-        public ScreenObjectSurface(int width, int height, Cell[] initialCells)
+        public ScreenObjectSurface(int width, int height, ColoredGlyph[] initialCells)
         {
             Surface = new CellSurface(width, height, initialCells);
             Font = Global.DefaultFont;
@@ -148,7 +148,7 @@ namespace SadConsole
         /// <summary>
         /// The height of the surface in pixels.
         /// </summary>
-        public int HeightPixels => Surface.Height * FontSize.Y;
+        public int HeightPixels => Surface.ViewHeight * FontSize.Y;
 
         /// <inheritdoc />
         protected override void SetAbsolutePosition()

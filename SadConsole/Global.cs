@@ -41,5 +41,10 @@ namespace SadConsole
         /// The default font to use with <see cref="DefaultFont"/>.
         /// </summary>
         public static Font.Sizes DefaultFontSize { get; set; } = Font.Sizes.One;
+
+        /// <summary>
+        /// Global keyboard object used by SadConsole during the update frame.
+        /// </summary>
+        public static Input.Keyboard Keyboard { get; } = new Input.Keyboard();
     }
 }

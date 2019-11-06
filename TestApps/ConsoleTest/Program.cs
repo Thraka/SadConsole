@@ -40,18 +40,20 @@ namespace ConsoleTest
                 screen.Surface.SetGlyph(i + 1, i + 1, value);
             }
             screen.Surface.BufferPosition = new Point(5,5);
-            screen.Surface.Width = 8;
-            screen.Surface.Height = 8;
+            screen.Surface.ViewWidth = 8;
+            screen.Surface.ViewHeight = 8;
             screen.Parent = Global.Screen;
             screen.Position = new Point(1, 1);
 
-            var surface = new CellSurface(10, 10);
+            var surface = screen.Surface.GetSubSurface(new Rectangle(0, 0, 10, 10));
             screen.Surface.Copy(surface);
             surface.DefaultBackground = Color.Blue;
-            screen = new ScreenObjectSurface(surface);
-            screen.Position = new Point(1, 11);
-            screen.Parent = Global.Screen;
-
+            var screen2 = new ScreenObjectSurface(surface);
+            screen2.Position = new Point(1, 11);
+            screen2.Parent = Global.Screen;
+            screen2.Surface.SetGlyph(5, 4, 'a');
+            screen2.Surface.SetBackground(5, 4, Color.Purple);
+            screen2.Surface.SetForeground(5, 4, Color.Black);
         }
 
     }

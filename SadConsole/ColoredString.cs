@@ -131,7 +131,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="value">The backing string.</param>
         /// <param name="appearance">The appearance to use for each character.</param>
-        public ColoredString(string value, Cell appearance) : this(value, appearance.Foreground, appearance.Background, appearance.Mirror) { }
+        public ColoredString(string value, ColoredGlyph appearance) : this(value, appearance.Foreground, appearance.Background, appearance.Mirror) { }
 
         /// <summary>
         /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.

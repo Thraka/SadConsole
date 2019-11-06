@@ -120,11 +120,16 @@
 
                 if (fixedSurfaceIndex != -1)
                 {
-                    newGlyph = new ColoredGlyph(surface[i + surfaceIndex]) { Glyph = value[i] };
+                    newGlyph = new ColoredGlyph();
+                    surface[i + surfaceIndex].CopyAppearanceTo(newGlyph);
+                    newGlyph.Glyph = value[i];
                 }
                 else
                 {
-                    newGlyph = new ColoredGlyph(new Cell()) { Glyph = value[i] };
+                    newGlyph = new ColoredGlyph()
+                    {
+                        Glyph = value[i]
+                    };
                 }
 
 

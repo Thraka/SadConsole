@@ -379,7 +379,7 @@ namespace SadConsole
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
-        public void SetCellAppearance(int x, int y, Cell appearance)
+        public void SetCellAppearance(int x, int y, ColoredGlyph appearance)
         {
             if (appearance == null)
             {
@@ -401,9 +401,9 @@ namespace SadConsole
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
         /// <returns>The appearance.</returns>
-        public Cell GetCellAppearance(int x, int y)
+        public ColoredGlyph GetCellAppearance(int x, int y)
         {
-            var appearance = new Cell();
+            var appearance = new ColoredGlyph();
             Cells[y * BufferWidth + x].CopyAppearanceTo(appearance);
             return appearance;
         }
@@ -413,7 +413,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="area">The area to get cells from.</param>
         /// <returns>A new array with references to each cell in the area.</returns>
-        public IEnumerable<Cell> GetCells(Rectangle area)
+        public IEnumerable<ColoredGlyph> GetCells(Rectangle area)
         {
             area = Rectangle.GetIntersection(area, new Rectangle(0, 0, BufferWidth, BufferHeight));
 
@@ -795,7 +795,7 @@ namespace SadConsole
         /// <param name="text">The string to display.</param>
         /// <param name="appearance">The appearance of the cell</param>
         /// <param name="effect">An optional effect to apply to the printed cells.</param>
-        public void Print(int x, int y, string text, Cell appearance)//, ICellEffect effect = null)
+        public void Print(int x, int y, string text, ColoredGlyph appearance)//, ICellEffect effect = null)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -812,7 +812,7 @@ namespace SadConsole
 
             for (; index < end; index++)
             {
-                Cell cell = Cells[index];
+                ColoredGlyph cell = Cells[index];
                 appearance.CopyAppearanceTo(cell);
                 cell.Glyph = text[charIndex];
                 //Effects.SetEffect(cell, effect);
@@ -839,7 +839,7 @@ namespace SadConsole
                 return;
             }
 
-            Cell cell = Cells[index];
+            ColoredGlyph cell = Cells[index];
             cell.CopyAppearanceFrom(glyph);
             cell.Glyph = glyph.Glyph;
             IsDirty = true;
@@ -967,7 +967,7 @@ namespace SadConsole
             for (int i = 0; i < length; i++)
             {
                 int tempIndex = i + index;
-                var cell = (Cell)sb[i];
+                var cell = (ColoredGlyph)sb[i];
                 if (tempIndex < Cells.Length)
                 {
                     Cells[tempIndex].CopyAppearanceTo(cell);
@@ -1016,21 +1016,21 @@ namespace SadConsole
 
             TimesShiftedUp += amount;
 
-            List<Tuple<Cell, int>> wrappedCells = null;
+            List<Tuple<ColoredGlyph, int>> wrappedCells = null;
 
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(BufferHeight * amount);
 
                 for (int y = 0; y < amount; y++)
                 {
                     for (int x = 0; x < BufferWidth; x++)
                     {
-                        var tempCell = new Cell();
+                        var tempCell = new ColoredGlyph();
                         Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, (BufferHeight - amount + y) * BufferWidth + x));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (BufferHeight - amount + y) * BufferWidth + x));
                     }
                 }
             }
@@ -1039,8 +1039,8 @@ namespace SadConsole
             {
                 for (int x = 0; x < BufferWidth; x++)
                 {
-                    Cell destination = Cells[(y - amount) * BufferWidth + x];
-                    Cell source = Cells[y * BufferWidth + x];
+                    ColoredGlyph destination = Cells[(y - amount) * BufferWidth + x];
+                    ColoredGlyph source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1062,9 +1062,9 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
+                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
-                    Cell destination = Cells[cellTuple.Item2];
+                    ColoredGlyph destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
@@ -1103,21 +1103,21 @@ namespace SadConsole
 
             TimesShiftedDown += amount;
 
-            List<Tuple<Cell, int>> wrappedCells = null;
+            List<Tuple<ColoredGlyph, int>> wrappedCells = null;
 
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(BufferHeight * amount);
 
                 for (int y = BufferHeight - amount; y < BufferHeight; y++)
                 {
                     for (int x = 0; x < BufferWidth; x++)
                     {
-                        var tempCell = new Cell();
+                        var tempCell = new ColoredGlyph();
                         Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, (amount - (BufferHeight - y)) * BufferWidth + x));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (amount - (BufferHeight - y)) * BufferWidth + x));
                     }
                 }
             }
@@ -1126,8 +1126,8 @@ namespace SadConsole
             {
                 for (int x = 0; x < BufferWidth; x++)
                 {
-                    Cell destination = Cells[(y + amount) * BufferWidth + x];
-                    Cell source = Cells[y * BufferWidth + x];
+                    ColoredGlyph destination = Cells[(y + amount) * BufferWidth + x];
+                    ColoredGlyph source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1142,16 +1142,16 @@ namespace SadConsole
                 {
                     for (int x = 0; x < BufferWidth; x++)
                     {
-                        Cell source = Cells[y * BufferWidth + x];
+                        ColoredGlyph source = Cells[y * BufferWidth + x];
                         source.Clear();
                     }
                 }
             }
             else
             {
-                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
+                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
-                    Cell destination = Cells[cellTuple.Item2];
+                    ColoredGlyph destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
@@ -1190,21 +1190,21 @@ namespace SadConsole
 
             TimesShiftedRight += amount;
 
-            List<Tuple<Cell, int>> wrappedCells = null;
+            List<Tuple<ColoredGlyph, int>> wrappedCells = null;
 
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(BufferHeight * amount);
 
                 for (int x = BufferWidth - amount; x < BufferWidth; x++)
                 {
                     for (int y = 0; y < BufferHeight; y++)
                     {
-                        var tempCell = new Cell();
+                        var tempCell = new ColoredGlyph();
                         Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * BufferWidth + amount - (BufferWidth - x)));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * BufferWidth + amount - (BufferWidth - x)));
                     }
                 }
             }
@@ -1214,8 +1214,8 @@ namespace SadConsole
             {
                 for (int y = 0; y < BufferHeight; y++)
                 {
-                    Cell destination = Cells[y * BufferWidth + (x + amount)];
-                    Cell source = Cells[y * BufferWidth + x];
+                    ColoredGlyph destination = Cells[y * BufferWidth + (x + amount)];
+                    ColoredGlyph source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1237,9 +1237,9 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
+                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
-                    Cell destination = Cells[cellTuple.Item2];
+                    ColoredGlyph destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
@@ -1278,21 +1278,21 @@ namespace SadConsole
 
             TimesShiftedLeft += amount;
 
-            List<Tuple<Cell, int>> wrappedCells = null;
+            List<Tuple<ColoredGlyph, int>> wrappedCells = null;
 
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<Cell, int>>(BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(BufferHeight * amount);
 
                 for (int x = 0; x < amount; x++)
                 {
                     for (int y = 0; y < BufferHeight; y++)
                     {
-                        var tempCell = new Cell();
+                        var tempCell = new ColoredGlyph();
                         Cells[y * BufferWidth + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<Cell, int>(tempCell, y * BufferWidth + (BufferWidth - amount + x)));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * BufferWidth + (BufferWidth - amount + x)));
                     }
                 }
             }
@@ -1301,8 +1301,8 @@ namespace SadConsole
             {
                 for (int y = 0; y < BufferHeight; y++)
                 {
-                    Cell destination = Cells[y * BufferWidth + (x - amount)];
-                    Cell source = Cells[y * BufferWidth + x];
+                    ColoredGlyph destination = Cells[y * BufferWidth + (x - amount)];
+                    ColoredGlyph source = Cells[y * BufferWidth + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1323,9 +1323,9 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<Cell, int> cellTuple in wrappedCells)
+                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
-                    Cell destination = Cells[cellTuple.Item2];
+                    ColoredGlyph destination = Cells[cellTuple.Item2];
 
                     destination.Background = cellTuple.Item1.Background;
                     destination.Foreground = cellTuple.Item1.Foreground;
@@ -1345,22 +1345,22 @@ namespace SadConsole
         /// <param name="count">The count of glyphs to erase.</param>
         /// <returns>The cells processed by this method.</returns>
         /// <remarks>
-        /// Cells altered by this method has the <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="Mirror.None"/>.
+        /// Cells altered by this method has the <see cref="ColoredGlyph.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
         /// </remarks>
-        public Cell[] Erase(int x, int y, int count)
+        public ColoredGlyph[] Erase(int x, int y, int count)
         {
             if (!IsValidCell(x, y, out int index))
             {
-                return Array.Empty<Cell>();
+                return Array.Empty<ColoredGlyph>();
             }
 
             int end = index + count > Cells.Length ? Cells.Length - index : index + count;
             int total = end - index;
-            Cell[] result = new Cell[total];
+            ColoredGlyph[] result = new ColoredGlyph[total];
             int resultIndex = 0;
             for (; index < end; index++)
             {
-                Cell c = Cells[index];
+                ColoredGlyph c = Cells[index];
 
                 c.Glyph = EraseGlyph;
                 c.Mirror = Mirror.None;
@@ -1380,7 +1380,7 @@ namespace SadConsole
         /// <param name="x">The x position.</param>
         /// <param name="y">The y position.</param>
         /// <remarks>
-        /// The cell altered by this method has the <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="Mirror.None"/>.
+        /// The cell altered by this method has the <see cref="ColoredGlyph.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
         /// </remarks>
         public void Erase(int x, int y)
         {
@@ -1400,7 +1400,7 @@ namespace SadConsole
         /// Erases all cells which clears the glyph, mirror, and decorators.
         /// </summary>
         /// <remarks>
-        /// All cells have <see cref="Cell.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="Cell.Decorators"/> array reset, and the <see cref="Cell.Mirror"/> set to <see cref="Mirror.None"/>.
+        /// All cells have <see cref="ColoredGlyph.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
         /// </remarks>
         public void Erase()
         {
@@ -1434,7 +1434,7 @@ namespace SadConsole
                 return;
             }
 
-            Cell cell = Cells[index];
+            ColoredGlyph cell = Cells[index];
             cell.Clear();
             cell.Foreground = DefaultForeground;
             cell.Background = DefaultBackground;
@@ -1467,7 +1467,7 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
         /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
-        public Cell[] Fill(Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
+        public ColoredGlyph[] Fill(Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
         {
             for (int i = 0; i < Cells.Length; i++)
             {
@@ -1509,22 +1509,22 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
         /// <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
-        public Cell[] Fill(int x, int y, int length, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
+        public ColoredGlyph[] Fill(int x, int y, int length, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
         {
 
 
             if (!IsValidCell(x, y, out int index))
             {
-                return Array.Empty<Cell>();
+                return Array.Empty<ColoredGlyph>();
             }
 
             int end = index + length > Cells.Length ? Cells.Length - index : index + length;
             int total = end - index;
-            Cell[] result = new Cell[total];
+            ColoredGlyph[] result = new ColoredGlyph[total];
             int resultIndex = 0;
             for (; index < end; index++)
             {
-                Cell c = Cells[index];
+                ColoredGlyph c = Cells[index];
                 if (background.HasValue)
                 {
                     c.Background = background.Value;
@@ -1565,23 +1565,23 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Sprite effect to apply. If null, skips.</param>
         /// <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
-        public Cell[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
+        public ColoredGlyph[] Fill(Rectangle area, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
         {
             area = Rectangle.GetIntersection(area, new Rectangle(0, 0, BufferWidth, BufferHeight));
 
             if (area == Rectangle.Empty)
             {
-                return new Cell[0];
+                return new ColoredGlyph[0];
             }
 
-            var result = new Cell[area.Width * area.Height];
+            var result = new ColoredGlyph[area.Width * area.Height];
             int resultIndex = 0;
 
             for (int x = area.X; x < area.X + area.Width; x++)
             {
                 for (int y = area.Y; y < area.Y + area.Height; y++)
                 {
-                    Cell cell = Cells[y * BufferWidth + x];
+                    ColoredGlyph cell = Cells[y * BufferWidth + x];
 
                     if (background.HasValue)
                     {
@@ -1624,9 +1624,9 @@ namespace SadConsole
         /// <param name="glyph">Glyph to set. If null, skipped.</param>
         /// <returns>A list of cells the line touched; ordered from first to last.</returns>
         /// <remarks>If no foreground, background, or glyph are specified, then the list of affected cells are returned but nothing is drawn.</remarks>
-        public IEnumerable<Cell> DrawLine(Point start, Point end, Color? foreground = null, Color? background = null, int? glyph = null)
+        public IEnumerable<ColoredGlyph> DrawLine(Point start, Point end, Color? foreground = null, Color? background = null, int? glyph = null)
         {
-            var result = new List<Cell>();
+            var result = new List<ColoredGlyph>();
             Func<int, int, bool> processor;
 
             if (foreground.HasValue || background.HasValue || glyph.HasValue)
@@ -1635,7 +1635,7 @@ namespace SadConsole
                 {
                     if (IsValidCell(x, y, out int index))
                     {
-                        Cell cell = Cells[index];
+                        ColoredGlyph cell = Cells[index];
                         result.Add(cell);
 
                         if (foreground.HasValue)
@@ -1686,7 +1686,7 @@ namespace SadConsole
         /// <param name="border">The border style.</param>
         /// <param name="fill">The fill style. If null, the box is not filled.</param>
         /// <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
-        public void DrawBox(Rectangle area, Cell border, Cell fill = null, int[] connectedLineStyle = null)
+        public void DrawBox(Rectangle area, ColoredGlyph border, ColoredGlyph fill = null, int[] connectedLineStyle = null)
         {
             if (connectedLineStyle == null)
             {
@@ -1729,10 +1729,10 @@ namespace SadConsole
         /// <param name="area">The area the ellipse </param>
         /// <param name="outer">The appearance of the outer line of the ellipse.</param>
         /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
-        public void DrawCircle(Rectangle area, Cell outer, Cell inner = null)
+        public void DrawCircle(Rectangle area, ColoredGlyph outer, ColoredGlyph inner = null)
         {
-            var cells = new List<Cell>(area.Width * area.Height);
-            var masterCells = new List<Cell>(Cells);
+            var cells = new List<ColoredGlyph>(area.Width * area.Height);
+            var masterCells = new List<ColoredGlyph>(Cells);
 
             Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX - 1, area.MaxExtentY - 1, (x, y) =>
             {
@@ -1745,15 +1745,15 @@ namespace SadConsole
 
             if (inner != null)
             {
-                Func<Cell, bool> isTargetCell = c => !cells.Contains(c);
-                Action<Cell> fillCell = c =>
+                Func<ColoredGlyph, bool> isTargetCell = c => !cells.Contains(c);
+                Action<ColoredGlyph> fillCell = c =>
                 {
                     inner.CopyAppearanceTo(c);
                     cells.Add(c);
                 };
-                Func<Cell, Algorithms.NodeConnections<Cell>> getConnectedCells = c =>
+                Func<ColoredGlyph, Algorithms.NodeConnections<ColoredGlyph>> getConnectedCells = c =>
                 {
-                    var connections = new Algorithms.NodeConnections<Cell>();
+                    var connections = new Algorithms.NodeConnections<ColoredGlyph>();
 
                     (int x, int y) = GetPointFromIndex(masterCells.IndexOf(c));
 
@@ -1938,11 +1938,7 @@ namespace SadConsole
                 for (int y = 0; y < maxY; y++)
                 {
                     if (IsValidCell(x, y, out int sourceIndex) && destination.IsValidCell(x, y, out int destIndex))
-                    {
-                        Cell sourceCell = Cells[sourceIndex];
-                        Cell desCell = destination.Cells[destIndex];
-                        sourceCell.CopyAppearanceTo(desCell);
-                    }
+                        Cells[sourceIndex].CopyAppearanceTo(destination.Cells[destIndex]);
                 }
             }
 
@@ -1962,11 +1958,7 @@ namespace SadConsole
                 for (int curY = 0; curY < BufferHeight; curY++)
                 {
                     if (IsValidCell(curX, curY, out int sourceIndex) && destination.IsValidCell(x + curX, y + curY, out int destIndex))
-                    {
-                        Cell sourceCell = Cells[sourceIndex];
-                        Cell desCell = destination.Cells[destIndex];
-                        sourceCell.CopyAppearanceTo(desCell);
-                    }
+                        Cells[sourceIndex].CopyAppearanceTo(destination.Cells[destIndex]);
                 }
             }
 
@@ -1989,26 +1981,23 @@ namespace SadConsole
         /// </summary>
         /// <param name="x">The x coordinate to start from.</param>
         /// <param name="y">The y coordinate to start from.</param>
-        /// <param name="BufferWidth">The BufferWidth to copy from.</param>
-        /// <param name="BufferHeight">The BufferHeight to copy from.</param>
+        /// <param name="width">The BufferWidth to copy from.</param>
+        /// <param name="height">The BufferHeight to copy from.</param>
         /// <param name="destination">The destination surface.</param>
         /// <param name="destinationX">The x coordinate to copy to.</param>
         /// <param name="destinationY">The y coordinate to copy to.</param>
-        public void Copy(int x, int y, int BufferWidth, int BufferHeight, CellSurface destination, int destinationX, int destinationY)
+        public void Copy(int x, int y, int width, int height, CellSurface destination, int destinationX, int destinationY)
         {
             int destX = destinationX;
             int destY = destinationY;
 
-            for (int curX = 0; curX < BufferWidth; curX++)
+            for (int curX = 0; curX < width; curX++)
             {
-                for (int curY = 0; curY < BufferHeight; curY++)
+                for (int curY = 0; curY < height; curY++)
                 {
                     if (IsValidCell(curX + x, curY + y, out int sourceIndex) && destination.IsValidCell(destX, destY, out int destIndex))
-                    {
-                        Cell sourceCell = Cells[sourceIndex];
-                        Cell desCell = destination.Cells[destIndex];
-                        sourceCell.CopyAppearanceTo(desCell);
-                    }
+                        Cells[sourceIndex].CopyAppearanceTo(destination.Cells[destIndex]);
+
                     destY++;
                 }
                 destY = destinationY;
@@ -2019,42 +2008,50 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Resizes the surface to the specified BufferWidth and BufferHeight.
+        /// Resizes the surface to the specified width and height.
         /// </summary>
-        /// <param name="BufferWidth">The new BufferWidth.</param>
-        /// <param name="BufferHeight">The new BufferHeight.</param>
-        /// <param name="clear">When true, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
-        public void Resize(int BufferWidth, int BufferHeight, bool clear)
+        /// <param name="width">The viewable width of the surface.</param>
+        /// <param name="height">The viewable height of the surface.</param>
+        /// <param name="bufferWidth">The maximum width of the surface.</param>
+        /// <param name="bufferHeight">The maximum height of the surface.</param>
+        /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        public void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear)
         {
-            var newCells = new Cell[BufferWidth * BufferHeight];
+            var newCells = new ColoredGlyph[bufferWidth * bufferHeight];
 
-            for (int y = 0; y < BufferHeight; y++)
+            for (int y = 0; y < bufferHeight; y++)
             {
-                for (int x = 0; x < BufferWidth; x++)
+                for (int x = 0; x < bufferWidth; x++)
                 {
+                    int index = new Point(x, y).ToIndex(bufferWidth);
+
                     if (IsValidCell(x, y))
                     {
-                        newCells[new Point(x, y).ToIndex(BufferWidth)] = this[x, y];
+                        newCells[index] = this[x, y];
 
                         if (clear)
                         {
-                            newCells[new Point(x, y).ToIndex(BufferWidth)].Foreground = DefaultForeground;
-                            newCells[new Point(x, y).ToIndex(BufferWidth)].Background = DefaultBackground;
-                            newCells[new Point(x, y).ToIndex(BufferWidth)].Glyph = 0;
-                            newCells[new Point(x, y).ToIndex(BufferWidth)].ClearState();
+                            newCells[index].Foreground = DefaultForeground;
+                            newCells[index].Background = DefaultBackground;
+                            newCells[index].Glyph = 0;
+                            newCells[index].Mirror = Mirror.None;
                         }
                     }
                     else
                     {
-                        newCells[new Point(x, y).ToIndex(BufferWidth)] = new Cell(DefaultForeground, DefaultBackground, 0);
+                        newCells[index] = new ColoredGlyph(DefaultForeground, DefaultBackground, 0);
                     }
                 }
             }
 
             Cells = newCells;
-            BufferWidth = BufferWidth;
-            BufferHeight = BufferHeight;
+            _bufferPosition = new Point(0, 0);
+            BufferWidth = bufferWidth;
+            BufferHeight = bufferHeight;
+            ViewWidth = width;
+            ViewHeight = height;
             //Effects = new EffectsManager(this);
+            IsDirty = true;
             OnCellsReset();
         }
 
@@ -2070,7 +2067,7 @@ namespace SadConsole
                 throw new Exception("View is outside of surface bounds.");
             }
 
-            var cells = new Cell[view.Width * view.Height];
+            var cells = new ColoredGlyph[view.Width * view.Height];
 
             int index = 0;
 
@@ -2101,9 +2098,12 @@ namespace SadConsole
                 throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
             }
 
+            _bufferPosition = new Point(0, 0);
             BufferWidth = rect.Width;
             BufferHeight = rect.Height;
-            Cells = new Cell[rect.Width * rect.Height];
+            ViewWidth = rect.Width;
+            ViewHeight = rect.Height;
+            Cells = new ColoredGlyph[rect.Width * rect.Height];
 
             int index = 0;
 
@@ -2124,12 +2124,19 @@ namespace SadConsole
         /// Changes the cells of the surface to the provided array.
         /// </summary>
         /// <param name="cells">The cells to replace in this surface.</param>
-        /// <param name="BufferWidth">The BufferWidth of the surface.</param>
-        /// <param name="BufferHeight">The BufferHeight of the surface.</param>
-        public void SetSurface(in Cell[] cells, int BufferWidth, int BufferHeight)
+        /// <param name="width">The viewable width of the surface.</param>
+        /// <param name="height">The viewable height of the surface.</param>
+        /// <param name="bufferWidth">The maximum width of the surface.</param>
+        /// <param name="bufferHeight">The maximum height of the surface.</param>
+        public void SetSurface(in ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight)
         {
-            BufferWidth = BufferWidth;
-            BufferHeight = BufferHeight;
+            if (cells.Length != bufferWidth * bufferHeight) throw new Exception("buffer width * buffer height must match the amount of cells.");
+
+            _bufferPosition = new Point(0, 0);
+            BufferWidth = bufferWidth;
+            BufferHeight = bufferHeight;
+            ViewWidth = width;
+            ViewHeight = height;
             Cells = cells;
 
             IsDirty = true;

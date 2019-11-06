@@ -70,6 +70,10 @@ namespace SadConsole
         public override Renderers.IRenderer GetDefaultRenderer() =>
             new Renderers.ConsoleRenderer();
 
+        public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
+            new SadConsole.MonoGame.Keyboard();
+
+
         /// <summary>
         /// Opens a read-only stream with MonoGame.
         /// </summary>

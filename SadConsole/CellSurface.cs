@@ -5,16 +5,16 @@ using SadRogue.Primitives;
 namespace SadConsole
 {
     /// <summary>
-    /// An array of <see cref="Cell"/> objects used to represent a 2D surface.
+    /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
     /// </summary>
-    public partial class CellSurface : IEnumerable<Cell>
+    public partial class CellSurface : IEnumerable<ColoredGlyph>
     {
         private bool _isDirty = true;
         private Color _defaultBackground;
         private Color _defaultForeground;
         private Point _bufferPosition;
-        private int _width;
-        private int _height;
+        private int _viewWidth;
+        private int _viewHeight;
 
 
 
@@ -60,36 +60,34 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// How many cells wide the surface is.
+        /// How many cells wide are visible.
         /// </summary>
-        public int Width
+        public int ViewWidth
         {
-            get => _width;
+            get => _viewWidth;
             set
             {
-                if (value > BufferWidth) throw new ArgumentOutOfRangeException(nameof(Width), $"{nameof(Width)} cannot be bigger than {nameof(BufferWidth)}.");
-                if (value < 1) throw new ArgumentOutOfRangeException(nameof(Width), $"{nameof(Width)} must be bigger than 1.");
-                if (IsBufferLocked) throw new ArgumentException(nameof(Width), $"Cannot modify {nameof(Width)} when {nameof(IsBufferLocked)} is true.");
+                if (value > BufferWidth) throw new ArgumentOutOfRangeException(nameof(ViewWidth), $"{nameof(ViewWidth)} cannot be bigger than {nameof(BufferWidth)}.");
+                if (value < 1) throw new ArgumentOutOfRangeException(nameof(ViewWidth), $"{nameof(ViewWidth)} must be bigger than 1.");
 
-                _width = value;
+                _viewWidth = value;
                 BufferPosition = _bufferPosition;
                 IsDirty = true;
             }
         }
 
         /// <summary>
-        /// How many cells high the surface is.
+        /// How many cells high are visible.
         /// </summary>
-        public int Height
+        public int ViewHeight
         {
-            get => _height;
+            get => _viewHeight;
             set
             {
-                if (value > BufferHeight) throw new ArgumentOutOfRangeException(nameof(Height), $"{nameof(Height)} cannot be bigger than {nameof(BufferHeight)}.");
-                if (value < 1) throw new ArgumentOutOfRangeException(nameof(Height), $"{nameof(Height)} must be bigger than 1.");
-                if (IsBufferLocked) throw new ArgumentException(nameof(Height), $"Cannot modify {nameof(Height)} when {nameof(IsBufferLocked)} is true.");
+                if (value > BufferHeight) throw new ArgumentOutOfRangeException(nameof(ViewHeight), $"{nameof(ViewHeight)} cannot be bigger than {nameof(BufferHeight)}.");
+                if (value < 1) throw new ArgumentOutOfRangeException(nameof(ViewHeight), $"{nameof(ViewHeight)} must be bigger than 1.");
 
-                _height = value;
+                _viewHeight = value;
 
                 BufferPosition = _bufferPosition;
                 IsDirty = true;
@@ -114,20 +112,18 @@ namespace SadConsole
             get => _bufferPosition;
             set
             {
-                if (IsBufferLocked) throw new ArgumentException(nameof(Height), $"Cannot modify {nameof(BufferPosition)} when {nameof(IsBufferLocked)} is true.");
-
                 int x = _bufferPosition.X;
                 int y = _bufferPosition.Y;
 
-                if (value.X + _width <= BufferWidth)
+                if (value.X + _viewWidth <= BufferWidth)
                     x = value.X;
                 else
-                    x = BufferWidth - _width;
+                    x = BufferWidth - _viewWidth;
 
-                if (value.Y + _height <= BufferHeight)
+                if (value.Y + _viewHeight <= BufferHeight)
                     y = value.Y;
                 else
-                    y = BufferHeight - _height;
+                    y = BufferHeight - _viewHeight;
 
                 if (x < 0)
                     x = 0;
@@ -141,14 +137,9 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// When <see langword="true"/> indicates the buffer can't be moved or resized; otherwise <see langword="false"/>.
-        /// </summary>
-        public bool IsBufferLocked { get; protected set; }
-
-        /// <summary>
         /// All cells of the surface.
         /// </summary>
-        public Cell[] Cells { get; protected set; }
+        public ColoredGlyph[] Cells { get; protected set; }
 
         /// <summary>
         /// Gets a cell based on its coordinates on the surface.
@@ -156,7 +147,7 @@ namespace SadConsole
         /// <param name="x">The X coordinate.</param>
         /// <param name="y">The Y coordinate.</param>
         /// <returns>The indicated cell.</returns>
-        public Cell this[int x, int y]
+        public ColoredGlyph this[int x, int y]
         {
             get => Cells[y * BufferWidth + x];
             protected set => Cells[y * BufferWidth + x] = value;
@@ -167,7 +158,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="index">The index of the cell.</param>
         /// <returns>The indicated cell.</returns>
-        public Cell this[int index]
+        public ColoredGlyph this[int index]
         {
             get => Cells[index];
             protected set => Cells[index] = value;
@@ -189,27 +180,25 @@ namespace SadConsole
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public CellSurface(int width, int height, Cell[] initialCells)
+        public CellSurface(int width, int height, ColoredGlyph[] initialCells)
         {
             DefaultForeground = Color.White;
             DefaultBackground = Color.Transparent;
-            _width = BufferWidth = width;
-            _height = BufferHeight = height;
-
-            IsBufferLocked = true;
+            _viewWidth = BufferWidth = width;
+            _viewHeight = BufferHeight = height;
 
             if (initialCells == null)
             {
-                Cells = new Cell[width * height];
+                Cells = new ColoredGlyph[width * height];
 
                 for (int i = 0; i < Cells.Length; i++)
                 {
-                    Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+                    Cells[i] = new ColoredGlyph(DefaultForeground, DefaultBackground, 0);
                 }
             }
             else
             {
-                if (initialCells.Length != Width * Height)
+                if (initialCells.Length != ViewWidth * ViewHeight)
                 {
                     throw new Exception("Width * Height does not match initialCells.Length");
                 }
@@ -240,27 +229,25 @@ namespace SadConsole
         /// <param name="bufferWidth">The total width of the surface in cells.</param>
         /// <param name="bufferHeight">The total height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public CellSurface(int width, int height, int bufferWidth, int bufferHeight, Cell[] initialCells)
+        public CellSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells)
         {
             if (width > bufferWidth) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Buffer width must be less than or equal to the width.");
             if (height > bufferHeight) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Buffer height must be less than or equal to the height.");
 
             DefaultForeground = Color.White;
             DefaultBackground = Color.Transparent;
-            _width = width;
-            _height = height;
+            _viewWidth = width;
+            _viewHeight = height;
             BufferWidth = bufferWidth;
             BufferHeight = bufferHeight;
 
-            IsBufferLocked = false;
-
             if (initialCells == null)
             {
-                Cells = new Cell[bufferWidth * bufferWidth];
+                Cells = new ColoredGlyph[bufferWidth * bufferWidth];
 
                 for (int i = 0; i < Cells.Length; i++)
                 {
-                    Cells[i] = new Cell(DefaultForeground, DefaultBackground, 0);
+                    Cells[i] = new ColoredGlyph(DefaultForeground, DefaultBackground, 0);
                 }
             }
             else
@@ -290,7 +277,7 @@ namespace SadConsole
         /// Gets an enumerator for <see cref="Cells"/>.
         /// </summary>
         /// <returns>An enumerator for <see cref="Cells"/>.</returns>
-        public IEnumerator<Cell> GetEnumerator() => ((IEnumerable<Cell>)Cells).GetEnumerator();
+        public IEnumerator<ColoredGlyph> GetEnumerator() => ((IEnumerable<ColoredGlyph>)Cells).GetEnumerator();
 
         /// <summary>
         /// Gets an enumerator for <see cref="Cells"/>.

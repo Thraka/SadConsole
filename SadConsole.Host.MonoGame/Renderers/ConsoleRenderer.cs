@@ -43,13 +43,13 @@ namespace SadConsole.Renderers
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != screenObject.Surface.Width * screenObject.Surface.Height || _renderRects[0].Width != screenObject.FontSize.X || _renderRects[0].Height != screenObject.FontSize.Y)
+            if (_renderRects == null || _renderRects.Length != screenObject.Surface.ViewWidth * screenObject.Surface.ViewHeight || _renderRects[0].Width != screenObject.FontSize.X || _renderRects[0].Height != screenObject.FontSize.Y)
             {
-                _renderRects = new XnaRectangle[screenObject.Surface.Width * screenObject.Surface.Height];
+                _renderRects = new XnaRectangle[screenObject.Surface.ViewWidth * screenObject.Surface.ViewHeight];
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, screenObject.Surface.Width);
+                    var position = SadRogue.Primitives.Point.FromIndex(i, screenObject.Surface.ViewWidth);
                     _renderRects[i] = screenObject.Font.GetRenderRect(position.X, position.Y, screenObject.FontSize).ToMonoRectangle();
                 }
             }
@@ -89,13 +89,13 @@ namespace SadConsole.Renderers
 
                 int rectIndex = 0;
 
-                for (int y = 0; y < cellSurface.Height; y++)
+                for (int y = 0; y < cellSurface.ViewHeight; y++)
                 {
                     int i = ((y + cellSurface.BufferPosition.Y) * cellSurface.BufferWidth) + cellSurface.BufferPosition.X;
 
-                    for (int x = 0; x < cellSurface.Width; x++)
+                    for (int x = 0; x < cellSurface.ViewWidth; x++)
                     {
-                        ref Cell cell = ref cellSurface.Cells[i];
+                        ref ColoredGlyph cell = ref cellSurface.Cells[i];
 
                         if (!cell.IsVisible)
                         {

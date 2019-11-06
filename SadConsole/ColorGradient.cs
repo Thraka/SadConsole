@@ -230,19 +230,16 @@ namespace SadRogue.Primitives
     /// <summary>
     /// A gradient stop. Defines a color and where it is located within the gradient.
     /// </summary>
-    [DataContract]
     public struct ColorGradientStop
     {
         /// <summary>
         /// The color.
         /// </summary>
-        [DataMember]
         public Color Color;
 
         /// <summary>
         /// The color stop in the gradiant this applies to.
         /// </summary>
-        [DataMember]
         public float Stop;
     }
 }

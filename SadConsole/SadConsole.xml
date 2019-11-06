@@ -98,145 +98,6 @@
             Creates a new instance of this object with all connections set to <see langword="null"/>.
             </summary>
         </member>
-        <member name="T:SadConsole.Cell">
-            <summary>
-            Represents an individual glyph on the screen with a foreground, background, and mirror effect.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cell.Decorators">
-            <summary>
-            Modifies the look of a cell with additional character. 
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cell.Foreground">
-            <summary>
-            The foreground color of this cell.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cell.Background">
-            <summary>
-            The background color of this cell.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cell.Glyph">
-            <summary>
-            The glyph index from a font for this cell.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cell.Mirror">
-            <summary>
-            The mirror effect for this cell.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cell.IsVisible">
-            <summary>
-            When true, indicates this cell should be drawn.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cell.State">
-            <summary>
-            A temporary state to backup and restore a cell.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.#ctor">
-            <summary>
-            Creates a cell with a white foreground, black background, glyph 0, and no mirror effect.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.#ctor(SadRogue.Primitives.Color)">
-            <summary>
-            Creates a cell with the specified foreground, black background, glyph 0, and no mirror effect.
-            </summary>
-            <param name="foreground">Foreground color.</param>
-        </member>
-        <member name="M:SadConsole.Cell.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Creates a cell with the specified foreground, specified background, glyph 0, and no mirror effect.
-            </summary>
-            <param name="foreground">Foreground color.</param>
-            <param name="background">Background color.</param>
-        </member>
-        <member name="M:SadConsole.Cell.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
-            <summary>
-            Creates a cell with the specified foreground, background, and glyph, with no mirror effect.
-            </summary>
-            <param name="foreground">Foreground color.</param>
-            <param name="background">Background color.</param>
-            <param name="glyph">The glyph index.</param>
-        </member>
-        <member name="M:SadConsole.Cell.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror)">
-            <summary>
-            Creates a cell with the specified foreground, background, glyph, and mirror effect.
-            </summary>
-            <param name="foreground">Foreground color.</param>
-            <param name="background">Background color.</param>
-            <param name="glyph">The glyph index.</param>
-            <param name="mirror">The mirror effect.</param>
-        </member>
-        <member name="M:SadConsole.Cell.CopyAppearanceTo(SadConsole.Cell)">
-            <summary>
-            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
-            </summary>
-            <param name="cell">The target cell to copy to.</param>
-        </member>
-        <member name="M:SadConsole.Cell.CopyAppearanceFrom(SadConsole.Cell)">
-            <summary>
-            Sets the foreground, background, glyph, and mirror effect to the same as the specified cell.
-            </summary>
-            <param name="cell">The target cell to copy from.</param>
-        </member>
-        <member name="M:SadConsole.Cell.Clear">
-            <summary>
-            Resets the foreground, background, glyph, and mirror effect.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.SaveState">
-            <summary>
-            Saves the current state of this cell to the <see cref="P:SadConsole.Cell.State"/> property.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.SaveState(SadConsole.CellState@)">
-            <summary>
-            Saves the current state of this cell to the provided state variable.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.RestoreState">
-            <summary>
-            Restores the state of this cell from the <see cref="P:SadConsole.Cell.State"/> property.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.RestoreState(SadConsole.CellState@)">
-            <summary>
-            Restores the state of this cell from the <paramref name="state"/> parameter.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.ClearState">
-            <summary>
-            Resets the <see cref="P:SadConsole.Cell.State"/> to nothing.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cell.Clone">
-            <summary>
-            Returns a new cell with the same properties as this one.
-            </summary>
-            <returns>The new cell.</returns>
-        </member>
-        <member name="M:SadConsole.Cell.op_Equality(SadConsole.Cell,SadConsole.CellState)">
-            <summary>
-            Compares if the cell is the same as the state.
-            </summary>
-            <param name="left">A cell.</param>
-            <param name="right">A cell state.</param>
-            <returns>True when they match.</returns>
-        </member>
-        <member name="M:SadConsole.Cell.op_Inequality(SadConsole.Cell,SadConsole.CellState)">
-            <summary>
-            Compares if the cell is different from the state.
-            </summary>
-            <param name="left">A cell.</param>
-            <param name="right">A cell state.</param>
-            <returns>True when are different.</returns>
-        </member>
         <member name="T:SadConsole.CellDecorator">
             <summary>
             Decorates a cell with a colored glyph.
@@ -299,81 +160,9 @@
         <member name="M:SadConsole.CellDecorator.GetHashCode">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.Mirror">
-            <summary>
-            The mirroring mode
-            </summary>
-        </member>
-        <member name="F:SadConsole.Mirror.None">
-            <summary>
-            No mirroring set.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Mirror.Vertical">
-            <summary>
-            Mirror vertically.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Mirror.Horizontal">
-            <summary>
-            Mirror horizontally.
-            </summary>
-        </member>
-        <member name="T:SadConsole.CellState">
-            <summary>
-            A cell in structure format for temporary storage.
-            </summary>
-        </member>
-        <member name="F:SadConsole.CellState.Decorators">
-            <summary>
-            Decorators of the state.
-            </summary>
-        </member>
-        <member name="F:SadConsole.CellState.Foreground">
-            <summary>
-            Foreground color of the state.
-            </summary>
-        </member>
-        <member name="F:SadConsole.CellState.Background">
-            <summary>
-            Background color of the state.
-            </summary>
-        </member>
-        <member name="F:SadConsole.CellState.Glyph">
-            <summary>
-            Glyph of the state.
-            </summary>
-        </member>
-        <member name="F:SadConsole.CellState.Mirror">
-            <summary>
-            Mirror setting of the state.
-            </summary>
-        </member>
-        <member name="F:SadConsole.CellState.IsVisible">
-            <summary>
-            Visible setting of the state.
-            </summary>
-        </member>
-        <member name="M:SadConsole.CellState.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean,SadConsole.CellDecorator[])">
-            <summary>
-            Creates a new state with the specified colors, glyph, visiblity, and mirror settings.
-            </summary>
-            <param name="foreground">Foreground color.</param>
-            <param name="background">Background color.</param>
-            <param name="glyph">Glyph value.</param>
-            <param name="mirror">Mirror setting.</param>
-            <param name="isVisible">Visbility setting.</param>
-            <param name="decorators">Decorators setting.</param>
-        </member>
-        <member name="M:SadConsole.CellState.#ctor(SadConsole.Cell)">
-            <summary>
-            Creates a cell state from a cell.
-            </summary>
-            <param name="source">The source cell to create a state from.</param>
-        </member>
         <member name="T:SadConsole.CellSurface">
             <summary>
-            An array of <see cref="T:SadConsole.Cell"/> objects used to represent a 2D surface.
+            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
             </summary>
         </member>
         <member name="E:SadConsole.CellSurface.DirtyChanged">
@@ -396,14 +185,14 @@
             The default background for glyphs on this surface.
             </summary>
         </member>
-        <member name="P:SadConsole.CellSurface.Width">
+        <member name="P:SadConsole.CellSurface.ViewWidth">
             <summary>
-            How many cells wide the surface is.
+            How many cells wide are visible.
             </summary>
         </member>
-        <member name="P:SadConsole.CellSurface.Height">
+        <member name="P:SadConsole.CellSurface.ViewHeight">
             <summary>
-            How many cells high the surface is.
+            How many cells high are visible.
             </summary>
         </member>
         <member name="P:SadConsole.CellSurface.BufferWidth">
@@ -419,11 +208,6 @@
         <member name="P:SadConsole.CellSurface.BufferPosition">
             <summary>
             The position of the buffer.
-            </summary>
-        </member>
-        <member name="P:SadConsole.CellSurface.IsBufferLocked">
-            <summary>
-            When <see langword="true"/> indicates the buffer can not be moved or resized; otherwise <see langword="false"/>.
             </summary>
         </member>
         <member name="P:SadConsole.CellSurface.Cells">
@@ -453,7 +237,7 @@
             <param name="width">The width of the surface in cells.</param>
             <param name="height">The height of the surface in cells.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,SadConsole.Cell[])">
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -470,7 +254,7 @@
             <param name="bufferWidth">The total width of the surface in cells.</param>
             <param name="bufferHeight">The total height of the surface in cells.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.Cell[])">
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -659,7 +443,7 @@
             <param name="y">The y location of the cell.</param>
             <returns>The color.</returns>
         </member>
-        <member name="M:SadConsole.CellSurface.SetCellAppearance(System.Int32,System.Int32,SadConsole.Cell)">
+        <member name="M:SadConsole.CellSurface.SetCellAppearance(System.Int32,System.Int32,SadConsole.ColoredGlyph)">
             <summary>
             Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
             </summary>
@@ -794,7 +578,7 @@
             <param name="text">The string to display.</param>
             <param name="mirror">The mirror to set on all characters in the text.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,SadConsole.Cell)">
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,SadConsole.ColoredGlyph)">
             <summary>
             Draws the string on the console at the specified location, wrapping if needed.
             </summary>
@@ -916,7 +700,7 @@
             <param name="count">The count of glyphs to erase.</param>
             <returns>The cells processed by this method.</returns>
             <remarks>
-            Cells altered by this method has the <see cref="F:SadConsole.Cell.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.Cell.Decorators"/> array reset, and the <see cref="F:SadConsole.Cell.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            Cells altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurface.Erase(System.Int32,System.Int32)">
@@ -926,7 +710,7 @@
             <param name="x">The x position.</param>
             <param name="y">The y position.</param>
             <remarks>
-            The cell altered by this method has the <see cref="F:SadConsole.Cell.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.Cell.Decorators"/> array reset, and the <see cref="F:SadConsole.Cell.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurface.Erase">
@@ -934,7 +718,7 @@
             Erases all cells which clears the glyph, mirror, and decorators.
             </summary>
             <remarks>
-            All cells have <see cref="F:SadConsole.Cell.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.Cell.Decorators"/> array reset, and the <see cref="F:SadConsole.Cell.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurface.Clear">
@@ -1010,7 +794,7 @@
             <returns>A list of cells the line touched; ordered from first to last.</returns>
             <remarks>If no foreground, background, or glyph are specified, then the list of affected cells are returned but nothing is drawn.</remarks>
         </member>
-        <member name="M:SadConsole.CellSurface.DrawBox(SadRogue.Primitives.Rectangle,SadConsole.Cell,SadConsole.Cell,System.Int32[])">
+        <member name="M:SadConsole.CellSurface.DrawBox(SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph,System.Int32[])">
             <summary>
             Draws a box.
             </summary>
@@ -1019,7 +803,7 @@
             <param name="fill">The fill style. If null, the box is not filled.</param>
             <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.DrawCircle(SadRogue.Primitives.Rectangle,SadConsole.Cell,SadConsole.Cell)">
+        <member name="M:SadConsole.CellSurface.DrawCircle(SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph)">
             <summary>
             Draws an ellipse.
             </summary>
@@ -1062,19 +846,21 @@
             </summary>
             <param name="x">The x coordinate to start from.</param>
             <param name="y">The y coordinate to start from.</param>
-            <param name="BufferWidth">The BufferWidth to copy from.</param>
-            <param name="BufferHeight">The BufferHeight to copy from.</param>
+            <param name="width">The BufferWidth to copy from.</param>
+            <param name="height">The BufferHeight to copy from.</param>
             <param name="destination">The destination surface.</param>
             <param name="destinationX">The x coordinate to copy to.</param>
             <param name="destinationY">The y coordinate to copy to.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Boolean)">
+        <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface to the specified BufferWidth and BufferHeight.
+            Resizes the surface to the specified width and height.
             </summary>
-            <param name="BufferWidth">The new BufferWidth.</param>
-            <param name="BufferHeight">The new BufferHeight.</param>
-            <param name="clear">When true, resets every cell to the <see cref="P:SadConsole.CellSurface.DefaultForeground"/>, <see cref="P:SadConsole.CellSurface.DefaultBackground"/> and glyph 0.</param>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
+            <param name="bufferWidth">The maximum width of the surface.</param>
+            <param name="bufferHeight">The maximum height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.CellSurface.DefaultForeground"/>, <see cref="P:SadConsole.CellSurface.DefaultBackground"/> and glyph 0.</param>
         </member>
         <member name="M:SadConsole.CellSurface.GetSubSurface(SadRogue.Primitives.Rectangle)">
             <summary>
@@ -1091,13 +877,15 @@
             <param name="view">A view rectangle of the target surface.</param>
             <param name="surface">The target surface to map cells from.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.Cell[]@,System.Int32,System.Int32)">
+        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ColoredGlyph[]@,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Changes the cells of the surface to the provided array.
             </summary>
             <param name="cells">The cells to replace in this surface.</param>
-            <param name="BufferWidth">The BufferWidth of the surface.</param>
-            <param name="BufferHeight">The BufferHeight of the surface.</param>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
+            <param name="bufferWidth">The maximum width of the surface.</param>
+            <param name="bufferHeight">The maximum height of the surface.</param>
         </member>
         <member name="M:SadConsole.CellSurface.FillWithRandomGarbage(System.Boolean)">
             <summary>
@@ -1167,7 +955,32 @@
         </member>
         <member name="T:SadConsole.ColoredGlyph">
             <summary>
-            Represents a single character that has a foreground and background color.
+            Represents an individual piece of a <see cref="T:SadConsole.CellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyph.Decorators">
+            <summary>
+            Modifies the look of a cell with additional character. 
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyph.Foreground">
+            <summary>
+            The foreground color of this cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyph.Background">
+            <summary>
+            The background color of this cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyph.Glyph">
+            <summary>
+            The glyph index from a font for this cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyph.Mirror">
+            <summary>
+            The mirror effect for this cell.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyph.GlyphCharacter">
@@ -1175,36 +988,80 @@
             The glyph.
             </summary>
         </member>
+        <member name="P:SadConsole.ColoredGlyph.IsVisible">
+            <summary>
+            <see langword="true"/> when this cell should be drawn; otherwise, <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyph.IsDirty">
+            <summary>
+            <see langword="true"/> when this cell needs to be redrawn; otherwise, <see langword="false"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor">
             <summary>
-            Creates a new colored glyph with a white foreground, black background, and a glyph index of 0.
+            Creates a cell with a white foreground, black background, glyph 0, and no mirror effect.
             </summary>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.#ctor(SadConsole.Cell)">
+        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color)">
             <summary>
-            Creates a new colored glyph based on the provided cell.
+            Creates a cell with the specified foreground, black background, glyph 0, and no mirror effect.
             </summary>
-            <param name="cell">The cell.</param>
+            <param name="foreground">Foreground color.</param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.#ctor(System.Int32)">
+        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
-            Creates a new colored glyph with a white foreground and black background.
+            Creates a cell with the specified foreground, specified background, glyph 0, and no mirror effect.
             </summary>
-            <param name="glyph">The glyph.</param>
+            <param name="foreground">Foreground color.</param>
+            <param name="background">Background color.</param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.#ctor(System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
             <summary>
-            Creates a new colored glyph with a given foreground and background.
+            Creates a cell with the specified foreground, background, and glyph, with no mirror effect.
             </summary>
-            <param name="glyph">The glyph.</param>
-            <param name="background">The color of the foreground.</param>
-            <param name="foreground">The color of the background.</param>
+            <param name="foreground">Foreground color.</param>
+            <param name="background">Background color.</param>
+            <param name="glyph">The glyph index.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror)">
+            <summary>
+            Creates a cell with the specified foreground, background, glyph, and mirror effect.
+            </summary>
+            <param name="foreground">Foreground color.</param>
+            <param name="background">Background color.</param>
+            <param name="glyph">The glyph index.</param>
+            <param name="mirror">The mirror effect.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph)">
+            <summary>
+            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
+            </summary>
+            <param name="cell">The target cell to copy to.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph)">
+            <summary>
+            Sets the foreground, background, glyph, and mirror effect to the same as the specified cell.
+            </summary>
+            <param name="cell">The target cell to copy from.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.Clear">
+            <summary>
+            Resets the foreground, background, glyph, and mirror effect.
+            </summary>
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clone">
             <summary>
-            Creates a new copy of this cell appearance.
+            Returns a new cell with the same properties as this one.
             </summary>
-            <returns>The cloned cell appearance.</returns>
+            <returns>The new cell.</returns>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.CreateArray(System.Int32)">
+            <summary>
+            Creates an array of colored glyphs.
+            </summary>
+            <param name="size"></param>
+            <returns></returns>
         </member>
         <member name="T:SadConsole.ColoredString">
             <summary>
@@ -1294,7 +1151,7 @@
             <param name="background">The background color for each character.</param>
             <param name="mirror">The mirror for each character.</param>`
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadConsole.Cell)">
+        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadConsole.ColoredGlyph)">
             <summary>
             Creates a new instance of the ColoredString class with the specified string value, foreground and background colors, and a cell effect.
             </summary>
@@ -1930,6 +1787,12 @@
             </summary>
             <returns>A renderer.</returns>
         </member>
+        <member name="M:SadConsole.GameHost.GetKeyboardState">
+            <summary>
+            Gets the state of the keyboard from the implemented host.
+            </summary>
+            <returns>The state of the keyboard.</returns>
+        </member>
         <member name="M:SadConsole.GameHost.LoadFont(System.String)">
             <summary>
             Loads a font from a file and adds it to the <see cref="!:Fonts"/> collection.
@@ -2022,11 +1885,1083 @@
         </member>
         <member name="M:SadConsole.GlyphDefinition.CreateCell(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
-            Creates a <see cref="T:SadConsole.Cell"/> from this definition.
+            Creates a <see cref="T:SadConsole.ColoredGlyph"/> from this definition.
             </summary>
             <param name="foreground">The foreground color of the cell.</param>
             <param name="background">The background color of the cell.</param>
             <returns>A new cell instance.</returns>
+        </member>
+        <member name="T:SadConsole.Mirror">
+            <summary>
+            The mirroring mode
+            </summary>
+        </member>
+        <member name="F:SadConsole.Mirror.None">
+            <summary>
+            No mirroring set.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Mirror.Vertical">
+            <summary>
+            Mirror vertically.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Mirror.Horizontal">
+            <summary>
+            Mirror horizontally.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Input.AsciiKey">
+            <summary>
+            Represents the state of a single key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.AsciiKey.Key">
+            <summary>
+            The key from MonoGame or XNA.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.AsciiKey.Character">
+            <summary>
+            The keyboard character of the key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.AsciiKey.TimeHeld">
+            <summary>
+            Total time the key has been held.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.AsciiKey.PostInitialDelay">
+            <summary>
+            Tracks if the key was previously held when calculating the <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.RemapVirtualKeys(SadConsole.Input.Keys,SadConsole.Input.IKeyboardState)">
+            <summary>
+             Does any necessary remapping for virtual keys.
+            </summary>
+            <param name="key"> The key to be remapped. </param>
+            <returns> The remapped key. </returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.Fill(SadConsole.Input.Keys,System.Boolean,SadConsole.Input.IKeyboardState)">
+            <summary>
+            Fills out the fields based on the MonoGame/XNA key.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="shiftPressed">Helps identify which <see cref="F:SadConsole.Input.AsciiKey.Character"/> to use while the key is pressed. For example, if <see cref="F:SadConsole.Input.Keys.A"/> is used the <see cref="F:SadConsole.Input.AsciiKey.Character"/> field will be either 'A' if <paramref name="shiftPressed"/> is true or 'a' if false.</param>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.Get(SadConsole.Input.Keys,SadConsole.Input.IKeyboardState)">
+            <summary>
+            Shortcut to get the <see cref="T:SadConsole.Input.AsciiKey"/> for a specific MonoGame/XNA <see cref="T:SadConsole.Input.Keys"/> type. Shift is considered not pressed.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>The <see cref="T:SadConsole.Input.AsciiKey"/> of the <see cref="T:SadConsole.Input.Keys"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.Get(SadConsole.Input.Keys,System.Boolean,SadConsole.Input.IKeyboardState)">
+            <summary>
+            Shortcut to get the <see cref="T:SadConsole.Input.AsciiKey"/> for a specific MonoGame/XNA <see cref="T:SadConsole.Input.Keys"/> type.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="shiftPressed">If shift should be considered pressed or not.</param>
+            <returns>The <see cref="T:SadConsole.Input.AsciiKey"/> of the <see cref="T:SadConsole.Input.Keys"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Equality(SadConsole.Input.AsciiKey,SadConsole.Input.AsciiKey)">
+            <summary>
+            Checks if the two <see cref="T:SadConsole.Input.AsciiKey"/> types use the same <see cref="F:SadConsole.Input.AsciiKey.Key"/> if the <see cref="F:SadConsole.Input.AsciiKey.Character"/> is 0. If the <see cref="F:SadConsole.Input.AsciiKey.Character"/> is not 0, the <see cref="F:SadConsole.Input.AsciiKey.Character"/> is compared.
+            </summary>
+            <param name="left">First item to compare.</param>
+            <param name="right">Second item to compare.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Inequality(SadConsole.Input.AsciiKey,SadConsole.Input.AsciiKey)">
+            <summary>
+            Compares if the <see cref="F:SadConsole.Input.AsciiKey.Character"/> field of two <see cref="T:SadConsole.Input.AsciiKey"/> instances are the same.
+            </summary>
+            <param name="left">First item to compare.</param>
+            <param name="right">Second item to compare.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Equality(SadConsole.Input.AsciiKey,SadConsole.Input.Keys)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type uses the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <param name="right">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> matches.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Inequality(SadConsole.Input.AsciiKey,SadConsole.Input.Keys)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type does not use the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <param name="right">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> does not match.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Equality(SadConsole.Input.Keys,SadConsole.Input.AsciiKey)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type uses the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <param name="right">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> matches.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.op_Inequality(SadConsole.Input.Keys,SadConsole.Input.AsciiKey)">
+            <summary>
+            Checks if the a <see cref="T:SadConsole.Input.AsciiKey"/> type does not use the indicated <see cref="F:SadConsole.Input.AsciiKey.Key"/>.
+            </summary>
+            <param name="left">The <see cref="F:SadConsole.Input.AsciiKey.Key"/> to compare.</param>
+            <param name="right">The <see cref="T:SadConsole.Input.AsciiKey"/> to compare.</param>
+            <returns>True when <see cref="F:SadConsole.Input.AsciiKey.Key"/> does not match.</returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.Equals(System.Object)">
+            <summary>
+            Compares references.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SadConsole.Input.IKeyboardState">
+            <summary>
+            Holds the state of keystrokes by a keyboard.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Input.IKeyboardState.CapsLock">
+            <summary>
+            Gets the current state of the Caps Lock key.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Input.IKeyboardState.NumLock">
+            <summary>
+            Gets the current state of the Num Lock key.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Input.IKeyboardState.IsKeyDown(SadConsole.Input.Keys)">
+            <summary>
+            Gets whether given key is currently being pressed.
+            </summary>
+            <param name="key">The key to query.</param>
+            <returns>true if the key is pressed; false otherwise.</returns>
+        </member>
+        <member name="M:SadConsole.Input.IKeyboardState.IsKeyUp(SadConsole.Input.Keys)">
+            <summary>
+            Gets whether given key is currently being not pressed.
+            </summary>
+            <param name="key">The key to query.</param>
+            <returns>true if the key is not pressed; false otherwise.</returns>
+        </member>
+        <member name="M:SadConsole.Input.IKeyboardState.GetPressedKeys">
+            <summary>
+            Returns an array of values holding keys that are currently being pressed.
+            </summary>
+            <returns>The keys that are currently being pressed.</returns>
+        </member>
+        <member name="T:SadConsole.Input.Keyboard">
+            <summary>
+            Represents the state of the keyboard.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Input.Keyboard.KeysPressed">
+            <summary>
+            A collection of keys registered as pressed which behaves like a command prompt when holding down keys. 
+            Uses the <see cref="F:SadConsole.Input.Keyboard.RepeatDelay"/> and <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/> settings.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Input.Keyboard.KeysDown">
+            <summary>
+            A collection of keys currently held down.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Input.Keyboard.KeysReleased">
+            <summary>
+            A collection of keys that were just released this frame.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keyboard.RepeatDelay">
+            <summary>
+            How often a key is included in the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection after the <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/> time has passed.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keyboard.InitialRepeatDelay">
+            <summary>
+            The initial delay after a key is first pressed before it is included a second time (while held down) in the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.Clear">
+            <summary>
+            Clears the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/>, <see cref="P:SadConsole.Input.Keyboard.KeysDown"/>, <see cref="P:SadConsole.Input.Keyboard.KeysReleased"/> collections.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyUp(SadConsole.Input.Keys)">
+            <summary>
+            Returns true if the key is not in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key is not being pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyUp(SadConsole.Input.AsciiKey)">
+            <summary>
+            Returns true if the key is not in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key is not being pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyDown(SadConsole.Input.Keys)">
+            <summary>
+            Returns true if the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key is being pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyDown(SadConsole.Input.AsciiKey)">
+            <summary>
+            Returns true if the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key is being pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyReleased(SadConsole.Input.Keys)">
+            <summary>
+            Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysReleased"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key was released this update frame.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyReleased(SadConsole.Input.AsciiKey)">
+            <summary>
+            Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysReleased"/> collection.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key was released this update frame.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyPressed(SadConsole.Input.Keys)">
+            <summary>
+            Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection regardless of shift state.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key was considered first pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.IsKeyPressed(SadConsole.Input.AsciiKey)">
+            <summary>
+            Returns true when the key is in the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True when the key was considered first pressed.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.Update(System.Single)">
+            <summary>
+            Reads the keyboard state from <see cref="M:SadConsole.GameHost.GetKeyboardState"/>.
+            </summary>
+            <param name="elapsedSeconds">Fractional seconds passed since Update was called.</param>
+        </member>
+        <member name="M:SadConsole.Input.Keyboard.Process">
+            <summary>
+            Send the keyboard to the active console.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Input.Keys">
+            <summary>
+            Defines the keys on a keyboard.
+            </summary>	
+        </member>
+        <member name="F:SadConsole.Input.Keys.None">
+            <summary>
+            Reserved.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Back">
+            <summary>
+            BACKSPACE key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Tab">
+            <summary>
+            TAB key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Enter">
+            <summary>
+            ENTER key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.CapsLock">
+            <summary>
+            CAPS LOCK key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Escape">
+            <summary>
+            ESC key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Space">
+            <summary>
+            SPACEBAR key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.PageUp">
+            <summary>
+            PAGE UP key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.PageDown">
+            <summary>
+            PAGE DOWN key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.End">
+            <summary>
+            END key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Home">
+            <summary>
+            HOME key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Left">
+            <summary>
+            LEFT ARROW key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Up">
+            <summary>
+            UP ARROW key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Right">
+            <summary>
+            RIGHT ARROW key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Down">
+            <summary>
+            DOWN ARROW key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Select">
+            <summary>
+            SELECT key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Print">
+            <summary>
+            PRINT key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Execute">
+            <summary>
+            EXECUTE key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.PrintScreen">
+            <summary>
+            PRINT SCREEN key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Insert">
+            <summary>
+            INS key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Delete">
+            <summary>
+            DEL key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Help">
+            <summary>
+            HELP key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D0">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D1">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D2">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D3">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D4">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D5">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D6">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D7">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D8">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D9">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.A">
+            <summary>
+            A key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.B">
+            <summary>
+            B key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.C">
+            <summary>
+            C key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.D">
+            <summary>
+            D key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.E">
+            <summary>
+            E key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F">
+            <summary>
+            F key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.G">
+            <summary>
+            G key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.H">
+            <summary>
+            H key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.I">
+            <summary>
+            I key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.J">
+            <summary>
+            J key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.K">
+            <summary>
+            K key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.L">
+            <summary>
+            L key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.M">
+            <summary>
+            M key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.N">
+            <summary>
+            N key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.O">
+            <summary>
+            O key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.P">
+            <summary>
+            P key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Q">
+            <summary>
+            Q key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.R">
+            <summary>
+            R key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.S">
+            <summary>
+            S key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.T">
+            <summary>
+            T key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.U">
+            <summary>
+            U key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.V">
+            <summary>
+            V key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.W">
+            <summary>
+            W key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.X">
+            <summary>
+            X key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Y">
+            <summary>
+            Y key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Z">
+            <summary>
+            Z key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.LeftWindows">
+            <summary>
+            Left Windows key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.RightWindows">
+            <summary>
+            Right Windows key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Apps">
+            <summary>
+            Applications key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Sleep">
+            <summary>
+            Computer Sleep key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad0">
+            <summary>
+            Numeric keypad 0 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad1">
+            <summary>
+            Numeric keypad 1 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad2">
+            <summary>
+            Numeric keypad 2 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad3">
+            <summary>
+            Numeric keypad 3 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad4">
+            <summary>
+            Numeric keypad 4 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad5">
+            <summary>
+            Numeric keypad 5 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad6">
+            <summary>
+            Numeric keypad 6 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad7">
+            <summary>
+            Numeric keypad 7 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad8">
+            <summary>
+            Numeric keypad 8 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumPad9">
+            <summary>
+            Numeric keypad 9 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Multiply">
+            <summary>
+            Multiply key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Add">
+            <summary>
+            Add key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Separator">
+            <summary>
+            Separator key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Subtract">
+            <summary>
+            Subtract key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Decimal">
+            <summary>
+            Decimal key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Divide">
+            <summary>
+            Divide key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F1">
+            <summary>
+            F1 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F2">
+            <summary>
+            F2 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F3">
+            <summary>
+            F3 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F4">
+            <summary>
+            F4 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F5">
+            <summary>
+            F5 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F6">
+            <summary>
+            F6 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F7">
+            <summary>
+            F7 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F8">
+            <summary>
+            F8 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F9">
+            <summary>
+            F9 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F10">
+            <summary>
+            F10 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F11">
+            <summary>
+            F11 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F12">
+            <summary>
+            F12 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F13">
+            <summary>
+            F13 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F14">
+            <summary>
+            F14 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F15">
+            <summary>
+            F15 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F16">
+            <summary>
+            F16 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F17">
+            <summary>
+            F17 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F18">
+            <summary>
+            F18 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F19">
+            <summary>
+            F19 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F20">
+            <summary>
+            F20 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F21">
+            <summary>
+            F21 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F22">
+            <summary>
+            F22 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F23">
+            <summary>
+            F23 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.F24">
+            <summary>
+            F24 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.NumLock">
+            <summary>
+            NUM LOCK key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Scroll">
+            <summary>
+            SCROLL LOCK key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.LeftShift">
+            <summary>
+            Left SHIFT key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.RightShift">
+            <summary>
+            Right SHIFT key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.LeftControl">
+            <summary>
+            Left CONTROL key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.RightControl">
+            <summary>
+            Right CONTROL key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.LeftAlt">
+            <summary>
+            Left ALT key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.RightAlt">
+            <summary>
+            Right ALT key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.BrowserBack">
+            <summary>
+            Browser Back key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.BrowserForward">
+            <summary>
+            Browser Forward key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.BrowserRefresh">
+            <summary>
+            Browser Refresh key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.BrowserStop">
+            <summary>
+            Browser Stop key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.BrowserSearch">
+            <summary>
+            Browser Search key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.BrowserFavorites">
+            <summary>
+            Browser Favorites key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.BrowserHome">
+            <summary>
+            Browser Start and Home key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.VolumeMute">
+            <summary>
+            Volume Mute key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.VolumeDown">
+            <summary>
+            Volume Down key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.VolumeUp">
+            <summary>
+            Volume Up key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.MediaNextTrack">
+            <summary>
+            Next Track key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.MediaPreviousTrack">
+            <summary>
+            Previous Track key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.MediaStop">
+            <summary>
+            Stop Media key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.MediaPlayPause">
+            <summary>
+            Play/Pause Media key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.LaunchMail">
+            <summary>
+            Start Mail key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.SelectMedia">
+            <summary>
+            Select Media key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.LaunchApplication1">
+            <summary>
+            Start Application 1 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.LaunchApplication2">
+            <summary>
+            Start Application 2 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemSemicolon">
+            <summary>
+            The OEM Semicolon key on a US standard keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemPlus">
+            <summary>
+            For any country/region, the '+' key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemComma">
+            <summary>
+            For any country/region, the ',' key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemMinus">
+            <summary>
+            For any country/region, the '-' key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemPeriod">
+            <summary>
+            For any country/region, the '.' key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemQuestion">
+            <summary>
+            The OEM question mark key on a US standard keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemTilde">
+            <summary>
+            The OEM tilde key on a US standard keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemOpenBrackets">
+            <summary>
+            The OEM open bracket key on a US standard keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemPipe">
+            <summary>
+            The OEM pipe key on a US standard keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemCloseBrackets">
+            <summary>
+            The OEM close bracket key on a US standard keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemQuotes">
+            <summary>
+            The OEM singled/double quote key on a US standard keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Oem8">
+            <summary>
+            Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemBackslash">
+            <summary>
+            The OEM angle bracket or backslash key on the RT 102 key keyboard.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.ProcessKey">
+            <summary>
+            IME PROCESS key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Attn">
+            <summary>
+            Attn key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Crsel">
+            <summary>
+            CrSel key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Exsel">
+            <summary>
+            ExSel key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.EraseEof">
+            <summary>
+            Erase EOF key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Play">
+            <summary>
+            Play key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Zoom">
+            <summary>
+            Zoom key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Pa1">
+            <summary>
+            PA1 key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemClear">
+            <summary>
+            CLEAR key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.ChatPadGreen">
+            <summary>
+            Green ChatPad key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.ChatPadOrange">
+            <summary>
+            Orange ChatPad key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Pause">
+            <summary>
+            PAUSE key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.ImeConvert">
+            <summary>
+            IME Convert key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.ImeNoConvert">
+            <summary>
+            IME NoConvert key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Kana">
+            <summary>
+            Kana key on Japanese keyboards.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.Kanji">
+            <summary>
+            Kanji key on Japanese keyboards.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemAuto">
+            <summary>
+            OEM Auto key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemCopy">
+            <summary>
+            OEM Copy key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.Keys.OemEnlW">
+            <summary>
+            OEM Enlarge Window key.
+            </summary>
         </member>
         <member name="T:SadConsole.NewOldValueEventArgs`1">
             <summary>
@@ -2352,7 +3287,7 @@
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,SadConsole.Cell[])">
+        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>

@@ -4,6 +4,7 @@ using System.Text;
 using SadRogue.Primitives;
 using SadConsole.Renderers;
 using System.IO;
+using SadConsole.Input;
 
 namespace SadConsole
 {
@@ -88,6 +89,12 @@ namespace SadConsole
         /// </summary>
         /// <returns>A renderer.</returns>
         public abstract IRenderer GetDefaultRenderer();
+
+        /// <summary>
+        /// Gets the state of the keyboard from the implemented host.
+        /// </summary>
+        /// <returns>The state of the keyboard.</returns>
+        public abstract IKeyboardState GetKeyboardState();
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
