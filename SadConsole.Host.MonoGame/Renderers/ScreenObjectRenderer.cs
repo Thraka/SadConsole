@@ -11,7 +11,7 @@ using SadConsole.Host.MonoGame;
 
 namespace SadConsole.Renderers
 {
-    public class ConsoleRenderer : IRenderer
+    public class ScreenObjectRenderer : IRenderer
     {
         public RenderTarget2D BackingTexture;
 
@@ -19,8 +19,6 @@ namespace SadConsole.Renderers
 
         public void Attach(ScreenObjectSurface screenObject)
         {
-            if (!(screenObject is Console))
-                throw new Exception($"The ConsoleRenderer must be added to a Console.");
         }
 
         public void Detatch(ScreenObjectSurface screenObject)
@@ -31,27 +29,8 @@ namespace SadConsole.Renderers
 
         public void Render(ScreenObjectSurface screenObject)
         {
-            var console = (Console)screenObject;
-
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y)));
-
-            var viewArea = new XnaRectangle(console.Surface.BufferPosition.ToMonoPoint(), new Microsoft.Xna.Framework.Point(console.Surface.BufferWidth, console.Surface.BufferHeight));
-
-            if (console.Cursor.IsVisible && console.Surface.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && viewArea.Contains(console.Cursor.Position.ToMonoPoint()))
-            {
-                GameHost.Instance.DrawCalls.Enqueue(
-                    new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
-                                               ((SadConsole.MonoGame.GameTexture)screenObject.Font.Image).Texture,
-                                               new XnaRectangle(screenObject.AbsolutePosition.ToMonoPoint() + screenObject.Font.GetRenderRect(console.Position.X, console.Position.Y, console.FontSize).ToMonoRectangle().Location, screenObject.FontSize.ToMonoPoint()),
-                                               screenObject.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                               screenObject.Font.GlyphRects[console.Cursor.CursorRenderCell.Glyph].ToMonoRectangle()
-                                              )
-                    );
-            }
-
-            if (screenObject.Tint.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screenObject.Tint.ToMonoColor(), ((SadConsole.MonoGame.GameTexture)screenObject.Font.Image).Texture, screenObject.AbsoluteArea.ToMonoRectangle(), screenObject.Font.SolidGlyphRectangle.ToMonoRectangle()));
         }
 
         public void Refresh(ScreenObjectSurface screenObject)
@@ -78,23 +57,25 @@ namespace SadConsole.Renderers
             // Rendering code from sadconsole
             RenderBegin(screenObject);
             RenderCells(screenObject);
+            RenderTint(screenObject);
             RenderEnd(screenObject);
         }
 
-        protected void RenderBegin(ScreenObjectSurface screenObject)
+
+        protected virtual void RenderBegin(ScreenObjectSurface screenObject)
         {
             MonoGame.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
             MonoGame.Global.GraphicsDevice.Clear(Color.Transparent);
             MonoGame.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
         }
 
-        protected void RenderEnd(ScreenObjectSurface screenObject)
+        protected virtual void RenderEnd(ScreenObjectSurface screenObject)
         {
             MonoGame.Global.SharedSpriteBatch.End();
             MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
         }
 
-        protected void RenderCells(ScreenObjectSurface screenObject)
+        protected virtual void RenderCells(ScreenObjectSurface screenObject)
         {
             var cellSurface = screenObject.Surface;
             if (screenObject.Tint.A != 255)
@@ -146,6 +127,15 @@ namespace SadConsole.Renderers
             }
         }
 
+        protected virtual void RenderTint(ScreenObjectSurface screenObject)
+        {
+            if (screenObject.Tint.A != 0)
+            {
+                MonoGame.Global.SharedSpriteBatch.Draw(((SadConsole.MonoGame.GameTexture)screenObject.Font.Image).Texture, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), screenObject.Font.GlyphRects[screenObject.Font.SolidGlyphIndex].ToMonoRectangle(), screenObject.Tint.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
+            }
+        }
+
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
@@ -165,7 +155,7 @@ namespace SadConsole.Renderers
             }
         }
 
-         ~ConsoleRenderer()
+         ~ScreenObjectRenderer()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(false);

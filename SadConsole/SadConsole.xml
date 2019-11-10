@@ -1251,12 +1251,12 @@
         </member>
         <member name="P:SadConsole.Components.IComponent.IsUpdate">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="!:Update(ScreenObject, TimeSpan)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsDraw">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="!:Draw(ScreenObject, TimeSpan)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsMouse">
@@ -1266,7 +1266,7 @@
         </member>
         <member name="P:SadConsole.Components.IComponent.IsKeyboard">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="!:ProcessKeyboard(ScreenObject, Keyboard, out bool)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> method.
             </summary>
         </member>
         <member name="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)">
@@ -1274,14 +1274,20 @@
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
-            <param name="delta">Time since the last call.</param>
         </member>
         <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
-            <param name="delta">Time since the last call.</param>
+        </member>
+        <member name="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <summary>
+            Called by a host when the keyboard is being processed.
+            </summary>
+            <param name="host">The host that added this component.</param>
+            <param name="keyboard">The keyboard state.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
         <member name="M:SadConsole.Components.IComponent.OnAdded(SadConsole.ScreenObject)">
             <summary>
@@ -1297,7 +1303,7 @@
         </member>
         <member name="T:SadConsole.Components.UpdateComponent">
             <summary>
-            A base class that implements <see cref="!:IComponent.Update(SadConsole.Console, TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.UpdateComponent.SortOrder">
@@ -1310,7 +1316,6 @@
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
-            <param name="delta">Time since the last call.</param>
         </member>
         <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
@@ -1333,7 +1338,6 @@
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
-            <param name="delta">Time since the last call.</param>
         </member>
         <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
@@ -1341,9 +1345,57 @@
         <member name="M:SadConsole.Components.DrawComponent.OnRemoved(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Components.KeyboardConsoleComponent">
+            <summary>
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.KeyboardConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <summary>
+            Called by a host when the keyboard is being processed.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="keyboard">The state of the keyboard.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnAdded(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnRemoved(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.InputConsoleComponent">
+            <summary>
+            A base class that implements <see cref="!:IComponent.ProcessMouse(Console, MouseConsoleState, out bool)"/> and <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.InputConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.InputConsoleComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <summary>
+            Called by a host when the keyboard is being processed.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="keyboard">The state of the keyboard.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.Components.InputConsoleComponent.OnAdded(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.InputConsoleComponent.OnRemoved(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Components.LogicComponent">
             <summary>
-            A base class that implements <see cref="!:IComponent.Update(SadConsole.Console, TimeSpan)"/> and <see cref="!:IComponent.Draw(Console, TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)"/> and <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.LogicComponent.SortOrder">
@@ -1356,14 +1408,12 @@
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
-            <param name="delta">Time since the last call.</param>
         </member>
         <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.ScreenObject)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
-            <param name="delta">Time since the last call.</param>
         </member>
         <member name="M:SadConsole.Components.LogicComponent.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
@@ -1397,6 +1447,9 @@
         <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.Components.ComponentBase.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <inheritdoc />
+        </member>
         <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
@@ -1408,9 +1461,27 @@
             How the console should handle becoming active.
             </summary>
         </member>
+        <member name="P:SadConsole.Console.IsCursorDisabled">
+            <summary>
+            When <see langword="true"/>, indicates that the <see cref="P:SadConsole.Console.Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
+            </summary>
+            <remarks>
+            This property should only be used to indicate that this object can never use the <see cref="P:SadConsole.Console.Cursor"/>. To simply disable or enable the <see cref="P:SadConsole.Console.Cursor"/>, use <see cref="P:SadConsole.Cursor.IsEnabled"/> and <see cref="P:SadConsole.Cursor.IsVisible"/>.
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Console.Cursor">
+            <summary>
+            The private virtual cursor reference.
+            </summary>
+        </member>
         <member name="P:SadConsole.Console.AutoCursorOnFocus">
             <summary>
-            Toggles the VirtualCursor as visible\hidden when the console if focused\unfocused.
+            Toggles the cursor as visible\hidden when the console if focused\unfocused.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.IsFocused">
+            <summary>
+            Gets or sets this console as the focused console for input.
             </summary>
         </member>
         <member name="M:SadConsole.Console.Update">
@@ -1418,12 +1489,12 @@
         </member>
         <member name="M:SadConsole.Console.OnFocusLost">
             <summary>
-            Called when this console's focus has been lost. Hides the <see cref="!:Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
+            Called when this console's focus has been lost. Hides the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Console.OnFocused">
             <summary>
-            Called when this console is focused. Shows the <see cref="!:Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
+            Called when this console is focused. Shows the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Console.IsMouseOver">
@@ -1438,7 +1509,7 @@
         </member>
         <member name="P:SadConsole.Console.FocusOnMouseClick">
             <summary>
-            When true, this console will set <see cref="!:IsFocused"/> to true when the mouse is clicked.
+            When true, this console will set <see cref="P:SadConsole.Console.IsFocused"/> to true when the mouse is clicked.
             </summary>
         </member>
         <member name="P:SadConsole.Console.UseKeyboard">
@@ -1451,9 +1522,12 @@
             Allows this console to accept mouse input.
             </summary>
         </member>
+        <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Console.ActiveBehavior">
             <summary>
-            How the console handles becoming focused and added to the <see cref="!:Global.FocusedConsoles"/> collection.
+            How the console handles becoming focused and added to the <see cref="P:SadConsole.Global.FocusedConsoles"/> collection.
             </summary>
         </member>
         <member name="F:SadConsole.Console.ActiveBehavior.Set">
@@ -1550,6 +1624,245 @@
         </member>
         <member name="M:SadConsole.ComponentObjectCollection.GetEnumerator">
             <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Cursor">
+            <summary>
+            A cursor that is attached to a <see cref="T:SadConsole.Console"/> used for printing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.CursorRenderCell">
+            <summary>
+            Cell used to render the cursor on the screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.PrintAppearance">
+            <summary>
+            Appearance used when printing text.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.PrintOnlyCharacterData">
+            <summary>
+            When true, indicates that the cursor, when printing, should not use the <see cref="P:SadConsole.Cursor.PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.IsVisible">
+            <summary>
+            Shows or hides the cursor. This does not affect how the cursor operates.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.IsEnabled">
+            <summary>
+            When true, allows the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method to run.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.Position">
+            <summary>
+            Gets or sets the location of the cursor on the console.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Cursor.DisableWordBreak">
+            <summary>
+            When true, prevents the any print method from breaking words up by spaces when wrapping lines.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Cursor.UseLinuxLineEndings">
+            <summary>
+            Enables linux-like string parsing where a \n behaves like a \r\n.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Cursor.UseStringParser">
+            <summary>
+            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Cursor.Print(System.String)"/> or <see cref="!:Print(string, Cell, ICellEffect)"/>
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.Row">
+            <summary>
+            Gets or sets the row of the cursor postion.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.Column">
+            <summary>
+            Gets or sets the column of the cursor postion.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.AutomaticallyShiftRowsUp">
+            <summary>
+            Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Cursor.#ctor(SadConsole.CellSurface)">
+            <summary>
+            Creates a new instance of the cursor class that will work with the specified console.
+            </summary>
+            <param name="console">The console this cursor will print on.</param>
+        </member>
+        <member name="M:SadConsole.Cursor.AttachSurface(SadConsole.CellSurface)">
+            <summary>
+            Sets the console this cursor is targetting.
+            </summary>
+            <param name="console">The console the cursor works with.</param>
+        </member>
+        <member name="M:SadConsole.Cursor.ResetAppearanceToConsole">
+            <summary>
+            Resets the cursor appearance to the console's default foreground and background.
+            </summary>
+            <returns>This cursor object.</returns>
+            <exception cref="T:System.Exception">Thrown when the backing console's CellData is null.</exception>
+        </member>
+        <member name="M:SadConsole.Cursor.SetPrintAppearance(SadConsole.ColoredGlyph)">
+            <summary>
+            Sets <see cref="P:SadConsole.Cursor.PrintAppearance"/>.
+            </summary>
+            <param name="appearance">The appearance to set.</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Print(System.String)">
+            <summary>
+            Prints text to the console using the default print appearance.
+            </summary>
+            <param name="text">The text to print.</param>
+            <returns>Returns this cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Print(System.String,SadConsole.ColoredGlyph)">
+            <summary>
+            Prints text on the console.
+            </summary>
+            <param name="text">The text to print.</param>
+            <param name="template">The way the text will look when it is printed.</param>
+            <param name="templateEffect">Effect to apply to the text as its printed.</param>
+            <returns>Returns this cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Print(SadConsole.ColoredString)">
+            <summary>
+            Prints text to the console using the appearance of the colored string.
+            </summary>
+            <param name="text">The text to print.</param>
+            <returns>Returns this cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.CarriageReturn">
+            <summary>
+            Returns the cursor to the start of the current line.
+            </summary>
+            <returns>The current cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.LineFeed">
+            <summary>
+            Moves the cursor down a line.
+            </summary>
+            <returns>The current cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.NewLine">
+            <summary>
+            Calls the <see cref="M:SadConsole.Cursor.CarriageReturn"/> and <see cref="M:SadConsole.Cursor.LineFeed"/> methods in a single call.
+            </summary>
+            <returns>The current cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Move(SadRogue.Primitives.Point)">
+            <summary>
+            Moves the cursor to the specified position.
+            </summary>
+            <param name="position">The destination of the cursor.</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Move(System.Int32,System.Int32)">
+            <summary>
+            Moves the cursor to the specified position.
+            </summary>
+            <param name="x">The x (horizontal) of the position.</param>
+            <param name="y">The x (vertical) of the position.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Up(System.Int32)">
+            <summary>
+            Moves the cusor up by the specified amount of lines.
+            </summary>
+            <param name="amount">The amount of lines to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Down(System.Int32)">
+            <summary>
+            Moves the cusor down by the specified amount of lines.
+            </summary>
+            <param name="amount">The amount of lines to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Left(System.Int32)">
+            <summary>
+            Moves the cusor left by the specified amount of columns.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.LeftWrap(System.Int32)">
+            <summary>
+            Moves the cusor left by the specified amount of columns, wrapping the cursor if needed.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.Right(System.Int32)">
+            <summary>
+            Moves the cusor right by the specified amount of columns.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.RightWrap(System.Int32)">
+            <summary>
+            Moves the cusor right by the specified amount of columns, wrapping the cursor if needed.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Automates the cursor based on keyboard input.
+            </summary>
+            <param name="info">The state of the keyboard</param>
+            <returns>Returns true when the keyboard caused the cursor to do something.</returns>
+        </member>
+        <member name="T:SadConsole.FocusedConsoleStack">
+            <summary>
+            A stack of consoles. The top-most of the stack is considered active and represented by the <see cref="P:SadConsole.FocusedConsoleStack.Console"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.FocusedConsoleStack.Console">
+            <summary>
+            Gets the current active console.
+            </summary>
+        </member>
+        <member name="F:SadConsole.FocusedConsoleStack.consoles">
+            <summary>
+            The stack of consoles for input processing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FocusedConsoleStack.Clear">
+            <summary>
+            Clears all consoles from the active stack along with the current active console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FocusedConsoleStack.Push(SadConsole.Console)">
+            <summary>
+            Adds another console to active stack, setting it as the active (top most in the stack) console.
+            </summary>
+            <param name="console"></param>
+        </member>
+        <member name="M:SadConsole.FocusedConsoleStack.Set(SadConsole.Console)">
+            <summary>
+            Replaces the top console (active console) with the provided instance. Sets <see cref="P:SadConsole.FocusedConsoleStack.Console"/> to this instance.
+            </summary>
+            <param name="console">The console to make active.</param>
+        </member>
+        <member name="M:SadConsole.FocusedConsoleStack.Pop(SadConsole.Console)">
+            <summary>
+            Removes the console from the active stack. If the instance is the current active console, the active console is set to the last console in the previous console.
+            </summary>
+            <param name="console">The console to remove.</param>
+        </member>
+        <member name="M:SadConsole.FocusedConsoleStack.Pop">
+            <summary>
+            Removes the top console from the stack.
+            </summary>
         </member>
         <member name="T:SadConsole.Font">
             <summary>
@@ -1847,6 +2160,16 @@
         <member name="P:SadConsole.Global.DefaultFontSize">
             <summary>
             The default font to use with <see cref="P:SadConsole.Global.DefaultFont"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.Keyboard">
+            <summary>
+            Global keyboard object used by SadConsole during the update frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.FocusedConsoles">
+            <summary>
+            The stack of focused consoles used by the mouse and keyboard.
             </summary>
         </member>
         <member name="T:SadConsole.GlyphDefinition">
@@ -2147,16 +2470,11 @@
             <param name="key">The key to check.</param>
             <returns>True when the key was considered first pressed.</returns>
         </member>
-        <member name="M:SadConsole.Input.Keyboard.Update(System.Single)">
+        <member name="M:SadConsole.Input.Keyboard.Update(System.TimeSpan)">
             <summary>
             Reads the keyboard state from <see cref="M:SadConsole.GameHost.GetKeyboardState"/>.
             </summary>
             <param name="elapsedSeconds">Fractional seconds passed since Update was called.</param>
-        </member>
-        <member name="M:SadConsole.Input.Keyboard.Process">
-            <summary>
-            Send the keyboard to the active console.
-            </summary>
         </member>
         <member name="T:SadConsole.Input.Keys">
             <summary>
@@ -3070,6 +3388,16 @@
             Gets or sets the visibility of this object.
             </summary>
         </member>
+        <member name="P:SadConsole.ScreenObject.UseKeyboard">
+            <summary>
+            When <see langword="true"/>, this object will use the keyboard; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.UseMouse">
+            <summary>
+            When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.ScreenObject.#ctor">
             <summary>
             Creates a new instance of this class.
@@ -3086,6 +3414,13 @@
             Updates all <see cref="P:SadConsole.ScreenObject.Components"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
             <remarks>Only processes if <see cref="!:IsPaused"/> is <see langword="false"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.ScreenObject.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Called by the engine to process the keyboard.
+            </summary>
+            <param name="keyboard">Keyboard information.</param>
+            <returns>True when the keyboard had data and this console did something with it.</returns>
         </member>
         <member name="M:SadConsole.ScreenObject.GetComponents``1">
             <summary>
@@ -3909,6 +4244,75 @@
             <summary>
             The color stop in the gradiant this applies to.
             </summary>
+        </member>
+        <member name="T:System.StringExtensions">
+            <summary>
+            Helpers for strings.
+            </summary>
+        </member>
+        <member name="M:System.StringExtensions.Align(System.String,SadConsole.HorizontalAlignment,System.Int32)">
+            <summary>
+            Aligns a string given a total character width and alignment style. Fills in the extra space with the space character.
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="alignment">The horizontal alignment.</param>
+            <param name="totalWidth">The total width of the new string.</param>
+            <returns>A new string instance.</returns>
+        </member>
+        <member name="M:System.StringExtensions.Align(System.String,SadConsole.HorizontalAlignment,System.Int32,System.Char)">
+            <summary>
+            Aligns a string given a total character width and alignment style.
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="alignment">The horizontal alignment.</param>
+            <param name="totalWidth">The total width of the new string.</param>
+            <param name="fillCharacter">The character to use to fill in the extra spaces after alignment.</param>
+            <returns>A new string instance.</returns>
+        </member>
+        <member name="M:System.StringExtensions.CreateColored(System.String,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror})">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="foreground">The foreground color. If null, <see cref="F:SadConsole.ColoredString.IgnoreForeground"/> will be set.</param>
+            <param name="background">The background color. If null, <see cref="F:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
+            <param name="mirror">The mirror setting. If null, <see cref="F:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+        </member>
+        <member name="M:System.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground gradient and cell effect. 
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="startingForeground">The starting foreground color to blend.</param>
+            <param name="endingForeground">The ending foreground color to blend.</param>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+        </member>
+        <member name="M:System.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground gradient, background gradient, and cell effect. 
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="startingForeground">The starting foreground color to blend.</param>
+            <param name="endingForeground">The ending foreground color to blend.</param>
+            <param name="startingBackground">The starting background color to blend.</param>
+            <param name="endingBackground">The ending background color to blend.</param>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+        </member>
+        <member name="M:System.StringExtensions.ToBool(System.String)">
+            <summary>
+            Converts a string to a boolean when it is "0", "1", "true", or "false".
+            </summary>
+            <param name="item">The string to convert</param>
+            <returns>The converted boolean value, otherwise false.</returns>
+        </member>
+        <member name="M:System.StringExtensions.Masked(System.String,System.String)">
+            <summary>
+            Returns a string of mask characters the same length as the input string.
+            </summary>
+            <param name="toMask">The string to mask.</param>
+            <param name="mask">The mask to use.</param>
+            <returns>A string of masks.</returns>
         </member>
     </members>
 </doc>

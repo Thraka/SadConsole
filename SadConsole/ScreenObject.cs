@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using SadConsole.Components;
+using SadConsole.Input;
 using SadRogue.Primitives;
 
 namespace SadConsole
@@ -154,6 +155,16 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// When <see langword="true"/>, this object will use the keyboard; otherwise <see langword="false"/>.
+        /// </summary>
+        public bool UseKeyboard { get; set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
+        /// </summary>
+        public bool UseMouse { get; set; }
+
+        /// <summary>
         /// Creates a new instance of this class.
         /// </summary>
         public ScreenObject()
@@ -195,6 +206,26 @@ namespace SadConsole
 
             foreach (ScreenObject child in new List<ScreenObject>(Children))
                 child.Update();
+        }
+
+        /// <summary>
+        /// Called by the engine to process the keyboard.
+        /// </summary>
+        /// <param name="keyboard">Keyboard information.</param>
+        /// <returns>True when the keyboard had data and this console did something with it.</returns>
+        public virtual bool ProcessKeyboard(Keyboard keyboard)
+        {
+            if (!UseKeyboard) return false;
+
+            foreach (Components.IComponent component in ComponentsKeyboard.ToArray())
+            {
+                component.ProcessKeyboard(this, keyboard, out bool isHandled);
+
+                if (isHandled)
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>

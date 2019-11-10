@@ -1,6 +1,7 @@
 ﻿using System;
 using SadConsole;
 using SadRogue.Primitives;
+using Console = SadConsole.Console;
 
 namespace ConsoleTest
 {
@@ -54,6 +55,14 @@ namespace ConsoleTest
             screen2.Surface.SetGlyph(5, 4, 'a');
             screen2.Surface.SetBackground(5, 4, Color.Purple);
             screen2.Surface.SetForeground(5, 4, Color.Black);
+
+
+            var con = new Console(20, 10);
+            con.Surface.DrawBox(new Rectangle(0, 0, 20, 10), new ColoredGlyph(Color.Green, Color.Transparent, 44));
+            con.Parent = Global.Screen;
+            con.Position = new Point(20, 3);
+
+            Global.FocusedConsoles.Set(con);
         }
 
     }

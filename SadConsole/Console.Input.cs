@@ -1,4 +1,5 @@
 ﻿using System;
+using SadConsole.Input;
 
 namespace SadConsole
 {
@@ -176,32 +177,16 @@ namespace SadConsole
             return false;
         }
 
-        /// <summary>
-        /// Called by the engine to process the keyboard.
-        /// </summary>
-        /// <param name="info">Keyboard information.</param>
-        /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        public virtual bool ProcessKeyboard(Keyboard info)
-        {
-            foreach (Components.IConsoleComponent component in ComponentsKeyboard.ToArray())
-            {
-                component.ProcessKeyboard(this, info, out bool isHandled);
-
-                if (isHandled)
-                {
-                    return true;
-                }
-            }
-
-            if (!UseKeyboard)
-            {
-                return false;
-            }
-
-            return !IsCursorDisabled && Cursor.IsEnabled && Cursor.ProcessKeyboard(info);
-        }
-
         */
+
+        /// <inheritdoc />
+        public override bool ProcessKeyboard(Keyboard keyboard)
+        {
+            if (!UseKeyboard) return false;
+            else if (base.ProcessKeyboard(keyboard)) return true;
+
+            return !IsCursorDisabled && Cursor.IsEnabled && Cursor.ProcessKeyboard(keyboard);
+        }
 
         /// <summary>
         /// How the console handles becoming focused and added to the <see cref="Global.FocusedConsoles"/> collection.

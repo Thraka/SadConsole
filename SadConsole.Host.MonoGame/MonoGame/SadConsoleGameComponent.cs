@@ -66,7 +66,12 @@ namespace SadConsole.MonoGame
                         if (SadConsole.Settings.Input.DoKeyboard)
                         {
                             SadConsole.Global.Keyboard.Update(SadConsole.Global.UpdateFrameDelta);
-                            SadConsole.Global.Keyboard.Process();
+
+                            if (SadConsole.Global.FocusedConsoles.Console != null && SadConsole.Global.FocusedConsoles.Console.UseKeyboard)
+                            {
+                                SadConsole.Global.FocusedConsoles.Console.ProcessKeyboard(SadConsole.Global.Keyboard);
+                            }
+
                         }
 
                         if (SadConsole.Settings.Input.DoMouse)

@@ -68,7 +68,7 @@ namespace SadConsole
             new MonoGame.GameTexture(textureStream);
 
         public override Renderers.IRenderer GetDefaultRenderer() =>
-            new Renderers.ConsoleRenderer();
+            new Renderers.ScreenObjectRenderer();
 
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
             new SadConsole.MonoGame.Keyboard();

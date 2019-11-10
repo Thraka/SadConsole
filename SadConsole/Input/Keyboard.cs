@@ -1,13 +1,8 @@
-﻿#if XNA
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-#endif
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SadConsole.Input
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-
     /// <summary>
     /// Represents the state of the keyboard.
     /// </summary>
@@ -229,19 +224,6 @@ namespace SadConsole.Input
                     KeysDownInternal[activeKeyIndex] = activeKey;
                 }
             }
-        }
-
-        /// <summary>
-        /// Send the keyboard to the active console.
-        /// </summary>
-        public void Process()
-        {
-            // Move this stuff?
-            throw new System.Exception();
-            //if (Global.FocusedConsoles.Console != null && Global.FocusedConsoles.Console.UseKeyboard)
-            //{
-            //    Global.FocusedConsoles.Console.ProcessKeyboard(this);
-            //}
         }
     }
 }

@@ -15,9 +15,9 @@ namespace SadConsole.MonoGame
             _keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState();
         }
 
-        public bool CapsLock => throw new NotImplementedException();
+        public bool CapsLock => _keyboard.CapsLock;
 
-        public bool NumLock => throw new NotImplementedException();
+        public bool NumLock => _keyboard.NumLock;
 
         public SadConsole.Input.Keys[] GetPressedKeys() =>
             _keyboard.GetPressedKeys().Cast<SadConsole.Input.Keys>().ToArray();
