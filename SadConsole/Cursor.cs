@@ -62,15 +62,13 @@ namespace SadConsole
             {
                 if (_editor != null)
                 {
-                    Point old = _position;
-
                     if (!(value.X < 0 || value.X >= _editor.BufferWidth))
                         _position = new Point(value.X, _position.Y);
 
                     if (!(value.Y < 0 || value.Y >= _editor.BufferHeight))
                         _position = new Point(_position.X, value.Y);
 
-                    if (_position != null)
+                    if (_position != null && _editor != null)
                         _editor.IsDirty = true;
                 }
             }

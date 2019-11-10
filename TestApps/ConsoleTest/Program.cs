@@ -59,7 +59,6 @@ namespace ConsoleTest
 
             var con = new Console(20, 10);
             con.Surface.DrawBox(new Rectangle(0, 0, 20, 10), new ColoredGlyph(Color.Green, Color.Transparent, 44));
-            //con.Surface[con.Surface.Cells.Length - 1].Glyph = 44;
             con.Parent = Global.Screen;
             con.Position = new Point(20, 3);
             con.Cursor.IsVisible = true;
