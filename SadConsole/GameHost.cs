@@ -98,6 +98,12 @@ namespace SadConsole
         public abstract IKeyboardState GetKeyboardState();
 
         /// <summary>
+        /// Gets the state of the mouse from the implemented host.
+        /// </summary>
+        /// <returns>The state of the mouse.</returns>
+        public abstract IMouseState GetMouseState();
+
+        /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
         /// </summary>
         /// <param name="font">The font file to load.</param>

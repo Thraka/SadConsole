@@ -48,6 +48,11 @@ namespace SadConsole
         public static Input.Keyboard Keyboard { get; } = new Input.Keyboard();
 
         /// <summary>
+        /// Global mouse object used by SadConsole during the update frame.
+        /// </summary>
+        public static Input.Mouse Mouse { get; } = new Input.Mouse();
+
+        /// <summary>
         /// The stack of focused consoles used by the mouse and keyboard.
         /// </summary>
         public static FocusedConsoleStack FocusedConsoles { get; } = new FocusedConsoleStack();

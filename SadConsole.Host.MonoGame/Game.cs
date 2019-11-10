@@ -78,6 +78,9 @@ namespace SadConsole
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
             new SadConsole.MonoGame.Keyboard();
 
+        public override SadConsole.Input.IMouseState GetMouseState() =>
+            new SadConsole.MonoGame.Mouse();
+
 
         /// <summary>
         /// Opens a read-only stream with MonoGame.

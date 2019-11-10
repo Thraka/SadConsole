@@ -2045,7 +2045,7 @@ namespace SadConsole
             }
 
             Cells = newCells;
-            _bufferPosition = new Point(0, 0);
+            _viewPosition = new Point(0, 0);
             BufferWidth = bufferWidth;
             BufferHeight = bufferHeight;
             ViewWidth = width;
@@ -2098,7 +2098,7 @@ namespace SadConsole
                 throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
             }
 
-            _bufferPosition = new Point(0, 0);
+            _viewPosition = new Point(0, 0);
             BufferWidth = rect.Width;
             BufferHeight = rect.Height;
             ViewWidth = rect.Width;
@@ -2132,7 +2132,7 @@ namespace SadConsole
         {
             if (cells.Length != bufferWidth * bufferHeight) throw new Exception("buffer width * buffer height must match the amount of cells.");
 
-            _bufferPosition = new Point(0, 0);
+            _viewPosition = new Point(0, 0);
             BufferWidth = bufferWidth;
             BufferHeight = bufferHeight;
             ViewWidth = width;

@@ -14,7 +14,7 @@ namespace SadConsole
         private static bool _handleResizeNone;
 
         /// <summary>
-        /// Gets and sets the default value for <see cref="Console.UseKeyboard"/> when the console is created.
+        /// Gets and sets the default value for <see cref="ScreenObject.UseKeyboard"/> when the console is created.
         /// </summary>
         public static bool DefaultConsoleUseKeyboard = true;
 

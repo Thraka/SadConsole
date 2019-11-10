@@ -12,11 +12,9 @@ namespace SadConsole
         private bool _isDirty = true;
         private Color _defaultBackground;
         private Color _defaultForeground;
-        private Point _bufferPosition;
+        private Point _viewPosition;
         private int _viewWidth;
         private int _viewHeight;
-
-
 
         /// <summary>
         /// An event that is raised when <see cref="IsDirty"/> is set to true.
@@ -71,7 +69,7 @@ namespace SadConsole
                 if (value < 1) throw new ArgumentOutOfRangeException(nameof(ViewWidth), $"{nameof(ViewWidth)} must be bigger than 1.");
 
                 _viewWidth = value;
-                BufferPosition = _bufferPosition;
+                ViewPosition = _viewPosition;
                 IsDirty = true;
             }
         }
@@ -88,8 +86,7 @@ namespace SadConsole
                 if (value < 1) throw new ArgumentOutOfRangeException(nameof(ViewHeight), $"{nameof(ViewHeight)} must be bigger than 1.");
 
                 _viewHeight = value;
-
-                BufferPosition = _bufferPosition;
+                ViewPosition = _viewPosition;
                 IsDirty = true;
             }
         }
@@ -105,15 +102,20 @@ namespace SadConsole
         public int BufferHeight { get; protected set; }
 
         /// <summary>
+        /// Returns <see langword="true"/> when the <see cref="ViewHeight"/> or <see cref="ViewWidth"/> is different from <see cref="BufferHeight"/> or <see cref="BufferWidth"/>, respectively.
+        /// </summary>
+        public bool IsScrollable => BufferHeight != ViewHeight || BufferWidth != ViewWidth;
+
+        /// <summary>
         /// The position of the buffer.
         /// </summary>
-        public Point BufferPosition
+        public Point ViewPosition
         {
-            get => _bufferPosition;
+            get => _viewPosition;
             set
             {
-                int x = _bufferPosition.X;
-                int y = _bufferPosition.Y;
+                int x = _viewPosition.X;
+                int y = _viewPosition.Y;
 
                 if (value.X + _viewWidth <= BufferWidth)
                     x = value.X;
@@ -131,7 +133,7 @@ namespace SadConsole
                 if (y < 0)
                     y = 0;
 
-                _bufferPosition = new Point(x, y);
+                _viewPosition = new Point(x, y);
                 IsDirty = true;
             }
         }
@@ -150,7 +152,7 @@ namespace SadConsole
         public ColoredGlyph this[int x, int y]
         {
             get => Cells[y * BufferWidth + x];
-            protected set => Cells[y * BufferWidth + x] = value;
+            protected set { Cells[y * BufferWidth + x] = value; IsDirty = true; }
         }
 
         /// <summary>
@@ -266,12 +268,20 @@ namespace SadConsole
         /// <summary>
         /// Called when the <see cref="IsDirty"/> property changes.
         /// </summary>
-        protected virtual void OnDirtyChanged() => DirtyChanged?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnDirtyChanged() =>
+            DirtyChanged?.Invoke(this, EventArgs.Empty);
 
         /// <summary>
         /// Called when the <see cref="Cells"/> property is reset.
         /// </summary>
         protected virtual void OnCellsReset() { }
+
+        /// <summary>
+        /// Gets a rectangle representing the visible portion of the surface.
+        /// </summary>
+        /// <returns>A rectangle with only the visible area.</returns>
+        public Rectangle GetViewRectangle() =>
+            new Rectangle(ViewPosition.X, ViewPosition.Y, ViewWidth, ViewHeight);
 
         /// <summary>
         /// Gets an enumerator for <see cref="Cells"/>.

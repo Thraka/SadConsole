@@ -1,10 +1,10 @@
-﻿#if XNA
-using Microsoft.Xna.Framework;
-#endif
-
+﻿using SadRogue.Primitives;
 
 namespace SadConsole.Input
 {
+    /// <summary>
+    /// The state of the mouse.
+    /// </summary>
     public class MouseConsoleState
     {
         /// <summary>
@@ -20,7 +20,7 @@ namespace SadConsole.Input
         /// <summary>
         /// The cell the mouse is over, from <see cref="Console"/>.
         /// </summary>
-        public readonly Cell Cell;
+        public readonly ColoredGlyph Cell;
 
         /// <summary>
         /// The position of the <see cref="Cell"/>.  
@@ -62,27 +62,27 @@ namespace SadConsole.Input
             {
                 if (console.UsePixelPositioning)
                 {
-                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.Font);
-                    ConsolePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
+                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.FontSize);
+                    ConsolePixelPosition = mouseData.ScreenPosition - console.AbsolutePosition;
 
                     if (ConsolePixelPosition.X < 0 || ConsolePixelPosition.Y < 0)
                     {
                         isNegative = true;
                     }
 
-                    ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.Font);
+                    ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.FontSize);
                 }
                 else
                 {
-                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.Font);
-                    ConsolePixelPosition = mouseData.ScreenPosition - console.CalculatedPosition;
+                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.FontSize);
+                    ConsolePixelPosition = mouseData.ScreenPosition - console.AbsolutePosition;
 
                     if (ConsolePixelPosition.X < 0 || ConsolePixelPosition.Y < 0)
                     {
                         isNegative = true;
                     }
 
-                    ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.Font);
+                    ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.FontSize);
                 }
 
                 if (isNegative)
@@ -91,24 +91,24 @@ namespace SadConsole.Input
                     return;
                 }
 
-                if (console is IConsoleViewPort viewObject)
+                if (console.Surface.IsScrollable)
                 {
-                    Point tempCellPosition = ConsoleCellPosition + viewObject.ViewPort.Location;
-                    IsOnConsole = viewObject.ViewPort.Contains(tempCellPosition);
+                    Point tempCellPosition = ConsoleCellPosition + console.Surface.ViewPosition;
+                    IsOnConsole = console.Surface.GetViewRectangle().Contains(tempCellPosition);
 
                     if (IsOnConsole)
                     {
                         CellPosition = tempCellPosition;
-                        Cell = console[CellPosition.X, CellPosition.Y];
+                        Cell = console.Surface[CellPosition.X, CellPosition.Y];
                     }
                 }
                 else
                 {
-                    if (console.IsValidCell(ConsoleCellPosition.X, ConsoleCellPosition.Y))
+                    if (console.Surface.IsValidCell(ConsoleCellPosition.X, ConsoleCellPosition.Y))
                     {
                         IsOnConsole = true;
                         CellPosition = ConsoleCellPosition;
-                        Cell = Console[ConsoleCellPosition.X, ConsoleCellPosition.Y];
+                        Cell = Console.Surface[ConsoleCellPosition.X, ConsoleCellPosition.Y];
                     }
                 }
             }

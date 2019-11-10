@@ -11,6 +11,11 @@ namespace SadConsole
         protected bool IsMouseOver;
 
         /// <summary>
+        /// Gets or sets whether or not this console has exclusive access to the mouse events.
+        /// </summary>
+        public bool IsExclusiveMouse { get; set; }
+
+        /// <summary>
         /// When true, this console will move to the front of its parent console when the mouse is clicked.
         /// </summary>
         public bool MoveToFrontOnMouseClick { get; set; }
@@ -21,44 +26,30 @@ namespace SadConsole
         public bool FocusOnMouseClick { get; set; }
 
         /// <summary>
-        /// Allows this console to accept keyboard input.
-        /// </summary>
-        public bool UseKeyboard { get; set; } = Settings.DefaultConsoleUseKeyboard;
-
-        /// <summary>
-        /// Allows this console to accept mouse input.
-        /// </summary>
-        public bool UseMouse { get; set; } = true;
-
-        /*
-
-        /// <summary>
         /// Raised when the a mouse button is clicked on this console.
         /// </summary>
-        public event EventHandler<MouseEventArgs> MouseButtonClicked;
+        public event EventHandler<MouseConsoleState> MouseButtonClicked;
 
         /// <summary>
         /// Raised when the mouse moves around the this console.
         /// </summary>
-        public event EventHandler<MouseEventArgs> MouseMove;
+        public event EventHandler<MouseConsoleState> MouseMove;
 
         /// <summary>
         /// Raised when the mouse exits this console.
         /// </summary>
-        public event EventHandler<MouseEventArgs> MouseExit;
+        public event EventHandler<MouseConsoleState> MouseExit;
 
         /// <summary>
         /// Raised when the mouse enters this console.
         /// </summary>
-        public event EventHandler<MouseEventArgs> MouseEnter;
-
-        
+        public event EventHandler<MouseConsoleState> MouseEnter;
 
         /// <summary>
         /// Raises the <see cref="MouseEnter"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseEnter(MouseConsoleState state) => MouseEnter?.Invoke(this, new MouseEventArgs(state));
+        protected virtual void OnMouseEnter(MouseConsoleState state) => MouseEnter?.Invoke(this, state);
 
         /// <summary>
         /// Raises the <see cref="MouseExit"/> event.
@@ -69,7 +60,7 @@ namespace SadConsole
             // Force mouse off just in case
             IsMouseOver = false;
 
-            MouseExit?.Invoke(this, new MouseEventArgs(state));
+            MouseExit?.Invoke(this, state);
         }
 
         /// <summary>
@@ -91,20 +82,20 @@ namespace SadConsole
                 }
             }
 
-            MouseMove?.Invoke(this, new MouseEventArgs(state));
+            MouseMove?.Invoke(this, state);
         }
 
         /// <summary>
         /// Raises the <see cref="MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseLeftClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
+        protected virtual void OnMouseLeftClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, state);
 
         /// <summary>
         /// Raises the <see cref="MouseButtonClicked"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnRightMouseClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, new MouseEventArgs(state));
+        protected virtual void OnRightMouseClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, state);
 
         /// <summary>
         /// If the mouse is not over the console, causes the protected <see cref="OnMouseExit"/> method to run which raises the <see cref="MouseExit"/> event.
@@ -130,7 +121,7 @@ namespace SadConsole
                 return false;
             }
 
-            foreach (Components.IConsoleComponent component in ComponentsMouse.ToArray())
+            foreach (SadConsole.Components.IComponent component in ComponentsMouse.ToArray())
             {
                 component.ProcessMouse(this, state, out bool isHandled);
 
@@ -176,8 +167,6 @@ namespace SadConsole
 
             return false;
         }
-
-        */
 
         /// <inheritdoc />
         public override bool ProcessKeyboard(Keyboard keyboard)

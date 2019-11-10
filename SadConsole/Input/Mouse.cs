@@ -1,10 +1,6 @@
-﻿#if XNA
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-#endif
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SadRogue.Primitives;
 
 namespace SadConsole.Input
 {
@@ -80,25 +76,25 @@ namespace SadConsole.Input
         /// <summary>
         /// Indicates that the mouse is currently within the bounds of the rendering area.
         /// </summary>
-        public bool IsOnScreen => Global.RenderRect.Contains(ScreenPosition + Global.RenderRect.Location);
+        public bool IsOnScreen => Settings.Rendering.RenderRect.Contains(ScreenPosition + Settings.Rendering.RenderRect.Position);
 
         /// <summary>
-        /// Updates the state of the mouse.
+        /// Reads the mouse state from <see cref="GameHost.GetMouseState"/>.
         /// </summary>
-        /// <param name="gameTime">Delta from last update.</param>
-        public void Update(GameTime gameTime)
+        /// <param name="elapsedSeconds">Fractional seconds passed since Update was called.</param>
+        public void Update(TimeSpan elapsedSeconds)
         {
-            MouseState currentState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+            IMouseState currentState = GameHost.Instance.GetMouseState();
 
             // Update local state
-            bool leftDown = currentState.LeftButton == ButtonState.Pressed;
-            bool rightDown = currentState.RightButton == ButtonState.Pressed;
-            bool middleDown = currentState.MiddleButton == ButtonState.Pressed;
+            bool leftDown = currentState.IsLeftButtonDown;
+            bool rightDown = currentState.IsRightButtonDown;
+            bool middleDown = currentState.IsMiddleButtonDown;
 
-            ScrollWheelValueChange = ScrollWheelValue - currentState.ScrollWheelValue;
-            ScrollWheelValue = currentState.ScrollWheelValue;
+            ScrollWheelValueChange = ScrollWheelValue - currentState.MouseWheel;
+            ScrollWheelValue = currentState.MouseWheel;
 
-            ScreenPosition = new Point((int)(currentState.X * Global.RenderScale.X), (int)(currentState.Y * Global.RenderScale.Y)) - new Point((int)(Global.RenderRect.X * Global.RenderScale.X), (int)(Global.RenderRect.Y * Global.RenderScale.Y));
+            ScreenPosition = new Point((int)(currentState.ScreenPosition.X * Settings.Rendering.RenderScale.X), (int)(currentState.ScreenPosition.Y * Settings.Rendering.RenderScale.Y)) - new Point((int)(Settings.Rendering.RenderRect.X * Settings.Rendering.RenderScale.X), (int)(Settings.Rendering.RenderRect.Y * Settings.Rendering.RenderScale.Y));
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
             bool newMiddleClicked = MiddleButtonDown && !middleDown;
@@ -118,17 +114,17 @@ namespace SadConsole.Input
                 MiddleDoubleClicked = false;
             }
 
-            if (LeftClicked && newLeftClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+            if (LeftClicked && newLeftClicked && elapsedSeconds.TotalSeconds < 1000)
             {
                 LeftDoubleClicked = true;
             }
 
-            if (RightClicked && newRightClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+            if (RightClicked && newRightClicked && elapsedSeconds.TotalSeconds < 1000)
             {
                 RightDoubleClicked = true;
             }
 
-            if (MiddleClicked && newMiddleClicked && gameTime.ElapsedGameTime.TotalSeconds < 1000)
+            if (MiddleClicked && newMiddleClicked && elapsedSeconds.TotalSeconds < 1000)
             {
                 MiddleDoubleClicked = true;
             }
@@ -136,8 +132,8 @@ namespace SadConsole.Input
             LeftClicked = newLeftClicked;
             RightClicked = newRightClicked;
             MiddleClicked = newMiddleClicked;
-            _leftLastClickedTime = gameTime.ElapsedGameTime;
-            _rightLastClickedTime = gameTime.ElapsedGameTime;
+            _leftLastClickedTime = elapsedSeconds;
+            _rightLastClickedTime = elapsedSeconds;
             LeftButtonDown = leftDown;
             RightButtonDown = rightDown;
             MiddleButtonDown = middleDown;
@@ -159,7 +155,7 @@ namespace SadConsole.Input
             MiddleButtonDown = false;
             ScrollWheelValue = 0;
             ScrollWheelValueChange = 0;
-            ScreenPosition = Point.Zero;
+            ScreenPosition = new Point(0, 0);
         }
 
         /// <summary>
@@ -193,13 +189,13 @@ namespace SadConsole.Input
             }
 
             // Scan through each "console" in the current screen, including children.
-            else if (Global.CurrentScreen != null)
+            else if (Global.Screen != null)
             {
                 bool foundMouseTarget = false;
 
                 // Build a list of all consoles
                 var consoles = new List<Console>();
-                GetConsoles(Global.CurrentScreen, ref consoles);
+                GetConsoles(Global.Screen, ref consoles);
 
                 // Process top-most consoles first.
                 consoles.Reverse();

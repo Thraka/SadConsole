@@ -76,8 +76,8 @@ namespace SadConsole.MonoGame
 
                         if (SadConsole.Settings.Input.DoMouse)
                         {
-                            //Global.MouseState.Update(gameTime);
-                            //Global.MouseState.Process();
+                            SadConsole.Global.Mouse.Update(SadConsole.Global.UpdateFrameDelta);
+                            SadConsole.Global.Mouse.Process();
                         }
                     }
 

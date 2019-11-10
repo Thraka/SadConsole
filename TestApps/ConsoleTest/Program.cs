@@ -1,5 +1,6 @@
 ﻿using System;
 using SadConsole;
+using SadConsole.Input;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
 
@@ -62,9 +63,26 @@ namespace ConsoleTest
             con.Parent = Global.Screen;
             con.Position = new Point(20, 3);
             con.Cursor.IsVisible = true;
+            con.UseMouse = true;
+            con.Components.Add(new MouseTest());
+            
 
             Global.FocusedConsoles.Set(con);
         }
 
+
+        class MouseTest : SadConsole.Components.MouseConsoleComponent
+        {
+            public override void ProcessMouse(ScreenObject host, MouseConsoleState state, out bool handled)
+            {
+                if (state.Mouse.IsOnScreen)
+                {
+                    host.Position = state.WorldCellPosition;
+                    handled = true;
+                }
+                else
+                    handled = false;
+            }
+        }
     }
 }

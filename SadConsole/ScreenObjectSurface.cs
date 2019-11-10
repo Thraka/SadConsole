@@ -101,6 +101,7 @@ namespace SadConsole
             set
             {
                 _usePixelPositioning = value;
+                IsDirty = true;
                 SetAbsolutePosition();
             }
         }
@@ -109,6 +110,12 @@ namespace SadConsole
         /// The width of the surface in pixels.
         /// </summary>
         public int WidthPixels => Surface.ViewWidth * FontSize.X;
+
+
+        /// <summary>
+        /// The height of the surface in pixels.
+        /// </summary>
+        public int HeightPixels => Surface.ViewHeight * FontSize.Y;
 
         /// <summary>
         /// Creates a new screen object that can render a surface.
@@ -137,6 +144,10 @@ namespace SadConsole
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 
+        /// <summary>
+        /// Creates a new screen object using the specified surface.
+        /// </summary>
+        /// <param name="surface">The surface.</param>
         public ScreenObjectSurface(CellSurface surface)
         {
             Surface = surface;
@@ -145,10 +156,6 @@ namespace SadConsole
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 
-        /// <summary>
-        /// The height of the surface in pixels.
-        /// </summary>
-        public int HeightPixels => Surface.ViewHeight * FontSize.Y;
 
         /// <inheritdoc />
         protected override void SetAbsolutePosition()
