@@ -2094,10 +2094,11 @@
             <param name="textureStream">A stream containing the texture.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.GameHost.GetDefaultRenderer">
+        <member name="M:SadConsole.GameHost.GetDefaultRenderer(SadConsole.ScreenObjectSurface)">
             <summary>
             Gets the default <see cref="T:SadConsole.Renderers.IRenderer"/> implemented by the host.
             </summary>
+            <param name="screenObject">The object to get a renderer for.</param>
             <returns>A renderer.</returns>
         </member>
         <member name="M:SadConsole.GameHost.GetKeyboardState">

@@ -120,7 +120,7 @@ namespace SadConsole
             Surface = new CellSurface(width, height);
             Font = Global.DefaultFont;
             FontSize = Font.GetFontSize(Global.DefaultFontSize);
-            Renderer = GameHost.Instance.GetDefaultRenderer();
+            Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace SadConsole
             Surface = new CellSurface(width, height, initialCells);
             Font = Global.DefaultFont;
             FontSize = Font.GetFontSize(Global.DefaultFontSize);
-            Renderer = GameHost.Instance.GetDefaultRenderer();
+            Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 
         public ScreenObjectSurface(CellSurface surface)
@@ -142,7 +142,7 @@ namespace SadConsole
             Surface = surface;
             Font = Global.DefaultFont;
             FontSize = Font.GetFontSize(Global.DefaultFontSize);
-            Renderer = GameHost.Instance.GetDefaultRenderer();
+            Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 
         /// <summary>

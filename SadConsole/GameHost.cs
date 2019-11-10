@@ -87,8 +87,9 @@ namespace SadConsole
         /// <summary>
         /// Gets the default <see cref="IRenderer"/> implemented by the host.
         /// </summary>
+        /// <param name="screenObject">The object to get a renderer for.</param>
         /// <returns>A renderer.</returns>
-        public abstract IRenderer GetDefaultRenderer();
+        public abstract IRenderer GetDefaultRenderer(ScreenObjectSurface screenObject);
 
         /// <summary>
         /// Gets the state of the keyboard from the implemented host.

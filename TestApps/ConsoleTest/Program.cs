@@ -62,6 +62,7 @@ namespace ConsoleTest
             //con.Surface[con.Surface.Cells.Length - 1].Glyph = 44;
             con.Parent = Global.Screen;
             con.Position = new Point(20, 3);
+            con.Cursor.IsVisible = true;
 
             Global.FocusedConsoles.Set(con);
         }
