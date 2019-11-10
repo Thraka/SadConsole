@@ -1709,9 +1709,9 @@ namespace SadConsole
 
             // Tweak the corners
             SetGlyph(area.X, area.Y, connectedLineStyle[(int)ConnectedLineIndex.TopLeft]);
-            SetGlyph(area.MaxExtentX - 1, area.Y, connectedLineStyle[(int)ConnectedLineIndex.TopRight]);
-            SetGlyph(area.X, area.MaxExtentY - 1, connectedLineStyle[(int)ConnectedLineIndex.BottomLeft]);
-            SetGlyph(area.MaxExtentX - 1, area.MaxExtentY - 1, connectedLineStyle[(int)ConnectedLineIndex.BottomRight]);
+            SetGlyph(area.MaxExtentX, area.Y, connectedLineStyle[(int)ConnectedLineIndex.TopRight]);
+            SetGlyph(area.X, area.MaxExtentY, connectedLineStyle[(int)ConnectedLineIndex.BottomLeft]);
+            SetGlyph(area.MaxExtentX, area.MaxExtentY, connectedLineStyle[(int)ConnectedLineIndex.BottomRight]);
 
             // Fill
             if (fill == null)
@@ -1734,7 +1734,7 @@ namespace SadConsole
             var cells = new List<ColoredGlyph>(area.Width * area.Height);
             var masterCells = new List<ColoredGlyph>(Cells);
 
-            Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX - 1, area.MaxExtentY - 1, (x, y) =>
+            Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX, area.MaxExtentY, (x, y) =>
             {
                 if (IsValidCell(x, y))
                 {
