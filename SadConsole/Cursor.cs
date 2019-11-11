@@ -239,7 +239,7 @@ namespace SadConsole
             (int x, int y) = _position;
             x += 1;
 
-            if (_position.X >= _editor.BufferWidth)
+            if (x >= _editor.BufferWidth)
             {
                 x = 0;
                 y += 1;
