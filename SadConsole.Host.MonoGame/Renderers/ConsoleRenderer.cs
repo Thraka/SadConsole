@@ -11,24 +11,35 @@ using SadConsole.Host.MonoGame;
 
 namespace SadConsole.Renderers
 {
+    /// <summary>
+    /// Draws a <see cref="Console"/>.
+    /// </summary>
+    /// <remarks>
+    /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(ScreenObjectSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+    ///
+    /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
+    /// </remarks>
     public class ConsoleRenderer : IRenderer
     {
         public RenderTarget2D BackingTexture;
 
         private XnaRectangle[] _renderRects;
 
+        ///  <inheritdoc/>
         public void Attach(ScreenObjectSurface surface)
         {
             if (!(surface is Console))
                 throw new Exception($"The ConsoleRenderer must be added to a Console.");
         }
 
+        ///  <inheritdoc/>
         public void Detatch(ScreenObjectSurface surface)
         {
             BackingTexture.Dispose();
             BackingTexture = null;
         }
 
+        ///  <inheritdoc/>
         public void Render(ScreenObjectSurface surface)
         {
             var console = (Console)surface;
@@ -52,8 +63,11 @@ namespace SadConsole.Renderers
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(surface.Tint.ToMonoColor(), ((SadConsole.MonoGame.GameTexture)surface.Font.Image).Texture, surface.AbsoluteArea.ToMonoRectangle(), surface.Font.SolidGlyphRectangle.ToMonoRectangle()));
         }
 
+        ///  <inheritdoc/>
         public void Refresh(ScreenObjectSurface surface)
         { 
+            if (!surface.IsDirty) return;
+
             // Update texture if something is out of size.
             if (BackingTexture == null || surface.AbsoluteArea.Width != BackingTexture.Width || surface.AbsoluteArea.Height != BackingTexture.Height)
             {
@@ -77,6 +91,8 @@ namespace SadConsole.Renderers
             RenderBegin(surface);
             RenderCells(surface);
             RenderEnd(surface);
+
+            surface.IsDirty = false;
         }
 
         protected void RenderBegin(ScreenObjectSurface surface)
@@ -100,9 +116,7 @@ namespace SadConsole.Renderers
                 var font = ((SadConsole.MonoGame.GameTexture)surface.Font.Image).Texture;
 
                 if (cellSurface.DefaultBackground.A != 0)
-                {
                     MonoGame.Global.SharedSpriteBatch.Draw(font, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
-                }
 
                 int rectIndex = 0;
 
@@ -114,28 +128,19 @@ namespace SadConsole.Renderers
                     {
                         ref ColoredGlyph cell = ref cellSurface.Cells[i];
 
-                        if (!cell.IsVisible)
-                        {
-                            continue;
-                        }
+                        if (!cell.IsVisible) continue;
 
                         if (!cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground)
-                        {
                             MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                        }
 
                         if (!cell.Foreground.Equals(Color.Transparent))
-                        {
                             MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.GlyphRects[cell.Glyph].ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
-                        }
 
                         foreach (CellDecorator decorator in cell.Decorators)
-                        {
                             if (!decorator.Color.Equals(Color.Transparent))
-                            {
                                 MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.GlyphRects[decorator.Glyph].ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
-                            }
-                        }
+
+                        cell.IsDirty = false;
 
                         i++;
                         rectIndex++;

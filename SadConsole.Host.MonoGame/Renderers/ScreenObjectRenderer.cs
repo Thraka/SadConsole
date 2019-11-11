@@ -11,6 +11,12 @@ using SadConsole.Host.MonoGame;
 
 namespace SadConsole.Renderers
 {
+    /// <summary>
+    /// Draws a <see cref="ScreenObjectSurface"/>.
+    /// </summary>
+    /// <remarks>
+    /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+    /// </remarks>
     public class ScreenObjectRenderer : IRenderer
     {
         public RenderTarget2D BackingTexture;
@@ -34,7 +40,9 @@ namespace SadConsole.Renderers
         }
 
         public void Refresh(ScreenObjectSurface surface)
-        { 
+        {
+            if (!surface.IsDirty) return;
+
             // Update texture if something is out of size.
             if (BackingTexture == null || surface.AbsoluteArea.Width != BackingTexture.Width || surface.AbsoluteArea.Height != BackingTexture.Height)
             {
@@ -53,12 +61,14 @@ namespace SadConsole.Renderers
                     _renderRects[i] = surface.Font.GetRenderRect(position.X, position.Y, surface.FontSize).ToMonoRectangle();
                 }
             }
-           
-            // Rendering code from sadconsole
+
+            // Render parts of the surface
             RenderBegin(surface);
             RenderCells(surface);
             RenderTint(surface);
             RenderEnd(surface);
+
+            surface.IsDirty = false;
         }
 
 
@@ -83,9 +93,7 @@ namespace SadConsole.Renderers
                 var font = ((SadConsole.MonoGame.GameTexture)surface.Font.Image).Texture;
 
                 if (cellSurface.DefaultBackground.A != 0)
-                {
                     MonoGame.Global.SharedSpriteBatch.Draw(font, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
-                }
 
                 int rectIndex = 0;
 
@@ -97,28 +105,19 @@ namespace SadConsole.Renderers
                     {
                         ref ColoredGlyph cell = ref cellSurface.Cells[i];
 
-                        if (!cell.IsVisible)
-                        {
-                            continue;
-                        }
+                        if (!cell.IsVisible) continue;
 
                         if (!cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground)
-                        {
                             MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                        }
 
                         if (!cell.Foreground.Equals(Color.Transparent))
-                        {
                             MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.GlyphRects[cell.Glyph].ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
-                        }
 
                         foreach (CellDecorator decorator in cell.Decorators)
-                        {
                             if (!decorator.Color.Equals(Color.Transparent))
-                            {
                                 MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.GlyphRects[decorator.Glyph].ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
-                            }
-                        }
+
+                        cell.IsDirty = false;
 
                         i++;
                         rectIndex++;
