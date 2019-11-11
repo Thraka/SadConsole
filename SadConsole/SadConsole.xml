@@ -4050,17 +4050,17 @@
         </member>
         <member name="F:SadConsole.Settings.DoDraw">
             <summary>
-            When true, indicates that <see cref="!:SadConsole.Game.SadConsoleGameComponent.Draw(GameTime)"/> will run.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.ScreenObject.Draw"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoFinalDraw">
             <summary>
-            When true, indicates that <see cref="!:SadConsole.Game.SadConsoleGameComponent.Draw(GameTime)"/> will render to the screen at the end.
+            When true, indicates that any game framework should render a composed image, of all consoles, to the screen.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoUpdate">
             <summary>
-            When true, indicates that <see cref="!:SadConsole.Game.SadConsoleGameComponent.Update(GameTime)"/> will run.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.ScreenObject.Update"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Settings.WindowMinimumSize">

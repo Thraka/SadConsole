@@ -176,11 +176,7 @@ namespace SadConsole
 
             if (_renderer != null)
             {
-                if (IsDirty)
-                {
-                    _renderer.Refresh(this);
-                    IsDirty = false;
-                }
+                _renderer.Refresh(this);
                 _renderer.Render(this);
             }
 

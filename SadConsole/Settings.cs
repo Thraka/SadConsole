@@ -39,17 +39,17 @@ namespace SadConsole
         public static bool UnlimitedFPS = false;
 
         /// <summary>
-        /// When true, indicates that <see cref="SadConsole.Game.SadConsoleGameComponent.Draw(GameTime)"/> will run.
+        /// When true, indicates that the game loop should call <see cref="ScreenObject.Draw"/> on each object in <see cref="Global.Screen"/>.
         /// </summary>
         public static bool DoDraw = true;
 
         /// <summary>
-        /// When true, indicates that <see cref="SadConsole.Game.SadConsoleGameComponent.Draw(GameTime)"/> will render to the screen at the end.
+        /// When true, indicates that any game framework should render a composed image, of all consoles, to the screen.
         /// </summary>
         public static bool DoFinalDraw = true;
 
         /// <summary>
-        /// When true, indicates that <see cref="SadConsole.Game.SadConsoleGameComponent.Update(GameTime)"/> will run.
+        /// When true, indicates that the game loop should call <see cref="ScreenObject.Update"/> on each object in <see cref="Global.Screen"/>.
         /// </summary>
         public static bool DoUpdate = true;
 
@@ -115,27 +115,27 @@ namespace SadConsole
         public enum WindowResizeOptions
         {
             /// <summary>
-            /// Stretches the <see cref="Global.RenderOutput"/> to fit the window.
+            /// Stretches the output to fit the window.
             /// </summary>
             Stretch,
 
             /// <summary>
-            /// Centers <see cref="Global.RenderOutput"/> in the window.
+            /// Centers output in the window.
             /// </summary>
             Center,
 
             /// <summary>
-            /// Scales <see cref="Global.RenderOutput"/> to fit the window as best as possible while maintaining a good picture.
+            /// Scales output to fit the window as best as possible while maintaining a good picture.
             /// </summary>
             Scale,
 
             /// <summary>
-            /// Fits <see cref="Global.RenderOutput"/> to the window using padding to maintain aspect ratio.
+            /// Fits output to the window using padding to maintain aspect ratio.
             /// </summary>
             Fit,
 
             /// <summary>
-            /// <see cref="Global.RenderOutput"/> always matches the window.
+            /// Output always matches the window.
             /// </summary>
             None,
         }

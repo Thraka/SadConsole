@@ -47,7 +47,7 @@ namespace SadConsole
         /// </summary>
         public Queue<DrawCalls.IDrawCall> DrawCalls { get; } = new Queue<DrawCalls.IDrawCall>();
 
-        public Point WindowSize { get; }
+        public Point WindowSize { get; protected set; }
 
         public int ScreenCellsX { get; protected set; }
 
