@@ -25,7 +25,7 @@ namespace ConsoleTest
         /// </summary>
         private static void Init()
         {
-            Game.Instance.MonoGameInstance.Components.Add(new SadConsole.MonoGame.Game.FPSCounterComponent(Game.Instance.MonoGameInstance));
+            //Game.Instance.MonoGameInstance.Components.Add(new SadConsole.MonoGame.Game.FPSCounterComponent(Game.Instance.MonoGameInstance));
             //Global.Screen.Surface.Print(1, 1, "Hello from SadConsole 9.0");
             //Global.Screen.Surface.Print(10, 15, "Hello from SadConsole 9.0", Color.AnsiCyan);
             //Global.Screen.Surface.Print(5, 18, new ColorGradient(Color.AliceBlue, Color.DarkOrange, Color.LightPink, Color.Red.GetRandomColor(Global.Random)).ToColoredString("Some color is fun to play with when you got it!"));
@@ -56,12 +56,12 @@ namespace ConsoleTest
             //screen2.Surface.SetGlyph(5, 4, 'a');
             //screen2.Surface.SetBackground(5, 4, Color.Purple);
             //screen2.Surface.SetForeground(5, 4, Color.Black);
-
+            Global.Screen.Renderer = null;
 
             var con = new Console(20, 10);
             con.Surface.DrawBox(new Rectangle(0, 0, 20, 10), new ColoredGlyph(Color.Green, Color.Transparent, 44));
             con.Parent = Global.Screen;
-            con.Position = new Point(20, 3);
+            con.Position = new Point(0,0);
             con.Cursor.IsVisible = true;
             con.UseMouse = true;
             con.Components.Add(new MouseTest());

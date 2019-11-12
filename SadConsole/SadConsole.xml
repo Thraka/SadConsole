@@ -3637,6 +3637,35 @@
             <param name="oldObject">The old parent.</param>
             <param name="newObject">The new parent.</param>
         </member>
+        <member name="T:SadConsole.Renderers.IRenderer">
+            <summary>
+            Draws a surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.ScreenObjectSurface)">
+            <summary>
+            Called when the renderer is added to a surface.
+            </summary>
+            <param name="surfaceObject">The surface.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.ScreenObjectSurface)">
+            <summary>
+            Called when the renderer is removed from a surface.
+            </summary>
+            <param name="surfaceObject">The surface.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ScreenObjectSurface)">
+            <summary>
+            Refreshes a cached drawing state.
+            </summary>
+            <param name="surfaceObject">The surface this renderer is attached to.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.ScreenObjectSurface)">
+            <summary>
+            Creates a drawcall in the drawing pipeline.
+            </summary>
+            <param name="surfaceObject">The surface this renderer is attached to.</param>
+        </member>
         <member name="T:SadConsole.ScreenObject">
             <summary>
             A generic object processed by SadConsole. Provides parent/child, components, and position.
@@ -4120,27 +4149,27 @@
         </member>
         <member name="F:SadConsole.Settings.WindowResizeOptions.Stretch">
             <summary>
-            Stretches the <see cref="!:Global.RenderOutput"/> to fit the window.
+            Stretches the output to fit the window.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.WindowResizeOptions.Center">
             <summary>
-            Centers <see cref="!:Global.RenderOutput"/> in the window.
+            Centers output in the window.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.WindowResizeOptions.Scale">
             <summary>
-            Scales <see cref="!:Global.RenderOutput"/> to fit the window as best as possible while maintaining a good picture.
+            Scales output to fit the window as best as possible while maintaining a good picture.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.WindowResizeOptions.Fit">
             <summary>
-            Fits <see cref="!:Global.RenderOutput"/> to the window using padding to maintain aspect ratio.
+            Fits output to the window using padding to maintain aspect ratio.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.WindowResizeOptions.None">
             <summary>
-            <see cref="!:Global.RenderOutput"/> always matches the window.
+            Output always matches the window.
             </summary>
         </member>
         <member name="T:SadConsole.StringParser.CommandTypes">

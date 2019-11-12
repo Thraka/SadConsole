@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.MonoGame", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheSadRogue.Primitives.MonoGame", "..\TheSadRogue.Primitives\TheSadRogue.Primitives.MonoGame\TheSadRogue.Primitives.MonoGame.csproj", "{0F9406DA-280F-4DE7-9AB3-30F48A714974}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.SFML", "SadConsole.Host.SFML\SadConsole.Host.SFML.csproj", "{B1DE0B37-435D-453C-BBC9-7ACE7E514E7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{0F9406DA-280F-4DE7-9AB3-30F48A714974}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F9406DA-280F-4DE7-9AB3-30F48A714974}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F9406DA-280F-4DE7-9AB3-30F48A714974}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1DE0B37-435D-453C-BBC9-7ACE7E514E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1DE0B37-435D-453C-BBC9-7ACE7E514E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1DE0B37-435D-453C-BBC9-7ACE7E514E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1DE0B37-435D-453C-BBC9-7ACE7E514E7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{661196A2-687D-435A-B5B9-47C433279E40} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 		{9765FD39-6A4F-414F-8976-623970682572} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 		{F02A2B3B-706E-4277-9CE2-B47733CCB22F} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
+		{B1DE0B37-435D-453C-BBC9-7ACE7E514E7F} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}
