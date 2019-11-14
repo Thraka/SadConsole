@@ -41,7 +41,7 @@ namespace SadConsole.StringParser
 
         }
 
-        public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex,
+        public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             glyphState.Mirror = Mirror;

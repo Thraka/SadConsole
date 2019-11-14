@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using SadRogue.Primitives;
-//using SadConsole.Effects;
+using SadConsole.Effects;
 using SadConsole.StringParser;
 
 namespace SadConsole
@@ -11,16 +11,16 @@ namespace SadConsole
     /// <summary>
     /// Represents a string that has foreground and background colors for each character in the string.
     /// </summary>
-    public partial class ColoredString : IEnumerable<ColoredGlyph>
+    public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffect>
     {
-        private ColoredGlyph[] _characters;
+        private ColoredGlyphEffect[] _characters;
 
         /// <summary>
-        /// Gets a <see cref="ColoredGlyph"/> from the string.
+        /// Gets a <see cref="ColoredGlyphEffect"/> from the string.
         /// </summary>
-        /// <param name="index">The index in the string of the <see cref="ColoredGlyph"/>.</param>
+        /// <param name="index">The index in the string of the <see cref="ColoredGlyphEffect"/>.</param>
         /// <returns>The colored glyph representing the character in the string.</returns>
-        public ColoredGlyph this[int index]
+        public ColoredGlyphEffect this[int index]
         {
             get => _characters[index];
             set => _characters[index] = value;
@@ -52,7 +52,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// The total number of <see cref="ColoredGlyph"/> characters in the string.
+        /// The total number of <see cref="ColoredGlyphEffect"/> characters in the string.
         /// </summary>
         public int Count => _characters.Length;
 
@@ -97,10 +97,10 @@ namespace SadConsole
         /// <param name="capacity">The number of blank characters.</param>
         public ColoredString(int capacity)
         {
-            _characters = new ColoredGlyph[capacity];
+            _characters = new ColoredGlyphEffect[capacity];
             for (int i = 0; i < capacity; i++)
             {
-                _characters[i] = new ColoredGlyph() { GlyphCharacter = ' ' };
+                _characters[i] = new ColoredGlyphEffect() { GlyphCharacter = ' ' };
             }
         }
 
@@ -131,13 +131,13 @@ namespace SadConsole
         /// </summary>
         /// <param name="value">The backing string.</param>
         /// <param name="appearance">The appearance to use for each character.</param>
-        public ColoredString(string value, ColoredGlyph appearance) : this(value, appearance.Foreground, appearance.Background, appearance.Mirror) { }
+        public ColoredString(string value, ColoredGlyphEffect appearance) : this(value, appearance.Foreground, appearance.Background, appearance.Mirror) { }
 
         /// <summary>
-        /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.
+        /// Combines a <see cref="ColoredGlyphEffect"/> array into a <see cref="ColoredString"/>.
         /// </summary>
         /// <param name="glyphs">The glyphs to combine.</param>
-        public ColoredString(params ColoredGlyph[] glyphs) => _characters = glyphs.ToArray();
+        public ColoredString(params ColoredGlyphEffect[] glyphs) => _characters = glyphs.ToArray();
 
         /// <summary>
         /// Returns a new <see cref="ColoredString"/> object by cloning this instance.
@@ -171,7 +171,7 @@ namespace SadConsole
         /// Returns a new <see cref="ColoredString"/> object using a substring of this instance.
         /// </summary>
         /// <param name="index">The index to copy the contents from.</param>
-        /// <param name="count">The count of <see cref="ColoredGlyph"/> objects to copy.</param>
+        /// <param name="count">The count of <see cref="ColoredGlyphEffect"/> objects to copy.</param>
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
         public ColoredString SubString(int index, int count)
         {
@@ -196,8 +196,6 @@ namespace SadConsole
             return returnObject;
         }
 
-        /*
-
         /// <summary>
         /// Applies the referenced cell effect to every character in the colored string.
         /// </summary>
@@ -209,8 +207,6 @@ namespace SadConsole
                 _characters[i].Effect = effect;
             }
         }
-
-        */
 
         /// <summary>
         /// Applies the referenced color to every character foreground in the colored string.
@@ -243,16 +239,16 @@ namespace SadConsole
         public override string ToString() => String;
 
         /// <summary>
-        /// Gets an enumerator for the <see cref="ColoredGlyph"/> objects in this string.
+        /// Gets an enumerator for the <see cref="ColoredGlyphEffect"/> objects in this string.
         /// </summary>
         /// <returns>The enumerator in the string.</returns>
-        public IEnumerator<ColoredGlyph> GetEnumerator() => ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
+        public IEnumerator<ColoredGlyphEffect> GetEnumerator() => ((IEnumerable<ColoredGlyphEffect>)_characters).GetEnumerator();
 
         /// <summary>
-        /// Gets an enumerator for the <see cref="ColoredGlyph"/> objects in this string.
+        /// Gets an enumerator for the <see cref="ColoredGlyphEffect"/> objects in this string.
         /// </summary>
         /// <returns>The enumerator in the string.</returns>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ColoredGlyph>)_characters).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ColoredGlyphEffect>)_characters).GetEnumerator();
 
         /// <summary>
         /// Combines two ColoredString objects into a single ColoredString object. Ignore* values are only copied when both strings Ignore* values match.
@@ -298,11 +294,11 @@ namespace SadConsole
                 returnString._characters[i] = string1._characters[i].Clone();
             }
 
-            ColoredGlyph templateCharacter = string1[string1.Count - 1];
+            ColoredGlyphEffect templateCharacter = string1[string1.Count - 1];
 
             for (int i = 0; i < string2.Length; i++)
             {
-                ColoredGlyph newChar = templateCharacter.Clone();
+                ColoredGlyphEffect newChar = templateCharacter.Clone();
                 newChar.GlyphCharacter = string2[i];
                 returnString._characters[i + string1.Count] = newChar;
             }

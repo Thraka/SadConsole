@@ -9,7 +9,7 @@ using SadConsole.Input;
 namespace SadConsole
 {
     /// <summary>
-    /// Represents 
+    /// Represents the SadConsole game engine.
     /// </summary>
     public abstract class GameHost : IDisposable
     {

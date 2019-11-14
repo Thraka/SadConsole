@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SadRogue.Primitives;
 using SadConsole.Input;
+using SadConsole.Effects;
 
 namespace SadConsole
 {
@@ -12,30 +13,38 @@ namespace SadConsole
     {
         private CellSurface _editor;
         private Point _position = new Point();
+        private EffectsManager.ColoredGlyphState _cursorRenderCellState;
+        private ColoredGlyph _cursorRenderCell;
 
         private readonly int cursorCharacter = 219;
 
         /// <summary>
         /// Cell used to render the cursor on the screen.
         /// </summary>
-        public ColoredGlyph CursorRenderCell { get; set; }
+        public ColoredGlyph CursorRenderCell
+        {
+            get => _cursorRenderCell;
+            set
+            {
+                _cursorRenderCell = value;
+                _cursorRenderCellState = new EffectsManager.ColoredGlyphState(_cursorRenderCell);
+            }
+        }
 
         /// <summary>
         /// Appearance used when printing text.
         /// </summary>
         public ColoredGlyph PrintAppearance { get; set; }
 
-        // TODO EFFECT
-
         /// <summary>
         /// This effect is applied to each cell printed by the cursor.
         /// </summary>
-        //public ICellEffect PrintEffect { get; set; }
+        public ICellEffect PrintEffect { get; set; }
 
         /// <summary>
         /// This is the cursor visible effect, like blinking.
         /// </summary>
-        //public ICellEffect CursorEffect { get; set; }
+        public ICellEffect CursorEffect { get; set; }
 
         /// <summary>
         /// When true, indicates that the cursor, when printing, should not use the <see cref="PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
@@ -133,9 +142,7 @@ namespace SadConsole
 
             CursorRenderCell = new ColoredGlyph(Color.White, Color.Transparent, cursorCharacter);
 
-            // TODO EFFECT
-
-            //ResetCursorEffect();
+            ResetCursorEffect();
         }
 
         internal Cursor()
@@ -153,21 +160,19 @@ namespace SadConsole
             Position = Position;
         }
 
-        // TODO EFFECT
-
-        ///// <summary>
-        ///// Resets the <see cref="CursorRenderCell"/> back to the default.
-        ///// </summary>
-        //public Cursor ResetCursorEffect()
-        //{
-        //    SadConsole.Effects.Blink blinkEffect = new Effects.Blink
-        //    {
-        //        BlinkSpeed = 0.35f
-        //    };
-        //    CursorEffect = blinkEffect;
-        //    CursorEffect.AddCell(CursorRenderCell);
-        //    return this;
-        //}
+        /// <summary>
+        /// Resets the <see cref="CursorRenderCell"/> back to the default.
+        /// </summary>
+        public Cursor ResetCursorEffect()
+        {
+            SadConsole.Effects.Blink blinkEffect = new Effects.Blink
+            {
+                BlinkSpeed = 0.35f
+            };
+            CursorEffect = blinkEffect;
+            CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
+            return this;
+        }
 
         /// <summary>
         /// Resets the cursor appearance to the console's default foreground and background.
@@ -199,42 +204,29 @@ namespace SadConsole
             return this;
         }
 
-        private void PrintGlyph(ColoredGlyph glyph, ColoredString settings)
+        private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
         {
             ColoredGlyph cell = _editor.Cells[_position.Y * _editor.BufferWidth + _position.X];
 
             if (!PrintOnlyCharacterData)
             {
                 if (!settings.IgnoreGlyph)
-                {
                     cell.Glyph = glyph.GlyphCharacter;
-                }
 
                 if (!settings.IgnoreBackground)
-                {
                     cell.Background = glyph.Background;
-                }
 
                 if (!settings.IgnoreForeground)
-                {
                     cell.Foreground = glyph.Foreground;
-                }
 
                 if (!settings.IgnoreMirror)
-                {
                     cell.Mirror = glyph.Mirror;
-                }
 
                 if (!settings.IgnoreEffect)
-                {
-                    // TODO EFFECT
-                    //_editor.SetEffect(cell, glyph.Effect);
-                }
+                    _editor.SetEffect(cell, glyph.Effect);
             }
             else if (!settings.IgnoreGlyph)
-            {
                 cell.Glyph = glyph.GlyphCharacter;
-            }
 
             (int x, int y) = _position;
             x += 1;
@@ -249,9 +241,7 @@ namespace SadConsole
                     y -= 1;
 
                     if (AutomaticallyShiftRowsUp)
-                    {
                         _editor.ShiftUp();
-                    }
                 }
             }
 
@@ -267,9 +257,7 @@ namespace SadConsole
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(string text)
         {
-            // TODO EFFECT
-            //Print(text, PrintAppearance, PrintEffect);
-            Print(text, PrintAppearance);
+            Print(text, PrintAppearance, PrintEffect);
             return this;
         }
 
@@ -289,9 +277,8 @@ namespace SadConsole
         /// <param name="template">The way the text will look when it is printed.</param>
         /// <param name="templateEffect">Effect to apply to the text as its printed.</param>
         /// <returns>Returns this cursor object.</returns>
-        public Cursor Print(string text, ColoredGlyph template)//, Effects.ICellEffect templateEffect)
+        public Cursor Print(string text, ColoredGlyph template, Effects.ICellEffect templateEffect)
         {
-            // TODO EFFECT
             ColoredString coloredString;
 
             if (UseStringParser)
@@ -301,7 +288,7 @@ namespace SadConsole
             else
             {
                 coloredString = text.CreateColored(template.Foreground, template.Background, template.Mirror);
-                //coloredString.SetEffect(templateEffect);
+                coloredString.SetEffect(templateEffect);
             }
 
             return Print(coloredString);
@@ -319,16 +306,15 @@ namespace SadConsole
                 return this;
             }
 
-            // TODO EFFECT
-            //CursorEffect?.Restart();
+            CursorEffect?.Restart();
 
             // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
             // Then use the pretty print system.
             if (!DisableWordBreak && text.String.Length != 1)
             {
                 // Prep
-                ColoredGlyph glyph;
-                ColoredGlyph spaceGlyph = text[0].Clone();
+                ColoredString.ColoredGlyphEffect glyph;
+                ColoredString.ColoredGlyphEffect spaceGlyph = text[0].Clone();
                 spaceGlyph.GlyphCharacter = ' ';
                 string stringText = text.String.TrimEnd(' ');
 
@@ -445,7 +431,7 @@ namespace SadConsole
                 bool movedLines = false;
                 int oldLine = _position.Y;
 
-                foreach (ColoredGlyph glyph in text)
+                foreach (ColoredString.ColoredGlyphEffect glyph in text)
                 {
                     // Check if the previous print moved us down a line (from print at end of the line) and move use back for the \r
                     if (movedLines)
@@ -666,16 +652,13 @@ namespace SadConsole
 
         internal void Update(TimeSpan elapsed)
         {
-            // TODO EFFECT
-            //if (CursorEffect != null)
-            //{
-            //    CursorEffect.Update(elapsed.TotalSeconds);
+            if (CursorEffect != null)
+            {
+                CursorEffect.Update(elapsed.TotalSeconds);
 
-            //    if (CursorEffect.UpdateCell(CursorRenderCell))
-            //    {
-            //        _editor.IsDirty = true;
-            //    }
-            //}
+                if (CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState))
+                    _editor.IsDirty = true;
+            }
         }
 
         /// <summary>

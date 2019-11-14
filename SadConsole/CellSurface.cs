@@ -184,6 +184,9 @@ namespace SadConsole
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         public CellSurface(int width, int height, ColoredGlyph[] initialCells)
         {
+            if (width == 0) throw new ArgumentOutOfRangeException(nameof(width), "Surface width must be > 0");
+            if (height == 0) throw new ArgumentOutOfRangeException(nameof(height), "Surface height must be > 0");
+
             DefaultForeground = Color.White;
             DefaultBackground = Color.Transparent;
             _viewWidth = BufferWidth = width;
@@ -208,7 +211,7 @@ namespace SadConsole
                 Cells = initialCells;
             }
 
-            //Effects = new Effects.EffectsManager(this);
+            Effects = new Effects.EffectsManager(this);
         }
 
         /// <summary>
@@ -233,8 +236,13 @@ namespace SadConsole
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         public CellSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells)
         {
+            if (width == 0) throw new ArgumentOutOfRangeException(nameof(width), "Surface view width must be > 0");
+            if (height == 0) throw new ArgumentOutOfRangeException(nameof(height), "Surface view height must be > 0");
+            if (bufferWidth == 0) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Surface buffer width must be > 0");
+            if (bufferHeight == 0) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Surface buffer height must be > 0");
             if (width > bufferWidth) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Buffer width must be less than or equal to the width.");
             if (height > bufferHeight) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Buffer height must be less than or equal to the height.");
+
 
             DefaultForeground = Color.White;
             DefaultBackground = Color.Transparent;
@@ -262,7 +270,7 @@ namespace SadConsole
                 Cells = initialCells;
             }
 
-            //Effects = new Effects.EffectsManager(this);
+            Effects = new Effects.EffectsManager(this);
         }
 
         /// <summary>

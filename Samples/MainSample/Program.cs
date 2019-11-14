@@ -70,6 +70,9 @@ namespace ConsoleTest
 
             Global.FocusedConsoles.Set(con);
 
+            var blink = new SadConsole.Effects.BlinkGlyph();
+            con.Surface.SetEffect(1, 1, blink);
+
         }
 
 

@@ -188,7 +188,7 @@ namespace SadConsole
         {
             if (!IsEnabled) return;
 
-            //Effects.UpdateEffects(timeElapsed.TotalSeconds);
+            Surface.Effects.UpdateEffects(Global.UpdateFrameDelta.TotalSeconds);
 
             base.Update();
         }

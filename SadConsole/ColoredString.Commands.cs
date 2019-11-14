@@ -9,7 +9,7 @@
         /// <summary>
         /// Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
         /// </summary>
-        public static Func<string, string, ColoredGlyph[], CellSurface, ParseCommandStacks, ParseCommandBase> CustomProcessor;
+        public static Func<string, string, ColoredGlyphEffect[], CellSurface, ParseCommandStacks, ParseCommandBase> CustomProcessor;
 
         /// <summary>
         /// Creates a colored string by parsing commands embedded in the string.
@@ -22,11 +22,11 @@
         public static ColoredString Parse(string value, int surfaceIndex = -1, CellSurface surface = null, ParseCommandStacks initialBehaviors = null)
         {
             ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
-            List<ColoredGlyph> glyphs = new List<ColoredGlyph>(value.Length);
+            List<ColoredGlyphEffect> glyphs = new List<ColoredGlyphEffect>(value.Length);
 
             for (int i = 0; i < value.Length; i++)
             {
-                ColoredGlyph[] existingGlyphs = glyphs.ToArray();
+                ColoredGlyphEffect[] existingGlyphs = glyphs.ToArray();
 
                 if (value[i] == '`' && i + 1 < value.Length && value[i + 1] == '[')
                 {
@@ -116,17 +116,17 @@
                     fixedSurfaceIndex = i + surfaceIndex < surface.Cells.Length ? i + surfaceIndex : -1;
                 }
 
-                ColoredGlyph newGlyph;
+                ColoredGlyphEffect newGlyph;
 
                 if (fixedSurfaceIndex != -1)
                 {
-                    newGlyph = new ColoredGlyph();
+                    newGlyph = new ColoredGlyphEffect();
                     surface[i + surfaceIndex].CopyAppearanceTo(newGlyph);
                     newGlyph.Glyph = value[i];
                 }
                 else
                 {
-                    newGlyph = new ColoredGlyph()
+                    newGlyph = new ColoredGlyphEffect()
                     {
                         Glyph = value[i]
                     };

@@ -125,6 +125,42 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Creates a cell with the specified foreground, background, glyph, mirror, and visibility.
+        /// </summary>
+        /// <param name="foreground">Foreground color.</param>
+        /// <param name="background">Background color.</param>
+        /// <param name="glyph">The glyph index.</param>
+        /// <param name="mirror">The mirror effect.</param>
+        /// <param name="isVisible">The visiblity of the glyph.</param>
+        public ColoredGlyph(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible)
+        {
+            Foreground = foreground;
+            Background = background;
+            Glyph = glyph;
+            Mirror = mirror;
+            IsVisible = isVisible;
+        }
+
+        /// <summary>
+        /// Creates a cell with the specified foreground, background, glyph, and mirror effect.
+        /// </summary>
+        /// <param name="foreground">Foreground color.</param>
+        /// <param name="background">Background color.</param>
+        /// <param name="glyph">The glyph index.</param>
+        /// <param name="mirror">The mirror effect.</param>
+        /// <param name="isVisible">The visiblity of the glyph.</param>
+        /// <param name="decorators">Decorators for the cell.</param>
+        public ColoredGlyph(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible, CellDecorator[] decorators)
+        {
+            Foreground = foreground;
+            Background = background;
+            Glyph = glyph;
+            Mirror = mirror;
+            IsVisible = isVisible;
+            Decorators = decorators;
+        }
+
+        /// <summary>
         /// Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
         /// </summary>
         /// <param name="cell">The target cell to copy to.</param>
@@ -190,7 +226,7 @@ namespace SadConsole
                 batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[Glyph], Foreground, 0f, Vector2.Zero, Mirror, 0.4f);
             }
 
-            foreach (CellDecorator decorator in Decorators)
+            foreach (ColoredGlyphDecorator decorator in Decorators)
             {
                 if (decorator.Color != Color.Transparent)
                 {

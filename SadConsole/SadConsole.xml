@@ -322,6 +322,11 @@
             When true, the <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)"/> command is used to print strings.
             </summary>
         </member>
+        <member name="P:SadConsole.CellSurface.Effects">
+            <summary>
+            Processes the effects added to cells with <see cref="o:SetEffect"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.CellSurface.EraseGlyph">
             <summary>
             The glyph used by the <see cref="M:SadConsole.CellSurface.Erase(System.Int32,System.Int32,System.Int32)"/> method. Defaults to 0.
@@ -393,7 +398,7 @@
         </member>
         <member name="M:SadConsole.CellSurface.SetGlyph(System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
             <summary>
-            Changes the glyph, foreground, background, and effect of a cell.
+            Changes the glyph, foreground, background, and mirror of a cell.
             </summary>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
@@ -404,7 +409,7 @@
         </member>
         <member name="M:SadConsole.CellSurface.SetGlyph(System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror,System.Collections.Generic.IEnumerable{SadConsole.CellDecorator})">
             <summary>
-            Changes the glyph, foreground, background, and effect of a cell.
+            Changes the glyph, foreground, background, and mirror of a cell.
             </summary>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
@@ -454,6 +459,43 @@
             <param name="y">The y location of the cell.</param>
             <returns>The color.</returns>
         </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(System.Int32,System.Int32,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(System.Int32,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="index">Index of the cell.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a list of cells to the specified effect.
+            </summary>
+            <param name="cells">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="cell">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.GetEffect(System.Int32,System.Int32)">
+            <summary>
+            Gets the effect of the specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The effect.</returns>
+        </member>
         <member name="M:SadConsole.CellSurface.SetCellAppearance(System.Int32,System.Int32,SadConsole.ColoredGlyph)">
             <summary>
             Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -479,7 +521,7 @@
         </member>
         <member name="M:SadConsole.CellSurface.GetMirror(System.Int32,System.Int32)">
             <summary>
-            Gets the sprite effect of a specified cell.
+            Gets the mirror of a specified cell.
             </summary>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
@@ -487,7 +529,7 @@
         </member>
         <member name="M:SadConsole.CellSurface.SetMirror(System.Int32,System.Int32,SadConsole.Mirror)">
             <summary>
-            Sets the sprite effect of a specified cell.
+            Sets the mirror of a specified cell.
             </summary>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
@@ -589,7 +631,7 @@
             <param name="text">The string to display.</param>
             <param name="mirror">The mirror to set on all characters in the text.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.CellSurface.Print(System.Int32,System.Int32,System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
             <summary>
             Draws the string on the console at the specified location, wrapping if needed.
             </summary>
@@ -734,19 +776,19 @@
         </member>
         <member name="M:SadConsole.CellSurface.Clear">
             <summary>
-            Clears the console data. Characters are reset to 0, the foreground and background are set to default, and effect set to none. Clears cell decorators.
+            Clears the console data. Characters are reset to 0, the foreground and background are set to default, and mirror set to none. Clears cell decorators.
             </summary>
         </member>
         <member name="M:SadConsole.CellSurface.Clear(System.Int32,System.Int32)">
             <summary>
-            Clears a cell. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
+            Clears a cell. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
             </summary>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
         </member>
         <member name="M:SadConsole.CellSurface.Clear(System.Int32,System.Int32,System.Int32)">
             <summary>
-            Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
+            Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
             </summary>
             <param name="x">The x position of the left end of the segment.</param>
             <param name="y">The y position of the segment.</param>
@@ -755,7 +797,7 @@
         </member>
         <member name="M:SadConsole.CellSurface.Clear(SadRogue.Primitives.Rectangle)">
             <summary>
-            Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and effect is set to none. Clears cell decorators.
+            Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
             </summary>
             <param name="area">The area to clear.</param>
         </member>
@@ -766,7 +808,7 @@
             <param name="foreground">Foreground to apply. If null, skips.</param>
             <param name="background">Foreground to apply. If null, skips.</param>
             <param name="glyph">Glyph to apply. If null, skips.</param>
-            <param name="mirror">Sprite effect to apply. If null, skips.</param>
+            <param name="mirror">Mirror to apply. If null, skips.</param>
             <returns>The array of all cells in this console, starting from the top left corner.</returns>
         </member>
         <member name="M:SadConsole.CellSurface.Fill(System.Int32,System.Int32,System.Int32,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
@@ -779,7 +821,7 @@
             <param name="foreground">Foreground to apply. If null, skips.</param>
             <param name="background">Background to apply. If null, skips.</param>
             <param name="glyph">Glyph to apply. If null, skips.</param>
-            <param name="mirror">Sprite effect to apply. If null, skips.</param>
+            <param name="mirror">Mirror to apply. If null, skips.</param>
             <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
         </member>
         <member name="M:SadConsole.CellSurface.Fill(SadRogue.Primitives.Rectangle,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
@@ -790,10 +832,10 @@
             <param name="foreground">Foreground to apply. If null, skips.</param>
             <param name="background">Background to apply. If null, skips.</param>
             <param name="glyph">Glyph to apply. If null, skips.</param>
-            <param name="mirror">Sprite effect to apply. If null, skips.</param>
+            <param name="mirror">Mirror to apply. If null, skips.</param>
             <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
         </member>
-        <member name="M:SadConsole.CellSurface.DrawLine(SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32})">
+        <member name="M:SadConsole.CellSurface.DrawLine(SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
             <summary>
             Draws a line from <paramref name="start"/> to <paramref name="end"/>.
             </summary>
@@ -802,6 +844,7 @@
             <param name="foreground">Foreground to set. If null, skipped.</param>
             <param name="background">Background to set. If null, skipped.</param>
             <param name="glyph">Glyph to set. If null, skipped.</param>
+            <param name="mirror">Mirror to set. If null, skipped.</param>
             <returns>A list of cells the line touched; ordered from first to last.</returns>
             <remarks>If no foreground, background, or glyph are specified, then the list of affected cells are returned but nothing is drawn.</remarks>
         </member>
@@ -1044,6 +1087,27 @@
             <param name="glyph">The glyph index.</param>
             <param name="mirror">The mirror effect.</param>
         </member>
+        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean)">
+            <summary>
+            Creates a cell with the specified foreground, background, glyph, mirror, and visibility.
+            </summary>
+            <param name="foreground">Foreground color.</param>
+            <param name="background">Background color.</param>
+            <param name="glyph">The glyph index.</param>
+            <param name="mirror">The mirror effect.</param>
+            <param name="isVisible">The visiblity of the glyph.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean,SadConsole.CellDecorator[])">
+            <summary>
+            Creates a cell with the specified foreground, background, glyph, and mirror effect.
+            </summary>
+            <param name="foreground">Foreground color.</param>
+            <param name="background">Background color.</param>
+            <param name="glyph">The glyph index.</param>
+            <param name="mirror">The mirror effect.</param>
+            <param name="isVisible">The visiblity of the glyph.</param>
+            <param name="decorators">Decorators for the cell.</param>
+        </member>
         <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph)">
             <summary>
             Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
@@ -1079,6 +1143,22 @@
             Represents a string that has foreground and background colors for each character in the string.
             </summary>
         </member>
+        <member name="T:SadConsole.ColoredString.ColoredGlyphEffect">
+            <summary>
+            A <see cref="T:SadConsole.ColoredGlyph"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredString.ColoredGlyphEffect.Effect">
+            <summary>
+            The effect of this cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.Clone">
+            <summary>
+            Creates a copy of this <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/>.
+            </summary>
+            <returns>A copy of this <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/>.</returns>
+        </member>
         <member name="F:SadConsole.ColoredString.CustomProcessor">
             <summary>
             Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
@@ -1096,9 +1176,9 @@
         </member>
         <member name="P:SadConsole.ColoredString.Item(System.Int32)">
             <summary>
-            Gets a <see cref="T:SadConsole.ColoredGlyph"/> from the string.
+            Gets a <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> from the string.
             </summary>
-            <param name="index">The index in the string of the <see cref="T:SadConsole.ColoredGlyph"/>.</param>
+            <param name="index">The index in the string of the <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/>.</param>
             <returns>The colored glyph representing the character in the string.</returns>
         </member>
         <member name="P:SadConsole.ColoredString.String">
@@ -1108,7 +1188,7 @@
         </member>
         <member name="P:SadConsole.ColoredString.Count">
             <summary>
-            The total number of <see cref="T:SadConsole.ColoredGlyph"/> characters in the string.
+            The total number of <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> characters in the string.
             </summary>
         </member>
         <member name="F:SadConsole.ColoredString.IgnoreGlyph">
@@ -1162,16 +1242,16 @@
             <param name="background">The background color for each character.</param>
             <param name="mirror">The mirror for each character.</param>`
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadConsole.ColoredString.ColoredGlyphEffect)">
             <summary>
             Creates a new instance of the ColoredString class with the specified string value, foreground and background colors, and a cell effect.
             </summary>
             <param name="value">The backing string.</param>
             <param name="appearance">The appearance to use for each character.</param>
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredString.ColoredGlyphEffect[])">
             <summary>
-            Combines a <see cref="T:SadConsole.ColoredGlyph"/> array into a <see cref="T:SadConsole.ColoredString"/>.
+            Combines a <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> array into a <see cref="T:SadConsole.ColoredString"/>.
             </summary>
             <param name="glyphs">The glyphs to combine.</param>
         </member>
@@ -1193,8 +1273,14 @@
             Returns a new <see cref="T:SadConsole.ColoredString"/> object using a substring of this instance.
             </summary>
             <param name="index">The index to copy the contents from.</param>
-            <param name="count">The count of <see cref="T:SadConsole.ColoredGlyph"/> objects to copy.</param>
+            <param name="count">The count of <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> objects to copy.</param>
             <returns>A new <see cref="T:SadConsole.ColoredString"/> object.</returns>
+        </member>
+        <member name="M:SadConsole.ColoredString.SetEffect(SadConsole.Effects.ICellEffect)">
+            <summary>
+            Applies the referenced cell effect to every character in the colored string.
+            </summary>
+            <param name="effect">The effect to apply.</param>
         </member>
         <member name="M:SadConsole.ColoredString.SetForeground(SadRogue.Primitives.Color)">
             <summary>
@@ -1216,13 +1302,13 @@
         </member>
         <member name="M:SadConsole.ColoredString.GetEnumerator">
             <summary>
-            Gets an enumerator for the <see cref="T:SadConsole.ColoredGlyph"/> objects in this string.
+            Gets an enumerator for the <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> objects in this string.
             </summary>
             <returns>The enumerator in the string.</returns>
         </member>
         <member name="M:SadConsole.ColoredString.System#Collections#IEnumerable#GetEnumerator">
             <summary>
-            Gets an enumerator for the <see cref="T:SadConsole.ColoredGlyph"/> objects in this string.
+            Gets an enumerator for the <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> objects in this string.
             </summary>
             <returns>The enumerator in the string.</returns>
         </member>
@@ -1770,6 +1856,16 @@
             Appearance used when printing text.
             </summary>
         </member>
+        <member name="P:SadConsole.Cursor.PrintEffect">
+            <summary>
+            This effect is applied to each cell printed by the cursor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Cursor.CursorEffect">
+            <summary>
+            This is the cursor visible effect, like blinking.
+            </summary>
+        </member>
         <member name="P:SadConsole.Cursor.PrintOnlyCharacterData">
             <summary>
             When true, indicates that the cursor, when printing, should not use the <see cref="P:SadConsole.Cursor.PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
@@ -1832,6 +1928,11 @@
             </summary>
             <param name="console">The console the cursor works with.</param>
         </member>
+        <member name="M:SadConsole.Cursor.ResetCursorEffect">
+            <summary>
+            Resets the <see cref="P:SadConsole.Cursor.CursorRenderCell"/> back to the default.
+            </summary>
+        </member>
         <member name="M:SadConsole.Cursor.ResetAppearanceToConsole">
             <summary>
             Resets the cursor appearance to the console's default foreground and background.
@@ -1853,7 +1954,7 @@
             <param name="text">The text to print.</param>
             <returns>Returns this cursor object.</returns>
         </member>
-        <member name="M:SadConsole.Cursor.Print(System.String,SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
             <summary>
             Prints text on the console.
             </summary>
@@ -1950,6 +2051,383 @@
             </summary>
             <param name="info">The state of the keyboard</param>
             <returns>Returns true when the keyboard caused the cursor to do something.</returns>
+        </member>
+        <member name="T:SadConsole.Effects.Blink">
+            <summary>
+            Switches between the normal foreground of a cell and a specified color for an amount of time, and then repeats.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blink.BlinkSpeed">
+            <summary>
+            In seconds, how fast the fade in and fade out each are
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blink.UseCellBackgroundColor">
+            <summary>
+            When true, uses the current cells background color for fading instead of the value of <see cref="P:SadConsole.Effects.Blink.BlinkOutColor"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blink.BlinkOutColor">
+            <summary>
+            The color to fade out to.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blink.BlinkCount">
+            <summary>
+            How many times to blink. The value of -1 represents forever.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.Blink.Restart">
+            <summary>
+            Restarts the cell effect but does not reset it.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Effects.BlinkGlyph">
+            <summary>
+            Switches between the glyph of a cell and a specified glyph for an amount of time, and then repeats.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.BlinkGlyph.BlinkSpeed">
+            <summary>
+            In seconds, how fast the fade in and fade out each are
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.BlinkGlyph.GlyphIndex">
+            <summary>
+            The glyph index to blink into.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.BlinkGlyph.Restart">
+            <summary>
+            Restarts the cell effect but does not reset it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.BlinkGlyph.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Effects.CellEffectBase">
+            <summary>
+            A base class for cell effects.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Effects.CellEffectBase._delayFinished">
+            <summary>
+            A flag to indidcate that the delay timer has finished.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Effects.CellEffectBase._timeElapsed">
+            <summary>
+            The total time elapsed while processing the effect.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.IsFinished">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.CloneOnApply">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.StartDelay">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.RemoveOnFinished">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Effects.CellEffectBase.RestoreCellOnFinished">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.Update(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.Restart">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CellEffectBase.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Effects.Delay">
+            <summary>
+            An effect that doesn't do anything but delays. Usually used with the <see cref="T:SadConsole.Effects.EffectsChain"/> effect.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.Delay.Update(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Effects.EffectsChain">
+            <summary>
+            Chains one effect after another.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsChain.Restart">
+            <summary>
+            Restarts the cell effect but does not reset it.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Effects.EffectsManager">
+            <summary>
+            Effects manager for a text surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.EffectsManager.Count">
+            <summary>
+            Gets the number of effects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.#ctor(SadConsole.CellSurface)">
+            <summary>
+            Creates a new effects manager associated with a text surface.
+            </summary>
+            <param name="surface">Text surface to manage.</param>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a specific cell.
+            </summary>
+            <param name="cell">Cells to change the effect on.</param>
+            <param name="effect">The effect to associate with the cell.</param>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of the <paramref name="cells"/> provided.
+            </summary>
+            <param name="cells">Cells to change the effect on.</param>
+            <param name="effect">The effect to associate with the cell.</param>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(SadConsole.ColoredGlyph)">
+            <summary>
+            Gets the effect of the specified cell.
+            </summary>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The effect.</returns>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.Remove(SadConsole.Effects.ICellEffect)">
+            <summary>
+            Removes an effect and associated cells from the manager.
+            </summary>
+            <param name="effect">Effect to remove.</param>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.RemoveAll">
+            <summary>
+            Removes all effects and associated cells.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.UpdateEffects(System.Double)">
+            <summary>
+            Updates all known effects and applies them to their associated cells.
+            </summary>
+            <param name="timeElapsed">The time elapased since the last update.</param>
+        </member>
+        <member name="T:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData">
+            <summary>
+            Represents a mapping of a single effect and associated cells.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Effects.EffectsManager.ColoredGlyphState">
+            <summary>
+            A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Decorators">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Foreground">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Foreground"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Background">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Background"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Glyph">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Mirror">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.IsVisible">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.IsVisible"/> property.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphState.#ctor(SadConsole.ColoredGlyph)">
+            <summary>
+            Creates a new state from a cell.
+            </summary>
+            <param name="cell">The colored glyph this state is a copy of.</param>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyph@)">
+            <summary>
+            Restores the state of this cell from the <see cref="!:State"/> property.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Effects.Fade">
+            <summary>
+            Fades both the background and foreground to seperate colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.DestinationBackground">
+            <summary>
+            Gets or sets the color gradient used to fade for the cell background.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.DestinationForeground">
+            <summary>
+            Gets or sets the color gradient used to fade for the cell background.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.FadeDuration">
+            <summary>
+            Gets or sets how long the fade takes to complete in seconds.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.Repeat">
+            <summary>
+            Gets or sets a value to indicate that the fade effect should repeat.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.UseCellForeground">
+            <summary>
+            Gets or sets a value to indicate that the color gradient used with the <see cref="P:SadConsole.Effects.Fade.DestinationForeground"/> should replace its first color stop with the cell's foreground color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.UseCellBackground">
+            <summary>
+            Gets or sets a value to indicate that the color gradient used with the <see cref="P:SadConsole.Effects.Fade.DestinationBackground"/> should replace its first color stop with the cell's background color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.FadeForeground">
+            <summary>
+            Gets or sets a value to indicate that the fade effect should use the foreground color on the cell's foreground.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.FadeBackground">
+            <summary>
+            Gets or sets a value to indicate that the fade effect should use the background color on the cell's background.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.AutoReverse">
+            <summary>
+            Gets or sets a value to indicate that the fade effect should automatically reverse itself when it finishes going up the color spectrum. By setting this to true, and setting the <see cref="P:SadConsole.Effects.Fade.Repeat"/> property to true, you can create a pulse effect.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Fade.UseCellDestinationReverse">
+            <summary>
+            When <see cref="P:SadConsole.Effects.Fade.UseCellForeground"/> or <see cref="P:SadConsole.Effects.Fade.UseCellBackground"/> is set, and this is true, the last color in the fade will be set to the cell instead of the first.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.Update(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Effects.ICellEffect">
+            <summary>
+            The interface describing a cell effect
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.ICellEffect.IsFinished">
+            <summary>
+            True when the effect is finished.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.ICellEffect.CloneOnApply">
+            <summary>
+            Flags this effect to be cloned when applied to a cell instead of reused.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.ICellEffect.StartDelay">
+            <summary>
+            A delay applied to the effect only when it first runs.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.ICellEffect.RemoveOnFinished">
+            <summary>
+            When true, the effect should be disassociated with cells when it has finished processing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.ICellEffect.RestoreCellOnFinished">
+            <summary>
+            When <see langword="true"/>, indicates the <see cref="T:SadConsole.Effects.EffectsManager"/> should restore the cell to its original state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+            <summary>
+            Applies the state of the effect to a cell.
+            </summary>
+            <param name="cell">The surface cell using this effect.</param>
+            <param name="originalState">The state of the cell prior to the effect being applied.</param>
+        </member>
+        <member name="M:SadConsole.Effects.ICellEffect.Update(System.Double)">
+            <summary>
+            Updates the state of the effect.
+            </summary>
+            <param name="gameTimeSeconds">Time since the last call to this effect.</param>
+        </member>
+        <member name="M:SadConsole.Effects.ICellEffect.Restart">
+            <summary>
+            Restarts the cell effect.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.ICellEffect.Clone">
+            <summary>
+            Returns a duplicate of this effect.
+            </summary>
+            <returns>A new copy of this effect.</returns>
+        </member>
+        <member name="T:SadConsole.Effects.Recolor">
+            <summary>
+            Recors the foreground or the background of a cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Recolor.Foreground">
+            <summary>
+            The foreground color applied to a cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Recolor.Background">
+            <summary>
+            The background color applied to a cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Recolor.DoForeground">
+            <summary>
+            When true, the <see cref="P:SadConsole.Effects.Recolor.Foreground"/> color will be applied to the cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Recolor.DoBackground">
+            <summary>
+            /// When true, the <see cref="P:SadConsole.Effects.Recolor.Background"/> color will be applied to the cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.FocusedConsoleStack">
             <summary>
@@ -2162,7 +2640,7 @@
         </member>
         <member name="T:SadConsole.GameHost">
             <summary>
-            Represents 
+            Represents the SadConsole game engine.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.Instance">
@@ -4222,7 +4700,7 @@
             Type of command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredGlyph@,SadConsole.ColoredGlyph[],System.Int32,SadConsole.CellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.CellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
             <summary>
             Builds a glyph.
             </summary>
