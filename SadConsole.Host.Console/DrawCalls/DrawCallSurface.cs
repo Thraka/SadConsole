@@ -16,14 +16,25 @@ namespace SadConsole.DrawCalls
 
         public void Draw()
         {
-            int index = 0;
-            foreach (var cell in _surface)
+            var area = _surface.GetViewRectangle();
+            for (int y = 0; y < area.Height; y++)
             {
-                index++;
-                if (cell.Glyph == 0)
-                { }
-                
+                System.Console.SetCursorPosition(_position.X, y + _position.Y);
+
+                    var text = _surface.GetString(area.X, y + area.Y, area.Width).Replace('\0', ' ');
+                    System.Console.Write(text);
             }
+
+           // System.Console.SetCursorPosition(0, 0);
+
+           // int index = 0;
+           // foreach (var cell in _surface)
+           // {
+           //     index++;
+           //     if (cell.Glyph == 0)
+           //     { }
+                
+           // }
         }
     }
 }

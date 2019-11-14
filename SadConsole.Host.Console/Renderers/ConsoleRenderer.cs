@@ -10,34 +10,33 @@ namespace SadConsole.Renderers
         public string RedrawString;
         private StringBuilder _redrawStringBuilder;
 
-        public void Attach(Console console)
+        public void Attach(ScreenObjectSurface surface)
         {
             //RedrawString = new string(' ', console.Width * console.Height);
-            _redrawStringBuilder = new StringBuilder(console.Width * console.Height * 4);
+            _redrawStringBuilder = new StringBuilder(surface.Surface.ViewWidth * surface.Surface.ViewHeight * 4);
         }
 
-        public void Detatch(Console console)
+        public void Detatch(ScreenObjectSurface surface)
         {
             
         }
 
-        public void Render()
+        public void Render(ScreenObjectSurface surface)
         {
-            System.Console.SetCursorPosition(0, 0);
-            System.Console.Write(RedrawString);
+            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallSurface(surface.Surface, surface.Position));            
         }
 
-        public void Refresh(Console console)
+        public void Refresh(ScreenObjectSurface surface)
         {
-            _redrawStringBuilder.Clear();
-            foreach (Cell cell in console)
-            {
-                if (cell.Glyph == 0)
-                    _redrawStringBuilder.Append(' ');
-                else
-                    _redrawStringBuilder.Append((char)cell.Glyph);
-            }
-            RedrawString = _redrawStringBuilder.ToString();
+            //_redrawStringBuilder.Clear();
+            //foreach (Cell cell in console)
+            //{
+            //    if (cell.Glyph == 0)
+            //        _redrawStringBuilder.Append(' ');
+            //    else
+            //        _redrawStringBuilder.Append((char)cell.Glyph);
+            //}
+            //RedrawString = _redrawStringBuilder.ToString();
         }
 
         #region IDisposable Support
