@@ -302,6 +302,37 @@ namespace SadRogue.Primitives
         /// <returns>A color with the alpha channel fully set.</returns>
         public static Color FillAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)255);
 
+        /// <summary>
+        /// Returns a new color with the red channel set to the specified value.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <param name="value">The new value for the red channel.</param>
+        /// <returns>A color with the red channel altered.</returns>
+        public static Color SetRed(this Color color, byte value) => new Color(value, color.G, color.B, color.A);
+
+        /// <summary>
+        /// Returns a new color with the green channel set to the specified value.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <param name="value">The new value for the green channel.</param>
+        /// <returns>A color with the green channel altered.</returns>
+        public static Color SetGreen(this Color color, byte value) => new Color(color.R, value, color.B, color.A);
+
+        /// <summary>
+        /// Returns a new color with the blue channel set to the specified value.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <param name="value">The new value for the blue channel.</param>
+        /// <returns>A color with the blue channel altered.</returns>
+        public static Color SetBlue(this Color color, byte value) => new Color(color.R, color.G, value, color.A);
+
+        /// <summary>
+        /// Returns a new color with the alpha channel set to the specified value.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <param name="value">The new value for the alpha channel.</param>
+        /// <returns>A color with the alpha channel altered.</returns>
+        public static Color SetAlpha(this Color color, byte value) => new Color(color.R, color.G, color.B, value);
 
 
         /// <summary>

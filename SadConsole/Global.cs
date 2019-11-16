@@ -28,6 +28,11 @@ namespace SadConsole
         public static TimeSpan DrawFrameDelta { get; set; }
 
         /// <summary>
+        /// The total time the game has been running.
+        /// </summary>
+        public static TimeSpan GameRunningTotalTime { get; set; }
+
+        /// <summary>
         /// Collection of fonts. Used mainly by the deserialization system.
         /// </summary>
         public static Dictionary<string, Font> Fonts { get; } = new Dictionary<string, Font>();

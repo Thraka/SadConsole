@@ -2052,6 +2052,11 @@
             <param name="info">The state of the keyboard</param>
             <returns>Returns true when the keyboard caused the cursor to do something.</returns>
         </member>
+        <member name="P:SadConsole.DoubleAnimation.EasingFunction">
+            <summary>
+            An easing method to apply to the value. The parameters passed in are: calculated value, starting value, ending value, and duration.
+            </summary>
+        </member>
         <member name="T:SadConsole.Effects.Blink">
             <summary>
             Switches between the normal foreground of a cell and a specified color for an amount of time, and then repeats.
@@ -2760,6 +2765,11 @@
         <member name="P:SadConsole.Global.DrawFrameDelta">
             <summary>
             The elapsed time between now and the last draw call.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.GameRunningTotalTime">
+            <summary>
+            The total time the game has been running.
             </summary>
         </member>
         <member name="P:SadConsole.Global.Fonts">
@@ -4093,6 +4103,336 @@
             </summary>
             <returns>A copy of this class instance.</returns>
         </member>
+        <member name="T:SadConsole.Instructions.CodeInstruction">
+            <summary>
+            An instruction with a code callback.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.CodeInstruction.ID">
+            <summary>
+            Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.CodeInstruction.#ctor(System.Func{SadConsole.ScreenObject,System.Boolean})">
+            <summary>
+            Creates a new instruction with the specified callback.
+            </summary>
+            <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.CodeInstruction.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.CodeInstruction.SetCallback(System.Func{SadConsole.ScreenObject,System.Boolean})">
+            <summary>
+            Sets the callback used by the instruction.
+            </summary>
+            <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
+        </member>
+        <member name="T:SadConsole.Instructions.ConcurrentInstructions">
+            <summary>
+            Runs one or more instructions at the same time. This instruction completes when all added instructions have finished.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.ConcurrentInstructions.Instructions">
+            <summary>
+            The instructions to run concurrently.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.ConcurrentInstructions.#ctor(System.Collections.Generic.IEnumerable{SadConsole.Instructions.InstructionBase})">
+            <summary>
+            Creates a new instruction that runs the provided instructions concurrently.
+            </summary>
+            <param name="instructions">The instructions</param>
+        </member>
+        <member name="M:SadConsole.Instructions.ConcurrentInstructions.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.ConcurrentInstructions.Repeat">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.ConcurrentInstructions.Reset">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Instructions.DrawString">
+            <summary>
+            Draws a string to a console as if someone was typing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.DrawString.Text">
+            <summary>
+            Gets or sets the text to print.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.DrawString.TotalTimeToPrint">
+            <summary>
+            Gets or sets the total time to take to write the string. Use zero for instant.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.DrawString.Position">
+            <summary>
+            Gets or sets the position on the console to write the text.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.DrawString.Cursor">
+            <summary>
+            Represents the cursor used in printing. Use this for styling and printing behavior.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.DrawString.#ctor(SadConsole.CellSurface,SadConsole.ColoredString)">
+            <summary>
+            Draws a string on the specified surface.
+            </summary>
+            <param name="target">The target surface to use.</param>
+            <param name="text">The text to print.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.DrawString.#ctor(SadConsole.ColoredString)">
+            <summary>
+            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.ScreenObject)"/>.
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="M:SadConsole.Instructions.DrawString.#ctor">
+            <summary>
+            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.ScreenObject)"/>. <see cref="P:SadConsole.Instructions.DrawString.Text"/> must be set manually.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.DrawString.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.DrawString.Repeat">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Instructions.FadeTextSurfaceTint">
+            <summary>
+            Animates a color change to <see cref="!:Console.Tint"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.FadeTextSurfaceTint.Colors">
+            <summary>
+            The color to fade the tint to.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.FadeTextSurfaceTint.FadeAnimationSettings">
+            <summary>
+            Animation provider.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.ScreenObjectSurface,SadRogue.Primitives.ColorGradient,System.TimeSpan)">
+            <summary>
+            Creates a new tint fade instruction that targets the specified console.
+            </summary>
+            <param name="objectSurface">The <see cref="!:Console.Tint"/> to fade.</param>
+            <param name="colors">The gradient pattern to fade through.</param>
+            <param name="duration">How long the fade takes.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadRogue.Primitives.ColorGradient,System.TimeSpan)">
+            <summary>
+            Creates a new tint fade instruction that uses the console passed to <see cref="!:IConsoleComponent.Update(Console, TimeSpan)"/>.
+            </summary>
+            <param name="colors">The gradient pattern to fade through.</param>
+            <param name="duration">How long the fade takes.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor">
+            <summary>
+            Creates a new tint fade instruction with default settings that uses the console passed to <see cref="!:IConsoleComponent.Update(Console, TimeSpan)"/>.
+            </summary>
+            <remarks>
+            The default settings are:
+            
+              - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.Colors"/>: <see cref="P:SadRogue.Primitives.Color.White"/> to <see cref="P:SadRogue.Primitives.Color.Black"/>
+              - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.FadeAnimationSettings"/>: 1 second
+            </remarks>
+        </member>
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Reset">
+            <summary>
+            Starts the instruction over.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Instructions.InstructionBase">
+            <summary>
+            Base class for all instructions.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Instructions.InstructionBase.Started">
+            <summary>
+            Raised when the instruction starts.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Instructions.InstructionBase.Finished">
+            <summary>
+            Raised when the instruction completes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Instructions.InstructionBase.Repeating">
+            <summary>
+            Raised when the instruction completes but is going to repeat.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished">
+            <summary>
+            When true, this instruction will automatically remove itself from the parent's <see cref="!:SadConsole.Console.Components"/> collection.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.InstructionBase.IsFinished">
+            <summary>
+            Flags the instruction as completed or not. If completed, the <see cref="E:SadConsole.Instructions.InstructionBase.Finished"/> event will be raised.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.InstructionBase.RepeatCount">
+            <summary>
+            Indicates how many times this set will repeat. Use 0 to not repeat and -1 to repeat forever.
+            </summary>
+            <remarks>This property counts down each time the instruction finishes. If set to -1 it will repeat forever. As this represents how many times to repeat, setting this value to 1 would allow the instruction to execute twice, once for the original time, and again for the repeat counter of 1.</remarks>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionBase.Reset">
+            <summary>
+            Resets the Done flag.
+            </summary>
+            <remarks>On the base class, resets the <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/> to false. Override this method to reset the derived class' counters and status flags for the instruction.</remarks>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionBase.Repeat">
+            <summary>
+            Repeats the current instruction. Decrements the <see cref="P:SadConsole.Instructions.InstructionBase.RepeatCount"/> value (if applicable), and raises the <see cref="E:SadConsole.Instructions.InstructionBase.Repeating"/> event. This method should be overridden in derived classes to customize how the object is reset for a repeat.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionBase.Update(SadConsole.ScreenObject)">
+            <summary>
+            Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionBase.OnFinished(SadConsole.ScreenObject)">
+            <summary>
+            Called when the instruction finishes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionBase.OnRepeating">
+            <summary>
+            Called when the instruction repeats.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionBase.OnStarted">
+            <summary>
+            Called when the instruction first runs.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Instructions.InstructionSet">
+            <summary>
+            A set of instructions to be executed sequentially.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.InstructionSet.Instructions">
+            <summary>
+            All instructions in this set.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.InstructionSet.Name">
+            <summary>
+            The name of this instruction to identify it apart from other instruction sets.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.InstructionSet.CurrentInstruction">
+            <summary>
+            Represents the current instruction if this set is currently executing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.Update(SadConsole.ScreenObject)">
+            <summary>
+            Runs the instruction set. Once all instructions are finished, this set will set the <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.Wait(System.TimeSpan)">
+            <summary>
+            Adds a new <see cref="T:SadConsole.Instructions.Wait"/> instruction with the specified duration to the end of this set.
+            </summary>
+            <param name="duration">The time to wait.</param>
+            <returns>This instruction set.</returns>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.Instruct(SadConsole.Instructions.InstructionBase)">
+            <summary>
+            Adds an instruction to the end of this set.
+            </summary>
+            <param name="instruction"></param>
+            <returns>This instruction set.</returns>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.Code(System.Func{SadConsole.ScreenObject,System.Boolean})">
+            <summary>
+            Adds a new <see cref="T:SadConsole.Instructions.CodeInstruction"/> instruction with the specified callback to the end of this set.
+            </summary>
+            <param name="expression">The code callback.</param>
+            <returns>This instruction set.</returns>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.WaitTrue(System.Func{System.Boolean})">
+            <summary>
+            Adds a new <see cref="T:SadConsole.Instructions.PredicateInstruction"/> instruction with the specified callback to the end of this set.
+            </summary>
+            <param name="expression">The code callback.</param>
+            <returns>This instruction set.</returns>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.InstructConcurrent(SadConsole.Instructions.InstructionBase[])">
+            <summary>
+            Adds a <see cref="T:SadConsole.Instructions.ConcurrentInstructions"/> to the end of this set.
+            </summary>
+            <param name="instructions">Instructions to add. Must be two or more instructions.</param>
+            <returns>This instruction set.</returns>
+        </member>
+        <member name="T:SadConsole.Instructions.PredicateInstruction">
+            <summary>
+            Instruction that waits until the code callback returns <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.PredicateInstruction.ID">
+            <summary>
+            Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.PredicateInstruction.#ctor(System.Func{System.Boolean})">
+            <summary>
+            Creates a new instruction with the specified callback.
+            </summary>
+            <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.PredicateInstruction.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.PredicateInstruction.SetCallback(System.Func{System.Boolean})">
+            <summary>
+            Sets the callback used by the instruction.
+            </summary>
+            <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
+        </member>
+        <member name="T:SadConsole.Instructions.Wait">
+            <summary>
+            Represents an instruction to pause for a specified duration.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.Wait.Duration">
+            <summary>
+            The duration of the wait.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.Wait.#ctor(System.TimeSpan)">
+            <summary>
+            Creates a new wait timer with the specified duration.
+            </summary>
+            <param name="duration">How long this instruction waits until it signals <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.Wait.#ctor">
+            <summary>
+            Creates a new wait timer with a 1-second delay.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.Wait.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Instructions.Wait.Reset">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.NewOldValueEventArgs`1">
             <summary>
             Provides reference to the old and new objects.
@@ -4712,6 +5052,11 @@
             <param name="processedString">The entire string being processed.</param>
             <param name="commandStack">The state of commands.</param>
         </member>
+        <member name="T:SadConsole.StringParser.ParseCommandBlink">
+            <summary>
+            Blinks characters.
+            </summary>
+        </member>
         <member name="T:SadConsole.StringParser.ParseCommandSetGlyph">
             <summary>
             Prints a glyph.
@@ -4967,6 +5312,38 @@
             </summary>
             <param name="color">Object instance.</param>
             <returns>A color with the alpha channel fully set.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.SetRed(SadRogue.Primitives.Color,System.Byte)">
+            <summary>
+            Returns a new color with the red channel set to the specified value.
+            </summary>
+            <param name="color">Object instance.</param>
+            <param name="value">The new value for the red channel.</param>
+            <returns>A color with the red channel altered.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.SetGreen(SadRogue.Primitives.Color,System.Byte)">
+            <summary>
+            Returns a new color with the green channel set to the specified value.
+            </summary>
+            <param name="color">Object instance.</param>
+            <param name="value">The new value for the green channel.</param>
+            <returns>A color with the green channel altered.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.SetBlue(SadRogue.Primitives.Color,System.Byte)">
+            <summary>
+            Returns a new color with the blue channel set to the specified value.
+            </summary>
+            <param name="color">Object instance.</param>
+            <param name="value">The new value for the blue channel.</param>
+            <returns>A color with the blue channel altered.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.SetAlpha(SadRogue.Primitives.Color,System.Byte)">
+            <summary>
+            Returns a new color with the alpha channel set to the specified value.
+            </summary>
+            <param name="color">Object instance.</param>
+            <param name="value">The new value for the alpha channel.</param>
+            <returns>A color with the alpha channel altered.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions.GetLuma(SadRogue.Primitives.Color)">
             <summary>

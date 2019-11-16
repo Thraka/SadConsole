@@ -13,6 +13,8 @@ namespace SadConsole
     /// </summary>
     public abstract class GameHost : IDisposable
     {
+        private DateTime _gameStartedAt = DateTime.Now;
+
         /// <summary>
         /// Instance of the game host.
         /// </summary>
@@ -62,8 +64,11 @@ namespace SadConsole
         /// <summary>
         /// Raises the <see cref="FrameUpdate"/> event.
         /// </summary>
-        protected virtual void OnFrameUpdate() =>
+        protected virtual void OnFrameUpdate()
+        {
+            Global.GameRunningTotalTime = DateTime.Now - _gameStartedAt;
             FrameUpdate?.Invoke(this, this);
+        }
 
         /// <summary>
         /// Runs the game.
@@ -204,12 +209,10 @@ namespace SadConsole
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~Game()
-        // {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
+        ~GameHost()
+        {
+            Dispose(false);
+        }
 
         // This code added to correctly implement the disposable pattern.
         public void Dispose()

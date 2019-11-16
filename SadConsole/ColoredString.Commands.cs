@@ -74,10 +74,10 @@
                                     case "g":
                                         commandObject = new ParseCommandGradient(commandParams);
                                         break;
-                                    //case "blink":
-                                    //case "b":
-                                    //    commandObject = new ParseCommandBlink(commandParams, existingGlyphs, commandStacks, surface);
-                                    //    break;
+                                    case "blink":
+                                    case "b":
+                                        commandObject = new ParseCommandBlink(commandParams, existingGlyphs, commandStacks, surface);
+                                        break;
                                     case "sglyph":
                                     case "sg":
                                         commandObject = new ParseCommandSetGlyph(commandParams);
