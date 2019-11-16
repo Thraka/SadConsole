@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives.SFML\TheSadRogue.Primitives.SFML.csproj" />
     <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
     <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives\TheSadRogue.Primitives.csproj" />
   </ItemGroup>

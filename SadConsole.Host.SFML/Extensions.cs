@@ -8,19 +8,18 @@ namespace SadConsole.Host
 {
     public static class Extensions
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static global::SFML.Graphics.IntRect ToSFML(this SadRogue.Primitives.Rectangle rectangle) =>
-            new global::SFML.Graphics.IntRect(rectangle.X, rectangle.Y, rectangle.X + rectangle.Width, rectangle.Y +rectangle.Height);
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //public static global::SFML.Graphics.IntRect ToSFML(this SadRogue.Primitives.Rectangle rectangle) =>
+        //    new global::SFML.Graphics.IntRect(rectangle.X, rectangle.Y, rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static global::SFML.Graphics.Color ToSFML(this SadRogue.Primitives.Color color) =>
-            new global::SFML.Graphics.Color(color.R, color.G, color.B, color.A);
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //public static global::SFML.Graphics.Color ToSFML(this SadRogue.Primitives.Color color) =>
+        //    new global::SFML.Graphics.Color(color.R, color.G, color.B, color.A);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SFML.System.Vector2i ToSFML(this SadRogue.Primitives.Point position) =>
-            new SFML.System.Vector2i(position.X, position.Y);
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //public static SFML.System.Vector2i ToSFML(this SadRogue.Primitives.Point position) =>
+        //    new SFML.System.Vector2i(position.X, position.Y);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SFMLKeys ToSFML(this Input.Keys key)
         {
             // A-Z

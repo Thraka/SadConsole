@@ -60,7 +60,7 @@ namespace ConsoleTest
             var con = new Console(20, 10);
             //con.Surface.DrawBox(new Rectangle(0, 0, 20, 10), new ColoredGlyph(Color.Green, Color.Black, 44, Mirror.None));
             con.Surface.UsePrintProcessor = true;
-            con.Surface.Print(1, 1, "[c:g f:Green:Blue:Red:14]This is a test");
+            con.Surface.Print(1, 1, "[c:g f:Green:Blue:Red:14]This is a [c:b]test");
             con.Surface.Print(1, 2, "[c:g f:Red:Blue:Green:14]This is a test");
             con.Parent = Global.Screen;
             con.Position = new Point(0,0);
@@ -73,8 +73,18 @@ namespace ConsoleTest
             var blink = new SadConsole.Effects.BlinkGlyph();
             con.Surface.SetEffect(1, 1, blink);
 
-        }
+            con.Components.Add(
+                new SadConsole.Instructions.InstructionSet().Wait(TimeSpan.FromSeconds(1)).Instruct(
 
+                new SadConsole.Instructions.FadeTextSurfaceTint(
+                                new SadRogue.Primitives.ColorGradient(Color.Purple.SetAlpha(0), Color.Purple.FillAlpha(), Color.Purple.SetAlpha(0)),
+                                TimeSpan.FromSeconds(5)
+                              )
+                { RepeatCount = -1 })
+                );
+
+            con.Components.Add(new MouseTest());
+        }
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent
         {

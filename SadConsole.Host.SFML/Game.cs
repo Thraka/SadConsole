@@ -84,7 +84,7 @@ namespace SadConsole
 
             while (SadConsole.Host.Global.GraphicsDevice.IsOpen)
             {
-                SadConsole.Host.Global.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToSFML());
+                SadConsole.Host.Global.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
 
                 // Update game loop part
                 if (SadConsole.Settings.DoUpdate)
@@ -132,7 +132,7 @@ namespace SadConsole
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
 
                     // Render to the global output texture
-                    Host.Global.RenderOutput.Clear(SadConsole.Settings.ClearColor.ToSFML());
+                    Host.Global.RenderOutput.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
 
                     // Render each draw call
                     Host.Global.SharedSpriteBatch.Reset(Host.Global.RenderOutput, RenderStates.Default, Transform.Identity);
@@ -147,7 +147,7 @@ namespace SadConsole
                     if (SadConsole.Settings.DoFinalDraw)
                     {
                         Host.Global.SharedSpriteBatch.Reset(Host.Global.GraphicsDevice, RenderStates.Default, Transform.Identity);
-                        Host.Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToSFML(), new IntRect(0, 0, (int)Host.Global.RenderOutput.Size.X, (int)Host.Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Host.Global.RenderOutput.Texture);
+                        Host.Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Host.Global.RenderOutput.Size.X, (int)Host.Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Host.Global.RenderOutput.Texture);
                         Host.Global.SharedSpriteBatch.End();
                     }
                 }

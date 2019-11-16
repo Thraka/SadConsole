@@ -2,6 +2,7 @@
 using Matrix = SFML.Graphics.Transform;
 using SadConsole;
 using SadConsole.Host;
+using SadRogue.Primitives;
 
 namespace SFML.Graphics
 {
@@ -80,7 +81,7 @@ namespace SFML.Graphics
 
         public unsafe void DrawCell(ColoredGlyph cell, Rectangle screenRect, bool drawBackground, SadConsole.Font font)
         {
-            Rectangle solidRect = font.SolidGlyphRectangle.ToSFML();
+            Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
 
             if (_lastDrawCall.Texture != ((SadConsole.Host.GameTexture)font.Image).Texture && _lastDrawCall.Texture != null)
             {
@@ -96,9 +97,9 @@ namespace SFML.Graphics
                 _maxIndex = _lastDrawCall.Verticies.Length - 200;
             }
 
-            var glyphRect = font.GlyphRects[cell.Glyph].ToSFML();
-            var background = cell.Background.ToSFML();
-            var foreground = cell.Foreground.ToSFML();
+            var glyphRect = font.GlyphRects[cell.Glyph].ToIntRect();
+            var background = cell.Background.ToSFMLColor();
+            var foreground = cell.Foreground.ToSFMLColor();
 
             if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
             {
@@ -188,8 +189,8 @@ namespace SFML.Graphics
                 {
                     foreach (var decorator in cell.Decorators)
                     {
-                        glyphRect = font.GlyphRects[decorator.Glyph].ToSFML();
-                        foreground = decorator.Color.ToSFML();
+                        glyphRect = font.GlyphRects[decorator.Glyph].ToIntRect();
+                        foreground = decorator.Color.ToSFMLColor();
 
                         if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
                         {

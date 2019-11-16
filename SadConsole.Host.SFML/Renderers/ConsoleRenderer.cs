@@ -2,6 +2,7 @@
 using SFML.Graphics;
 using Color = SFML.Graphics.Color;
 using SadConsole.Host;
+using SadRogue.Primitives;
 
 namespace SadConsole.Renderers
 {
@@ -47,7 +48,7 @@ namespace SadConsole.Renderers
                 
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
-                                               new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, surface.FontSize.X, surface.FontSize.Y).ToSFML(),
+                                               new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, surface.FontSize.X, surface.FontSize.Y).ToIntRect(),
                                                surface.Font,
                                                true
                                               )
@@ -55,7 +56,7 @@ namespace SadConsole.Renderers
             }
 
             if (surface.Tint.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(surface.Tint.ToSFML(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture, surface.AbsoluteArea.ToSFML(), surface.Font.SolidGlyphRectangle.ToSFML()));
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(surface.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture, surface.AbsoluteArea.ToIntRect(), surface.Font.SolidGlyphRectangle.ToIntRect()));
         }
 
         ///  <inheritdoc/>
@@ -78,7 +79,7 @@ namespace SadConsole.Renderers
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
                     var position = SadRogue.Primitives.Point.FromIndex(i, surface.Surface.ViewWidth);
-                    _renderRects[i] = surface.Font.GetRenderRect(position.X, position.Y, surface.FontSize).ToSFML();
+                    _renderRects[i] = surface.Font.GetRenderRect(position.X, position.Y, surface.FontSize).ToIntRect();
                 }
             }
            
@@ -108,7 +109,7 @@ namespace SadConsole.Renderers
             if (surface.Tint.A != 255)
             {
                 if (cellSurface.DefaultBackground.A != 0)
-                    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToSFML(), cellSurface.DefaultBackground.ToSFML(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture);
+                    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToIntRect(), cellSurface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture);
 
                 int rectIndex = 0;
 
