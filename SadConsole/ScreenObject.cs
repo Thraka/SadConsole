@@ -394,7 +394,7 @@ namespace SadConsole
         /// <param name="newParent">The new parent.</param>
         protected virtual void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
         {
-            SetAbsolutePosition();
+            UpdateAbsolutePosition();
             ParentChanged?.Invoke(this, new NewOldValueEventArgs<ScreenObject>(oldParent, newParent));
         }
 
@@ -405,7 +405,7 @@ namespace SadConsole
         /// <param name="newPosition">The new position.</param>
         protected virtual void OnPositionChanged(Point oldPosition, Point newPosition)
         {
-            SetAbsolutePosition();
+            UpdateAbsolutePosition();
             PositionChanged?.Invoke(this, new NewOldValueEventArgs<Point>(oldPosition, newPosition));
         }
 
@@ -424,12 +424,12 @@ namespace SadConsole
         /// <summary>
         /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
         /// </summary>
-        protected virtual void SetAbsolutePosition()
+        public virtual void UpdateAbsolutePosition()
         {
             AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (Console child in Children)
-                child.SetAbsolutePosition();
+            foreach (ScreenObject child in Children)
+                child.UpdateAbsolutePosition();
         }
     }
 }

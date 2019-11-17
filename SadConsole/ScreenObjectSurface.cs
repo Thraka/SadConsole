@@ -102,7 +102,7 @@ namespace SadConsole
             {
                 _usePixelPositioning = value;
                 IsDirty = true;
-                SetAbsolutePosition();
+                UpdateAbsolutePosition();
             }
         }
 
@@ -158,15 +158,15 @@ namespace SadConsole
 
 
         /// <inheritdoc />
-        protected override void SetAbsolutePosition()
+        public override void UpdateAbsolutePosition()
         {
             if (UsePixelPositioning)
-                base.SetAbsolutePosition();
+                base.UpdateAbsolutePosition();
             else
                 AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (Console child in Children)
-                child.SetAbsolutePosition();
+            foreach (ScreenObject child in Children)
+                child.UpdateAbsolutePosition();
         }
 
         ///  <inheritdoc/>
