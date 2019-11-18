@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using SadConsole.Components;
+using SadConsole.Input;
 using SadRogue.Primitives;
 
 namespace SadConsole
@@ -9,11 +10,6 @@ namespace SadConsole
     public partial class Console : ScreenObjectSurface
     {
         private bool _isCursorDisabled;
-
-        /// <summary>
-        /// How the console should handle becoming active.
-        /// </summary>
-        public ActiveBehavior FocusedMode { get; set; }
 
         /// <summary>
         /// When <see langword="true"/>, indicates that the <see cref="Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
@@ -64,42 +60,9 @@ namespace SadConsole
         protected override void OnVisibleChanged()
         {
             if (!IsVisible && IsMouseOver)
-                OnMouseExit(new Input.MouseConsoleState(this, SadConsole.Global.Mouse));
+                OnMouseExit(new Input.MouseScreenObjectState(this, SadConsole.Global.Mouse));
 
             base.OnVisibleChanged();
-        }
-
-        /// <summary>
-        /// Gets or sets this console as the focused console for input.
-        /// </summary>
-        public bool IsFocused
-        {
-            get => Global.FocusedConsoles.Console == this;
-            set
-            {
-                if (Global.FocusedConsoles.Console != null)
-                {
-                    if (value && Global.FocusedConsoles.Console != this)
-                    {
-                        if (FocusedMode == ActiveBehavior.Push)
-                            Global.FocusedConsoles.Push(this);
-                        else
-                            Global.FocusedConsoles.Set(this);
-                    }
-                    else if (!value && Global.FocusedConsoles.Console == this)
-                        Global.FocusedConsoles.Pop(this);
-                }
-                else
-                {
-                    if (value)
-                    {
-                        if (FocusedMode == ActiveBehavior.Push)
-                            Global.FocusedConsoles.Push(this);
-                        else
-                            Global.FocusedConsoles.Set(this);
-                    }
-                }
-            }
         }
 
         ///  <inheritdoc/>
@@ -113,10 +76,19 @@ namespace SadConsole
                 Cursor.Update(Global.UpdateFrameDelta);
         }
 
+        /// <inheritdoc />
+        public override bool ProcessKeyboard(Keyboard keyboard)
+        {
+            if (!UseKeyboard) return false;
+            else if (base.ProcessKeyboard(keyboard)) return true;
+
+            return !IsCursorDisabled && Cursor.IsEnabled && Cursor.ProcessKeyboard(keyboard);
+        }
+
         /// <summary>
         /// Called when this console's focus has been lost. Hides the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
-        public virtual void OnFocusLost()
+        public override void OnFocusLost()
         {
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = false;
@@ -125,7 +97,7 @@ namespace SadConsole
         /// <summary>
         /// Called when this console is focused. Shows the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
-        public virtual void OnFocused()
+        public override void OnFocused()
         {
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = true;

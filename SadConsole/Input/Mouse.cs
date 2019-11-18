@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SadRogue.Primitives;
 
 namespace SadConsole.Input
@@ -11,7 +12,7 @@ namespace SadConsole.Input
     {
         private TimeSpan _leftLastClickedTime;
         private TimeSpan _rightLastClickedTime;
-        private Console _lastMouseConsole;
+        private ScreenObjectSurface _lastMouseScreenObject;
 
         /// <summary>
         /// The pixel position of the mouse on the screen.
@@ -159,73 +160,73 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Builds information about the mouse state based on the <see cref="Global.FocusedConsoles"/> or <see cref="Global.CurrentScreen"/>. Should be called each frame.
+        /// Builds information about the mouse state based on the <see cref="Global.FocusedScreenObjects"/> or <see cref="Global.CurrentScreen"/>. Should be called each frame.
         /// </summary>
         public virtual void Process()
         {
             // Check if last mouse was marked exclusive
-            if (_lastMouseConsole != null && _lastMouseConsole.IsExclusiveMouse)
+            if (_lastMouseScreenObject != null && _lastMouseScreenObject.IsExclusiveMouse)
             {
-                var state = new MouseConsoleState(_lastMouseConsole, this);
+                var state = new MouseScreenObjectState(_lastMouseScreenObject, this);
 
-                _lastMouseConsole.ProcessMouse(state);
+                _lastMouseScreenObject.ProcessMouse(state);
             }
 
-            // Check if the focused input console wants exclusive mouse
-            else if (Global.FocusedConsoles.Console != null && Global.FocusedConsoles.Console.IsExclusiveMouse)
+            // Check if the focused input screen object wants exclusive mouse
+            else if (Global.FocusedScreenObjects.ScreenObject != null && Global.FocusedScreenObjects.ScreenObject.IsExclusiveMouse)
             {
-                var state = new MouseConsoleState(Global.FocusedConsoles.Console, this);
+                var state = new MouseScreenObjectState(Global.FocusedScreenObjects.ScreenObject, this);
 
-                // if the last console to have the mouse is not our global, signal
-                if (_lastMouseConsole != null && _lastMouseConsole != Global.FocusedConsoles.Console)
+                // if the last screen object to have the mouse is not our global, signal
+                if (_lastMouseScreenObject != null && _lastMouseScreenObject != Global.FocusedScreenObjects.ScreenObject)
                 {
-                    _lastMouseConsole.LostMouse(state);
-                    _lastMouseConsole = null;
+                    _lastMouseScreenObject.LostMouse(state);
+                    _lastMouseScreenObject = null;
                 }
 
-                Global.FocusedConsoles.Console.ProcessMouse(state);
+                Global.FocusedScreenObjects.ScreenObject.ProcessMouse(state);
 
-                _lastMouseConsole = Global.FocusedConsoles.Console;
+                _lastMouseScreenObject = Global.FocusedScreenObjects.ScreenObject;
             }
 
-            // Scan through each "console" in the current screen, including children.
+            // Scan through each "screen object" in the current screen, including children.
             else if (Global.Screen != null)
             {
                 bool foundMouseTarget = false;
 
-                // Build a list of all consoles
-                var consoles = new List<Console>();
-                GetConsoles(Global.Screen, ref consoles);
+                // Build a list of all screen objects
+                var screenObjects = new List<ScreenObjectSurface>();
+                GetConsoles(Global.Screen, ref screenObjects);
 
-                // Process top-most consoles first.
-                consoles.Reverse();
+                // Process top-most screen objects first.
+                screenObjects.Reverse();
 
-                for (int i = 0; i < consoles.Count; i++)
+                for (int i = 0; i < screenObjects.Count; i++)
                 {
-                    var state = new MouseConsoleState(consoles[i], this);
+                    var state = new MouseScreenObjectState(screenObjects[i], this);
 
-                    if (consoles[i].ProcessMouse(state))
+                    if (screenObjects[i].ProcessMouse(state))
                     {
-                        if (_lastMouseConsole != null && _lastMouseConsole != consoles[i])
+                        if (_lastMouseScreenObject != null && _lastMouseScreenObject != screenObjects[i])
                         {
-                            _lastMouseConsole.LostMouse(state);
+                            _lastMouseScreenObject.LostMouse(state);
                         }
 
                         foundMouseTarget = true;
-                        _lastMouseConsole = consoles[i];
+                        _lastMouseScreenObject = screenObjects[i];
                         break;
                     }
                 }
 
                 if (!foundMouseTarget)
                 {
-                    _lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
+                    _lastMouseScreenObject?.LostMouse(new MouseScreenObjectState(null, this));
                 }
             }
 
         }
 
-        private void GetConsoles(Console screen, ref List<Console> list)
+        private void GetConsoles(ScreenObjectSurface screen, ref List<ScreenObjectSurface> list)
         {
             if (!screen.IsVisible)
             {
@@ -237,27 +238,28 @@ namespace SadConsole.Input
                 list.Add(screen);
             }
 
-            foreach (Console child in screen.Children)
+            foreach (ScreenObjectSurface child in screen.Children.OfType<ScreenObjectSurface>())
             {
                 GetConsoles(child, ref list);
             }
         }
 
         /// <summary>
-        /// Unlocks the last console the mouse was locked to. Allows another conosle to become locked to the mouse.
+        /// Unlocks the last screen object the mouse was locked to. Allows another conosle to become locked to the mouse.
         /// </summary>
-        public void ClearLastMouseConsole()
+        public void ClearLastMouseScreenObject()
         {
-            _lastMouseConsole?.LostMouse(new MouseConsoleState(null, this));
-            _lastMouseConsole = null;
+            _lastMouseScreenObject?.LostMouse(new MouseScreenObjectState(null, this));
+            _lastMouseScreenObject = null;
         }
 
         /// <summary>
-        /// Returns true when the mouse is currently over the provided console.
+        /// Returns true when the mouse is currently over the provided screen object.
         /// </summary>
-        /// <param name="console">The console to check.</param>
-        /// <returns>True or false indicating if the mouse is over the console.</returns>
-        public bool IsMouseOverConsole(Console console) => new MouseConsoleState(console, this).IsOnConsole;
+        /// <param name="screenObject">The screen object to check.</param>
+        /// <returns>True or false indicating if the mouse is over the screen object.</returns>
+        public bool IsMouseOverScreenObjectSurface(ScreenObjectSurface screenObject) =>
+            new MouseScreenObjectState(screenObject, this).IsOnScreenObject;
 
         /// <summary>
         /// Clones this mouse into a new object.

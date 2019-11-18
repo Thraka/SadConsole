@@ -5,12 +5,12 @@ namespace SadConsole.Input
     /// <summary>
     /// The state of the mouse.
     /// </summary>
-    public class MouseConsoleState
+    public class MouseScreenObjectState
     {
         /// <summary>
-        /// The console used to create the mouse state.
+        /// The screen object used to create the mouse state.
         /// </summary>
-        public readonly Console Console;
+        public readonly ScreenObjectSurface ScreenObject;
 
         /// <summary>
         /// The mouse data.
@@ -18,7 +18,7 @@ namespace SadConsole.Input
         public readonly Mouse Mouse;
 
         /// <summary>
-        /// The cell the mouse is over, from <see cref="Console"/>.
+        /// The cell the mouse is over, from <see cref="ScreenObject"/>.
         /// </summary>
         public readonly ColoredGlyph Cell;
 
@@ -28,108 +28,108 @@ namespace SadConsole.Input
         public readonly Point CellPosition;
 
         /// <summary>
-        /// The position of the mouse on the <see cref="Console"/>, based on the <see cref="WorldCellPosition"/> and the position of the <see cref="Console"/>.
+        /// The position of the mouse on the <see cref="ScreenObject"/>, based on the <see cref="WorldCellPosition"/> and the position of the <see cref="ScreenObject"/>.
         /// </summary>
-        public readonly Point ConsoleCellPosition;
+        public readonly Point SurfaceCellPosition;
 
         /// <summary>
-        /// A cell-based location of the mouse based on the screen, not the console.
+        /// A cell-based location of the mouse based on the screen, not the screen object.
         /// </summary>
         public readonly Point WorldCellPosition;
 
         /// <summary>
-        /// The mouse position in pixels on the console.
+        /// The mouse position in pixels on the screen object.
         /// </summary>
-        public readonly Point ConsolePixelPosition;
+        public readonly Point SurfacePixelPosition;
 
         /// <summary>
-        /// Indicates that the mouse is within the bounds of <see cref="Console"/>.
+        /// Indicates that the mouse is within the bounds of <see cref="ScreenObject"/>.
         /// </summary>
-        public readonly bool IsOnConsole;
+        public readonly bool IsOnScreenObject;
 
         /// <summary>
-        /// Calculates a new <see cref="MouseConsoleState"/> based on an <see cref="Console"/> and <see cref="Mouse"/> state.
+        /// Calculates a new <see cref="MouseScreenObjectState"/> based on an <see cref="ScreenObject"/> and <see cref="Mouse"/> state.
         /// </summary>
-        /// <param name="console">The console to process with the mouse state.</param>
+        /// <param name="screenObject">The screen object to process with the mouse state.</param>
         /// <param name="mouseData">The current mouse state.</param>
-        public MouseConsoleState(Console console, Mouse mouseData)
+        public MouseScreenObjectState(ScreenObjectSurface screenObject, Mouse mouseData)
         {
             bool isNegative = false;
             Mouse = mouseData.Clone();
-            Console = console;
+            ScreenObject = screenObject;
 
-            if (console != null)
+            if (screenObject != null)
             {
-                if (console.UsePixelPositioning)
+                if (screenObject.UsePixelPositioning)
                 {
-                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.FontSize);
-                    ConsolePixelPosition = mouseData.ScreenPosition - console.AbsolutePosition;
+                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToSurface(screenObject.FontSize);
+                    SurfacePixelPosition = mouseData.ScreenPosition - screenObject.AbsolutePosition;
 
-                    if (ConsolePixelPosition.X < 0 || ConsolePixelPosition.Y < 0)
+                    if (SurfacePixelPosition.X < 0 || SurfacePixelPosition.Y < 0)
                     {
                         isNegative = true;
                     }
 
-                    ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.FontSize);
+                    SurfaceCellPosition = SurfacePixelPosition.PixelLocationToSurface(screenObject.FontSize);
                 }
                 else
                 {
-                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToConsole(console.FontSize);
-                    ConsolePixelPosition = mouseData.ScreenPosition - console.AbsolutePosition;
+                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToSurface(screenObject.FontSize);
+                    SurfacePixelPosition = mouseData.ScreenPosition - screenObject.AbsolutePosition;
 
-                    if (ConsolePixelPosition.X < 0 || ConsolePixelPosition.Y < 0)
+                    if (SurfacePixelPosition.X < 0 || SurfacePixelPosition.Y < 0)
                     {
                         isNegative = true;
                     }
 
-                    ConsoleCellPosition = ConsolePixelPosition.PixelLocationToConsole(console.FontSize);
+                    SurfaceCellPosition = SurfacePixelPosition.PixelLocationToSurface(screenObject.FontSize);
                 }
 
                 if (isNegative)
                 {
-                    IsOnConsole = false;
+                    IsOnScreenObject = false;
                     return;
                 }
 
-                if (console.Surface.IsScrollable)
+                if (screenObject.Surface.IsScrollable)
                 {
-                    Point tempCellPosition = ConsoleCellPosition + console.Surface.ViewPosition;
-                    IsOnConsole = console.Surface.GetViewRectangle().Contains(tempCellPosition);
+                    Point tempCellPosition = SurfaceCellPosition + screenObject.Surface.ViewPosition;
+                    IsOnScreenObject = screenObject.Surface.GetViewRectangle().Contains(tempCellPosition);
 
-                    if (IsOnConsole)
+                    if (IsOnScreenObject)
                     {
                         CellPosition = tempCellPosition;
-                        Cell = console.Surface[CellPosition.X, CellPosition.Y];
+                        Cell = screenObject.Surface[CellPosition.X, CellPosition.Y];
                     }
                 }
                 else
                 {
-                    if (console.Surface.IsValidCell(ConsoleCellPosition.X, ConsoleCellPosition.Y))
+                    if (screenObject.Surface.IsValidCell(SurfaceCellPosition.X, SurfaceCellPosition.Y))
                     {
-                        IsOnConsole = true;
-                        CellPosition = ConsoleCellPosition;
-                        Cell = Console.Surface[ConsoleCellPosition.X, ConsoleCellPosition.Y];
+                        IsOnScreenObject = true;
+                        CellPosition = SurfaceCellPosition;
+                        Cell = ScreenObject.Surface[SurfaceCellPosition.X, SurfaceCellPosition.Y];
                     }
                 }
             }
         }
 
-        private MouseConsoleState(MouseConsoleState clonedCopy)
+        private MouseScreenObjectState(MouseScreenObjectState clonedCopy)
         {
-            Console = clonedCopy.Console;
+            ScreenObject = clonedCopy.ScreenObject;
             Mouse = clonedCopy.Mouse.Clone();
             Cell = clonedCopy.Cell;
-            ConsoleCellPosition = clonedCopy.ConsoleCellPosition;
+            SurfaceCellPosition = clonedCopy.SurfaceCellPosition;
             CellPosition = clonedCopy.CellPosition;
             WorldCellPosition = clonedCopy.WorldCellPosition;
-            ConsolePixelPosition = clonedCopy.ConsolePixelPosition;
-            IsOnConsole = clonedCopy.IsOnConsole;
+            SurfacePixelPosition = clonedCopy.SurfacePixelPosition;
+            IsOnScreenObject = clonedCopy.IsOnScreenObject;
         }
 
         /// <summary>
         /// Creates a copy.
         /// </summary>
         /// <returns>A copy of this class instance.</returns>
-        public MouseConsoleState Clone() => new MouseConsoleState(this);
+        public MouseScreenObjectState Clone() => new MouseScreenObjectState(this);
     }
 }

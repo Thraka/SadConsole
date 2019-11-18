@@ -1592,7 +1592,7 @@
         </member>
         <member name="P:SadConsole.Components.IComponent.IsMouse">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseConsoleState,System.Boolean@)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsKeyboard">
@@ -1612,7 +1612,7 @@
             </summary>
             <param name="host">The host calling the component.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseConsoleState,System.Boolean@)">
+        <member name="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <summary>
             Called by a host when the mouse is being processed.
             </summary>
@@ -1686,7 +1686,7 @@
         </member>
         <member name="T:SadConsole.Components.MouseConsoleComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseConsoleState,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.MouseConsoleComponent.SortOrder">
@@ -1694,7 +1694,7 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.MouseConsoleComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseConsoleState,System.Boolean@)">
+        <member name="M:SadConsole.Components.MouseConsoleComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <summary>
             Called by a host when the mouse is being processed.
             </summary>
@@ -1734,7 +1734,7 @@
         </member>
         <member name="T:SadConsole.Components.InputConsoleComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseConsoleState,System.Boolean@)"/> and <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> and <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.InputConsoleComponent.SortOrder">
@@ -1750,7 +1750,7 @@
             <param name="keyboard">The state of the keyboard.</param>
             <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
-        <member name="M:SadConsole.Components.InputConsoleComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseConsoleState,System.Boolean@)">
+        <member name="M:SadConsole.Components.InputConsoleComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <summary>
             Called by a host when the mouse is being processed.
             </summary>
@@ -1821,7 +1821,7 @@
         <member name="M:SadConsole.Components.ComponentBase.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseConsoleState,System.Boolean@)">
+        <member name="M:SadConsole.Components.ComponentBase.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.ScreenObject)">
@@ -1829,11 +1829,6 @@
         </member>
         <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.ScreenObject)">
             <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Console.FocusedMode">
-            <summary>
-            How the console should handle becoming active.
-            </summary>
         </member>
         <member name="P:SadConsole.Console.IsCursorDisabled">
             <summary>
@@ -1871,13 +1866,11 @@
         <member name="M:SadConsole.Console.OnVisibleChanged">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Console.IsFocused">
-            <summary>
-            Gets or sets this console as the focused console for input.
-            </summary>
-        </member>
         <member name="M:SadConsole.Console.Update">
              <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <inheritdoc />
         </member>
         <member name="M:SadConsole.Console.OnFocusLost">
             <summary>
@@ -1887,107 +1880,6 @@
         <member name="M:SadConsole.Console.OnFocused">
             <summary>
             Called when this console is focused. Shows the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.IsMouseOver">
-            <summary>
-            Indicates that the mouse is currently over this console.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.IsExclusiveMouse">
-            <summary>
-            Gets or sets whether or not this console has exclusive access to the mouse events.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.MoveToFrontOnMouseClick">
-            <summary>
-            When true, this console will move to the front of its parent console when the mouse is clicked.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.FocusOnMouseClick">
-            <summary>
-            When true, this console will set <see cref="P:SadConsole.Console.IsFocused"/> to true when the mouse is clicked.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Console.MouseButtonClicked">
-            <summary>
-            Raised when the a mouse button is clicked on this console.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Console.MouseMove">
-            <summary>
-            Raised when the mouse moves around the this console.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Console.MouseExit">
-            <summary>
-            Raised when the mouse exits this console.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Console.MouseEnter">
-            <summary>
-            Raised when the mouse enters this console.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Console.OnMouseEnter(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Raises the <see cref="E:SadConsole.Console.MouseEnter"/> event.
-            </summary>
-            <param name="state">Current mouse state in relation to this console.</param>
-        </member>
-        <member name="M:SadConsole.Console.OnMouseExit(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Raises the <see cref="E:SadConsole.Console.MouseExit"/> event.
-            </summary>
-            <param name="state">Current mouse state in relation to this console.</param>
-        </member>
-        <member name="M:SadConsole.Console.OnMouseMove(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Raises the <see cref="E:SadConsole.Console.MouseMove"/> event.
-            </summary>
-            <param name="state">Current mouse state in relation to this console.</param>
-        </member>
-        <member name="M:SadConsole.Console.OnMouseLeftClicked(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Raises the <see cref="E:SadConsole.Console.MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
-            </summary>
-            <param name="state">Current mouse state in relation to this console.</param>
-        </member>
-        <member name="M:SadConsole.Console.OnRightMouseClicked(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Raises the <see cref="E:SadConsole.Console.MouseButtonClicked"/> event.
-            </summary>
-            <param name="state">Current mouse state in relation to this console.</param>
-        </member>
-        <member name="M:SadConsole.Console.LostMouse(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            If the mouse is not over the console, causes the protected <see cref="M:SadConsole.Console.OnMouseExit(SadConsole.Input.MouseConsoleState)"/> method to run which raises the <see cref="E:SadConsole.Console.MouseExit"/> event.
-            </summary>
-            <param name="state"></param>
-        </member>
-        <member name="M:SadConsole.Console.ProcessMouse(SadConsole.Input.MouseConsoleState)">
-            <summary>
-            Processes the mouse.
-            </summary>
-            <param name="state">The mouse state related to this console.</param>
-            <returns>True when the mouse is over this console and processing should stop.</returns>
-        </member>
-        <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Console.ActiveBehavior">
-            <summary>
-            How the console handles becoming focused and added to the <see cref="P:SadConsole.Global.FocusedConsoles"/> collection.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ActiveBehavior.Set">
-            <summary>
-            Becomes the only active input object when focused.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Console.ActiveBehavior.Push">
-            <summary>
-            Pushes to the top of the stack when it becomes the active input object.
             </summary>
         </member>
         <member name="T:SadConsole.ComponentObjectCollection">
@@ -2668,47 +2560,47 @@
         <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.FocusedConsoleStack">
+        <member name="T:SadConsole.FocusedScreenObjectStack">
             <summary>
-            A stack of consoles. The top-most of the stack is considered active and represented by the <see cref="P:SadConsole.FocusedConsoleStack.Console"/> property.
+            A stack of screen objects. The top-most of the stack is considered active and represented by the <see cref="P:SadConsole.FocusedScreenObjectStack.ScreenObject"/> property.
             </summary>
         </member>
-        <member name="P:SadConsole.FocusedConsoleStack.Console">
+        <member name="P:SadConsole.FocusedScreenObjectStack.ScreenObject">
             <summary>
-            Gets the current active console.
+            Gets the current active screen object.
             </summary>
         </member>
-        <member name="F:SadConsole.FocusedConsoleStack.consoles">
+        <member name="F:SadConsole.FocusedScreenObjectStack._screenObjects">
             <summary>
-            The stack of consoles for input processing.
+            The stack of screen objects for input processing.
             </summary>
         </member>
-        <member name="M:SadConsole.FocusedConsoleStack.Clear">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Clear">
             <summary>
-            Clears all consoles from the active stack along with the current active console.
+            Clears all screen objects from the active stack along with the current active screen object.
             </summary>
         </member>
-        <member name="M:SadConsole.FocusedConsoleStack.Push(SadConsole.Console)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Push(SadConsole.ScreenObjectSurface)">
             <summary>
-            Adds another console to active stack, setting it as the active (top most in the stack) console.
+            Adds another screen object to active stack, setting it as the active (top most in the stack) screen object.
             </summary>
-            <param name="console"></param>
+            <param name="screenObject"></param>
         </member>
-        <member name="M:SadConsole.FocusedConsoleStack.Set(SadConsole.Console)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Set(SadConsole.ScreenObjectSurface)">
             <summary>
-            Replaces the top console (active console) with the provided instance. Sets <see cref="P:SadConsole.FocusedConsoleStack.Console"/> to this instance.
+            Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="T:SadConsole.ScreenObjectSurface"/> to this instance.
             </summary>
-            <param name="console">The console to make active.</param>
+            <param name="screenObject">The screen object to make active.</param>
         </member>
-        <member name="M:SadConsole.FocusedConsoleStack.Pop(SadConsole.Console)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Pop(SadConsole.ScreenObjectSurface)">
             <summary>
-            Removes the console from the active stack. If the instance is the current active console, the active console is set to the last console in the previous console.
+            Removes the screen object from the active stack. If the instance is the current active screen object, the active screen object is set to the last screen object in the previous screen object.
             </summary>
-            <param name="console">The console to remove.</param>
+            <param name="screenObject">The screen object to remove.</param>
         </member>
-        <member name="M:SadConsole.FocusedConsoleStack.Pop">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Pop">
             <summary>
-            Removes the top console from the stack.
+            Removes the top screen object from the stack.
             </summary>
         </member>
         <member name="T:SadConsole.Font">
@@ -3031,7 +2923,7 @@
             Global mouse object used by SadConsole during the update frame.
             </summary>
         </member>
-        <member name="P:SadConsole.Global.FocusedConsoles">
+        <member name="P:SadConsole.Global.FocusedScreenObjects">
             <summary>
             The stack of focused consoles used by the mouse and keyboard.
             </summary>
@@ -4258,20 +4150,20 @@
         </member>
         <member name="M:SadConsole.Input.Mouse.Process">
             <summary>
-            Builds information about the mouse state based on the <see cref="P:SadConsole.Global.FocusedConsoles"/> or <see cref="!:Global.CurrentScreen"/>. Should be called each frame.
+            Builds information about the mouse state based on the <see cref="P:SadConsole.Global.FocusedScreenObjects"/> or <see cref="!:Global.CurrentScreen"/>. Should be called each frame.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.Mouse.ClearLastMouseConsole">
+        <member name="M:SadConsole.Input.Mouse.ClearLastMouseScreenObject">
             <summary>
-            Unlocks the last console the mouse was locked to. Allows another conosle to become locked to the mouse.
+            Unlocks the last screen object the mouse was locked to. Allows another conosle to become locked to the mouse.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.Mouse.IsMouseOverConsole(SadConsole.Console)">
+        <member name="M:SadConsole.Input.Mouse.IsMouseOverScreenObjectSurface(SadConsole.ScreenObjectSurface)">
             <summary>
-            Returns true when the mouse is currently over the provided console.
+            Returns true when the mouse is currently over the provided screen object.
             </summary>
-            <param name="console">The console to check.</param>
-            <returns>True or false indicating if the mouse is over the console.</returns>
+            <param name="screenObject">The screen object to check.</param>
+            <returns>True or false indicating if the mouse is over the screen object.</returns>
         </member>
         <member name="M:SadConsole.Input.Mouse.Clone">
             <summary>
@@ -4279,59 +4171,59 @@
             </summary>
             <returns>A clone.</returns>
         </member>
-        <member name="T:SadConsole.Input.MouseConsoleState">
+        <member name="T:SadConsole.Input.MouseScreenObjectState">
             <summary>
             The state of the mouse.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.Console">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.ScreenObject">
             <summary>
-            The console used to create the mouse state.
+            The screen object used to create the mouse state.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.Mouse">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.Mouse">
             <summary>
             The mouse data.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.Cell">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.Cell">
             <summary>
-            The cell the mouse is over, from <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>.
+            The cell the mouse is over, from <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.CellPosition">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.CellPosition">
             <summary>
-            The position of the <see cref="F:SadConsole.Input.MouseConsoleState.Cell"/>.  
+            The position of the <see cref="F:SadConsole.Input.MouseScreenObjectState.Cell"/>.  
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.ConsoleCellPosition">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.SurfaceCellPosition">
             <summary>
-            The position of the mouse on the <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>, based on the <see cref="F:SadConsole.Input.MouseConsoleState.WorldCellPosition"/> and the position of the <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>.
+            The position of the mouse on the <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>, based on the <see cref="F:SadConsole.Input.MouseScreenObjectState.WorldCellPosition"/> and the position of the <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.WorldCellPosition">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.WorldCellPosition">
             <summary>
-            A cell-based location of the mouse based on the screen, not the console.
+            A cell-based location of the mouse based on the screen, not the screen object.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.ConsolePixelPosition">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.SurfacePixelPosition">
             <summary>
-            The mouse position in pixels on the console.
+            The mouse position in pixels on the screen object.
             </summary>
         </member>
-        <member name="F:SadConsole.Input.MouseConsoleState.IsOnConsole">
+        <member name="F:SadConsole.Input.MouseScreenObjectState.IsOnScreenObject">
             <summary>
-            Indicates that the mouse is within the bounds of <see cref="F:SadConsole.Input.MouseConsoleState.Console"/>.
+            Indicates that the mouse is within the bounds of <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.MouseConsoleState.#ctor(SadConsole.Console,SadConsole.Input.Mouse)">
+        <member name="M:SadConsole.Input.MouseScreenObjectState.#ctor(SadConsole.ScreenObjectSurface,SadConsole.Input.Mouse)">
             <summary>
-            Calculates a new <see cref="T:SadConsole.Input.MouseConsoleState"/> based on an <see cref="F:SadConsole.Input.MouseConsoleState.Console"/> and <see cref="F:SadConsole.Input.MouseConsoleState.Mouse"/> state.
+            Calculates a new <see cref="T:SadConsole.Input.MouseScreenObjectState"/> based on an <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/> and <see cref="F:SadConsole.Input.MouseScreenObjectState.Mouse"/> state.
             </summary>
-            <param name="console">The console to process with the mouse state.</param>
+            <param name="screenObject">The screen object to process with the mouse state.</param>
             <param name="mouseData">The current mouse state.</param>
         </member>
-        <member name="M:SadConsole.Input.MouseConsoleState.Clone">
+        <member name="M:SadConsole.Input.MouseScreenObjectState.Clone">
             <summary>
             Creates a copy.
             </summary>
@@ -5076,6 +4968,127 @@
         <member name="M:SadConsole.ScreenObjectSurface.Dispose">
             <inheritdoc/>
         </member>
+        <member name="E:SadConsole.ScreenObjectSurface.MouseButtonClicked">
+            <summary>
+            Raised when the a mouse button is clicked on this console.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObjectSurface.MouseMove">
+            <summary>
+            Raised when the mouse moves around the this console.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObjectSurface.MouseExit">
+            <summary>
+            Raised when the mouse exits this console.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObjectSurface.MouseEnter">
+            <summary>
+            Raised when the mouse enters this console.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.IsMouseOver">
+            <summary>
+            Indicates that the mouse is currently over this console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.FocusedMode">
+            <summary>
+            How the object should handle becoming active.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.IsExclusiveMouse">
+            <summary>
+            Gets or sets whether or not this console has exclusive access to the mouse events.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.MoveToFrontOnMouseClick">
+            <summary>
+            When true, this console will move to the front of its parent console when the mouse is clicked.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.FocusOnMouseClick">
+            <summary>
+            When true, this console will set <see cref="P:SadConsole.ScreenObjectSurface.IsFocused"/> to true when the mouse is clicked.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.IsFocused">
+            <summary>
+            Gets or sets this console as the focused console for input.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseEnter"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseExit"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnMouseMove(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseMove"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnMouseLeftClicked(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnRightMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseButtonClicked"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.LostMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            If the mouse is not over the console, causes the protected <see cref="M:SadConsole.ScreenObjectSurface.OnMouseExit(SadConsole.Input.MouseScreenObjectState)"/> method to run which raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseExit"/> event.
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Processes the mouse.
+            </summary>
+            <param name="state">The mouse state related to this console.</param>
+            <returns>True when the mouse is over this console and processing should stop.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnFocusLost">
+            <summary>
+            Called when this console's focus has been lost. Hides the <see cref="T:SadConsole.Cursor"/> if <see cref="!:AutoCursorOnFocus"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnFocused">
+            <summary>
+            Called when this console is focused. Shows the <see cref="T:SadConsole.Cursor"/> if <see cref="!:AutoCursorOnFocus"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="T:SadConsole.ScreenObjectSurface.ActiveBehavior">
+            <summary>
+            How the console handles becoming focused and added to the <see cref="P:SadConsole.Global.FocusedScreenObjects"/> collection.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.ActiveBehavior.Set">
+            <summary>
+            Becomes the only active input object when focused.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.ActiveBehavior.Push">
+            <summary>
+            Pushes to the top of the stack when it becomes the active input object.
+            </summary>
+        </member>
         <member name="T:SadConsole.Serializer">
             <summary>
             Common serialization tasks for SadConsole.
@@ -5703,35 +5716,35 @@
             The color stop in the gradiant this applies to.
             </summary>
         </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.ConsoleLocationToPixel(SadRogue.Primitives.Point,System.Int32,System.Int32)">
+        <member name="M:SadRogue.Primitives.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,System.Int32,System.Int32)">
             <summary>
-            Translates a console cell position to where it appears on the screen in pixels.
+            Translates a surface cell position to where it appears on the screen in pixels.
             </summary>
             <param name="point">The current cell position.</param>
             <param name="cellWidth">The width of a cell in pixels.</param>
             <param name="cellHeight">The height of a cell in pixels.</param>
             <returns>The pixel position of the top-left of the cell.</returns>
         </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.ConsoleLocationToPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadRogue.Primitives.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
-            Translates a console cell position to where it appears on the screen in pixels.
+            Translates a surface cell position to where it appears on the screen in pixels.
             </summary>
             <param name="point">The current cell position.</param>
             <param name="fontSize">The font to use in calculating the position.</param>
             <returns>The pixel position of the top-left of the cell.</returns>
         </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.PixelLocationToConsole(SadRogue.Primitives.Point,System.Int32,System.Int32)">
+        <member name="M:SadRogue.Primitives.PointExtensions.PixelLocationToSurface(SadRogue.Primitives.Point,System.Int32,System.Int32)">
             <summary>
-            Translates a pixel to where it appears on a console cell.
+            Translates a pixel to where it appears on a surface cell.
             </summary>
             <param name="point">The current world position.</param>
             <param name="cellWidth">The width of a cell in pixels.</param>
             <param name="cellHeight">The height of a cell in pixels.</param>
             <returns>The cell position on the screen.</returns>
         </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.PixelLocationToConsole(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadRogue.Primitives.PointExtensions.PixelLocationToSurface(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
-            Translates a pixel to where it appears on a console cell.
+            Translates a pixel to where it appears on a surface cell.
             </summary>
             <param name="point">The current world position.</param>
             <param name="fontSize">The font to use in calculating the position.</param>

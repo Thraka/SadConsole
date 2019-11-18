@@ -3,12 +3,38 @@ using SadConsole.Input;
 
 namespace SadConsole
 {
-    public partial class Console
+    public partial class ScreenObjectSurface
     {
+
+        /// <summary>
+        /// Raised when the a mouse button is clicked on this console.
+        /// </summary>
+        public event EventHandler<MouseScreenObjectState> MouseButtonClicked;
+
+        /// <summary>
+        /// Raised when the mouse moves around the this console.
+        /// </summary>
+        public event EventHandler<MouseScreenObjectState> MouseMove;
+
+        /// <summary>
+        /// Raised when the mouse exits this console.
+        /// </summary>
+        public event EventHandler<MouseScreenObjectState> MouseExit;
+
+        /// <summary>
+        /// Raised when the mouse enters this console.
+        /// </summary>
+        public event EventHandler<MouseScreenObjectState> MouseEnter;
+
         /// <summary>
         /// Indicates that the mouse is currently over this console.
         /// </summary>
         protected bool IsMouseOver;
+
+        /// <summary>
+        /// How the object should handle becoming active.
+        /// </summary>
+        public ActiveBehavior FocusedMode { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not this console has exclusive access to the mouse events.
@@ -26,36 +52,49 @@ namespace SadConsole
         public bool FocusOnMouseClick { get; set; }
 
         /// <summary>
-        /// Raised when the a mouse button is clicked on this console.
+        /// Gets or sets this console as the focused console for input.
         /// </summary>
-        public event EventHandler<MouseConsoleState> MouseButtonClicked;
-
-        /// <summary>
-        /// Raised when the mouse moves around the this console.
-        /// </summary>
-        public event EventHandler<MouseConsoleState> MouseMove;
-
-        /// <summary>
-        /// Raised when the mouse exits this console.
-        /// </summary>
-        public event EventHandler<MouseConsoleState> MouseExit;
-
-        /// <summary>
-        /// Raised when the mouse enters this console.
-        /// </summary>
-        public event EventHandler<MouseConsoleState> MouseEnter;
+        public bool IsFocused
+        {
+            get => Global.FocusedScreenObjects.ScreenObject == this;
+            set
+            {
+                if (Global.FocusedScreenObjects.ScreenObject != null)
+                {
+                    if (value && Global.FocusedScreenObjects.ScreenObject != this)
+                    {
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedScreenObjects.Push(this);
+                        else
+                            Global.FocusedScreenObjects.Set(this);
+                    }
+                    else if (!value && Global.FocusedScreenObjects.ScreenObject == this)
+                        Global.FocusedScreenObjects.Pop(this);
+                }
+                else
+                {
+                    if (value)
+                    {
+                        if (FocusedMode == ActiveBehavior.Push)
+                            Global.FocusedScreenObjects.Push(this);
+                        else
+                            Global.FocusedScreenObjects.Set(this);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Raises the <see cref="MouseEnter"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseEnter(MouseConsoleState state) => MouseEnter?.Invoke(this, state);
+        protected virtual void OnMouseEnter(MouseScreenObjectState state) => MouseEnter?.Invoke(this, state);
 
         /// <summary>
         /// Raises the <see cref="MouseExit"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseExit(MouseConsoleState state)
+        protected virtual void OnMouseExit(MouseScreenObjectState state)
         {
             // Force mouse off just in case
             IsMouseOver = false;
@@ -67,7 +106,7 @@ namespace SadConsole
         /// Raises the <see cref="MouseMove"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseMove(MouseConsoleState state)
+        protected virtual void OnMouseMove(MouseScreenObjectState state)
         {
             if (state.Mouse.LeftButtonDown)
             {
@@ -89,19 +128,19 @@ namespace SadConsole
         /// Raises the <see cref="MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnMouseLeftClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, state);
+        protected virtual void OnMouseLeftClicked(MouseScreenObjectState state) => MouseButtonClicked?.Invoke(this, state);
 
         /// <summary>
         /// Raises the <see cref="MouseButtonClicked"/> event.
         /// </summary>
         /// <param name="state">Current mouse state in relation to this console.</param>
-        protected virtual void OnRightMouseClicked(MouseConsoleState state) => MouseButtonClicked?.Invoke(this, state);
+        protected virtual void OnRightMouseClicked(MouseScreenObjectState state) => MouseButtonClicked?.Invoke(this, state);
 
         /// <summary>
         /// If the mouse is not over the console, causes the protected <see cref="OnMouseExit"/> method to run which raises the <see cref="MouseExit"/> event.
         /// </summary>
         /// <param name="state"></param>
-        public void LostMouse(MouseConsoleState state)
+        public void LostMouse(MouseScreenObjectState state)
         {
             if (IsMouseOver)
             {
@@ -114,7 +153,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="state">The mouse state related to this console.</param>
         /// <returns>True when the mouse is over this console and processing should stop.</returns>
-        public virtual bool ProcessMouse(MouseConsoleState state)
+        public virtual bool ProcessMouse(MouseScreenObjectState state)
         {
             if (!IsVisible)
             {
@@ -136,7 +175,7 @@ namespace SadConsole
                 return false;
             }
 
-            if (state.IsOnConsole)
+            if (state.IsOnScreenObject)
             {
                 if (IsMouseOver != true)
                 {
@@ -173,12 +212,21 @@ namespace SadConsole
         {
             if (!UseKeyboard) return false;
             else if (base.ProcessKeyboard(keyboard)) return true;
-
-            return !IsCursorDisabled && Cursor.IsEnabled && Cursor.ProcessKeyboard(keyboard);
+            return false;
         }
 
         /// <summary>
-        /// How the console handles becoming focused and added to the <see cref="Global.FocusedConsoles"/> collection.
+        /// Called when this console's focus has been lost. Hides the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
+        /// </summary>
+        public virtual void OnFocusLost() { }
+
+        /// <summary>
+        /// Called when this console is focused. Shows the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
+        /// </summary>
+        public virtual void OnFocused() { }
+
+        /// <summary>
+        /// How the console handles becoming focused and added to the <see cref="Global.FocusedScreenObjects"/> collection.
         /// </summary>
         public enum ActiveBehavior
         {

@@ -97,9 +97,9 @@ namespace SadConsole
                         {
                             SadConsole.Global.Keyboard.Update(SadConsole.Global.UpdateFrameDelta);
 
-                            if (SadConsole.Global.FocusedConsoles.Console != null && SadConsole.Global.FocusedConsoles.Console.UseKeyboard)
+                            if (SadConsole.Global.FocusedScreenObjects.ScreenObject != null && SadConsole.Global.FocusedScreenObjects.ScreenObject.UseKeyboard)
                             {
-                                SadConsole.Global.FocusedConsoles.Console.ProcessKeyboard(SadConsole.Global.Keyboard);
+                                SadConsole.Global.FocusedScreenObjects.ScreenObject.ProcessKeyboard(SadConsole.Global.Keyboard);
                             }
 
                         }

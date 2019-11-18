@@ -60,6 +60,6 @@ namespace SadConsole
         /// <summary>
         /// The stack of focused consoles used by the mouse and keyboard.
         /// </summary>
-        public static FocusedConsoleStack FocusedConsoles { get; } = new FocusedConsoleStack();
+        public static FocusedScreenObjectStack FocusedScreenObjects { get; } = new FocusedScreenObjectStack();
     }
 }

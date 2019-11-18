@@ -8,7 +8,7 @@ namespace SadConsole
     /// <summary>
     /// An object that renders a <see cref="CellSurface"/>.
     /// </summary>
-    public class ScreenObjectSurface: ScreenObject, IDisposable
+    public partial class ScreenObjectSurface: ScreenObject, IDisposable
     {
         private Font _font;
         private Point _fontSize;
@@ -192,7 +192,6 @@ namespace SadConsole
 
             base.Update();
         }
-
 
         #region IDisposable Support
         private bool _disposedValue = false; // To detect redundant calls

@@ -6,45 +6,45 @@ namespace SadRogue.Primitives
     public static class PointExtensions
     {
         /// <summary>
-        /// Translates a console cell position to where it appears on the screen in pixels.
+        /// Translates a surface cell position to where it appears on the screen in pixels.
         /// </summary>
         /// <param name="point">The current cell position.</param>
         /// <param name="cellWidth">The width of a cell in pixels.</param>
         /// <param name="cellHeight">The height of a cell in pixels.</param>
         /// <returns>The pixel position of the top-left of the cell.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point ConsoleLocationToPixel(this Point point, int cellWidth, int cellHeight) =>
+        public static Point SurfaceLocationToPixel(this Point point, int cellWidth, int cellHeight) =>
             new Point(point.X * cellWidth, point.Y * cellHeight);
 
         /// <summary>
-        /// Translates a console cell position to where it appears on the screen in pixels.
+        /// Translates a surface cell position to where it appears on the screen in pixels.
         /// </summary>
         /// <param name="point">The current cell position.</param>
         /// <param name="fontSize">The font to use in calculating the position.</param>
         /// <returns>The pixel position of the top-left of the cell.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point ConsoleLocationToPixel(this Point point, Point fontSize) =>
+        public static Point SurfaceLocationToPixel(this Point point, Point fontSize) =>
             new Point(point.X * fontSize.X, point.Y * fontSize.Y);
 
         /// <summary>
-        /// Translates a pixel to where it appears on a console cell.
+        /// Translates a pixel to where it appears on a surface cell.
         /// </summary>
         /// <param name="point">The current world position.</param>
         /// <param name="cellWidth">The width of a cell in pixels.</param>
         /// <param name="cellHeight">The height of a cell in pixels.</param>
         /// <returns>The cell position on the screen.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point PixelLocationToConsole(this Point point, int cellWidth, int cellHeight) =>
+        public static Point PixelLocationToSurface(this Point point, int cellWidth, int cellHeight) =>
             new Point(point.X / cellWidth, point.Y / cellHeight);
 
         /// <summary>
-        /// Translates a pixel to where it appears on a console cell.
+        /// Translates a pixel to where it appears on a surface cell.
         /// </summary>
         /// <param name="point">The current world position.</param>
         /// <param name="fontSize">The font to use in calculating the position.</param>
         /// <returns>The cell position on the screen.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point PixelLocationToConsole(this Point point, Point fontSize) =>
+        public static Point PixelLocationToSurface(this Point point, Point fontSize) =>
             new Point(point.X / fontSize.X, point.Y / fontSize.Y);
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace SadRogue.Primitives
         /// <returns>The position of the cell in the <paramref name="targetFontSize"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point TranslateFont(this Point point, Point sourceFontSize, Point targetFontSize) =>
-            point.ConsoleLocationToPixel(sourceFontSize.X, sourceFontSize.Y).PixelLocationToConsole(targetFontSize.X, targetFontSize.Y);
+            point.SurfaceLocationToPixel(sourceFontSize.X, sourceFontSize.Y).PixelLocationToSurface(targetFontSize.X, targetFontSize.Y);
 
         ///// <summary>
         ///// Creates a position matrix (in pixels) based on the position of a cell.
@@ -75,7 +75,7 @@ namespace SadRogue.Primitives
         //    }
         //    else
         //    {
-        //        worldLocation = position.ConsoleLocationToPixel(cellSize.X, cellSize.Y);
+        //        worldLocation = position.SurfaceLocationToPixel(cellSize.X, cellSize.Y);
         //    }
 
         //    return Matrix.CreateTranslation(worldLocation.X, worldLocation.Y, 0f);
