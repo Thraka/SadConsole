@@ -314,11 +314,9 @@ namespace SadConsole
         public void SetEffect(int x, int y, ICellEffect effect)
         {
             if (!IsValidCell(x, y, out int index))
-            {
                 return;
-            }
 
-            Effects.SetEffect(Cells[index], effect);
+            Effects.SetEffect(index, effect);
             IsDirty = true;
         }
 
@@ -330,11 +328,9 @@ namespace SadConsole
         public void SetEffect(int index, ICellEffect effect)
         {
             if (!IsValidCell(index))
-            {
                 return;
-            }
 
-            Effects.SetEffect(Cells[index], effect);
+            Effects.SetEffect(index, effect);
             IsDirty = true;
         }
 
@@ -344,6 +340,18 @@ namespace SadConsole
         /// <param name="cells">The cells for the effect.</param>
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(IEnumerable<ColoredGlyph> cells, ICellEffect effect)
+        {
+            var cellsList = Cells.ToList();
+            Effects.SetEffect(cells.Select(c => cellsList.IndexOf(c)), effect);
+            IsDirty = true;
+        }
+
+        /// <summary>
+        /// Changes the effect of a list of cells to the specified effect.
+        /// </summary>
+        /// <param name="cells">The cells for the effect.</param>
+        /// <param name="effect">The desired effect.</param>
+        public void SetEffect(IEnumerable<int> cells, ICellEffect effect)
         {
             Effects.SetEffect(cells, effect);
             IsDirty = true;
@@ -356,7 +364,7 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public void SetEffect(ColoredGlyph cell, ICellEffect effect)
         {
-            Effects.SetEffect(cell, effect);
+            Effects.SetEffect(Cells.ToList().IndexOf(cell), effect);
             IsDirty = true;
         }
 
@@ -368,7 +376,7 @@ namespace SadConsole
         /// <returns>The effect.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ICellEffect GetEffect(int x, int y) =>
-            Effects.GetEffect(Cells[GetIndexFromPoint(x, y)]);
+            Effects.GetEffect(GetIndexFromPoint(x, y));
 
         /// <summary>
         /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -725,7 +733,7 @@ namespace SadConsole
                 ColoredGlyph cell = Cells[index];
                 appearance.CopyAppearanceTo(cell);
                 cell.Glyph = text[charIndex];
-                Effects.SetEffect(cell, effect);
+                Effects.SetEffect(index, effect);
                 charIndex++;
             }
             IsDirty = true;

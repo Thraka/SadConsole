@@ -98,98 +98,98 @@
             Creates a new instance of this object with all connections set to <see langword="null"/>.
             </summary>
         </member>
-        <member name="T:SadConsole.AnimatedObject">
+        <member name="T:SadConsole.AnimatedScreenObject">
             <summary>
             Animates a list of frames.
             </summary>
         </member>
-        <member name="E:SadConsole.AnimatedObject.AnimationStateChanged">
+        <member name="E:SadConsole.AnimatedScreenObject.AnimationStateChanged">
             <summary>
-            Raised when the <see cref="T:SadConsole.AnimatedObject.AnimationState"/> changes.
+            Raised when the <see cref="T:SadConsole.AnimatedScreenObject.AnimationState"/> changes.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.FramesList">
+        <member name="F:SadConsole.AnimatedScreenObject.FramesList">
             <summary>
             The frames of animation.
             </summary>
-            <remarks>If this collection changes, <see cref="F:SadConsole.AnimatedObject.CurrentFrameIndexValue"/>, <see cref="M:SadConsole.AnimatedObject.UpdateFrameReferences"/>, and <see cref="F:SadConsole.AnimatedObject.TimePerFrame"/> should all be recalculated.</remarks>
+            <remarks>If this collection changes, <see cref="F:SadConsole.AnimatedScreenObject.CurrentFrameIndexValue"/>, <see cref="M:SadConsole.AnimatedScreenObject.UpdateFrameReferences"/>, and <see cref="F:SadConsole.AnimatedScreenObject.TimePerFrame"/> should all be recalculated.</remarks>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AddedTime">
+        <member name="F:SadConsole.AnimatedScreenObject.AddedTime">
             <summary>
             Time counter for the animation
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.CurrentFrameIndexValue">
+        <member name="F:SadConsole.AnimatedScreenObject.CurrentFrameIndexValue">
             <summary>
             The current frame index being animated.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.TimePerFrame">
+        <member name="F:SadConsole.AnimatedScreenObject.TimePerFrame">
             <summary>
             How much time per animated frame should be used.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.Frames">
+        <member name="P:SadConsole.AnimatedScreenObject.Frames">
             <summary>
             All frames of the animation
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.Center">
+        <member name="P:SadConsole.AnimatedScreenObject.Center">
             <summary>
             Center of the animation used in positioning.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.Repeat">
+        <member name="P:SadConsole.AnimatedScreenObject.Repeat">
             <summary>
             Indicates whether or not this animation will repeat once it has finished animating.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.IsPlaying">
+        <member name="P:SadConsole.AnimatedScreenObject.IsPlaying">
             <summary>
-            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedObject.Update"/> method will advance the frames.
+            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedScreenObject.Update"/> method will advance the frames.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.AnimationDuration">
+        <member name="P:SadConsole.AnimatedScreenObject.AnimationDuration">
             <summary>
             The length of the animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.CurrentFrameIndex">
+        <member name="P:SadConsole.AnimatedScreenObject.CurrentFrameIndex">
             <summary>
             Gets or sets the current frame index to animate.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.IsEmpty">
+        <member name="P:SadConsole.AnimatedScreenObject.IsEmpty">
             <summary>
             Indicates the animation is empty.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.Width">
+        <member name="P:SadConsole.AnimatedScreenObject.Width">
             <summary>
             The width of the animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.Height">
+        <member name="P:SadConsole.AnimatedScreenObject.Height">
             <summary>
             The height of the animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.Name">
+        <member name="P:SadConsole.AnimatedScreenObject.Name">
             <summary>
             Gets the name of this animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.CurrentFrame">
+        <member name="P:SadConsole.AnimatedScreenObject.CurrentFrame">
             <summary>
             Gets the currently frame being animated.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedObject.State">
+        <member name="P:SadConsole.AnimatedScreenObject.State">
             <summary>
             Gets the current animation state.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.#ctor(System.String,System.Int32,System.Int32)">
+        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32)">
             <summary>
             Creates a new animation with the specified name, width, and height.
             </summary>
@@ -197,7 +197,7 @@
             <param name="width">The width of each frame this animation will have.</param>
             <param name="height">The height of each frame this animation will have.</param>
         </member>
-        <member name="M:SadConsole.AnimatedObject.#ctor(System.String,System.Int32,System.Int32,SadConsole.Font,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32,SadConsole.Font,SadRogue.Primitives.Point)">
             <summary>
             Creates a new animation with the specified name, width, and height.
             </summary>
@@ -207,52 +207,52 @@
             <param name="font">The font used with this animation.</param>
             <param name="fontSize">The size of the font.</param>
         </member>
-        <member name="M:SadConsole.AnimatedObject.UpdateFrameReferences">
+        <member name="M:SadConsole.AnimatedScreenObject.UpdateFrameReferences">
             <summary>
             Updates the base <see cref="P:SadConsole.CellSurface.Cells"/> references to the current frame.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.CreateFrame">
+        <member name="M:SadConsole.AnimatedScreenObject.CreateFrame">
             <summary>
             Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
             </summary>
             <returns>The created frame.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedObject.CalculateFrameDuration">
+        <member name="M:SadConsole.AnimatedScreenObject.CalculateFrameDuration">
             <summary>
             Calculates the time needed per frame for rendering.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.Stop">
+        <member name="M:SadConsole.AnimatedScreenObject.Stop">
             <summary>
             Stops animating.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.Start">
+        <member name="M:SadConsole.AnimatedScreenObject.Start">
             <summary>
             Starts animating the frames.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.Restart">
+        <member name="M:SadConsole.AnimatedScreenObject.Restart">
             <summary>
             Restarts the animation from the first frame.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.Update">
+        <member name="M:SadConsole.AnimatedScreenObject.Update">
             <summary>
             Updates the animation frames and calls update on the base class.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.ToString">
+        <member name="M:SadConsole.AnimatedScreenObject.ToString">
             <summary>
             Returns the name of the animation.
             </summary>
             <returns>The name.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedObject.UpdateAbsolutePosition">
+        <member name="M:SadConsole.AnimatedScreenObject.UpdateAbsolutePosition">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.AnimatedObject.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double)">
+        <member name="M:SadConsole.AnimatedScreenObject.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double)">
             <summary>
             Creates an animated surface that looks like static.
             </summary>
@@ -262,72 +262,72 @@
             <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="M:System.Random.NextDouble"/>.</param>
             <returns>An animation.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedObject.Save(System.String)">
+        <member name="M:SadConsole.AnimatedScreenObject.Save(System.String)">
             <summary>
-            Saves the <see cref="T:SadConsole.AnimatedObject"/> to a file.
+            Saves the <see cref="T:SadConsole.AnimatedScreenObject"/> to a file.
             </summary>
             <param name="file">The destination file.</param>
         </member>
-        <member name="M:SadConsole.AnimatedObject.Load(System.String)">
+        <member name="M:SadConsole.AnimatedScreenObject.Load(System.String)">
             <summary>
-            Loads a <see cref="T:SadConsole.AnimatedObject"/> from a file.
+            Loads a <see cref="T:SadConsole.AnimatedScreenObject"/> from a file.
             </summary>
             <param name="file">The source file.</param>
             <returns></returns>
         </member>
-        <member name="T:SadConsole.AnimatedObject.AnimationStateChangedEventArgs">
+        <member name="T:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs">
             <summary>
             Event args for when the animation state changes
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationStateChangedEventArgs.PreviousState">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.PreviousState">
             <summary>
             The previous state.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationStateChangedEventArgs.NewState">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.NewState">
             <summary>
             The new state.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedObject.AnimationStateChangedEventArgs.#ctor(SadConsole.AnimatedObject.AnimationState,SadConsole.AnimatedObject.AnimationState)">
+        <member name="M:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.#ctor(SadConsole.AnimatedScreenObject.AnimationState,SadConsole.AnimatedScreenObject.AnimationState)">
             <summary>
             Creates a new instance of the event args.
             </summary>
             <param name="previousState">The previous state.</param>
             <param name="newState">The new state.</param>
         </member>
-        <member name="T:SadConsole.AnimatedObject.AnimationState">
+        <member name="T:SadConsole.AnimatedScreenObject.AnimationState">
             <summary>
             Represents what state the animation is in.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationState.Stopped">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Stopped">
             <summary>
             The animation has never been played or was forcibly stopped.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationState.Playing">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Playing">
             <summary>
             The animation is currently playing.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationState.Restarted">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Restarted">
             <summary>
             The animation was either manually restarted or repeated.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationState.Finished">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Finished">
             <summary>
             The animation was played and completed.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationState.Activated">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Activated">
             <summary>
             The animation is now the current animation for an entity.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedObject.AnimationState.Deactivated">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Deactivated">
             <summary>
             The animation is no longer the current animation for an entity.
             </summary>
@@ -709,6 +709,13 @@
             <param name="effect">The desired effect.</param>
         </member>
         <member name="M:SadConsole.CellSurface.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a list of cells to the specified effect.
+            </summary>
+            <param name="cells">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.SetEffect(System.Collections.Generic.IEnumerable{System.Int32},SadConsole.Effects.ICellEffect)">
             <summary>
             Changes the effect of a list of cells to the specified effect.
             </summary>
@@ -1442,7 +1449,7 @@
         </member>
         <member name="F:SadConsole.ColoredString.IgnoreEffect">
             <summary>
-            When true, instructs a caller to not render the <see cref="!:Effect"/>.
+            When true, instructs a caller to not render the effect.
             </summary>
         </member>
         <member name="F:SadConsole.ColoredString.IgnoreMirror">
@@ -2007,6 +2014,11 @@
             When true, allows the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method to run.
             </summary>
         </member>
+        <member name="P:SadConsole.Cursor.UsePrintEffect">
+            <summary>
+            When <see langword="true"/>, applies the <see cref="P:SadConsole.Cursor.PrintEffect"/> to the cursor when it prints.
+            </summary>
+        </member>
         <member name="P:SadConsole.Cursor.Position">
             <summary>
             Gets or sets the location of the cursor on the console.
@@ -2321,26 +2333,24 @@
             </summary>
             <param name="surface">Text surface to manage.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Int32,SadConsole.Effects.ICellEffect)">
             <summary>
             Changes the effect of a specific cell.
             </summary>
             <param name="cell">Cells to change the effect on.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{System.Int32},SadConsole.Effects.ICellEffect)">
             <summary>
             Changes the effect of the <paramref name="cells"/> provided.
             </summary>
             <param name="cells">Cells to change the effect on.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(System.Int32)">
             <summary>
             Gets the effect of the specified cell.
             </summary>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
             <returns>The effect.</returns>
         </member>
         <member name="M:SadConsole.Effects.EffectsManager.Remove(SadConsole.Effects.ICellEffect)">

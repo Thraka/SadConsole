@@ -13,7 +13,7 @@ namespace SadConsole.Effects
     public class EffectsManager
     {
         protected Dictionary<ICellEffect, ColoredGlyphEffectData> _effects;
-        protected Dictionary<ColoredGlyph, ColoredGlyphEffectData> _effectCells;
+        protected Dictionary<int, ColoredGlyphEffectData> _effectCells;
 
         protected CellSurface _backingSurface;
 
@@ -29,7 +29,7 @@ namespace SadConsole.Effects
         public EffectsManager(CellSurface surface)
         {
             _effects = new Dictionary<ICellEffect, ColoredGlyphEffectData>(20);
-            _effectCells = new Dictionary<ColoredGlyph, ColoredGlyphEffectData>(50);
+            _effectCells = new Dictionary<int, ColoredGlyphEffectData>(50);
             _backingSurface = surface;
         }
 
@@ -38,13 +38,9 @@ namespace SadConsole.Effects
         /// </summary>
         /// <param name="cell">Cells to change the effect on.</param>
         /// <param name="effect">The effect to associate with the cell.</param>
-        public void SetEffect(ColoredGlyph cell, ICellEffect effect)
+        public void SetEffect(int cellIndex, ICellEffect effect)
         {
-            var list = new List<ColoredGlyph>(_backingSurface.Cells);
-            if (!list.Contains(cell))
-            {
-                throw new Exception("Cell is not part of the surface used to create this effects manager.");
-            }
+            ColoredGlyph cell = _backingSurface[cellIndex];
 
             if (effect != null)
             {
@@ -65,7 +61,7 @@ namespace SadConsole.Effects
                     }
                     else
                     {
-                        if (workingEffect.ContainsCell(in cell))
+                        if (workingEffect.ContainsCell(cellIndex))
                         {
                             // Make sure the effect is attached to the cell.
                             return;
@@ -74,15 +70,15 @@ namespace SadConsole.Effects
                 }
 
                 // Remove the targeted cell from the known cells list if it is already there (associated with another effect)
-                ClearCellEffect(cell);
+                ClearCellEffect(cellIndex);
 
                 // Add the cell to the effects by cell key and to list of known cells for the effect
-                _effectCells.Add(cell, workingEffect);
-                workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell));
+                _effectCells.Add(cellIndex, workingEffect);
+                workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell, cellIndex));
             }
             else
             {
-                ClearCellEffect(cell);
+                ClearCellEffect(cellIndex);
             }
         }
 
@@ -91,17 +87,9 @@ namespace SadConsole.Effects
         /// </summary>
         /// <param name="cells">Cells to change the effect on.</param>
         /// <param name="effect">The effect to associate with the cell.</param>
-        public void SetEffect(IEnumerable<ColoredGlyph> cells, ICellEffect effect)
+        public void SetEffect(IEnumerable<int> cellIndicies, ICellEffect effect)
         {
-            var list = new List<ColoredGlyph>(_backingSurface.Cells);
-            foreach (ColoredGlyph cell in cells)
-            {
-                if (!list.Contains(cell))
-                {
-                    throw new Exception("Cell is not part of the surface used to create this effects manager.");
-                }
-            }
-
+            var cells = cellIndicies.Select(i => (_backingSurface[i], i));
 
             if (effect != null)
             {
@@ -122,24 +110,24 @@ namespace SadConsole.Effects
                     }
                 }
 
-                foreach (ColoredGlyph cell in cells)
+                foreach (var cell in cells)
                 {
-                    if (!workingEffect.ContainsCell(cell))
+                    if (!workingEffect.ContainsCell(cell.i))
                     {
                         // Remove the targeted cell from the known cells list if it is already there (associated with another effect)
-                        ClearCellEffect(cell);
+                        ClearCellEffect(cell.i);
 
                         // Add the cell to the effects by cell key and to list of known cells for the effect
-                        _effectCells.Add(cell, workingEffect);
-                        workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell));
+                        _effectCells.Add(cell.i, workingEffect);
+                        workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell.Item1, cell.i));
                     }
                 }
             }
             else
             {
-                foreach (ColoredGlyph cell in cells)
+                foreach (var cell in cells)
                 {
-                    ClearCellEffect(cell);
+                    ClearCellEffect(cell.i);
                 }
             }
         }
@@ -147,10 +135,8 @@ namespace SadConsole.Effects
         /// <summary>
         /// Gets the effect of the specified cell.
         /// </summary>
-        /// <param name="x">The x location of the cell.</param>
-        /// <param name="y">The y location of the cell.</param>
         /// <returns>The effect.</returns>
-        public Effects.ICellEffect GetEffect(ColoredGlyph cell) => _effectCells.ContainsKey(cell) ? _effectCells[cell].Effect : null;
+        public Effects.ICellEffect GetEffect(int cellIndex) => _effectCells.ContainsKey(cellIndex) ? _effectCells[cellIndex].Effect : null;
 
         public IEnumerable<ICellEffect> GetEffects()
         {
@@ -173,7 +159,7 @@ namespace SadConsole.Effects
                 ColoredGlyphWithState[] states = _effects[effect].CellsStates.ToArray();
 
                 foreach (var state in states)
-                    ClearCellEffect(state.Cell);
+                    ClearCellEffect(state.CellIndex);
             }
         }
 
@@ -208,12 +194,12 @@ namespace SadConsole.Effects
             }
         }
 
-        protected void ClearCellEffect(ColoredGlyph cell)
+        protected void ClearCellEffect(int cellIndex)
         {
-            if (_effectCells.TryGetValue(cell, out ColoredGlyphEffectData oldEffectData))
+            if (_effectCells.TryGetValue(cellIndex, out ColoredGlyphEffectData oldEffectData))
             {
-                oldEffectData.RemoveCell(ref cell, oldEffectData.Effect.RestoreCellOnFinished);
-                _effectCells.Remove(cell);
+                oldEffectData.RemoveCell(cellIndex, oldEffectData.Effect.RestoreCellOnFinished & oldEffectData.Effect.IsFinished);
+                _effectCells.Remove(cellIndex);
 
                 if (oldEffectData.CellsStates.Count == 0)
                 {
@@ -222,7 +208,6 @@ namespace SadConsole.Effects
 
                 _backingSurface.IsDirty = true;
             }
-
         }
 
         /// <summary>
@@ -235,7 +220,7 @@ namespace SadConsole.Effects
 
             foreach (ColoredGlyphEffectData effectData in _effects.Values)
             {
-                List<ColoredGlyph> cellsToRemove = new List<ColoredGlyph>();
+                List<ColoredGlyphWithState> cellsToRemove = new List<ColoredGlyphWithState>();
                 effectData.Effect.Update(timeElapsed);
 
                 foreach (ColoredGlyphWithState cellState in effectData.CellsStates)
@@ -244,14 +229,13 @@ namespace SadConsole.Effects
                         _backingSurface.IsDirty = true;
 
                     if (effectData.Effect.IsFinished && effectData.Effect.RemoveOnFinished)
-                        cellsToRemove.Add(cellState.Cell);
+                        cellsToRemove.Add(cellState);
                 }
 
                 for (int i = 0; i < cellsToRemove.Count; i++)
                 {
-                    ColoredGlyph cell = cellsToRemove[i];
-                    effectData.RemoveCell(ref cell, effectData.Effect.RestoreCellOnFinished);
-                    _effectCells.Remove(cell);
+                    effectData.RemoveCell(cellsToRemove[i].CellIndex, effectData.Effect.RestoreCellOnFinished & effectData.Effect.IsFinished);
+                    _effectCells.Remove(cellsToRemove[i].CellIndex);
                     _backingSurface.IsDirty = true;
                 }
 
@@ -298,13 +282,15 @@ namespace SadConsole.Effects
                 CellsStates = new List<ColoredGlyphWithState>();
             }
 
-            public void RemoveCell(ref ColoredGlyph cell, bool restoreState)
+            public void RemoveCell(int cellIndex, bool restoreState)
             {
                 for (int i = 0; i < CellsStates.Count; i++)
                 {
                     ColoredGlyphWithState cellState = CellsStates[i];
-                    if (cellState.Cell == cell)
+                    if (cellState.CellIndex == cellIndex)
                     {
+                        ColoredGlyph cell = cellState.Cell;
+
                         if (restoreState)
                             cellState.State.RestoreState(ref cell);
 
@@ -314,11 +300,11 @@ namespace SadConsole.Effects
                 }
             }
 
-            public bool ContainsCell(in ColoredGlyph cell)
+            public bool ContainsCell(int cellIndex)
             {
                 foreach (var state in CellsStates)
                 {
-                    if (state.Cell == cell)
+                    if (state.CellIndex == cellIndex)
                         return true;
                 }
 
@@ -331,9 +317,10 @@ namespace SadConsole.Effects
         {
             public ColoredGlyph Cell;
             public ColoredGlyphState State;
+            public int CellIndex;
 
-            public ColoredGlyphWithState(ColoredGlyph cell) =>
-                (Cell, State) = (cell, new ColoredGlyphState(cell));
+            public ColoredGlyphWithState(ColoredGlyph cell, int cellIndex) =>
+                (Cell, State, CellIndex) = (cell, new ColoredGlyphState(cell), cellIndex);
         }
 
         /// <summary>

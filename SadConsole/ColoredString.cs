@@ -75,7 +75,7 @@ namespace SadConsole
         public bool IgnoreBackground;
 
         /// <summary>
-        /// When true, instructs a caller to not render the <see cref="Effect"/>.
+        /// When true, instructs a caller to not render the effect.
         /// </summary>
         [DataMember]
         public bool IgnoreEffect = true;

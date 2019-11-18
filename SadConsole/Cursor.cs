@@ -62,6 +62,11 @@ namespace SadConsole
         public bool IsEnabled { get; set; }
 
         /// <summary>
+        /// When <see langword="true"/>, applies the <see cref="PrintEffect"/> to the cursor when it prints.
+        /// </summary>
+        public bool UsePrintEffect { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the location of the cursor on the console.
         /// </summary>
         public Point Position
@@ -223,7 +228,7 @@ namespace SadConsole
                     cell.Mirror = glyph.Mirror;
 
                 if (!settings.IgnoreEffect)
-                    _editor.SetEffect(cell, glyph.Effect);
+                    _editor.SetEffect(_position.Y * _editor.BufferWidth + _position.X, glyph.Effect);
             }
             else if (!settings.IgnoreGlyph)
                 cell.Glyph = glyph.GlyphCharacter;
@@ -288,6 +293,7 @@ namespace SadConsole
             else
             {
                 coloredString = text.CreateColored(template.Foreground, template.Background, template.Mirror);
+                coloredString.IgnoreEffect = !UsePrintEffect;
                 coloredString.SetEffect(templateEffect);
             }
 
