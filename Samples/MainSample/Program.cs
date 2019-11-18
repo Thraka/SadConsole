@@ -68,7 +68,7 @@ namespace ConsoleTest
 
             con.UseMouse = true;
 
-            Global.FocusedConsoles.Set(con);
+            Global.FocusedScreenObjects.Set(con);
 
             var blink = new SadConsole.Effects.BlinkGlyph();
             con.Surface.SetEffect(1, 1, blink);
@@ -84,11 +84,15 @@ namespace ConsoleTest
                 );
 
             con.Components.Add(new MouseTest());
+
+            var animation = AnimatedScreenObject.CreateStatic(20, 10, 20, 0.5d);
+            animation.Parent = Global.Screen;
+            animation.Position = (22, 2);
         }
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent
         {
-            public override void ProcessMouse(ScreenObject host, MouseConsoleState state, out bool handled)
+            public override void ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled)
             {
                 if (state.Mouse.IsOnScreen)
                 {
