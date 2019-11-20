@@ -161,7 +161,10 @@ namespace SadConsole
         public override void UpdateAbsolutePosition()
         {
             if (UsePixelPositioning)
+            {
                 base.UpdateAbsolutePosition();
+                return;
+            }
             else
                 AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
@@ -192,6 +195,13 @@ namespace SadConsole
 
             base.Update();
         }
+
+        /// <summary>
+        /// Called when the <see cref="Font"/> or <see cref="FontSize"/> property changes.
+        /// </summary>
+        /// <param name="oldFont">The font prior to the change.</param>
+        /// <param name="oldFontSize">The font size prior to the change.</param>
+        protected virtual void OnFontChanged(Font oldFont, Point oldFontSize) { }
 
         #region IDisposable Support
         private bool _disposedValue = false; // To detect redundant calls

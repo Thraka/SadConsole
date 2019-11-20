@@ -67,12 +67,17 @@ namespace ConsoleTest
             //con.Cursor.IsEnabled = false;
             
             con.UseMouse = true;
-
-            Global.FocusedScreenObjects.Set(con);
-
             var blink = new SadConsole.Effects.BlinkGlyph();
             con.Surface.Print(1, 1, "!");
             con.Surface.SetEffect(1, 1, blink);
+
+            var ent = new SadConsole.Entities.Entity(3, 3);
+            ent.Animation.CurrentFrame.Fill(Color.AliceBlue, Color.DarkBlue, '.');
+            ent.Animation.Center = (1, 1);
+            ent.UseKeyboard = true;
+            ent.Components.Add(new SadConsole.Components.MoveObject());
+            Global.Screen.Children.Add(ent);
+            ent.IsFocused = true;
 
             //con.Components.Add(
             //    new SadConsole.Instructions.InstructionSet().Wait(TimeSpan.FromSeconds(1)).Instruct(

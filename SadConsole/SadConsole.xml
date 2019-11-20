@@ -2570,6 +2570,193 @@
         <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Entities.Entity">
+            <summary>
+            A positionable and animated game object.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Entities.Entity.AnimationStateChanged">
+            <summary>
+            Automatically forwards the <see cref="E:SadConsole.AnimatedScreenObject.AnimationStateChanged"/> event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Entity.animation">
+            <summary>
+            Animation for the game object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Entity.positionOffset">
+            <summary>
+            The offset to render this object at.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Name">
+            <summary>
+            A friendly name of the game object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animation">
+            <summary>
+            The current animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animations">
+            <summary>
+            Collection of animations associated with this game object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.PositionOffset">
+            <summary>
+            Offsets the position by this amount.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new Entity with the default font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(System.Int32,System.Int32,SadConsole.Font)">
+            <summary>
+            Creates a new Entity.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
+            <summary>
+            Creates a new 1x1 entity with the specified foreground, background, and glyph.
+            </summary>
+            <param name="foreground">The foreground color of the entity.</param>
+            <param name="background">The background color of the entity.</param>
+            <param name="glyph">The glyph color of the entity.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenObject)">
+            <summary>
+            Creates a new Entity with a default animation/
+            </summary>
+            <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.AnimatedScreenObject.Name"/> property changesd to "default".</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs)">
+            <summary>
+            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.AnimatedScreenObject.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
+            </summary>
+            <param name="sender">The animation calling this method.</param>
+            <param name="e">The state of the animation.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.UpdateAbsolutePosition">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Entity.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Entity.Save(System.String)">
+            <summary>
+            Saves the <see cref="T:SadConsole.Entities.Entity"/> to a file.
+            </summary>
+            <param name="file">The destination file.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.Load(System.String)">
+            <summary>
+            Loads a <see cref="T:SadConsole.Entities.Entity"/> from a file.
+            </summary>
+            <param name="file">The source file.</param>
+            <returns>The entity.</returns>
+        </member>
+        <member name="T:SadConsole.Entities.Entity.EntityMovedEventArgs">
+            <summary>
+            Arguments for the entity moved event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity">
+            <summary>
+            The entity associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Entity.EntityMovedEventArgs.FromPosition">
+            <summary>
+            The positiont the <see cref="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity"/> moved from.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.EntityMovedEventArgs.#ctor(SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for the entity movement.
+            </summary>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="oldPosition">The position the entity moved from.</param>
+        </member>
+        <member name="T:SadConsole.Entities.Hotspot">
+            <summary>
+            A group of positions with a set of settings.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Hotspot.Positions">
+            <summary>
+            The hotspot position on the map.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Hotspot.DebugAppearance">
+            <summary>
+            A visual for the area to help debug.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Hotspot.Settings">
+            <summary>
+            Key-value pairs for the hotspot.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Hotspot.#ctor">
+            <summary>
+            Creates a new hotspot object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Hotspot.Contains(SadRogue.Primitives.Point)">
+            <summary>
+            Return true when the specified point is in the list of <see cref="P:SadConsole.Entities.Hotspot.Positions"/>.
+            </summary>
+            <param name="point">The position to check for.</param>
+            <returns>True or false based on if the position is associated with the Hotspot.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Hotspot.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Hotspot.OnVisibleChanged">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Entities.Zone">
+            <summary>
+            Defines an area for a scene.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Zone.Area">
+            <summary>
+            The area the zone covers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Zone.DebugTitle">
+            <summary>
+            A title for the area.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Zone.DebugAppearance">
+            <summary>
+            A visual for the area to help debug.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Zone.Settings">
+            <summary>
+            Key-value pairs for the zone.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Rectangle)">
+            <summary>
+            Creates a new zone object with the specified area.
+            </summary>
+            <param name="area">The area of the zone.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.OnVisibleChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Zone.Draw">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.FocusedScreenObjectStack">
             <summary>
             A stack of screen objects. The top-most of the stack is considered active and represented by the <see cref="P:SadConsole.FocusedScreenObjectStack.ScreenObject"/> property.
@@ -4966,6 +5153,13 @@
         </member>
         <member name="M:SadConsole.ScreenObjectSurface.Update">
              <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
+            <summary>
+            Called when the <see cref="P:SadConsole.ScreenObjectSurface.Font"/> or <see cref="P:SadConsole.ScreenObjectSurface.FontSize"/> property changes.
+            </summary>
+            <param name="oldFont">The font prior to the change.</param>
+            <param name="oldFontSize">The font size prior to the change.</param>
         </member>
         <member name="M:SadConsole.ScreenObjectSurface.Dispose(System.Boolean)">
             <inheritdoc/>

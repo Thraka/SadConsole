@@ -291,9 +291,9 @@ namespace SadConsole
         public override void UpdateAbsolutePosition()
         {
             if (UsePixelPositioning)
-                AbsolutePosition = Position - Center + (Parent?.AbsolutePosition ?? new Point(0, 0));
+                AbsolutePosition = Position - (FontSize * Center) + (Parent?.AbsolutePosition ?? new Point(0, 0));
             else
-                AbsolutePosition = Position.SurfaceLocationToPixel(FontSize) - Center.SurfaceLocationToPixel(FontSize) + (Parent?.AbsolutePosition ?? new Point(0, 0));
+                AbsolutePosition = (FontSize * Position) - (FontSize * Center) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
             foreach (ScreenObject child in Children)
                 child.UpdateAbsolutePosition();
