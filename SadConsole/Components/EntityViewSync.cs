@@ -7,7 +7,7 @@ namespace SadConsole.Components
     /// <summary>
     /// Add to an <see cref="Entity"/> to sync the visibility and position offset with a parent <see cref="Console"/>. 
     /// </summary>
-    public class EntityViewSyncComponent : UpdateComponent
+    public class EntityViewSync : UpdateComponent
     {
         private Point _oldPosition;
         private Rectangle _oldView;
@@ -21,7 +21,7 @@ namespace SadConsole.Components
         public override void OnAdded(ScreenObject host)
         {
             if (!(host is Entity))
-                throw new Exception($"{nameof(EntityViewSyncComponent)} can only be added to an {nameof(Entity)}.");
+                throw new Exception($"{nameof(EntityViewSync)} can only be added to an {nameof(Entity)}.");
         }
 
 
