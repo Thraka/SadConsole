@@ -332,6 +332,190 @@
             The animation is no longer the current animation for an entity.
             </summary>
         </member>
+        <member name="T:SadConsole.Ansi.AnsiWriter">
+            <summary>
+            Writes a <see cref="T:SadConsole.Ansi.Document"/> to a <see cref="T:SadConsole.CellSurface"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.AnsiDocument">
+            <summary>
+            The document used to create this writer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.BlinkEffect">
+            <summary>
+            The blink effect to apply when the ansi document provides the ANSI blink command.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.Cursor">
+            <summary>
+            The cursor used to write to the target <see cref="T:SadConsole.CellSurface"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.AnsiWriter.CharactersPerSecond">
+            <summary>
+            How many characters to process a second. When set to 0 reads the entire document at once.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.#ctor(SadConsole.Ansi.Document,SadConsole.CellSurface)">
+            <summary>
+            Creates a new instance with the source document and target surface.
+            </summary>
+            <param name="ansiDocument">The source document containing ANSI commands.</param>
+            <param name="editor">The surface to parse the ANSI to.</param>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.Process(System.Double)">
+            <summary>
+            Processes the document by the amount of time that has elapsed. If <see cref="P:SadConsole.Ansi.AnsiWriter.CharactersPerSecond"/> is 0, time elapsed has no affect.
+            </summary>
+            <param name="timeElapsed">The time in seconds.</param>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.AnsiInterpret(System.String)">
+            <summary>
+            Interprets an individual ansi code.
+            </summary>
+            <param name="code">The ANSI.SYS code to read.</param>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.AnsiReadLine(System.String,System.Boolean)">
+            <summary>
+            Reads a line of ANSI.SYS code.
+            </summary>
+            <param name="line">The line to read.</param>
+            <param name="moreLines">When <see langword="true"/>, calls <see cref="M:SadConsole.Cursor.LineFeed"/>; otherwise does nothing.</param>
+            <returns>Returns false when character 26 is encountered; otherwise true.</returns>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.ReadEntireDocument">
+            <summary>
+            Loads an ansi file and parses it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.AnsiWriter.Restart">
+            <summary>
+            Moves the reader back to the start of the file so that the source can .
+            </summary>
+        </member>
+        <member name="T:SadConsole.Ansi.Document">
+            <summary>
+            Represents an ANSI.SYS formatted document.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.Document.AnsiBytes">
+            <summary>
+            Gets or sets the ANSI.SYS bytes that make up the document.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.Document.AnsiString">
+            <summary>
+            A string representing the <see cref="P:SadConsole.Ansi.Document.AnsiBytes"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.Document.Stream">
+            <summary>
+            A stream that points to the <see cref="P:SadConsole.Ansi.Document.AnsiBytes"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.#ctor(System.String)">
+            <summary>
+            Creates a new document from the provided file name.
+            </summary>
+            <param name="file">The file to load.</param>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.Finalize">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Ansi.Document.FromAsciiString(System.String)">
+            <summary>
+            Creates a new document from an existing string representing ANSI.SYS codes and characters.
+            </summary>
+            <param name="ansiContent">The ANSI.SYS encoded string.</param>
+            <returns>A new document.</returns>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.FromBytes(System.Byte[])">
+            <summary>
+            Creates a new document from an existing byte array representing ANSI.SYS codes and characters.
+            </summary>
+            <param name="bytes">The ANSI.SYS encoded byte array.</param>
+            <returns>A new document.</returns>
+        </member>
+        <member name="M:SadConsole.Ansi.Document.System#IDisposable#Dispose">
+            <summary>
+            Disposes the <see cref="P:SadConsole.Ansi.Document.Stream"/>.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Ansi.Helpers">
+            <summary>
+            Helpers related to ANSI processing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.Helpers.AnsiJustNormalColor(SadRogue.Primitives.Color)">
+            <summary>
+            Returns the a normal, dark, ansi color based on the ansi color provided.
+            </summary>
+            <param name="input">An ansi color.</param>
+            <returns>The adjusted color.</returns>
+            <remarks>If the color provided is not an ansi color, dark or light, the passed in color will be returned.</remarks>
+        </member>
+        <member name="M:SadConsole.Ansi.Helpers.AnsiAdjustColor(SadRogue.Primitives.Color,System.Boolean)">
+            <summary>
+            Adjusts the provided color based on the <paramref name="bold"/> value.
+            </summary>
+            <param name="input">The ansi color to adjust.</param>
+            <returns>The adjusted color.</returns>
+            <remarks>If the color provided is not an ansi color, dark or light, the passed in color will be returned.</remarks>
+        </member>
+        <member name="M:SadConsole.Ansi.Helpers.AnsiConfigurePrintColor(System.Boolean,System.Int32,SadConsole.Ansi.State)">
+            <summary>
+            Sets the print appearance of the cursor based on the ANSI.SYS code provided.
+            </summary>
+            <param name="isBackground">When true, changes the background color instead of the foreground.</param>
+            <param name="code">The 0-7 color code.</param>
+            <param name="ansiState">The current state of the ANSI settings.</param>
+        </member>
+        <member name="T:SadConsole.Ansi.State">
+            <summary>
+            Represents the state of an ANSI.SYS processor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Bold">
+            <summary>
+            Indicates that the state is using bold colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Reverse">
+            <summary>
+            Indicates that the state is printing reverse colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Concealed">
+            <summary>
+            Not supported.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Foreground">
+            <summary>
+            Foreground color for the state of the ANSI.SYS processor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Ansi.State.Background">
+            <summary>
+            Background color for the state of the ANSI.SYS processor.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.State.#ctor">
+            <summary>
+            Creates a new object to track the state of the ansi cursor.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.State.AnsiCorrectPrintColor">
+            <summary>
+            Forces the Background of the print appearance to be the darkened color and the foreground to be bright or not based on the <see cref="P:SadConsole.Ansi.State.Bold"/> property.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Ansi.State.AnsiResetVideo">
+            <summary>
+            Resets all of the print appearance and ansi settings back to the default.
+            </summary>
+        </member>
         <member name="T:SadConsole.CellDecorator">
             <summary>
             Decorates a cell with a colored glyph.
@@ -1577,6 +1761,25 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
+        <member name="T:SadConsole.Components.EntityViewSync">
+            <summary>
+            Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.EntityViewSync.HandleIsVisible">
+            <summary>
+            If set to true, controls the <see cref="P:SadConsole.ScreenObject.IsVisible"/> property of the attached object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.EntityViewSync.OnAdded(SadConsole.ScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.EntityViewSync.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.EntityViewSync.OnRemoved(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Components.IComponent">
             <summary>
             A component that can be added to a <see cref="T:SadConsole.ScreenObject"/>.
@@ -1835,6 +2038,27 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.MultipleHostEntityDrawing">
+            <summary>
+            Add to a <see cref="T:SadConsole.Console"/> to draw the <see cref="P:SadConsole.Components.MultipleHostEntityDrawing.Entities"/> on it. May be used with multiple consoles.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MultipleHostEntityDrawing.Entities">
+            <summary>
+            Entities to draw on each console this component is added to.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MultipleHostEntityDrawing.HandleIsVisible">
+            <summary>
+            If set to true, controls the <see cref="P:SadConsole.ScreenObject.IsVisible"/> property of the attached object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Update(SadConsole.ScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Draw(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
         <member name="P:SadConsole.Console.IsCursorDisabled">
