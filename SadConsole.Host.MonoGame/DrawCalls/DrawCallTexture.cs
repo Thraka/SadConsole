@@ -10,6 +10,8 @@ namespace SadConsole.DrawCalls
 
         public DrawCallTexture(Texture2D texture, Vector2 position)
         {
+            if (texture == null) throw new System.NullReferenceException($"{nameof(texture)} cannot be null.");
+
             Texture = texture;
             Position = position;
         }

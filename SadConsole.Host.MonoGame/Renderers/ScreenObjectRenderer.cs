@@ -21,116 +21,120 @@ namespace SadConsole.Renderers
     {
         public RenderTarget2D BackingTexture;
 
-        private XnaRectangle[] _renderRects;
+        protected XnaRectangle[] _renderRects;
 
-        public void Attach(ScreenObjectSurface surface)
+        ///  <inheritdoc/>
+        public virtual void Attach(ScreenObjectSurface screen)
         {
         }
 
-        public void Detatch(ScreenObjectSurface surface)
+        ///  <inheritdoc/>
+        public virtual void Detatch(ScreenObjectSurface screen)
         {
             BackingTexture.Dispose();
             BackingTexture = null;
         }
 
-        public void Render(ScreenObjectSurface surface)
+        ///  <inheritdoc/>
+        public virtual void Render(ScreenObjectSurface screen)
         {
             // Draw call for texture
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(surface.AbsoluteArea.Position.X, surface.AbsoluteArea.Position.Y)));
+            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
         }
 
-        public void Refresh(ScreenObjectSurface surface)
+        ///  <inheritdoc/>
+        public virtual void Refresh(ScreenObjectSurface screen, bool force = false)
         {
-            if (!surface.IsDirty) return;
+            if (!force && !screen.IsDirty && BackingTexture != null) return;
 
             // Update texture if something is out of size.
-            if (BackingTexture == null || surface.AbsoluteArea.Width != BackingTexture.Width || surface.AbsoluteArea.Height != BackingTexture.Height)
+            if (BackingTexture == null || screen.AbsoluteArea.Width != BackingTexture.Width || screen.AbsoluteArea.Height != BackingTexture.Height)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTarget2D(MonoGame.Global.GraphicsDevice, surface.AbsoluteArea.Width, surface.AbsoluteArea.Height, false, MonoGame.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                BackingTexture = new RenderTarget2D(MonoGame.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, MonoGame.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != surface.Surface.ViewWidth * surface.Surface.ViewHeight || _renderRects[0].Width != surface.FontSize.X || _renderRects[0].Height != surface.FontSize.Y)
+            if (_renderRects == null || _renderRects.Length != screen.Surface.ViewWidth * screen.Surface.ViewHeight || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
             {
-                _renderRects = new XnaRectangle[surface.Surface.ViewWidth * surface.Surface.ViewHeight];
+                _renderRects = new XnaRectangle[screen.Surface.ViewWidth * screen.Surface.ViewHeight];
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, surface.Surface.ViewWidth);
-                    _renderRects[i] = surface.Font.GetRenderRect(position.X, position.Y, surface.FontSize).ToMonoRectangle();
+                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.ViewWidth);
+                    _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
                 }
             }
 
             // Render parts of the surface
-            RenderBegin(surface);
-            RenderCells(surface);
-            RenderTint(surface);
-            RenderEnd(surface);
+            RefreshBegin(screen);
 
-            surface.IsDirty = false;
+            if (screen.Tint.A != 255)
+                RefreshCells(screen.Surface, screen.Font);
+
+            RefreshTint(screen);
+
+            RefreshEnd(screen);
+
+            screen.IsDirty = false;
         }
 
 
-        protected virtual void RenderBegin(ScreenObjectSurface surface)
+        protected virtual void RefreshBegin(ScreenObjectSurface screen)
         {
             MonoGame.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
             MonoGame.Global.GraphicsDevice.Clear(Color.Transparent);
             MonoGame.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
         }
 
-        protected virtual void RenderEnd(ScreenObjectSurface surface)
+        protected virtual void RefreshEnd(ScreenObjectSurface screen)
         {
             MonoGame.Global.SharedSpriteBatch.End();
             MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
         }
 
-        protected virtual void RenderCells(ScreenObjectSurface surface)
+        protected virtual void RefreshCells(CellSurface cellSurface, Font font)
         {
-            var cellSurface = surface.Surface;
-            if (surface.Tint.A != 255)
+            var fontImage = ((SadConsole.MonoGame.GameTexture)font.Image).Texture;
+
+            if (cellSurface.DefaultBackground.A != 0)
+                MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.GlyphRects[font.SolidGlyphIndex].ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+
+            int rectIndex = 0;
+
+            for (int y = 0; y < cellSurface.ViewHeight; y++)
             {
-                var font = ((SadConsole.MonoGame.GameTexture)surface.Font.Image).Texture;
+                int i = ((y + cellSurface.ViewPosition.Y) * cellSurface.BufferWidth) + cellSurface.ViewPosition.X;
 
-                if (cellSurface.DefaultBackground.A != 0)
-                    MonoGame.Global.SharedSpriteBatch.Draw(font, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
-
-                int rectIndex = 0;
-
-                for (int y = 0; y < cellSurface.ViewHeight; y++)
+                for (int x = 0; x < cellSurface.ViewWidth; x++)
                 {
-                    int i = ((y + cellSurface.ViewPosition.Y) * cellSurface.BufferWidth) + cellSurface.ViewPosition.X;
+                    ref ColoredGlyph cell = ref cellSurface.Cells[i];
 
-                    for (int x = 0; x < cellSurface.ViewWidth; x++)
-                    {
-                        ref ColoredGlyph cell = ref cellSurface.Cells[i];
+                    if (!cell.IsVisible) continue;
 
-                        if (!cell.IsVisible) continue;
+                    if (!cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground)
+                        MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
-                        if (!cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground)
-                            MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    if (!cell.Foreground.Equals(Color.Transparent))
+                        MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GlyphRects[cell.Glyph].ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
-                        if (!cell.Foreground.Equals(Color.Transparent))
-                            MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.GlyphRects[cell.Glyph].ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                    foreach (CellDecorator decorator in cell.Decorators)
+                        if (!decorator.Color.Equals(Color.Transparent))
+                            MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GlyphRects[decorator.Glyph].ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
 
-                        foreach (CellDecorator decorator in cell.Decorators)
-                            if (!decorator.Color.Equals(Color.Transparent))
-                                MonoGame.Global.SharedSpriteBatch.Draw(font, _renderRects[rectIndex], surface.Font.GlyphRects[decorator.Glyph].ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                    cell.IsDirty = false;
 
-                        cell.IsDirty = false;
-
-                        i++;
-                        rectIndex++;
-                    }
+                    i++;
+                    rectIndex++;
                 }
             }
         }
 
-        protected virtual void RenderTint(ScreenObjectSurface screenObject)
+        protected virtual void RefreshTint(ScreenObjectSurface screen)
         {
-            if (screenObject.Tint.A != 0)
+            if (screen.Tint.A != 0)
             {
-                MonoGame.Global.SharedSpriteBatch.Draw(((SadConsole.MonoGame.GameTexture)screenObject.Font.Image).Texture, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), screenObject.Font.GlyphRects[screenObject.Font.SolidGlyphIndex].ToMonoRectangle(), screenObject.Tint.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
+                MonoGame.Global.SharedSpriteBatch.Draw(((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), screen.Font.GlyphRects[screen.Font.SolidGlyphIndex].ToMonoRectangle(), screen.Tint.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
             }
         }
 

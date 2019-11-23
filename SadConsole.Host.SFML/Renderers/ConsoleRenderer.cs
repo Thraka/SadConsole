@@ -14,124 +14,71 @@ namespace SadConsole.Renderers
     ///
     /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
     /// </remarks>
-    public class ConsoleRenderer : IRenderer
+    public class ConsoleRenderer : ScreenObjectRenderer
     {
-        public RenderTexture BackingTexture;
-
-        private IntRect[] _renderRects;
-
         ///  <inheritdoc/>
-        public void Attach(ScreenObjectSurface surface)
+        public override void Attach(ScreenObjectSurface screen)
         {
-            if (!(surface is Console))
+            if (!(screen is Console))
                 throw new Exception($"The ConsoleRenderer must be added to a Console.");
         }
 
         ///  <inheritdoc/>
-        public void Detatch(ScreenObjectSurface surface)
+        public override void Render(ScreenObjectSurface screen)
         {
-            BackingTexture.Dispose();
-            BackingTexture = null;
-        }
-
-        ///  <inheritdoc/>
-        public void Render(ScreenObjectSurface surface)
-        {
-            var console = (Console)surface;
+            var console = (Console)screen;
 
             // Draw call for texture
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(surface.AbsoluteArea.Position.X, surface.AbsoluteArea.Position.Y)));
+            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-            if (console.Cursor.IsVisible && console.Surface.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && surface.Surface.GetViewRectangle().Contains(console.Cursor.Position))
+            if (console.Cursor.IsVisible && console.Surface.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.GetViewRectangle().Contains(console.Cursor.Position))
             {
-                var cursorPosition = surface.AbsolutePosition + surface.Font.GetRenderRect(console.Cursor.Position.X, console.Cursor.Position.Y, console.FontSize).Position;
+                var cursorPosition = screen.AbsolutePosition + screen.Font.GetRenderRect(console.Cursor.Position.X, console.Cursor.Position.Y, console.FontSize).Position;
                 
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
-                                               new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, surface.FontSize.X, surface.FontSize.Y).ToIntRect(),
-                                               surface.Font,
+                                               new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, screen.FontSize.X, screen.FontSize.Y).ToIntRect(),
+                                               screen.Font,
                                                true
                                               )
                     );
             }
 
-            if (surface.Tint.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(surface.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture, surface.AbsoluteArea.ToIntRect(), surface.Font.SolidGlyphRectangle.ToIntRect()));
+            if (screen.Tint.A != 0)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToIntRect(), screen.Font.SolidGlyphRectangle.ToIntRect()));
         }
 
         ///  <inheritdoc/>
-        public void Refresh(ScreenObjectSurface surface)
-        { 
-            if (!surface.IsDirty) return;
+        public override void Refresh(ScreenObjectSurface screen, bool force = false)
+        {
+            if (!force && !screen.IsDirty && BackingTexture != null) return;
 
             // Update texture if something is out of size.
-            if (BackingTexture == null || surface.AbsoluteArea.Width != (int)BackingTexture.Size.X || surface.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+            if (BackingTexture == null || screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTexture((uint)surface.AbsoluteArea.Width, (uint)surface.AbsoluteArea.Height);
+                BackingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != surface.Surface.ViewWidth * surface.Surface.ViewHeight || _renderRects[0].Width != surface.FontSize.X || _renderRects[0].Height != surface.FontSize.Y)
+            if (_renderRects == null || _renderRects.Length != screen.Surface.ViewWidth * screen.Surface.ViewHeight || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
             {
-                _renderRects = new IntRect[surface.Surface.ViewWidth * surface.Surface.ViewHeight];
+                _renderRects = new IntRect[screen.Surface.ViewWidth * screen.Surface.ViewHeight];
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, surface.Surface.ViewWidth);
-                    _renderRects[i] = surface.Font.GetRenderRect(position.X, position.Y, surface.FontSize).ToIntRect();
+                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.ViewWidth);
+                    _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
                 }
             }
            
             // Rendering code from sadconsole
-            RenderBegin(surface);
-            RenderCells(surface);
-            RenderEnd(surface);
+            RefreshBegin(screen);
+            if (screen.Tint.A != 255)
+                RefreshCells(screen.Surface, screen.Font);
+            RefreshEnd(screen);
 
-            surface.IsDirty = false;
-        }
-
-        protected void RenderBegin(ScreenObjectSurface surface)
-        {
-            BackingTexture.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Reset(BackingTexture, RenderStates.Default, Transform.Identity);
-        }
-
-        protected void RenderEnd(ScreenObjectSurface surface)
-        {
-            Host.Global.SharedSpriteBatch.End();
-            BackingTexture.Display();
-        }
-
-        protected void RenderCells(ScreenObjectSurface surface)
-        {
-            var cellSurface = surface.Surface;
-            if (surface.Tint.A != 255)
-            {
-                if (cellSurface.DefaultBackground.A != 0)
-                    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), surface.Font.GlyphRects[surface.Font.SolidGlyphIndex].ToIntRect(), cellSurface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture);
-
-                int rectIndex = 0;
-
-                for (int y = 0; y < cellSurface.ViewHeight; y++)
-                {
-                    int i = ((y + cellSurface.ViewPosition.Y) * cellSurface.BufferWidth) + cellSurface.ViewPosition.X;
-
-                    for (int x = 0; x < cellSurface.ViewWidth; x++)
-                    {
-                        ref ColoredGlyph cell = ref cellSurface.Cells[i];
-
-                        if (!cell.IsVisible) continue;
-
-                        Host.Global.SharedSpriteBatch.DrawCell(cell, _renderRects[rectIndex], !cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground, surface.Font);
-
-                        cell.IsDirty = false;
-
-                        i++;
-                        rectIndex++;
-                    }
-                }
-            }
+            screen.IsDirty = false;
         }
 
         #region IDisposable Support

@@ -1,0 +1,149 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace SadConsole.Readers
+{
+    /// <summary>
+    /// Reads a texture to a cached surface. Used for animation.
+    /// </summary>
+    public class TextureToSurfaceReader
+    {
+        private readonly int width;
+        private readonly int height;
+        private readonly Console surface;
+        private readonly Color[] pixels;
+        private readonly int[] indexes;
+        private readonly int fontPixels;
+
+        /// <summary>
+        /// Renders the cells as blocks instead of characters.
+        /// </summary>
+        public bool UseBlockMode { get; set; }
+
+        /// <summary>
+        /// Creates a new instance of the class.
+        /// </summary>
+        /// <param name="pixelWidth">Width the source texture.</param>
+        /// <param name="pixelHeight">Height of the source texture.</param>
+        /// <param name="font">Font used for rendering.</param>
+        public TextureToSurfaceReader(int pixelWidth, int pixelHeight, Font font, SadRogue.Primitives.Point fontSize)
+        {
+            width = pixelWidth;
+            height = pixelHeight;
+            pixels = new Color[pixelWidth * pixelHeight];
+            indexes = new int[pixelWidth * pixelHeight];
+            surface = new Console(pixelWidth / fontSize.X, pixelHeight / fontSize.Y) { Font = font, FontSize = fontSize };
+            fontPixels = fontSize.X * fontSize.Y;
+
+            // build the indexes
+            int currentIndex = 0;
+            for (int h = 0; h < surface.Surface.BufferHeight; h++)
+            {
+                int startY = (h * surface.FontSize.Y);
+                //System.Threading.Tasks.Parallel.For(0, image.Width / surface.Font.Size.X, (w) =>
+                for (int w = 0; w < surface.Surface.BufferWidth; w++)
+                {
+                    int startX = (w * surface.FontSize.X);
+
+                    for (int y = 0; y < surface.FontSize.Y; y++)
+                    {
+                        for (int x = 0; x < surface.FontSize.X; x++)
+                        {
+                            int cY = y + startY;
+                            int cX = x + startX;
+
+                            indexes[currentIndex] = cY * pixelWidth + cX;
+                            currentIndex++;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns a surface with the specified image rendered to it as characters.
+        /// </summary>
+        /// <param name="image">The image to render.</param>
+        /// <returns>The surface.</returns>
+        public Console GetSurface(Texture2D image)
+        {
+            surface.Surface.Clear();
+
+            image.GetData<Color>(pixels);
+
+            System.Threading.Tasks.Parallel.For(0, surface.Width * surface.Height, (i) =>
+            //for (int i = 0; i < surface.Width * surface.Height; i++)
+            {
+                int allR = 0;
+                int allG = 0;
+                int allB = 0;
+
+                int min = i * fontPixels;
+                int max = min + fontPixels;
+
+                for (int pixel = min; pixel < max; pixel++)
+                {
+                    Color color = pixels[indexes[pixel]];
+
+                    allR += color.R;
+                    allG += color.G;
+                    allB += color.B;
+                }
+
+                // print our character
+                byte sr = (byte)(allR / fontPixels);
+                byte sg = (byte)(allG / fontPixels);
+                byte sb = (byte)(allB / fontPixels);
+
+                SadRogue.Primitives.Color newColor = new Color(sr, sg, sb).ToSadRogueColor();
+                float sbri = newColor.GetBrightness() * 255;
+
+
+                SadRogue.Primitives.Point surfacePoint = surface.Surface.GetPointFromIndex(i);
+                if (UseBlockMode)
+                {
+                    if (sbri > 204)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
+                    else if (sbri > 152)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
+                    else if (sbri > 100)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
+                    else if (sbri > 48)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
+                    else
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, SadRogue.Primitives.Color.Black);
+                }
+                else
+                {
+                    if (sbri > 230)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '#', newColor);
+                    else if (sbri > 207)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '&', newColor);
+                    else if (sbri > 184)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '$', newColor);
+                    else if (sbri > 161)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'X', newColor);
+                    else if (sbri > 138)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'x', newColor);
+                    else if (sbri > 115)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '=', newColor);
+                    else if (sbri > 92)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '+', newColor);
+                    else if (sbri > 69)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ';', newColor);
+                    else if (sbri > 46)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ':', newColor);
+                    else if (sbri > 23)
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '.', newColor);
+                    else
+                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, SadRogue.Primitives.Color.Black);
+                }
+            }
+            );
+
+            return surface;
+        }
+
+    }
+}

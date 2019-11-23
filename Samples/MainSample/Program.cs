@@ -57,19 +57,58 @@ namespace ConsoleTest
             //screen2.Surface.SetForeground(5, 4, Color.Black);
             //Global.Screen.Renderer = null;
 
-            var con = new Console(20, 10);
-            //con.Surface.DrawBox(new Rectangle(0, 0, 20, 10), new ColoredGlyph(Color.Green, Color.Black, 44, Mirror.None));
-            con.Surface.UsePrintProcessor = true;
-            //con.Surface.Print(1, 1, "[c:g f:Green:Blue:Red:14]This is a [c:b]test");
-            //con.Surface.Print(1, 2, "[c:g f:Red:Blue:Green:14]This is a test");
+            var layeredSurface = new LayeredCellSurface(20, 10, 3);
+
+            AddStars(layeredSurface.Layers[0].Surface, Color.DarkOrange);
+            AddStars(layeredSurface.Layers[1].Surface, Color.Green);
+            AddStars(layeredSurface.Layers[2].Surface, Color.GreenYellow);
+
+            static void AddStars(CellSurface surface, Color starColor)
+            {
+                int count = surface.BufferWidth * surface.BufferHeight / 10;
+
+                for (int i = 0; i < count; i++)
+                {
+                    if (Global.Random.Next(0, 10) > 5)
+                    {
+                        int x = Global.Random.Next(0, surface.BufferWidth);
+                        int y = Global.Random.Next(0, surface.BufferHeight);
+
+                        surface.SetGlyph(x, y, 7, starColor);
+                    }
+                }
+            }
+
+            var con = new Console(layeredSurface);
+            con.Renderer = new SadConsole.Renderers.LayeredConsole();
             con.Parent = Global.Screen;
-            con.Position = new Point(0,0);
-            //con.Cursor.IsEnabled = false;
-            
-            con.UseMouse = true;
-            var blink = new SadConsole.Effects.BlinkGlyph();
-            con.Surface.Print(1, 1, "!");
-            con.Surface.SetEffect(1, 1, blink);
+            con.Position = new Point(10, 14);
+            con.Cursor.IsEnabled = false;
+
+            var set = new SadConsole.Instructions.InstructionSet()
+                .InstructConcurrent(
+                    new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
+                        .Wait(new TimeSpan(0, 0, 1))
+                        .Code((s) => { layeredSurface.Layers[0].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
+
+                    new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
+                        .Wait(new TimeSpan(0, 0, 0, 0, 800))
+                        .Code((s) => { layeredSurface.Layers[1].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
+
+                    new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
+                        .Wait(new TimeSpan(0, 0, 0, 0, 400))
+                        .Code((s) => { layeredSurface.Layers[2].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; })
+                );
+
+            con.Components.Add(set);
+
+            var obj2 = new ScreenObjectSurface(layeredSurface);
+            obj2.Renderer = new SadConsole.Renderers.LayeredScreenObject();
+            obj2.Position = (5, 1);
+            obj2.Parent = Global.Screen;
+
+            layeredSurface.IsDirtyChanged += (o, e) => { obj2.ForceRendererRefresh = true; };
+
 
             var ent = new SadConsole.Entities.Entity(3, 3);
             ent.Animation.CurrentFrame.Fill(Color.AliceBlue, Color.DarkBlue, '.');

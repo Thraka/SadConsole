@@ -17,9 +17,9 @@ namespace SadConsole
         private int _viewHeight;
 
         /// <summary>
-        /// An event that is raised when <see cref="IsDirty"/> is set to true.
+        /// An event that is raised when <see cref="IsDirty"/> changes.
         /// </summary>
-        public event EventHandler DirtyChanged;
+        public event EventHandler IsDirtyChanged;
 
         /// <summary>
         /// Indicates the surface has changed and needs to be rendered.
@@ -29,13 +29,10 @@ namespace SadConsole
             get => _isDirty;
             set
             {
-                if (_isDirty == value)
-                {
-                    return;
-                }
-                
+                if (_isDirty == value) return;
+
                 _isDirty = value;
-                OnDirtyChanged();
+                OnIsDirtyChanged();
             }
         }
 
@@ -171,7 +168,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
-        public CellSurface(int width, int height) : this(width, height, null)
+        public CellSurface(int width, int height) : this(width, height, width, height, null)
         {
 
         }
@@ -182,36 +179,9 @@ namespace SadConsole
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public CellSurface(int width, int height, ColoredGlyph[] initialCells)
+        public CellSurface(int width, int height, ColoredGlyph[] initialCells): this(width, height, width, height, initialCells)
         {
-            if (width == 0) throw new ArgumentOutOfRangeException(nameof(width), "Surface width must be > 0");
-            if (height == 0) throw new ArgumentOutOfRangeException(nameof(height), "Surface height must be > 0");
 
-            DefaultForeground = Color.White;
-            DefaultBackground = Color.Transparent;
-            _viewWidth = BufferWidth = width;
-            _viewHeight = BufferHeight = height;
-
-            if (initialCells == null)
-            {
-                Cells = new ColoredGlyph[width * height];
-
-                for (int i = 0; i < Cells.Length; i++)
-                {
-                    Cells[i] = new ColoredGlyph(DefaultForeground, DefaultBackground, 0);
-                }
-            }
-            else
-            {
-                if (initialCells.Length != ViewWidth * ViewHeight)
-                {
-                    throw new Exception("Width * Height does not match initialCells.Length");
-                }
-
-                Cells = initialCells;
-            }
-
-            Effects = new Effects.EffectsManager(this);
         }
 
         /// <summary>
@@ -253,7 +223,7 @@ namespace SadConsole
 
             if (initialCells == null)
             {
-                Cells = new ColoredGlyph[bufferWidth * bufferWidth];
+                Cells = new ColoredGlyph[bufferWidth * bufferHeight];
 
                 for (int i = 0; i < Cells.Length; i++)
                 {
@@ -276,8 +246,8 @@ namespace SadConsole
         /// <summary>
         /// Called when the <see cref="IsDirty"/> property changes.
         /// </summary>
-        protected virtual void OnDirtyChanged() =>
-            DirtyChanged?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnIsDirtyChanged() =>
+            IsDirtyChanged?.Invoke(this, EventArgs.Empty);
 
         /// <summary>
         /// Called when the <see cref="Cells"/> property is reset.

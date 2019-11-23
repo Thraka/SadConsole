@@ -583,9 +583,9 @@
             An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
             </summary>
         </member>
-        <member name="E:SadConsole.CellSurface.DirtyChanged">
+        <member name="E:SadConsole.CellSurface.IsDirtyChanged">
             <summary>
-            An event that is raised when <see cref="P:SadConsole.CellSurface.IsDirty"/> is set to true.
+            An event that is raised when <see cref="P:SadConsole.CellSurface.IsDirty"/> changes.
             </summary>
         </member>
         <member name="P:SadConsole.CellSurface.IsDirty">
@@ -687,7 +687,7 @@
             <param name="bufferHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.OnDirtyChanged">
+        <member name="M:SadConsole.CellSurface.OnIsDirtyChanged">
             <summary>
             Called when the <see cref="P:SadConsole.CellSurface.IsDirty"/> property changes.
             </summary>
@@ -2061,6 +2061,11 @@
         <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Draw(SadConsole.ScreenObject)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Console">
+            <summary>
+            A surface that has a cursor.
+            </summary>
+        </member>
         <member name="P:SadConsole.Console.IsCursorDisabled">
             <summary>
             When <see langword="true"/>, indicates that the <see cref="P:SadConsole.Console.Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
@@ -2068,6 +2073,16 @@
             <remarks>
             This property should only be used to indicate that this object can never use the <see cref="P:SadConsole.Console.Cursor"/>. To simply disable or enable the <see cref="P:SadConsole.Console.Cursor"/>, use <see cref="P:SadConsole.Cursor.IsEnabled"/> and <see cref="P:SadConsole.Cursor.IsVisible"/>.
             </remarks>
+        </member>
+        <member name="P:SadConsole.Console.Width">
+            <summary>
+            The buffer width of the console. Forwards <see cref="P:SadConsole.CellSurface.BufferWidth"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Console.Height">
+            <summary>
+            The buffer height of the console. Forwards <see cref="P:SadConsole.CellSurface.BufferHeight"/>.
+            </summary>
         </member>
         <member name="P:SadConsole.Console.Cursor">
             <summary>
@@ -2093,6 +2108,12 @@
             <param name="width">The width of the console.</param>
             <param name="height">The height of the console.</param>
             <param name="initialCells">The cells to seed the cosnole.</param>
+        </member>
+        <member name="M:SadConsole.Console.#ctor(SadConsole.CellSurface)">
+            <summary>
+            Creates a new console with the specified <see cref="T:SadConsole.CellSurface"/> type.
+            </summary>
+            <param name="surface">The surface to use for this console.</param>
         </member>
         <member name="M:SadConsole.Console.OnVisibleChanged">
             <inheritdoc/>
@@ -4980,6 +5001,60 @@
         <member name="M:SadConsole.Instructions.Wait.Reset">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.LayeredCellSurface">
+            <summary>
+            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            </summary>
+            <summary>
+            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LayeredCellSurface.LayerCount">
+            <summary>
+            Gets the number of layers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LayeredCellSurface.Layers">
+            <summary>
+            A read-only collection of layers.
+            </summary>
+        </member>
+        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="layers">The number of layers to add to this surface.</param>
+        </member>
+        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The visible width of the surface in cells.</param>
+            <param name="height">The visible height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="layers">The number of layers to add to this surface.</param>
+        </member>
+        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        </member>
+        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        </member>
         <member name="T:SadConsole.NewOldValueEventArgs`1">
             <summary>
             Provides reference to the old and new objects.
@@ -5002,6 +5077,189 @@
             <param name="oldObject">The old parent.</param>
             <param name="newObject">The new parent.</param>
         </member>
+        <member name="T:SadConsole.Readers.REXPaintImage">
+            <summary>
+            A RexPaint image.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Readers.REXPaintImage.Cell">
+            <summary>
+            A RexPaint layer cell.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.REXPaintImage.Cell.Character">
+            <summary>
+            The character for the cell.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.REXPaintImage.Cell.Foreground">
+            <summary>
+            The foreground color of the cell.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.REXPaintImage.Cell.Background">
+            <summary>
+            The background color of the cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Cell.IsTransparent">
+            <summary>
+            Returns true when the current color is considered transparent.
+            </summary>
+            <returns>True when transparent.</returns>
+        </member>
+        <member name="T:SadConsole.Readers.REXPaintImage.Color">
+            <summary>
+            A RexPaint color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.REXPaintImage.Color.R">
+            <summary>
+            The red channel of the color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.REXPaintImage.Color.G">
+            <summary>
+            The green channel of the color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.REXPaintImage.Color.B">
+            <summary>
+            The blue channel of the color.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Color.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Creates a new RexPaint color with the specified RGB channels.
+            </summary>
+            <param name="r">The red channel of the color.</param>
+            <param name="g">The green channel of the color.</param>
+            <param name="b">The blue channel of the color.</param>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Color.Transparent">
+            <summary>
+            Returns the transparent color used by RexPaint: rgb(255, 0, 255).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Version">
+            <summary>
+            The version of RexPaint that created this image.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Width">
+            <summary>
+            The width of the image.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Height">
+            <summary>
+            The height of the image.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.LayerCount">
+            <summary>
+            The total number of layers for this image.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Layers">
+            <summary>
+            A read-only collection of layers.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new RexPaint image.
+            </summary>
+            <param name="width">The width of the image.</param>
+            <param name="height">The height of the image.</param>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Create">
+            <summary>
+            Creates a new layer for the image adding it to the end of the layer stack.
+            </summary>
+            <returns>A new layer.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Create(System.Int32)">
+            <summary>
+            Creates a new layer for the image and inserts it at the specified position (0-based).
+            </summary>
+            <param name="index">The position to create the new layer at.</param>
+            <returns>A new layer.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Add(SadConsole.Readers.REXPaintImage.Layer)">
+            <summary>
+            Adds an existing layer (must be the same width/height) to the image.
+            </summary>
+            <param name="layer">The layer to add.</param>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Add(SadConsole.Readers.REXPaintImage.Layer,System.Int32)">
+            <summary>
+            Adds an existing layer (must be the same width/height) to the image and inserts it at the specified position (0-based).
+            </summary>
+            <param name="layer">The layer to add.</param>
+            <param name="index">The position to add the layer.</param>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Remove(SadConsole.Readers.REXPaintImage.Layer)">
+            <summary>
+            Removes the specified layer.
+            </summary>
+            <param name="layer">The layer.</param>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.ToLayeredCellSurface">
+            <summary>
+            Converts this REXPaint image to a <see cref="T:SadConsole.LayeredCellSurface"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Load(System.IO.Stream)">
+            <summary>
+            Loads a .xp RexPaint image from a GZip compressed stream.
+            </summary>
+            <param name="stream">The GZip stream to load.</param>
+            <returns>The RexPaint image.</returns>
+        </member>
+        <member name="T:SadConsole.Readers.REXPaintImage.Layer">
+            <summary>
+            A layer of a RexPaint image.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Layer.Width">
+            <summary>
+            The width of the layer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Layer.Height">
+            <summary>
+            The height of the layer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Layer.Cells">
+            <summary>
+            Represents all cells of the layer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Layer.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets a cell by coordinates.
+            </summary>
+            <param name="x">The x (0-based) position of the cell.</param>
+            <param name="y">The y (0-based) position of the cell.</param>
+            <returns>The cell.</returns>
+        </member>
+        <member name="P:SadConsole.Readers.REXPaintImage.Layer.Item(System.Int32)">
+            <summary>
+            Gets a cell by index.
+            </summary>
+            <param name="index">The index of the cell.</param>
+            <returns>The cell.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Layer.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new layer with the specified width and height.
+            </summary>
+            <param name="width">The width of the layer.</param>
+            <param name="height">The height of the layer.</param>
+        </member>
         <member name="T:SadConsole.Renderers.IRenderer">
             <summary>
             Draws a surface.
@@ -5019,11 +5277,12 @@
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ScreenObjectSurface,System.Boolean)">
             <summary>
             Refreshes a cached drawing state.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
+            <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
         </member>
         <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.ScreenObjectSurface)">
             <summary>
@@ -5306,6 +5565,11 @@
         <member name="P:SadConsole.ScreenObjectSurface.IsDirty">
             <summary>
             Indicates the <see cref="P:SadConsole.ScreenObjectSurface.Surface"/> has changed and needs to be rendered.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.ForceRendererRefresh">
+            <summary>
+            When <see langword="true"/>, the <see cref="M:SadConsole.ScreenObjectSurface.Draw"/> method forces the <see cref="P:SadConsole.ScreenObjectSurface.Renderer"/> to refresh the backing texture with the latest state of the <see cref="P:SadConsole.ScreenObjectSurface.Surface"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.Renderer">

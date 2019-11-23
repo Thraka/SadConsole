@@ -26,7 +26,8 @@ namespace SadConsole.Renderers
         /// Refreshes a cached drawing state.
         /// </summary>
         /// <param name="surfaceObject">The surface this renderer is attached to.</param>
-        void Refresh(ScreenObjectSurface surfaceObject);
+        /// <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
+        void Refresh(ScreenObjectSurface surfaceObject, bool force = false);
 
         /// <summary>
         /// Creates a drawcall in the drawing pipeline.

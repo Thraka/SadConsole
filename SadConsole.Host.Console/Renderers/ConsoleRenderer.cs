@@ -26,7 +26,7 @@ namespace SadConsole.Renderers
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallSurface(surface.Surface, surface.Position));            
         }
 
-        public void Refresh(ScreenObjectSurface surface)
+        public void Refresh(ScreenObjectSurface surface, bool force)
         {
             //_redrawStringBuilder.Clear();
             //foreach (Cell cell in console)

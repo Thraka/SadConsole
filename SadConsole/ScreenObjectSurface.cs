@@ -31,6 +31,11 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the <see cref="Surface"/>.
+        /// </summary>
+        public bool ForceRendererRefresh { get; set; }
+
+        /// <summary>
         /// The renderer used to draw this surface.
         /// </summary>
         public Renderers.IRenderer Renderer
@@ -179,8 +184,9 @@ namespace SadConsole
 
             if (_renderer != null)
             {
-                _renderer.Refresh(this);
+                _renderer.Refresh(this, ForceRendererRefresh);
                 _renderer.Render(this);
+                ForceRendererRefresh = false;
             }
 
             base.Draw();

@@ -12,44 +12,23 @@ using SadConsole.Host.MonoGame;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="Console"/>.
+    /// Draws a <see cref="Console"/> when it uses a <see cref="LayeredCellSurface"/> type for the <see cref="ScreenObjectSurface.Surface"/>.
     /// </summary>
     /// <remarks>
     /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(ScreenObjectSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
     ///
     /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
     /// </remarks>
-    public class ConsoleRenderer : ScreenObjectRenderer
+    public class LayeredConsole : ConsoleRenderer
     {
         ///  <inheritdoc/>
         public override void Attach(ScreenObjectSurface screen)
         {
             if (!(screen is Console))
-                throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(Console)}.");
-        }
+                throw new Exception($"The {nameof(LayeredConsole)} renderer must be added to a {nameof(Console)}.");
 
-        ///  <inheritdoc/>
-        public override void Render(ScreenObjectSurface screen)
-        {
-            var console = (Console)screen;
-
-            // Draw call for texture
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
-
-            if (console.Cursor.IsVisible && console.Surface.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.GetViewRectangle().Contains(console.Cursor.Position))
-            {
-                GameHost.Instance.DrawCalls.Enqueue(
-                    new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
-                                               ((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture,
-                                               new XnaRectangle(screen.AbsolutePosition.ToMonoPoint() + screen.Font.GetRenderRect(console.Cursor.Position.X, console.Cursor.Position.Y, console.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
-                                               screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                               screen.Font.GlyphRects[console.Cursor.CursorRenderCell.Glyph].ToMonoRectangle()
-                                              )
-                    );
-            }
-
-            if (screen.Tint.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToMonoColor(), ((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToMonoRectangle(), screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
+            if (!(screen.Surface is LayeredCellSurface))
+                throw new Exception($"The {nameof(LayeredConsole)} renderer must be added to a screen object that has a {nameof(LayeredCellSurface)} for a surface.");
         }
 
         ///  <inheritdoc/>
@@ -80,7 +59,10 @@ namespace SadConsole.Renderers
             RefreshBegin(screen);
 
             if (screen.Tint.A != 255)
-                RefreshCells(screen.Surface, screen.Font);
+            {
+                foreach (var layer in ((LayeredCellSurface)screen.Surface).Layers)
+                    RefreshCells(layer.Surface, screen.Font);
+            }
 
             RefreshEnd(screen);
 
