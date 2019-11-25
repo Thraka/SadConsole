@@ -23,8 +23,8 @@ namespace SadConsole.MonoGame
                 : base(game)
             {
                 surface = new Console(30, 1);
-                surface.Surface.DefaultBackground = Color.Black;
-                surface.Surface.Clear();
+                surface.DefaultBackground = Color.Black;
+                surface.Clear();
                 DrawOrder = 8;
                 Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
             }
@@ -46,8 +46,8 @@ namespace SadConsole.MonoGame
             public override void Draw(GameTime gameTime)
             {
                 frameCounter++;
-                surface.Surface.Clear();
-                surface.Surface.Print(0, 0, $"fps: {frameRate}", Color.White, Color.Black);
+                surface.Clear();
+                surface.Print(0, 0, $"fps: {frameRate}", Color.White, Color.Black);
                 surface.Draw();
                 
                 Game.GraphicsDevice.SetRenderTarget(null);

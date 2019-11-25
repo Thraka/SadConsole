@@ -4,7 +4,7 @@ using SadConsole.Input;
 namespace SadConsole.Components
 {
     /// <summary>
-    /// A component that can be added to a <see cref="ScreenObject"/>.
+    /// A component that can be added to a <see cref="IScreenObject"/>.
     /// </summary>
     public interface IComponent
     {
@@ -14,22 +14,22 @@ namespace SadConsole.Components
         int SortOrder { get; }
 
         /// <summary>
-        /// When <see langword="true"/>, indicates that this component calls the <see cref="Update(ScreenObject)"/> method.
+        /// When <see langword="true"/>, indicates that this component calls the <see cref="Update(IScreenObject)"/> method.
         /// </summary>
         bool IsUpdate { get; }
 
         /// <summary>
-        /// When <see langword="true"/>, indicates that this component calls the <see cref="Draw(ScreenObject)"/> method.
+        /// When <see langword="true"/>, indicates that this component calls the <see cref="Draw(IScreenObject)"/> method.
         /// </summary>
         bool IsDraw { get; }
 
         /// <summary>
-        /// When <see langword="true"/>, indicates that this component calls the <see cref="ProcessMouse(ScreenObject, MouseScreenObjectState, out bool)"/> method.
+        /// When <see langword="true"/>, indicates that this component calls the <see cref="ProcessMouse(IScreenObject, MouseScreenObjectState, out bool)"/> method.
         /// </summary>
         bool IsMouse { get; }
 
         /// <summary>
-        /// When <see langword="true"/>, indicates that this component calls the <see cref="ProcessKeyboard(ScreenObject, Keyboard, out bool)"/> method.
+        /// When <see langword="true"/>, indicates that this component calls the <see cref="ProcessKeyboard(IScreenObject, Keyboard, out bool)"/> method.
         /// </summary>
         bool IsKeyboard { get; }
 
@@ -37,13 +37,13 @@ namespace SadConsole.Components
         /// Called by a host on the update frame.
         /// </summary>
         /// <param name="host">The host calling the component.</param>
-        void Update(ScreenObject host);
+        void Update(IScreenObject host);
 
         /// <summary>
         /// Called by a host on the draw frame.
         /// </summary>
         /// <param name="host">The host calling the component.</param>
-        void Draw(ScreenObject host);
+        void Draw(IScreenObject host);
 
         /// <summary>
         /// Called by a host when the mouse is being processed.
@@ -51,7 +51,7 @@ namespace SadConsole.Components
         /// <param name="host">The host console.</param>
         /// <param name="state">The mouse state.</param>
         /// <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        void ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled);
+        void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled);
 
         /// <summary>
         /// Called by a host when the keyboard is being processed.
@@ -59,23 +59,23 @@ namespace SadConsole.Components
         /// <param name="host">The host that added this component.</param>
         /// <param name="keyboard">The keyboard state.</param>
         /// <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        void ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled);
+        void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled);
 
         /// <summary>
         /// Called when the component is added to a host.
         /// </summary>
         /// <param name="host">The host that added the component.</param>
-        void OnAdded(ScreenObject host);
+        void OnAdded(IScreenObject host);
 
         /// <summary>
         /// Called when the component is removed from the host.
         /// </summary>
         /// <param name="host">The host that removed the component.</param>
-        void OnRemoved(ScreenObject host);
+        void OnRemoved(IScreenObject host);
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.Update(ScreenObject)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.Update(IScreenObject)"/> of <see cref="IComponent"/>.
     /// </summary>
     public abstract class UpdateComponent : IComponent
     {
@@ -88,13 +88,13 @@ namespace SadConsole.Components
         /// Called by a host on the update frame.
         /// </summary>
         /// <param name="host">The host calling the component.</param>
-        public abstract void Update(ScreenObject host);
+        public abstract void Update(IScreenObject host);
 
         /// <inheritdoc />
-        public virtual void OnAdded(ScreenObject host) { }
+        public virtual void OnAdded(IScreenObject host) { }
 
         /// <inheritdoc />
-        public virtual void OnRemoved(ScreenObject host) { }
+        public virtual void OnRemoved(IScreenObject host) { }
 
         int IComponent.SortOrder => SortOrder;
 
@@ -106,20 +106,20 @@ namespace SadConsole.Components
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(ScreenObject host) { }
+        void IComponent.Draw(IScreenObject host) { }
 
-        void IComponent.ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled) =>
+        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             handled = false;
 
-        void IComponent.ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled) =>
+        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             handled = false;
 
-        void IComponent.Update(ScreenObject host) =>
+        void IComponent.Update(IScreenObject host) =>
             Update(host);
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.Draw(ScreenObject)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.Draw(IScreenObject)"/> of <see cref="IComponent"/>.
     /// </summary>
     public abstract class DrawComponent : IComponent
     {
@@ -132,13 +132,13 @@ namespace SadConsole.Components
         /// Called by a host on the draw frame.
         /// </summary>
         /// <param name="host">The host calling the component.</param>
-        public abstract void Draw(ScreenObject host);
+        public abstract void Draw(IScreenObject host);
 
         /// <inheritdoc />
-        public virtual void OnAdded(ScreenObject host) { }
+        public virtual void OnAdded(IScreenObject host) { }
 
         /// <inheritdoc />
-        public virtual void OnRemoved(ScreenObject host) { }
+        public virtual void OnRemoved(IScreenObject host) { }
 
         int IComponent.SortOrder => SortOrder;
 
@@ -150,20 +150,20 @@ namespace SadConsole.Components
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(ScreenObject host) =>
+        void IComponent.Draw(IScreenObject host) =>
             Draw(host);
 
-        void IComponent.ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled) =>
+        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             handled = false;
 
-        void IComponent.ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled) =>
+        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             handled = false;
 
-        void IComponent.Update(ScreenObject host) { }
+        void IComponent.Update(IScreenObject host) { }
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.ProcessMouse(ScreenObject, MouseScreenObjectState, out bool)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.ProcessMouse(IScreenObject, MouseScreenObjectState, out bool)"/> of <see cref="IComponent"/>.
     /// </summary>
     public abstract class MouseConsoleComponent : IComponent
     {
@@ -178,13 +178,13 @@ namespace SadConsole.Components
         /// <param name="host">The host calling the component.</param>
         /// <param name="state">The state of the mouse in relation to the console.</param>
         /// <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        public abstract void ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled);
+        public abstract void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled);
 
         /// <inheritdoc />
-        public virtual void OnAdded(ScreenObject host) { }
+        public virtual void OnAdded(IScreenObject host) { }
 
         /// <inheritdoc />
-        public virtual void OnRemoved(ScreenObject host) { }
+        public virtual void OnRemoved(IScreenObject host) { }
 
         int IComponent.SortOrder => SortOrder;
 
@@ -196,19 +196,19 @@ namespace SadConsole.Components
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(ScreenObject host) { }
+        void IComponent.Draw(IScreenObject host) { }
 
-        void IComponent.ProcessKeyboard(ScreenObject host, Keyboard info, out bool handled) =>
+        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard info, out bool handled) =>
             handled = false;
 
-        void IComponent.ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled) =>
+        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             ProcessMouse(host, state, out handled);
 
-        void IComponent.Update(ScreenObject host) { }
+        void IComponent.Update(IScreenObject host) { }
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.ProcessKeyboard(ScreenObject, Keyboard, out bool)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.ProcessKeyboard(IScreenObject, Keyboard, out bool)"/> of <see cref="IComponent"/>.
     /// </summary>
     public abstract class KeyboardConsoleComponent : IComponent
     {
@@ -223,13 +223,13 @@ namespace SadConsole.Components
         /// <param name="host">The host calling the component.</param>
         /// <param name="keyboard">The state of the keyboard.</param>
         /// <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        public abstract void ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled);
+        public abstract void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled);
 
         /// <inheritdoc />
-        public virtual void OnAdded(ScreenObject host) { }
+        public virtual void OnAdded(IScreenObject host) { }
 
         /// <inheritdoc />
-        public virtual void OnRemoved(ScreenObject host) { }
+        public virtual void OnRemoved(IScreenObject host) { }
 
         int IComponent.SortOrder => SortOrder;
 
@@ -241,19 +241,19 @@ namespace SadConsole.Components
 
         bool IComponent.IsKeyboard => true;
 
-        void IComponent.Draw(ScreenObject host) { }
+        void IComponent.Draw(IScreenObject host) { }
 
-        void IComponent.ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled) =>
+        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             ProcessKeyboard(host, keyboard, out handled);
 
-        void IComponent.ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled) =>
+        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             handled = false;
 
-        void IComponent.Update(ScreenObject host) { }
+        void IComponent.Update(IScreenObject host) { }
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.ProcessMouse(ScreenObject, MouseScreenObjectState, out bool)"/> and <see cref="IComponent.ProcessKeyboard(ScreenObject, Keyboard, out bool)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.ProcessMouse(IScreenObject, MouseScreenObjectState, out bool)"/> and <see cref="IComponent.ProcessKeyboard(IScreenObject, Keyboard, out bool)"/> of <see cref="IComponent"/>.
     /// </summary>
     public abstract class InputConsoleComponent : IComponent
     {
@@ -268,7 +268,7 @@ namespace SadConsole.Components
         /// <param name="host">The host calling the component.</param>
         /// <param name="keyboard">The state of the keyboard.</param>
         /// <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        public abstract void ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled);
+        public abstract void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled);
 
         /// <summary>
         /// Called by a host when the mouse is being processed.
@@ -276,13 +276,13 @@ namespace SadConsole.Components
         /// <param name="host">The host calling the component.</param>
         /// <param name="state">The state of the mouse in relation to the console.</param>
         /// <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        public abstract void ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled);
+        public abstract void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled);
 
         /// <inheritdoc />
-        public virtual void OnAdded(ScreenObject host) { }
+        public virtual void OnAdded(IScreenObject host) { }
 
         /// <inheritdoc />
-        public virtual void OnRemoved(ScreenObject host) { }
+        public virtual void OnRemoved(IScreenObject host) { }
 
         int IComponent.SortOrder => SortOrder;
 
@@ -294,19 +294,19 @@ namespace SadConsole.Components
 
         bool IComponent.IsKeyboard => true;
 
-        void IComponent.Draw(ScreenObject host) { }
+        void IComponent.Draw(IScreenObject host) { }
 
-        void IComponent.ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled) =>
+        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             ProcessKeyboard(host, keyboard, out handled);
 
-        void IComponent.ProcessMouse(ScreenObject host, MouseScreenObjectState mouse, out bool handled) =>
+        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState mouse, out bool handled) =>
             ProcessMouse(host, mouse, out handled);
 
-        void IComponent.Update(ScreenObject host) { }
+        void IComponent.Update(IScreenObject host) { }
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.Update(ScreenObject)"/> and <see cref="IComponent.Draw(ScreenObject)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.Update(IScreenObject)"/> and <see cref="IComponent.Draw(IScreenObject)"/> of <see cref="IComponent"/>.
     /// </summary>
     public abstract class LogicComponent : IComponent
     {
@@ -320,19 +320,19 @@ namespace SadConsole.Components
         /// Called by a host on the draw frame.
         /// </summary>
         /// <param name="host">The host calling the component.</param>
-        public abstract void Draw(ScreenObject host);
+        public abstract void Draw(IScreenObject host);
 
         /// <summary>
         /// Called by a host on the update frame.
         /// </summary>
         /// <param name="host">The host calling the component.</param>
-        public abstract void Update(ScreenObject host);
+        public abstract void Update(IScreenObject host);
 
         /// <inheritdoc />
-        public virtual void OnAdded(ScreenObject host) { }
+        public virtual void OnAdded(IScreenObject host) { }
 
         /// <inheritdoc />
-        public virtual void OnRemoved(ScreenObject host) { }
+        public virtual void OnRemoved(IScreenObject host) { }
 
         int IComponent.SortOrder => SortOrder;
 
@@ -344,16 +344,16 @@ namespace SadConsole.Components
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(ScreenObject host) =>
+        void IComponent.Draw(IScreenObject host) =>
             Draw(host);
 
-        void IComponent.ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled) =>
+        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             handled = false;
 
-        void IComponent.ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled) =>
+        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             handled = false;
 
-        void IComponent.Update(ScreenObject host) =>
+        void IComponent.Update(IScreenObject host) =>
             Update(host);
     }
 
@@ -378,22 +378,22 @@ namespace SadConsole.Components
         public bool IsKeyboard => true;
 
         /// <inheritdoc />
-        public abstract void Draw(ScreenObject host);
+        public abstract void Draw(IScreenObject host);
 
         /// <inheritdoc />
-        public abstract void Update(ScreenObject host);
+        public abstract void Update(IScreenObject host);
 
         /// <inheritdoc />
-        public abstract void ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled);
+        public abstract void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled);
 
         /// <inheritdoc />
-        public abstract void ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled);
+        public abstract void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled);
 
         /// <inheritdoc />
-        public virtual void OnRemoved(ScreenObject host) { }
+        public virtual void OnRemoved(IScreenObject host) { }
 
 
         /// <inheritdoc />
-        public virtual void OnAdded(ScreenObject host) { }
+        public virtual void OnAdded(IScreenObject host) { }
     }
 }

@@ -1,9 +1,9 @@
-﻿namespace SadConsole.Instructions
-{
-    using System;
-    using System.Collections.Generic;
-    using Console = SadConsole.Console;
+﻿using System;
+using System.Collections.Generic;
+using Console = SadConsole.Console;
 
+namespace SadConsole.Instructions
+{
     /// <summary>
     /// Runs one or more instructions at the same time. This instruction completes when all added instructions have finished.
     /// </summary>
@@ -28,7 +28,7 @@
             _instructions = instructions;
 
         /// <inheritdoc />
-        public override void Update(ScreenObject componentHost)
+        public override void Update(IScreenObject componentHost)
         {
             bool stillRunning = false;
 

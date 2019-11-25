@@ -10,7 +10,7 @@ namespace SadConsole.Input
         /// <summary>
         /// The screen object used to create the mouse state.
         /// </summary>
-        public readonly ScreenObjectSurface ScreenObject;
+        public readonly IScreenObjectSurface ScreenObject;
 
         /// <summary>
         /// The mouse data.
@@ -18,7 +18,7 @@ namespace SadConsole.Input
         public readonly Mouse Mouse;
 
         /// <summary>
-        /// The cell the mouse is over, from <see cref="ScreenObject"/>.
+        /// The cell the mouse is over, from <see cref="IScreenObject"/>.
         /// </summary>
         public readonly ColoredGlyph Cell;
 
@@ -28,7 +28,7 @@ namespace SadConsole.Input
         public readonly Point CellPosition;
 
         /// <summary>
-        /// The position of the mouse on the <see cref="ScreenObject"/>, based on the <see cref="WorldCellPosition"/> and the position of the <see cref="ScreenObject"/>.
+        /// The position of the mouse on the <see cref="IScreenObject"/>, based on the <see cref="WorldCellPosition"/> and the position of the <see cref="ScreenObject"/>.
         /// </summary>
         public readonly Point SurfaceCellPosition;
 
@@ -52,7 +52,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="screenObject">The screen object to process with the mouse state.</param>
         /// <param name="mouseData">The current mouse state.</param>
-        public MouseScreenObjectState(ScreenObjectSurface screenObject, Mouse mouseData)
+        public MouseScreenObjectState(IScreenObjectSurface screenObject, Mouse mouseData)
         {
             bool isNegative = false;
             Mouse = mouseData.Clone();

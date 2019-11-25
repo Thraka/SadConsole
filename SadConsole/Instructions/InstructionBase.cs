@@ -63,7 +63,7 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
         /// </summary>
-        public override void Update(ScreenObject componentHost)
+        public override void Update(IScreenObject componentHost)
         {
             if (IsFinished)
             {
@@ -81,7 +81,7 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Called when the instruction finishes.
         /// </summary>
-        protected virtual void OnFinished(ScreenObject componentHost)
+        protected virtual void OnFinished(IScreenObject componentHost)
         {
             Finished?.Invoke(this, EventArgs.Empty);
 

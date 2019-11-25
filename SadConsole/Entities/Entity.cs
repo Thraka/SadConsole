@@ -137,7 +137,7 @@ namespace SadConsole.Entities
             else
                 AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (ScreenObject child in Children)
+            foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
         }
 

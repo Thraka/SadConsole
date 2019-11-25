@@ -7,7 +7,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="ScreenObjectSurface"/>.
+    /// Draws a <see cref="IScreenObjectSurface"/>.
     /// </summary>
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
@@ -18,23 +18,23 @@ namespace SadConsole.Renderers
 
         protected IntRect[] _renderRects;
 
-        public virtual void Attach(ScreenObjectSurface screen)
+        public virtual void Attach(IScreenObjectSurface screen)
         {
         }
 
-        public virtual void Detatch(ScreenObjectSurface screen)
+        public virtual void Detatch(IScreenObjectSurface screen)
         {
             BackingTexture.Dispose();
             BackingTexture = null;
         }
 
-        public virtual void Render(ScreenObjectSurface screen)
+        public virtual void Render(IScreenObjectSurface screen)
         {
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
         }
 
-        public virtual void Refresh(ScreenObjectSurface screen, bool force = false)
+        public virtual void Refresh(IScreenObjectSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -68,13 +68,13 @@ namespace SadConsole.Renderers
         }
 
 
-        protected virtual void RefreshBegin(ScreenObjectSurface surface)
+        protected virtual void RefreshBegin(IScreenObjectSurface surface)
         {
             BackingTexture.Clear(Color.Transparent);
             Host.Global.SharedSpriteBatch.Reset(BackingTexture, RenderStates.Default, Transform.Identity);
         }
 
-        protected virtual void RefreshEnd(ScreenObjectSurface surface)
+        protected virtual void RefreshEnd(IScreenObjectSurface surface)
         {
             Host.Global.SharedSpriteBatch.End();
             BackingTexture.Display();
@@ -107,7 +107,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RefreshTint(ScreenObjectSurface surface)
+        protected virtual void RefreshTint(IScreenObjectSurface surface)
         {
             if (surface.Tint.A != 0)
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(surface.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture, surface.AbsoluteArea.ToIntRect(), surface.Font.SolidGlyphRectangle.ToIntRect()));

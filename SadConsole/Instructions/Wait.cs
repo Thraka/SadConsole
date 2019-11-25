@@ -29,7 +29,7 @@ namespace SadConsole.Instructions
             => Duration = TimeSpan.FromSeconds(1);
 
         /// <inheritdoc />
-        public override void Update(ScreenObject componentHost)
+        public override void Update(IScreenObject componentHost)
         {
             if (!_started)
             {

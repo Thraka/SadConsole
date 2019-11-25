@@ -42,7 +42,7 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Runs the instruction set. Once all instructions are finished, this set will set the <see cref="InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
         /// </summary>
-        public override void Update(ScreenObject componentHost)
+        public override void Update(IScreenObject componentHost)
         {
             if (!IsFinished && Instructions.Count != 0)
             {
@@ -98,7 +98,7 @@ namespace SadConsole.Instructions
         /// </summary>
         /// <param name="expression">The code callback.</param>
         /// <returns>This instruction set.</returns>
-        public InstructionSet Code(Func<ScreenObject, bool> expression)
+        public InstructionSet Code(Func<IScreenObject, bool> expression)
         {
             Instructions.AddLast(new CodeInstruction(expression));
             return this;

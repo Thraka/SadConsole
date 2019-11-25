@@ -173,9 +173,9 @@ namespace SadConsole
         protected void UpdateFrameReferences()
         {
             CellSurface frame = FramesList[CurrentFrameIndexValue];
-            Surface.SetSurface(frame.Cells, _width, _height, _width, _height);
-            Surface.DefaultBackground = frame.DefaultBackground;
-            Surface.DefaultForeground = frame.DefaultForeground;
+            SetSurface(frame.Cells, _width, _height, _width, _height);
+            DefaultBackground = frame.DefaultBackground;
+            DefaultForeground = frame.DefaultForeground;
             IsDirty = true;
         }
 
@@ -190,7 +190,7 @@ namespace SadConsole
                 FramesList = new List<CellSurface>();
             }
 
-            var frame = new CellSurface(Width, Height) { DefaultBackground = Surface.DefaultBackground, DefaultForeground = Surface.DefaultForeground };
+            var frame = new CellSurface(Width, Height) { DefaultBackground = DefaultBackground, DefaultForeground = DefaultForeground };
             frame.Clear();
             FramesList.Add(frame);
             UpdateFrameReferences();
@@ -295,7 +295,7 @@ namespace SadConsole
             else
                 AbsolutePosition = (FontSize * Position) - (FontSize * Center) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (ScreenObject child in Children)
+            foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
         }
 
@@ -310,7 +310,7 @@ namespace SadConsole
         public static AnimatedScreenObject CreateStatic(int width, int height, int frames, double blankChance)
         {
             var animation = new AnimatedScreenObject("default", width, height);
-            animation.Surface.DefaultBackground = Color.Black;
+            animation.DefaultBackground = Color.Black;
             for (int f = 0; f < frames; f++)
             {
                 CellSurface frame = animation.CreateFrame();

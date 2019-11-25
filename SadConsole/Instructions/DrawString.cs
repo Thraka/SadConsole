@@ -56,7 +56,7 @@ namespace SadConsole.Instructions
         }
 
         /// <summary>
-        /// Draws a string on the surface passed to <see cref="Update(ScreenObject)"/>.
+        /// Draws a string on the surface passed to <see cref="Update(IScreenObject)"/>.
         /// </summary>
         /// <param name="text"></param>
         public DrawString(ColoredString text)
@@ -66,7 +66,7 @@ namespace SadConsole.Instructions
         }
 
         /// <summary>
-        /// Draws a string on the surface passed to <see cref="Update(ScreenObject)"/>. <see cref="Text"/> must be set manually.
+        /// Draws a string on the surface passed to <see cref="Update(IScreenObject)"/>. <see cref="Text"/> must be set manually.
         /// </summary>
         public DrawString()
         {
@@ -75,7 +75,7 @@ namespace SadConsole.Instructions
         }
 
         /// <inheritdoc />
-        public override void Update(ScreenObject componentHost)
+        public override void Update(IScreenObject componentHost)
         {
             if (!_started)
             {
@@ -84,7 +84,7 @@ namespace SadConsole.Instructions
                 _textIndex = 0;
 
                 if (_target == null)
-                    _target = (componentHost as ScreenObjectSurface)?.Surface;
+                    _target = (componentHost as IScreenObjectSurface)?.Surface;
 
                 Cursor.AttachSurface(_target);
                 Cursor.DisableWordBreak = true;

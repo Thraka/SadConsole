@@ -7,7 +7,7 @@ namespace SadConsole.Components
 {
     public class MoveObject : KeyboardConsoleComponent
     {
-        public override void ProcessKeyboard(ScreenObject host, Keyboard keyboard, out bool handled)
+        public override void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
         {
             handled = false;
 

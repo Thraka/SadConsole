@@ -1768,21 +1768,21 @@
         </member>
         <member name="P:SadConsole.Components.EntityViewSync.HandleIsVisible">
             <summary>
-            If set to true, controls the <see cref="P:SadConsole.ScreenObject.IsVisible"/> property of the attached object.
+            If set to true, controls the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property of the attached object.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.EntityViewSync.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.EntityViewSync.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Components.EntityViewSync.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.EntityViewSync.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.EntityViewSync.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.EntityViewSync.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.IComponent">
             <summary>
-            A component that can be added to a <see cref="T:SadConsole.ScreenObject"/>.
+            A component that can be added to a <see cref="T:SadConsole.IScreenObject"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.SortOrder">
@@ -1792,37 +1792,37 @@
         </member>
         <member name="P:SadConsole.Components.IComponent.IsUpdate">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsDraw">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsMouse">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsKeyboard">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> method.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
+        <member name="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <summary>
             Called by a host when the mouse is being processed.
             </summary>
@@ -1830,7 +1830,7 @@
             <param name="state">The mouse state.</param>
             <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+        <member name="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
             <summary>
             Called by a host when the keyboard is being processed.
             </summary>
@@ -1838,13 +1838,13 @@
             <param name="keyboard">The keyboard state.</param>
             <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.IComponent.OnAdded(SadConsole.IScreenObject)">
             <summary>
             Called when the component is added to a host.
             </summary>
             <param name="host">The host that added the component.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.IComponent.OnRemoved(SadConsole.IScreenObject)">
             <summary>
             Called when the component is removed from the host.
             </summary>
@@ -1852,7 +1852,7 @@
         </member>
         <member name="T:SadConsole.Components.UpdateComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.UpdateComponent.SortOrder">
@@ -1860,21 +1860,21 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.IScreenObject)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
         </member>
-        <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.DrawComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.DrawComponent.SortOrder">
@@ -1882,21 +1882,21 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.IScreenObject)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.DrawComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.MouseConsoleComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.MouseConsoleComponent.SortOrder">
@@ -1904,7 +1904,7 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.MouseConsoleComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
+        <member name="M:SadConsole.Components.MouseConsoleComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <summary>
             Called by a host when the mouse is being processed.
             </summary>
@@ -1912,15 +1912,15 @@
             <param name="state">The state of the mouse in relation to the console.</param>
             <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
-        <member name="M:SadConsole.Components.MouseConsoleComponent.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.MouseConsoleComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.MouseConsoleComponent.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.MouseConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.KeyboardConsoleComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.KeyboardConsoleComponent.SortOrder">
@@ -1928,7 +1928,7 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.KeyboardConsoleComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
             <summary>
             Called by a host when the keyboard is being processed.
             </summary>
@@ -1936,15 +1936,15 @@
             <param name="keyboard">The state of the keyboard.</param>
             <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
-        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.InputConsoleComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> and <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> and <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.InputConsoleComponent.SortOrder">
@@ -1952,7 +1952,7 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.InputConsoleComponent.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+        <member name="M:SadConsole.Components.InputConsoleComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
             <summary>
             Called by a host when the keyboard is being processed.
             </summary>
@@ -1960,7 +1960,7 @@
             <param name="keyboard">The state of the keyboard.</param>
             <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
-        <member name="M:SadConsole.Components.InputConsoleComponent.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
+        <member name="M:SadConsole.Components.InputConsoleComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <summary>
             Called by a host when the mouse is being processed.
             </summary>
@@ -1968,15 +1968,15 @@
             <param name="state">The state of the mouse in relation to the console.</param>
             <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
         </member>
-        <member name="M:SadConsole.Components.InputConsoleComponent.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.InputConsoleComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.InputConsoleComponent.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.InputConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.LogicComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.ScreenObject)"/> and <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.ScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)"/> and <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.LogicComponent.SortOrder">
@@ -1984,22 +1984,22 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.IScreenObject)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.IScreenObject)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.LogicComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.LogicComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.ComponentBase">
@@ -2022,22 +2022,22 @@
         <member name="P:SadConsole.Components.ComponentBase.IsKeyboard">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.ProcessKeyboard(SadConsole.ScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+        <member name="M:SadConsole.Components.ComponentBase.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.ProcessMouse(SadConsole.ScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
+        <member name="M:SadConsole.Components.ComponentBase.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.MultipleHostEntityDrawing">
@@ -2052,13 +2052,13 @@
         </member>
         <member name="P:SadConsole.Components.MultipleHostEntityDrawing.HandleIsVisible">
             <summary>
-            If set to true, controls the <see cref="P:SadConsole.ScreenObject.IsVisible"/> property of the attached object.
+            If set to true, controls the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property of the attached object.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Draw(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Draw(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Console">
@@ -2959,7 +2959,7 @@
             <param name="point">The position to check for.</param>
             <returns>True or false based on if the position is associated with the Hotspot.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Hotspot.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Entities.Hotspot.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Entities.Hotspot.OnVisibleChanged">
@@ -3002,9 +3002,24 @@
         <member name="M:SadConsole.Entities.Zone.Draw">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.FocusBehavior">
+            <summary>
+            How the console handles becoming focused and added to the <see cref="P:SadConsole.Global.FocusedScreenObjects"/> collection.
+            </summary>
+        </member>
+        <member name="F:SadConsole.FocusBehavior.Set">
+            <summary>
+            Becomes the only active input object when focused.
+            </summary>
+        </member>
+        <member name="F:SadConsole.FocusBehavior.Push">
+            <summary>
+            Pushes to the top of the stack when it becomes the active input object.
+            </summary>
+        </member>
         <member name="T:SadConsole.FocusedScreenObjectStack">
             <summary>
-            A stack of screen objects. The top-most of the stack is considered active and represented by the <see cref="P:SadConsole.FocusedScreenObjectStack.ScreenObject"/> property.
+            A stack of screen objects. The top-most of the stack is considered active and represented by the <see cref="T:SadConsole.IScreenObject"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.FocusedScreenObjectStack.ScreenObject">
@@ -3022,19 +3037,19 @@
             Clears all screen objects from the active stack along with the current active screen object.
             </summary>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Push(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Push(SadConsole.IScreenObjectSurface)">
             <summary>
             Adds another screen object to active stack, setting it as the active (top most in the stack) screen object.
             </summary>
             <param name="screenObject"></param>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Set(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Set(SadConsole.IScreenObjectSurface)">
             <summary>
-            Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="T:SadConsole.ScreenObjectSurface"/> to this instance.
+            Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="T:SadConsole.IScreenObjectSurface"/> to this instance.
             </summary>
             <param name="screenObject">The screen object to make active.</param>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Pop(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Pop(SadConsole.IScreenObjectSurface)">
             <summary>
             Removes the screen object from the active stack. If the instance is the current active screen object, the active screen object is set to the last screen object in the previous screen object.
             </summary>
@@ -3275,7 +3290,7 @@
             <param name="textureStream">A stream containing the texture.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.GameHost.GetDefaultRenderer(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.GameHost.GetDefaultRenderer(SadConsole.IScreenObjectSurface)">
             <summary>
             Gets the default <see cref="T:SadConsole.Renderers.IRenderer"/> implemented by the host.
             </summary>
@@ -4600,7 +4615,7 @@
             Unlocks the last screen object the mouse was locked to. Allows another conosle to become locked to the mouse.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.Mouse.IsMouseOverScreenObjectSurface(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.Input.Mouse.IsMouseOverScreenObjectSurface(SadConsole.IScreenObjectSurface)">
             <summary>
             Returns true when the mouse is currently over the provided screen object.
             </summary>
@@ -4630,7 +4645,7 @@
         </member>
         <member name="F:SadConsole.Input.MouseScreenObjectState.Cell">
             <summary>
-            The cell the mouse is over, from <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
+            The cell the mouse is over, from <see cref="T:SadConsole.IScreenObject"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Input.MouseScreenObjectState.CellPosition">
@@ -4640,7 +4655,7 @@
         </member>
         <member name="F:SadConsole.Input.MouseScreenObjectState.SurfaceCellPosition">
             <summary>
-            The position of the mouse on the <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>, based on the <see cref="F:SadConsole.Input.MouseScreenObjectState.WorldCellPosition"/> and the position of the <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
+            The position of the mouse on the <see cref="T:SadConsole.IScreenObject"/>, based on the <see cref="F:SadConsole.Input.MouseScreenObjectState.WorldCellPosition"/> and the position of the <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Input.MouseScreenObjectState.WorldCellPosition">
@@ -4658,7 +4673,7 @@
             Indicates that the mouse is within the bounds of <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.MouseScreenObjectState.#ctor(SadConsole.ScreenObjectSurface,SadConsole.Input.Mouse)">
+        <member name="M:SadConsole.Input.MouseScreenObjectState.#ctor(SadConsole.IScreenObjectSurface,SadConsole.Input.Mouse)">
             <summary>
             Calculates a new <see cref="T:SadConsole.Input.MouseScreenObjectState"/> based on an <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/> and <see cref="F:SadConsole.Input.MouseScreenObjectState.Mouse"/> state.
             </summary>
@@ -4681,16 +4696,16 @@
             Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.CodeInstruction.#ctor(System.Func{SadConsole.ScreenObject,System.Boolean})">
+        <member name="M:SadConsole.Instructions.CodeInstruction.#ctor(System.Func{SadConsole.IScreenObject,System.Boolean})">
             <summary>
             Creates a new instruction with the specified callback.
             </summary>
             <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
         </member>
-        <member name="M:SadConsole.Instructions.CodeInstruction.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.CodeInstruction.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Instructions.CodeInstruction.SetCallback(System.Func{SadConsole.ScreenObject,System.Boolean})">
+        <member name="M:SadConsole.Instructions.CodeInstruction.SetCallback(System.Func{SadConsole.IScreenObject,System.Boolean})">
             <summary>
             Sets the callback used by the instruction.
             </summary>
@@ -4712,7 +4727,7 @@
             </summary>
             <param name="instructions">The instructions</param>
         </member>
-        <member name="M:SadConsole.Instructions.ConcurrentInstructions.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.ConcurrentInstructions.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.ConcurrentInstructions.Repeat">
@@ -4755,16 +4770,16 @@
         </member>
         <member name="M:SadConsole.Instructions.DrawString.#ctor(SadConsole.ColoredString)">
             <summary>
-            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.ScreenObject)"/>.
+            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject)"/>.
             </summary>
             <param name="text"></param>
         </member>
         <member name="M:SadConsole.Instructions.DrawString.#ctor">
             <summary>
-            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.ScreenObject)"/>. <see cref="P:SadConsole.Instructions.DrawString.Text"/> must be set manually.
+            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject)"/>. <see cref="P:SadConsole.Instructions.DrawString.Text"/> must be set manually.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.DrawString.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.DrawString.Repeat">
@@ -4785,11 +4800,11 @@
             Animation provider.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.ScreenObjectSurface,SadRogue.Primitives.ColorGradient,System.TimeSpan)">
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.IScreenObjectSurface,SadRogue.Primitives.ColorGradient,System.TimeSpan)">
             <summary>
             Creates a new tint fade instruction that targets the specified console.
             </summary>
-            <param name="objectSurface">The <see cref="!:Console.Tint"/> to fade.</param>
+            <param name="objectSurface">The <see cref="P:SadConsole.IScreenObjectSurface.Tint"/> to fade.</param>
             <param name="colors">The gradient pattern to fade through.</param>
             <param name="duration">How long the fade takes.</param>
         </member>
@@ -4811,7 +4826,7 @@
               - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.FadeAnimationSettings"/>: 1 second
             </remarks>
         </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Reset">
@@ -4866,12 +4881,12 @@
             Repeats the current instruction. Decrements the <see cref="P:SadConsole.Instructions.InstructionBase.RepeatCount"/> value (if applicable), and raises the <see cref="E:SadConsole.Instructions.InstructionBase.Repeating"/> event. This method should be overridden in derived classes to customize how the object is reset for a repeat.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.InstructionBase.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.InstructionBase.Update(SadConsole.IScreenObject)">
             <summary>
             Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.InstructionBase.OnFinished(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.InstructionBase.OnFinished(SadConsole.IScreenObject)">
             <summary>
             Called when the instruction finishes.
             </summary>
@@ -4909,7 +4924,7 @@
         <member name="M:SadConsole.Instructions.InstructionSet.Reset">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Instructions.InstructionSet.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.InstructionSet.Update(SadConsole.IScreenObject)">
             <summary>
             Runs the instruction set. Once all instructions are finished, this set will set the <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
             </summary>
@@ -4928,7 +4943,7 @@
             <param name="instruction"></param>
             <returns>This instruction set.</returns>
         </member>
-        <member name="M:SadConsole.Instructions.InstructionSet.Code(System.Func{SadConsole.ScreenObject,System.Boolean})">
+        <member name="M:SadConsole.Instructions.InstructionSet.Code(System.Func{SadConsole.IScreenObject,System.Boolean})">
             <summary>
             Adds a new <see cref="T:SadConsole.Instructions.CodeInstruction"/> instruction with the specified callback to the end of this set.
             </summary>
@@ -4965,7 +4980,7 @@
             </summary>
             <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
         </member>
-        <member name="M:SadConsole.Instructions.PredicateInstruction.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.PredicateInstruction.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.PredicateInstruction.SetCallback(System.Func{System.Boolean})">
@@ -4995,13 +5010,18 @@
             Creates a new wait timer with a 1-second delay.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.Wait.Update(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.Instructions.Wait.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.Wait.Reset">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.LayeredCellSurface">
+        <member name="P:SadConsole.IScreenObjectSurface.Surface">
+            <summary>
+            The surface the screen object represents.
+            </summary>
+        </member>
+        <member name="T:SadConsole.LayeredScreenObject">
             <summary>
             An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
             </summary>
@@ -5009,17 +5029,17 @@
             An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
             </summary>
         </member>
-        <member name="P:SadConsole.LayeredCellSurface.LayerCount">
+        <member name="P:SadConsole.LayeredScreenObject.LayerCount">
             <summary>
             Gets the number of layers.
             </summary>
         </member>
-        <member name="P:SadConsole.LayeredCellSurface.Layers">
+        <member name="P:SadConsole.LayeredScreenObject.Layers">
             <summary>
             A read-only collection of layers.
             </summary>
         </member>
-        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,System.Int32)">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5027,7 +5047,7 @@
             <param name="height">The height of the surface in cells.</param>
             <param name="layers">The number of layers to add to this surface.</param>
         </member>
-        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5037,7 +5057,7 @@
             <param name="bufferHeight">The total height of the surface in cells.</param>
             <param name="layers">The number of layers to add to this surface.</param>
         </member>
-        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5045,7 +5065,7 @@
             <param name="height">The height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
-        <member name="M:SadConsole.LayeredCellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5207,7 +5227,7 @@
         </member>
         <member name="M:SadConsole.Readers.REXPaintImage.ToLayeredCellSurface">
             <summary>
-            Converts this REXPaint image to a <see cref="T:SadConsole.LayeredCellSurface"/>.
+            Converts this REXPaint image to a <see cref="T:SadConsole.LayeredScreenObject"/>.
             </summary>
             <returns></returns>
         </member>
@@ -5265,26 +5285,26 @@
             Draws a surface.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenObjectSurface)">
             <summary>
             Called when the renderer is added to a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.IScreenObjectSurface)">
             <summary>
             Called when the renderer is removed from a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ScreenObjectSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.IScreenObjectSurface,System.Boolean)">
             <summary>
             Refreshes a cached drawing state.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
             <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.ScreenObjectSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.IScreenObjectSurface)">
             <summary>
             Creates a drawcall in the drawing pipeline.
             </summary>
@@ -5423,7 +5443,7 @@
             <typeparam name="TComponent">THe component to find</typeparam>
             <returns>The component if found, otherwise null.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObject.OnParentChanged(SadConsole.ScreenObject,SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObject.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
             <summary>
             Raises the <see cref="E:SadConsole.ScreenObject.ParentChanged"/> event.
             </summary>
@@ -5454,7 +5474,7 @@
         </member>
         <member name="T:SadConsole.ScreenObjectCollection">
             <summary>
-            Manages the parent and children relationship for <see cref="T:SadConsole.ScreenObject"/>.
+            Manages the parent and children relationship for <see cref="T:SadConsole.IScreenObject"/>.
             </summary>
         </member>
         <member name="F:SadConsole.ScreenObjectCollection.objects">
@@ -5484,7 +5504,7 @@
             <param name="index">The index of the child object.</param>
             <returns>The wanted object.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.#ctor(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.#ctor(SadConsole.IScreenObject)">
             <summary>
             Creates a new object collection and parents it to the <paramref name="owner"/> object.
             </summary>
@@ -5495,28 +5515,28 @@
             Removes all consoles.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Contains(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.Contains(SadConsole.IScreenObject)">
             <summary>
             Returns true if this console list contains the specified <paramref name="obj"/>.
             </summary>
             <param name="obj">The console to search for.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.IsTop(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.IsTop(SadConsole.IScreenObject)">
             <summary>
             When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
             </summary>
             <param name="obj">The obj object to check.</param>
             <returns>True when the object is on top.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Add(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.Add(SadConsole.IScreenObject)">
             <summary>
             Adds a new child object to this collection.
             </summary>
             <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Insert(System.Int32,SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.Insert(System.Int32,SadConsole.IScreenObject)">
             <summary>
             Inserts a child object at the specified <paramref name="index"/>.
             </summary>
@@ -5524,26 +5544,26 @@
             <param name="index">The 0-based index to insert the object at.</param>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Remove(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.Remove(SadConsole.IScreenObject)">
             <summary>
             Removes a new child object from this collection.
             </summary>
             <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.MoveToTop(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.MoveToTop(SadConsole.IScreenObject)">
             <summary>
             Moves the specified <paramref name="obj"/>  to the top of the collection.
             </summary>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.MoveToBottom(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.MoveToBottom(SadConsole.IScreenObject)">
             <summary>
             Moves the specified <paramref name="obj"/>  to the bottom of the collection.
             </summary>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.IndexOf(SadConsole.ScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection.IndexOf(SadConsole.IScreenObject)">
             <summary>
             Gets the 0-based index of the <paramref name="obj"/>.
             </summary>
@@ -5556,20 +5576,13 @@
             <summary>
             An object that renders a <see cref="T:SadConsole.CellSurface"/>.
             </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Surface">
             <summary>
-            The surface used by the screen object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectSurface.IsDirty">
-            <summary>
-            Indicates the <see cref="P:SadConsole.ScreenObjectSurface.Surface"/> has changed and needs to be rendered.
+            An object that renders a <see cref="T:SadConsole.CellSurface"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.ForceRendererRefresh">
             <summary>
-            When <see langword="true"/>, the <see cref="M:SadConsole.ScreenObjectSurface.Draw"/> method forces the <see cref="P:SadConsole.ScreenObjectSurface.Renderer"/> to refresh the backing texture with the latest state of the <see cref="P:SadConsole.ScreenObjectSurface.Surface"/>.
+            When <see langword="true"/>, the <see cref="M:SadConsole.ScreenObjectSurface.Draw"/> method forces the <see cref="P:SadConsole.ScreenObjectSurface.Renderer"/> to refresh the backing texture with the latest state of the <see cref="!:Surface"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.Renderer">
@@ -5584,7 +5597,7 @@
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.FontSize">
             <summary>
-            The size of the <see cref="P:SadConsole.ScreenObjectSurface.Font"/> cells applied to the <see cref="P:SadConsole.ScreenObjectSurface.Surface"/> when rendering.
+            The size of the <see cref="P:SadConsole.ScreenObjectSurface.Font"/> cells applied to the <see cref="!:Surface"/> when rendering.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.Tint">
@@ -5599,7 +5612,7 @@
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.UsePixelPositioning">
             <summary>
-            Treats the <see cref="P:SadConsole.ScreenObject.Position"/> of the console as if it is pixels and not cells.
+            Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the console as if it is pixels and not cells.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenObjectSurface.WidthPixels">
@@ -5627,20 +5640,47 @@
             <param name="height">The height in cells of the surface.</param>
             <param name="initialCells">The initial cells to seed the surface.</param>
         </member>
+        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The visible width of the surface in cells.</param>
+            <param name="height">The visible height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+        </member>
         <member name="M:SadConsole.ScreenObjectSurface.#ctor(SadConsole.CellSurface)">
             <summary>
-            Creates a new screen object using the specified surface.
+            Creates a new screen object using the specified surface's cells.
             </summary>
             <param name="surface">The surface.</param>
         </member>
+        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        </member>
         <member name="M:SadConsole.ScreenObjectSurface.UpdateAbsolutePosition">
-            <inheritdoc />
+            <summary>
+            Sets a value for <see cref="P:SadConsole.ScreenObjectSurface.AbsolutePosition"/> based on the <see cref="P:SadConsole.ScreenObjectSurface.Position"/> of this instance and the <see cref="P:SadConsole.ScreenObjectSurface.Parent"/> instance.
+            </summary>
         </member>
         <member name="M:SadConsole.ScreenObjectSurface.Draw">
-             <inheritdoc/>
+            <summary>
+            Draws all <see cref="P:SadConsole.ScreenObjectSurface.Components"/> and <see cref="P:SadConsole.ScreenObjectSurface.Children"/>.
+            </summary>
+            <remarks>Only processes if <see cref="P:SadConsole.ScreenObjectSurface.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenObjectSurface.Update">
-             <inheritdoc/>
+            <summary>
+            Updates all <see cref="P:SadConsole.ScreenObjectSurface.Components"/> and <see cref="P:SadConsole.ScreenObjectSurface.Children"/>.
+            </summary>
+            <remarks>Only processes if <see cref="!:IsPaused"/> is <see langword="false"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenObjectSurface.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
             <summary>
@@ -5754,7 +5794,11 @@
             <returns>True when the mouse is over this console and processing should stop.</returns>
         </member>
         <member name="M:SadConsole.ScreenObjectSurface.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <inheritdoc />
+            <summary>
+            Called by the engine to process the keyboard.
+            </summary>
+            <param name="keyboard">Keyboard information.</param>
+            <returns>True when the keyboard had data and this console did something with it.</returns>
         </member>
         <member name="M:SadConsole.ScreenObjectSurface.OnFocusLost">
             <summary>
@@ -5766,19 +5810,132 @@
             Called when this console is focused. Shows the <see cref="T:SadConsole.Cursor"/> if <see cref="!:AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="T:SadConsole.ScreenObjectSurface.ActiveBehavior">
+        <member name="E:SadConsole.ScreenObjectSurface.ParentChanged">
             <summary>
-            How the console handles becoming focused and added to the <see cref="P:SadConsole.Global.FocusedScreenObjects"/> collection.
+            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.Parent"/> property changes.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.ActiveBehavior.Set">
+        <member name="E:SadConsole.ScreenObjectSurface.PositionChanged">
             <summary>
-            Becomes the only active input object when focused.
+            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.Position"/> property changes.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.ActiveBehavior.Push">
+        <member name="E:SadConsole.ScreenObjectSurface.VisibleChanged">
             <summary>
-            Pushes to the top of the stack when it becomes the active input object.
+            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.IsVisible"/> property changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObjectSurface.EnabledChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.IsEnabled"/> property changes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.ComponentsUpdate">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.ComponentsDraw">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.ComponentsMouse">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.ComponentsKeyboard">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectSurface.ComponentsEmpty">
+            <summary>
+            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> that is not set for update, draw, mouse, or keyboard.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Components">
+            <summary>
+            A collection of components processed by this console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Children">
+            <summary>
+            The child objects of this instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Parent">
+            <summary>
+            The parent object that this instance is a child of.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.Position">
+            <summary>
+            The position of the object on the screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.AbsolutePosition">
+            <summary>
+            A position that is based on the current <see cref="P:SadConsole.ScreenObjectSurface.Position"/> and <see cref="P:SadConsole.ScreenObjectSurface.Parent"/> position, in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.IsVisible">
+            <summary>
+            Gets or sets the visibility of this object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.IsEnabled">
+            <summary>
+            Gets or sets the visibility of this object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.UseKeyboard">
+            <summary>
+            When <see langword="true"/>, this object will use the keyboard; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectSurface.UseMouse">
+            <summary>
+            When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.GetComponents``1">
+            <summary>
+            Gets components of the specified types.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The components found.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.GetComponent``1">
+            <summary>
+            Gets the first component of the specified type.
+            </summary>
+            <typeparam name="TComponent">THe component to find</typeparam>
+            <returns>The component if found, otherwise null.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObjectSurface.ParentChanged"/> event.
+            </summary>
+            <param name="oldParent">The previous parent.</param>
+            <param name="newParent">The new parent.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObjectSurface.PositionChanged"/> event.
+            </summary>
+            <param name="oldPosition">The previous position.</param>
+            <param name="newPosition">The new position.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnVisibleChanged">
+            <summary>
+            Called when the visibility of the object changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectSurface.OnEnabledChanged">
+            <summary>
+            Called when the paused status of the object changes.
             </summary>
         </member>
         <member name="T:SadConsole.Serializer">
@@ -5836,7 +5993,7 @@
         </member>
         <member name="F:SadConsole.Settings.DoDraw">
             <summary>
-            When true, indicates that the game loop should call <see cref="M:SadConsole.ScreenObject.Draw"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Draw"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoFinalDraw">
@@ -5846,7 +6003,7 @@
         </member>
         <member name="F:SadConsole.Settings.DoUpdate">
             <summary>
-            When true, indicates that the game loop should call <see cref="M:SadConsole.ScreenObject.Update"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Update"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Settings.WindowMinimumSize">

@@ -1,8 +1,4 @@
-﻿#if XNA
-using Microsoft.Xna.Framework;
-#endif
-
-using System;
+﻿using System;
 using SadRogue.Primitives;
 
 namespace SadConsole.Instructions
@@ -12,7 +8,7 @@ namespace SadConsole.Instructions
     /// </summary>
     public class FadeTextSurfaceTint : InstructionBase
     {
-        private ScreenObjectSurface _objectSurface;
+        private IScreenObjectSurface _objectSurface;
         private ColorGradient _colors;
 
         /// <summary>
@@ -32,10 +28,10 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Creates a new tint fade instruction that targets the specified console.
         /// </summary>
-        /// <param name="objectSurface">The <see cref="Console.Tint"/> to fade.</param>
+        /// <param name="objectSurface">The <see cref="IScreenObjectSurface.Tint"/> to fade.</param>
         /// <param name="colors">The gradient pattern to fade through.</param>
         /// <param name="duration">How long the fade takes.</param>
-        public FadeTextSurfaceTint(ScreenObjectSurface objectSurface, ColorGradient colors, TimeSpan duration)
+        public FadeTextSurfaceTint(IScreenObjectSurface objectSurface, ColorGradient colors, TimeSpan duration)
         {
             Colors = colors;
             FadeAnimationSettings = new DoubleAnimation() { StartingValue = 0d, EndingValue = 1d, Duration = duration };
@@ -70,7 +66,7 @@ namespace SadConsole.Instructions
         }
 
         /// <inheritdoc />
-        public override void Update(ScreenObject componentHost)
+        public override void Update(IScreenObject componentHost)
         {
             if (!FadeAnimationSettings.IsStarted)
             {
@@ -78,7 +74,7 @@ namespace SadConsole.Instructions
 
                 if (_objectSurface == null)
                 {
-                    _objectSurface = componentHost as ScreenObjectSurface;
+                    _objectSurface = componentHost as IScreenObjectSurface;
                 }
             }
 

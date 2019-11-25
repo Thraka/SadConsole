@@ -37,11 +37,11 @@ namespace SadConsole.Readers
 
             // build the indexes
             int currentIndex = 0;
-            for (int h = 0; h < surface.Surface.BufferHeight; h++)
+            for (int h = 0; h < surface.BufferHeight; h++)
             {
                 int startY = (h * surface.FontSize.Y);
                 //System.Threading.Tasks.Parallel.For(0, image.Width / surface.Font.Size.X, (w) =>
-                for (int w = 0; w < surface.Surface.BufferWidth; w++)
+                for (int w = 0; w < surface.BufferWidth; w++)
                 {
                     int startX = (w * surface.FontSize.X);
 
@@ -68,7 +68,7 @@ namespace SadConsole.Readers
         /// <returns>The surface.</returns>
         public Console GetSurface(Texture2D image)
         {
-            surface.Surface.Clear();
+            surface.Clear();
 
             image.GetData<Color>(pixels);
 
@@ -100,44 +100,44 @@ namespace SadConsole.Readers
                 float sbri = newColor.GetBrightness() * 255;
 
 
-                SadRogue.Primitives.Point surfacePoint = surface.Surface.GetPointFromIndex(i);
+                SadRogue.Primitives.Point surfacePoint = surface.GetPointFromIndex(i);
                 if (UseBlockMode)
                 {
                     if (sbri > 204)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 219, newColor); //█
                     else if (sbri > 152)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 178, newColor); //▓
                     else if (sbri > 100)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 177, newColor); //▒
                     else if (sbri > 48)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 176, newColor); //░
                     else
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, SadRogue.Primitives.Color.Black);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, SadRogue.Primitives.Color.Black);
                 }
                 else
                 {
                     if (sbri > 230)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '#', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '#', newColor);
                     else if (sbri > 207)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '&', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '&', newColor);
                     else if (sbri > 184)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '$', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '$', newColor);
                     else if (sbri > 161)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'X', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'X', newColor);
                     else if (sbri > 138)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'x', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 'x', newColor);
                     else if (sbri > 115)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '=', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '=', newColor);
                     else if (sbri > 92)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '+', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '+', newColor);
                     else if (sbri > 69)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ';', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ';', newColor);
                     else if (sbri > 46)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ':', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, ':', newColor);
                     else if (sbri > 23)
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '.', newColor);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, '.', newColor);
                     else
-                        surface.Surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, SadRogue.Primitives.Color.Black);
+                        surface.SetGlyph(surfacePoint.X, surfacePoint.Y, 0, SadRogue.Primitives.Color.Black);
                 }
             }
             );

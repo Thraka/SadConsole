@@ -13,12 +13,12 @@ namespace SadConsole.Components
         private Rectangle _oldView;
 
         /// <summary>
-        /// If set to true, controls the <see cref="ScreenObject.IsVisible"/> property of the attached object.
+        /// If set to true, controls the <see cref="IScreenObject.IsVisible"/> property of the attached object.
         /// </summary>
         public bool HandleIsVisible { get; set; } = true;
 
         /// <inheritdoc/>
-        public override void OnAdded(ScreenObject host)
+        public override void OnAdded(IScreenObject host)
         {
             if (!(host is Entity))
                 throw new Exception($"{nameof(EntityViewSync)} can only be added to an {nameof(Entity)}.");
@@ -26,11 +26,11 @@ namespace SadConsole.Components
 
 
         /// <inheritdoc />
-        public override void Update(ScreenObject hostObject)
+        public override void Update(IScreenObject hostObject)
         {
             var host = (Entity)hostObject;
 
-            if (host.Parent is ScreenObjectSurface parent)
+            if (host.Parent is IScreenObjectSurface parent)
             {
                 Rectangle parentViewPort = parent.Surface.GetViewRectangle();
 
@@ -48,7 +48,7 @@ namespace SadConsole.Components
         }
 
         /// <inheritdoc />
-        public override void OnRemoved(ScreenObject host)
+        public override void OnRemoved(IScreenObject host)
         {
             _oldPosition = (0, 0);
             _oldView = Rectangle.Empty;

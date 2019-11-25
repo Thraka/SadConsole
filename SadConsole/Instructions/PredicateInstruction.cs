@@ -24,7 +24,7 @@ namespace SadConsole.Instructions
         private PredicateInstruction() { }
 
         /// <inheritdoc />
-        public override void Update(ScreenObject componentHost)
+        public override void Update(IScreenObject componentHost)
         {
             IsFinished = _callback();
 

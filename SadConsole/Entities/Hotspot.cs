@@ -62,7 +62,7 @@ namespace SadConsole.Entities
         public bool Contains(Point point) => Positions.Contains(point);
 
         /// <inheritdoc />
-        protected override void OnParentChanged(ScreenObject oldParent, ScreenObject newParent)
+        protected override void OnParentChanged(IScreenObject oldParent, IScreenObject newParent)
         {
             //_parentSurface = newParent as SurfaceBase;
         }

@@ -57,7 +57,7 @@ namespace ConsoleTest
             //screen2.Surface.SetForeground(5, 4, Color.Black);
             //Global.Screen.Renderer = null;
 
-            var layeredSurface = new LayeredCellSurface(20, 10, 3);
+            var layeredSurface = new LayeredScreenObject(20, 10, 3);
 
             AddStars(layeredSurface.Layers[0].Surface, Color.DarkOrange);
             AddStars(layeredSurface.Layers[1].Surface, Color.Green);
@@ -79,11 +79,9 @@ namespace ConsoleTest
                 }
             }
 
-            var con = new Console(layeredSurface);
-            con.Renderer = new SadConsole.Renderers.LayeredConsole();
-            con.Parent = Global.Screen;
-            con.Position = new Point(10, 14);
-            con.Cursor.IsEnabled = false;
+            layeredSurface.Renderer = new SadConsole.Renderers.LayeredScreenObject();
+            layeredSurface.Parent = Global.Screen;
+            layeredSurface.Position = new Point(10, 14);
 
             var set = new SadConsole.Instructions.InstructionSet()
                 .InstructConcurrent(
@@ -100,15 +98,7 @@ namespace ConsoleTest
                         .Code((s) => { layeredSurface.Layers[2].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; })
                 );
 
-            con.Components.Add(set);
-
-            var obj2 = new ScreenObjectSurface(layeredSurface);
-            obj2.Renderer = new SadConsole.Renderers.LayeredScreenObject();
-            obj2.Position = (5, 1);
-            obj2.Parent = Global.Screen;
-
-            layeredSurface.IsDirtyChanged += (o, e) => { obj2.ForceRendererRefresh = true; };
-
+            layeredSurface.Components.Add(set);
 
             var ent = new SadConsole.Entities.Entity(3, 3);
             ent.Animation.CurrentFrame.Fill(Color.AliceBlue, Color.DarkBlue, '.');
@@ -117,6 +107,13 @@ namespace ConsoleTest
             ent.Components.Add(new SadConsole.Components.MoveObject());
             Global.Screen.Children.Add(ent);
             ent.IsFocused = true;
+
+            //Console con = new Console(80, 25);
+            //con.Print(1, 1, "Hello, welcome to SadConsole", Color.Yellow);
+            //con.SetForeground(4, 1, Color.Brown);
+            //con.SetForeground(5, 1, Color.Brown);
+            //con.SetGlyph(6, 1, '!');
+            //con.Cursor.Move(1, 20).Print("Printing with cursor");
 
             //con.Components.Add(
             //    new SadConsole.Instructions.InstructionSet().Wait(TimeSpan.FromSeconds(1)).Instruct(
@@ -137,7 +134,7 @@ namespace ConsoleTest
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent
         {
-            public override void ProcessMouse(ScreenObject host, MouseScreenObjectState state, out bool handled)
+            public override void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
             {
                 if (state.Mouse.IsOnScreen)
                 {

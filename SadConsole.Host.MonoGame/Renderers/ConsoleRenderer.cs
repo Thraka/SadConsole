@@ -15,28 +15,28 @@ namespace SadConsole.Renderers
     /// Draws a <see cref="Console"/>.
     /// </summary>
     /// <remarks>
-    /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(ScreenObjectSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+    /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(IScreenObjectSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
     ///
     /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
     /// </remarks>
     public class ConsoleRenderer : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
-        public override void Attach(ScreenObjectSurface screen)
+        public override void Attach(IScreenObjectSurface screen)
         {
             if (!(screen is Console))
                 throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(Console)}.");
         }
 
         ///  <inheritdoc/>
-        public override void Render(ScreenObjectSurface screen)
+        public override void Render(IScreenObjectSurface screen)
         {
             var console = (Console)screen;
 
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-            if (console.Cursor.IsVisible && console.Surface.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.GetViewRectangle().Contains(console.Cursor.Position))
+            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.GetViewRectangle().Contains(console.Cursor.Position))
             {
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
@@ -53,7 +53,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(ScreenObjectSurface screen, bool force = false)
+        public override void Refresh(IScreenObjectSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 

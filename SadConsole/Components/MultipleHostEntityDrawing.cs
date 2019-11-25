@@ -16,12 +16,12 @@ namespace SadConsole.Components
         public List<Entity> Entities { get; } = new List<Entity>();
 
         /// <summary>
-        /// If set to true, controls the <see cref="ScreenObject.IsVisible"/> property of the attached object.
+        /// If set to true, controls the <see cref="IScreenObject.IsVisible"/> property of the attached object.
         /// </summary>
         public bool HandleIsVisible { get; set; } = true;
 
         /// <inheritdoc />
-        public override void Update(ScreenObject host)
+        public override void Update(IScreenObject host)
         {
             foreach (Entity entity in Entities)
             {
@@ -30,11 +30,11 @@ namespace SadConsole.Components
         }
 
         /// <inheritdoc />
-        public override void Draw(ScreenObject host)
+        public override void Draw(IScreenObject host)
         {
             foreach (Entity entity in Entities)
             {
-                if (host is ScreenObjectSurface parent)
+                if (host is IScreenObjectSurface parent)
                 {
                     Rectangle parentViewPort = parent.Surface.GetViewRectangle();
 

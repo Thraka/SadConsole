@@ -7,7 +7,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="ScreenObjectSurface"/> when it uses a <see cref="LayeredCellSurface"/> type for the <see cref="ScreenObjectSurface.Surface"/>.
+    /// Draws a <see cref="IScreenObjectSurface"/> when it uses a <see cref="SadConsole.LayeredScreenObject"/> type for the <see cref="IScreenObjectSurface.Surface"/>.
     /// </summary>
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
@@ -15,14 +15,14 @@ namespace SadConsole.Renderers
     public class LayeredScreenObject : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
-        public override void Attach(ScreenObjectSurface screen)
+        public override void Attach(IScreenObjectSurface screen)
         {
-            if (!(screen.Surface is LayeredCellSurface))
-                throw new Exception($"The {nameof(LayeredConsole)} renderer must be added to a screen object that has a {nameof(LayeredCellSurface)} for a surface.");
+            if (!(screen.Surface is SadConsole.LayeredScreenObject))
+                throw new Exception($"The {nameof(Renderers.LayeredScreenObject)} renderer must be added to a screen object that has a {nameof(SadConsole.LayeredScreenObject)} for a surface.");
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(ScreenObjectSurface screen, bool force = false)
+        public override void Refresh(IScreenObjectSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -50,8 +50,8 @@ namespace SadConsole.Renderers
 
             if (screen.Tint.A != 255)
             {
-                foreach (var layer in ((LayeredCellSurface)screen.Surface).Layers)
-                    RefreshCells(layer.Surface, screen.Font);
+                foreach (var layer in ((SadConsole.LayeredScreenObject)screen).Layers)
+                    base.RefreshCells(layer.Surface, screen.Font);
             }
 
             RefreshTint(screen);

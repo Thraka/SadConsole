@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Text;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -9,9 +10,9 @@ using SadRogue.Primitives;
 namespace SadConsole
 {
     /// <summary>
-    /// A generic object processed by SadConsole. Provides parent/child, components, and position.
+    /// An object that renders a <see cref="CellSurface"/>.
     /// </summary>
-    public class ScreenObject : IScreenObject
+    public partial class ScreenObjectSurface : CellSurface, IDisposable, IScreenObject
     {
         private IScreenObject _parentObject;
         private Point _position;
@@ -163,70 +164,6 @@ namespace SadConsole
         /// When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
         /// </summary>
         public bool UseMouse { get; set; }
-
-        /// <summary>
-        /// Creates a new instance of this class.
-        /// </summary>
-        public ScreenObject()
-        {
-            Components = new ObservableCollection<IComponent>();
-            ComponentsUpdate = new List<IComponent>();
-            ComponentsDraw = new List<IComponent>();
-            ComponentsKeyboard = new List<IComponent>();
-            ComponentsMouse = new List<IComponent>();
-            Components.CollectionChanged += Components_CollectionChanged;
-            Children = new ScreenObjectCollection(this);
-        }
-
-        /// <summary>
-        /// Draws all <see cref="Components"/> and <see cref="Children"/>.
-        /// </summary>
-        /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
-        public virtual void Draw()
-        {
-            if (!IsVisible) return;
-
-            foreach (IComponent component in ComponentsDraw.ToArray())
-                component.Draw(this);
-
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Draw();
-        }
-
-        /// <summary>
-        /// Updates all <see cref="Components"/> and <see cref="Children"/>.
-        /// </summary>
-        /// <remarks>Only processes if <see cref="IsPaused"/> is <see langword="false"/>.</remarks>
-        public virtual void Update()
-        {
-            if (!IsEnabled) return;
-
-            foreach (IComponent component in ComponentsUpdate.ToArray())
-                component.Update(this);
-
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Update();
-        }
-
-        /// <summary>
-        /// Called by the engine to process the keyboard.
-        /// </summary>
-        /// <param name="keyboard">Keyboard information.</param>
-        /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        public virtual bool ProcessKeyboard(Keyboard keyboard)
-        {
-            if (!UseKeyboard) return false;
-
-            foreach (Components.IComponent component in ComponentsKeyboard.ToArray())
-            {
-                component.ProcessKeyboard(this, keyboard, out bool isHandled);
-
-                if (isHandled)
-                    return true;
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Gets components of the specified types.
@@ -420,16 +357,6 @@ namespace SadConsole
         /// </summary>
         protected virtual void OnEnabledChanged() =>
             EnabledChanged?.Invoke(this, EventArgs.Empty);
-
-        /// <summary>
-        /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
-        /// </summary>
-        public virtual void UpdateAbsolutePosition()
-        {
-            AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
-
-            foreach (IScreenObject child in Children)
-                child.UpdateAbsolutePosition();
-        }
     }
 }
+

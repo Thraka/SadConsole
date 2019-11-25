@@ -34,7 +34,7 @@ namespace SadConsole
         /// <summary>
         /// How the object should handle becoming active.
         /// </summary>
-        public ActiveBehavior FocusedMode { get; set; }
+        public FocusBehavior FocusedMode { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not this console has exclusive access to the mouse events.
@@ -63,7 +63,7 @@ namespace SadConsole
                 {
                     if (value && Global.FocusedScreenObjects.ScreenObject != this)
                     {
-                        if (FocusedMode == ActiveBehavior.Push)
+                        if (FocusedMode == FocusBehavior.Push)
                             Global.FocusedScreenObjects.Push(this);
                         else
                             Global.FocusedScreenObjects.Set(this);
@@ -75,7 +75,7 @@ namespace SadConsole
                 {
                     if (value)
                     {
-                        if (FocusedMode == ActiveBehavior.Push)
+                        if (FocusedMode == FocusBehavior.Push)
                             Global.FocusedScreenObjects.Push(this);
                         else
                             Global.FocusedScreenObjects.Set(this);
@@ -207,11 +207,23 @@ namespace SadConsole
             return false;
         }
 
-        /// <inheritdoc />
-        public override bool ProcessKeyboard(Keyboard keyboard)
+        /// <summary>
+        /// Called by the engine to process the keyboard.
+        /// </summary>
+        /// <param name="keyboard">Keyboard information.</param>
+        /// <returns>True when the keyboard had data and this console did something with it.</returns>
+        public virtual bool ProcessKeyboard(Keyboard keyboard)
         {
             if (!UseKeyboard) return false;
-            else if (base.ProcessKeyboard(keyboard)) return true;
+
+            foreach (Components.IComponent component in ComponentsKeyboard.ToArray())
+            {
+                component.ProcessKeyboard(this, keyboard, out bool isHandled);
+
+                if (isHandled)
+                    return true;
+            }
+
             return false;
         }
 
@@ -224,21 +236,5 @@ namespace SadConsole
         /// Called when this console is focused. Shows the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>
         public virtual void OnFocused() { }
-
-        /// <summary>
-        /// How the console handles becoming focused and added to the <see cref="Global.FocusedScreenObjects"/> collection.
-        /// </summary>
-        public enum ActiveBehavior
-        {
-            /// <summary>
-            /// Becomes the only active input object when focused.
-            /// </summary>
-            Set,
-
-            /// <summary>
-            /// Pushes to the top of the stack when it becomes the active input object.
-            /// </summary>
-            Push
-        }
     }
 }

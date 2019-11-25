@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using SadConsole.Components;
 using SadRogue.Primitives;
 
 namespace SadConsole
@@ -8,27 +10,13 @@ namespace SadConsole
     /// <summary>
     /// An object that renders a <see cref="CellSurface"/>.
     /// </summary>
-    public partial class ScreenObjectSurface: ScreenObject, IDisposable
+    public partial class ScreenObjectSurface : CellSurface, IDisposable, IScreenObjectSurface
     {
         private Font _font;
         private Point _fontSize;
         private Renderers.IRenderer _renderer;
         private Color _tint = Color.Transparent;
         private bool _usePixelPositioning;
-
-        /// <summary>
-        /// The surface used by the screen object.
-        /// </summary>
-        public CellSurface Surface { get; protected set; }
-
-        /// <summary>
-        /// Indicates the <see cref="Surface"/> has changed and needs to be rendered.
-        /// </summary>
-        public bool IsDirty
-        {
-            get => Surface.IsDirty;
-            set => Surface.IsDirty = value;
-        }
 
         /// <summary>
         /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the <see cref="Surface"/>.
@@ -47,6 +35,9 @@ namespace SadConsole
                 IsDirty = true;
             }
         }
+
+
+        CellSurface IScreenObjectSurface.Surface => this;
 
         /// <summary>
         /// Font used with rendering.
@@ -95,10 +86,10 @@ namespace SadConsole
         /// <summary>
         /// The area on the screen this surface occupies. In pixels.
         /// </summary>
-        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, Surface.ViewWidth * FontSize.X, Surface.ViewHeight * FontSize.Y);
+        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, ViewWidth * FontSize.X, ViewHeight * FontSize.Y);
 
         /// <summary>
-        /// Treats the <see cref="ScreenObject.Position"/> of the console as if it is pixels and not cells.
+        /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.
         /// </summary>
         public bool UsePixelPositioning
         {
@@ -114,25 +105,22 @@ namespace SadConsole
         /// <summary>
         /// The width of the surface in pixels.
         /// </summary>
-        public int WidthPixels => Surface.ViewWidth * FontSize.X;
+        public int WidthPixels => ViewWidth * FontSize.X;
 
 
         /// <summary>
         /// The height of the surface in pixels.
         /// </summary>
-        public int HeightPixels => Surface.ViewHeight * FontSize.Y;
+        public int HeightPixels => ViewHeight * FontSize.Y;
 
         /// <summary>
         /// Creates a new screen object that can render a surface.
         /// </summary>
         /// <param name="width">The width in cells of the surface.</param>
         /// <param name="height">The height in cells of the surface.</param>
-        public ScreenObjectSurface(int width, int height)
+        public ScreenObjectSurface(int width, int height) : this(width, height, width, height, null)
         {
-            Surface = new CellSurface(width, height);
-            Font = Global.DefaultFont;
-            FontSize = Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
-            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+
         }
 
         /// <summary>
@@ -141,44 +129,73 @@ namespace SadConsole
         /// <param name="width">The width in cells of the surface.</param>
         /// <param name="height">The height in cells of the surface.</param>
         /// <param name="initialCells">The initial cells to seed the surface.</param>
-        public ScreenObjectSurface(int width, int height, ColoredGlyph[] initialCells)
+        public ScreenObjectSurface(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells)
         {
-            Surface = new CellSurface(width, height, initialCells);
-            Font = Global.DefaultFont;
-            FontSize = Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
-            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+            
         }
 
         /// <summary>
-        /// Creates a new screen object using the specified surface.
+        /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// </summary>
+        /// <param name="width">The visible width of the surface in cells.</param>
+        /// <param name="height">The visible height of the surface in cells.</param>
+        /// <param name="bufferWidth">The total width of the surface in cells.</param>
+        /// <param name="bufferHeight">The total height of the surface in cells.</param>
+        public ScreenObjectSurface(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new screen object using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public ScreenObjectSurface(CellSurface surface)
+        public ScreenObjectSurface(CellSurface surface) : this(surface.ViewWidth, surface.ViewHeight, surface.BufferWidth, surface.BufferHeight, surface.Cells)
         {
-            Surface = surface;
+
+        }
+
+        /// <summary>
+        /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// </summary>
+        /// <param name="width">The width of the surface in cells.</param>
+        /// <param name="height">The height of the surface in cells.</param>
+        /// <param name="bufferWidth">The total width of the surface in cells.</param>
+        /// <param name="bufferHeight">The total height of the surface in cells.</param>
+        /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        public ScreenObjectSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells): base (width, height, bufferWidth, bufferHeight, initialCells)
+        {
             Font = Global.DefaultFont;
             FontSize = Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
+            Components = new ObservableCollection<IComponent>();
+            ComponentsUpdate = new List<IComponent>();
+            ComponentsDraw = new List<IComponent>();
+            ComponentsKeyboard = new List<IComponent>();
+            ComponentsMouse = new List<IComponent>();
+            Components.CollectionChanged += Components_CollectionChanged;
+            Children = new ScreenObjectCollection(this);
         }
 
-
-        /// <inheritdoc />
-        public override void UpdateAbsolutePosition()
+        /// <summary>
+        /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
+        /// </summary>
+        public virtual void UpdateAbsolutePosition()
         {
             if (UsePixelPositioning)
-            {
-                base.UpdateAbsolutePosition();
-                return;
-            }
+                AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
             else
                 AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (ScreenObject child in Children)
+            foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
         }
 
-        ///  <inheritdoc/>
-        public override void Draw()
+        /// <summary>
+        /// Draws all <see cref="Components"/> and <see cref="Children"/>.
+        /// </summary>
+        /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
+        public virtual void Draw()
         {
             if (!IsVisible) return;
 
@@ -189,17 +206,28 @@ namespace SadConsole
                 ForceRendererRefresh = false;
             }
 
-            base.Draw();
+            foreach (IComponent component in ComponentsDraw.ToArray())
+                component.Draw(this);
+
+            foreach (IScreenObject child in new List<IScreenObject>(Children))
+                child.Draw();
         }
 
-        ///  <inheritdoc/>
-        public override void Update()
+        /// <summary>
+        /// Updates all <see cref="Components"/> and <see cref="Children"/>.
+        /// </summary>
+        /// <remarks>Only processes if <see cref="IsPaused"/> is <see langword="false"/>.</remarks>
+        public virtual void Update()
         {
             if (!IsEnabled) return;
 
-            Surface.Effects.UpdateEffects(Global.UpdateFrameDelta.TotalSeconds);
+            Effects.UpdateEffects(Global.UpdateFrameDelta.TotalSeconds);
 
-            base.Update();
+            foreach (IComponent component in ComponentsUpdate.ToArray())
+                component.Update(this);
+
+            foreach (IScreenObject child in new List<IScreenObject>(Children))
+                child.Update();
         }
 
         /// <summary>
