@@ -8,21 +8,21 @@ namespace SadConsole
     /// </summary>
     public class FocusedScreenObjectStack
     {
-        private IScreenObjectSurface _activeScreenObject;
+        private IScreenSurface _activeScreenObject;
 
         /// <summary>
         /// Gets the current active screen object.
         /// </summary>
-        public IScreenObjectSurface ScreenObject => _activeScreenObject;
+        public IScreenSurface ScreenObject => _activeScreenObject;
 
         /// <summary>
         /// The stack of screen objects for input processing.
         /// </summary>
-        private readonly List<IScreenObjectSurface> _screenObjects;
+        private readonly List<IScreenSurface> _screenObjects;
 
         public FocusedScreenObjectStack()
         {
-            _screenObjects = new List<IScreenObjectSurface>();
+            _screenObjects = new List<IScreenSurface>();
             _activeScreenObject = null;
         }
 
@@ -45,7 +45,7 @@ namespace SadConsole
         /// Adds another screen object to active stack, setting it as the active (top most in the stack) screen object.
         /// </summary>
         /// <param name="screenObject"></param>
-        public void Push(IScreenObjectSurface screenObject)
+        public void Push(IScreenSurface screenObject)
         {
             if (screenObject != _activeScreenObject && screenObject != null)
             {
@@ -66,10 +66,10 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="IScreenObjectSurface"/> to this instance.
+        /// Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="IScreenSurface"/> to this instance.
         /// </summary>
         /// <param name="screenObject">The screen object to make active.</param>
-        public void Set(IScreenObjectSurface screenObject)
+        public void Set(IScreenSurface screenObject)
         {
             if (_activeScreenObject == screenObject)
             {
@@ -88,7 +88,7 @@ namespace SadConsole
         /// Removes the screen object from the active stack. If the instance is the current active screen object, the active screen object is set to the last screen object in the previous screen object.
         /// </summary>
         /// <param name="screenObject">The screen object to remove.</param>
-        public void Pop(IScreenObjectSurface screenObject)
+        public void Pop(IScreenSurface screenObject)
         {
             if (screenObject == _activeScreenObject)
             {
@@ -122,8 +122,8 @@ namespace SadConsole
             }
         }
 
-        public static bool operator !=(FocusedScreenObjectStack left, IScreenObjectSurface right) => left._activeScreenObject != right;
+        public static bool operator !=(FocusedScreenObjectStack left, IScreenSurface right) => left._activeScreenObject != right;
 
-        public static bool operator ==(FocusedScreenObjectStack left, IScreenObjectSurface right) => left._activeScreenObject == right;
+        public static bool operator ==(FocusedScreenObjectStack left, IScreenSurface right) => left._activeScreenObject == right;
     }
 }

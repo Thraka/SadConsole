@@ -5,7 +5,7 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
-    public interface IScreenObjectSurface: IScreenObject
+    public interface IScreenSurface: IScreenObject
     {
         event EventHandler<MouseScreenObjectState> MouseButtonClicked;
         event EventHandler<MouseScreenObjectState> MouseEnter;
@@ -33,14 +33,9 @@ namespace SadConsole
         bool UsePixelPositioning { get; set; }
         int WidthPixels { get; }
 
-        void Dispose();
-        void Draw();
         void LostMouse(MouseScreenObjectState state);
         void OnFocused();
         void OnFocusLost();
-        bool ProcessKeyboard(Keyboard keyboard);
         bool ProcessMouse(MouseScreenObjectState state);
-        void Update();
-        void UpdateAbsolutePosition();
     }
 }

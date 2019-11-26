@@ -98,98 +98,98 @@
             Creates a new instance of this object with all connections set to <see langword="null"/>.
             </summary>
         </member>
-        <member name="T:SadConsole.AnimatedScreenObject">
+        <member name="T:SadConsole.AnimatedScreenSurface">
             <summary>
             Animates a list of frames.
             </summary>
         </member>
-        <member name="E:SadConsole.AnimatedScreenObject.AnimationStateChanged">
+        <member name="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged">
             <summary>
-            Raised when the <see cref="T:SadConsole.AnimatedScreenObject.AnimationState"/> changes.
+            Raised when the <see cref="T:SadConsole.AnimatedScreenSurface.AnimationState"/> changes.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.FramesList">
+        <member name="F:SadConsole.AnimatedScreenSurface.FramesList">
             <summary>
             The frames of animation.
             </summary>
-            <remarks>If this collection changes, <see cref="F:SadConsole.AnimatedScreenObject.CurrentFrameIndexValue"/>, <see cref="M:SadConsole.AnimatedScreenObject.UpdateFrameReferences"/>, and <see cref="F:SadConsole.AnimatedScreenObject.TimePerFrame"/> should all be recalculated.</remarks>
+            <remarks>If this collection changes, <see cref="F:SadConsole.AnimatedScreenSurface.CurrentFrameIndexValue"/>, <see cref="M:SadConsole.AnimatedScreenSurface.UpdateFrameReferences"/>, and <see cref="F:SadConsole.AnimatedScreenSurface.TimePerFrame"/> should all be recalculated.</remarks>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AddedTime">
+        <member name="F:SadConsole.AnimatedScreenSurface.AddedTime">
             <summary>
             Time counter for the animation
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.CurrentFrameIndexValue">
+        <member name="F:SadConsole.AnimatedScreenSurface.CurrentFrameIndexValue">
             <summary>
             The current frame index being animated.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.TimePerFrame">
+        <member name="F:SadConsole.AnimatedScreenSurface.TimePerFrame">
             <summary>
             How much time per animated frame should be used.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.Frames">
+        <member name="P:SadConsole.AnimatedScreenSurface.Frames">
             <summary>
             All frames of the animation
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.Center">
+        <member name="P:SadConsole.AnimatedScreenSurface.Center">
             <summary>
             Center of the animation used in positioning.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.Repeat">
+        <member name="P:SadConsole.AnimatedScreenSurface.Repeat">
             <summary>
             Indicates whether or not this animation will repeat once it has finished animating.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.IsPlaying">
+        <member name="P:SadConsole.AnimatedScreenSurface.IsPlaying">
             <summary>
-            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedScreenObject.Update"/> method will advance the frames.
+            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedScreenSurface.Update"/> method will advance the frames.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.AnimationDuration">
+        <member name="P:SadConsole.AnimatedScreenSurface.AnimationDuration">
             <summary>
             The length of the animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.CurrentFrameIndex">
+        <member name="P:SadConsole.AnimatedScreenSurface.CurrentFrameIndex">
             <summary>
             Gets or sets the current frame index to animate.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.IsEmpty">
+        <member name="P:SadConsole.AnimatedScreenSurface.IsEmpty">
             <summary>
             Indicates the animation is empty.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.Width">
+        <member name="P:SadConsole.AnimatedScreenSurface.Width">
             <summary>
             The width of the animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.Height">
+        <member name="P:SadConsole.AnimatedScreenSurface.Height">
             <summary>
             The height of the animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.Name">
+        <member name="P:SadConsole.AnimatedScreenSurface.Name">
             <summary>
             Gets the name of this animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.CurrentFrame">
+        <member name="P:SadConsole.AnimatedScreenSurface.CurrentFrame">
             <summary>
             Gets the currently frame being animated.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenObject.State">
+        <member name="P:SadConsole.AnimatedScreenSurface.State">
             <summary>
             Gets the current animation state.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32)">
+        <member name="M:SadConsole.AnimatedScreenSurface.#ctor(System.String,System.Int32,System.Int32)">
             <summary>
             Creates a new animation with the specified name, width, and height.
             </summary>
@@ -197,7 +197,7 @@
             <param name="width">The width of each frame this animation will have.</param>
             <param name="height">The height of each frame this animation will have.</param>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32,SadConsole.Font,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.AnimatedScreenSurface.#ctor(System.String,System.Int32,System.Int32,SadConsole.Font,SadRogue.Primitives.Point)">
             <summary>
             Creates a new animation with the specified name, width, and height.
             </summary>
@@ -207,52 +207,52 @@
             <param name="font">The font used with this animation.</param>
             <param name="fontSize">The size of the font.</param>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.UpdateFrameReferences">
+        <member name="M:SadConsole.AnimatedScreenSurface.UpdateFrameReferences">
             <summary>
             Updates the base <see cref="P:SadConsole.CellSurface.Cells"/> references to the current frame.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.CreateFrame">
+        <member name="M:SadConsole.AnimatedScreenSurface.CreateFrame">
             <summary>
             Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
             </summary>
             <returns>The created frame.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.CalculateFrameDuration">
+        <member name="M:SadConsole.AnimatedScreenSurface.CalculateFrameDuration">
             <summary>
             Calculates the time needed per frame for rendering.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.Stop">
+        <member name="M:SadConsole.AnimatedScreenSurface.Stop">
             <summary>
             Stops animating.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.Start">
+        <member name="M:SadConsole.AnimatedScreenSurface.Start">
             <summary>
             Starts animating the frames.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.Restart">
+        <member name="M:SadConsole.AnimatedScreenSurface.Restart">
             <summary>
             Restarts the animation from the first frame.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.Update">
+        <member name="M:SadConsole.AnimatedScreenSurface.Update">
             <summary>
             Updates the animation frames and calls update on the base class.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.ToString">
+        <member name="M:SadConsole.AnimatedScreenSurface.ToString">
             <summary>
             Returns the name of the animation.
             </summary>
             <returns>The name.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.UpdateAbsolutePosition">
+        <member name="M:SadConsole.AnimatedScreenSurface.UpdateAbsolutePosition">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double)">
+        <member name="M:SadConsole.AnimatedScreenSurface.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double)">
             <summary>
             Creates an animated surface that looks like static.
             </summary>
@@ -262,72 +262,72 @@
             <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="M:System.Random.NextDouble"/>.</param>
             <returns>An animation.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.Save(System.String)">
+        <member name="M:SadConsole.AnimatedScreenSurface.Save(System.String)">
             <summary>
-            Saves the <see cref="T:SadConsole.AnimatedScreenObject"/> to a file.
+            Saves the <see cref="T:SadConsole.AnimatedScreenSurface"/> to a file.
             </summary>
             <param name="file">The destination file.</param>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.Load(System.String)">
+        <member name="M:SadConsole.AnimatedScreenSurface.Load(System.String)">
             <summary>
-            Loads a <see cref="T:SadConsole.AnimatedScreenObject"/> from a file.
+            Loads a <see cref="T:SadConsole.AnimatedScreenSurface"/> from a file.
             </summary>
             <param name="file">The source file.</param>
             <returns></returns>
         </member>
-        <member name="T:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs">
+        <member name="T:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs">
             <summary>
             Event args for when the animation state changes
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.PreviousState">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs.PreviousState">
             <summary>
             The previous state.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.NewState">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs.NewState">
             <summary>
             The new state.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.#ctor(SadConsole.AnimatedScreenObject.AnimationState,SadConsole.AnimatedScreenObject.AnimationState)">
+        <member name="M:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs.#ctor(SadConsole.AnimatedScreenSurface.AnimationState,SadConsole.AnimatedScreenSurface.AnimationState)">
             <summary>
             Creates a new instance of the event args.
             </summary>
             <param name="previousState">The previous state.</param>
             <param name="newState">The new state.</param>
         </member>
-        <member name="T:SadConsole.AnimatedScreenObject.AnimationState">
+        <member name="T:SadConsole.AnimatedScreenSurface.AnimationState">
             <summary>
             Represents what state the animation is in.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Stopped">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Stopped">
             <summary>
             The animation has never been played or was forcibly stopped.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Playing">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Playing">
             <summary>
             The animation is currently playing.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Restarted">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Restarted">
             <summary>
             The animation was either manually restarted or repeated.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Finished">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Finished">
             <summary>
             The animation was played and completed.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Activated">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Activated">
             <summary>
             The animation is now the current animation for an entity.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Deactivated">
+        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Deactivated">
             <summary>
             The animation is no longer the current animation for an entity.
             </summary>
@@ -2076,12 +2076,12 @@
         </member>
         <member name="P:SadConsole.Console.Width">
             <summary>
-            The buffer width of the console. Forwards <see cref="P:SadConsole.CellSurface.BufferWidth"/>.
+            The entire width of the console. Forwards <see cref="P:SadConsole.CellSurface.BufferWidth"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Console.Height">
             <summary>
-            The buffer height of the console. Forwards <see cref="P:SadConsole.CellSurface.BufferHeight"/>.
+            The entire height of the console. Forwards <see cref="P:SadConsole.CellSurface.BufferHeight"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Console.Cursor">
@@ -2096,24 +2096,43 @@
         </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates a new console with the specified width and height.
+            Creates a new console.
             </summary>
-            <param name="width">The width of the console.</param>
-            <param name="height">The height of the console.</param>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
         </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
-            Creates a new console with the specified width and height and an initial set of cells.
+            Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>
-            <param name="width">The width of the console.</param>
-            <param name="height">The height of the console.</param>
-            <param name="initialCells">The cells to seed the cosnole.</param>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+            <param name="initialCells">The initial cells to seed the surface.</param>
+        </member>
+        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new console with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The visible width of the console in cells.</param>
+            <param name="height">The visible height of the console in cells.</param>
+            <param name="bufferWidth">The total width of the console in cells.</param>
+            <param name="bufferHeight">The total height of the console in cells.</param>
         </member>
         <member name="M:SadConsole.Console.#ctor(SadConsole.CellSurface)">
             <summary>
-            Creates a new console with the specified <see cref="T:SadConsole.CellSurface"/> type.
+            Creates a new console using the specified surface's cells.
             </summary>
-            <param name="surface">The surface to use for this console.</param>
+            <param name="surface">The surface.</param>
+        </member>
+        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a console with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the console in cells.</param>
+            <param name="height">The height of the console in cells.</param>
+            <param name="bufferWidth">The total width of the console in cells.</param>
+            <param name="bufferHeight">The total height of the console in cells.</param>
+            <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
         </member>
         <member name="M:SadConsole.Console.OnVisibleChanged">
             <inheritdoc/>
@@ -2133,91 +2152,6 @@
             <summary>
             Called when this console is focused. Shows the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
-        </member>
-        <member name="T:SadConsole.ComponentObjectCollection">
-            <summary>
-            Manages the parent and children relationship for <see cref="T:SadConsole.Console"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ComponentObjectCollection.IsLocked">
-            <summary>
-            When true, the collection cannot be modified.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ComponentObjectCollection.Item(System.Int32)">
-            <summary>
-            Gets or sets a child object for this collection.
-            </summary>
-            <param name="index">The index of the child object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.#ctor(SadConsole.Console)">
-            <summary>
-            Creates a new screen object collection and parents it to the <paramref name="owner"/> object.
-            </summary>
-            <param name="owner">The owning object of this collection.</param>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.Clear">
-            <summary>
-            Removes all consoles.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.Contains(SadConsole.Console)">
-            <summary>
-            Returns true if this console list contains the specified <paramref name="screen"/>.
-            </summary>
-            <param name="screen">The console to search for.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.IsTop(SadConsole.Console)">
-            <summary>
-            When true, indicates that the <paramref name="screen"/> is at the top of the collection stack.
-            </summary>
-            <param name="screen">The screen object to check.</param>
-            <returns>True when the object is on top.</returns>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.Add(SadConsole.Console)">
-            <summary>
-            Adds a new child object to this collection.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ComponentObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.Insert(System.Int32,SadConsole.Console)">
-            <summary>
-            Inserts a child object at the specified <paramref name="index"/>.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ComponentObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="index">The 0-based index to insert the object at.</param>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.Remove(SadConsole.Console)">
-            <summary>
-            Removes a new child object from this collection.
-            </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ComponentObjectCollection.IsLocked"/> property is set to true.</exception>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.MoveToTop(SadConsole.Console)">
-            <summary>
-            Moves the specified <paramref name="screen"/>  to the top of the collection.
-            </summary>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.MoveToBottom(SadConsole.Console)">
-            <summary>
-            Moves the specified <paramref name="screen"/>  to the bottom of the collection.
-            </summary>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.IndexOf(SadConsole.Console)">
-            <summary>
-            Gets the 0-based index of the <paramref name="screen"/>.
-            </summary>
-            <param name="screen">The child object.</param>
-        </member>
-        <member name="M:SadConsole.ComponentObjectCollection.GetEnumerator">
-            <inheritdoc />
         </member>
         <member name="T:SadConsole.Cursor">
             <summary>
@@ -2822,7 +2756,7 @@
         </member>
         <member name="E:SadConsole.Entities.Entity.AnimationStateChanged">
             <summary>
-            Automatically forwards the <see cref="E:SadConsole.AnimatedScreenObject.AnimationStateChanged"/> event.
+            Automatically forwards the <see cref="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged"/> event.
             </summary>
         </member>
         <member name="F:SadConsole.Entities.Entity.animation">
@@ -2873,15 +2807,15 @@
             <param name="background">The background color of the entity.</param>
             <param name="glyph">The glyph color of the entity.</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenObject)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenSurface)">
             <summary>
             Creates a new Entity with a default animation/
             </summary>
-            <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.AnimatedScreenObject.Name"/> property changesd to "default".</param>
+            <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.AnimatedScreenSurface.Name"/> property changesd to "default".</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs)">
+        <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs)">
             <summary>
-            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.AnimatedScreenObject.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
+            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
             </summary>
             <param name="sender">The animation calling this method.</param>
             <param name="e">The state of the animation.</param>
@@ -3037,19 +2971,19 @@
             Clears all screen objects from the active stack along with the current active screen object.
             </summary>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Push(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Push(SadConsole.IScreenSurface)">
             <summary>
             Adds another screen object to active stack, setting it as the active (top most in the stack) screen object.
             </summary>
             <param name="screenObject"></param>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Set(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Set(SadConsole.IScreenSurface)">
             <summary>
-            Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="T:SadConsole.IScreenObjectSurface"/> to this instance.
+            Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="T:SadConsole.IScreenSurface"/> to this instance.
             </summary>
             <param name="screenObject">The screen object to make active.</param>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Pop(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Pop(SadConsole.IScreenSurface)">
             <summary>
             Removes the screen object from the active stack. If the instance is the current active screen object, the active screen object is set to the last screen object in the previous screen object.
             </summary>
@@ -3290,7 +3224,7 @@
             <param name="textureStream">A stream containing the texture.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.GameHost.GetDefaultRenderer(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.GameHost.GetDefaultRenderer(SadConsole.IScreenSurface)">
             <summary>
             Gets the default <see cref="T:SadConsole.Renderers.IRenderer"/> implemented by the host.
             </summary>
@@ -4615,7 +4549,7 @@
             Unlocks the last screen object the mouse was locked to. Allows another conosle to become locked to the mouse.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.Mouse.IsMouseOverScreenObjectSurface(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.Input.Mouse.IsMouseOverScreenObjectSurface(SadConsole.IScreenSurface)">
             <summary>
             Returns true when the mouse is currently over the provided screen object.
             </summary>
@@ -4673,7 +4607,7 @@
             Indicates that the mouse is within the bounds of <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.MouseScreenObjectState.#ctor(SadConsole.IScreenObjectSurface,SadConsole.Input.Mouse)">
+        <member name="M:SadConsole.Input.MouseScreenObjectState.#ctor(SadConsole.IScreenSurface,SadConsole.Input.Mouse)">
             <summary>
             Calculates a new <see cref="T:SadConsole.Input.MouseScreenObjectState"/> based on an <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/> and <see cref="F:SadConsole.Input.MouseScreenObjectState.Mouse"/> state.
             </summary>
@@ -4800,11 +4734,11 @@
             Animation provider.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.IScreenObjectSurface,SadRogue.Primitives.ColorGradient,System.TimeSpan)">
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.IScreenSurface,SadRogue.Primitives.ColorGradient,System.TimeSpan)">
             <summary>
             Creates a new tint fade instruction that targets the specified console.
             </summary>
-            <param name="objectSurface">The <see cref="P:SadConsole.IScreenObjectSurface.Tint"/> to fade.</param>
+            <param name="objectSurface">The <see cref="P:SadConsole.IScreenSurface.Tint"/> to fade.</param>
             <param name="colors">The gradient pattern to fade through.</param>
             <param name="duration">How long the fade takes.</param>
         </member>
@@ -5016,12 +4950,12 @@
         <member name="M:SadConsole.Instructions.Wait.Reset">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.IScreenObjectSurface.Surface">
+        <member name="P:SadConsole.IScreenSurface.Surface">
             <summary>
             The surface the screen object represents.
             </summary>
         </member>
-        <member name="T:SadConsole.LayeredScreenObject">
+        <member name="T:SadConsole.LayeredScreenSurface">
             <summary>
             An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
             </summary>
@@ -5029,17 +4963,17 @@
             An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
             </summary>
         </member>
-        <member name="P:SadConsole.LayeredScreenObject.LayerCount">
+        <member name="P:SadConsole.LayeredScreenSurface.LayerCount">
             <summary>
             Gets the number of layers.
             </summary>
         </member>
-        <member name="P:SadConsole.LayeredScreenObject.Layers">
+        <member name="P:SadConsole.LayeredScreenSurface.Layers">
             <summary>
             A read-only collection of layers.
             </summary>
         </member>
-        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32)">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5047,7 +4981,7 @@
             <param name="height">The height of the surface in cells.</param>
             <param name="layers">The number of layers to add to this surface.</param>
         </member>
-        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5057,7 +4991,7 @@
             <param name="bufferHeight">The total height of the surface in cells.</param>
             <param name="layers">The number of layers to add to this surface.</param>
         </member>
-        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5065,7 +4999,7 @@
             <param name="height">The height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
-        <member name="M:SadConsole.LayeredScreenObject.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5227,7 +5161,7 @@
         </member>
         <member name="M:SadConsole.Readers.REXPaintImage.ToLayeredCellSurface">
             <summary>
-            Converts this REXPaint image to a <see cref="T:SadConsole.LayeredScreenObject"/>.
+            Converts this REXPaint image to a <see cref="T:SadConsole.LayeredScreenSurface"/>.
             </summary>
             <returns></returns>
         </member>
@@ -5285,26 +5219,26 @@
             Draws a surface.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenSurface)">
             <summary>
             Called when the renderer is added to a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.IScreenSurface)">
             <summary>
             Called when the renderer is removed from a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.IScreenObjectSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
             <summary>
             Refreshes a cached drawing state.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
             <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.IScreenObjectSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.IScreenSurface)">
             <summary>
             Creates a drawcall in the drawing pipeline.
             </summary>
@@ -5572,67 +5506,64 @@
         <member name="M:SadConsole.ScreenObjectCollection.GetEnumerator">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.ScreenObjectSurface">
-            <summary>
-            An object that renders a <see cref="T:SadConsole.CellSurface"/>.
-            </summary>
+        <member name="T:SadConsole.ScreenSurface">
             <summary>
             An object that renders a <see cref="T:SadConsole.CellSurface"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.ForceRendererRefresh">
+        <member name="P:SadConsole.ScreenSurface.ForceRendererRefresh">
             <summary>
-            When <see langword="true"/>, the <see cref="M:SadConsole.ScreenObjectSurface.Draw"/> method forces the <see cref="P:SadConsole.ScreenObjectSurface.Renderer"/> to refresh the backing texture with the latest state of the <see cref="!:Surface"/>.
+            When <see langword="true"/>, the <see cref="M:SadConsole.ScreenSurface.Draw"/> method forces the <see cref="P:SadConsole.ScreenSurface.Renderer"/> to refresh the backing texture with the latest state of the <see cref="!:Surface"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Renderer">
+        <member name="P:SadConsole.ScreenSurface.Renderer">
             <summary>
             The renderer used to draw this surface.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Font">
+        <member name="P:SadConsole.ScreenSurface.Font">
             <summary>
             Font used with rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.FontSize">
+        <member name="P:SadConsole.ScreenSurface.FontSize">
             <summary>
-            The size of the <see cref="P:SadConsole.ScreenObjectSurface.Font"/> cells applied to the <see cref="!:Surface"/> when rendering.
+            The size of the <see cref="P:SadConsole.ScreenSurface.Font"/> cells applied to the <see cref="!:Surface"/> when rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Tint">
+        <member name="P:SadConsole.ScreenSurface.Tint">
             <summary>
             A tint used in rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.AbsoluteArea">
+        <member name="P:SadConsole.ScreenSurface.AbsoluteArea">
             <summary>
             The area on the screen this surface occupies. In pixels.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.UsePixelPositioning">
+        <member name="P:SadConsole.ScreenSurface.UsePixelPositioning">
             <summary>
             Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the console as if it is pixels and not cells.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.WidthPixels">
+        <member name="P:SadConsole.ScreenSurface.WidthPixels">
             <summary>
             The width of the surface in pixels.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.HeightPixels">
+        <member name="P:SadConsole.ScreenSurface.HeightPixels">
             <summary>
             The height of the surface in pixels.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32)">
+        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new screen object that can render a surface.
             </summary>
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>
@@ -5640,7 +5571,7 @@
             <param name="height">The height in cells of the surface.</param>
             <param name="initialCells">The initial cells to seed the surface.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5649,13 +5580,13 @@
             <param name="bufferWidth">The total width of the surface in cells.</param>
             <param name="bufferHeight">The total height of the surface in cells.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.#ctor(SadConsole.CellSurface)">
+        <member name="M:SadConsole.ScreenSurface.#ctor(SadConsole.CellSurface)">
             <summary>
             Creates a new screen object using the specified surface's cells.
             </summary>
             <param name="surface">The surface.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -5665,275 +5596,275 @@
             <param name="bufferHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.UpdateAbsolutePosition">
+        <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
             <summary>
-            Sets a value for <see cref="P:SadConsole.ScreenObjectSurface.AbsolutePosition"/> based on the <see cref="P:SadConsole.ScreenObjectSurface.Position"/> of this instance and the <see cref="P:SadConsole.ScreenObjectSurface.Parent"/> instance.
+            Sets a value for <see cref="P:SadConsole.ScreenSurface.AbsolutePosition"/> based on the <see cref="P:SadConsole.ScreenSurface.Position"/> of this instance and the <see cref="P:SadConsole.ScreenSurface.Parent"/> instance.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.Draw">
+        <member name="M:SadConsole.ScreenSurface.Draw">
             <summary>
-            Draws all <see cref="P:SadConsole.ScreenObjectSurface.Components"/> and <see cref="P:SadConsole.ScreenObjectSurface.Children"/>.
+            Draws all <see cref="P:SadConsole.ScreenSurface.Components"/> and <see cref="P:SadConsole.ScreenSurface.Children"/>.
             </summary>
-            <remarks>Only processes if <see cref="P:SadConsole.ScreenObjectSurface.IsVisible"/> is <see langword="true"/>.</remarks>
+            <remarks>Only processes if <see cref="P:SadConsole.ScreenSurface.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.Update">
+        <member name="M:SadConsole.ScreenSurface.Update">
             <summary>
-            Updates all <see cref="P:SadConsole.ScreenObjectSurface.Components"/> and <see cref="P:SadConsole.ScreenObjectSurface.Children"/>.
+            Updates all <see cref="P:SadConsole.ScreenSurface.Components"/> and <see cref="P:SadConsole.ScreenSurface.Children"/>.
             </summary>
             <remarks>Only processes if <see cref="!:IsPaused"/> is <see langword="false"/>.</remarks>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.ScreenSurface.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
             <summary>
-            Called when the <see cref="P:SadConsole.ScreenObjectSurface.Font"/> or <see cref="P:SadConsole.ScreenObjectSurface.FontSize"/> property changes.
+            Called when the <see cref="P:SadConsole.ScreenSurface.Font"/> or <see cref="P:SadConsole.ScreenSurface.FontSize"/> property changes.
             </summary>
             <param name="oldFont">The font prior to the change.</param>
             <param name="oldFontSize">The font size prior to the change.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.Dispose(System.Boolean)">
+        <member name="M:SadConsole.ScreenSurface.Dispose(System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.Finalize">
+        <member name="M:SadConsole.ScreenSurface.Finalize">
             <summary>
-            Disposes <see cref="P:SadConsole.ScreenObjectSurface.Renderer"/>.
+            Disposes <see cref="P:SadConsole.ScreenSurface.Renderer"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.Dispose">
+        <member name="M:SadConsole.ScreenSurface.Dispose">
             <inheritdoc/>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.MouseButtonClicked">
+        <member name="E:SadConsole.ScreenSurface.MouseButtonClicked">
             <summary>
             Raised when the a mouse button is clicked on this console.
             </summary>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.MouseMove">
+        <member name="E:SadConsole.ScreenSurface.MouseMove">
             <summary>
             Raised when the mouse moves around the this console.
             </summary>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.MouseExit">
+        <member name="E:SadConsole.ScreenSurface.MouseExit">
             <summary>
             Raised when the mouse exits this console.
             </summary>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.MouseEnter">
+        <member name="E:SadConsole.ScreenSurface.MouseEnter">
             <summary>
             Raised when the mouse enters this console.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.IsMouseOver">
+        <member name="F:SadConsole.ScreenSurface.IsMouseOver">
             <summary>
             Indicates that the mouse is currently over this console.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.FocusedMode">
+        <member name="P:SadConsole.ScreenSurface.FocusedMode">
             <summary>
             How the object should handle becoming active.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.IsExclusiveMouse">
+        <member name="P:SadConsole.ScreenSurface.IsExclusiveMouse">
             <summary>
             Gets or sets whether or not this console has exclusive access to the mouse events.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.MoveToFrontOnMouseClick">
+        <member name="P:SadConsole.ScreenSurface.MoveToFrontOnMouseClick">
             <summary>
             When true, this console will move to the front of its parent console when the mouse is clicked.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.FocusOnMouseClick">
+        <member name="P:SadConsole.ScreenSurface.FocusOnMouseClick">
             <summary>
-            When true, this console will set <see cref="P:SadConsole.ScreenObjectSurface.IsFocused"/> to true when the mouse is clicked.
+            When true, this console will set <see cref="P:SadConsole.ScreenSurface.IsFocused"/> to true when the mouse is clicked.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.IsFocused">
+        <member name="P:SadConsole.ScreenSurface.IsFocused">
             <summary>
             Gets or sets this console as the focused console for input.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.ScreenSurface.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseEnter"/> event.
+            Raises the <see cref="E:SadConsole.ScreenSurface.MouseEnter"/> event.
             </summary>
             <param name="state">Current mouse state in relation to this console.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.ScreenSurface.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseExit"/> event.
+            Raises the <see cref="E:SadConsole.ScreenSurface.MouseExit"/> event.
             </summary>
             <param name="state">Current mouse state in relation to this console.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnMouseMove(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.ScreenSurface.OnMouseMove(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseMove"/> event.
+            Raises the <see cref="E:SadConsole.ScreenSurface.MouseMove"/> event.
             </summary>
             <param name="state">Current mouse state in relation to this console.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnMouseLeftClicked(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.ScreenSurface.OnMouseLeftClicked(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
+            Raises the <see cref="E:SadConsole.ScreenSurface.MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
             </summary>
             <param name="state">Current mouse state in relation to this console.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnRightMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.ScreenSurface.OnRightMouseClicked(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            Raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseButtonClicked"/> event.
+            Raises the <see cref="E:SadConsole.ScreenSurface.MouseButtonClicked"/> event.
             </summary>
             <param name="state">Current mouse state in relation to this console.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.LostMouse(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.ScreenSurface.LostMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            If the mouse is not over the console, causes the protected <see cref="M:SadConsole.ScreenObjectSurface.OnMouseExit(SadConsole.Input.MouseScreenObjectState)"/> method to run which raises the <see cref="E:SadConsole.ScreenObjectSurface.MouseExit"/> event.
+            If the mouse is not over the console, causes the protected <see cref="M:SadConsole.ScreenSurface.OnMouseExit(SadConsole.Input.MouseScreenObjectState)"/> method to run which raises the <see cref="E:SadConsole.ScreenSurface.MouseExit"/> event.
             </summary>
             <param name="state"></param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.ScreenSurface.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
             Processes the mouse.
             </summary>
             <param name="state">The mouse state related to this console.</param>
             <returns>True when the mouse is over this console and processing should stop.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.ProcessKeyboard(SadConsole.Input.Keyboard)">
+        <member name="M:SadConsole.ScreenSurface.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
             Called by the engine to process the keyboard.
             </summary>
             <param name="keyboard">Keyboard information.</param>
             <returns>True when the keyboard had data and this console did something with it.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnFocusLost">
+        <member name="M:SadConsole.ScreenSurface.OnFocusLost">
             <summary>
             Called when this console's focus has been lost. Hides the <see cref="T:SadConsole.Cursor"/> if <see cref="!:AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnFocused">
+        <member name="M:SadConsole.ScreenSurface.OnFocused">
             <summary>
             Called when this console is focused. Shows the <see cref="T:SadConsole.Cursor"/> if <see cref="!:AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.ParentChanged">
+        <member name="E:SadConsole.ScreenSurface.ParentChanged">
             <summary>
-            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.Parent"/> property changes.
+            Raised when the <see cref="P:SadConsole.ScreenSurface.Parent"/> property changes.
             </summary>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.PositionChanged">
+        <member name="E:SadConsole.ScreenSurface.PositionChanged">
             <summary>
-            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.Position"/> property changes.
+            Raised when the <see cref="P:SadConsole.ScreenSurface.Position"/> property changes.
             </summary>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.VisibleChanged">
+        <member name="E:SadConsole.ScreenSurface.VisibleChanged">
             <summary>
-            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.IsVisible"/> property changes.
+            Raised when the <see cref="P:SadConsole.ScreenSurface.IsVisible"/> property changes.
             </summary>
         </member>
-        <member name="E:SadConsole.ScreenObjectSurface.EnabledChanged">
+        <member name="E:SadConsole.ScreenSurface.EnabledChanged">
             <summary>
-            Raised when the <see cref="P:SadConsole.ScreenObjectSurface.IsEnabled"/> property changes.
+            Raised when the <see cref="P:SadConsole.ScreenSurface.IsEnabled"/> property changes.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.ComponentsUpdate">
+        <member name="F:SadConsole.ScreenSurface.ComponentsUpdate">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.ComponentsDraw">
+        <member name="F:SadConsole.ScreenSurface.ComponentsDraw">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.ComponentsMouse">
+        <member name="F:SadConsole.ScreenSurface.ComponentsMouse">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.ComponentsKeyboard">
+        <member name="F:SadConsole.ScreenSurface.ComponentsKeyboard">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectSurface.ComponentsEmpty">
+        <member name="F:SadConsole.ScreenSurface.ComponentsEmpty">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObjectSurface.Components"/> that is not set for update, draw, mouse, or keyboard.
+            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> that is not set for update, draw, mouse, or keyboard.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Components">
+        <member name="P:SadConsole.ScreenSurface.Components">
             <summary>
             A collection of components processed by this console.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Children">
+        <member name="P:SadConsole.ScreenSurface.Children">
             <summary>
             The child objects of this instance.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Parent">
+        <member name="P:SadConsole.ScreenSurface.Parent">
             <summary>
             The parent object that this instance is a child of.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.Position">
+        <member name="P:SadConsole.ScreenSurface.Position">
             <summary>
             The position of the object on the screen.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.AbsolutePosition">
+        <member name="P:SadConsole.ScreenSurface.AbsolutePosition">
             <summary>
-            A position that is based on the current <see cref="P:SadConsole.ScreenObjectSurface.Position"/> and <see cref="P:SadConsole.ScreenObjectSurface.Parent"/> position, in pixels.
+            A position that is based on the current <see cref="P:SadConsole.ScreenSurface.Position"/> and <see cref="P:SadConsole.ScreenSurface.Parent"/> position, in pixels.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.IsVisible">
-            <summary>
-            Gets or sets the visibility of this object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectSurface.IsEnabled">
+        <member name="P:SadConsole.ScreenSurface.IsVisible">
             <summary>
             Gets or sets the visibility of this object.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.UseKeyboard">
+        <member name="P:SadConsole.ScreenSurface.IsEnabled">
+            <summary>
+            Gets or sets the visibility of this object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenSurface.UseKeyboard">
             <summary>
             When <see langword="true"/>, this object will use the keyboard; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObjectSurface.UseMouse">
+        <member name="P:SadConsole.ScreenSurface.UseMouse">
             <summary>
             When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.GetComponents``1">
+        <member name="M:SadConsole.ScreenSurface.GetComponents``1">
             <summary>
             Gets components of the specified types.
             </summary>
             <typeparam name="TComponent">THe component to find</typeparam>
             <returns>The components found.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.GetComponent``1">
+        <member name="M:SadConsole.ScreenSurface.GetComponent``1">
             <summary>
             Gets the first component of the specified type.
             </summary>
             <typeparam name="TComponent">THe component to find</typeparam>
             <returns>The component if found, otherwise null.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenSurface.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
             <summary>
-            Raises the <see cref="E:SadConsole.ScreenObjectSurface.ParentChanged"/> event.
+            Raises the <see cref="E:SadConsole.ScreenSurface.ParentChanged"/> event.
             </summary>
             <param name="oldParent">The previous parent.</param>
             <param name="newParent">The new parent.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.ScreenSurface.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
-            Raises the <see cref="E:SadConsole.ScreenObjectSurface.PositionChanged"/> event.
+            Raises the <see cref="E:SadConsole.ScreenSurface.PositionChanged"/> event.
             </summary>
             <param name="oldPosition">The previous position.</param>
             <param name="newPosition">The new position.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnVisibleChanged">
+        <member name="M:SadConsole.ScreenSurface.OnVisibleChanged">
             <summary>
             Called when the visibility of the object changes.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectSurface.OnEnabledChanged">
+        <member name="M:SadConsole.ScreenSurface.OnEnabledChanged">
             <summary>
             Called when the paused status of the object changes.
             </summary>
@@ -6195,6 +6126,901 @@
             <summary>
             Pops a behavior off of a <see cref="T:SadConsole.StringParser.ParseCommandStacks"/>.
             </summary>
+        </member>
+        <member name="T:SadConsole.UI.ControlsConsole">
+            <summary>
+            A basic console that can contain controls.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.ControlsConsole.KeyboardState">
+            <summary>
+            Keyboard processor shared by all Controls Consoles.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.ControlsConsole.ControlsList">
+            <summary>
+            The collection of controls.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.ControlsConsole.UseGlobalKeyboardInput">
+            <summary>
+            When set to false, uses the static <see cref="F:SadConsole.UI.ControlsConsole.KeyboardState"/> keyboard instead of <see cref="!:Global.KeyboardState"/>
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.Theme">
+            <summary>
+            Gets or sets the theme of the window.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.ThemeColors">
+            <summary>
+            Gets or sets the colors to use with the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.Controls">
+            <summary>
+            Gets a read-only collection of the controls this console contains.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.CapturedControl">
+            <summary>
+            Gets the control currently capturing mouse events.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.FocusedControl">
+            <summary>
+            Gets or sets the control that has keyboard focus.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.CanTabToNextConsole">
+            <summary>
+            When true, allows the tab command to move to the next console (when there is a parent) instead of cycling back to the first control on this console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.NextTabConsole">
+            <summary>
+            Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlsConsole.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.PreviousTabConsole">
+            <summary>
+            Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlsConsole.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlsConsole.DisableControlFocusing">
+            <summary>
+            When set to true, child controls are not alerted to (non-)focused states.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new console.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+            <param name="initialCells">The initial cells to seed the surface.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new console with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The visible width of the console in cells.</param>
+            <param name="height">The visible height of the console in cells.</param>
+            <param name="bufferWidth">The total width of the console in cells.</param>
+            <param name="bufferHeight">The total height of the console in cells.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(SadConsole.CellSurface)">
+            <summary>
+            Creates a new console using the specified surface's cells.
+            </summary>
+            <param name="surface">The surface.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a console with the specified width and height, with <see cref="!:Color.Transparent"/> for the background and <see cref="!:Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the console in cells.</param>
+            <param name="height">The height of the console in cells.</param>
+            <param name="bufferWidth">The total width of the console in cells.</param>
+            <param name="bufferHeight">The total height of the console in cells.</param>
+            <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.Add(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Adds an existing control to this console.
+            </summary>
+            <param name="control">The control to add.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.Remove(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Removes a control from this console.
+            </summary>
+            <param name="control">The control to remove.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.TabNextControl">
+            <summary>
+            Gives the focus to the next control in the tab order.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.TabPreviousControl">
+            <summary>
+            Gives focus to the previous control in the tab order.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.TryTabPreviousConsole">
+            <summary>
+            Tries to tab to the console that comes before this one in the <see cref="P:SadConsole.ScreenObject.Parent"/> collection of <see cref="P:SadConsole.ScreenObject.Children"/>. Sets focus to the target console if found.
+            </summary>
+            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.TryTabNextConsole">
+            <summary>
+            Tries to tab to the console that comes after this one in the <see cref="P:SadConsole.IScreenObject.Parent"/> collection of <see cref="P:SadConsole.IScreenObject.Children"/>. Sets focus to the target console if found.
+            </summary>
+            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.RemoveAll">
+            <summary>
+            Removes all controls from this console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.Contains(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Checks if the specified control exists in this console.
+            </summary>
+            <param name="control">The control to check.</param>
+            <returns>True when the control exists in this console; otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.FocusedControlChanging(SadConsole.UI.Controls.ControlBase,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            When overridden, allows you to prevent a control from taking focus from another control.
+            </summary>
+            <param name="newControl">The control requesting focus.</param>
+            <param name="oldControl">The control that has focus.</param>
+            <returns>True when the focus change is allowed; otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.FocusedControlChanged(SadConsole.UI.Controls.ControlBase,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            This method is called when a control gains focus.
+            </summary>
+            <param name="newControl">The control that has focus.</param>
+            <param name="oldControl">The control that previously had focus.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.ReOrderControls">
+            <summary>
+            Reorders the control collection based on the tab index of each control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.OnIsDirtyChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.OnThemeDrawn">
+            <summary>
+            Used for custom drawing. Called after the console's <see cref="P:SadConsole.IScreenSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/> is redrawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.Update">
+            <summary>
+            Calls the Update method of the base class and then Update on each control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.Draw">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Processes the keyboard for the console.
+            </summary>
+            <param name="info">Keyboard information sent by the engine.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Processes the mouse for the console.
+            </summary>
+            <param name="state">Mouse information sent by the engine.</param>
+            <returns>True when the mouse is over this console and it is the active console; otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.CaptureControl(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Captures a control for exclusive mouse focus. Sets the ExclusiveMouse property to true.
+            </summary>
+            <param name="control">The control to capture</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.ReleaseControl">
+            <summary>
+            Releases the control from exclusive mouse focus. Sets the ExclusiveMouse property to false and sets the CapturedControl property to null.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.GetEnumerator">
+            <summary>
+            Gets an enumerator of the controls collection.
+            </summary>
+            <returns>The enumerator of the controls collection.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets an enumerator of the controls collection.
+            </summary>
+            <returns>The enumerator of the controls collection.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.OnFocused">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.OnFocusLost">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Controls.ButtonBase">
+            <summary>
+            Base class for creating a button type control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ButtonBase.Click">
+            <summary>
+            Raised when the button is clicked.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ButtonBase.text">
+            <summary>
+            The display text of the button.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ButtonBase.textAlignment">
+            <summary>
+            The alignment of the <see cref="F:SadConsole.UI.Controls.ButtonBase.text"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ButtonBase.Text">
+            <summary>
+            The text displayed on the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ButtonBase.TextAlignment">
+            <summary>
+            The alignment of the text, left, center, or right.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ButtonBase.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new button control.
+            </summary>
+            <param name="width">Width of the button.</param>
+            <param name="height">Height of the button.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ButtonBase.DoClick">
+            <summary>
+            Raises the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ButtonBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Detects if the SPACE and ENTER keys are pressed and calls the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> method.
+            </summary>
+            <param name="info"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ButtonBase.OnLeftMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called when the left-mouse button is clicked.
+            </summary>
+            <param name="state">The mouse state.</param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Button">
+            <summary>
+            Simple button control with a height of 1.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Button.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates an instance of the button control with the specified width and height.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control (default is 1).</param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ControlBase">
+            <summary>
+            Base class for all controls.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlBase.isMouseLeftDown">
+            <summary>
+            <see langword="true"/> when the left mouse button is down.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlBase.isMouseRightDown">
+            <summary>
+            <see langword="true"/> when the right mouse button is down.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Surface">
+            <summary>
+            The cell data to render the control. Controlled by a theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.MouseBounds">
+            <summary>
+            The region the of the control used for mouse input.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Position">
+            <summary>
+            Indicates the rendering location of this control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.IsVisible">
+            <summary>
+            Indicates weather or not this control is visible.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.TabStop">
+            <summary>
+            Indicates weather or not this control can be tabbed to.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.TabIndex">
+            <summary>
+            Sets the tab index of this control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.IsDirty">
+            <summary>
+            Indicates weather or not this control is dirty and should be redrawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Name">
+            <summary>
+            Represents a name to identify a control by.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.FocusOnClick">
+            <summary>
+            Gets or sets weather or not this control will become focused when the mouse is clicked.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Width">
+            <summary>
+            The width of the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Height">
+            <summary>
+            The height of the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.IsFocused">
+            <summary>
+            Gets or sets weather or not this control is focused.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.IsEnabled">
+            <summary>
+            Gets or sets weather or not this control is enabled.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Bounds">
+            <summary>
+            The area this control covers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Parent">
+            <summary>
+            Gets or sets the parent console of this control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.ThemeColors">
+            <summary>
+            Gets or sets the colors to use with the <see cref="P:SadConsole.UI.Controls.ControlBase.Theme"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Theme">
+            <summary>
+            The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="P:SadConsole.UI.Controls.ControlBase.Parent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.State">
+            <summary>
+            The state of the control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ControlBase.MouseEnter">
+            <summary>
+            Raised when the mouse enters this control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ControlBase.MouseExit">
+            <summary>
+            Raised when the mouse exits this control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ControlBase.MouseMove">
+            <summary>
+            Raised when the mouse is moved over this control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ControlBase.MouseButtonClicked">
+            <summary>
+            Raised when a mouse button is clicked while the mouse is over this control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.#ctor(System.Int32,System.Int32)">
+            <inheritdoc />
+            <summary>
+            Creates a control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.FocusLost">
+            <summary>
+            Called when the control loses focus. Calls DetermineAppearance.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.Focused">
+            <summary>
+            Called when the control is focused. Calls DetermineAppearance.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnThemeChanged">
+            <summary>
+            Called when the <see cref="P:SadConsole.UI.Controls.ControlBase.Theme"/> changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Called when the keyboard is used on this control.
+            </summary>
+            <param name="state">The state of the keyboard.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Checks if the mouse is the control and calls the appropriate mouse methods.
+            </summary>
+            <param name="state">Mouse information.</param>
+            <returns>Always returns false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.LostMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called to trigger the state of losing mouse focus.
+            </summary>
+            <param name="state">The mouse state.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnParentChanged">
+            <summary>
+            Called when the parent property is changed.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnPositionChanged">
+            <summary>
+            Called when the control changes position.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.DetermineState">
+            <summary>
+            Sets the appropriate theme for the control based on the current state of the control.
+            </summary>
+            <remarks>Called by the control as the mouse state changes, like when the mouse is clicked on top of the control or leaves the area of the control. This method is implemented by each derived control.</remarks>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnStateChanged(SadConsole.UI.Controls.ControlStates,SadConsole.UI.Controls.ControlStates)">
+            <summary>
+            Called when the <see cref="P:SadConsole.UI.Controls.ControlBase.State"/> changes. Sets the <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> to true.
+            </summary>
+            <param name="oldState">The original state.</param>
+            <param name="newState">The new state.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
+            </summary>
+            <param name="state">The current mouse data</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
+            </summary>
+            <param name="state">The current mouse data</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseIn(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
+            </summary>
+            <param name="state">The current mouse data</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnLeftMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
+            </summary>
+            <param name="state">The current mouse data</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnRightMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
+            </summary>
+            <param name="state">The current mouse data</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.TransformConsolePositionByControlPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Helper method that returns the mouse x,y position for the control.
+            </summary>
+            <param name="consolePosition">Position of the console to get the relative control position from.</param>
+            <returns>The x,y position of the mouse over the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.Update(System.TimeSpan)">
+            <summary>
+            Update the control appearance based on <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/>.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ControlStates">
+            <summary>
+            Indicates the state of a control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.Normal">
+            <summary>
+            Normal state. 
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.Disabled">
+            <summary>
+            The control is disabled.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.Focused">
+            <summary>
+            The control has focus.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.Clicked">
+            <summary>
+            The control is selected
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.MouseOver">
+            <summary>
+            The mouse is over the control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.MouseLeftButtonDown">
+            <summary>
+            The left mouse button is down.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.MouseRightButtonDown">
+            <summary>
+            The Right mouse button is down.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ControlStates.Selected">
+            <summary>
+            THe control is selected
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Label">
+            <summary>
+            A simple surface for drawing text that can be moved and sized like a control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Label.ShowUnderline">
+            <summary>
+            When <see langword="true"/>, shows an underline on the text.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Label.ShowStrikethrough">
+            <summary>
+            When <see langword="true"/>, shows a strikethrough on the text.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Label.TextColor">
+            <summary>
+            Optional text color for the label. Otherwise the theme controls the color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Label.Alignment">
+            <summary>
+            Sets the horizontal alignment of the label. Defaults to <see cref="F:SadConsole.HorizontalAlignment.Left"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Label.DisplayText">
+            <summary>
+            The text to display on the label. The label size is set in the constructor and cannot be changed.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Label.#ctor(System.String)">
+            <summary>
+            A control to display simple one-line text.
+            </summary>
+            <param name="displayText">The text to display. Sets the width based on the length.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Label.#ctor(System.Int32)">
+            <summary>
+            A control to display simple one-line text.
+            </summary>
+            <param name="length">The initial length of the label without any text.</param>
+        </member>
+        <member name="T:SadConsole.UI.Themes.ButtonTheme">
+            <summary>
+            The theme of the button control
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonTheme.ShowEnds">
+            <summary>
+            When true, renders the <see cref="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterLeft"/> 
+            and <see cref="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterRight"/> on the button.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterLeft">
+            <summary>
+            The character on the left side of the button. Defaults to '&lt;'.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterRight">
+            <summary>
+            The character on the right side of the button. Defaults to '>'.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.Button3dTheme">
+            <summary>
+            A 3D shadow theme of the button control
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Button3dTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.Button3dTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.Button3dTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.Colors">
+            <summary>
+            Default colors used by control themes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Colors.ModalBackground">
+            <summary>
+            The color used to darken the background when <see cref="o:Window.Show"/> is called and <see cref="!:Window.IsModal"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Colors.RebuildAppearances">
+            <summary>
+            Sets all Appearance* properties based on the existing colors and settings.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Colors.Clone">
+            <summary>
+            Returns a clone of this object.
+            </summary>
+            <returns>A new Colors object.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Themes.ControlsConsole">
+            <summary>
+            A theme for a Window object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ControlsConsole.FillStyle">
+            <summary>
+            The style of of the console surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ControlsConsole.#ctor">
+            <summary>
+            Creates a new theme without specifying the colors.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ControlsConsole.Clone">
+            <summary>
+            Returns a clone of this object.
+            </summary>
+            <returns>The cloned object.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ControlsConsole.Draw(SadConsole.UI.ControlsConsole)">
+            <summary>
+            Draws the theme to the console.
+            </summary>
+            <param name="console">Console associated with the theme.</param>
+        </member>
+        <member name="T:SadConsole.UI.Themes.LabelTheme">
+            <summary>
+            A basic theme for a drawing surface that simply fills the surface based on the state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.LabelTheme.UseNormalStateOnly">
+            <summary>
+            When true, only uses <see cref="P:SadConsole.UI.Themes.ThemeStates.Normal"/> for drawing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.LabelTheme.DecoratorUnderline">
+            <summary>
+            The decorator to use when the <see cref="P:SadConsole.UI.Controls.Label.ShowUnderline"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.LabelTheme.DecoratorStrikethrough">
+            <summary>
+            The decorator to use when the <see cref="P:SadConsole.UI.Controls.Label.ShowStrikethrough"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.LabelTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.LabelTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.LabelTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.Library">
+            <summary>
+            The library of themes. Holds the themes of all controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Library.Default">
+            <summary>
+            If a control does not specify its own theme, the theme from this property will be used.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Library.Colors">
+            <summary>
+            Colors for the theme library.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.Init">
+            <summary>
+            Seeds the library with the default themes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.#ctor">
+            <summary>
+            Creates a new instance of the theme library with default themes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.#ctor(System.Boolean)">
+            <summary>
+            Create the instance for the singleton.
+            </summary>
+            <param name="_">Not used.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.GetControlTheme(System.Type)">
+            <summary>
+            Creates and returns a theme based on the type of control provided.
+            </summary>
+            <param name="control">The control instance</param>
+            <returns>A theme that is associated with the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.SetControlTheme(System.Type,SadConsole.UI.Themes.ThemeBase)">
+            <summary>
+            Sets a control theme based on the control type.
+            </summary>
+            <param name="control">The control type to register a theme.</param>
+            <param name="theme">The theme to associate with the control.</param>
+            <returns>A theme that is associated with the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.Clone">
+            <summary>
+            Clones this library.
+            </summary>
+            <returns>A new instance of a library.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Themes.ThemeBase">
+            <summary> 
+            The base class for a theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeBase.ThemeStates">
+            <summary>
+            The colors and glyphs to use for each control state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeBase.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <summary>
+            Draws the control state to the control.
+            </summary>
+            <param name="control">The control to draw.</param>
+            <param name="time">The time since the last update frame call.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeBase.Attached(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Called when the theme is attached to a control.
+            </summary>
+            <param name="control">The control that will use this theme instance.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeBase.Clone">
+            <summary>
+            Creates a new theme instance based on the current instance.
+            </summary>
+            <returns>A new theme instance.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Themes.ThemeStates">
+            <summary>
+            Has the basic appearances of each control state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeStates.Normal">
+            <summary>
+            The normal appearance of the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeStates.Disabled">
+            <summary>
+            The appearance of the control when it is disabled.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeStates.Focused">
+            <summary>
+            The appearance of the control when it is focused.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeStates.Selected">
+            <summary>
+            The appearence of the control when it is in a selected state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeStates.MouseOver">
+            <summary>
+            The appearance of the control when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeStates.MouseDown">
+            <summary>
+            THe appearance of the control when a mouse button is held down.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.SetForeground(SadRogue.Primitives.Color)">
+            <summary>
+            Sets the same foreground color to all theme states.
+            </summary>
+            <param name="color">The foreground color.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.SetBackground(SadRogue.Primitives.Color)">
+            <summary>
+            Sets the same background color to all theme states.
+            </summary>
+            <param name="color">The background color.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.SetGlyph(System.Int32)">
+            <summary>
+            Sets the same glyph to all theme states.
+            </summary>
+            <param name="glyph">The glyph.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.SetMirror(SadConsole.Mirror)">
+            <summary>
+            Sets the same mirror setting to all theme states.
+            </summary>
+            <param name="mirror">The mirror setting.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.GetStateAppearance(SadConsole.UI.Controls.ControlStates)">
+            <summary>
+            Gets an apperance defined by this theme from the <paramref name="state" /> parameter.
+            </summary>
+            <param name="state">The state to check.</param>
+            <returns>A cell appearance.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.Clone">
+            <summary>
+            Performs a deep copy of this theme.
+            </summary>
+            <returns>A new instance of the theme.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.RefreshTheme(SadConsole.UI.Themes.Colors)">
+            <summary>
+            Reloads the theme values based on the colors provided.
+            </summary>
+            <param name="themeColors">The colors to create the theme with.</param>
         </member>
         <member name="T:SadRogue.Primitives.ColorAnsi">
             <summary>

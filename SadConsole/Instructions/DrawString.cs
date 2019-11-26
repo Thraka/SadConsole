@@ -84,7 +84,7 @@ namespace SadConsole.Instructions
                 _textIndex = 0;
 
                 if (_target == null)
-                    _target = (componentHost as IScreenObjectSurface)?.Surface;
+                    _target = (componentHost as IScreenSurface)?.Surface;
 
                 Cursor.AttachSurface(_target);
                 Cursor.DisableWordBreak = true;

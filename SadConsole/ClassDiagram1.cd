@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SadConsole.Console" Collapsed="true">
+    <Position X="8" Y="3.75" Width="2" />
+    <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="3.691" />
+        <Point X="6.5" Y="4.062" />
+        <Point X="8" Y="4.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQABAAABQAAAAIAAABAAEAAgAAAAgAAAAAgAIAAAAA=</HashCode>
+      <FileName>Console.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SadConsole.AnimatedScreenSurface" Collapsed="true">
+    <Position X="8" Y="4.75" Width="2" />
+    <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="3.691" />
+        <Point X="6.5" Y="5.062" />
+        <Point X="8" Y="5.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EATCoIAALCCAAAEEAAEACEQAABQEAAUQIAIABEAIAAE=</HashCode>
+      <FileName>AnimatedScreenSurface.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SadConsole.Entities.Entity" Collapsed="true">
+    <Position X="8" Y="5.75" Width="2" />
+    <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="3.691" />
+        <Point X="6.5" Y="6.062" />
+        <Point X="8" Y="6.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>QAAAgIAAAAAAAAAAgAEAAIQQAkAAAAQAAAAAAEAAAAA=</HashCode>
+      <FileName>Entities\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SadConsole.CellSurface" Collapsed="true">
+    <Position X="5.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASoCjHKQImpAQHCICAZQLAFhCkKnCZkIQEgHAgFUCAA=</HashCode>
+      <FileName>CellSurface.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SadConsole.LayeredScreenSurface" Collapsed="true">
+    <Position X="8" Y="6.75" Width="2" />
+    <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="3.691" />
+        <Point X="6.5" Y="7.062" />
+        <Point X="8" Y="7.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAEAAAAAAAAEAA=</HashCode>
+      <FileName>LayeredCellSurface.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SadConsole.ScreenSurface" Collapsed="true">
+    <Position X="5.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQAIIAAgLABGoZhEANU5hFgEFCBAgQCBGCgoVbivgA=</HashCode>
+      <FileName>ScreenSurface.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

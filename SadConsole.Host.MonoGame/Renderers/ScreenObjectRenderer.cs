@@ -12,7 +12,7 @@ using SadConsole.Host.MonoGame;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="IScreenObjectSurface"/>.
+    /// Draws a <see cref="IScreenSurface"/>.
     /// </summary>
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
@@ -24,26 +24,26 @@ namespace SadConsole.Renderers
         protected XnaRectangle[] _renderRects;
 
         ///  <inheritdoc/>
-        public virtual void Attach(IScreenObjectSurface screen)
+        public virtual void Attach(IScreenSurface screen)
         {
         }
 
         ///  <inheritdoc/>
-        public virtual void Detatch(IScreenObjectSurface screen)
+        public virtual void Detatch(IScreenSurface screen)
         {
             BackingTexture.Dispose();
             BackingTexture = null;
         }
 
         ///  <inheritdoc/>
-        public virtual void Render(IScreenObjectSurface screen)
+        public virtual void Render(IScreenSurface screen)
         {
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
         }
 
         ///  <inheritdoc/>
-        public virtual void Refresh(IScreenObjectSurface screen, bool force = false)
+        public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -80,14 +80,14 @@ namespace SadConsole.Renderers
         }
 
 
-        protected virtual void RefreshBegin(IScreenObjectSurface screen)
+        protected virtual void RefreshBegin(IScreenSurface screen)
         {
             MonoGame.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
             MonoGame.Global.GraphicsDevice.Clear(Color.Transparent);
             MonoGame.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
         }
 
-        protected virtual void RefreshEnd(IScreenObjectSurface screen)
+        protected virtual void RefreshEnd(IScreenSurface screen)
         {
             MonoGame.Global.SharedSpriteBatch.End();
             MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
@@ -130,7 +130,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RefreshTint(IScreenObjectSurface screen)
+        protected virtual void RefreshTint(IScreenSurface screen)
         {
             if (screen.Tint.A != 0)
             {

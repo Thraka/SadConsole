@@ -7,7 +7,7 @@ namespace SadConsole
     /// <summary>
     /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
     /// </summary>
-    public partial class LayeredScreenObject
+    public partial class LayeredScreenSurface
     {
         public interface ILayer
         {

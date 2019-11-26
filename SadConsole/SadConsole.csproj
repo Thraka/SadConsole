@@ -27,12 +27,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="UI\**" />
-    <EmbeddedResource Remove="UI\**" />
-    <None Remove="UI\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Input\ConsoleViewInputHandler.cs" />
     <Compile Remove="Input\MouseEventArgs.cs" />
     <Compile Remove="SerializedTypes\AnimatedConsole.cs" />

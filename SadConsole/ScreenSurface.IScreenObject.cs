@@ -9,10 +9,7 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
-    /// <summary>
-    /// An object that renders a <see cref="CellSurface"/>.
-    /// </summary>
-    public partial class ScreenObjectSurface : CellSurface, IDisposable, IScreenObject
+    public partial class ScreenSurface
     {
         private IScreenObject _parentObject;
         private Point _position;

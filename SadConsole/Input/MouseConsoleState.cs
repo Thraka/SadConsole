@@ -10,7 +10,7 @@ namespace SadConsole.Input
         /// <summary>
         /// The screen object used to create the mouse state.
         /// </summary>
-        public readonly IScreenObjectSurface ScreenObject;
+        public readonly IScreenSurface ScreenObject;
 
         /// <summary>
         /// The mouse data.
@@ -52,7 +52,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="screenObject">The screen object to process with the mouse state.</param>
         /// <param name="mouseData">The current mouse state.</param>
-        public MouseScreenObjectState(IScreenObjectSurface screenObject, Mouse mouseData)
+        public MouseScreenObjectState(IScreenSurface screenObject, Mouse mouseData)
         {
             bool isNegative = false;
             Mouse = mouseData.Clone();

@@ -12,7 +12,7 @@ namespace SadConsole.Input
     {
         private TimeSpan _leftLastClickedTime;
         private TimeSpan _rightLastClickedTime;
-        private IScreenObjectSurface _lastMouseScreenObject;
+        private IScreenSurface _lastMouseScreenObject;
 
         /// <summary>
         /// The pixel position of the mouse on the screen.
@@ -195,7 +195,7 @@ namespace SadConsole.Input
                 bool foundMouseTarget = false;
 
                 // Build a list of all screen objects
-                var screenObjects = new List<IScreenObjectSurface>();
+                var screenObjects = new List<IScreenSurface>();
                 GetConsoles(Global.Screen, ref screenObjects);
 
                 // Process top-most screen objects first.
@@ -226,7 +226,7 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(IScreenObjectSurface screen, ref List<IScreenObjectSurface> list)
+        private void GetConsoles(IScreenSurface screen, ref List<IScreenSurface> list)
         {
             if (!screen.IsVisible)
             {
@@ -238,7 +238,7 @@ namespace SadConsole.Input
                 list.Add(screen);
             }
 
-            foreach (IScreenObjectSurface child in screen.Children.OfType<IScreenObjectSurface>())
+            foreach (IScreenSurface child in screen.Children.OfType<IScreenSurface>())
             {
                 GetConsoles(child, ref list);
             }
@@ -258,7 +258,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="screenObject">The screen object to check.</param>
         /// <returns>True or false indicating if the mouse is over the screen object.</returns>
-        public bool IsMouseOverScreenObjectSurface(IScreenObjectSurface screenObject) =>
+        public bool IsMouseOverScreenObjectSurface(IScreenSurface screenObject) =>
             new MouseScreenObjectState(screenObject, this).IsOnScreenObject;
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace SadConsole
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Console (Animated)")]
     //[JsonConverter(typeof(SerializedTypes.AnimatedConsoleConverterJson))]
-    public class AnimatedScreenObject : ScreenObjectSurface
+    public class AnimatedScreenSurface : ScreenSurface
     {
         private float _animatedTime;
         private AnimationState _state;
@@ -144,7 +144,7 @@ namespace SadConsole
         /// <param name="name">The name of the animation.</param>
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
-        public AnimatedScreenObject(string name, int width, int height) : this(name, width, height, Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize))
+        public AnimatedScreenSurface(string name, int width, int height) : this(name, width, height, Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize))
         {
         }
 
@@ -156,7 +156,7 @@ namespace SadConsole
         /// <param name="height">The height of each frame this animation will have.</param>
         /// <param name="font">The font used with this animation.</param>
         /// <param name="fontSize">The size of the font.</param>
-        public AnimatedScreenObject(string name, int width, int height, Font font, Point fontSize) : base(width, height)
+        public AnimatedScreenSurface(string name, int width, int height, Font font, Point fontSize) : base(width, height)
         {
             Name = name;
             Font = font;
@@ -307,9 +307,9 @@ namespace SadConsole
         /// <param name="frames">How many frames the animation should have.</param>
         /// <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="System.Random.NextDouble"/>.</param>
         /// <returns>An animation.</returns>
-        public static AnimatedScreenObject CreateStatic(int width, int height, int frames, double blankChance)
+        public static AnimatedScreenSurface CreateStatic(int width, int height, int frames, double blankChance)
         {
-            var animation = new AnimatedScreenObject("default", width, height);
+            var animation = new AnimatedScreenSurface("default", width, height);
             animation.DefaultBackground = Color.Black;
             for (int f = 0; f < frames; f++)
             {
@@ -342,17 +342,17 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Saves the <see cref="AnimatedScreenObject"/> to a file.
+        /// Saves the <see cref="AnimatedScreenSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
         public new void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
 
         /// <summary>
-        /// Loads a <see cref="AnimatedScreenObject"/> from a file.
+        /// Loads a <see cref="AnimatedScreenSurface"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
         /// <returns></returns>
-        public static new AnimatedScreenObject Load(string file) => Serializer.Load<AnimatedScreenObject>(file, Settings.SerializationIsCompressed);
+        public static new AnimatedScreenSurface Load(string file) => Serializer.Load<AnimatedScreenSurface>(file, Settings.SerializationIsCompressed);
 
         /// <summary>
         /// Event args for when the animation state changes

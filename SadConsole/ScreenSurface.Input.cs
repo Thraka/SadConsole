@@ -3,7 +3,7 @@ using SadConsole.Input;
 
 namespace SadConsole
 {
-    public partial class ScreenObjectSurface
+    public partial class ScreenSurface
     {
 
         /// <summary>

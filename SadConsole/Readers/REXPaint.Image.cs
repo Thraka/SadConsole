@@ -93,16 +93,16 @@ namespace SadConsole.Readers
         public void Remove(Layer layer) => _layers.Remove(layer);
 
         /// <summary>
-        /// Converts this REXPaint image to a <see cref="LayeredScreenObject"/>.
+        /// Converts this REXPaint image to a <see cref="LayeredScreenSurface"/>.
         /// </summary>
         /// <returns></returns>
-        public LayeredScreenObject ToLayeredCellSurface()
+        public LayeredScreenSurface ToLayeredCellSurface()
         {
-            var surface = new LayeredScreenObject(Width, Height, LayerCount);
+            var surface = new LayeredScreenSurface(Width, Height, LayerCount);
 
             for (int i = 0; i < LayerCount; i++)
             {
-                LayeredScreenObject.ILayer layer = surface.Layers[i];
+                LayeredScreenSurface.ILayer layer = surface.Layers[i];
 
                 for (int y = 0; y < Height; y++)
                 {

@@ -10,7 +10,7 @@ namespace SadConsole
     /// <summary>
     /// A surface that has a cursor.
     /// </summary>
-    public class Console: ScreenObjectSurface
+    public class Console: ScreenSurface
     {
         private bool _isCursorDisabled;
 
@@ -27,13 +27,13 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// The buffer width of the console. Forwards <see cref="CellSurface.BufferWidth"/>.
+        /// The entire width of the console. Forwards <see cref="CellSurface.BufferWidth"/>.
         /// </summary>
         public int Width =>
             base.BufferWidth;
 
         /// <summary>
-        /// The buffer height of the console. Forwards <see cref="CellSurface.BufferHeight"/>.
+        /// The entire height of the console. Forwards <see cref="CellSurface.BufferHeight"/>.
         /// </summary>
         public int Height =>
             base.BufferHeight;
@@ -49,38 +49,49 @@ namespace SadConsole
         public bool AutoCursorOnFocus { get; set; }
 
         /// <summary>
-        /// Creates a new console with the specified width and height.
+        /// Creates a new console.
         /// </summary>
-        /// <param name="width">The width of the console.</param>
-        /// <param name="height">The height of the console.</param>
-        public Console(int width, int height): base(width, height)
-        {
-            Cursor = new Cursor(this);
-            UseKeyboard = Settings.DefaultConsoleUseKeyboard;
-        }
+        /// <param name="width">The width in cells of the surface.</param>
+        /// <param name="height">The height in cells of the surface.</param>
+        public Console(int width, int height) : this(width, height, width, height, null) { }
 
         /// <summary>
-        /// Creates a new console with the specified width and height and an initial set of cells.
+        /// Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
         /// </summary>
-        /// <param name="width">The width of the console.</param>
-        /// <param name="height">The height of the console.</param>
-        /// <param name="initialCells">The cells to seed the cosnole.</param>
-        public Console(int width, int height, ColoredGlyph[] initialCells) : base(width, height, initialCells)
-        {
-            Cursor = new Cursor(this);
-            UseKeyboard = Settings.DefaultConsoleUseKeyboard;
-        }
+        /// <param name="width">The width in cells of the surface.</param>
+        /// <param name="height">The height in cells of the surface.</param>
+        /// <param name="initialCells">The initial cells to seed the surface.</param>
+        public Console(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells) { }
 
         /// <summary>
-        /// Creates a new console with the specified <see cref="CellSurface"/> type.
+        /// Creates a new console with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
-        /// <param name="surface">The surface to use for this console.</param>
-        public Console(CellSurface surface) : base(surface)
+        /// <param name="width">The visible width of the console in cells.</param>
+        /// <param name="height">The visible height of the console in cells.</param>
+        /// <param name="bufferWidth">The total width of the console in cells.</param>
+        /// <param name="bufferHeight">The total height of the console in cells.</param>
+        public Console(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null) { }
+
+        /// <summary>
+        /// Creates a new console using the specified surface's cells.
+        /// </summary>
+        /// <param name="surface">The surface.</param>
+        public Console(CellSurface surface) : this(surface.ViewWidth, surface.ViewHeight, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
+
+        /// <summary>
+        /// Creates a console with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// </summary>
+        /// <param name="width">The width of the console in cells.</param>
+        /// <param name="height">The height of the console in cells.</param>
+        /// <param name="bufferWidth">The total width of the console in cells.</param>
+        /// <param name="bufferHeight">The total height of the console in cells.</param>
+        /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
+        public Console(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
         {
             Cursor = new Cursor(this);
             UseKeyboard = Settings.DefaultConsoleUseKeyboard;
         }
-
+        
         /// <inheritdoc/>
         protected override void OnVisibleChanged()
         {

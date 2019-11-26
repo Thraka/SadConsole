@@ -10,7 +10,7 @@ namespace SadConsole
     /// <summary>
     /// An object that renders a <see cref="CellSurface"/>.
     /// </summary>
-    public partial class ScreenObjectSurface : CellSurface, IDisposable, IScreenObjectSurface
+    public partial class ScreenSurface : CellSurface, IDisposable, IScreenSurface
     {
         private Font _font;
         private Point _fontSize;
@@ -37,7 +37,7 @@ namespace SadConsole
         }
 
 
-        CellSurface IScreenObjectSurface.Surface => this;
+        CellSurface IScreenSurface.Surface => this;
 
         /// <summary>
         /// Font used with rendering.
@@ -118,7 +118,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The width in cells of the surface.</param>
         /// <param name="height">The height in cells of the surface.</param>
-        public ScreenObjectSurface(int width, int height) : this(width, height, width, height, null)
+        public ScreenSurface(int width, int height) : this(width, height, width, height, null)
         {
 
         }
@@ -129,7 +129,7 @@ namespace SadConsole
         /// <param name="width">The width in cells of the surface.</param>
         /// <param name="height">The height in cells of the surface.</param>
         /// <param name="initialCells">The initial cells to seed the surface.</param>
-        public ScreenObjectSurface(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells)
+        public ScreenSurface(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells)
         {
             
         }
@@ -141,7 +141,7 @@ namespace SadConsole
         /// <param name="height">The visible height of the surface in cells.</param>
         /// <param name="bufferWidth">The total width of the surface in cells.</param>
         /// <param name="bufferHeight">The total height of the surface in cells.</param>
-        public ScreenObjectSurface(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null)
+        public ScreenSurface(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null)
         {
 
         }
@@ -150,7 +150,7 @@ namespace SadConsole
         /// Creates a new screen object using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public ScreenObjectSurface(CellSurface surface) : this(surface.ViewWidth, surface.ViewHeight, surface.BufferWidth, surface.BufferHeight, surface.Cells)
+        public ScreenSurface(CellSurface surface) : this(surface.ViewWidth, surface.ViewHeight, surface.BufferWidth, surface.BufferHeight, surface.Cells)
         {
 
         }
@@ -163,7 +163,7 @@ namespace SadConsole
         /// <param name="bufferWidth">The total width of the surface in cells.</param>
         /// <param name="bufferHeight">The total height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public ScreenObjectSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells): base (width, height, bufferWidth, bufferHeight, initialCells)
+        public ScreenSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells): base (width, height, bufferWidth, bufferHeight, initialCells)
         {
             Font = Global.DefaultFont;
             FontSize = Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
@@ -260,7 +260,7 @@ namespace SadConsole
         /// <summary>
         /// Disposes <see cref="Renderer"/>.
         /// </summary>
-        ~ScreenObjectSurface() =>
+        ~ScreenSurface() =>
             Dispose(false);
 
         /// <inheritdoc/>

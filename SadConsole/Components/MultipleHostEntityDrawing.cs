@@ -34,7 +34,7 @@ namespace SadConsole.Components
         {
             foreach (Entity entity in Entities)
             {
-                if (host is IScreenObjectSurface parent)
+                if (host is IScreenSurface parent)
                 {
                     Rectangle parentViewPort = parent.Surface.GetViewRectangle();
 

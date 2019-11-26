@@ -11,17 +11,17 @@ namespace SadConsole.Entities
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Entity")]
     //[JsonConverter(typeof(EntityJsonConverter))]
-    public class Entity : ScreenObjectSurface
+    public class Entity : ScreenSurface
     {
         /// <summary>
-        /// Automatically forwards the <see cref="AnimatedScreenObject.AnimationStateChanged"/> event.
+        /// Automatically forwards the <see cref="AnimatedScreenSurface.AnimationStateChanged"/> event.
         /// </summary>
-        public event System.EventHandler<AnimatedScreenObject.AnimationStateChangedEventArgs> AnimationStateChanged;
+        public event System.EventHandler<AnimatedScreenSurface.AnimationStateChangedEventArgs> AnimationStateChanged;
 
         /// <summary>
         /// Animation for the game object.
         /// </summary>
-        protected AnimatedScreenObject animation;
+        protected AnimatedScreenSurface animation;
 
         /// <summary>
         /// The offset to render this object at.
@@ -36,14 +36,14 @@ namespace SadConsole.Entities
         /// <summary>
         /// The current animation.
         /// </summary>
-        public AnimatedScreenObject Animation
+        public AnimatedScreenSurface Animation
         {
             get => animation;
             set
             {
                 if (animation != null)
                 {
-                    animation.State = AnimatedScreenObject.AnimationState.Deactivated;
+                    animation.State = AnimatedScreenSurface.AnimationState.Deactivated;
                     animation.AnimationStateChanged -= OnAnimationStateChanged;
                     Children.Remove(animation);
                 }
@@ -52,7 +52,7 @@ namespace SadConsole.Entities
                 animation.Font = Font;
 
                 animation.AnimationStateChanged += OnAnimationStateChanged;
-                animation.State = AnimatedScreenObject.AnimationState.Activated;
+                animation.State = AnimatedScreenSurface.AnimationState.Activated;
                 Children.Add(animation);
             }
         }
@@ -60,7 +60,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// Collection of animations associated with this game object.
         /// </summary>
-        public Dictionary<string, AnimatedScreenObject> Animations { get; protected set; } = new Dictionary<string, AnimatedScreenObject>();
+        public Dictionary<string, AnimatedScreenSurface> Animations { get; protected set; } = new Dictionary<string, AnimatedScreenSurface>();
 
         /// <summary>
         /// Offsets the position by this amount.
@@ -91,7 +91,7 @@ namespace SadConsole.Entities
         public Entity(int width, int height, Font font): base(width, height)
         {
             Font = font;
-            Animation = new AnimatedScreenObject("default", width, height, font, FontSize);
+            Animation = new AnimatedScreenSurface("default", width, height, font, FontSize);
             animation.CreateFrame();
             Animations.Add("default", animation);
         }
@@ -104,7 +104,7 @@ namespace SadConsole.Entities
         /// <param name="glyph">The glyph color of the entity.</param>
         public Entity(Color foreground, Color background, int glyph) : base(1, 1)
         {
-            Animation = new AnimatedScreenObject("default", 1, 1);
+            Animation = new AnimatedScreenSurface("default", 1, 1);
             animation.CreateFrame().SetGlyph(0, 0, glyph, foreground, background);
             Animations.Add("default", animation);
         }
@@ -112,8 +112,8 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new Entity with a default animation/
         /// </summary>
-        /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedScreenObject.Name"/> property changesd to "default".</param>
-        public Entity(AnimatedScreenObject animation): base(animation.Width, animation.Height)
+        /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedScreenSurface.Name"/> property changesd to "default".</param>
+        public Entity(AnimatedScreenSurface animation): base(animation.Width, animation.Height)
         {
             Font = animation.Font;
             FontSize = animation.FontSize;
@@ -123,11 +123,11 @@ namespace SadConsole.Entities
         }
 
         /// <summary>
-        /// Called when the current <see cref="Animation"/> raises the <see cref="AnimatedScreenObject.AnimationStateChanged"/> event and then raises the <see cref="AnimationStateChanged"/> event for the entity.
+        /// Called when the current <see cref="Animation"/> raises the <see cref="AnimatedScreenSurface.AnimationStateChanged"/> event and then raises the <see cref="AnimationStateChanged"/> event for the entity.
         /// </summary>
         /// <param name="sender">The animation calling this method.</param>
         /// <param name="e">The state of the animation.</param>
-        protected void OnAnimationStateChanged(object sender, AnimatedScreenObject.AnimationStateChangedEventArgs e) => AnimationStateChanged?.Invoke(this, e);
+        protected void OnAnimationStateChanged(object sender, AnimatedScreenSurface.AnimationStateChangedEventArgs e) => AnimationStateChanged?.Invoke(this, e);
 
         /// <inheritdoc />
         public override void UpdateAbsolutePosition()

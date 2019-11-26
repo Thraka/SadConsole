@@ -190,7 +190,7 @@ namespace SadConsole
         public override ITexture GetTexture(Stream textureStream) =>
             new FauxTexture();
 
-        public override IRenderer GetDefaultRenderer(IScreenObjectSurface screenObject) =>
+        public override IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
             new Renderers.ConsoleRenderer();
 
         public override IKeyboardState GetKeyboardState()

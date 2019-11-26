@@ -12,20 +12,20 @@ using SadConsole.Host.MonoGame;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="Console"/>.
+    /// Draws a <see cref="ControlsConsole"/>.
     /// </summary>
     /// <remarks>
     /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
     ///
     /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
     /// </remarks>
-    public class ConsoleRenderer : ScreenObjectRenderer
+    public class ControlsConsole : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
         public override void Attach(IScreenSurface screen)
         {
-            if (!(screen is Console))
-                throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(Console)}.");
+            if (!(screen is ControlsConsole))
+                throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(ControlsConsole)}.");
         }
 
         ///  <inheritdoc/>
@@ -82,9 +82,64 @@ namespace SadConsole.Renderers
             if (screen.Tint.A != 255)
                 RefreshCells(screen.Surface, screen.Font);
 
+            foreach (SadConsole.UI.Controls.ControlBase control in ((SadConsole.UI.ControlsConsole)screen).Controls)
+            {
+                if (!control.IsVisible) continue;
+
+                RenderControlCells(control);
+            }
+
             RefreshEnd(screen);
 
             screen.IsDirty = false;
+        }
+
+        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control)
+        {
+            Font font = control.AlternateFont ?? control.Parent.Font;
+
+            var fontImage = ((SadConsole.MonoGame.GameTexture)font.Image).Texture;
+
+            if (control.Surface.DefaultBackground.A != 0)
+            {
+                (int x, int y) = (control.Position - control.Parent.ViewPosition).SurfaceLocationToPixel(control.Parent.FontSize);
+                (int width, int height) = new SadRogue.Primitives.Point(control.Surface.ViewWidth, control.Surface.ViewHeight) * control.Parent.FontSize;
+
+                MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, width, height), font.GlyphRects[font.SolidGlyphIndex].ToMonoRectangle(), control.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+            }
+
+            var parentViewRect = control.Parent.GetViewRectangle();
+
+            for (int i = 0; i < control.Surface.Cells.Length; i++)
+            {
+                ref ColoredGlyph cell = ref control.Surface.Cells[i];
+
+                if (!cell.IsVisible) continue;
+
+                SadRogue.Primitives.Point cellRenderPosition = SadRogue.Primitives.Point.FromIndex(i, control.Surface.ViewWidth) + control.Position;
+
+                if (!parentViewRect.Contains(cellRenderPosition)) continue;
+
+                XnaRectangle renderRect = _renderRects[(cellRenderPosition - control.Parent.ViewPosition).ToIndex(control.Parent.BufferWidth)];
+
+                if (cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != control.Surface.DefaultBackground)
+                {
+                    MonoGame.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GlyphRects[font.SolidGlyphIndex].ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                }
+
+                if (cell.Foreground != SadRogue.Primitives.Color.Transparent)
+                {
+                    MonoGame.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GlyphRects[cell.Glyph].ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                }
+
+                foreach (CellDecorator decorator in cell.Decorators)
+                {
+                    if (decorator.Color != SadRogue.Primitives.Color.Transparent)
+                    {
+                        MonoGame.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GlyphRects[decorator.Glyph].ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                    }
+                }
+            }
         }
     }
 }

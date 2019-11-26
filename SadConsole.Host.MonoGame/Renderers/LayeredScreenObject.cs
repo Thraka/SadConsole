@@ -12,7 +12,7 @@ using SadConsole.Host.MonoGame;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="IScreenObjectSurface"/> when it uses a <see cref="SadConsole.LayeredScreenObject"/> type for the <see cref="IScreenObjectSurface.Surface"/>.
+    /// Draws a <see cref="IScreenSurface"/> when it uses a <see cref="SadConsole.LayeredScreenSurface"/> type for the <see cref="IScreenSurface.Surface"/>.
     /// </summary>
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
@@ -20,14 +20,14 @@ namespace SadConsole.Renderers
     public class LayeredScreenObject : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
-        public override void Attach(IScreenObjectSurface screen)
+        public override void Attach(IScreenSurface screen)
         {
-            if (!(screen.Surface is SadConsole.LayeredScreenObject))
-                throw new Exception($"The {nameof(LayeredConsole)} renderer must be added to a screen object that has a {nameof(SadConsole.LayeredScreenObject)} for a surface.");
+            if (!(screen.Surface is SadConsole.LayeredScreenSurface))
+                throw new Exception($"The {nameof(LayeredScreenObject)} renderer must be added to a screen object that has a {nameof(SadConsole.LayeredScreenSurface)} for a surface.");
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(IScreenObjectSurface screen, bool force = false)
+        public override void Refresh(IScreenSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -55,7 +55,7 @@ namespace SadConsole.Renderers
 
             if (screen.Tint.A != 255)
             {
-                foreach (var layer in ((SadConsole.LayeredScreenObject)screen).Layers)
+                foreach (var layer in ((SadConsole.LayeredScreenSurface)screen).Layers)
                     base.RefreshCells(layer.Surface, screen.Font);
             }
 

@@ -7,7 +7,7 @@ namespace SadConsole
     /// <summary>
     /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
     /// </summary>
-    public partial class LayeredScreenObject : ScreenObjectSurface
+    public partial class LayeredScreenSurface : ScreenSurface
     {
         private List<ILayer> _layers;
 
@@ -27,7 +27,7 @@ namespace SadConsole
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
         /// <param name="layers">The number of layers to add to this surface.</param>
-        public LayeredScreenObject(int width, int height, int layers) : this(width, height, width, height, layers)
+        public LayeredScreenSurface(int width, int height, int layers) : this(width, height, width, height, layers)
         {
             
         }
@@ -40,7 +40,7 @@ namespace SadConsole
         /// <param name="bufferWidth">The total width of the surface in cells.</param>
         /// <param name="bufferHeight">The total height of the surface in cells.</param>
         /// <param name="layers">The number of layers to add to this surface.</param>
-        public LayeredScreenObject(int width, int height, int bufferWidth, int bufferHeight, int layers) : base(width, height, bufferWidth, bufferHeight, null)
+        public LayeredScreenSurface(int width, int height, int bufferWidth, int bufferHeight, int layers) : base(width, height, bufferWidth, bufferHeight, null)
         {
             if (layers < 1) throw new ArgumentOutOfRangeException(nameof(layers), "The layer count must be one or more.");
             _layers = new List<ILayer>(layers);
@@ -65,7 +65,7 @@ namespace SadConsole
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public LayeredScreenObject(int width, int height, ColoredGlyph[][] initialCells) : this(width, height, width, height, initialCells)
+        public LayeredScreenSurface(int width, int height, ColoredGlyph[][] initialCells) : this(width, height, width, height, initialCells)
         {
 
         }
@@ -78,7 +78,7 @@ namespace SadConsole
         /// <param name="bufferWidth">The total width of the surface in cells.</param>
         /// <param name="bufferHeight">The total height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public LayeredScreenObject(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[][] initialCells): base(width, height, bufferWidth, bufferHeight, initialCells?[0])
+        public LayeredScreenSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[][] initialCells): base(width, height, bufferWidth, bufferHeight, initialCells?[0])
         {
             if (initialCells == null) throw new ArgumentNullException(nameof(initialCells), $"You must pass an array of {nameof(ColoredGlyph)} arrays to represent the surface layers.");
 

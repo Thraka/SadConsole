@@ -7,26 +7,26 @@ using SadRogue.Primitives;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="Console"/>.
+    /// Draws a <see cref="ControlsConsole"/>.
     /// </summary>
     /// <remarks>
     /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
     ///
     /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
     /// </remarks>
-    public class ConsoleRenderer : ScreenObjectRenderer
+    public class ControlsConsole : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
         public override void Attach(IScreenSurface screen)
         {
-            if (!(screen is Console))
-                throw new Exception($"The ConsoleRenderer must be added to a Console.");
+            if (!(screen is ControlsConsole))
+                throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(ControlsConsole)}.");
         }
 
         ///  <inheritdoc/>
         public override void Render(IScreenSurface screen)
         {
-            var console = (Console)screen;
+            var console = (SadConsole.UI.ControlsConsole)screen;
 
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
@@ -75,10 +75,50 @@ namespace SadConsole.Renderers
             // Rendering code from sadconsole
             RefreshBegin(screen);
             if (screen.Tint.A != 255)
+            {
                 RefreshCells(screen.Surface, screen.Font);
+
+                foreach (SadConsole.UI.Controls.ControlBase control in ((SadConsole.UI.ControlsConsole)screen).Controls)
+                {
+                    if (!control.IsVisible) continue;
+
+                    RenderControlCells(control);
+                }
+
+            }
             RefreshEnd(screen);
 
             screen.IsDirty = false;
+        }
+
+        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control)
+        {
+            Font font = control.AlternateFont ?? control.Parent.Font;
+
+            if (control.Surface.DefaultBackground.A != 0)
+            {
+                (int x, int y) = (control.Position - control.Parent.ViewPosition).SurfaceLocationToPixel(control.Parent.FontSize);
+                (int width, int height) = new Point(control.Surface.ViewWidth, control.Surface.ViewHeight) * control.Parent.FontSize;
+
+                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.GlyphRects[font.SolidGlyphIndex].ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+            }
+
+            var parentViewRect = control.Parent.GetViewRectangle();
+
+            for (int i = 0; i < control.Surface.Cells.Length; i++)
+            {
+                ref ColoredGlyph cell = ref control.Surface.Cells[i];
+
+                if (!cell.IsVisible) continue;
+
+                Point cellRenderPosition = Point.FromIndex(i, control.Surface.ViewWidth) + control.Position;
+
+                if (!parentViewRect.Contains(cellRenderPosition)) continue;
+
+                IntRect renderRect = _renderRects[(cellRenderPosition - control.Parent.ViewPosition).ToIndex(control.Parent.BufferWidth)];
+
+                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, !cell.Background.Equals(Color.Transparent) && cell.Background != control.Surface.DefaultBackground, font);
+            }
         }
 
         #region IDisposable Support
@@ -100,7 +140,7 @@ namespace SadConsole.Renderers
             }
         }
 
-         ~ConsoleRenderer()
+         ~ControlsConsole()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(false);

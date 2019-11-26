@@ -57,79 +57,67 @@ namespace ConsoleTest
             //screen2.Surface.SetForeground(5, 4, Color.Black);
             //Global.Screen.Renderer = null;
 
-            var layeredSurface = new LayeredScreenObject(20, 10, 3);
+            //// LAYERED SURFACE ==============================================================
+            //var layeredSurface = new LayeredScreenSurface(20, 10, 3);
 
-            AddStars(layeredSurface.Layers[0].Surface, Color.DarkOrange);
-            AddStars(layeredSurface.Layers[1].Surface, Color.Green);
-            AddStars(layeredSurface.Layers[2].Surface, Color.GreenYellow);
+            //AddStars(layeredSurface.Layers[0].Surface, Color.DarkOrange);
+            //AddStars(layeredSurface.Layers[1].Surface, Color.Green);
+            //AddStars(layeredSurface.Layers[2].Surface, Color.GreenYellow);
 
-            static void AddStars(CellSurface surface, Color starColor)
-            {
-                int count = surface.BufferWidth * surface.BufferHeight / 10;
+            //static void AddStars(CellSurface surface, Color starColor)
+            //{
+            //    int count = surface.BufferWidth * surface.BufferHeight / 10;
 
-                for (int i = 0; i < count; i++)
-                {
-                    if (Global.Random.Next(0, 10) > 5)
-                    {
-                        int x = Global.Random.Next(0, surface.BufferWidth);
-                        int y = Global.Random.Next(0, surface.BufferHeight);
+            //    for (int i = 0; i < count; i++)
+            //    {
+            //        if (Global.Random.Next(0, 10) > 5)
+            //        {
+            //            int x = Global.Random.Next(0, surface.BufferWidth);
+            //            int y = Global.Random.Next(0, surface.BufferHeight);
 
-                        surface.SetGlyph(x, y, 7, starColor);
-                    }
-                }
-            }
+            //            surface.SetGlyph(x, y, 7, starColor);
+            //        }
+            //    }
+            //}
 
-            layeredSurface.Renderer = new SadConsole.Renderers.LayeredScreenObject();
-            layeredSurface.Parent = Global.Screen;
-            layeredSurface.Position = new Point(10, 14);
+            //layeredSurface.Renderer = new SadConsole.Renderers.LayeredScreenObject();
+            //layeredSurface.Parent = Global.Screen;
+            //layeredSurface.Position = new Point(10, 14);
 
-            var set = new SadConsole.Instructions.InstructionSet()
-                .InstructConcurrent(
-                    new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
-                        .Wait(new TimeSpan(0, 0, 1))
-                        .Code((s) => { layeredSurface.Layers[0].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
+            //var set = new SadConsole.Instructions.InstructionSet()
+            //    .InstructConcurrent(
+            //        new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
+            //            .Wait(new TimeSpan(0, 0, 1))
+            //            .Code((s) => { layeredSurface.Layers[0].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
 
-                    new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
-                        .Wait(new TimeSpan(0, 0, 0, 0, 800))
-                        .Code((s) => { layeredSurface.Layers[1].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
+            //        new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
+            //            .Wait(new TimeSpan(0, 0, 0, 0, 800))
+            //            .Code((s) => { layeredSurface.Layers[1].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
 
-                    new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
-                        .Wait(new TimeSpan(0, 0, 0, 0, 400))
-                        .Code((s) => { layeredSurface.Layers[2].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; })
-                );
-
-            layeredSurface.Components.Add(set);
-
-            var ent = new SadConsole.Entities.Entity(3, 3);
-            ent.Animation.CurrentFrame.Fill(Color.AliceBlue, Color.DarkBlue, '.');
-            ent.Animation.Center = (1, 1);
-            ent.UseKeyboard = true;
-            ent.Components.Add(new SadConsole.Components.MoveObject());
-            Global.Screen.Children.Add(ent);
-            ent.IsFocused = true;
-
-            //Console con = new Console(80, 25);
-            //con.Print(1, 1, "Hello, welcome to SadConsole", Color.Yellow);
-            //con.SetForeground(4, 1, Color.Brown);
-            //con.SetForeground(5, 1, Color.Brown);
-            //con.SetGlyph(6, 1, '!');
-            //con.Cursor.Move(1, 20).Print("Printing with cursor");
-
-            //con.Components.Add(
-            //    new SadConsole.Instructions.InstructionSet().Wait(TimeSpan.FromSeconds(1)).Instruct(
-
-            //    new SadConsole.Instructions.FadeTextSurfaceTint(
-            //                    new SadRogue.Primitives.ColorGradient(Color.Purple.SetAlpha(0), Color.Purple.FillAlpha(), Color.Purple.SetAlpha(0)),
-            //                    TimeSpan.FromSeconds(5)
-            //                  )
-            //    { RepeatCount = -1 })
+            //        new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
+            //            .Wait(new TimeSpan(0, 0, 0, 0, 400))
+            //            .Code((s) => { layeredSurface.Layers[2].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; })
             //    );
 
-            //con.Components.Add(new MouseTest());
+            //layeredSurface.Components.Add(set);
 
-            //var animation = AnimatedScreenObject.CreateStatic(20, 10, 20, 0.5d);
-            //animation.Parent = Global.Screen;
-            //animation.Position = (22, 2);
+            //// ENTITY ==============================================================
+            //var ent = new SadConsole.Entities.Entity(3, 3);
+            //ent.Animation.CurrentFrame.Fill(Color.AliceBlue, Color.DarkBlue, '.');
+            //ent.Animation.Center = (1, 1);
+            //ent.UseKeyboard = true;
+            //ent.Components.Add(new SadConsole.Components.MoveObject());
+            //Global.Screen.Children.Add(ent);
+            //ent.IsFocused = true;
+
+
+            // CONTROLS ===============================================================
+            var console = new SadConsole.UI.ControlsConsole(30, 15);
+            console.Parent = Global.Screen;
+            console.Add(new SadConsole.UI.Controls.Label(10) { DisplayText = "Hello", TextColor = new Color(33,213,22) });
+            console.Add(new SadConsole.UI.Controls.Button(9) { Text = "Hello", Position = (5, 5) });
+            console.Add(new SadConsole.UI.Controls.Button(9, 3) { Text = "Hello", Position = (5, 7), Theme = new SadConsole.UI.Themes.Button3dTheme() });
+            console.IsFocused = true;
         }
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent

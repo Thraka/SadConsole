@@ -8,7 +8,7 @@ namespace SadConsole.Instructions
     /// </summary>
     public class FadeTextSurfaceTint : InstructionBase
     {
-        private IScreenObjectSurface _objectSurface;
+        private IScreenSurface _objectSurface;
         private ColorGradient _colors;
 
         /// <summary>
@@ -28,10 +28,10 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Creates a new tint fade instruction that targets the specified console.
         /// </summary>
-        /// <param name="objectSurface">The <see cref="IScreenObjectSurface.Tint"/> to fade.</param>
+        /// <param name="objectSurface">The <see cref="IScreenSurface.Tint"/> to fade.</param>
         /// <param name="colors">The gradient pattern to fade through.</param>
         /// <param name="duration">How long the fade takes.</param>
-        public FadeTextSurfaceTint(IScreenObjectSurface objectSurface, ColorGradient colors, TimeSpan duration)
+        public FadeTextSurfaceTint(IScreenSurface objectSurface, ColorGradient colors, TimeSpan duration)
         {
             Colors = colors;
             FadeAnimationSettings = new DoubleAnimation() { StartingValue = 0d, EndingValue = 1d, Duration = duration };
@@ -74,7 +74,7 @@ namespace SadConsole.Instructions
 
                 if (_objectSurface == null)
                 {
-                    _objectSurface = componentHost as IScreenObjectSurface;
+                    _objectSurface = componentHost as IScreenSurface;
                 }
             }
 
