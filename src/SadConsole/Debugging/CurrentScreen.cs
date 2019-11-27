@@ -13,6 +13,11 @@ namespace SadConsole.Debug
 {
     public static class CurrentScreen
     {
+        static CurrentScreen()
+        {
+            SadConsole.Themes.Library.Default.SetControlTheme(typeof(ScrollingSurfaceView), new ScrollingSurfaceView.ScrollingSurfaceViewTheme());
+        }
+
         private class DebugWindow : Window
         {
             private Console _originalScreen;
@@ -32,8 +37,8 @@ namespace SadConsole.Debug
 
             public DebugWindow(Font font) : base(78, 22, font)
             {
-                Theme = Theme.Clone();
-                Theme.ListBoxTheme.DrawBorder = true;
+                var listboxTheme = (ListBoxTheme)Library.Default.GetControlTheme(typeof(ListBox));
+                listboxTheme.DrawBorder = true;
 
                 Title = "Global.CurrentScreen Debugger";
                 IsModalDefault = true;
@@ -41,6 +46,7 @@ namespace SadConsole.Debug
 
                 _listConsoles = new ListBox(30, 15) { Position = new Point(2, 3) };
                 _listConsoles.SelectedItemChanged += Listbox_SelectedItemChanged;
+                _listConsoles.Theme = listboxTheme;
                 Add(_listConsoles);
 
                 Label label = CreateLabel("Current Screen", new Point(_listConsoles.Bounds.Left, _listConsoles.Bounds.Top - 1));
@@ -110,7 +116,7 @@ namespace SadConsole.Debug
 
                 Label CreateLabel(string text, Point position)
                 {
-                    var labelTemp = new Label(text) { Position = position, TextColor = Theme.Colors.TitleText };
+                    var labelTemp = new Label(text) { Position = position, TextColor = (ThemeColors?.TitleText ?? Library.Default.Colors.TitleText) };
                     Add(labelTemp);
                     return labelTemp;
                 }
@@ -205,7 +211,7 @@ namespace SadConsole.Debug
 
                 Label CreateLabel(string text, Point position)
                 {
-                    var labelTemp = new Label(text) { Position = position, TextColor = Theme.Colors.TitleText };
+                    var labelTemp = new Label(text) { Position = position, TextColor = ThemeColors.TitleText };
                     window.Add(labelTemp);
                     return labelTemp;
                 }
@@ -292,19 +298,6 @@ namespace SadConsole.Debug
             window.Show();
             window.Center();
         }
-
-        //private class DebugSurface : Console
-        //{
-        //    public override void Draw(TimeSpan timeElapsed)
-        //    {
-        //        base.Draw(timeElapsed);
-        //    }
-        //}
-
-        //public static void Show()
-        //{
-
-        //}
 
         private class ConsoleListboxItem
         {
@@ -459,9 +452,6 @@ namespace SadConsole.Debug
                 {
                     control.Surface = new CellSurface(control.Width, control.Height);
 
-                    ((ScrollingSurfaceView)control).VerticalBar.Theme = new ScrollBarTheme();
-                    ((ScrollingSurfaceView)control).HorizontalBar.Theme = new ScrollBarTheme();
-
                     base.Attached(control);
                 }
 
@@ -481,6 +471,8 @@ namespace SadConsole.Debug
                     {
                         return;
                     }
+
+                    RefreshTheme(control.ThemeColors, control);
 
                     Cell appearance = GetStateAppearance(scroller.State);
 
@@ -537,7 +529,6 @@ namespace SadConsole.Debug
 
                 public override ThemeBase Clone() => new ScrollingSurfaceViewTheme()
                 {
-                    Colors = Colors?.Clone(),
                     Normal = Normal.Clone(),
                     Disabled = Disabled.Clone(),
                     MouseOver = MouseOver.Clone(),
@@ -546,12 +537,21 @@ namespace SadConsole.Debug
                     Focused = Focused.Clone(),
                 };
 
-                public override void RefreshTheme(Colors themeColors)
+                public override void RefreshTheme(Colors themeColors, ControlBase control)
                 {
-                    base.RefreshTheme(themeColors);
+                    if (themeColors == null) themeColors = Library.Default.Colors;
+
+                    base.RefreshTheme(themeColors, control);
 
                     SetForeground(Normal.Foreground);
                     SetBackground(Normal.Background);
+
+                    var scroller = (ScrollingSurfaceView)control;
+
+                    scroller.VerticalBar.Theme = new ScrollBarTheme();
+                    scroller.HorizontalBar.Theme = new ScrollBarTheme();
+                    scroller.VerticalBar.Theme.RefreshTheme(themeColors, control);
+                    scroller.HorizontalBar.Theme.RefreshTheme(themeColors, control);
                 }
             }
         }

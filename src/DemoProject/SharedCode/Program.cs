@@ -64,11 +64,13 @@ namespace StarterProject
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
                 {
+                    SadConsole.Debug.CurrentScreen.Show();
                 }
                 else if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
                 {
                     SadConsole.Settings.ToggleFullScreen();
                 }
+                
             }
         }
 
@@ -95,6 +97,14 @@ namespace StarterProject
             
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
+
+
+Console con = new Console(80, 25);
+con.Print(1, 1, "Hello, welcome to SadConsole", Color.Yellow);
+con.SetForeground(4, 1, Color.Brown);
+con.SetForeground(5, 1, Color.Brown);
+con.SetGlyph(6, 1, '!');
+con.Cursor.Move(1, 20).Print("Printing with cursor");
 
         }
     }

@@ -54,10 +54,10 @@ namespace StarterProject.CustomConsoles
                     base.Draw(delta);
 
                     mainData.Components.RemoveAll();
-                    mainData.Components.Add(new InputHandling.MoveViewPortKeyboardHandler());
 
                     // Generate the content
                     mainData.Resize(2000, 2000, false, new Rectangle(0, 0, 80, 23));
+                    mainData.Components.Add(new InputHandling.MoveViewPortKeyboardHandler());
                     mainData.FillWithRandomGarbage();
                     mainData.IsVisible = true;
 

@@ -22,6 +22,7 @@ namespace SadConsole.Controls
 
         protected Themes.ThemeBase ActiveTheme;
         protected bool IsCustomTheme;
+        protected Themes.Colors _themeColors;
 
         /// <summary>
         /// <see langword="true"/> when the left mouse button is down.
@@ -199,15 +200,21 @@ namespace SadConsole.Controls
             set
             {
                 parent = value;
-
-                RefreshParentTheme();
-
                 OnParentChanged();
             }
         }
 
         /// <summary>
-        /// The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="Parent"/>.
+        /// Gets or sets the colors to use with the <see cref="Theme"/>.
+        /// </summary>
+        public Themes.Colors ThemeColors
+        {
+            get => _themeColors ?? parent?.ThemeColors;
+            set => _themeColors = value;
+        }
+
+        /// <summary>
+        /// The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="Themes.Library"/>.
         /// </summary>
         public Themes.ThemeBase Theme
         {
@@ -219,7 +226,8 @@ namespace SadConsole.Controls
                     if (value == null)
                     {
                         IsCustomTheme = false;
-                        ActiveTheme = parent?.Theme.GetControlTheme(this) ?? Themes.Library.Default.GetControlTheme(this);
+                        ActiveTheme = Themes.Library.Default.GetControlTheme(GetType());
+                        if (ActiveTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
                     }
                     else
                     {
@@ -279,6 +287,8 @@ namespace SadConsole.Controls
             UseKeyboard = true;
             Bounds = new Rectangle(0, 0, width, height);
             MouseBounds = new Rectangle(0, 0, width, height);
+            Theme = SadConsole.Themes.Library.Default.GetControlTheme(GetType());
+            if (Theme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
         }
         #endregion
 
@@ -297,33 +307,6 @@ namespace SadConsole.Controls
         /// Called when the <see cref="Theme"/> changes.
         /// </summary>
         protected virtual void OnThemeChanged() { }
-
-        /// <summary>
-        /// Gets the latest theme from the parent's library unless a theme has been explicitly set.
-        /// </summary>
-        public void RefreshParentTheme()
-        {
-            if (parent == null)
-            {
-                return;
-            }
-
-            if (IsCustomTheme && ActiveTheme != null)
-            {
-                ActiveTheme.RefreshTheme(GetThemeColors());
-            }
-            else
-            {
-                ActiveTheme = parent.Theme.GetControlTheme(this);
-                ActiveTheme?.Attached(this);
-            }
-        }
-
-        /// <summary>
-        /// Gets the theme colors associated with this control.
-        /// </summary>
-        /// <returns>Theme colors.</returns>
-        public Themes.Colors GetThemeColors() => ActiveTheme.Colors ?? Parent?.Theme.Colors ?? Themes.Library.Default.Colors;
 
         #region Input
         /// <summary>

@@ -19,6 +19,9 @@ namespace StarterProject.Windows
         private readonly SadConsole.Effects.Recolor highlightedEffect;
         private readonly SadConsole.Effects.Fade unhighlightEffect;
         private int fontRowOffset = 0;
+        private ColoredString selectedGlyphString;
+        private int hoverGlyph;
+        private bool isHover;
 
         public event EventHandler ColorsChanged;
         public int SelectedCharacterIndex = 0;
@@ -75,8 +78,8 @@ namespace StarterProject.Windows
                 Permanent = true
             };
 
-            Theme = SadConsole.Themes.Library.Default.Clone();
-            Theme.WindowTheme.BorderLineStyle = CellSurface.ConnectedLineThick;
+            Theme = SadConsole.Themes.Library.Default.WindowTheme.Clone();
+            Theme.BorderLineStyle = CellSurface.ConnectedLineThick;
 
             // The frame will have been drawn by the base class, so redraw and our close button will be put on top of it
             //Invalidate();
@@ -100,7 +103,7 @@ namespace StarterProject.Windows
             }
         }
 
-        public override void Invalidate()
+        protected override void Invalidate()
         {
             base.Invalidate();
 
@@ -122,6 +125,11 @@ namespace StarterProject.Windows
                     charIndex++;
                 }
             }
+
+            if (isHover)
+                DrawHoverItemString();
+            else
+                DrawSelectedItemString();
         }
 
         protected override void OnMouseLeftClicked(SadConsole.Input.MouseConsoleState state)
@@ -142,19 +150,8 @@ namespace StarterProject.Windows
         {
             if (state.Cell != null && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
             {
-                // Draw the character index and value in the status area
-                string[] items = new string[] { "Index: ", state.Cell.Glyph.ToString() + " ", ((char)state.Cell.Glyph).ToString() };
-
-                items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
-
-                ColoredString text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
-                           items[1].CreateColored(Color.LightCoral, Color.Black, null) +
-                           items[2].CreateColored(Color.LightCyan, Color.Black, null);
-
-                text.IgnoreBackground = true;
-                text.IgnoreEffect = true;
-
-                Print(1, Height - 2, text);
+                isHover = true;
+                hoverGlyph = state.Cell.Glyph;
 
                 // Set the special effect on the current known character and clear it on the last known
                 if (lastMouseState == null)
@@ -172,8 +169,8 @@ namespace StarterProject.Windows
             }
             else
             {
-                DrawSelectedItemString();
-
+                isHover = false;
+                
                 // Clear the special effect on the last known character
                 if (lastMouseState != null)
                 {
@@ -183,6 +180,25 @@ namespace StarterProject.Windows
             }
 
             base.OnMouseMove(state);
+
+            IsDirty = true;
+        }
+
+        private void DrawHoverItemString()
+        {
+            // Draw the character index and value in the status area
+            string[] items = new string[] { "Index: ", hoverGlyph.ToString() + " ", ((char)hoverGlyph).ToString() };
+
+            items[2] = items[2].PadRight(Width - 2 - (items[0].Length + items[1].Length));
+
+            ColoredString text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
+                       items[1].CreateColored(Color.LightCoral, Color.Black, null) +
+                       items[2].CreateColored(Color.LightCyan, Color.Black, null);
+
+            text.IgnoreBackground = true;
+            text.IgnoreEffect = true;
+
+            Print(1, Height - 2, text);
         }
 
         private void DrawSelectedItemString()
@@ -194,11 +210,11 @@ namespace StarterProject.Windows
             string[] items = new string[] { "Selected: ", ((char)SelectedCharacterIndex).ToString(), " (", SelectedCharacterIndex.ToString(), ")" };
             items[4] = items[4].PadRight(Width - 2 - (items[0].Length + items[1].Length + items[2].Length + items[3].Length));
 
-            ColoredString text = items[0].CreateColored(Color.LightBlue, Theme.WindowTheme.BorderStyle.Background, null) +
-                       items[1].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
-                       items[2].CreateColored(Color.LightCyan, Theme.WindowTheme.BorderStyle.Background, null) +
-                       items[3].CreateColored(Color.LightCoral, Theme.WindowTheme.BorderStyle.Background, null) +
-                       items[4].CreateColored(Color.LightCyan, Theme.WindowTheme.BorderStyle.Background, null);
+            ColoredString text = items[0].CreateColored(Color.LightBlue, Theme.BorderStyle.Background, null) +
+                       items[1].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
+                       items[2].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null) +
+                       items[3].CreateColored(Color.LightCoral, Theme.BorderStyle.Background, null) +
+                       items[4].CreateColored(Color.LightCyan, Theme.BorderStyle.Background, null);
 
             text.IgnoreBackground = true;
             text.IgnoreEffect = true;

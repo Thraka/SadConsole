@@ -42,6 +42,7 @@ namespace SadConsole.Themes
                 return;
             }
 
+            RefreshTheme(control.ThemeColors, control);
             Cell appearance;
 
             if (!UseNormalStateOnly)

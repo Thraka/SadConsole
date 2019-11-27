@@ -39,12 +39,12 @@ namespace SadConsole
             var yesButton = new Button(yesPrompt.Length + 2, 1);
             var noButton = new Button(noPrompt.Length + 2, 1);
 
-            yesButton.Theme = library.ButtonTheme;
-            noButton.Theme = library.ButtonTheme;
+            yesButton.Theme = library.GetControlTheme(typeof(Button));
+            noButton.Theme = library.GetControlTheme(typeof(Button));
 
             var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height)
             {
-                Theme = library
+                Theme = library.WindowTheme
             };
 
             var printArea = new DrawingSurface(window.Width, window.Height)
@@ -118,12 +118,12 @@ namespace SadConsole
             var closeButton = new Button(buttonWidth, 1)
             {
                 Text = closeButtonText,
-                Theme = library.ButtonTheme
+                Theme = library.GetControlTheme(typeof(Button))
             };
 
             var window = new Window(width, 5 + closeButton.Surface.Height)
             {
-                Theme = library
+                Theme = library.WindowTheme
             };
 
             message.IgnoreBackground = true;

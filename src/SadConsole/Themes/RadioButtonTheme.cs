@@ -17,29 +17,32 @@ namespace SadConsole.Themes
         /// <summary>
         /// The icon displayed when the radio button is checked.
         /// </summary>
-        [DataMember] public ThemeStates CheckedIcon;
+        [DataMember] public ThemeStates CheckedIcon { get; protected set; }
 
         /// <summary>
         /// The icon displayed when the radio button is checked.
         /// </summary>
-        [DataMember] public ThemeStates UncheckedIcon;
+        [DataMember] public ThemeStates UncheckedIcon { get; protected set; }
 
         /// <summary>
         /// The icon displayed for the brack left of the check icon.
         /// </summary>
-        [DataMember] public ThemeStates LeftBracket;
+        [DataMember] public ThemeStates LeftBracket { get; protected set; }
 
         /// <summary>
         /// The icon displayed for the brack right of the check icon.
         /// </summary>
-        [DataMember] public ThemeStates RightBracket;
+        [DataMember] public ThemeStates RightBracket { get; protected set; }
 
         /// <summary>
         /// Creates a new theme used by the <see cref="RadioButton"/>.
         /// </summary>
         public RadioButtonTheme()
         {
-
+            CheckedIcon = new ThemeStates();
+            UncheckedIcon = new ThemeStates();
+            LeftBracket = new ThemeStates();
+            RightBracket = new ThemeStates();
         }
 
         /// <inheritdoc />
@@ -55,24 +58,6 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors)
-        {
-            base.RefreshTheme(themeColors);
-
-            CheckedIcon = new ThemeStates(themeColors);
-            UncheckedIcon = new ThemeStates(themeColors);
-            LeftBracket = new ThemeStates(themeColors);
-            RightBracket = new ThemeStates(themeColors);
-
-            //TODO Hardcoded radio button glyphs
-            //CheckedIcon.SetGlyph(251);
-            CheckedIcon.SetGlyph(15);
-            UncheckedIcon.SetGlyph(0);
-            LeftBracket.SetGlyph('(');
-            RightBracket.SetGlyph(')');
-        }
-
-        /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
             if (!(control is RadioButton radiobutton))
@@ -84,6 +69,15 @@ namespace SadConsole.Themes
             {
                 return;
             }
+
+            RefreshTheme(control.ThemeColors, control);
+
+            //TODO Hardcoded radio button glyphs
+            //CheckedIcon.SetGlyph(251);
+            CheckedIcon.SetGlyph(15);
+            UncheckedIcon.SetGlyph(0);
+            LeftBracket.SetGlyph('(');
+            RightBracket.SetGlyph(')');
 
             Cell appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
 
@@ -146,20 +140,31 @@ namespace SadConsole.Themes
             radiobutton.IsDirty = false;
         }
 
+        public override void RefreshTheme(Colors themeColors, ControlBase control)
+        {
+            if (themeColors == null) themeColors = Library.Default.Colors;
+
+            base.RefreshTheme(themeColors, control);
+
+            CheckedIcon.RefreshTheme(themeColors, control);
+            UncheckedIcon.RefreshTheme(themeColors, control);
+            LeftBracket.RefreshTheme(themeColors, control);
+            RightBracket.RefreshTheme(themeColors, control);
+        }
+
         /// <inheritdoc />
         public override ThemeBase Clone() => new RadioButtonTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
-            CheckedIcon = CheckedIcon.Clone(),
-            UncheckedIcon = UncheckedIcon.Clone(),
-            LeftBracket = LeftBracket.Clone(),
-            RightBracket = RightBracket.Clone(),
+            CheckedIcon = CheckedIcon?.Clone(),
+            UncheckedIcon = UncheckedIcon?.Clone(),
+            LeftBracket = LeftBracket?.Clone(),
+            RightBracket = RightBracket?.Clone(),
         };
     }
 }

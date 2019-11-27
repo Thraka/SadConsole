@@ -47,9 +47,11 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors)
+        public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            base.RefreshTheme(themeColors);
+            if (themeColors == null) themeColors = Library.Default.Colors;
+
+            base.RefreshTheme(themeColors, control);
 
             Normal = new SadConsole.Cell(themeColors.Text, themeColors.GrayDark);
         }
@@ -73,6 +75,7 @@ namespace SadConsole.Themes
                 return;
             }
 
+            RefreshTheme(control.ThemeColors, control);
             Cell appearance = GetStateAppearance(textbox.State);
 
             if (textbox.IsFocused && !textbox.DisableKeyboard)
@@ -138,7 +141,6 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new TextBoxTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),

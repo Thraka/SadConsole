@@ -38,8 +38,10 @@ namespace SadConsole
         private ControlBase _focusedControl;
         private bool _wasFocusedBeforeCapture;
         private bool _exclusiveBeforeCapture;
+        [DataMember]
+        private Themes.Colors _themeColors;
 
-        private Library _theme;
+        private ControlsConsoleTheme _theme;
 
         /// <summary>
         /// When set to false, uses the static <see cref="ControlsConsole.KeyboardState"/> keyboard instead of <see cref="Global.KeyboardState"/>
@@ -49,23 +51,25 @@ namespace SadConsole
         #region Properties
 
         /// <summary>
-        /// Gets or sets the theme of the window.
+        /// The theme for the console. Defaults to <see cref="Library.ControlsConsoleTheme"/>.
         /// </summary>
-        public Library Theme
+        public Themes.ControlsConsoleTheme Theme
         {
-            get => _theme ?? Library.Default;
+            get => _theme ?? Library.Default.ControlsConsoleTheme;
             set
             {
                 _theme = value;
-
-                foreach (ControlBase control in Controls)
-                {
-                    control.RefreshParentTheme();
-                }
-
                 IsDirty = true;
-                Invalidate();
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the colors to use with the <see cref="Theme"/>.
+        /// </summary>
+        public Colors ThemeColors
+        {
+            get => _themeColors;
+            set { _themeColors = value; OnThemeColorsChanged(_themeColors); }
         }
 
         /// <summary>
@@ -460,27 +464,21 @@ namespace SadConsole
         {
             if (IsDirty)
             {
+                Invalidate();
+
                 foreach (ControlBase control in ControlsList)
-                {
                     control.IsDirty = true;
-                }
             }
+
+            base.OnDirtyChanged();
         }
 
         /// <summary>
         /// Signals that the console should be considered dirty and reapplies the <see cref="Theme"/>. When overridden, call this method first.
         /// </summary>
-        public virtual void Invalidate()
+        protected virtual void Invalidate()
         {
-            Theme.ControlsConsoleTheme.RefreshTheme(Theme.Colors);
-            Theme.ControlsConsoleTheme.Draw(this, this);
-
-            IsDirty = true;
-
-            foreach (ControlBase control in ControlsList)
-            {
-                control.IsDirty = true;
-            }
+            Theme?.Draw(this, this);
         }
 
         /// <summary>
@@ -661,6 +659,12 @@ namespace SadConsole
             IsExclusiveMouse = _exclusiveBeforeCapture;
             CapturedControl = null;
         }
+
+        /// <summary>
+        /// Called when the <see cref="ThemeColors"/> property changes.
+        /// </summary>
+        /// <param name="themeColors">The new colors.</param>
+        protected virtual void OnThemeColorsChanged(Colors themeColors) { }
 
         /// <summary>
         /// Gets an enumerator of the controls collection.

@@ -39,7 +39,10 @@ namespace SadConsole.Themes
         /// </summary>
         public CheckBoxTheme()
         {
-
+            CheckedIcon = new ThemeStates();
+            UncheckedIcon = new ThemeStates();
+            LeftBracket = new ThemeStates();
+            RightBracket = new ThemeStates();
         }
 
         /// <inheritdoc />
@@ -54,14 +57,16 @@ namespace SadConsole.Themes
             base.Attached(control);
         }
 
-        public override void RefreshTheme(Colors themeColors)
+        public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            base.RefreshTheme(themeColors);
+            if (themeColors == null) themeColors = Library.Default.Colors;
 
-            CheckedIcon = new ThemeStates(themeColors);
-            UncheckedIcon = new ThemeStates(themeColors);
-            LeftBracket = new ThemeStates(themeColors);
-            RightBracket = new ThemeStates(themeColors);
+            base.RefreshTheme(themeColors, control);
+
+            CheckedIcon.RefreshTheme(themeColors, control);
+            UncheckedIcon.RefreshTheme(themeColors, control);
+            LeftBracket.RefreshTheme(themeColors, control);
+            RightBracket.RefreshTheme(themeColors, control);
 
             CheckedIcon.SetGlyph(251);
             UncheckedIcon.SetGlyph(0);
@@ -82,6 +87,7 @@ namespace SadConsole.Themes
                 return;
             }
 
+            RefreshTheme(control.ThemeColors, control);
             Cell appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
 
             if (Helpers.HasFlag(checkbox.State, ControlStates.Disabled))
@@ -143,17 +149,16 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new CheckBoxTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
-            CheckedIcon = CheckedIcon.Clone(),
-            UncheckedIcon = UncheckedIcon.Clone(),
-            LeftBracket = LeftBracket.Clone(),
-            RightBracket = RightBracket.Clone(),
+            CheckedIcon = CheckedIcon?.Clone(),
+            UncheckedIcon = UncheckedIcon?.Clone(),
+            LeftBracket = LeftBracket?.Clone(),
+            RightBracket = RightBracket?.Clone(),
         };
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace SadConsole.Themes
 {
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -54,19 +55,14 @@ namespace SadConsole.Themes
         [DataMember]
         public Color ModalTint;
 
-        /// <summary>
-        /// Creates a new controls console theme with the specified colors.
-        /// </summary>
-        /// <param name="themeColors">The colors used with this theme.</param>
-        public WindowTheme(Colors themeColors) : base(themeColors)
+        public WindowTheme()
         {
+            ModalTint = Library.Default.Colors.ModalBackground;
 
+            FillStyle = new Cell(Library.Default.Colors.ControlHostFore, Library.Default.Colors.ControlHostBack);
+            TitleStyle = new Cell(Library.Default.Colors.TitleText, FillStyle.Background, FillStyle.Glyph);
+            BorderStyle = new Cell(Library.Default.Colors.Lines, FillStyle.Background, 0);
         }
-
-        /// <summary>
-        /// Creates a new theme without specifying the colors.
-        /// </summary>
-        protected WindowTheme() { }
 
         /// <summary>
         /// Returns a clone of this object. <see cref="BorderLineStyle"/> is referenced.
@@ -74,9 +70,9 @@ namespace SadConsole.Themes
         /// <returns>The cloned object.</returns>
         public new WindowTheme Clone() => new WindowTheme
         {
-            TitleStyle = TitleStyle.Clone(),
-            BorderStyle = BorderStyle.Clone(),
-            FillStyle = FillStyle.Clone(),
+            TitleStyle = TitleStyle?.Clone(),
+            BorderStyle = BorderStyle?.Clone(),
+            FillStyle = FillStyle?.Clone(),
             TitleAreaY = TitleAreaY,
             TitleAreaX = TitleAreaX,
             TitleAreaLength = TitleAreaLength,
@@ -87,6 +83,13 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void Draw(ControlsConsole console, CellSurface hostSurface)
         {
+            var themeColors = console.ThemeColors ?? Library.Default.Colors;
+
+            FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
+            TitleStyle = new Cell(themeColors.TitleText, FillStyle.Background, FillStyle.Glyph);
+            BorderStyle = new Cell(themeColors.Lines, FillStyle.Background, 0);
+            ModalTint = themeColors.ModalBackground;
+
             hostSurface.DefaultForeground = FillStyle.Foreground;
             hostSurface.DefaultBackground = FillStyle.Background;
             hostSurface.Fill(hostSurface.DefaultForeground, hostSurface.DefaultBackground, FillStyle.Glyph, null);
@@ -139,15 +142,6 @@ namespace SadConsole.Themes
 
                 hostSurface.Print(TitleAreaX, TitleAreaY, adjustedText, TitleStyle);
             }
-        }
-
-        /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors)
-        {
-            FillStyle = new Cell(themeColors.ControlHostFore, themeColors.ControlHostBack);
-            TitleStyle = new Cell(themeColors.TitleText, FillStyle.Background, FillStyle.Glyph);
-            BorderStyle = new Cell(themeColors.Lines, FillStyle.Background, 0);
-            ModalTint = themeColors.ModalBackground;
         }
     }
 }
