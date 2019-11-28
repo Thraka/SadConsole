@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CustomConsoles\AnsiConsole.cs" />
+    <Compile Remove="CustomConsoles\AutoTypingConsole.cs" />
+    <Compile Remove="CustomConsoles\BorderedConsole.cs" />
+    <Compile Remove="CustomConsoles\CursorConsole.cs" />
+    <Compile Remove="CustomConsoles\DOSConsole.cs" />
+    <Compile Remove="CustomConsoles\EntityConsole.cs" />
+    <Compile Remove="CustomConsoles\FadeConsole.cs" />
+    <Compile Remove="CustomConsoles\HexConsole.cs" />
+    <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />
+    <Compile Remove="CustomConsoles\RandomScrollingConsole.cs" />
+    <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
+    <Compile Remove="CustomConsoles\ScrollableConsole.cs" />
+    <Compile Remove="CustomConsoles\SerializationTests.cs" />
+    <Compile Remove="CustomConsoles\ShapesConsole.cs" />
+    <Compile Remove="CustomConsoles\SplashScreen.cs" />
+    <Compile Remove="CustomConsoles\StretchedConsole.cs" />
+    <Compile Remove="CustomConsoles\StringParsingConsole.cs" />
+    <Compile Remove="CustomConsoles\SubConsoleCursor.cs" />
+    <Compile Remove="CustomConsoles\TextCursorConsole.cs" />
+    <Compile Remove="CustomConsoles\ViewsAndSubViews.cs" />
+    <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <!--<ProjectReference Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />-->
+    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -4,19 +4,50 @@ using SadConsole.Input;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
 
-namespace ConsoleTest
+namespace FeatureDemo
 {
     internal class Program
     {
+        //private static Windows.CharacterViewer _characterWindow;
+        private static Container MainConsole;
+
         private static void Main(string[] args)
         {
-            //Console.WriteLine("Hello World!")
-            //Console.ReadKey();
+            //SadConsole.Settings.UseDefaultExtendedFont = true;
 
             SadConsole.Game.Create(80, 25);
             SadConsole.Game.Instance.OnStart = Init;
+            SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
+        }
+
+        private static void Instance_FrameUpdate(object sender, GameHost e)
+        {
+            // Called each logic update.
+            //if (!_characterWindow.IsVisible)
+            {
+                // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
+                // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
+                // in the Initialize method above.
+                if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F1))
+                {
+                    MainConsole.MoveNextConsole();
+                }
+                else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F2))
+                {
+                    //_characterWindow.Show(true);
+                }
+                else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F3))
+                {
+                    //SadConsole.Debug.CurrentScreen.Show();
+                }
+                else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F5))
+                {
+                    //SadConsole.Settings.ToggleFullScreen();
+                }
+
+            }
         }
 
         /// <summary>
@@ -24,100 +55,25 @@ namespace ConsoleTest
         /// </summary>
         private static void Init()
         {
-            //Game.Instance.MonoGameInstance.Components.Add(new SadConsole.MonoGame.Game.FPSCounterComponent(Game.Instance.MonoGameInstance));
-            //Global.Screen.Surface.Print(1, 1, "Hello from SadConsole 9.0");
-            //Global.Screen.Surface.Print(10, 15, "Hello from SadConsole 9.0", Color.AnsiCyan);
-            //Global.Screen.Surface.Print(5, 18, new ColorGradient(Color.AliceBlue, Color.DarkOrange, Color.LightPink, Color.Red.GetRandomColor(Global.Random)).ToColoredString("Some color is fun to play with when you got it!"));
+            // Any setup
+            //if (Settings.UnlimitedFPS)
+            //    SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
 
-            //var screen = new ScreenObjectSurface(new CellSurface(5, 5, 10, 10));
-            //screen.Surface.DefaultBackground = Color.Green;
-            //screen.Surface.Print(0, 0, "0123456789");
-            //screen.Surface.Print(0, 9, "0123456789");
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    char value = Convert.ToString(i + 1)[0];
-            //    screen.Surface.SetGlyph(0, i + 1, value);
-            //    screen.Surface.SetGlyph(9, i + 1, value);
-            //    screen.Surface.SetGlyph(i + 1, i + 1, value);
-            //}
-            //screen.Surface.BufferPosition = new Point(5,5);
-            //screen.Surface.ViewWidth = 8;
-            //screen.Surface.ViewHeight = 8;
-            //screen.Parent = Global.Screen;
-            //screen.Position = new Point(1, 1);
+            //SadConsole.Game.Instance.Window.Title = "DemoProject Core";
 
-            //var surface = screen.Surface.GetSubSurface(new Rectangle(0, 0, 10, 10));
-            //screen.Surface.Copy(surface);
-            //surface.DefaultBackground = Color.Blue;
-            //var screen2 = new ScreenObjectSurface(surface);
-            //screen2.Position = new Point(1, 11);
-            //screen2.Parent = Global.Screen;
-            //screen2.Surface.SetGlyph(5, 4, 'a');
-            //screen2.Surface.SetBackground(5, 4, Color.Purple);
-            //screen2.Surface.SetForeground(5, 4, Color.Black);
-            //Global.Screen.Renderer = null;
+            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
+            // We don't want to use that for the sample project so we'll remove it.
 
-            //// LAYERED SURFACE ==============================================================
-            //var layeredSurface = new LayeredScreenSurface(20, 10, 3);
+            //Global.MouseState.ProcessMouseWhenOffScreen = true;
 
-            //AddStars(layeredSurface.Layers[0].Surface, Color.DarkOrange);
-            //AddStars(layeredSurface.Layers[1].Surface, Color.Green);
-            //AddStars(layeredSurface.Layers[2].Surface, Color.GreenYellow);
+            MainConsole = new Container();
 
-            //static void AddStars(CellSurface surface, Color starColor)
-            //{
-            //    int count = surface.BufferWidth * surface.BufferHeight / 10;
+            // We'll instead use our demo consoles that show various features of SadConsole.
+            Global.Screen.Renderer = null;
+            Global.Screen.Children.Add(MainConsole);
 
-            //    for (int i = 0; i < count; i++)
-            //    {
-            //        if (Global.Random.Next(0, 10) > 5)
-            //        {
-            //            int x = Global.Random.Next(0, surface.BufferWidth);
-            //            int y = Global.Random.Next(0, surface.BufferHeight);
-
-            //            surface.SetGlyph(x, y, 7, starColor);
-            //        }
-            //    }
-            //}
-
-            //layeredSurface.Renderer = new SadConsole.Renderers.LayeredScreenObject();
-            //layeredSurface.Parent = Global.Screen;
-            //layeredSurface.Position = new Point(10, 14);
-
-            //var set = new SadConsole.Instructions.InstructionSet()
-            //    .InstructConcurrent(
-            //        new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
-            //            .Wait(new TimeSpan(0, 0, 1))
-            //            .Code((s) => { layeredSurface.Layers[0].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
-
-            //        new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
-            //            .Wait(new TimeSpan(0, 0, 0, 0, 800))
-            //            .Code((s) => { layeredSurface.Layers[1].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; }),
-
-            //        new SadConsole.Instructions.InstructionSet() { RepeatCount = -1 }
-            //            .Wait(new TimeSpan(0, 0, 0, 0, 400))
-            //            .Code((s) => { layeredSurface.Layers[2].Surface.ShiftRight(1, true); layeredSurface.IsDirty = true; return true; })
-            //    );
-
-            //layeredSurface.Components.Add(set);
-
-            //// ENTITY ==============================================================
-            //var ent = new SadConsole.Entities.Entity(3, 3);
-            //ent.Animation.CurrentFrame.Fill(Color.AliceBlue, Color.DarkBlue, '.');
-            //ent.Animation.Center = (1, 1);
-            //ent.UseKeyboard = true;
-            //ent.Components.Add(new SadConsole.Components.MoveObject());
-            //Global.Screen.Children.Add(ent);
-            //ent.IsFocused = true;
-
-
-            // CONTROLS ===============================================================
-            var console = new SadConsole.UI.ControlsConsole(30, 15);
-            console.Parent = Global.Screen;
-            console.Add(new SadConsole.UI.Controls.Label(10) { DisplayText = "Hello", TextColor = new Color(33,213,22) });
-            console.Add(new SadConsole.UI.Controls.Button(9) { Text = "Hello", Position = (5, 5) });
-            console.Add(new SadConsole.UI.Controls.Button(9, 3) { Text = "Hello", Position = (5, 7), Theme = new SadConsole.UI.Themes.Button3dTheme() });
-            console.IsFocused = true;
+            // Initialize the windows
+            //_characterWindow = new Windows.CharacterViewer();
         }
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent
