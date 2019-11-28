@@ -6127,6 +6127,54 @@
             Pops a behavior off of a <see cref="T:SadConsole.StringParser.ParseCommandStacks"/>.
             </summary>
         </member>
+        <member name="T:SadConsole.Timer">
+            <summary>
+            A simple timer with callback.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Timer.TimerElapsed">
+            <summary>
+            Called when the timer elapses.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Timer.TimerRestart">
+            <summary>
+            Called when the timer restarts.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Timer.Repeat">
+            <summary>
+            If true, the timer will restart when the time has elapsed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Timer.TimerAmount">
+            <summary>
+            How many milliseconds to cause the timer to trigger.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Timer.IsPaused">
+            <summary>
+            When true, the timer does not count time.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Timer.#ctor(System.TimeSpan)">
+            <summary>
+            Creates a new timer.
+            </summary>
+            <param name="triggerTime">Duration of the timer.</param>
+        </member>
+        <member name="M:SadConsole.Timer.Update(SadConsole.IScreenObject)">
+            <summary>
+            Updates the timer with the time since the last call.
+            </summary>
+            <param name="console">The parent object.</param>
+            <param name="delta">The time since the last frame update.</param>
+        </member>
+        <member name="M:SadConsole.Timer.Restart">
+            <summary>
+            Restarts the timer; sets <see cref="P:SadConsole.Timer.IsPaused"/> to false.
+            </summary>
+        </member>
         <member name="T:SadConsole.UI.ControlsConsole">
             <summary>
             A basic console that can contain controls.
@@ -6266,6 +6314,12 @@
             </summary>
             <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
         </member>
+        <member name="M:SadConsole.UI.ControlsConsole.FindThemeColors">
+            <summary>
+            Returns the colors assigned to this console or the library default.
+            </summary>
+            <returns>The found colors.</returns>
+        </member>
         <member name="M:SadConsole.UI.ControlsConsole.RemoveAll">
             <summary>
             Removes all controls from this console.
@@ -6300,6 +6354,11 @@
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.OnIsDirtyChanged">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.RedrawTheme">
+            <summary>
+            Causes the console to redraw the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/>.
+            </summary>
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.OnThemeDrawn">
             <summary>
@@ -6424,6 +6483,46 @@
             </summary>
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control (default is 1).</param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.CheckBox">
+            <summary>
+            Represents a button that can be toggled on/off within a group of other buttons.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.CheckBox.IsSelectedChanged">
+            <summary>
+            Raised when the selected state of the radio button is changed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CheckBox.Text">
+            <summary>
+            The text displayed on the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CheckBox.TextAlignment">
+            <summary>
+            The alignment of the text, left, center, or right.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CheckBox.IsSelected">
+            <summary>
+            Gets or sets the selected state of the radio button.
+            </summary>
+            <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CheckBox.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new radio button control with the specified width and height.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CheckBox.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Called when the control should process keyboard information.
+            </summary>
+            <param name="info">The keyboard information.</param>
+            <returns>True if the keyboard was handled by this control.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.ControlBase">
             <summary>
@@ -6613,6 +6712,12 @@
             <param name="oldState">The original state.</param>
             <param name="newState">The new state.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.FindThemeColors">
+            <summary>
+            Returns the colors assigned to this control, the parent, or the library default.
+            </summary>
+            <returns>The found colors.</returns>
+        </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
             <summary>
             Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
@@ -6742,6 +6847,172 @@
             </summary>
             <param name="length">The initial length of the label without any text.</param>
         </member>
+        <member name="T:SadConsole.UI.Controls.ProgressBar">
+            <summary>
+            A control that fills an area (vertical or horizontal) according to a value.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ProgressBar.ProgressChanged">
+            <summary>
+            Called when the <see cref="P:SadConsole.UI.Controls.ProgressBar.Progress"/> property value changes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ProgressBar.progressValue">
+            <summary>
+            The progress bar fill value. Between 0f and 1f.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ProgressBar.controlSize">
+            <summary>
+            The size of the bar.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ProgressBar.fillSize">
+            <summary>
+            The size of the bar currently filled based on the <see cref="P:SadConsole.UI.Controls.ProgressBar.Progress"/> property.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ProgressBar.isHorizontal">
+            <summary>
+            Flag to indicate this bar was created horizontal.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ProgressBar.horizontalAlignment">
+            <summary>
+            The alignment if the bar is horizontal.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ProgressBar.verticalAlignment">
+            <summary>
+            The alignment if the bar is vertical.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.HorizontalAlignment">
+            <summary>
+            The horizontal orientation used when <see cref="P:SadConsole.UI.Controls.ProgressBar.IsHorizontal"/> is set to true.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown when the value is set to either <see cref="F:SadConsole.HorizontalAlignment.Center"/> or <see cref="F:SadConsole.HorizontalAlignment.Stretch"/>.</exception>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.VerticalAlignment">
+            <summary>
+            The vertical orientation used when <see cref="P:SadConsole.UI.Controls.ProgressBar.IsHorizontal"/> is set to false.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown when the value is set to either <see cref="F:SadConsole.VerticalAlignment.Center"/> or <see cref="F:SadConsole.VerticalAlignment.Stretch"/>.</exception>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.IsHorizontal">
+            <summary>
+            When true, the progress bar uses the <see cref="P:SadConsole.UI.Controls.ProgressBar.HorizontalAlignment"/> property to determine the starting fill direction. When false, uses the <see cref="P:SadConsole.UI.Controls.ProgressBar.VerticalAlignment"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.Progress">
+            <summary>
+            Gets or sets the value of the scrollbar between the minimum and maximum values.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ProgressBar.#ctor(System.Int32,System.Int32,SadConsole.HorizontalAlignment)">
+            <summary>
+            Creates a new horizontal progress bar.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control.</param>
+            <param name="horizontalAlignment">Sets the control to be horizontal, starting from the specified side. Center/Stretch is invalid.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when <paramref name="horizontalAlignment"/> is set to either <see cref="F:SadConsole.HorizontalAlignment.Center"/> or <see cref="F:SadConsole.HorizontalAlignment.Stretch"/>.</exception>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ProgressBar.#ctor(System.Int32,System.Int32,SadConsole.VerticalAlignment)">
+            <summary>
+            Creates a new vertical progress bar.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control.</param>
+            <param name="verticalAlignment">Sets the control to be vertical, starting from the specified side. Center/Stretch is invalid.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when <paramref name="verticalAlignment"/> is set to either <see cref="F:SadConsole.VerticalAlignment.Center"/> or <see cref="F:SadConsole.VerticalAlignment.Stretch"/>.</exception>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ProgressBar.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Called when the control should process keyboard information.
+            </summary>
+            <param name="info">The keyboard information.</param>
+            <returns>True if the keyboard was handled by this control.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Controls.RadioButton">
+            <summary>
+            Represents a button that can be toggled on/off within a group of other buttons.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.RadioButton.IsSelectedChanged">
+            <summary>
+            Raised when the selected state of the radio button is changed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.RadioButton.Text">
+            <summary>
+            The text displayed on the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.RadioButton.TextAlignment">
+            <summary>
+            The alignment of the text, left, center, or right.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.RadioButton.GroupName">
+            <summary>
+            The group of the radio button. All radio buttons with the same group name will work together to keep one radio button selected at a time.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.RadioButton.IsSelected">
+            <summary>
+            Gets or sets the selected state of the radio button.
+            </summary>
+            <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
+        </member>
+        <member name="M:SadConsole.UI.Controls.RadioButton.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new radio button control with the specified width and height.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.RadioButton.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Called when the control should process keyboard information.
+            </summary>
+            <param name="info">The keyboard information.</param>
+            <returns>True if the keyboard was handled by this control.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ScrollBar">
+            <summary>
+            Represents a scrollbar control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.Value">
+            <summary>
+            Gets or sets the value of the scrollbar between the minimum and maximum values.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.Maximum">
+            <summary>
+            Gets or sets the maximum value for the scrollbar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.Step">
+            <summary>
+            Gets or sets the amount of values to add or substract to the <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/> when the up or down arrows are used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.#ctor(SadConsole.Orientation,System.Int32)">
+            <summary>
+            Creates a new ScrollBar control.
+            </summary>
+            <param name="orientation">Sets the control to either horizontal or vertical.</param>
+            <param name="size">The height or width of the control.</param>
+            <returns>The new control instance.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Not Used.
+            </summary>
+            <param name="state"></param>
+        </member>
         <member name="T:SadConsole.UI.Themes.ButtonTheme">
             <summary>
             The theme of the button control
@@ -6784,6 +7055,62 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.Button3dTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.ButtonLinesTheme">
+            <summary>
+            A 3D theme of the button control using thin lines. Supports the SadConsole extended character set.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.CheckBoxTheme">
+            <summary>
+            The theme of a checkbox control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.CheckedIcon">
+            <summary>
+            The icon displayed when the radio button is checked.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.UncheckedIcon">
+            <summary>
+            The icon displayed when the radio button is checked.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.LeftBracket">
+            <summary>
+            The icon displayed for the brack left of the check icon.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.RightBracket">
+            <summary>
+            The icon displayed for the brack right of the check icon.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.#ctor">
+            <summary>
+            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.CheckBox"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.Clone">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.Colors">
@@ -6888,12 +7215,6 @@
             Creates a new instance of the theme library with default themes.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.Library.#ctor(System.Boolean)">
-            <summary>
-            Create the instance for the singleton.
-            </summary>
-            <param name="_">Not used.</param>
-        </member>
         <member name="M:SadConsole.UI.Themes.Library.GetControlTheme(System.Type)">
             <summary>
             Creates and returns a theme based on the type of control provided.
@@ -6915,14 +7236,129 @@
             </summary>
             <returns>A new instance of a library.</returns>
         </member>
+        <member name="T:SadConsole.UI.Themes.ProgressBarTheme">
+            <summary>
+            The theme of a radio button control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ProgressBarTheme.Background">
+            <summary>
+            The theme of the unprogressed part of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ProgressBarTheme.Foreground">
+            <summary>
+            The theme of the progressed part of the bar.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ProgressBarTheme.#ctor">
+            <summary>
+            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.ProgressBar"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ProgressBarTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ProgressBarTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ProgressBarTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.RadioButtonTheme">
+            <summary>
+            The theme of a radio button control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.CheckedIcon">
+            <summary>
+            The icon displayed when the radio button is checked.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.UncheckedIcon">
+            <summary>
+            The icon displayed when the radio button is checked.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.LeftBracket">
+            <summary>
+            The icon displayed for the brack left of the check icon.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.RightBracket">
+            <summary>
+            The icon displayed for the brack right of the check icon.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.#ctor">
+            <summary>
+            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.RadioButton"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.ScrollBarTheme">
+            <summary>
+            The theme of the slider control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ScrollBarTheme.StartButtonVerticalGlyph">
+            <summary>
+            The theme part fot the start button.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ScrollBarTheme.EndButtonVerticalGlyph">
+            <summary>
+            The theme part fot the start button.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ScrollBarTheme.StartButtonHorizontalGlyph">
+            <summary>
+            The theme part fot the start button.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ScrollBarTheme.EndButtonHorizontalGlyph">
+            <summary>
+            The theme part fot the start button.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ScrollBarTheme.BarGlyph">
+            <summary>
+            The theme part for the scroll bar bar where the slider is not located.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ScrollBarTheme.SliderGlyph">
+            <summary>
+            The theme part for the scroll bar icon.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.#ctor">
+            <summary>
+            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.ScrollBar"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.Clone">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.UI.Themes.ThemeBase">
             <summary> 
             The base class for a theme.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.ThemeBase.ThemeStates">
-            <summary>
-            The colors and glyphs to use for each control state.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.ThemeBase.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
@@ -7016,11 +7452,12 @@
             </summary>
             <returns>A new instance of the theme.</returns>
         </member>
-        <member name="M:SadConsole.UI.Themes.ThemeStates.RefreshTheme(SadConsole.UI.Themes.Colors)">
+        <member name="M:SadConsole.UI.Themes.ThemeStates.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
             <summary>
             Reloads the theme values based on the colors provided.
             </summary>
-            <param name="themeColors">The colors to create the theme with.</param>
+            <param name="colors">The colors to create the theme with.</param>
+            <param name="control">The control being drawn with the theme.</param>
         </member>
         <member name="T:SadRogue.Primitives.ColorAnsi">
             <summary>

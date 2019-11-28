@@ -37,7 +37,7 @@ namespace SadConsole.UI.Themes
         /// <param name="console">Console associated with the theme.</param>
         public virtual void Draw(UI.ControlsConsole console)
         {
-            ColoredGlyph fillStyle = FillStyle ?? console.ThemeColors.Appearance_ControlNormal;
+            ColoredGlyph fillStyle = FillStyle ?? console.FindThemeColors().Appearance_ControlNormal;
 
             console.DefaultForeground = fillStyle.Foreground;
             console.DefaultBackground = fillStyle.Background;

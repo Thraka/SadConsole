@@ -154,15 +154,18 @@ namespace SadConsole.UI.Themes
         /// <summary>
         /// Reloads the theme values based on the colors provided.
         /// </summary>
-        /// <param name="themeColors">The colors to create the theme with.</param>
-        public virtual void RefreshTheme(Colors themeColors)
+        /// <param name="colors">The colors to create the theme with.</param>
+        /// <param name="control">The control being drawn with the theme.</param>
+        public virtual void RefreshTheme(Colors colors, ControlBase control)
         {
-            Normal = themeColors.Appearance_ControlNormal.Clone();
-            Disabled = themeColors.Appearance_ControlDisabled.Clone();
-            MouseOver = themeColors.Appearance_ControlOver.Clone();
-            MouseDown = themeColors.Appearance_ControlMouseDown.Clone();
-            Selected = themeColors.Appearance_ControlSelected.Clone();
-            Focused = themeColors.Appearance_ControlFocused.Clone();
+            if (colors == null) colors = control.FindThemeColors();
+
+            Normal = colors.Appearance_ControlNormal.Clone();
+            Disabled = colors.Appearance_ControlDisabled.Clone();
+            MouseOver = colors.Appearance_ControlOver.Clone();
+            MouseDown = colors.Appearance_ControlMouseDown.Clone();
+            Selected = colors.Appearance_ControlSelected.Clone();
+            Focused = colors.Appearance_ControlFocused.Clone();
         }
     }
 }

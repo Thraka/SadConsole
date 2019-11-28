@@ -8,13 +8,8 @@ namespace SadConsole.UI.Themes
     /// The base class for a theme.
     /// </summary>
     [DataContract]
-    public abstract class ThemeBase
+    public abstract class ThemeBase: ThemeStates
     {
-        /// <summary>
-        /// The colors and glyphs to use for each control state.
-        /// </summary>
-        public ThemeStates ThemeStates { get; set; } = new ThemeStates();
-
         /// <summary>
         /// Draws the control state to the control.
         /// </summary>

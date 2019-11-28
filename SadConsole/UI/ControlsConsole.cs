@@ -62,7 +62,7 @@ namespace SadConsole.UI
         /// </summary>
         public Colors ThemeColors
         {
-            get => _themeColors ?? Library.Default.Colors;
+            get => _themeColors;
             set => _themeColors = value;
         }
 
@@ -440,6 +440,13 @@ namespace SadConsole.UI
         }
 
         /// <summary>
+        /// Returns the colors assigned to this console or the library default.
+        /// </summary>
+        /// <returns>The found colors.</returns>
+        public Colors FindThemeColors() =>
+            _themeColors ?? Library.Default.Colors;
+
+        /// <summary>
         /// Removes all controls from this console.
         /// </summary>
         public void RemoveAll()
@@ -503,15 +510,21 @@ namespace SadConsole.UI
         protected override void OnIsDirtyChanged()
         {
             if (IsDirty)
-            {
-                Theme.Draw(this);
-                OnThemeDrawn();
-
-                foreach (ControlBase control in ControlsList)
-                    control.IsDirty = true;
-            }
+                RedrawTheme();
 
             base.OnIsDirtyChanged();
+        }
+
+        /// <summary>
+        /// Causes the console to redraw the <see cref="Theme"/>.
+        /// </summary>
+        public void RedrawTheme()
+        {
+            Theme?.Draw(this);
+            OnThemeDrawn();
+
+            foreach (ControlBase control in ControlsList)
+                control.IsDirty = true;
         }
 
         /// <summary>

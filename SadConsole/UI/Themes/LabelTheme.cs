@@ -42,36 +42,16 @@ namespace SadConsole.UI.Themes
             if (!control.IsDirty) return;
             if (!(control is Label label)) return;
 
-            ThemeStates.RefreshTheme(control.ThemeColors);
+            RefreshTheme(control.FindThemeColors(), control);
             ColoredGlyph appearance;
 
             if (!UseNormalStateOnly)
             {
-                if (Helpers.HasFlag((int)control.State, (int)ControlStates.Disabled))
-                {
-                    appearance = ThemeStates.Disabled;
-                }
-                else if (Helpers.HasFlag((int)control.State, (int)ControlStates.MouseLeftButtonDown) ||
-                         Helpers.HasFlag((int)control.State, (int)ControlStates.MouseRightButtonDown))
-                {
-                    appearance = ThemeStates.MouseDown;
-                }
-                else if (Helpers.HasFlag((int)control.State, (int)ControlStates.MouseOver))
-                {
-                    appearance = ThemeStates.MouseOver;
-                }
-                else if (Helpers.HasFlag((int)control.State, (int)ControlStates.Focused))
-                {
-                    appearance = ThemeStates.Focused;
-                }
-                else
-                {
-                    appearance = ThemeStates.Normal;
-                }
+                appearance = GetStateAppearance(control.State);
             }
             else
             {
-                appearance = ThemeStates.Normal;
+                appearance = Normal;
             }
 
             label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, 0);
@@ -134,7 +114,12 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new LabelTheme()
         {
-            ThemeStates = ThemeStates.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
             UseNormalStateOnly = UseNormalStateOnly,
             DecoratorStrikethrough = DecoratorStrikethrough,
             DecoratorUnderline = DecoratorUnderline

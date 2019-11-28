@@ -197,7 +197,11 @@ namespace SadConsole.UI.Controls
             get => _parent;
             set
             {
+                if (_parent == value) return;
+                _parent = null;
+                if (_parent != null) _parent.Remove(this);
                 _parent = value;
+                _parent.Add(this);
 
                 OnParentChanged();
             }
@@ -208,7 +212,7 @@ namespace SadConsole.UI.Controls
         /// </summary>
         public Colors ThemeColors
         {
-            get => _themeColors ?? _parent?.ThemeColors ?? Library.Default.Colors;
+            //get => _themeColors;
             set => _themeColors = value;
         }
 
@@ -224,8 +228,9 @@ namespace SadConsole.UI.Controls
                 {
                     if (value == null)
                     {
-                        ActiveTheme = Library.Default.GetControlTheme(GetType());
                         IsCustomTheme = false;
+                        ActiveTheme = Library.Default.GetControlTheme(GetType());
+                        if (ActiveTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
                     }
                     else
                     {
@@ -286,6 +291,7 @@ namespace SadConsole.UI.Controls
             Bounds = new Rectangle(0, 0, width, height);
             MouseBounds = new Rectangle(0, 0, width, height);
             Theme = Library.Default.GetControlTheme(GetType());
+            if (Theme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
         }
         #endregion
 
@@ -418,6 +424,13 @@ namespace SadConsole.UI.Controls
         /// <param name="oldState">The original state.</param>
         /// <param name="newState">The new state.</param>
         protected virtual void OnStateChanged(ControlStates oldState, ControlStates newState) => IsDirty = true;
+
+        /// <summary>
+        /// Returns the colors assigned to this control, the parent, or the library default.
+        /// </summary>
+        /// <returns>The found colors.</returns>
+        public Colors FindThemeColors() =>
+            _themeColors ?? _parent?.ThemeColors ?? Library.Default.Colors;
 
         /// <summary>
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.

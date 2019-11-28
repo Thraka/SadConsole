@@ -47,8 +47,8 @@ namespace SadConsole.UI.Themes
             if (!(control is Button button)) return;
             if (!button.IsDirty) return;
 
-            ThemeStates.RefreshTheme(control.ThemeColors);
-            ColoredGlyph appearance = ThemeStates.GetStateAppearance(control.State);
+            RefreshTheme(control.FindThemeColors(), control);
+            ColoredGlyph appearance = GetStateAppearance(control.State);
 
             int middle = (button.Height != 1 ? button.Height / 2 : 0);
 
@@ -75,7 +75,12 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new ButtonTheme()
         {
-            ThemeStates = ThemeStates.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
             ShowEnds = ShowEnds,
             EndCharacterLeft = EndCharacterLeft,
             EndCharacterRight = EndCharacterRight
@@ -88,8 +93,15 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class Button3dTheme : ButtonTheme
     {
+        OverridableDefaultValue<ColoredGlyph> _shade = new OverridableDefaultValue<ColoredGlyph>(new ColoredGlyph());
+
         [DataMember]
-        public ColoredGlyph Shade { get; set; }
+        public ColoredGlyph Shade
+        {
+            get => _shade.Value;
+            set => _shade.Value = value;
+        }
+
 
         /// <inheritdoc />
         public override void Attached(ControlBase control)
@@ -107,13 +119,8 @@ namespace SadConsole.UI.Themes
             if (!(control is Button button)) return;
             if (!button.IsDirty) return;
 
-            var colors = control.ThemeColors;
-            ThemeStates.RefreshTheme(colors);
-            ColoredGlyph appearance = ThemeStates.GetStateAppearance(control.State);
-
-            var shade = Shade ?? new ColoredGlyph(colors.ControlBackDark, Color.Transparent, 176);
-            ThemeStates.Normal.Foreground = colors.Appearance_ControlNormal.Foreground;
-            ThemeStates.Normal.Background = colors.ControlBackLight;
+            RefreshTheme(control.FindThemeColors(), control);
+            ColoredGlyph appearance = GetStateAppearance(control.State);
 
             int middle = button.Height != 1 ? button.Height / 2 : 0;
 
@@ -121,7 +128,7 @@ namespace SadConsole.UI.Themes
 
             button.Surface.Clear();
 
-            if (appearance == ThemeStates.MouseDown)
+            if (appearance == MouseDown)
             {
                 middle += 1;
 
@@ -146,18 +153,18 @@ namespace SadConsole.UI.Themes
 
                 // Bottom line
                 button.Surface.DrawLine(new Point(shadowBounds.X, shadowBounds.MaxExtentY),
-                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), shade.Foreground, shade.Background,
-                    shade.Glyph);
+                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Foreground, Shade.Background,
+                    Shade.Glyph);
 
                 // Side line 1
                 button.Surface.DrawLine(new Point(shadowBounds.MaxExtentX - 1, shadowBounds.Y),
-                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), shade.Foreground, shade.Background,
-                    shade.Glyph);
+                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Foreground, Shade.Background,
+                    Shade.Glyph);
 
                 // Side line 2
                 button.Surface.DrawLine(new Point(shadowBounds.MaxExtentX, shadowBounds.Y),
-                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), shade.Foreground, shade.Background,
-                    shade.Glyph);
+                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Foreground, Shade.Background,
+                    Shade.Glyph);
 
                 button.MouseBounds = button.Bounds;
             }
@@ -165,10 +172,28 @@ namespace SadConsole.UI.Themes
             button.IsDirty = false;
         }
 
+        public override void RefreshTheme(Colors colors, ControlBase control)
+        {
+            if (colors == null) colors = control.FindThemeColors();
+
+            base.RefreshTheme(colors, control);
+
+            if (!_shade.Overridden)
+                _shade.ChangeOriginalValue(new ColoredGlyph(colors.ControlBackDark, Color.Transparent, 176));
+
+            Normal.Foreground = colors.Appearance_ControlNormal.Foreground;
+            Normal.Background = colors.ControlBackLight;
+        }
+
         /// <inheritdoc />
         public override ThemeBase Clone() => new Button3dTheme()
         {
-            ThemeStates = ThemeStates.Clone(),
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
             Shade = Shade?.Clone(),
             ShowEnds = ShowEnds,
             EndCharacterLeft = EndCharacterLeft,
@@ -176,184 +201,170 @@ namespace SadConsole.UI.Themes
         };
     }
 
-    ///// <summary>
-    ///// A 3D theme of the button control using thin lines. Supports the SadConsole extended character set.
-    ///// </summary>
-    //[DataContract]
-    //public class ButtonLinesTheme : ButtonTheme
-    //{
-    //    [DataMember]
-    //    public Cell TopLeftLineColors;
+    /// <summary>
+    /// A 3D theme of the button control using thin lines. Supports the SadConsole extended character set.
+    /// </summary>
+    [DataContract]
+    public class ButtonLinesTheme : ButtonTheme
+    {
+        [DataMember]
+        public ColoredGlyph TopLeftLineColors { get; set; }
 
-    //    [DataMember]
-    //    public Cell BottomRightLineColors;
+        [DataMember]
+        public ColoredGlyph BottomRightLineColors { get; set; }
 
-    //    [DataMember]
-    //    public bool UseExtended;
+        [DataMember]
+        public bool UseExtended { get; set; }
 
-    //    public ButtonLinesTheme() =>
-    //        UseExtended = true;
+        public ButtonLinesTheme() =>
+            UseExtended = true;
 
-    //    /// <inheritdoc />
-    //    public override void RefreshTheme(Colors themeColors)
-    //    {
-    //        base.RefreshTheme(themeColors);
+        private ColoredGlyph _topLeftLineColors;
+        private ColoredGlyph _bottomRightLineColors;
 
-    //        TopLeftLineColors = new Cell(themeColors.Gray, Color.Transparent);
-    //        BottomRightLineColors = new Cell(themeColors.GrayDark, Color.Transparent);
-    //    }
+        /// <inheritdoc />
+        public override void RefreshTheme(Colors colors, ControlBase control)
+        {
+            if (colors == null) colors = control.FindThemeColors();
 
-    //    /// <inheritdoc />
-    //    public override void UpdateAndDraw(ControlBase control, TimeSpan time)
-    //    {
-    //        if (!(control is Button button))
-    //        {
-    //            return;
-    //        }
+            base.RefreshTheme(colors, control);
 
-    //        if (!button.IsDirty)
-    //        {
-    //            return;
-    //        }
+            _topLeftLineColors = TopLeftLineColors ?? new ColoredGlyph(colors.Gray, Color.Transparent);
+            _bottomRightLineColors = BottomRightLineColors ?? new ColoredGlyph(colors.GrayDark, Color.Transparent);
+        }
 
-    //        Cell appearance;
-    //        bool mouseDown = false;
-    //        bool mouseOver = false;
-    //        bool focused = false;
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
+        {
+            if (!(control is Button button)) return;
+            if (!button.IsDirty) return;
 
-    //        if (Helpers.HasFlag(button.State, ControlStates.Disabled))
-    //        {
-    //            appearance = Disabled;
-    //        }
-    //        else
-    //        {
-    //            appearance = Normal;
-    //        }
+            RefreshTheme(control.FindThemeColors(), control);
+            ColoredGlyph appearance;
+            bool mouseDown = false;
+            bool mouseOver = false;
+            bool focused = false;
 
-    //        if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) ||
-    //            Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
-    //        {
-    //            mouseDown = true;
-    //        }
+            if (Helpers.HasFlag((int)button.State, (int)ControlStates.Disabled))
+                appearance = Disabled;
+            else
+                appearance = Normal;
 
-    //        if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
-    //        {
-    //            mouseOver = true;
-    //        }
+            if (Helpers.HasFlag((int)button.State, (int)ControlStates.MouseLeftButtonDown) ||
+                Helpers.HasFlag((int)button.State, (int)ControlStates.MouseRightButtonDown))
+                mouseDown = true;
 
-    //        if (Helpers.HasFlag(button.State, ControlStates.Focused))
-    //        {
-    //            focused = true;
-    //        }
+            if (Helpers.HasFlag((int)button.State, (int)ControlStates.MouseOver))
+                mouseOver = true;
+
+            if (Helpers.HasFlag((int)button.State, (int)ControlStates.Focused))
+                focused = true;
 
 
-    //        // Middle part of the button for text.
-    //        int middle = button.Surface.Height != 1 ? button.Surface.Height / 2 : 0;
-    //        Color topleftcolor = !mouseDown ? TopLeftLineColors.Foreground : BottomRightLineColors.Foreground;
-    //        Color bottomrightcolor = !mouseDown ? BottomRightLineColors.Foreground : TopLeftLineColors.Foreground;
-    //        Color textColor = Normal.Foreground;
+            // Middle part of the button for text.
+            int middle = button.Surface.BufferHeight != 1 ? button.Surface.BufferHeight / 2 : 0;
+            Color topleftcolor = !mouseDown ? _topLeftLineColors.Foreground : _bottomRightLineColors.Foreground;
+            Color bottomrightcolor = !mouseDown ? _bottomRightLineColors.Foreground : _topLeftLineColors.Foreground;
+            Color textColor = Normal.Foreground;
 
-    //        if (button.Surface.Height > 1 && button.Surface.Height % 2 == 0)
-    //        {
-    //            middle -= 1;
-    //        }
+            if (button.Surface.BufferHeight > 1 && button.Surface.BufferHeight % 2 == 0)
+            {
+                middle -= 1;
+            }
 
-    //        if (mouseOver)
-    //        {
-    //            textColor = MouseOver.Foreground;
-    //        }
-    //        else if (focused)
-    //        {
-    //            textColor = Focused.Foreground;
-    //        }
+            if (mouseOver)
+                textColor = MouseOver.Foreground;
+            else if (focused)
+                textColor = Focused.Foreground;
 
-    //        // Extended font draw
-    //        if (button.Parent.Font.Master.IsSadExtended && UseExtended)
-    //        {
-    //            // Redraw the control
-    //            button.Surface.Fill(appearance.Foreground, appearance.Background,
-    //                                appearance.Glyph, SpriteEffects.None);
+            // Extended font draw
+            if (button.Parent.Font.IsSadExtended && UseExtended)
+            {
+                // Redraw the control
+                button.Surface.Fill(appearance.Foreground, appearance.Background,
+                                    appearance.Glyph, Mirror.None);
 
-    //            button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), textColor);
+                button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), textColor);
 
-    //            if (button.Height == 1)
-    //            {
-    //                button.Surface.SetDecorator(0, button.Surface.Width,
-    //                                                    new FontMaster.GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], SpriteEffects.None).CreateCellDecorator(topleftcolor),
-    //                                                    new FontMaster.GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], SpriteEffects.None).CreateCellDecorator(bottomrightcolor));
-    //                button.Surface.AddDecorator(0, 1, button.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor));
-    //                button.Surface.AddDecorator(button.Surface.Width - 1, 1, button.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor));
-    //            }
-    //            else if (button.Height == 2)
-    //            {
-    //                button.Surface.SetDecorator(0, button.Surface.Width,
-    //                                                    new FontMaster.GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], SpriteEffects.None).CreateCellDecorator(topleftcolor));
+                if (button.Height == 1)
+                {
+                    button.Surface.SetDecorator(0, button.Surface.BufferWidth,
+                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor),
+                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
+                    button.Surface.AddDecorator(0, 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                }
+                else if (button.Height == 2)
+                {
+                    button.Surface.SetDecorator(0, button.Surface.BufferWidth,
+                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor));
 
-    //                button.Surface.SetDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.Height - 1), button.Surface.Width,
-    //                                                    new FontMaster.GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], SpriteEffects.None).CreateCellDecorator(bottomrightcolor));
+                    button.Surface.SetDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.BufferHeight - 1), button.Surface.BufferWidth,
+                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
 
-    //                button.Surface.AddDecorator(0, 1, button.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor));
-    //                button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, 1), 1, button.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor));
-    //                button.Surface.AddDecorator(button.Surface.Width - 1, 1, button.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor));
-    //                button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.Width - 1, 1), 1, button.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor));
-    //            }
-    //            else
-    //            {
-    //                button.Surface.SetDecorator(0, button.Surface.Width,
-    //                                                    new FontMaster.GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], SpriteEffects.None).CreateCellDecorator(topleftcolor));
+                    button.Surface.AddDecorator(0, 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, 1), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.BufferWidth - 1, 1), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                }
+                else
+                {
+                    button.Surface.SetDecorator(0, button.Surface.BufferWidth,
+                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor));
 
-    //                button.Surface.SetDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.Height - 1), button.Surface.Width,
-    //                                                    new FontMaster.GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], SpriteEffects.None).CreateCellDecorator(bottomrightcolor));
+                    button.Surface.SetDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.BufferHeight - 1), button.Surface.BufferWidth,
+                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
 
-    //                button.Surface.AddDecorator(0, 1, button.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor));
-    //                button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.Height - 1), 1, button.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor));
-    //                button.Surface.AddDecorator(button.Surface.Width - 1, 1, button.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor));
-    //                button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.Width - 1, button.Surface.Height - 1), 1, button.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(0, 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.BufferHeight - 1), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.BufferWidth - 1, button.Surface.BufferHeight - 1), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
 
-    //                for (int y = 0; y < button.Surface.Height - 2; y++)
-    //                {
-    //                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, y + 1), 1, button.Parent.Font.Master.GetDecorator("box-edge-left", topleftcolor));
-    //                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.Width - 1, y + 1), 1, button.Parent.Font.Master.GetDecorator("box-edge-right", bottomrightcolor));
-    //                }
-    //            }
-    //        }
-    //        else // Non extended normal draw
-    //        {
-    //            button.Surface.Fill(appearance.Foreground, appearance.Background,
-    //                appearance.Glyph, SpriteEffects.None);
+                    for (int y = 0; y < button.Surface.BufferHeight - 2; y++)
+                    {
+                        button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, y + 1), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                        button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.BufferWidth - 1, y + 1), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    }
+                }
+            }
+            else // Non extended normal draw
+            {
+                button.Surface.Fill(appearance.Foreground, appearance.Background,
+                    appearance.Glyph, Mirror.None);
 
-    //            button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), textColor);
+                button.Surface.Print(1, middle, button.Text.Align(button.TextAlignment, button.Width - 2), textColor);
 
-    //            button.Surface.DrawBox(new Rectangle(0, 0, button.Width, button.Surface.Height), new Cell(topleftcolor, TopLeftLineColors.Background, 0),
-    //                connectedLineStyle: button.Parent.Font.Master.IsSadExtended ? CellSurface.ConnectedLineThinExtended : CellSurface.ConnectedLineThin);
+                button.Surface.DrawBox(new Rectangle(0, 0, button.Width, button.Surface.BufferHeight),
+                                       new ColoredGlyph(topleftcolor, appearance.Background, 0),
+                                       null,
+                                       connectedLineStyle: button.Parent.Font.IsSadExtended ? CellSurface.ConnectedLineThinExtended : CellSurface.ConnectedLineThin);
 
-    //            //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
+                //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
 
-    //            button.Surface.DrawLine(Point.Zero, new Point(button.Width - 1, 0), topleftcolor, appearance.Background);
-    //            button.Surface.DrawLine(Point.Zero, new Point(0, button.Surface.Height - 1), topleftcolor, appearance.Background);
-    //            button.Surface.DrawLine(new Point(button.Width - 1, 0), new Point(button.Width - 1, button.Surface.Height - 1), bottomrightcolor, appearance.Background);
-    //            button.Surface.DrawLine(new Point(1, button.Surface.Height - 1), new Point(button.Width - 1, button.Surface.Height - 1), bottomrightcolor, appearance.Background);
-    //        }
+                button.Surface.DrawLine(new Point(0, 0), new Point(button.Width - 1, 0), topleftcolor, appearance.Background);
+                button.Surface.DrawLine(new Point(0, 0), new Point(0, button.Surface.BufferHeight - 1), topleftcolor, appearance.Background);
+                button.Surface.DrawLine(new Point(button.Width - 1, 0), new Point(button.Width - 1, button.Surface.BufferHeight - 1), bottomrightcolor, appearance.Background);
+                button.Surface.DrawLine(new Point(1, button.Surface.BufferHeight - 1), new Point(button.Width - 1, button.Surface.BufferHeight - 1), bottomrightcolor, appearance.Background);
+            }
 
-    //        button.IsDirty = false;
-    //    }
+            button.IsDirty = false;
+        }
 
-    //    /// <inheritdoc />
-    //    public override ThemeBase Clone() => new ButtonLinesTheme()
-    //    {
-    //        Colors = Colors?.Clone(),
-    //        Normal = Normal.Clone(),
-    //        Disabled = Disabled.Clone(),
-    //        MouseOver = MouseOver.Clone(),
-    //        MouseDown = MouseDown.Clone(),
-    //        Selected = Selected.Clone(),
-    //        Focused = Focused.Clone(),
-    //        TopLeftLineColors = TopLeftLineColors.Clone(),
-    //        BottomRightLineColors = BottomRightLineColors.Clone(),
-    //        ShowEnds = ShowEnds,
-    //        EndCharacterLeft = EndCharacterLeft,
-    //        EndCharacterRight = EndCharacterRight,
-    //        UseExtended = UseExtended
-    //    };
-    //}
+        /// <inheritdoc />
+        public override ThemeBase Clone() => new ButtonLinesTheme()
+        {
+            Normal = Normal.Clone(),
+            Disabled = Disabled.Clone(),
+            MouseOver = MouseOver.Clone(),
+            MouseDown = MouseDown.Clone(),
+            Selected = Selected.Clone(),
+            Focused = Focused.Clone(),
+            _topLeftLineColors = _topLeftLineColors.Clone(),
+            _bottomRightLineColors = _bottomRightLineColors.Clone(),
+            ShowEnds = ShowEnds,
+            EndCharacterLeft = EndCharacterLeft,
+            EndCharacterRight = EndCharacterRight,
+            UseExtended = UseExtended
+        };
+    }
 }

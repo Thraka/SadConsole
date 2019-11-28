@@ -7,6 +7,8 @@ namespace SadConsole.UI.Themes
     /// </summary>
     public class Colors
     {
+        public bool IsLibrary { get; internal set; }
+
 #pragma warning disable 1591
         public Color White = Color.White;
         public Color Black = Color.Black;
@@ -107,68 +109,75 @@ namespace SadConsole.UI.Themes
             Appearance_ControlFocused = new ColoredGlyph(TextFocused, ControlBackLight);
         }
 
+        public void CopyTo(ref Colors colors)
+        {
+            colors.White = White;
+            colors.Black = Black;
+            colors.Gray = Gray;
+            colors.GrayDark = GrayDark;
+
+            colors.Red = Red;
+            colors.Green = Green;
+            colors.Blue = Blue;
+            colors.Purple = Purple;
+            colors.Yellow = Yellow;
+            colors.Orange = Orange;
+            colors.Cyan = Cyan;
+            colors.Brown = Brown;
+
+            colors.RedDark = RedDark;
+            colors.GreenDark = GreenDark;
+            colors.BlueDark = BlueDark;
+            colors.PurpleDark = PurpleDark;
+            colors.YellowDark = YellowDark;
+            colors.OrangeDark = OrangeDark;
+            colors.CyanDark = CyanDark;
+            colors.BrownDark = BrownDark;
+
+            colors.Gold = Gold;
+            colors.GoldDark = GoldDark;
+            colors.Silver = Silver;
+            colors.SilverDark = SilverDark;
+            colors.Bronze = Bronze;
+            colors.BronzeDark = BronzeDark;
+
+            colors.ModalBackground = ModalBackground;
+
+            colors.TitleText = TitleText;
+
+            colors.Lines = Lines;
+
+            colors.TextBright = TextBright;
+            colors.Text = Text;
+            colors.TextSelected = TextSelected;
+            colors.TextSelectedDark = TextSelectedDark;
+            colors.TextLight = TextLight;
+            colors.TextDark = TextDark;
+            colors.ControlBack = ControlBack;
+            colors.ControlBackLight = ControlBackLight;
+            colors.ControlBackSelected = ControlBackSelected;
+            colors.ControlBackDark = ControlBackDark;
+            colors.ControlHostBack = ControlHostBack;
+            colors.ControlHostFore = ControlHostFore;
+
+            colors.Appearance_ControlNormal.CopyAppearanceFrom(Appearance_ControlNormal);
+            colors.Appearance_ControlDisabled.CopyAppearanceFrom(Appearance_ControlDisabled);
+            colors.Appearance_ControlOver.CopyAppearanceFrom(Appearance_ControlOver);
+            colors.Appearance_ControlSelected.CopyAppearanceFrom(Appearance_ControlSelected);
+            colors.Appearance_ControlMouseDown.CopyAppearanceFrom(Appearance_ControlMouseDown);
+            colors.Appearance_ControlFocused.CopyAppearanceFrom(Appearance_ControlFocused);
+        }
+
         /// <summary>
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>A new Colors object.</returns>
-        public Colors Clone() => new Colors()
+        public Colors Clone()
         {
-            White = White,
-            Black = Black,
-            Gray = Gray,
-            GrayDark = GrayDark,
-
-            Red = Red,
-            Green = Green,
-            Blue = Blue,
-            Purple = Purple,
-            Yellow = Yellow,
-            Orange = Orange,
-            Cyan = Cyan,
-            Brown = Brown,
-
-            RedDark = RedDark,
-            GreenDark = GreenDark,
-            BlueDark = BlueDark,
-            PurpleDark = PurpleDark,
-            YellowDark = YellowDark,
-            OrangeDark = OrangeDark,
-            CyanDark = CyanDark,
-            BrownDark = BrownDark,
-
-            Gold = Gold,
-            GoldDark = GoldDark,
-            Silver = Silver,
-            SilverDark = SilverDark,
-            Bronze = Bronze,
-            BronzeDark = BronzeDark,
-
-            ModalBackground = ModalBackground,
-
-            TitleText = TitleText,
-
-            Lines = Lines,
-
-            TextBright = TextBright,
-            Text = Text,
-            TextSelected = TextSelected,
-            TextSelectedDark = TextSelectedDark,
-            TextLight = TextLight,
-            TextDark = TextDark,
-            ControlBack = ControlBack,
-            ControlBackLight = ControlBackLight,
-            ControlBackSelected = ControlBackSelected,
-            ControlBackDark = ControlBackDark,
-            ControlHostBack = ControlHostBack,
-            ControlHostFore = ControlHostFore,
-
-            Appearance_ControlNormal = Appearance_ControlNormal.Clone(),
-            Appearance_ControlDisabled = Appearance_ControlDisabled.Clone(),
-            Appearance_ControlOver = Appearance_ControlOver.Clone(),
-            Appearance_ControlSelected = Appearance_ControlSelected.Clone(),
-            Appearance_ControlMouseDown = Appearance_ControlMouseDown.Clone(),
-            Appearance_ControlFocused = Appearance_ControlFocused.Clone(),
-        };
+            Colors newColors = new Colors();
+            CopyTo(ref newColors);
+            return newColors;
+        }
     }
 }
 

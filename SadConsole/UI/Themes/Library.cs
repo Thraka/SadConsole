@@ -13,7 +13,6 @@ namespace SadConsole.UI.Themes
     {
         private static Library _libraryInstance;
 
-        private Colors _colors;
         private Dictionary<System.Type, ThemeBase> _controlThemes;
 
         /// <summary>
@@ -46,22 +45,13 @@ namespace SadConsole.UI.Themes
         /// Colors for the theme library.
         /// </summary>
         [DataMember]
-        public Colors Colors
-        {
-            get => _colors;
-            set
-            {
-                if (_colors == null) throw new System.NullReferenceException("Colors cannot be set to null");
-
-                _colors = value;
-            }
-        }
+        public Colors Colors { get; protected set; }
 
         static Library()
         {
             if (Default == null)
             {
-                Default = new Library(false);
+                Default = new Library();
                 Default.Init();
             }
         }
@@ -76,12 +66,12 @@ namespace SadConsole.UI.Themes
             //ControlsConsoleTheme = new ControlsConsoleTheme(Colors);
             //WindowTheme = new WindowTheme(Colors);
 
-            //ScrollBarTheme = new ScrollBarTheme();
+            SetControlTheme(typeof(ScrollBar), new ScrollBarTheme());
             //ButtonTheme = new ButtonTheme();
-            //CheckBoxTheme = new CheckBoxTheme();
+            SetControlTheme(typeof(CheckBox), new CheckBoxTheme());
             //ListBoxTheme = new ListBoxTheme(new ScrollBarTheme());
-            //ProgressBarTheme = new ProgressBarTheme();
-            //RadioButtonTheme = new RadioButtonTheme();
+            SetControlTheme(typeof(ProgressBar), new ProgressBarTheme());
+            SetControlTheme(typeof(RadioButton), new RadioButtonTheme());
             //TextBoxTheme = new TextBoxTheme();
             //SelectionButtonTheme = new ButtonTheme();
             //DrawingSurfaceTheme = new DrawingSurfaceTheme();
@@ -94,15 +84,9 @@ namespace SadConsole.UI.Themes
         /// </summary>
         public Library()
         {
-            _colors = new Colors();
+            Colors = new Colors() { IsLibrary = true };
             _controlThemes = new Dictionary<Type, ThemeBase>(15);
         }
-
-        /// <summary>
-        /// Create the instance for the singleton.
-        /// </summary>
-        /// <param name="_">Not used.</param>
-        private Library(bool _) => _colors = new Colors();
 
         /// <summary>
         /// Creates and returns a theme based on the type of control provided.
@@ -140,7 +124,8 @@ namespace SadConsole.UI.Themes
             foreach (var item in _controlThemes)
                 library.SetControlTheme(item.Key, item.Value);
 
-            library._colors = _colors.Clone();
+            library.Colors = Colors.Clone();
+            library.Colors.IsLibrary = true;
 
             return library;
         }
