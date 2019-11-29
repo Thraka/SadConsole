@@ -226,19 +226,15 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(IScreenSurface screen, ref List<IScreenSurface> list)
+        private void GetConsoles(IScreenObject screen, ref List<IScreenSurface> list)
         {
-            if (!screen.IsVisible)
-            {
-                return;
-            }
+            if (!screen.IsVisible) return;
 
-            if (screen.UseMouse)
-            {
-                list.Add(screen);
-            }
+            if (screen is IScreenSurface surface)
+                if (screen.UseMouse)
+                    list.Add(surface);
 
-            foreach (IScreenSurface child in screen.Children.OfType<IScreenSurface>())
+            foreach (IScreenObject child in screen.Children)
             {
                 GetConsoles(child, ref list);
             }

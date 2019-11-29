@@ -67,14 +67,13 @@ namespace SadConsole.UI.Themes
             //WindowTheme = new WindowTheme(Colors);
 
             SetControlTheme(typeof(ScrollBar), new ScrollBarTheme());
-            //ButtonTheme = new ButtonTheme();
             SetControlTheme(typeof(CheckBox), new CheckBoxTheme());
-            //ListBoxTheme = new ListBoxTheme(new ScrollBarTheme());
+            SetControlTheme(typeof(ListBox), new ListBoxTheme(new ScrollBarTheme()));
             SetControlTheme(typeof(ProgressBar), new ProgressBarTheme());
             SetControlTheme(typeof(RadioButton), new RadioButtonTheme());
-            //TextBoxTheme = new TextBoxTheme();
-            //SelectionButtonTheme = new ButtonTheme();
-            //DrawingSurfaceTheme = new DrawingSurfaceTheme();
+            SetControlTheme(typeof(TextBox), new TextBoxTheme());
+            SetControlTheme(typeof(SelectionButton), new ButtonTheme());
+            SetControlTheme(typeof(DrawingSurface), new DrawingSurfaceTheme());
             SetControlTheme(typeof(Button), new ButtonTheme());
             SetControlTheme(typeof(Label), new LabelTheme());
         }

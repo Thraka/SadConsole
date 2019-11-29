@@ -48,19 +48,19 @@ namespace FeatureDemo.CustomConsoles
 
             Components.Add(progressTimer);
 
-            //var listbox = new ListBox(20, 6)
-            //{
-            //    Position = new Point(28, 3)
-            //};
-            //listbox.Items.Add("item 1");
-            //listbox.Items.Add("item 2");
-            //listbox.Items.Add("item 3");
-            //listbox.Items.Add("item 4");
-            //listbox.Items.Add("item 5");
-            //listbox.Items.Add("item 6");
-            //listbox.Items.Add("item 7");
-            //listbox.Items.Add("item 8");
-            //Add(listbox);
+            var listbox = new ListBox(20, 6)
+            {
+                Position = new Point(28, 3)
+            };
+            listbox.Items.Add("item 1");
+            listbox.Items.Add("item 2");
+            listbox.Items.Add("item 3");
+            listbox.Items.Add("item 4");
+            listbox.Items.Add("item 5");
+            listbox.Items.Add("item 6");
+            listbox.Items.Add("item 7");
+            listbox.Items.Add("item 8");
+            Add(listbox);
 
             var radioButton = new RadioButton(20, 1)
             {
@@ -76,46 +76,46 @@ namespace FeatureDemo.CustomConsoles
             };
             Add(radioButton);
 
-            //var selButton = new SadConsole.Controls.SelectionButton(24, 1)
-            //{
-            //    Text = "Selection Button 1",
-            //    Position = new Point(51, 3)
-            //};
-            //Add(selButton);
+            var selButton = new SelectionButton(24, 1)
+            {
+                Text = "Selection Button 1",
+                Position = new Point(51, 3)
+            };
+            Add(selButton);
 
-            //var selButton1 = new SadConsole.Controls.SelectionButton(24, 1)
-            //{
-            //    Text = "Selection Button 2",
-            //    Position = new Point(51, 4)
-            //};
-            //Add(selButton1);
+            var selButton1 = new SelectionButton(24, 1)
+            {
+                Text = "Selection Button 2",
+                Position = new Point(51, 4)
+            };
+            Add(selButton1);
 
-            //var selButton2 = new SadConsole.Controls.SelectionButton(24, 1)
-            //{
-            //    Text = "Selection Button 3",
-            //    Position = new Point(51, 5)
-            //};
-            //Add(selButton2);
+            var selButton2 = new SelectionButton(24, 1)
+            {
+                Text = "Selection Button 3",
+                Position = new Point(51, 5)
+            };
+            Add(selButton2);
 
-            //selButton.PreviousSelection = selButton2;
-            //selButton.NextSelection = selButton1;
-            //selButton1.PreviousSelection = selButton;
-            //selButton1.NextSelection = selButton2;
-            //selButton2.PreviousSelection = selButton1;
-            //selButton2.NextSelection = selButton;
+            selButton.PreviousSelection = selButton2;
+            selButton.NextSelection = selButton1;
+            selButton1.PreviousSelection = selButton;
+            selButton1.NextSelection = selButton2;
+            selButton2.PreviousSelection = selButton1;
+            selButton2.NextSelection = selButton;
 
-            //var input = new TextBox(10)
-            //{
-            //    Position = new Point(51, 9)
-            //};
-            //Add(input);
+            var input = new TextBox(10)
+            {
+                Position = new Point(51, 9)
+            };
+            Add(input);
 
-            //var password = new TextBox(10)
-            //{
-            //    PasswordChar = "*",
-            //    Position = new Point(65, 9)
-            //};
-            //Add(password);
+            var password = new TextBox(10)
+            {
+                PasswordChar = "*",
+                Position = new Point(65, 9)
+            };
+            Add(password);
 
             var button = new Button(11, 1)
             {
@@ -221,6 +221,8 @@ namespace FeatureDemo.CustomConsoles
 
             return base.ProcessKeyboard(info);
         }
+
+        public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState state) => base.ProcessMouse(state);
 
         protected override void OnThemeDrawn()
         {

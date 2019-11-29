@@ -6805,6 +6805,23 @@
             THe control is selected
             </summary>
         </member>
+        <member name="T:SadConsole.UI.Controls.DrawingSurface">
+            <summary>
+            A simple surface for drawing text that can be moved and sized like a control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.DrawingSurface.OnDraw">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.DrawingSurface.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new drawing surface control with the specified width and height.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control.</param>
+        </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
             A simple surface for drawing text that can be moved and sized like a control.
@@ -6846,6 +6863,59 @@
             A control to display simple one-line text.
             </summary>
             <param name="length">The initial length of the label without any text.</param>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemChanged">
+            <summary>
+            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted">
+            <summary>
+            An event that triggers when an item is double clicked or the Enter key is pressed while the listbox has focus.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.ItemTheme">
+            <summary>
+            The theme used by the listbox items.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.IsScrollBarVisible">
+            <summary>
+            Internal use only; used in rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.ScrollBar">
+            <summary>
+            Used in rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.ScrollBarRenderLocation">
+            <summary>
+            Used in rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.RelativeIndexMouseOver">
+            <summary>
+            Used in rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.CompareByReference">
+            <summary>
+            When the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> changes, and this property is true, objects will be compared by reference. If false, they will be compared by value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.SingleClickItemExecute">
+            <summary>
+            When set to <see langword="true"/>, the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted"/> event will fire when an item is single-clicked instead of double-clicked.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of the listbox control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Controls.ProgressBar">
             <summary>
@@ -7013,6 +7083,244 @@
             </summary>
             <param name="state"></param>
         </member>
+        <member name="T:SadConsole.UI.Controls.SelectionButton">
+            <summary>
+            Provides a button-like control that changes focus to a designated previous or next selection button when the arrow keys are pushed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.SelectionButton.PreviousSelection">
+            <summary>
+            The selection button to focus when the UP key is pressed or the SelectPrevious() method is called.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.SelectionButton.NextSelection">
+            <summary>
+            The selection button to focus when the DOWN key is pressed or the SelectNext() method is called.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SelectionButton.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new Selection Button with a specific width and height.
+            </summary>
+            <param name="width">The width of the selection button.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SelectionButton.SetNextSelection(SadConsole.UI.Controls.SelectionButton@,System.Boolean)">
+            <summary>
+            Sets the next selection button and optionally sets the previous of the referenced selection to this button.
+            </summary>
+            <param name="nextSelection">The selection button to be used as next.</param>
+            <param name="setPreviousOnNext">Sets the PreviousSelection property on the <paramref name="nextSelection"/> instance to current selection button. Defaults to true.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SelectionButton.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Focuses the previous or next selection button depending on if the UP or DOWN arrow keys were pressed.
+            </summary>
+            <param name="info">The keyboard state.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SelectionButton.SelectPrevious">
+            <summary>
+            Selects the previous selection button.
+            </summary>
+            <returns>Returns the previous selection button.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SelectionButton.SelectNext">
+            <summary>
+            Selects the next selection button.
+            </summary>
+            <returns>Returns the next selection button.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Controls.TextBox">
+            <summary>
+            InputBox control that allows text input.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox.PasswordChar">
+            <summary>
+            Mask input with a certain character.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox.IsCaretVisible">
+            <summary>
+            Indicates the caret is visible.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox._validNumbers">
+            <summary>
+            A list of valid number characters
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox._alignment">
+            <summary>
+            The alignment of the text.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.LeftDrawOffset">
+            <summary>
+            When editing the text box, this allows the text to scroll to the right so you can see what you are typing.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox._caretPos">
+            <summary>
+            The location of the caret.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox._text">
+            <summary>
+            The text value of the input box.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox._isNumeric">
+            <summary>
+            Indicates the input box is numeric only.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox._allowDecimalPoint">
+            <summary>
+            Indicates that the input box (when numeric) will accept decimal points.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox._currentAppearance">
+            <summary>
+            The current appearance of the control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.TextChanged">
+            <summary>
+            Raised when the text has changed and the preview has accepted it.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.TextChangedPreview">
+            <summary>
+            Raised before the text has changed and allows the change to be cancelled.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.KeyPressed">
+            <summary>
+            Raised when a key is pressed on the textbox.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox.DisableMouse">
+            <summary>
+            Disables mouse input.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.DisableKeyboard">
+            <summary>
+            Disables the keyboard which turns off keyboard input and hides the cursor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.EditingText">
+            <summary>
+            A temp holder for the text as it's being edited.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.TextAlignment">
+            <summary>
+            The alignment of the caret.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.MaxLength">
+            <summary>
+            How big the text can be. Setting this to 0 will make it unlimited.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.CaretPosition">
+            <summary>
+            Gets or sets the position of the caret in the current text.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.Text">
+            <summary>
+            Gets or sets the text of the input box.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.IsNumeric">
+            <summary>
+            Gets or sets weather or not this input box only allows numeric input.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.AllowDecimal">
+            <summary>
+            Gets or sets weather or not this input box should restrict numeric input should allow a decimal point.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the input box.
+            </summary>
+            <param name="width">The width of the input box.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.Validate">
+            <summary>
+            Validates that the value of the input box conforms to the settings of this control and sets the dirty flag to true.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.ValidateCursorPosition">
+            <summary>
+            Correctly positions the cursor within the text.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Called when the control should process keyboard information.
+            </summary>
+            <param name="info">The keyboard information.</param>
+            <returns>True if the keyboard was handled by this control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.FocusLost">
+            <summary>
+            Called when the control loses focus.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.Focused">
+            <summary>
+            Called when the control is focused.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.TextBox.TextChangedEventArgs">
+            <summary>
+            Event arguments that indicate the change in text for a textbox control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox.TextChangedEventArgs.OldValue">
+            <summary>
+            The original text value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.TextChangedEventArgs.NewValue">
+            <summary>
+            The new text of the textbox.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.TextChangedEventArgs.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new event args object.
+            </summary>
+            <param name="oldValue">The original value of the text.</param>
+            <param name="newValue">The value the text is chaning to.</param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.TextBox.KeyPressEventArgs">
+            <summary>
+            Event arguments to indicate that a key is being pressed on the textbox.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TextBox.KeyPressEventArgs.Key">
+            <summary>
+            The key being pressed by the textbox.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.KeyPressEventArgs.IsCancelled">
+            <summary>
+            When set to <see langword="true"/>, causes the textbox to cancel the key press.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.KeyPressEventArgs.#ctor(SadConsole.Input.AsciiKey)">
+            <summary>
+            Creates a new event args object.
+            </summary>
+            <param name="key">The key being pressed.</param>
+        </member>
         <member name="T:SadConsole.UI.Themes.ButtonTheme">
             <summary>
             The theme of the button control
@@ -7161,6 +7469,25 @@
             </summary>
             <param name="console">Console associated with the theme.</param>
         </member>
+        <member name="T:SadConsole.UI.Themes.DrawingSurfaceTheme">
+            <summary>
+            A basic theme for a drawing surface that simply fills the surface based on the state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.DrawingSurfaceTheme.UseNormalStateOnly">
+            <summary>
+            When true, only uses <see cref="P:SadConsole.UI.Themes.ThemeStates.Normal"/> for drawing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.Clone">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.UI.Themes.LabelTheme">
             <summary>
             A basic theme for a drawing surface that simply fills the surface based on the state.
@@ -7235,6 +7562,49 @@
             Clones this library.
             </summary>
             <returns>A new instance of a library.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Themes.ListBoxTheme">
+            <summary>
+            The theme for a ListBox control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ListBoxTheme.BorderTheme">
+            <summary>
+            The drawing theme for the boarder when <see cref="F:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ListBoxTheme.BorderLineStyle">
+            <summary>
+            The line style for the border when <see cref="F:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ListBoxTheme.DrawBorder">
+            <summary>
+            If false the border will not be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ListBoxTheme.ScrollBarTheme">
+            <summary>
+            The appearance of the scrollbar used by the listbox control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.#ctor(SadConsole.UI.Themes.ScrollBarTheme)">
+            <summary>
+            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.ListBox"/>.
+            </summary>
+            <param name="scrollBarTheme">The theme to use to draw the scroll bar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.ProgressBarTheme">
             <summary>
@@ -7354,6 +7724,33 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ScrollBarTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.TextBoxTheme">
+            <summary>
+            A theme for the input box control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.TextBoxTheme.CaretEffect">
+            <summary>
+            The style to use for the carrot.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.TextBoxTheme.#ctor">
+            <summary>
+            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.TextBox"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.TextBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.TextBoxTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.TextBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.TextBoxTheme.Clone">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.ThemeBase">
