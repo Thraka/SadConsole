@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <!--<ProjectReference Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />-->
+    <!--<ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />-->
+    <ProjectReference Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
     <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
   </ItemGroup>
 

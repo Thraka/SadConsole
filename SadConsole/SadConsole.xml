@@ -687,6 +687,11 @@
             <param name="bufferHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
+        <member name="M:SadConsole.CellSurface.SetIsDirtySafe">
+            <summary>
+            Sets <see cref="P:SadConsole.CellSurface.IsDirty"/> to <see langword="true"/> without triggering <see cref="M:SadConsole.CellSurface.OnIsDirtyChanged"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.CellSurface.OnIsDirtyChanged">
             <summary>
             Called when the <see cref="P:SadConsole.CellSurface.IsDirty"/> property changes.
@@ -7546,7 +7551,7 @@
             <summary>
             Creates and returns a theme based on the type of control provided.
             </summary>
-            <param name="control">The control instance</param>
+            <param name="control">The control type.</param>
             <returns>A theme that is associated with the control.</returns>
         </member>
         <member name="M:SadConsole.UI.Themes.Library.SetControlTheme(System.Type,SadConsole.UI.Themes.ThemeBase)">
@@ -7556,6 +7561,21 @@
             <param name="control">The control type to register a theme.</param>
             <param name="theme">The theme to associate with the control.</param>
             <returns>A theme that is associated with the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.GetConsoleTheme(System.Type)">
+            <summary>
+            Creates and returns a theme based on the type of control provided.
+            </summary>
+            <param name="console">The console type.</param>
+            <returns>A theme that is associated with the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.SetConsoleTheme(System.Type,SadConsole.UI.Themes.ControlsConsole)">
+            <summary>
+            Sets a console theme based on the control type.
+            </summary>
+            <param name="console">The console type to register a theme.</param>
+            <param name="theme">The theme to associate with the control.</param>
+            <returns>A theme that is associated with the console.</returns>
         </member>
         <member name="M:SadConsole.UI.Themes.Library.Clone">
             <summary>
@@ -7855,6 +7875,247 @@
             </summary>
             <param name="colors">The colors to create the theme with.</param>
             <param name="control">The control being drawn with the theme.</param>
+        </member>
+        <member name="T:SadConsole.UI.Themes.Window">
+            <summary>
+            A theme for a Window object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Window.TitleStyle">
+            <summary>
+            The style of the title.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Window.TitleAreaY">
+            <summary>
+            The Y coordinate of the title drawing area. This can be set to any value > 0 and &lt; the height.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Window.TitleAreaX">
+            <summary>
+            The X coordinate of the title drawing area. This is automatically set by the theme.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Window.TitleAreaLength">
+            <summary>
+            The width of the title drawing area. This is automatically set by the theme.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Window.BorderStyle">
+            <summary>
+            The style of the border
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Window.BorderLineStyle">
+            <summary>
+            The line sytle for the border.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.Window.ModalTint">
+            <summary>
+            The color to tint the background when the window is shown as modal.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Window.Clone">
+            <summary>
+            Returns a clone of this object. <see cref="F:SadConsole.UI.Themes.Window.BorderLineStyle"/> is referenced.
+            </summary>
+            <returns>The cloned object.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Window.Draw(SadConsole.UI.ControlsConsole)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Window">
+            <summary>
+            Represents a windowed controls console.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Window.Closed">
+            <summary>
+            Raised when the window is closed.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Window.PreviousMouseInfo">
+            <summary>
+            The mouse state of the previous update frame.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Window.CellAtDragPosition">
+            <summary>
+            The position of the cell that the window drag started at.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Window.PreviousMouseExclusiveDrag">
+            <summary>
+            Temporary value to hold the state of <see cref="P:SadConsole.ScreenSurface.IsExclusiveMouse"/> prior to dragging.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Window.AddedToParent">
+            <summary>
+            When <see langword="true"/>, indicates that the window has been added to a parent; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Window.IsDragging">
+            <summary>
+            When <see langword="true"/>, indicates that the window is being dragged; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.TitleAlignment">
+            <summary>
+            Gets or sets the alignment of the window title.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.IsModal">
+            <summary>
+            Gets the whether or not the window is being shown as modal. 
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.CanDrag">
+            <summary>
+            Gets or sets whether or not this window can be moved with the mouse.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.CloseOnEscKey">
+            <summary>
+            Gets or sets whether or not this window can be closed when the escape key is pressed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.DialogResult">
+            <summary>
+            Gets or set the dialog result status of the window.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.IsModalDefault">
+            <summary>
+            Indicates that when this window is shown by the <see cref="M:SadConsole.UI.Window.Show"/> method or by setting the <see cref="!:Console.IsVisible"/> property to true, the window will be shown as modal.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.Title">
+            <summary>
+            Gets or sets the title displayed on the window.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new window.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+            <param name="initialCells">The initial cells to seed the surface.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new window with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The visible width of the window in cells.</param>
+            <param name="height">The visible height of the window in cells.</param>
+            <param name="bufferWidth">The total width of the window in cells.</param>
+            <param name="bufferHeight">The total height of the window in cells.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.#ctor(SadConsole.CellSurface)">
+            <summary>
+            Creates a new window using the specified surface's cells.
+            </summary>
+            <param name="surface">The surface.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a window with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the window in cells.</param>
+            <param name="height">The height of the window in cells.</param>
+            <param name="bufferWidth">The total width of the window in cells.</param>
+            <param name="bufferHeight">The total height of the window in cells.</param>
+            <param name="initialCells">The cells to seed the window with. If <see langword="null"/>, creates the cells for you.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.RedrawTheme">
+            <summary>
+            Causes the window to be redrawn with the selected <see cref="!:Theme"/>. When overridden, call this method first.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Window.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Processes the keyboard looking for the ESC key press to close the window, if required. Otherwise the base ControlsConsole will process the keyboard.
+            </summary>
+            <param name="info">Keyboard state.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.OnVisibleChanged">
+            <summary>
+            Depending on if the window is visible, calls <see cref="M:SadConsole.UI.Window.Show(System.Boolean)"/> or <see cref="M:SadConsole.UI.Window.Hide"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.Show">
+            <summary>
+            Displays this window using the modal value of the <see cref="P:SadConsole.UI.Window.IsModalDefault"/> property.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.Show(System.Boolean)">
+            <summary>
+            Displays this window.
+            </summary>
+            <param name="modal">When true, the window will be displayed as modal; otherwise false.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.Hide">
+            <summary>
+            Hides the window.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.Center">
+            <summary>
+            Centers the window within the bounds of <see cref="!:Global.RenderWidth"/> and <see cref="!:Global.RenderHeight"/>
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.Prompt(System.String,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Themes.Window,SadConsole.UI.Themes.ButtonTheme)">
+            <summary>
+            Shows a window prompt with two buttons for the user to click.
+            </summary>
+            <param name="message">The text to display.</param>
+            <param name="yesPrompt">The yes button's text.</param>
+            <param name="noPrompt">The no button's text.</param>
+            <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
+            <param name="windowTheme">The theme the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+            <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.Prompt(SadConsole.ColoredString,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Themes.Window,SadConsole.UI.Themes.ButtonTheme)">
+            <summary>
+            Shows a window prompt with two buttons for the user to click.
+            </summary>
+            <param name="message">The text to display. (background color is ignored)</param>
+            <param name="yesPrompt">The yes button's text.</param>
+            <param name="noPrompt">The no button's text.</param>
+            <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
+            <param name="windowTheme">The theme the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+            <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.Message(System.String,System.String,System.Action,SadConsole.UI.Themes.Window,SadConsole.UI.Themes.ButtonTheme)">
+            <summary>
+            Displays a dialog to the user with a specific message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="closeButtonText">The text of the dialog's close button.</param>
+            <param name="closedCallback">A callback indicating the message was dismissed.</param>
+            <param name="windowTheme">The theme the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+            <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.Message(SadConsole.ColoredString,System.String,System.Action,SadConsole.UI.Themes.Window,SadConsole.UI.Themes.ButtonTheme)">
+            <summary>
+            Displays a dialog to the user with a specific message.
+            </summary>
+            <param name="message">The message. (background color is ignored)</param>
+            <param name="closeButtonText">The text of the dialog's close button.</param>
+            <param name="closedCallback">A callback indicating the message was dismissed.</param>
+            <param name="windowTheme">The theme the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+            <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
         </member>
         <member name="T:SadRogue.Primitives.ColorAnsi">
             <summary>

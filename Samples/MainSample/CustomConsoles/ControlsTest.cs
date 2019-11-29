@@ -122,7 +122,7 @@ namespace FeatureDemo.CustomConsoles
                 Text = "Click",
                 Position = new Point(1, 3)
             };
-            //button.Click += (s, a) => Window.Message("This has been clicked -- and your password field contains '" + password.Text + "'", "Close");
+            button.Click += (s, a) => SadConsole.UI.Window.Message("This has been clicked -- and your password field contains '" + password.Text + "'", "Close");
             Add(button);
 
             button = new Button(11, 3)

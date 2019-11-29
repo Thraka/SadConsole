@@ -244,6 +244,12 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Sets <see cref="IsDirty"/> to <see langword="true"/> without triggering <see cref="OnIsDirtyChanged"/>.
+        /// </summary>
+        protected void SetIsDirtySafe() =>
+            _isDirty = true;
+
+        /// <summary>
         /// Called when the <see cref="IsDirty"/> property changes.
         /// </summary>
         protected virtual void OnIsDirtyChanged() =>

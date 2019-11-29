@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
+using System.Linq;
 
 namespace SadConsole.UI.Themes
 {
@@ -14,6 +15,7 @@ namespace SadConsole.UI.Themes
         private static Library _libraryInstance;
 
         private Dictionary<System.Type, ThemeBase> _controlThemes;
+        private Dictionary<System.Type, ControlsConsole> _consoleThemes;
 
         /// <summary>
         /// If a control does not specify its own theme, the theme from this property will be used.
@@ -61,10 +63,8 @@ namespace SadConsole.UI.Themes
         /// </summary>
         protected void Init()
         {
-            //SetControlTheme(typeof())
-
-            //ControlsConsoleTheme = new ControlsConsoleTheme(Colors);
-            //WindowTheme = new WindowTheme(Colors);
+            SetConsoleTheme(typeof(UI.Window), new Window());
+            SetConsoleTheme(typeof(UI.ControlsConsole), new ControlsConsole());
 
             SetControlTheme(typeof(ScrollBar), new ScrollBarTheme());
             SetControlTheme(typeof(CheckBox), new CheckBoxTheme());
@@ -85,12 +85,13 @@ namespace SadConsole.UI.Themes
         {
             Colors = new Colors() { IsLibrary = true };
             _controlThemes = new Dictionary<Type, ThemeBase>(15);
+            _consoleThemes = new Dictionary<Type, ControlsConsole>(2);
         }
 
         /// <summary>
         /// Creates and returns a theme based on the type of control provided.
         /// </summary>
-        /// <param name="control">The control instance</param>
+        /// <param name="control">The control type.</param>
         /// <returns>A theme that is associated with the control.</returns>
         public ThemeBase GetControlTheme(Type control)
         {
@@ -110,6 +111,47 @@ namespace SadConsole.UI.Themes
         {
             if (null == control) throw new ArgumentNullException(nameof(control), "Cannot use a null control type");
             _controlThemes[control] = theme ?? throw new ArgumentNullException(nameof(theme), "Cannot set the theme of a control to null");
+        }
+
+        /// <summary>
+        /// Creates and returns a theme based on the type of control provided.
+        /// </summary>
+        /// <param name="console">The console type.</param>
+        /// <returns>A theme that is associated with the control.</returns>
+        public ControlsConsole GetConsoleTheme(Type console)
+        {
+            if (_consoleThemes.ContainsKey(console))
+                return (ControlsConsole)_consoleThemes[console].GetType().GetMethod("Clone").Invoke(_consoleThemes[console], null);
+
+            Type windowType = typeof(UI.Window);
+            Type controlsConsoleType = typeof(UI.ControlsConsole);
+
+            console = console.BaseType;
+
+            while (console != null)
+            {
+                if (console == windowType)
+                    return (ControlsConsole)_consoleThemes[windowType].GetType().GetMethod("Clone").Invoke(_consoleThemes[windowType], null);
+
+                if (console == controlsConsoleType)
+                    return (ControlsConsole)_consoleThemes[controlsConsoleType].GetType().GetMethod("Clone").Invoke(_consoleThemes[controlsConsoleType], null);
+
+                console = console.BaseType;
+            }
+
+            throw new System.Exception("Console does not have an associated theme.");
+        }
+
+        /// <summary>
+        /// Sets a console theme based on the control type.
+        /// </summary>
+        /// <param name="console">The console type to register a theme.</param>
+        /// <param name="theme">The theme to associate with the control.</param>
+        /// <returns>A theme that is associated with the console.</returns>
+        public void SetConsoleTheme(Type console, ControlsConsole theme)
+        {
+            if (null == console) throw new ArgumentNullException(nameof(console), "Cannot use a null console type");
+            _consoleThemes[console] = theme ?? throw new ArgumentNullException(nameof(theme), "Cannot set the theme of a console to null");
         }
 
         /// <summary>

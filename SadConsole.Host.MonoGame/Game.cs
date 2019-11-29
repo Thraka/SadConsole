@@ -70,6 +70,7 @@ namespace SadConsole
         public override Renderers.IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
             screenObject switch
             {
+                UI.Window _ => new Renderers.Window(),
                 UI.ControlsConsole _ => new Renderers.ControlsConsole(),
                 Console _ => new Renderers.ConsoleRenderer(),
                 _ => new Renderers.ScreenObjectRenderer(),

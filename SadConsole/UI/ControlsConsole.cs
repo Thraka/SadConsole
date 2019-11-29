@@ -63,7 +63,11 @@ namespace SadConsole.UI
         public Colors ThemeColors
         {
             get => _themeColors;
-            set => _themeColors = value;
+            set
+            {
+                _themeColors = value;
+                IsDirty = true;
+            }
         }
 
         /// <summary>
@@ -167,9 +171,8 @@ namespace SadConsole.UI
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
 
-            _theme = new Themes.ControlsConsole();
-            _theme.Draw(this);
-        }
+            _theme = Library.Default.GetConsoleTheme(GetType());
+            OnIsDirtyChanged();        }
 
         /// <summary>
         /// Adds an existing control to this console.
@@ -518,8 +521,9 @@ namespace SadConsole.UI
         /// <summary>
         /// Causes the console to redraw the <see cref="Theme"/>.
         /// </summary>
-        public void RedrawTheme()
+        public virtual void RedrawTheme()
         {
+            IsDirty = true;
             Theme?.Draw(this);
             OnThemeDrawn();
 
