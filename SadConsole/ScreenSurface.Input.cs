@@ -6,24 +6,16 @@ namespace SadConsole
     public partial class ScreenSurface
     {
 
-        /// <summary>
-        /// Raised when the a mouse button is clicked on this console.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<MouseScreenObjectState> MouseButtonClicked;
 
-        /// <summary>
-        /// Raised when the mouse moves around the this console.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<MouseScreenObjectState> MouseMove;
 
-        /// <summary>
-        /// Raised when the mouse exits this console.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<MouseScreenObjectState> MouseExit;
 
-        /// <summary>
-        /// Raised when the mouse enters this console.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<MouseScreenObjectState> MouseEnter;
 
         /// <summary>
@@ -31,29 +23,19 @@ namespace SadConsole
         /// </summary>
         protected bool IsMouseOver;
 
-        /// <summary>
-        /// How the object should handle becoming active.
-        /// </summary>
+        /// <inheritdoc/>
         public FocusBehavior FocusedMode { get; set; }
 
-        /// <summary>
-        /// Gets or sets whether or not this console has exclusive access to the mouse events.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsExclusiveMouse { get; set; }
 
-        /// <summary>
-        /// When true, this console will move to the front of its parent console when the mouse is clicked.
-        /// </summary>
+        /// <inheritdoc/>
         public bool MoveToFrontOnMouseClick { get; set; }
 
-        /// <summary>
-        /// When true, this console will set <see cref="IsFocused"/> to true when the mouse is clicked.
-        /// </summary>
+        /// <inheritdoc/>
         public bool FocusOnMouseClick { get; set; }
 
-        /// <summary>
-        /// Gets or sets this console as the focused console for input.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsFocused
         {
             get => Global.FocusedScreenObjects.ScreenObject == this;
@@ -136,10 +118,7 @@ namespace SadConsole
         /// <param name="state">Current mouse state in relation to this console.</param>
         protected virtual void OnRightMouseClicked(MouseScreenObjectState state) => MouseButtonClicked?.Invoke(this, state);
 
-        /// <summary>
-        /// If the mouse is not over the console, causes the protected <see cref="OnMouseExit"/> method to run which raises the <see cref="MouseExit"/> event.
-        /// </summary>
-        /// <param name="state"></param>
+        /// <inheritdoc/>
         public void LostMouse(MouseScreenObjectState state)
         {
             if (IsMouseOver)
@@ -148,11 +127,7 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// Processes the mouse.
-        /// </summary>
-        /// <param name="state">The mouse state related to this console.</param>
-        /// <returns>True when the mouse is over this console and processing should stop.</returns>
+        /// <inheritdoc/>
         public virtual bool ProcessMouse(MouseScreenObjectState state)
         {
             if (!IsVisible)
@@ -227,14 +202,10 @@ namespace SadConsole
             return false;
         }
 
-        /// <summary>
-        /// Called when this console's focus has been lost. Hides the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual void OnFocusLost() { }
 
-        /// <summary>
-        /// Called when this console is focused. Shows the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual void OnFocused() { }
     }
 }

@@ -18,24 +18,16 @@ namespace SadConsole
         private bool _isVisible = true;
         private bool _isEnabled = true;
 
-        /// <summary>
-        /// Raised when the <see cref="Parent"/> property changes.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<NewOldValueEventArgs<IScreenObject>> ParentChanged;
 
-        /// <summary>
-        /// Raised when the <see cref="Position"/> property changes.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<NewOldValueEventArgs<Point>> PositionChanged;
 
-        /// <summary>
-        /// Raised when the <see cref="IsVisible"/> property changes.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler VisibleChanged;
 
-        /// <summary>
-        /// Raised when the <see cref="IsEnabled"/> property changes.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler EnabledChanged;
 
         /// <summary>
@@ -63,19 +55,13 @@ namespace SadConsole
         /// </summary>
         protected List<IComponent> ComponentsEmpty;
 
-        /// <summary>
-        /// A collection of components processed by this console.
-        /// </summary>
+        /// <inheritdoc/>
         public ObservableCollection<IComponent> Components { get; private set; }
 
-        /// <summary>
-        /// The child objects of this instance.
-        /// </summary>
+        /// <inheritdoc/>
         public ScreenObjectCollection Children { get; }
 
-        /// <summary>
-        /// The parent object that this instance is a child of.
-        /// </summary>
+        /// <inheritdoc/>
         public IScreenObject Parent
         {
             get => _parentObject;
@@ -103,9 +89,7 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// The position of the object on the screen.
-        /// </summary>
+        /// <inheritdoc/>
         public Point Position
         {
             get => _position;
@@ -119,14 +103,10 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// A position that is based on the current <see cref="Position"/> and <see cref="Parent"/> position, in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         public Point AbsolutePosition { get; protected set; }
 
-        /// <summary>
-        /// Gets or sets the visibility of this object.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsVisible
         {
             get => _isVisible;
@@ -139,9 +119,7 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// Gets or sets the visibility of this object.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -154,14 +132,10 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// When <see langword="true"/>, this object will use the keyboard; otherwise <see langword="false"/>.
-        /// </summary>
+        /// <inheritdoc/>
         public bool UseKeyboard { get; set; }
 
-        /// <summary>
-        /// When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
-        /// </summary>
+        /// <inheritdoc/>
         public bool UseMouse { get; set; }
 
         /// <summary>
@@ -178,10 +152,7 @@ namespace SadConsole
             Children = new ScreenObjectCollection(this);
         }
 
-        /// <summary>
-        /// Draws all <see cref="Components"/> and <see cref="Children"/>.
-        /// </summary>
-        /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
+        /// <inheritdoc/>
         public virtual void Draw()
         {
             if (!IsVisible) return;
@@ -193,10 +164,7 @@ namespace SadConsole
                 child.Draw();
         }
 
-        /// <summary>
-        /// Updates all <see cref="Components"/> and <see cref="Children"/>.
-        /// </summary>
-        /// <remarks>Only processes if <see cref="IsPaused"/> is <see langword="false"/>.</remarks>
+        /// <inheritdoc/>
         public virtual void Update()
         {
             if (!IsEnabled) return;
@@ -208,11 +176,7 @@ namespace SadConsole
                 child.Update();
         }
 
-        /// <summary>
-        /// Called by the engine to process the keyboard.
-        /// </summary>
-        /// <param name="keyboard">Keyboard information.</param>
-        /// <returns>True when the keyboard had data and this console did something with it.</returns>
+        /// <inheritdoc/>
         public virtual bool ProcessKeyboard(Keyboard keyboard)
         {
             if (!UseKeyboard) return false;
@@ -228,11 +192,7 @@ namespace SadConsole
             return false;
         }
 
-        /// <summary>
-        /// Gets components of the specified types.
-        /// </summary>
-        /// <typeparam name="TComponent">THe component to find</typeparam>
-        /// <returns>The components found.</returns>
+        /// <inheritdoc/>
         public IEnumerable<IComponent> GetComponents<TComponent>()
             where TComponent : IComponent
         {
@@ -243,11 +203,7 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// Gets the first component of the specified type.
-        /// </summary>
-        /// <typeparam name="TComponent">THe component to find</typeparam>
-        /// <returns>The component if found, otherwise null.</returns>
+        /// <inheritdoc/>
         public IComponent GetComponent<TComponent>()
             where TComponent : IComponent
         {
@@ -375,7 +331,7 @@ namespace SadConsole
                 ComponentsMouse.Sort(CompareComponent);
             }
 
-            int CompareComponent(IComponent left, IComponent right)
+            static int CompareComponent(IComponent left, IComponent right)
             {
                 if (left.SortOrder > right.SortOrder)
                     return 1;
@@ -421,9 +377,7 @@ namespace SadConsole
         protected virtual void OnEnabledChanged() =>
             EnabledChanged?.Invoke(this, EventArgs.Empty);
 
-        /// <summary>
-        /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual void UpdateAbsolutePosition()
         {
             AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));

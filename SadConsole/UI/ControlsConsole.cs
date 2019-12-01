@@ -345,7 +345,7 @@ namespace SadConsole.UI
         }
 
         /// <summary>
-        /// Tries to tab to the console that comes before this one in the <see cref="ScreenObject.Parent"/> collection of <see cref="ScreenObject.Children"/>. Sets focus to the target console if found.
+        /// Tries to tab to the console that comes before this one in the <see cref="IScreenObject.Parent"/> collection of <see cref="IScreenObject.Children"/>. Sets focus to the target console if found.
         /// </summary>
         /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
         protected bool TryTabPreviousConsole()

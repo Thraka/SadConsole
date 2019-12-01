@@ -18,14 +18,10 @@ namespace SadConsole
         private Color _tint = Color.Transparent;
         private bool _usePixelPositioning;
 
-        /// <summary>
-        /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the object.
-        /// </summary>
+        /// <inheritdoc/>
         public bool ForceRendererRefresh { get; set; }
 
-        /// <summary>
-        /// The renderer used to draw this surface.
-        /// </summary>
+        /// <inheritdoc/>
         public Renderers.IRenderer Renderer
         {
             get => _renderer;
@@ -39,9 +35,7 @@ namespace SadConsole
 
         CellSurface IScreenSurface.Surface => this;
 
-        /// <summary>
-        /// Font used with rendering.
-        /// </summary>
+        /// <inheritdoc/>
         public Font Font
         {
             get => _font;
@@ -55,9 +49,7 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// The size of the <see cref="Font"/> cells applied to the object when rendering.
-        /// </summary>
+        /// <inheritdoc/>
         public Point FontSize
         {
             get => _fontSize;
@@ -70,9 +62,7 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// A tint used in rendering.
-        /// </summary>
+        /// <inheritdoc/>
         public Color Tint
         {
             get => _tint;
@@ -83,14 +73,10 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// The area on the screen this surface occupies. In pixels.
-        /// </summary>
+        /// <inheritdoc/>
         public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, View.Width * FontSize.X, View.Height * FontSize.Y);
 
-        /// <summary>
-        /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.
-        /// </summary>
+        /// <inheritdoc/>
         public bool UsePixelPositioning
         {
             get => _usePixelPositioning;
@@ -102,15 +88,11 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// The width of the surface in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         public int WidthPixels => View.Width * FontSize.X;
 
 
-        /// <summary>
-        /// The height of the surface in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         public int HeightPixels => View.Height * FontSize.Y;
 
         /// <summary>
@@ -177,9 +159,7 @@ namespace SadConsole
             Children = new ScreenObjectCollection(this);
         }
 
-        /// <summary>
-        /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
-        /// </summary>
+        /// <inheritdoc />
         public virtual void UpdateAbsolutePosition()
         {
             if (UsePixelPositioning)

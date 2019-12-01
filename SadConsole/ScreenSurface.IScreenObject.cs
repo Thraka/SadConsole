@@ -309,7 +309,7 @@ namespace SadConsole
                 ComponentsMouse.Sort(CompareComponent);
             }
 
-            int CompareComponent(IComponent left, IComponent right)
+            static int CompareComponent(IComponent left, IComponent right)
             {
                 if (left.SortOrder > right.SortOrder)
                     return 1;
