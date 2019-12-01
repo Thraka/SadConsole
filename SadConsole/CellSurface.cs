@@ -66,6 +66,24 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Gets or sets the visible width of the surface in cells.
+        /// </summary>
+        public int ViewWidth
+        {
+            get => _viewArea.Area.Width;
+            set => _viewArea.Area = _viewArea.Area.WithWidth(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the visible height of the surface in cells.
+        /// </summary>
+        public int ViewHeight
+        {
+            get => _viewArea.Area.Height;
+            set => _viewArea.Area = _viewArea.Area.WithHeight(value);
+        }
+
+        /// <summary>
         /// Returns a rectangle that represents the size of the buffer.
         /// </summary>
         public Rectangle Buffer => _viewArea.BoundingBox;
