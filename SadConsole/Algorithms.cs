@@ -80,7 +80,6 @@ namespace SadConsole
         /// <param name="changeNode">After it is determined if the node should change, this changes the node.</param>
         /// <param name="getNodeConnections">Gets any other nodes connected to this node.</param>
         public static void FloodFill<TNode>(TNode node, Func<TNode, bool> shouldNodeChange, Action<TNode> changeNode, Func<TNode, NodeConnections<TNode>> getNodeConnections)
-            where TNode : class
         {
             var queue = new Queue<TNode>();
 
@@ -278,12 +277,16 @@ namespace SadConsole
         /// </summary>
         /// <typeparam name="TNode">The type of object the node and its connections are.</typeparam>
         public class NodeConnections<TNode>
-            where TNode : class
         {
             public TNode West;
             public TNode East;
             public TNode North;
             public TNode South;
+
+            public bool HasWest;
+            public bool HasEast;
+            public bool HasNorth;
+            public bool HasSouth;
 
             /// <summary>
             /// Creates a new instance of this object with the specified connections.
@@ -292,12 +295,14 @@ namespace SadConsole
             /// <param name="east">The east connection.</param>
             /// <param name="north">The north connection.</param>
             /// <param name="south">The south connection.</param>
-            public NodeConnections(TNode west, TNode east, TNode north, TNode south)
+            public NodeConnections(TNode west, TNode east, TNode north, TNode south, bool isWest, bool isEast, bool isNorth, bool isSouth)
             {
                 West = west;
                 East = east;
                 North = north;
                 South = south;
+
+                (HasWest, HasEast, HasNorth, HasSouth) = (isWest, isEast, isNorth, isSouth);
             }
 
             /// <summary>
@@ -305,10 +310,7 @@ namespace SadConsole
             /// </summary>
             public NodeConnections()
             {
-                West = null;
-                East = null;
-                North = null;
-                South = null;
+
             }
         }
     }

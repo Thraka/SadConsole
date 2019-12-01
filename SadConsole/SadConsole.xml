@@ -84,7 +84,7 @@
             </summary>
             <typeparam name="TNode">The type of object the node and its connections are.</typeparam>
         </member>
-        <member name="M:SadConsole.Algorithms.NodeConnections`1.#ctor(`0,`0,`0,`0)">
+        <member name="M:SadConsole.Algorithms.NodeConnections`1.#ctor(`0,`0,`0,`0,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Creates a new instance of this object with the specified connections.
             </summary>
@@ -606,6 +606,16 @@
         <member name="P:SadConsole.CellSurface.View">
             <summary>
             The view presented by the surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.ViewWidth">
+            <summary>
+            Gets or sets the visible width of the surface in cells.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellSurface.ViewHeight">
+            <summary>
+            Gets or sets the visible height of the surface in cells.
             </summary>
         </member>
         <member name="P:SadConsole.CellSurface.Buffer">

@@ -129,8 +129,8 @@ namespace SadConsole
         /// <returns>The indicated cell.</returns>
         public ColoredGlyph this[int x, int y]
         {
-            get => Cells[y * BufferWidth + x];
-            protected set { Cells[y * BufferWidth + x] = value; IsDirty = true; }
+            get => Cells[Point.ToIndex(x, y, BufferWidth)];
+            protected set { Cells[Point.ToIndex(x, y, BufferWidth)] = value; IsDirty = true; }
         }
 
         /// <summary>

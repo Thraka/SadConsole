@@ -1636,7 +1636,7 @@ namespace SadConsole
         /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
         public void DrawCircle(Rectangle area, ColoredGlyph outer, ColoredGlyph inner = null)
         {
-            var cells = new List<ColoredGlyph>(area.Width * area.Height);
+            var cells = new List<int>(area.Width * area.Height);
             var masterCells = new List<ColoredGlyph>(Cells);
 
             Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX, area.MaxExtentY, (x, y) =>
@@ -1644,33 +1644,50 @@ namespace SadConsole
                 if (IsValidCell(x, y))
                 {
                     SetCellAppearance(x, y, outer);
-                    cells.Add(this[x, y]);
+                    cells.Add(Point.ToIndex(x, y, BufferWidth));
                 }
             });
 
             if (inner != null)
             {
-                Func<ColoredGlyph, bool> isTargetCell = c => !cells.Contains(c);
-                Action<ColoredGlyph> fillCell = c =>
+                //TODO this isn't working anymore :(
+                Func<int, bool> isTargetCell = c => !cells.Contains(c);
+                Action<int> fillCell = c =>
                 {
-                    inner.CopyAppearanceTo(c);
+                    inner.CopyAppearanceTo(this[c]);
                     cells.Add(c);
                 };
-                Func<ColoredGlyph, Algorithms.NodeConnections<ColoredGlyph>> getConnectedCells = c =>
+                Func<int, Algorithms.NodeConnections<int>> getConnectedCells = c =>
                 {
-                    var connections = new Algorithms.NodeConnections<ColoredGlyph>();
+                    var connections = new Algorithms.NodeConnections<int>();
 
-                    (int x, int y) = GetPointFromIndex(masterCells.IndexOf(c));
+                    (int x, int y) = GetPointFromIndex(c);
 
-                    connections.West = IsValidCell(x - 1, y) ? this[x - 1, y] : null;
-                    connections.East = IsValidCell(x + 1, y) ? this[x + 1, y] : null;
-                    connections.North = IsValidCell(x, y - 1) ? this[x, y - 1] : null;
-                    connections.South = IsValidCell(x, y + 1) ? this[x, y + 1] : null;
+                    if (IsValidCell(x - 1, y))
+                    {
+                        connections.West = Point.ToIndex(x - 1, y, BufferWidth);
+                        connections.HasWest = true;
+                    }
+                    if (IsValidCell(x + 1, y))
+                    {
+                        connections.East = Point.ToIndex(x + 1, y, BufferWidth);
+                        connections.HasEast = true;
+                    }
+                    if (IsValidCell(x, y - 1))
+                    {
+                        connections.North = Point.ToIndex(x, y - 1, BufferWidth);
+                        connections.HasNorth = true;
+                    }
+                    if (IsValidCell(x, y + 1))
+                    {
+                        connections.South = Point.ToIndex(x, y + 1, BufferWidth);
+                        connections.HasSouth = true;
+                    }
 
                     return connections;
                 };
 
-                Algorithms.FloodFill(this[area.Center.X, area.Center.Y], isTargetCell, fillCell, getConnectedCells);
+                Algorithms.FloodFill(area.Center.ToIndex(BufferWidth), isTargetCell, fillCell, getConnectedCells);
             }
         }
 
