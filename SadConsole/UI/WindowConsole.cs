@@ -140,7 +140,7 @@ namespace SadConsole.UI
         /// Creates a new window using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public Window(CellSurface surface) : this(surface.ViewWidth, surface.ViewHeight, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
+        public Window(CellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
 
         /// <summary>
         /// Creates a window with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.

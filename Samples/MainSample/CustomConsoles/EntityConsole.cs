@@ -1,14 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SadConsole;
+﻿using SadConsole;
 using SadConsole.Entities;
-using ScrollingConsole = SadConsole.ScrollingConsole;
-
+using SadConsole.Input;
+using SadRogue.Primitives;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class EntityConsole : ScrollingConsole
+    internal class EntityConsole : ScreenSurface
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
@@ -16,19 +13,17 @@ namespace FeatureDemo.CustomConsoles
         private Point playerPreviousPosition;
 
         public EntityConsole()
-            : base(80, 23)
+            : base(80, 23, 160, 46)
         {
-            var animation = new AnimatedConsole("default", 1, 1);
-            CellSurface frame = animation.CreateFrame();
-            frame.Cells[0].Glyph = 1;
-            frame.SetDecorator(0, 2, new CellDecorator(Color.Yellow, 69, SpriteEffects.None));
-
-            player = new Entity(animation)
+            player = new Entity(Color.Yellow, Color.Black, 1)
             {
-                Position = new Point(Width / 2, Height / 2)
+                Position = new Point(BufferWidth / 2, BufferHeight / 2)
             };
-            player.Components.Add(new SadConsole.Components.EntityViewSyncComponent());
+            
             playerPreviousPosition = player.Position;
+            Components.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
+            Components.Add(new SadConsole.Components.SurfaceComponentEntityOffsets());
+            //player.Components.Add(new SadConsole.Components.EntityViewSync());
 
             Children.Add(player);
 
@@ -51,7 +46,7 @@ namespace FeatureDemo.CustomConsoles
 
             if (info.IsKeyPressed(Keys.W))
             {
-                player.Animation.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, SpriteEffects.None) });
+                player.Animation.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, Mirror.None) });
                 keyHit = true;
             }
             if (info.IsKeyPressed(Keys.Q))
@@ -86,7 +81,7 @@ namespace FeatureDemo.CustomConsoles
             if (keyHit)
             {
                 // Check if the new position is valid
-                if (ViewPort.Contains(player.Position))
+                if (Buffer.Contains(player.Position))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
                     SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);

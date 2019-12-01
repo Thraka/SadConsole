@@ -36,7 +36,7 @@ namespace SadConsole.Renderers
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.GetViewRectangle().Contains(console.Cursor.Position))
+            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
             {
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
@@ -65,13 +65,13 @@ namespace SadConsole.Renderers
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != screen.Surface.ViewWidth * screen.Surface.ViewHeight || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
+            if (_renderRects == null || _renderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
             {
-                _renderRects = new XnaRectangle[screen.Surface.ViewWidth * screen.Surface.ViewHeight];
+                _renderRects = new XnaRectangle[screen.Surface.View.Width * screen.Surface.View.Height];
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.ViewWidth);
+                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.View.Width);
                     _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
                 }
             }
@@ -103,12 +103,12 @@ namespace SadConsole.Renderers
             if (control.Surface.DefaultBackground.A != 0)
             {
                 (int x, int y) = (control.Position - control.Parent.ViewPosition).SurfaceLocationToPixel(control.Parent.FontSize);
-                (int width, int height) = new SadRogue.Primitives.Point(control.Surface.ViewWidth, control.Surface.ViewHeight) * control.Parent.FontSize;
+                (int width, int height) = new SadRogue.Primitives.Point(control.Surface.View.Width, control.Surface.View.Height) * control.Parent.FontSize;
 
                 MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, width, height), font.GlyphRects[font.SolidGlyphIndex].ToMonoRectangle(), control.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
             }
 
-            var parentViewRect = control.Parent.GetViewRectangle();
+            var parentViewRect = control.Parent.View;
 
             for (int i = 0; i < control.Surface.Cells.Length; i++)
             {
@@ -116,7 +116,7 @@ namespace SadConsole.Renderers
 
                 if (!cell.IsVisible) continue;
 
-                SadRogue.Primitives.Point cellRenderPosition = SadRogue.Primitives.Point.FromIndex(i, control.Surface.ViewWidth) + control.Position;
+                SadRogue.Primitives.Point cellRenderPosition = SadRogue.Primitives.Point.FromIndex(i, control.Surface.View.Width) + control.Position;
 
                 if (!parentViewRect.Contains(cellRenderPosition)) continue;
 

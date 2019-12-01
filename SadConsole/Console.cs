@@ -76,7 +76,7 @@ namespace SadConsole
         /// Creates a new console using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public Console(CellSurface surface) : this(surface.ViewWidth, surface.ViewHeight, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
+        public Console(CellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
 
         /// <summary>
         /// Creates a console with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.

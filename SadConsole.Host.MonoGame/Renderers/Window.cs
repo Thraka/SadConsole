@@ -40,7 +40,7 @@ namespace SadConsole.Renderers
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.GetViewRectangle().Contains(console.Cursor.Position))
+            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
             {
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,

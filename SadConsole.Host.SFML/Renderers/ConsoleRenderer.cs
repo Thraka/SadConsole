@@ -31,7 +31,7 @@ namespace SadConsole.Renderers
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.GetViewRectangle().Contains(console.Cursor.Position))
+            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
             {
                 var cursorPosition = screen.AbsolutePosition + screen.Font.GetRenderRect(console.Cursor.Position.X, console.Cursor.Position.Y, console.FontSize).Position;
                 
@@ -61,13 +61,13 @@ namespace SadConsole.Renderers
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != screen.Surface.ViewWidth * screen.Surface.ViewHeight || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
+            if (_renderRects == null || _renderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
             {
-                _renderRects = new IntRect[screen.Surface.ViewWidth * screen.Surface.ViewHeight];
+                _renderRects = new IntRect[screen.Surface.View.Width * screen.Surface.View.Height];
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.ViewWidth);
+                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.View.Width);
                     _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
                 }
             }

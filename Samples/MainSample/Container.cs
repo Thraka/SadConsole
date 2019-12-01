@@ -13,7 +13,7 @@ namespace FeatureDemo
     class Container : ScreenObject
     {
         private int currentConsoleIndex = -1;
-        private Console selectedConsole;
+        private IScreenSurface selectedConsole;
         private HeaderConsole headerConsole;
 
         CustomConsole[] consoles;
@@ -31,11 +31,11 @@ namespace FeatureDemo
                 //consoleReal,
                 //new CustomConsoles.AutoTypingConsole(),
                 //new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
+                new CustomConsole(new CustomConsoles.EntityConsole(), "Game object", "Use the cursor keys to move the little character"),
                 new CustomConsole(new CustomConsoles.ControlsTest(), "Controls Test", "Interact with SadConsole controls"),
                 //new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
                 //new CustomConsole(new CustomConsoles.StringParsingConsole(), "String Parser", "Examples of using the string parser"),
                 //new CustomConsole(new CustomConsoles.StretchedConsole(), "Font Zoom", "Console where font has been zoomed x2"),
-                //new CustomConsole(new CustomConsoles.EntityConsole(), "Game object", "Use the cursor keys to move the little character"),
                 //new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
                 //new CustomConsole(new CustomConsoles.BorderedConsole(), "Border Component", "A component that draws a border around a console"),
                 //new CustomConsole(new CustomConsoles.SerializationTests(), "Serialization Tests", "Test serializing various types from SadConsole"),
@@ -63,7 +63,7 @@ namespace FeatureDemo
             selectedConsole = consoles[currentConsoleIndex].Console;
 
             Children.Clear();
-            Children.Add((SadConsole.Console)selectedConsole);
+            Children.Add(selectedConsole);
             Children.Add(headerConsole);
 
             selectedConsole.IsVisible = true;

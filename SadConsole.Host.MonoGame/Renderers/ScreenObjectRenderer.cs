@@ -55,13 +55,13 @@ namespace SadConsole.Renderers
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != screen.Surface.ViewWidth * screen.Surface.ViewHeight || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
+            if (_renderRects == null || _renderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
             {
-                _renderRects = new XnaRectangle[screen.Surface.ViewWidth * screen.Surface.ViewHeight];
+                _renderRects = new XnaRectangle[screen.Surface.View.Width * screen.Surface.View.Height];
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.ViewWidth);
+                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.View.Width);
                     _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
                 }
             }
@@ -102,11 +102,11 @@ namespace SadConsole.Renderers
 
             int rectIndex = 0;
 
-            for (int y = 0; y < cellSurface.ViewHeight; y++)
+            for (int y = 0; y < cellSurface.View.Height; y++)
             {
                 int i = ((y + cellSurface.ViewPosition.Y) * cellSurface.BufferWidth) + cellSurface.ViewPosition.X;
 
-                for (int x = 0; x < cellSurface.ViewWidth; x++)
+                for (int x = 0; x < cellSurface.View.Width; x++)
                 {
                     ref ColoredGlyph cell = ref cellSurface.Cells[i];
 

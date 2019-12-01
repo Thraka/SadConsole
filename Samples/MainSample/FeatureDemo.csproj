@@ -11,7 +11,6 @@
     <Compile Remove="CustomConsoles\BorderedConsole.cs" />
     <Compile Remove="CustomConsoles\CursorConsole.cs" />
     <Compile Remove="CustomConsoles\DOSConsole.cs" />
-    <Compile Remove="CustomConsoles\EntityConsole.cs" />
     <Compile Remove="CustomConsoles\FadeConsole.cs" />
     <Compile Remove="CustomConsoles\HexConsole.cs" />
     <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />

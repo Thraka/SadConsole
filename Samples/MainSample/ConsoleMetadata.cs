@@ -1,4 +1,4 @@
-﻿using Console = SadConsole.Console;
+﻿using SadConsole;
 
 namespace FeatureDemo
 {
@@ -7,13 +7,13 @@ namespace FeatureDemo
         public string Title;
         public string Summary;
 
-        public Console Console
+        public IScreenSurface Console
         {
             get;
             set;
         }
 
-        public CustomConsole(Console console, string title, string summary)
+        public CustomConsole(IScreenSurface console, string title, string summary)
         {
             Console = console;
             Title = title;

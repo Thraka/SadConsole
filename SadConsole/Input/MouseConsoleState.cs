@@ -94,7 +94,7 @@ namespace SadConsole.Input
                 if (screenObject.Surface.IsScrollable)
                 {
                     Point tempCellPosition = SurfaceCellPosition + screenObject.Surface.ViewPosition;
-                    IsOnScreenObject = screenObject.Surface.GetViewRectangle().Contains(tempCellPosition);
+                    IsOnScreenObject = screenObject.Surface.View.Contains(tempCellPosition);
 
                     if (IsOnScreenObject)
                     {

@@ -19,7 +19,7 @@ namespace SadConsole
         private bool _usePixelPositioning;
 
         /// <summary>
-        /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the <see cref="Surface"/>.
+        /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the object.
         /// </summary>
         public bool ForceRendererRefresh { get; set; }
 
@@ -56,7 +56,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// The size of the <see cref="Font"/> cells applied to the <see cref="Surface"/> when rendering.
+        /// The size of the <see cref="Font"/> cells applied to the object when rendering.
         /// </summary>
         public Point FontSize
         {
@@ -86,7 +86,7 @@ namespace SadConsole
         /// <summary>
         /// The area on the screen this surface occupies. In pixels.
         /// </summary>
-        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, ViewWidth * FontSize.X, ViewHeight * FontSize.Y);
+        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, View.Width * FontSize.X, View.Height * FontSize.Y);
 
         /// <summary>
         /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.
@@ -105,13 +105,13 @@ namespace SadConsole
         /// <summary>
         /// The width of the surface in pixels.
         /// </summary>
-        public int WidthPixels => ViewWidth * FontSize.X;
+        public int WidthPixels => View.Width * FontSize.X;
 
 
         /// <summary>
         /// The height of the surface in pixels.
         /// </summary>
-        public int HeightPixels => ViewHeight * FontSize.Y;
+        public int HeightPixels => View.Height * FontSize.Y;
 
         /// <summary>
         /// Creates a new screen object that can render a surface.
@@ -150,7 +150,7 @@ namespace SadConsole
         /// Creates a new screen object using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public ScreenSurface(CellSurface surface) : this(surface.ViewWidth, surface.ViewHeight, surface.BufferWidth, surface.BufferHeight, surface.Cells)
+        public ScreenSurface(CellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells)
         {
 
         }
@@ -216,7 +216,7 @@ namespace SadConsole
         /// <summary>
         /// Updates all <see cref="Components"/> and <see cref="Children"/>.
         /// </summary>
-        /// <remarks>Only processes if <see cref="IsPaused"/> is <see langword="false"/>.</remarks>
+        /// <remarks>Only processes if <see cref="IsEnabled"/> is <see langword="true"/>.</remarks>
         public virtual void Update()
         {
             if (!IsEnabled) return;

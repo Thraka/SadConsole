@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SadConsole.Console" Collapsed="true">
-    <Position X="8" Y="3.75" Width="2" />
+    <Position X="9.5" Y="3.75" Width="2" />
     <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
       <Path>
-        <Point X="6.5" Y="3.691" />
-        <Point X="6.5" Y="4.062" />
-        <Point X="8" Y="4.062" />
+        <Point X="8.25" Y="3.691" />
+        <Point X="8.25" Y="4.062" />
+        <Point X="9.5" Y="4.062" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -15,12 +15,12 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SadConsole.AnimatedScreenSurface" Collapsed="true">
-    <Position X="8" Y="4.75" Width="2" />
+    <Position X="9.5" Y="4.75" Width="2" />
     <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
       <Path>
-        <Point X="6.5" Y="3.691" />
-        <Point X="6.5" Y="5.062" />
-        <Point X="8" Y="5.062" />
+        <Point X="8.25" Y="3.691" />
+        <Point X="8.25" Y="5.062" />
+        <Point X="9.5" Y="5.062" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -29,34 +29,27 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SadConsole.Entities.Entity" Collapsed="true">
-    <Position X="8" Y="5.75" Width="2" />
-    <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
-      <Path>
-        <Point X="6.5" Y="3.691" />
-        <Point X="6.5" Y="6.062" />
-        <Point X="8" Y="6.062" />
-      </Path>
-    </InheritanceLine>
+    <Position X="5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAAgIAAAAAAAAAAgAEAAIQQAkAAAAQAAAAAAEAAAAA=</HashCode>
+      <HashCode>AAAAgIAAAAAAAAAAgAEAAAQQggAAAAQAABAAAEAAAAA=</HashCode>
       <FileName>Entities\Entity.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SadConsole.CellSurface" Collapsed="true">
-    <Position X="5.75" Y="1.25" Width="1.5" />
+    <Position X="7.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ASoCjHKQImpAQHCICAZQLAFhCkKnCZkIQEgHAgFUCAA=</HashCode>
+      <HashCode>ASoCjHKQImpAQFCICAZQLBFhCgKnCJkIQEgHAgFUQAA=</HashCode>
       <FileName>CellSurface.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SadConsole.LayeredScreenSurface" Collapsed="true">
-    <Position X="8" Y="6.75" Width="2" />
+    <Position X="9.5" Y="5.75" Width="2" />
     <InheritanceLine Type="SadConsole.ScreenSurface" FixedToPoint="true">
       <Path>
-        <Point X="6.5" Y="3.691" />
-        <Point X="6.5" Y="7.062" />
-        <Point X="8" Y="7.062" />
+        <Point X="8.25" Y="3.691" />
+        <Point X="8.25" Y="6.062" />
+        <Point X="9.5" Y="6.062" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -65,12 +58,48 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SadConsole.ScreenSurface" Collapsed="true">
-    <Position X="5.75" Y="3" Width="1.5" />
+    <Position X="7.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgQAIIAAgLABGoZhEANU5hFgEFCBAgQCBGCgoVbivgA=</HashCode>
       <FileName>ScreenSurface.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SadConsole.ScreenObject" Collapsed="true">
+    <Position X="3.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQAAAAAAIAAEoJhEAFERBAgAAABAAQCBGAAoUBAggA=</HashCode>
+      <FileName>ScreenObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SadConsole.Entities.Hotspot" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <InheritanceLine Type="SadConsole.ScreenObject" FixedToPoint="true">
+      <Path>
+        <Point X="4.25" Y="3.562" />
+        <Point X="4.25" Y="5.062" />
+        <Point X="5" Y="5.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAgIgAAAAAAAAgAAAAAAAgKAAAAAwgAA=</HashCode>
+      <FileName>Entities\Hotspot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SadConsole.Entities.Zone" Collapsed="true">
+    <Position X="5" Y="5.75" Width="1.5" />
+    <InheritanceLine Type="SadConsole.ScreenObject" FixedToPoint="true">
+      <Path>
+        <Point X="4.25" Y="3.562" />
+        <Point X="4.25" Y="6.062" />
+        <Point X="5" Y="6.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAgIAAAAAAAAAgAAAAAAAgKIAAQAEAAA=</HashCode>
+      <FileName>Entities\Zone.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

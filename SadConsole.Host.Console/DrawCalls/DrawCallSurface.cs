@@ -16,7 +16,7 @@ namespace SadConsole.DrawCalls
 
         public void Draw()
         {
-            var area = _surface.GetViewRectangle();
+            var area = _surface.View;
             for (int y = 0; y < area.Height; y++)
             {
                 System.Console.SetCursorPosition(_position.X, y + _position.Y);

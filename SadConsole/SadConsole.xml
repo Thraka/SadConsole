@@ -603,14 +603,14 @@
             The default background for glyphs on this surface.
             </summary>
         </member>
-        <member name="P:SadConsole.CellSurface.ViewWidth">
+        <member name="P:SadConsole.CellSurface.View">
             <summary>
-            How many cells wide are visible.
+            The view presented by the surface.
             </summary>
         </member>
-        <member name="P:SadConsole.CellSurface.ViewHeight">
+        <member name="P:SadConsole.CellSurface.Buffer">
             <summary>
-            How many cells high are visible.
+            Returns a rectangle that represents the size of the buffer.
             </summary>
         </member>
         <member name="P:SadConsole.CellSurface.BufferWidth">
@@ -625,7 +625,7 @@
         </member>
         <member name="P:SadConsole.CellSurface.IsScrollable">
             <summary>
-            Returns <see langword="true"/> when the <see cref="P:SadConsole.CellSurface.ViewHeight"/> or <see cref="P:SadConsole.CellSurface.ViewWidth"/> is different from <see cref="P:SadConsole.CellSurface.BufferHeight"/> or <see cref="P:SadConsole.CellSurface.BufferWidth"/>, respectively.
+            Returns <see langword="true"/> when the <see cref="P:SadConsole.CellSurface.View"/> width or height is different from <see cref="P:SadConsole.CellSurface.BufferHeight"/> or <see cref="P:SadConsole.CellSurface.BufferWidth"/>.
             </summary>
         </member>
         <member name="P:SadConsole.CellSurface.ViewPosition">
@@ -701,12 +701,6 @@
             <summary>
             Called when the <see cref="P:SadConsole.CellSurface.Cells"/> property is reset.
             </summary>
-        </member>
-        <member name="M:SadConsole.CellSurface.GetViewRectangle">
-            <summary>
-            Gets a rectangle representing the visible portion of the surface.
-            </summary>
-            <returns>A rectangle with only the visible area.</returns>
         </member>
         <member name="M:SadConsole.CellSurface.GetEnumerator">
             <summary>
@@ -1766,23 +1760,23 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
-        <member name="T:SadConsole.Components.EntityViewSync">
+        <member name="T:SadConsole.Components.EntityComponentParentViewSync">
             <summary>
             Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
             </summary>
         </member>
-        <member name="P:SadConsole.Components.EntityViewSync.HandleIsVisible">
+        <member name="P:SadConsole.Components.EntityComponentParentViewSync.HandleIsVisible">
             <summary>
             If set to true, controls the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property of the attached object.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.EntityViewSync.OnAdded(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.EntityComponentParentViewSync.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Components.EntityViewSync.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.EntityComponentParentViewSync.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.EntityViewSync.OnRemoved(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.EntityComponentParentViewSync.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.IComponent">
@@ -2045,25 +2039,39 @@
         <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.Components.MultipleHostEntityDrawing">
+        <member name="T:SadConsole.Components.SurfaceComponentEntityOffsets">
             <summary>
-            Add to a <see cref="T:SadConsole.Console"/> to draw the <see cref="P:SadConsole.Components.MultipleHostEntityDrawing.Entities"/> on it. May be used with multiple consoles.
+            Add to a <see cref="T:SadConsole.IScreenSurface"/> to sync all child <see cref="T:SadConsole.Entities.Entity"/> object's visibility and position offsets.
             </summary>
         </member>
-        <member name="P:SadConsole.Components.MultipleHostEntityDrawing.Entities">
-            <summary>
-            Entities to draw on each console this component is added to.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.MultipleHostEntityDrawing.HandleIsVisible">
+        <member name="P:SadConsole.Components.SurfaceComponentEntityOffsets.HandleIsVisible">
             <summary>
             If set to true, controls the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property of the attached object.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.MultipleHostEntityDrawing.Draw(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.SurfaceComponentFollowTarget">
+            <summary>
+            Add to a <see cref="T:SadConsole.IScreenSurface"/> to have the <see cref="P:SadConsole.CellSurface.ViewPosition"/> center on a specific object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.SurfaceComponentFollowTarget.Target">
+            <summary>
+            Target to have the surface follow.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.SurfaceComponentFollowTarget.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.SurfaceComponentFollowTarget.Update(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Console">
@@ -2764,12 +2772,12 @@
             Automatically forwards the <see cref="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged"/> event.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Entity.animation">
+        <member name="F:SadConsole.Entities.Entity._animation">
             <summary>
             Animation for the game object.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Entity.positionOffset">
+        <member name="F:SadConsole.Entities.Entity._positionOffset">
             <summary>
             The offset to render this object at.
             </summary>
@@ -2799,7 +2807,7 @@
             Creates a new Entity with the default font.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(System.Int32,System.Int32,SadConsole.Font)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(System.Int32,System.Int32,SadConsole.Font,SadRogue.Primitives.Point)">
             <summary>
             Creates a new Entity.
             </summary>
@@ -2826,9 +2834,6 @@
             <param name="e">The state of the animation.</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.UpdateAbsolutePosition">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.Entity.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Entities.Entity.Save(System.String)">
@@ -5518,7 +5523,7 @@
         </member>
         <member name="P:SadConsole.ScreenSurface.ForceRendererRefresh">
             <summary>
-            When <see langword="true"/>, the <see cref="M:SadConsole.ScreenSurface.Draw"/> method forces the <see cref="P:SadConsole.ScreenSurface.Renderer"/> to refresh the backing texture with the latest state of the <see cref="!:Surface"/>.
+            When <see langword="true"/>, the <see cref="M:SadConsole.ScreenSurface.Draw"/> method forces the <see cref="P:SadConsole.ScreenSurface.Renderer"/> to refresh the backing texture with the latest state of the object.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenSurface.Renderer">
@@ -5533,7 +5538,7 @@
         </member>
         <member name="P:SadConsole.ScreenSurface.FontSize">
             <summary>
-            The size of the <see cref="P:SadConsole.ScreenSurface.Font"/> cells applied to the <see cref="!:Surface"/> when rendering.
+            The size of the <see cref="P:SadConsole.ScreenSurface.Font"/> cells applied to the object when rendering.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenSurface.Tint">
@@ -5616,7 +5621,7 @@
             <summary>
             Updates all <see cref="P:SadConsole.ScreenSurface.Components"/> and <see cref="P:SadConsole.ScreenSurface.Children"/>.
             </summary>
-            <remarks>Only processes if <see cref="!:IsPaused"/> is <see langword="false"/>.</remarks>
+            <remarks>Only processes if <see cref="P:SadConsole.ScreenSurface.IsEnabled"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenSurface.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
             <summary>
@@ -8528,6 +8533,40 @@
             <param name="sourceFontSize">The source font translating from.</param>
             <param name="targetFontSize">The target font translating to.</param>
             <returns>The position of the cell in the <paramref name="targetFontSize"/>.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.RectangleExtensions.ToPixels(SadRogue.Primitives.Rectangle,SadRogue.Primitives.Point)">
+            <summary>
+            Converts a rectangle from cells to pixels.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="fontSize">The font size used for translation.</param>
+            <returns>A new rectangle in pixels.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.RectangleExtensions.ToPixels(SadRogue.Primitives.Rectangle,System.Int32,System.Int32)">
+            <summary>
+            Converts a rectangle from cells to pixels.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="cellWidth">The width of a cell used in converting.</param>
+            <param name="cellHeight">The height of a cell used in converting.</param>
+            <returns>A new rectangle in pixels.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.RectangleExtensions.ToConsole(SadRogue.Primitives.Rectangle,SadRogue.Primitives.Point)">
+            <summary>
+            Converts a rectangle from pixels to cells.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="fontSize">The font size used for translation.</param>
+            <returns>A new rectangle in cell coordinates.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.RectangleExtensions.ToConsole(SadRogue.Primitives.Rectangle,System.Int32,System.Int32)">
+            <summary>
+            Converts a rectangle from pixels to cells.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="cellWidth">The width of a cell used in converting.</param>
+            <param name="cellHeight">The height of a cell used in converting.</param>
+            <returns>A new rectangle in cell coordinates.</returns>
         </member>
         <member name="T:System.StringExtensions">
             <summary>

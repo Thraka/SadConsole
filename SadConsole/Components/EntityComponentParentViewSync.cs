@@ -7,7 +7,7 @@ namespace SadConsole.Components
     /// <summary>
     /// Add to an <see cref="Entity"/> to sync the visibility and position offset with a parent <see cref="Console"/>. 
     /// </summary>
-    public class EntityViewSync : UpdateComponent
+    public class EntityComponentParentViewSync : UpdateComponent
     {
         private Point _oldPosition;
         private Rectangle _oldView;
@@ -21,7 +21,7 @@ namespace SadConsole.Components
         public override void OnAdded(IScreenObject host)
         {
             if (!(host is Entity))
-                throw new Exception($"{nameof(EntityViewSync)} can only be added to an {nameof(Entity)}.");
+                throw new Exception($"{nameof(EntityComponentParentViewSync)} can only be added to an {nameof(Entity)}.");
         }
 
 
@@ -32,11 +32,11 @@ namespace SadConsole.Components
 
             if (host.Parent is IScreenSurface parent)
             {
-                Rectangle parentViewPort = parent.Surface.GetViewRectangle();
+                Rectangle parentViewPort = parent.Surface.View;
 
                 if (parentViewPort != _oldView || host.Position != _oldPosition)
                 {
-                    host.PositionOffset = new Point(-parentViewPort.Position.X, -parentViewPort.Position.Y).TranslateFont(parent.FontSize, host.FontSize);
+                    host.PositionOffset = new Point(-parentViewPort.Position.X, -parentViewPort.Position.Y).TranslateFont(parent.FontSize, host.Animation.FontSize);
 
                     if (HandleIsVisible)
                         host.IsVisible = parent.AbsoluteArea.Contains(host.AbsolutePosition);

@@ -12,9 +12,7 @@ namespace SadConsole
         private bool _isDirty = true;
         private Color _defaultBackground;
         private Color _defaultForeground;
-        private Point _viewPosition;
-        private int _viewWidth;
-        private int _viewHeight;
+        private BoundedRectangle _viewArea;
 
         /// <summary>
         /// An event that is raised when <see cref="IsDirty"/> changes.
@@ -55,82 +53,47 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// How many cells wide are visible.
+        /// The view presented by the surface.
         /// </summary>
-        public int ViewWidth
+        public Rectangle View
         {
-            get => _viewWidth;
+            get => _viewArea.Area;
             set
             {
-                if (value > BufferWidth) throw new ArgumentOutOfRangeException(nameof(ViewWidth), $"{nameof(ViewWidth)} cannot be bigger than {nameof(BufferWidth)}.");
-                if (value < 1) throw new ArgumentOutOfRangeException(nameof(ViewWidth), $"{nameof(ViewWidth)} must be bigger than 1.");
-
-                _viewWidth = value;
-                ViewPosition = _viewPosition;
+                _viewArea.Area = value;
                 IsDirty = true;
             }
         }
 
         /// <summary>
-        /// How many cells high are visible.
+        /// Returns a rectangle that represents the size of the buffer.
         /// </summary>
-        public int ViewHeight
-        {
-            get => _viewHeight;
-            set
-            {
-                if (value > BufferHeight) throw new ArgumentOutOfRangeException(nameof(ViewHeight), $"{nameof(ViewHeight)} cannot be bigger than {nameof(BufferHeight)}.");
-                if (value < 1) throw new ArgumentOutOfRangeException(nameof(ViewHeight), $"{nameof(ViewHeight)} must be bigger than 1.");
-
-                _viewHeight = value;
-                ViewPosition = _viewPosition;
-                IsDirty = true;
-            }
-        }
+        public Rectangle Buffer => _viewArea.BoundingBox;
 
         /// <summary>
         /// Width of the surface buffer.
         /// </summary>
-        public int BufferWidth { get; protected set; }
+        public int BufferWidth => _viewArea.BoundingBox.Width;
 
         /// <summary>
         /// Height of the surface buffer.
         /// </summary>
-        public int BufferHeight { get; protected set; }
+        public int BufferHeight => _viewArea.BoundingBox.Height;
 
         /// <summary>
-        /// Returns <see langword="true"/> when the <see cref="ViewHeight"/> or <see cref="ViewWidth"/> is different from <see cref="BufferHeight"/> or <see cref="BufferWidth"/>, respectively.
+        /// Returns <see langword="true"/> when the <see cref="CellSurface.View"/> width or height is different from <see cref="BufferHeight"/> or <see cref="BufferWidth"/>.
         /// </summary>
-        public bool IsScrollable => BufferHeight != ViewHeight || BufferWidth != ViewWidth;
+        public bool IsScrollable => BufferHeight != _viewArea.Area.Height || BufferWidth != _viewArea.Area.Width;
 
         /// <summary>
         /// The position of the buffer.
         /// </summary>
         public Point ViewPosition
         {
-            get => _viewPosition;
+            get => _viewArea.Area.Position;
             set
             {
-                int x = _viewPosition.X;
-                int y = _viewPosition.Y;
-
-                if (value.X + _viewWidth <= BufferWidth)
-                    x = value.X;
-                else
-                    x = BufferWidth - _viewWidth;
-
-                if (value.Y + _viewHeight <= BufferHeight)
-                    y = value.Y;
-                else
-                    y = BufferHeight - _viewHeight;
-
-                if (x < 0)
-                    x = 0;
-
-                if (y < 0)
-                    y = 0;
-
-                _viewPosition = new Point(x, y);
+                _viewArea.Area = _viewArea.Area.WithPosition(value);
                 IsDirty = true;
             }
         }
@@ -216,10 +179,9 @@ namespace SadConsole
 
             DefaultForeground = Color.White;
             DefaultBackground = Color.Transparent;
-            _viewWidth = width;
-            _viewHeight = height;
-            BufferWidth = bufferWidth;
-            BufferHeight = bufferHeight;
+
+            _viewArea = new BoundedRectangle((0, 0, width, height),
+                                             (0, 0, bufferWidth, bufferHeight));
 
             if (initialCells == null)
             {
@@ -259,13 +221,6 @@ namespace SadConsole
         /// Called when the <see cref="Cells"/> property is reset.
         /// </summary>
         protected virtual void OnCellsReset() { }
-
-        /// <summary>
-        /// Gets a rectangle representing the visible portion of the surface.
-        /// </summary>
-        /// <returns>A rectangle with only the visible area.</returns>
-        public Rectangle GetViewRectangle() =>
-            new Rectangle(ViewPosition.X, ViewPosition.Y, ViewWidth, ViewHeight);
 
         /// <summary>
         /// Gets an enumerator for <see cref="Cells"/>.

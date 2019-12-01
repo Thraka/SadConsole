@@ -5,7 +5,7 @@ using SadConsole.Input;
 
 namespace SadConsole.Components
 {
-    public class MoveObject : KeyboardConsoleComponent
+    public class ObjectComponentMove : KeyboardConsoleComponent
     {
         public override void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
         {

@@ -1958,11 +1958,8 @@ namespace SadConsole
             }
 
             Cells = newCells;
-            _viewPosition = new Point(0, 0);
-            BufferWidth = bufferWidth;
-            BufferHeight = bufferHeight;
-            ViewWidth = width;
-            ViewHeight = height;
+            _viewArea = new BoundedRectangle((0, 0, width, height),
+                                             (0, 0, bufferWidth, bufferHeight));
             Effects = new EffectsManager(this);
             IsDirty = true;
             OnCellsReset();
@@ -2011,11 +2008,7 @@ namespace SadConsole
                 throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
             }
 
-            _viewPosition = new Point(0, 0);
-            BufferWidth = rect.Width;
-            BufferHeight = rect.Height;
-            ViewWidth = rect.Width;
-            ViewHeight = rect.Height;
+            _viewArea = new BoundedRectangle(rect, rect);
             Cells = new ColoredGlyph[rect.Width * rect.Height];
 
             int index = 0;
@@ -2045,11 +2038,8 @@ namespace SadConsole
         {
             if (cells.Length != bufferWidth * bufferHeight) throw new Exception("buffer width * buffer height must match the amount of cells.");
 
-            _viewPosition = new Point(0, 0);
-            BufferWidth = bufferWidth;
-            BufferHeight = bufferHeight;
-            ViewWidth = width;
-            ViewHeight = height;
+            _viewArea = new BoundedRectangle((0, 0, width, height),
+                                             (0, 0, bufferWidth, bufferHeight));
             Cells = cells;
 
             IsDirty = true;

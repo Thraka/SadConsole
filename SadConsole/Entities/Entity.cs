@@ -11,7 +11,7 @@ namespace SadConsole.Entities
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Entity")]
     //[JsonConverter(typeof(EntityJsonConverter))]
-    public class Entity : ScreenSurface
+    public class Entity : ScreenObject
     {
         /// <summary>
         /// Automatically forwards the <see cref="AnimatedScreenSurface.AnimationStateChanged"/> event.
@@ -21,12 +21,12 @@ namespace SadConsole.Entities
         /// <summary>
         /// Animation for the game object.
         /// </summary>
-        protected AnimatedScreenSurface animation;
+        protected AnimatedScreenSurface _animation;
 
         /// <summary>
         /// The offset to render this object at.
         /// </summary>
-        protected Point positionOffset;
+        protected Point _positionOffset;
 
         /// <summary>
         /// A friendly name of the game object.
@@ -38,22 +38,19 @@ namespace SadConsole.Entities
         /// </summary>
         public AnimatedScreenSurface Animation
         {
-            get => animation;
+            get => _animation;
             set
             {
-                if (animation != null)
+                if (_animation != null)
                 {
-                    animation.State = AnimatedScreenSurface.AnimationState.Deactivated;
-                    animation.AnimationStateChanged -= OnAnimationStateChanged;
-                    Children.Remove(animation);
+                    _animation.State = AnimatedScreenSurface.AnimationState.Deactivated;
+                    _animation.AnimationStateChanged -= OnAnimationStateChanged;
+                    Children.Remove(_animation);
                 }
-
-                animation = value;
-                animation.Font = Font;
-
-                animation.AnimationStateChanged += OnAnimationStateChanged;
-                animation.State = AnimatedScreenSurface.AnimationState.Activated;
-                Children.Add(animation);
+                _animation = value;
+                _animation.AnimationStateChanged += OnAnimationStateChanged;
+                _animation.State = AnimatedScreenSurface.AnimationState.Activated;
+                Children.Add(_animation);
             }
         }
 
@@ -67,15 +64,15 @@ namespace SadConsole.Entities
         /// </summary>
         public Point PositionOffset
         {
-            get => positionOffset;
+            get => _positionOffset;
             set
             {
-                if (positionOffset == value)
+                if (_positionOffset == value)
                 {
                     return;
                 }
 
-                positionOffset = value;
+                _positionOffset = value;
                 UpdateAbsolutePosition();
             }
         }
@@ -83,17 +80,16 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new Entity with the default font.
         /// </summary>
-        public Entity(int width, int height) : this(width, height, Global.DefaultFont) { }
+        public Entity(int width, int height) : this(width, height, Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize)) { }
 
         /// <summary>
         /// Creates a new Entity.
         /// </summary>
-        public Entity(int width, int height, Font font): base(width, height)
+        public Entity(int width, int height, Font font, Point fontSize)
         {
-            Font = font;
-            Animation = new AnimatedScreenSurface("default", width, height, font, FontSize);
-            animation.CreateFrame();
-            Animations.Add("default", animation);
+            Animation = new AnimatedScreenSurface("default", width, height, font, fontSize);
+            _animation.CreateFrame();
+            Animations.Add(_animation.Name, _animation);
         }
 
         /// <summary>
@@ -102,21 +98,18 @@ namespace SadConsole.Entities
         /// <param name="foreground">The foreground color of the entity.</param>
         /// <param name="background">The background color of the entity.</param>
         /// <param name="glyph">The glyph color of the entity.</param>
-        public Entity(Color foreground, Color background, int glyph) : base(1, 1)
+        public Entity(Color foreground, Color background, int glyph) : this(1, 1, Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize))
         {
-            Animation = new AnimatedScreenSurface("default", 1, 1);
-            animation.CreateFrame().SetGlyph(0, 0, glyph, foreground, background);
-            Animations.Add("default", animation);
+            _animation.CurrentFrame.SetGlyph(0, 0, glyph, foreground, background);
+            _animation.IsDirty = true;
         }
 
         /// <summary>
         /// Creates a new Entity with a default animation/
         /// </summary>
         /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedScreenSurface.Name"/> property changesd to "default".</param>
-        public Entity(AnimatedScreenSurface animation): base(animation.Width, animation.Height)
+        public Entity(AnimatedScreenSurface animation)
         {
-            Font = animation.Font;
-            FontSize = animation.FontSize;
             animation.Name = "default";
             Animation = animation;
             Animations.Add("default", animation);
@@ -132,23 +125,13 @@ namespace SadConsole.Entities
         /// <inheritdoc />
         public override void UpdateAbsolutePosition()
         {
-            if (UsePixelPositioning)
-                AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
+            if (Animation.UsePixelPositioning)
+                AbsolutePosition = Position + _positionOffset + (Parent?.AbsolutePosition ?? new Point(0, 0));
             else
-                AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
+                AbsolutePosition = (Animation.FontSize * Position) + (Animation.FontSize * _positionOffset) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
             foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
-        }
-
-        /// <inheritdoc />
-        protected override void OnFontChanged(Font oldFont, Point oldFontSize)
-        {
-            foreach (var animation in Animations.Values)
-            {
-                animation.Font = Font;
-                animation.FontSize = FontSize;
-            }
         }
 
         /// <summary>

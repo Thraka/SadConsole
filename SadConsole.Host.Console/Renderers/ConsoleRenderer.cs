@@ -13,7 +13,7 @@ namespace SadConsole.Renderers
         public void Attach(IScreenSurface surface)
         {
             //RedrawString = new string(' ', console.Width * console.Height);
-            _redrawStringBuilder = new StringBuilder(surface.Surface.ViewWidth * surface.Surface.ViewHeight * 4);
+            _redrawStringBuilder = new StringBuilder(surface.Surface.View.Width * surface.Surface.View.Height * 4);
         }
 
         public void Detatch(IScreenSurface surface)

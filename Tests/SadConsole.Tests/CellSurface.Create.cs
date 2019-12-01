@@ -26,8 +26,8 @@ namespace SadConsole.Tests
             var surface = new SadConsole.CellSurface(width, height, bufferWidth, bufferHeight);
             Assert.IsTrue(surface.BufferWidth == bufferWidth, $"BufferWidth does not match value");
             Assert.IsTrue(surface.BufferWidth == bufferHeight, $"BufferHeight does not match value");
-            Assert.IsTrue(surface.ViewWidth == width, $"ViewWidth does not match value");
-            Assert.IsTrue(surface.ViewHeight == height, $"ViewHeight does not match value");
+            Assert.IsTrue(surface.View.Width == width, $"View.Width does not match value");
+            Assert.IsTrue(surface.View.Height == height, $"View.Height does not match value");
             Assert.IsTrue(surface.ViewPosition == new SadRogue.Primitives.Point(0, 0));
         }
 
