@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
+using SadRogue.Primitives;
 
-namespace SadRogue.Primitives
+namespace SadConsole
 {
     public static class RectangleExtensions
     {

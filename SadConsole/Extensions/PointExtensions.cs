@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
-using SadConsole;
+using SadRogue.Primitives;
 
-namespace SadRogue.Primitives
+namespace SadConsole
 {
     public static class PointExtensions
     {

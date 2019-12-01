@@ -2946,6 +2946,152 @@
         <member name="M:SadConsole.Entities.Zone.Draw">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,System.Int32,System.Int32)">
+            <summary>
+            Translates a surface cell position to where it appears on the screen in pixels.
+            </summary>
+            <param name="point">The current cell position.</param>
+            <param name="cellWidth">The width of a cell in pixels.</param>
+            <param name="cellHeight">The height of a cell in pixels.</param>
+            <returns>The pixel position of the top-left of the cell.</returns>
+        </member>
+        <member name="M:SadConsole.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Translates a surface cell position to where it appears on the screen in pixels.
+            </summary>
+            <param name="point">The current cell position.</param>
+            <param name="fontSize">The font to use in calculating the position.</param>
+            <returns>The pixel position of the top-left of the cell.</returns>
+        </member>
+        <member name="M:SadConsole.PointExtensions.PixelLocationToSurface(SadRogue.Primitives.Point,System.Int32,System.Int32)">
+            <summary>
+            Translates a pixel to where it appears on a surface cell.
+            </summary>
+            <param name="point">The current world position.</param>
+            <param name="cellWidth">The width of a cell in pixels.</param>
+            <param name="cellHeight">The height of a cell in pixels.</param>
+            <returns>The cell position on the screen.</returns>
+        </member>
+        <member name="M:SadConsole.PointExtensions.PixelLocationToSurface(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Translates a pixel to where it appears on a surface cell.
+            </summary>
+            <param name="point">The current world position.</param>
+            <param name="fontSize">The font to use in calculating the position.</param>
+            <returns>The cell position on the screen.</returns>
+        </member>
+        <member name="M:SadConsole.PointExtensions.TranslateFont(SadRogue.Primitives.Point,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Gets the cell coordinates of the <paramref name="targetFont"/> based on a cell in the <paramref name="sourceFontSize"/>.
+            </summary>
+            <param name="point">The position of the cell in the <paramref name="sourceFontSize"/>.</param>
+            <param name="sourceFontSize">The source font translating from.</param>
+            <param name="targetFontSize">The target font translating to.</param>
+            <returns>The position of the cell in the <paramref name="targetFontSize"/>.</returns>
+        </member>
+        <member name="M:SadConsole.RectangleExtensions.ToPixels(SadRogue.Primitives.Rectangle,SadRogue.Primitives.Point)">
+            <summary>
+            Converts a rectangle from cells to pixels.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="fontSize">The font size used for translation.</param>
+            <returns>A new rectangle in pixels.</returns>
+        </member>
+        <member name="M:SadConsole.RectangleExtensions.ToPixels(SadRogue.Primitives.Rectangle,System.Int32,System.Int32)">
+            <summary>
+            Converts a rectangle from cells to pixels.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="cellWidth">The width of a cell used in converting.</param>
+            <param name="cellHeight">The height of a cell used in converting.</param>
+            <returns>A new rectangle in pixels.</returns>
+        </member>
+        <member name="M:SadConsole.RectangleExtensions.ToConsole(SadRogue.Primitives.Rectangle,SadRogue.Primitives.Point)">
+            <summary>
+            Converts a rectangle from pixels to cells.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="fontSize">The font size used for translation.</param>
+            <returns>A new rectangle in cell coordinates.</returns>
+        </member>
+        <member name="M:SadConsole.RectangleExtensions.ToConsole(SadRogue.Primitives.Rectangle,System.Int32,System.Int32)">
+            <summary>
+            Converts a rectangle from pixels to cells.
+            </summary>
+            <param name="rect">The rectangle to work with.</param>
+            <param name="cellWidth">The width of a cell used in converting.</param>
+            <param name="cellHeight">The height of a cell used in converting.</param>
+            <returns>A new rectangle in cell coordinates.</returns>
+        </member>
+        <member name="T:SadConsole.StringExtensions">
+            <summary>
+            Helpers for strings.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringExtensions.Align(System.String,SadConsole.HorizontalAlignment,System.Int32)">
+            <summary>
+            Aligns a string given a total character width and alignment style. Fills in the extra space with the space character.
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="alignment">The horizontal alignment.</param>
+            <param name="totalWidth">The total width of the new string.</param>
+            <returns>A new string instance.</returns>
+        </member>
+        <member name="M:SadConsole.StringExtensions.Align(System.String,SadConsole.HorizontalAlignment,System.Int32,System.Char)">
+            <summary>
+            Aligns a string given a total character width and alignment style.
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="alignment">The horizontal alignment.</param>
+            <param name="totalWidth">The total width of the new string.</param>
+            <param name="fillCharacter">The character to use to fill in the extra spaces after alignment.</param>
+            <returns>A new string instance.</returns>
+        </member>
+        <member name="M:SadConsole.StringExtensions.CreateColored(System.String,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror})">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="foreground">The foreground color. If null, <see cref="F:SadConsole.ColoredString.IgnoreForeground"/> will be set.</param>
+            <param name="background">The background color. If null, <see cref="F:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
+            <param name="mirror">The mirror setting. If null, <see cref="F:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+        </member>
+        <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground gradient and cell effect. 
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="startingForeground">The starting foreground color to blend.</param>
+            <param name="endingForeground">The ending foreground color to blend.</param>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+        </member>
+        <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground gradient, background gradient, and cell effect. 
+            </summary>
+            <param name="value">The current string.</param>
+            <param name="startingForeground">The starting foreground color to blend.</param>
+            <param name="endingForeground">The ending foreground color to blend.</param>
+            <param name="startingBackground">The starting background color to blend.</param>
+            <param name="endingBackground">The ending background color to blend.</param>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+        </member>
+        <member name="M:SadConsole.StringExtensions.ToBool(System.String)">
+            <summary>
+            Converts a string to a boolean when it is "0", "1", "true", or "false".
+            </summary>
+            <param name="item">The string to convert</param>
+            <returns>The converted boolean value, otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.StringExtensions.Masked(System.String,System.String)">
+            <summary>
+            Returns a string of mask characters the same length as the input string.
+            </summary>
+            <param name="toMask">The string to mask.</param>
+            <param name="mask">The mask to use.</param>
+            <returns>A string of masks.</returns>
+        </member>
         <member name="T:SadConsole.FocusBehavior">
             <summary>
             How the console handles becoming focused and added to the <see cref="P:SadConsole.Global.FocusedScreenObjects"/> collection.
@@ -8621,152 +8767,6 @@
             <summary>
             The color stop in the gradiant this applies to.
             </summary>
-        </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,System.Int32,System.Int32)">
-            <summary>
-            Translates a surface cell position to where it appears on the screen in pixels.
-            </summary>
-            <param name="point">The current cell position.</param>
-            <param name="cellWidth">The width of a cell in pixels.</param>
-            <param name="cellHeight">The height of a cell in pixels.</param>
-            <returns>The pixel position of the top-left of the cell.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
-            <summary>
-            Translates a surface cell position to where it appears on the screen in pixels.
-            </summary>
-            <param name="point">The current cell position.</param>
-            <param name="fontSize">The font to use in calculating the position.</param>
-            <returns>The pixel position of the top-left of the cell.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.PixelLocationToSurface(SadRogue.Primitives.Point,System.Int32,System.Int32)">
-            <summary>
-            Translates a pixel to where it appears on a surface cell.
-            </summary>
-            <param name="point">The current world position.</param>
-            <param name="cellWidth">The width of a cell in pixels.</param>
-            <param name="cellHeight">The height of a cell in pixels.</param>
-            <returns>The cell position on the screen.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.PixelLocationToSurface(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
-            <summary>
-            Translates a pixel to where it appears on a surface cell.
-            </summary>
-            <param name="point">The current world position.</param>
-            <param name="fontSize">The font to use in calculating the position.</param>
-            <returns>The cell position on the screen.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.PointExtensions.TranslateFont(SadRogue.Primitives.Point,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
-            <summary>
-            Gets the cell coordinates of the <paramref name="targetFont"/> based on a cell in the <paramref name="sourceFontSize"/>.
-            </summary>
-            <param name="point">The position of the cell in the <paramref name="sourceFontSize"/>.</param>
-            <param name="sourceFontSize">The source font translating from.</param>
-            <param name="targetFontSize">The target font translating to.</param>
-            <returns>The position of the cell in the <paramref name="targetFontSize"/>.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.RectangleExtensions.ToPixels(SadRogue.Primitives.Rectangle,SadRogue.Primitives.Point)">
-            <summary>
-            Converts a rectangle from cells to pixels.
-            </summary>
-            <param name="rect">The rectangle to work with.</param>
-            <param name="fontSize">The font size used for translation.</param>
-            <returns>A new rectangle in pixels.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.RectangleExtensions.ToPixels(SadRogue.Primitives.Rectangle,System.Int32,System.Int32)">
-            <summary>
-            Converts a rectangle from cells to pixels.
-            </summary>
-            <param name="rect">The rectangle to work with.</param>
-            <param name="cellWidth">The width of a cell used in converting.</param>
-            <param name="cellHeight">The height of a cell used in converting.</param>
-            <returns>A new rectangle in pixels.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.RectangleExtensions.ToConsole(SadRogue.Primitives.Rectangle,SadRogue.Primitives.Point)">
-            <summary>
-            Converts a rectangle from pixels to cells.
-            </summary>
-            <param name="rect">The rectangle to work with.</param>
-            <param name="fontSize">The font size used for translation.</param>
-            <returns>A new rectangle in cell coordinates.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.RectangleExtensions.ToConsole(SadRogue.Primitives.Rectangle,System.Int32,System.Int32)">
-            <summary>
-            Converts a rectangle from pixels to cells.
-            </summary>
-            <param name="rect">The rectangle to work with.</param>
-            <param name="cellWidth">The width of a cell used in converting.</param>
-            <param name="cellHeight">The height of a cell used in converting.</param>
-            <returns>A new rectangle in cell coordinates.</returns>
-        </member>
-        <member name="T:System.StringExtensions">
-            <summary>
-            Helpers for strings.
-            </summary>
-        </member>
-        <member name="M:System.StringExtensions.Align(System.String,SadConsole.HorizontalAlignment,System.Int32)">
-            <summary>
-            Aligns a string given a total character width and alignment style. Fills in the extra space with the space character.
-            </summary>
-            <param name="value">The current string.</param>
-            <param name="alignment">The horizontal alignment.</param>
-            <param name="totalWidth">The total width of the new string.</param>
-            <returns>A new string instance.</returns>
-        </member>
-        <member name="M:System.StringExtensions.Align(System.String,SadConsole.HorizontalAlignment,System.Int32,System.Char)">
-            <summary>
-            Aligns a string given a total character width and alignment style.
-            </summary>
-            <param name="value">The current string.</param>
-            <param name="alignment">The horizontal alignment.</param>
-            <param name="totalWidth">The total width of the new string.</param>
-            <param name="fillCharacter">The character to use to fill in the extra spaces after alignment.</param>
-            <returns>A new string instance.</returns>
-        </member>
-        <member name="M:System.StringExtensions.CreateColored(System.String,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror})">
-            <summary>
-            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
-            </summary>
-            <param name="value">The current string.</param>
-            <param name="foreground">The foreground color. If null, <see cref="F:SadConsole.ColoredString.IgnoreForeground"/> will be set.</param>
-            <param name="background">The background color. If null, <see cref="F:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
-            <param name="mirror">The mirror setting. If null, <see cref="F:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
-        </member>
-        <member name="M:System.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground gradient and cell effect. 
-            </summary>
-            <param name="value">The current string.</param>
-            <param name="startingForeground">The starting foreground color to blend.</param>
-            <param name="endingForeground">The ending foreground color to blend.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
-        </member>
-        <member name="M:System.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground gradient, background gradient, and cell effect. 
-            </summary>
-            <param name="value">The current string.</param>
-            <param name="startingForeground">The starting foreground color to blend.</param>
-            <param name="endingForeground">The ending foreground color to blend.</param>
-            <param name="startingBackground">The starting background color to blend.</param>
-            <param name="endingBackground">The ending background color to blend.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
-        </member>
-        <member name="M:System.StringExtensions.ToBool(System.String)">
-            <summary>
-            Converts a string to a boolean when it is "0", "1", "true", or "false".
-            </summary>
-            <param name="item">The string to convert</param>
-            <returns>The converted boolean value, otherwise false.</returns>
-        </member>
-        <member name="M:System.StringExtensions.Masked(System.String,System.String)">
-            <summary>
-            Returns a string of mask characters the same length as the input string.
-            </summary>
-            <param name="toMask">The string to mask.</param>
-            <param name="mask">The mask to use.</param>
-            <returns>A string of masks.</returns>
         </member>
     </members>
 </doc>

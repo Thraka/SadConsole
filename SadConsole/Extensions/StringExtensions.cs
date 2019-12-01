@@ -2,7 +2,7 @@
 using SadConsole.StringParser;
 using SadRogue.Primitives;
 
-namespace System
+namespace SadConsole
 {
     /// <summary>
     /// Helpers for strings.
@@ -174,10 +174,9 @@ namespace System
         /// <returns>The converted boolean value, otherwise false.</returns>
         public static bool ToBool(this string item)
         {
-
             if (int.TryParse(item, out int intValue))
             {
-                return Convert.ToBoolean(intValue);
+                return System.Convert.ToBoolean(intValue);
             }
 
             if (bool.TryParse(item, out bool boolValue))
@@ -202,7 +201,7 @@ namespace System
             }
             else
             {
-                throw new NotImplementedException("Can't generate multiple character password masks.");
+                throw new System.NotImplementedException("Can't generate multiple character password masks.");
             }
         }
     }
