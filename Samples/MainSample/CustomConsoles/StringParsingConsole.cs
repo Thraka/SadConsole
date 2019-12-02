@@ -1,12 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-
-using SadConsole;
-
+﻿using SadConsole;
 using SadConsole.StringParser;
+using SadRogue.Primitives;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class StringParsingConsole : ScrollingConsole
+    internal class StringParsingConsole : ScreenSurface
     {
         public StringParsingConsole() : base(80, 23)
         {
@@ -118,8 +116,7 @@ namespace FeatureDemo.CustomConsoles
                 // No exceptions, set the type
                 CommandType = CommandTypes.Glyph;
             }
-
-            public override void Build(ref ColoredGlyph glyphState, ColoredGlyph[] glyphString, int surfaceIndex, CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex, CellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
             {
                 glyphState.Glyph = Glyph;
 

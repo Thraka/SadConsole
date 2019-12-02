@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using SadConsole;
-using ColorHelper = Microsoft.Xna.Framework.Color;
-using ScrollingConsole = SadConsole.ScrollingConsole;
+﻿using SadConsole;
+using SadRogue.Primitives;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class StretchedConsole : ScrollingConsole
+    internal class StretchedConsole : Console
     {
         public StretchedConsole()
             : base(40, 11)
@@ -18,9 +14,9 @@ namespace FeatureDemo.CustomConsoles
             // stretch the size of the cells based on the font * 2. This will fill our 
             // area.
             UseKeyboard = false;
-            Font = Global.Fonts.Values.First().GetFont(SadConsole.Font.FontSizes.Two);
+            FontSize = Font.GetFontSize(Font.Sizes.Two);
 
-            ColoredString colorString = "Text using a colored string gradient".CreateGradient(ColorHelper.DarkGreen, ColorHelper.LightGreen);
+            ColoredString colorString = "Text using a colored string gradient".CreateGradient(Color.DarkGreen, Color.LightGreen);
             Print(2, 1, colorString);
 
             Print(2, 3, "Same font as others, just doubled");
