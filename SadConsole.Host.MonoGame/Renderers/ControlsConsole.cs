@@ -41,7 +41,7 @@ namespace SadConsole.Renderers
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
                                                ((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture,
-                                               new XnaRectangle(screen.AbsolutePosition.ToMonoPoint() + screen.Font.GetRenderRect(console.Cursor.Position.X, console.Cursor.Position.Y, console.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
+                                               new XnaRectangle(screen.AbsolutePosition.ToMonoPoint() + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
                                                screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
                                                screen.Font.GlyphRects[console.Cursor.CursorRenderCell.Glyph].ToMonoRectangle()
                                               )
