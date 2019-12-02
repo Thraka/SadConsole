@@ -11,35 +11,61 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class CheckBoxTheme : ThemeBase
     {
-        /// <summary>
-        /// The icon displayed when the radio button is checked.
-        /// </summary>
-        [DataMember] public ThemeStates CheckedIcon;
+        private ThemeStates _checkedIcon;
+        private ThemeStates _uncheckedIcon;
+        private ThemeStates _leftBracket;
+        private ThemeStates _rightBracket;
+
+        protected ThemeStates _checkedIconDefault;
+        protected ThemeStates _uncheckedIconDefault;
+        protected ThemeStates _leftBracketDefault;
+        protected ThemeStates _rightBracketDefault;
 
         /// <summary>
         /// The icon displayed when the radio button is checked.
         /// </summary>
-        [DataMember] public ThemeStates UncheckedIcon;
+        [DataMember] public ThemeStates CheckedIcon
+        {
+            get => _checkedIcon ?? _checkedIconDefault;
+            set => _checkedIcon = value;
+        }
+
+        /// <summary>
+        /// The icon displayed when the radio button is checked.
+        /// </summary>
+        [DataMember] public ThemeStates UncheckedIcon
+        {
+            get => _uncheckedIcon ?? _uncheckedIconDefault;
+            set => _uncheckedIcon = value;
+        }
 
         /// <summary>
         /// The icon displayed for the brack left of the check icon.
         /// </summary>
-        [DataMember] public ThemeStates LeftBracket;
+        [DataMember] public ThemeStates LeftBracket
+        {
+            get => _leftBracket ?? _leftBracketDefault;
+            set => _leftBracket = value;
+        }
 
         /// <summary>
         /// The icon displayed for the brack right of the check icon.
         /// </summary>
-        [DataMember] public ThemeStates RightBracket;
+        [DataMember] public ThemeStates RightBracket
+        {
+            get => _rightBracket ?? _rightBracketDefault;
+            set => _rightBracket = value;
+        }
 
         /// <summary>
         /// Creates a new theme used by the <see cref="CheckBox"/>.
         /// </summary>
         public CheckBoxTheme()
         {
-            CheckedIcon = new ThemeStates();
-            UncheckedIcon = new ThemeStates();
-            LeftBracket = new ThemeStates();
-            RightBracket = new ThemeStates();
+            _checkedIconDefault = new ThemeStates();
+            _uncheckedIconDefault = new ThemeStates();
+            _leftBracketDefault = new ThemeStates();
+            _rightBracketDefault = new ThemeStates();
         }
 
         /// <inheritdoc />
@@ -61,29 +87,22 @@ namespace SadConsole.UI.Themes
 
             base.RefreshTheme(themeColors, control);
 
-            CheckedIcon.RefreshTheme(themeColors, control);
-            UncheckedIcon.RefreshTheme(themeColors, control);
-            LeftBracket.RefreshTheme(themeColors, control);
-            RightBracket.RefreshTheme(themeColors, control);
+            _checkedIconDefault.RefreshTheme(themeColors, control);
+            _uncheckedIconDefault.RefreshTheme(themeColors, control);
+            _leftBracketDefault.RefreshTheme(themeColors, control);
+            _rightBracketDefault.RefreshTheme(themeColors, control);
 
-            CheckedIcon.SetGlyph(251);
-            UncheckedIcon.SetGlyph(0);
-            LeftBracket.SetGlyph('[');
-            RightBracket.SetGlyph(']');
+            _checkedIconDefault.SetGlyph(251);
+            _uncheckedIconDefault.SetGlyph(0);
+            _leftBracketDefault.SetGlyph('[');
+            _rightBracketDefault.SetGlyph(']');
         }
 
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is CheckBox checkbox))
-            {
-                return;
-            }
-
-            if (!control.IsDirty)
-            {
-                return;
-            }
+            if (!(control is CheckBox checkbox)) return;
+            if (!control.IsDirty) return;
 
             RefreshTheme(control.FindThemeColors(), control);
             ColoredGlyph appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
@@ -153,10 +172,10 @@ namespace SadConsole.UI.Themes
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
-            CheckedIcon = CheckedIcon?.Clone(),
-            UncheckedIcon = UncheckedIcon?.Clone(),
-            LeftBracket = LeftBracket?.Clone(),
-            RightBracket = RightBracket?.Clone(),
+            _checkedIcon = _checkedIcon?.Clone(),
+            _uncheckedIcon = _uncheckedIcon?.Clone(),
+            _leftBracket = _leftBracket?.Clone(),
+            _rightBracket = _rightBracket?.Clone(),
         };
     }
 }

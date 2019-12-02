@@ -93,13 +93,17 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class Button3dTheme : ButtonTheme
     {
-        OverridableDefaultValue<ColoredGlyph> _shade = new OverridableDefaultValue<ColoredGlyph>(new ColoredGlyph());
+        private ColoredGlyph _shade;
+        protected ColoredGlyph _shadeDefault = new ColoredGlyph();
 
+        /// <summary>
+        /// The shade appearance for the 3D aspect of the button.
+        /// </summary>
         [DataMember]
         public ColoredGlyph Shade
         {
-            get => _shade.Value;
-            set => _shade.Value = value;
+            get => _shade ?? _shadeDefault;
+            set => _shade = value;
         }
 
 
@@ -172,14 +176,16 @@ namespace SadConsole.UI.Themes
             button.IsDirty = false;
         }
 
+        /// <inheritdoc />
         public override void RefreshTheme(Colors colors, ControlBase control)
         {
             if (colors == null) colors = control.FindThemeColors();
 
             base.RefreshTheme(colors, control);
 
-            if (!_shade.Overridden)
-                _shade.ChangeOriginalValue(new ColoredGlyph(colors.ControlBackDark, Color.Transparent, 176));
+            _shadeDefault.Foreground = colors.ControlBackDark;
+            _shadeDefault.Background = Color.Transparent;
+            _shadeDefault.Glyph = 176;
 
             Normal.Foreground = colors.Appearance_ControlNormal.Foreground;
             Normal.Background = colors.ControlBackLight;
@@ -194,7 +200,7 @@ namespace SadConsole.UI.Themes
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
-            Shade = Shade?.Clone(),
+            _shade = _shade?.Clone(),
             ShowEnds = ShowEnds,
             EndCharacterLeft = EndCharacterLeft,
             EndCharacterRight = EndCharacterRight
@@ -207,20 +213,37 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class ButtonLinesTheme : ButtonTheme
     {
-        [DataMember]
-        public ColoredGlyph TopLeftLineColors { get; set; }
+        private ColoredGlyph _topLeftLineColors;
+        protected ColoredGlyph _topLeftLineColorsDefault = new ColoredGlyph();
 
+        private ColoredGlyph _bottomRightLineColors;
+        protected ColoredGlyph _bottomRightLineColorsDefault = new ColoredGlyph();
+
+        /// <summary>
+        /// The colors to use for the top and left lines.
+        /// </summary>
         [DataMember]
-        public ColoredGlyph BottomRightLineColors { get; set; }
+        public ColoredGlyph TopLeftLineColors
+        {
+            get => _topLeftLineColors ?? _topLeftLineColorsDefault;
+            set => _topLeftLineColors = value;
+        }
+
+        /// <summary>
+        /// The colors to use for the bottom and right lines.
+        /// </summary>
+        [DataMember]
+        public ColoredGlyph BottomRightLineColors
+        {
+            get => _bottomRightLineColors ?? _bottomRightLineColorsDefault;
+            set => _bottomRightLineColors = value;
+        }
 
         [DataMember]
         public bool UseExtended { get; set; }
 
         public ButtonLinesTheme() =>
             UseExtended = true;
-
-        private ColoredGlyph _topLeftLineColors;
-        private ColoredGlyph _bottomRightLineColors;
 
         /// <inheritdoc />
         public override void RefreshTheme(Colors colors, ControlBase control)
@@ -229,8 +252,8 @@ namespace SadConsole.UI.Themes
 
             base.RefreshTheme(colors, control);
 
-            _topLeftLineColors = TopLeftLineColors ?? new ColoredGlyph(colors.Gray, Color.Transparent);
-            _bottomRightLineColors = BottomRightLineColors ?? new ColoredGlyph(colors.GrayDark, Color.Transparent);
+            _topLeftLineColorsDefault = new ColoredGlyph(colors.Gray, Color.Transparent);
+            _bottomRightLineColorsDefault = new ColoredGlyph(colors.GrayDark, Color.Transparent);
         }
 
         /// <inheritdoc />
@@ -263,8 +286,8 @@ namespace SadConsole.UI.Themes
 
             // Middle part of the button for text.
             int middle = button.Surface.BufferHeight != 1 ? button.Surface.BufferHeight / 2 : 0;
-            Color topleftcolor = !mouseDown ? _topLeftLineColors.Foreground : _bottomRightLineColors.Foreground;
-            Color bottomrightcolor = !mouseDown ? _bottomRightLineColors.Foreground : _topLeftLineColors.Foreground;
+            Color topleftcolor = !mouseDown ? TopLeftLineColors.Foreground : BottomRightLineColors.Foreground;
+            Color bottomrightcolor = !mouseDown ? BottomRightLineColors.Foreground : TopLeftLineColors.Foreground;
             Color textColor = Normal.Foreground;
 
             if (button.Surface.BufferHeight > 1 && button.Surface.BufferHeight % 2 == 0)
@@ -359,8 +382,8 @@ namespace SadConsole.UI.Themes
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
-            _topLeftLineColors = _topLeftLineColors.Clone(),
-            _bottomRightLineColors = _bottomRightLineColors.Clone(),
+            _topLeftLineColors = _topLeftLineColors?.Clone(),
+            _bottomRightLineColors = _bottomRightLineColors?.Clone(),
             ShowEnds = ShowEnds,
             EndCharacterLeft = EndCharacterLeft,
             EndCharacterRight = EndCharacterRight,

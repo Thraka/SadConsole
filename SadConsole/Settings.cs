@@ -59,12 +59,12 @@ namespace SadConsole
         public static Point WindowMinimumSize { get; set; } = new Point(0, 0);
 
         /// <summary>
-        /// When set to true, all loading and saving performed by SadConsole uses GZIP. <see cref="Global.LoadFont(string)"/> does not use this setting and always runs uncompressed.
+        /// When set to true, all loading and saving performed by SadConsole uses GZIP. <see cref="GameHost.LoadFont(string)"/> does not use this setting and always runs uncompressed.
         /// </summary>
         public static bool SerializationIsCompressed { get; set; } = false;
 
         /// <summary>
-        /// When set to true, and a font is not specified with the <see cref="Game.Create(string, int, int, Action{Game})"/> overload, the IBM 8x16 extended SadConsole font will be used.
+        /// When set to true, and a font is not specified with the <see cref="GameHost"/>, the IBM 8x16 extended SadConsole font will be used.
         /// </summary>
         public static bool UseDefaultExtendedFont { get; set; } = false;
 
@@ -76,11 +76,17 @@ namespace SadConsole
             /// <summary>
             /// Not currently used
             /// </summary>
-            public static bool ProcessMouseOffscreen = false;
+            public static bool ProcessMouseOffscreen { get; set; } = false;
 
-            public static bool DoMouse = true;
+            /// <summary>
+            /// Indicates that the <see cref="GameHost"/> should process mouse input.
+            /// </summary>
+            public static bool DoMouse { get; set; } = true;
 
-            public static bool DoKeyboard = true;
+            /// <summary>
+            /// Indicates that the <see cref="GameHost"/> should process keyboard input.
+            /// </summary>
+            public static bool DoKeyboard { get; set; } = true;
         }
 
         /// <summary>

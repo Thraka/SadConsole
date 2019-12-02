@@ -10,6 +10,8 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class ThemeStates
     {
+        protected Colors _colorsLastUsed;
+
         /// <summary>
         /// The normal appearance of the control.
         /// </summary>
@@ -166,6 +168,8 @@ namespace SadConsole.UI.Themes
             MouseDown = colors.Appearance_ControlMouseDown.Clone();
             Selected = colors.Appearance_ControlSelected.Clone();
             Focused = colors.Appearance_ControlFocused.Clone();
+
+            _colorsLastUsed = colors;
         }
     }
 }
