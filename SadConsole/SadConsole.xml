@@ -6241,12 +6241,12 @@
         </member>
         <member name="P:SadConsole.Settings.SerializationIsCompressed">
             <summary>
-            When set to true, all loading and saving performed by SadConsole uses GZIP. <see cref="!:Global.LoadFont(string)"/> does not use this setting and always runs uncompressed.
+            When set to true, all loading and saving performed by SadConsole uses GZIP. <see cref="M:SadConsole.GameHost.LoadFont(System.String)"/> does not use this setting and always runs uncompressed.
             </summary>
         </member>
         <member name="P:SadConsole.Settings.UseDefaultExtendedFont">
             <summary>
-            When set to true, and a font is not specified with the <see cref="!:Game.Create(string, int, int, Action&lt;Game&gt;)"/> overload, the IBM 8x16 extended SadConsole font will be used.
+            When set to true, and a font is not specified with the <see cref="T:SadConsole.GameHost"/>, the IBM 8x16 extended SadConsole font will be used.
             </summary>
         </member>
         <member name="T:SadConsole.Settings.Input">
@@ -6254,9 +6254,19 @@
             Settings related to input.
             </summary>
         </member>
-        <member name="F:SadConsole.Settings.Input.ProcessMouseOffscreen">
+        <member name="P:SadConsole.Settings.Input.ProcessMouseOffscreen">
             <summary>
             Not currently used
+            </summary>
+        </member>
+        <member name="P:SadConsole.Settings.Input.DoMouse">
+            <summary>
+            Indicates that the <see cref="T:SadConsole.GameHost"/> should process mouse input.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Settings.Input.DoKeyboard">
+            <summary>
+            Indicates that the <see cref="T:SadConsole.GameHost"/> should process keyboard input.
             </summary>
         </member>
         <member name="T:SadConsole.Settings.Rendering">
@@ -7653,10 +7663,18 @@
             A 3D shadow theme of the button control
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Themes.Button3dTheme.Shade">
+            <summary>
+            The shade appearance for the 3D aspect of the button.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Themes.Button3dTheme.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.Button3dTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.Button3dTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.Button3dTheme.Clone">
@@ -7665,6 +7683,16 @@
         <member name="T:SadConsole.UI.Themes.ButtonLinesTheme">
             <summary>
             A 3D theme of the button control using thin lines. Supports the SadConsole extended character set.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonLinesTheme.TopLeftLineColors">
+            <summary>
+            The colors to use for the top and left lines.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonLinesTheme.BottomRightLineColors">
+            <summary>
+            The colors to use for the bottom and right lines.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
@@ -7681,22 +7709,22 @@
             The theme of a checkbox control.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.CheckedIcon">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.CheckedIcon">
             <summary>
             The icon displayed when the radio button is checked.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.UncheckedIcon">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.UncheckedIcon">
             <summary>
             The icon displayed when the radio button is checked.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.LeftBracket">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.LeftBracket">
             <summary>
             The icon displayed for the brack left of the check icon.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.CheckBoxTheme.RightBracket">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.RightBracket">
             <summary>
             The icon displayed for the brack right of the check icon.
             </summary>

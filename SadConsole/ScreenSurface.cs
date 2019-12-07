@@ -227,7 +227,7 @@ namespace SadConsole
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    // dispose managed state (managed objects).
                 }
 
                 _renderer?.Dispose();

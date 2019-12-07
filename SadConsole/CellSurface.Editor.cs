@@ -1610,8 +1610,6 @@ namespace SadConsole
             DrawLine(area.Position, area.Position + new Point(0, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Left], border.Mirror);
             DrawLine(area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ConnectedLineIndex.Right], border.Mirror);
 
-            // TODO: Check that MaxExtentX/Y need the "- 1"
-
             // Tweak the corners
             SetGlyph(area.X, area.Y, connectedLineStyle[(int)ConnectedLineIndex.TopLeft]);
             SetGlyph(area.MaxExtentX, area.Y, connectedLineStyle[(int)ConnectedLineIndex.TopRight]);
@@ -1650,7 +1648,6 @@ namespace SadConsole
 
             if (inner != null)
             {
-                //TODO this isn't working anymore :(
                 Func<int, bool> isTargetCell = c => !cells.Contains(c);
                 Action<int> fillCell = c =>
                 {

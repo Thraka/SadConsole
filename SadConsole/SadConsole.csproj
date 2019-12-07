@@ -8,8 +8,8 @@
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyTitle>SadConsole (.NET Standard) for MonoGame</AssemblyTitle>
-    <Description>A MonoGame library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.0</Description>
+    <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
+    <Description>A library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.1.</Description>
     <Copyright>Copyright © 2019 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
@@ -39,7 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.*" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,4 +63,9 @@
     <None Include="Resources\readme.txt" pack="true" PackagePath="." />
   </ItemGroup>
 
+  <Target Name="MyPostCompileTarget" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet inheritdoc -o -b $(OutDir)" />
+  </Target>
+  
 </Project>

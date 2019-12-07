@@ -386,7 +386,7 @@ namespace SadConsole.Effects
             }
         }
 
-        //TODO: this doesn't really work because we don't save the cell positions for hydration.. 
+        //TODO: load/save for effects manager now that it saves the cell index.
 
         //[DataContract]
         //internal class EffectsManagerSerialized

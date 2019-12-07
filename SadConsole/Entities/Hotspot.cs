@@ -5,8 +5,6 @@ using SadRogue.Primitives;
 
 namespace SadConsole.Entities
 {
-    // TODO: make sure hotspot works.
-
     /// <summary>
     /// A group of positions with a set of settings.
     /// </summary>
