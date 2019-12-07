@@ -224,39 +224,70 @@ namespace SadConsole
         /// </summary>
         public void TabNextControl()
         {
+            if (ControlsList.Count == 0)
+                return;
+
+            ControlBase control;
+
             if (_focusedControl == null)
             {
-                if (ControlsList.Count == 0)
+                if (FindTabControlForward(0, ControlsList.Count - 1, out control))
                 {
+                    FocusedControl = control;
                     return;
                 }
 
-                foreach (ControlBase control in ControlsList)
-                {
-                    if (control.TabStop)
-                    {
-                        FocusedControl = control;
-                        break;
-                    }
-                }
-
-                // Still couldn't find one, try moving previous console if we can
-                if (FocusedControl == null)
-                {
-                    TryTabNextConsole();
-                }
+                TryTabNextConsole();
             }
             else
             {
                 int index = ControlsList.IndexOf(_focusedControl);
 
-                if (index == ControlsList.Count - 1 && !TryTabNextConsole())
+                // From first control
+                if (index == 0)
                 {
-                    FocusedControl = ControlsList[0];
+                    if (FindTabControlForward(index + 1, ControlsList.Count - 1, out control))
+                    {
+                        FocusedControl = control;
+                        return;
+                    }
+
+                    TryTabNextConsole();
                 }
+
+                // From last control
+                else if (index == ControlsList.Count - 1)
+                {
+                    if (!TryTabNextConsole())
+                    {
+                        if (FindTabControlForward(0, ControlsList.Count - 1, out control))
+                        {
+                            FocusedControl = control;
+                            return;
+                        }
+                    }
+                }
+
+                // Middle
                 else
                 {
-                    FocusedControl = ControlsList[index + 1];
+                    // Middle > End
+                    if (FindTabControlForward(index + 1, ControlsList.Count - 1, out control))
+                    {
+                        FocusedControl = control;
+                        return;
+                    }
+
+                    // Next console
+                    if (TryTabNextConsole())
+                        return;
+
+                    // Start > Middle
+                    if (FindTabControlForward(0, index, out control))
+                    {
+                        FocusedControl = control;
+                        return;
+                    }
                 }
             }
         }
@@ -266,39 +297,103 @@ namespace SadConsole
         /// </summary>
         public void TabPreviousControl()
         {
+            if (ControlsList.Count == 0)
+                return;
+
+            ControlBase control;
+
             if (_focusedControl == null)
             {
-                if (ControlsList.Count != 0)
+                if (FindTabControlPrevious(ControlsList.Count - 1, 0, out control))
                 {
-                    for (int i = ControlsList.Count - 1; i > 0; i--)
-                    {
-                        if (ControlsList[i].TabStop)
-                        {
-                            FocusedControl = ControlsList[i];
-                            break;
-                        }
-                    }
-
-                    // Still couldn't find one, try moving previous console if we can
-                    if (FocusedControl == null)
-                    {
-                        TryTabPreviousConsole();
-                    }
+                    FocusedControl = control;
+                    return;
                 }
+
+                TryTabPreviousConsole();
             }
             else
             {
                 int index = ControlsList.IndexOf(_focusedControl);
 
-                if (index == 0 && !TryTabPreviousConsole())
+                // From first control
+                if (index == 0)
                 {
-                    FocusedControl = ControlsList[ControlsList.Count - 1];
+                    if (!TryTabPreviousConsole())
+                    {
+                        if (FindTabControlPrevious(ControlsList.Count - 1, 0, out control))
+                        {
+                            FocusedControl = control;
+                            return;
+                        }
+                    }
                 }
+
+                // From last control
+                else if (index == ControlsList.Count - 1)
+                {
+                    if (FindTabControlPrevious(index - 1, 0, out control))
+                    {
+                        FocusedControl = control;
+                        return;
+                    }
+
+                    TryTabPreviousConsole();
+                }
+
+                // Middle
                 else
                 {
-                    FocusedControl = ControlsList[index - 1];
+                    // Middle -> Start
+                    if (FindTabControlPrevious(index - 1, 0, out control))
+                    {
+                        FocusedControl = control;
+                        return;
+                    }
+
+                    // Next console
+                    if (TryTabPreviousConsole())
+                        return;
+
+                    // End -> Middle
+                    if (FindTabControlPrevious(ControlsList.Count - 1, index, out control))
+                    {
+                        FocusedControl = control;
+                        return;
+                    }
                 }
             }
+        }
+
+
+        private bool FindTabControlForward(int startingIndex, int endingIndex, out ControlBase foundControl)
+        {
+            for (int i = startingIndex; i <= endingIndex; i++)
+            {
+                if (ControlsList[i].TabStop)
+                {
+                    foundControl = ControlsList[i];
+                    return true;
+                }
+            }
+
+            foundControl = null;
+            return false;
+        }
+
+        private bool FindTabControlPrevious(int startingIndex, int endingIndex, out ControlBase foundControl)
+        {
+            for (int i = startingIndex; i >= endingIndex; i--)
+            {
+                if (ControlsList[i].TabStop)
+                {
+                    foundControl = ControlsList[i];
+                    return true;
+                }
+            }
+
+            foundControl = null;
+            return false;
         }
 
         /// <summary>
