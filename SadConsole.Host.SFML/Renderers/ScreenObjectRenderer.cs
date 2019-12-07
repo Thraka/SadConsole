@@ -123,7 +123,7 @@ namespace SadConsole.Renderers
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    _renderRects = null;
                 }
 
                 BackingTexture?.Dispose();
