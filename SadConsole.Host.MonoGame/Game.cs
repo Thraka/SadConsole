@@ -91,8 +91,13 @@ namespace SadConsole
         /// <param name="mode">Unused by monogame.</param>
         /// <param name="access">Unused by monogame.</param>
         /// <returns>The stream.</returns>
-        public override Stream OpenStream(string file, FileMode mode = FileMode.Open, FileAccess access = FileAccess.Read) =>
-             Microsoft.Xna.Framework.TitleContainer.OpenStream(file);
+        public override Stream OpenStream(string file, FileMode mode = FileMode.Open, FileAccess access = FileAccess.Read)
+        {
+            if (mode == FileMode.Create || mode == FileMode.CreateNew || mode == FileMode.OpenOrCreate)
+                return System.IO.File.OpenWrite(file);
+            
+            return Microsoft.Xna.Framework.TitleContainer.OpenStream(file);
+        }
 
         internal void MonoGameLoadEmbeddedFont() =>
             LoadEmbeddedFont();

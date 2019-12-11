@@ -12,7 +12,6 @@
     <Compile Remove="CustomConsoles\CursorConsole.cs" />
     <Compile Remove="CustomConsoles\DOSConsole.cs" />
     <Compile Remove="CustomConsoles\FadeConsole.cs" />
-    <Compile Remove="CustomConsoles\HexConsole.cs" />
     <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />
     <Compile Remove="CustomConsoles\RandomScrollingConsole.cs" />
     <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
@@ -24,10 +23,26 @@
     <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
   </ItemGroup>
 
-  <ItemGroup>
+  <PropertyGroup>
+    <GameHost>monogame</GameHost>
+    <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <!--<ProjectReference Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />-->
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">
+    <ProjectReference Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HostSpecific\SFML\" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Runtime.Serialization;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -11,8 +13,16 @@ namespace SadConsole
     /// <summary>
     /// A generic object processed by SadConsole. Provides parent/child, components, and position.
     /// </summary>
+    //[Newtonsoft.Json.JsonConverter(typeof(SerializedTypes.ScreenObjectJsonConverter))]
+    [DataContract]
     public class ScreenObject : IScreenObject
     {
+        [DataMember(Name = "Children")]
+        private IScreenObject[] _childrenSerialized;
+
+        [DataMember(Name = "Components")]
+        private IComponent[] _componentsSerialized;
+
         private IScreenObject _parentObject;
         private Point _position;
         private bool _isVisible = true;
@@ -90,6 +100,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
+        [DataMember]
         public Point Position
         {
             get => _position;
@@ -107,6 +118,7 @@ namespace SadConsole
         public Point AbsolutePosition { get; protected set; }
 
         /// <inheritdoc/>
+        [DataMember]
         public bool IsVisible
         {
             get => _isVisible;
@@ -120,6 +132,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
+        [DataMember]
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -133,9 +146,11 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
+        [DataMember]
         public bool UseKeyboard { get; set; }
 
         /// <inheritdoc/>
+        [DataMember]
         public bool UseMouse { get; set; }
 
         /// <summary>
@@ -384,6 +399,32 @@ namespace SadConsole
 
             foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
+        }
+
+        [OnSerializing]
+        internal void OnSerializingMethod(StreamingContext context)
+        {
+            _childrenSerialized = Children.ToArray();
+            _componentsSerialized = Components.ToArray();
+        }
+
+        [OnSerialized]
+        internal void OnSerializedMethod(StreamingContext context)
+        {
+            _childrenSerialized = null;
+            _componentsSerialized = null;
+        }
+
+        [OnDeserialized]
+        internal void OnDeserializedMethod(StreamingContext context)
+        {
+            foreach (var item in _childrenSerialized)
+                Children.Add(item);
+
+            foreach (var item in _componentsSerialized)
+                Components.Add(item);
+
+            _childrenSerialized = null;
         }
     }
 }

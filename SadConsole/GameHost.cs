@@ -154,6 +154,32 @@ namespace SadConsole
             File.Open(file, mode, access);
 
         /// <summary>
+        /// Checks if a file exists.
+        /// </summary>
+        /// <param name="file">The file to check.</param>
+        /// <returns><see langword="true"/> if the file exists; otherwise <see langword="false"/>.</returns>
+        public virtual bool FileExists(string file) =>
+            File.Exists(file);
+
+        /// <summary>
+        /// Deletes a file.
+        /// </summary>
+        /// <param name="file">The file to delete.</param>
+        /// <returns><see langword="true"/> if the file was deleted; otherwise <see langword="false"/>.</returns>
+        public virtual bool FileDelete(string file)
+        {
+            try
+            {
+                File.Delete(file);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Loads the <c>IBM.font</c> built into the binary.
         /// </summary>
         protected void LoadEmbeddedFont()

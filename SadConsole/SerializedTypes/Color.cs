@@ -1,18 +1,24 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 
 namespace SadConsole.SerializedTypes
 {
-    [DataContract]
+    public class ColorJsonConverter : JsonConverter<Color>
+    {
+        public override void WriteJson(JsonWriter writer, Color value, JsonSerializer serializer) =>
+            serializer.Serialize(writer, (ColorSerialized)value);
+
+        public override Color ReadJson(JsonReader reader, Type objectType, Color existingValue, bool hasExistingValue, JsonSerializer serializer) =>
+            serializer.Deserialize<ColorSerialized>(reader);
+    }
+
     public struct ColorSerialized
     {
-        [DataMember]
         public byte R;
-        [DataMember]
         public byte G;
-        [DataMember]
         public byte B;
-        [DataMember]
         public byte A;
 
         public static implicit operator ColorSerialized(Color color) => new ColorSerialized() { R = color.R, G = color.G, B = color.B, A = color.A };

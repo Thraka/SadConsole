@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using SadConsole.Input;
 
 namespace SadConsole
@@ -24,15 +25,19 @@ namespace SadConsole
         protected bool IsMouseOver;
 
         /// <inheritdoc/>
+        [DataMember]
         public FocusBehavior FocusedMode { get; set; }
 
         /// <inheritdoc/>
+        [DataMember]
         public bool IsExclusiveMouse { get; set; }
 
         /// <inheritdoc/>
+        [DataMember]
         public bool MoveToFrontOnMouseClick { get; set; }
 
         /// <inheritdoc/>
+        [DataMember]
         public bool FocusOnMouseClick { get; set; }
 
         /// <inheritdoc/>

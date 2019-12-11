@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GameHost>monogame</GameHost>
+    <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
+    <ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">
+    <ProjectReference Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -5,6 +5,7 @@
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
     <Version>9.0.0</Version>
+    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -13,7 +14,9 @@
     <Copyright>Copyright © 2019 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
-    <PackageReleaseNotes>Fix xml docs</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      
+    </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -30,7 +33,6 @@
     <Compile Remove="Input\ConsoleViewInputHandler.cs" />
     <Compile Remove="Input\MouseEventArgs.cs" />
     <Compile Remove="SerializedTypes\AnimatedConsole.cs" />
-    <Compile Remove="SerializedTypes\CellSurface.cs" />
     <Compile Remove="SerializedTypes\CellSurfaceLayer.cs" />
     <Compile Remove="SerializedTypes\Console.cs" />
     <Compile Remove="SerializedTypes\Entity.cs" />
@@ -40,11 +42,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.*" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives\TheSadRogue.Primitives.csproj" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,5 +66,12 @@
     <Exec Command="dotnet tool restore" />
     <Exec Command="dotnet inheritdoc -o -b $(OutDir)" />
   </Target>
+
+  <!-- When packing, copy the nuget files to the nuget output directory
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\..\nuget" />
+  </Target>
+  -->
   
 </Project>

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using Newtonsoft.Json;
 using SadConsole.Components;
 using SadRogue.Primitives;
 
@@ -10,12 +13,14 @@ namespace SadConsole
     /// <summary>
     /// An object that renders a <see cref="CellSurface"/>.
     /// </summary>
+    [DataContract]
     public partial class ScreenSurface : CellSurface, IDisposable, IScreenSurface
     {
         private Font _font;
         private Point _fontSize;
         private Renderers.IRenderer _renderer;
         private Color _tint = Color.Transparent;
+        [DataMember(Name = "UsePixelPositioning")]
         private bool _usePixelPositioning;
 
         /// <inheritdoc/>
@@ -36,6 +41,7 @@ namespace SadConsole
         CellSurface IScreenSurface.Surface => this;
 
         /// <inheritdoc/>
+        [DataMember]
         public Font Font
         {
             get => _font;
@@ -50,6 +56,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
+        [DataMember]
         public Point FontSize
         {
             get => _fontSize;
@@ -63,6 +70,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
+        [DataMember]
         public Color Tint
         {
             get => _tint;
@@ -159,6 +167,17 @@ namespace SadConsole
             Children = new ScreenObjectCollection(this);
         }
 
+        [JsonConstructor]
+        private ScreenSurface(BoundedRectangle areaBounds, ColoredGlyph[] cells) : base(areaBounds.Area.Width, areaBounds.Area.Height, areaBounds.BoundingBox.Width, areaBounds.BoundingBox.Height, cells)
+        {
+            Children = new ScreenObjectCollection(this);
+            Components = new ObservableCollection<IComponent>();
+            ComponentsUpdate = new List<IComponent>();
+            ComponentsDraw = new List<IComponent>();
+            ComponentsKeyboard = new List<IComponent>();
+            ComponentsMouse = new List<IComponent>();
+        }
+
         /// <inheritdoc />
         public virtual void UpdateAbsolutePosition()
         {
@@ -216,6 +235,35 @@ namespace SadConsole
         /// <param name="oldFont">The font prior to the change.</param>
         /// <param name="oldFontSize">The font size prior to the change.</param>
         protected virtual void OnFontChanged(Font oldFont, Point oldFontSize) { }
+
+        [OnSerializing]
+        internal void OnSerializingMethod(StreamingContext context)
+        {
+            _childrenSerialized = Children.ToArray();
+            _componentsSerialized = Components.ToArray();
+        }
+
+        [OnSerialized]
+        internal void OnSerializedMethod(StreamingContext context)
+        {
+            _childrenSerialized = null;
+            _componentsSerialized = null;
+        }
+
+        [OnDeserialized]
+        internal void OnDeserializedMethod(StreamingContext context)
+        {
+            foreach (var item in _childrenSerialized)
+                Children.Add(item);
+
+            foreach (var item in _componentsSerialized)
+                Components.Add(item);
+
+            _childrenSerialized = null;
+
+            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+            UpdateAbsolutePosition();
+        }
 
         #region IDisposable Support
         private bool _disposedValue = false; // To detect redundant calls

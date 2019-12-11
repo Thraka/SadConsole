@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using SadConsole.Components;
 using SadConsole.Input;
@@ -11,8 +13,16 @@ namespace SadConsole
 {
     public partial class ScreenSurface
     {
-        private IScreenObject _parentObject;
+        [DataMember(Name = "Children")]
+        private IScreenObject[] _childrenSerialized;
+
+        [DataMember(Name = "Components")]
+        private IComponent[] _componentsSerialized;
+
+        [DataMember(Name = "Position")]
         private Point _position;
+
+        private IScreenObject _parentObject;
         private bool _isVisible = true;
         private bool _isEnabled = true;
 
@@ -125,6 +135,7 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the visibility of this object.
         /// </summary>
+        [DataMember]
         public bool IsVisible
         {
             get => _isVisible;
@@ -140,6 +151,7 @@ namespace SadConsole
         /// <summary>
         /// Gets or sets the visibility of this object.
         /// </summary>
+        [DataMember]
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -155,11 +167,13 @@ namespace SadConsole
         /// <summary>
         /// When <see langword="true"/>, this object will use the keyboard; otherwise <see langword="false"/>.
         /// </summary>
+        [DataMember]
         public bool UseKeyboard { get; set; }
 
         /// <summary>
         /// When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
         /// </summary>
+        [DataMember]
         public bool UseMouse { get; set; }
 
         /// <summary>

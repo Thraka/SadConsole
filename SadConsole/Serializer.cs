@@ -11,6 +11,48 @@ namespace SadConsole
     /// </summary>
     public static class Serializer
     {
+        private static JsonSerializerSettings _settings;
+
+
+        static Serializer()
+        {
+            _settings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All };
+            _settings.ContractResolver = new Contracts();
+        }
+
+
+        private class Contracts: DefaultContractResolver
+        {
+            protected override JsonContract CreateContract(Type objectType)
+            {
+                JsonContract contract = base.CreateContract(objectType);
+
+                if (objectType == typeof(SadRogue.Primitives.Rectangle))
+                    contract.Converter = new SadConsole.SerializedTypes.RectangleJsonConverter();
+
+                else if (objectType == typeof(SadRogue.Primitives.BoundedRectangle))
+                    contract.Converter = new SadConsole.SerializedTypes.BoundedRectangleJsonConverter();
+
+                else if (objectType == typeof(SadRogue.Primitives.Color))
+                    contract.Converter = new SadConsole.SerializedTypes.ColorJsonConverter();
+
+                return contract;
+            }
+        }
+
+
+        /// <summary>
+        /// The settings to use during <see cref="Save{T}(T, string, bool)"/> and <see cref="Load{T}(string, bool)"/>.
+        /// </summary>
+        public static JsonSerializerSettings Settings
+        {
+            get => _settings;
+            set
+            {
+                _settings = value;
+            }
+        }
+
         /// <summary>
         /// Serializes the <paramref name="instance"/> instance to the specified file.
         /// </summary>
@@ -20,19 +62,17 @@ namespace SadConsole
         /// <param name="compress">When true, uses GZIP compression on the json string saved to the <paramref name="file"/></param>
         public static void Save<T>(T instance, string file, bool compress)
         {
-            if (System.IO.File.Exists(file))
-            {
-                System.IO.File.Delete(file);
-            }
+            if (GameHost.Instance.FileExists(file))
+                GameHost.Instance.FileDelete(file);
 
-            using (System.IO.FileStream stream = System.IO.File.OpenWrite(file))
+            using (System.IO.Stream stream = GameHost.Instance.OpenStream(file, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
             {
                 if (compress)
                 {
                     using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
                     {
                         //var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
-                        byte[] bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
+                        byte[] bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, _settings));
                         sw.Write(bytes, 0, bytes.Length);
                     }
                 }
@@ -41,7 +81,7 @@ namespace SadConsole
                     using (var sw = new System.IO.StreamWriter(stream))
                     {
                         //sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
-                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
+                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, _settings));
                     }
                 }
             }
@@ -68,7 +108,7 @@ namespace SadConsole
                         {
                             string value = sr.ReadToEnd();
                             //return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
-                            return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
+                            return (T)JsonConvert.DeserializeObject(value, typeof(T), _settings);
                         }
                     }
                 }
@@ -77,7 +117,7 @@ namespace SadConsole
                     using (var sr = new System.IO.StreamReader(fileObject))
                     {
                         //return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
-                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
+                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), _settings);
                     }
                 }
             }

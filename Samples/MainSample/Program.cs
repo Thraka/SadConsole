@@ -65,15 +65,14 @@ namespace FeatureDemo
             // We don't want to use that for the sample project so we'll remove it.
 
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
-
             MainConsole = new Container();
 
             // We'll instead use our demo consoles that show various features of SadConsole.
             Global.Screen.Renderer = null;
             Global.Screen.Children.Add(MainConsole);
-
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
+
         }
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent

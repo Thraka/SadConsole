@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 
 namespace SadConsole
@@ -7,11 +9,15 @@ namespace SadConsole
     /// <summary>
     /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
     /// </summary>
+    [DataContract]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public partial class CellSurface : IEnumerable<ColoredGlyph>
     {
         private bool _isDirty = true;
         private Color _defaultBackground;
         private Color _defaultForeground;
+
+        [DataMember(Name = "AreaBounds")]
         private BoundedRectangle _viewArea;
 
         /// <summary>
@@ -37,6 +43,7 @@ namespace SadConsole
         /// <summary>
         /// The default foreground for glyphs on this surface.
         /// </summary>
+        [DataMember]
         public Color DefaultForeground
         {
             get => _defaultForeground;
@@ -46,6 +53,7 @@ namespace SadConsole
         /// <summary>
         /// The default background for glyphs on this surface.
         /// </summary>
+        [DataMember]
         public Color DefaultBackground
         {
             get => _defaultBackground;
@@ -60,7 +68,7 @@ namespace SadConsole
             get => _viewArea.Area;
             set
             {
-                _viewArea.Area = value;
+                _viewArea.SetArea(value);
                 IsDirty = true;
             }
         }
@@ -71,7 +79,7 @@ namespace SadConsole
         public int ViewWidth
         {
             get => _viewArea.Area.Width;
-            set => _viewArea.Area = _viewArea.Area.WithWidth(value);
+            set => _viewArea.SetArea(_viewArea.Area.WithWidth(value));
         }
 
         /// <summary>
@@ -80,7 +88,7 @@ namespace SadConsole
         public int ViewHeight
         {
             get => _viewArea.Area.Height;
-            set => _viewArea.Area = _viewArea.Area.WithHeight(value);
+            set => _viewArea.SetArea(_viewArea.Area.WithHeight(value));
         }
 
         /// <summary>
@@ -111,7 +119,7 @@ namespace SadConsole
             get => _viewArea.Area.Position;
             set
             {
-                _viewArea.Area = _viewArea.Area.WithPosition(value);
+                _viewArea.SetArea(_viewArea.Area.WithPosition(value));
                 IsDirty = true;
             }
         }
@@ -119,6 +127,7 @@ namespace SadConsole
         /// <summary>
         /// All cells of the surface.
         /// </summary>
+        [DataMember]
         public ColoredGlyph[] Cells { get; protected set; }
 
         /// <summary>
@@ -222,6 +231,13 @@ namespace SadConsole
 
             Effects = new Effects.EffectsManager(this);
         }
+
+        [JsonConstructor]
+        private CellSurface()
+        {
+            Effects = new Effects.EffectsManager(this);
+        }
+
 
         /// <summary>
         /// Sets <see cref="IsDirty"/> to <see langword="true"/> without triggering <see cref="OnIsDirtyChanged"/>.

@@ -11,12 +11,12 @@
 
   <ItemGroup>
     <PackageReference Include="SFML.Net" Version="2.5.0" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
+    <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.0.0-alpha1-debug" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives.SFML\TheSadRogue.Primitives.SFML.csproj" />
     <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
-    <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives\TheSadRogue.Primitives.csproj" />
   </ItemGroup>
 
 </Project>

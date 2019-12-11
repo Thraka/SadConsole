@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace SadConsole
 {
     /// <summary>
     /// Represents an individual piece of a <see cref="CellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
     /// </summary>
-    [DataContract]
+    [Newtonsoft.Json.JsonConverter(typeof(SerializedTypes.ColoredGlyphJsonConverter))]
     public class ColoredGlyph : IEquatable<ColoredGlyph>
     {
         private Color _foreground;
@@ -20,13 +19,11 @@ namespace SadConsole
         /// <summary>
         /// Modifies the look of a cell with additional character. 
         /// </summary>
-        [DataMember]
-        public CellDecorator[] Decorators { get; internal set; } = Array.Empty<CellDecorator>();
+        public CellDecorator[] Decorators { get; set; } = Array.Empty<CellDecorator>();
 
         /// <summary>
         /// The foreground color of this cell.
         /// </summary>
-        [DataMember]
         public Color Foreground
         {
             get => _foreground;
@@ -36,7 +33,6 @@ namespace SadConsole
         /// <summary>
         /// The background color of this cell.
         /// </summary>
-        [DataMember]
         public Color Background
         {
             get => _background;
@@ -46,7 +42,6 @@ namespace SadConsole
         /// <summary>
         /// The glyph index from a font for this cell.
         /// </summary>
-        [DataMember]
         public int Glyph
         {
             get => _glyph;
@@ -56,7 +51,6 @@ namespace SadConsole
         /// <summary>
         /// The mirror effect for this cell.
         /// </summary>
-        [DataMember]
         public Mirror Mirror
         {
             get => _mirror;
@@ -75,7 +69,6 @@ namespace SadConsole
         /// <summary>
         /// <see langword="true"/> when this cell should be drawn; otherwise, <see langword="false"/>.
         /// </summary>
-        [DataMember]
         public bool IsVisible { get; set; } = true;
 
         /// <summary>

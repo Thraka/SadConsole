@@ -744,7 +744,7 @@
             A variable that tracks how many times this editor shifted the surface up.
             </summary>
         </member>
-        <member name="F:SadConsole.CellSurface.UsePrintProcessor">
+        <member name="P:SadConsole.CellSurface.UsePrintProcessor">
             <summary>
             When true, the <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.CellSurface,SadConsole.StringParser.ParseCommandStacks)"/> command is used to print strings.
             </summary>
@@ -3424,6 +3424,20 @@
             <param name="mode">The mode for opening. Defaults to <see cref="F:System.IO.FileMode.Open"/>.</param>
             <param name="access">The type of access for the stream. Defaults to <see cref="F:System.IO.FileAccess.Read"/>.</param>
             <returns>The stream object.</returns>
+        </member>
+        <member name="M:SadConsole.GameHost.FileExists(System.String)">
+            <summary>
+            Checks if a file exists.
+            </summary>
+            <param name="file">The file to check.</param>
+            <returns><see langword="true"/> if the file exists; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.GameHost.FileDelete(System.String)">
+            <summary>
+            Deletes a file.
+            </summary>
+            <param name="file">The file to delete.</param>
+            <returns><see langword="true"/> if the file was deleted; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.GameHost.LoadEmbeddedFont">
             <summary>
@@ -6169,6 +6183,11 @@
         <member name="T:SadConsole.Serializer">
             <summary>
             Common serialization tasks for SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Serializer.Settings">
+            <summary>
+            The settings to use during <see cref="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean)"/> and <see cref="M:SadConsole.Serializer.Load``1(System.String,System.Boolean)"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean)">

@@ -35,7 +35,8 @@ namespace SadConsole
         /// <summary>
         /// When true, the <see cref="ColoredString.Parse(string, int, CellSurface, ParseCommandStacks)"/> command is used to print strings.
         /// </summary>
-        public bool UsePrintProcessor = false;
+        [DataMember]
+        public bool UsePrintProcessor { get; set; } = false;
 
         /// <summary>
         /// Processes the effects added to cells with <see cref="o:SetEffect"/>.
@@ -46,6 +47,7 @@ namespace SadConsole
         /// <summary>
         /// The glyph used by the <see cref="Erase(int, int, int)"/> method. Defaults to 0.
         /// </summary>
+        [DataMember]
         public int EraseGlyph { get; set; } = 0;
 
         /// <summary>

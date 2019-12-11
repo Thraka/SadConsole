@@ -7,12 +7,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
-    <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives.MonoGame\TheSadRogue.Primitives.MonoGame.csproj" />
-    <ProjectReference Include="..\..\TheSadRogue.Primitives\TheSadRogue.Primitives\TheSadRogue.Primitives.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
+    <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0-alpha1-debug" />
   </ItemGroup>
 
 </Project>

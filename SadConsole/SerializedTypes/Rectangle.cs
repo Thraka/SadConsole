@@ -1,19 +1,23 @@
-﻿
+﻿using System;
+using Newtonsoft.Json;
+using SadRogue.Primitives;
+
 namespace SadConsole.SerializedTypes
 {
-    using System.Runtime.Serialization;
-    using SadRogue.Primitives;
+    public class RectangleJsonConverter : JsonConverter<Rectangle>
+    {
+        public override void WriteJson(JsonWriter writer, Rectangle value, JsonSerializer serializer) =>
+            serializer.Serialize(writer, (RectangleSerialized)value);
 
-    [DataContract]
+        public override Rectangle ReadJson(JsonReader reader, Type objectType, Rectangle existingValue, bool hasExistingValue, JsonSerializer serializer) =>
+            serializer.Deserialize<RectangleSerialized>(reader);
+    }
+
     public struct RectangleSerialized
     {
-        [DataMember]
         public int X;
-        [DataMember]
         public int Y;
-        [DataMember]
         public int Width;
-        [DataMember]
         public int Height;
 
         public static implicit operator RectangleSerialized(Rectangle rect) => new RectangleSerialized()

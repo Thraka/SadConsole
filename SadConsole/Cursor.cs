@@ -26,7 +26,7 @@ namespace SadConsole
             get => _cursorRenderCell;
             set
             {
-                _cursorRenderCell = value;
+                _cursorRenderCell = value ?? throw new NullReferenceException("The render cell cannot be null. To hide the cursor, use the IsVisible property.");
                 _cursorRenderCellState = new EffectsManager.ColoredGlyphState(_cursorRenderCell);
             }
         }
@@ -170,6 +170,9 @@ namespace SadConsole
         /// </summary>
         public Cursor ResetCursorEffect()
         {
+            if (CursorEffect != null)
+                _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+
             SadConsole.Effects.Blink blinkEffect = new Effects.Blink
             {
                 BlinkSpeed = 0.35f
