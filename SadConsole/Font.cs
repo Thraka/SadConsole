@@ -11,7 +11,6 @@ namespace SadConsole
     /// Represents a specific font size from a <see cref="FontMaster"/>.
     /// </summary>
     [DataContract]
-    [Newtonsoft.Json.JsonConverter(typeof(SerializedTypes.FontJsonConverter))]
     public sealed class Font
     {
         private int _solidGlyphIndex;

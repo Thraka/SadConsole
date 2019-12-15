@@ -203,7 +203,8 @@ namespace SadConsole
                     typeof(Font),
                     new Newtonsoft.Json.JsonSerializerSettings()
                     {
-                        TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
+                        TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All,
+                        Converters = null
                     });
 
                 Global.Fonts.Add(masterFont.Name, masterFont);
