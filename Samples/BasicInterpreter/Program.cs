@@ -30,6 +30,21 @@ namespace Game
             //SadConsole.Settings.gam.Window.Title = "DemoProject Core";
 
             //Global.Screen.Renderer = null;
+            //Teletype keyboardComponent = new Teletype();
+
+            //var runtimeEnv = new ClassicBasic.Interpreter.RunEnvironment();
+            //var programRep = new ClassicBasic.Interpreter.ProgramRepository();
+            //var tokensProvider = new new ClassicBasic.Interpreter.TokensProvider(new ClassicBasic.Interpreter.IToken[] { });
+            //var tokenizer = new ClassicBasic.Interpreter.Tokeniser(tokensProvider);
+
+            //Executor = new ClassicBasic.Interpreter.Executor(keyboardComponent, runtimeEnv, programRep, tokensProvider, tokenizer);
+
+
+            //Interpreter = new ClassicBasic.Interpreter.Interpreter(keyboardComponent, tokenizer, runtimeEnv, programRep, Executor);
+            Global.Screen.Components.Add(new ConsoleBASICInterpreter());
+            Global.Screen.Cursor.IsVisible = true;
+            Global.Screen.Cursor.IsEnabled = true;
+            Global.Screen.IsFocused = true;
         }
     }
 }
