@@ -97,5 +97,21 @@ namespace SadConsole.Tests
 
             Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenSurface));
         }
+
+        [TestMethod]
+        public void AnimatedScreenSurface_SaveLoad()
+        {
+            new SadConsole.Tests.BasicGameHost();
+
+            AnimatedScreenSurface animation = AnimatedScreenSurface.CreateStatic(10, 10, 10, 0.5d);
+            animation.Save("test.file");
+            AnimatedScreenSurface animation2 = AnimatedScreenSurface.Load("test.file");
+
+            Assert.AreEqual(animation.Frames.Count, animation2.Frames.Count);
+            Assert.AreEqual(animation.Font?.Name, animation2.Font?.Name);
+            Assert.AreEqual(animation.Repeat, animation2.Repeat);
+            Assert.AreEqual(animation.AnimationDuration, animation2.AnimationDuration);
+            Assert.AreEqual(animation.CurrentFrameIndex, animation2.CurrentFrameIndex);
+        }
     }
 }
