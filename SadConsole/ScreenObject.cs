@@ -402,21 +402,21 @@ namespace SadConsole
         }
 
         [OnSerializing]
-        internal void OnSerializingMethod(StreamingContext context)
+        protected void OnSerializingMethod(StreamingContext context)
         {
             _childrenSerialized = Children.ToArray();
             _componentsSerialized = Components.ToArray();
         }
 
         [OnSerialized]
-        internal void OnSerializedMethod(StreamingContext context)
+        protected void OnSerializedMethod(StreamingContext context)
         {
             _childrenSerialized = null;
             _componentsSerialized = null;
         }
 
         [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context)
+        protected void OnDeserializedMethod(StreamingContext context)
         {
             foreach (var item in _childrenSerialized)
                 Children.Add(item);
@@ -424,7 +424,10 @@ namespace SadConsole
             foreach (var item in _componentsSerialized)
                 Components.Add(item);
 
+            _componentsSerialized = null;
             _childrenSerialized = null;
+
+            UpdateAbsolutePosition();
         }
     }
 }

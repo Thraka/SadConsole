@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 
@@ -10,12 +11,15 @@ namespace SadConsole
     /// Animates a list of frames.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Console (Animated)")]
-    //[JsonConverter(typeof(SerializedTypes.AnimatedConsoleConverterJson))]
+    [DataContract]
     public class AnimatedScreenSurface : ScreenSurface
     {
+        [DataMember(Name = "AnimationDuration")]
         private float _animatedTime;
         private AnimationState _state;
+        [DataMember(Name = "Width")]
         protected int _width;
+        [DataMember(Name = "Height")]
         protected int _height;
 
         /// <summary>
@@ -27,6 +31,7 @@ namespace SadConsole
         /// The frames of animation.
         /// </summary>
         /// <remarks>If this collection changes, <see cref="CurrentFrameIndexValue"/>, <see cref="UpdateFrameReferences"/>, and <see cref="TimePerFrame"/> should all be recalculated.</remarks>
+        [DataMember]
         protected internal List<CellSurface> FramesList = new List<CellSurface>();
 
         /// <summary>
@@ -37,6 +42,7 @@ namespace SadConsole
         /// <summary>
         /// The current frame index being animated.
         /// </summary>
+        [DataMember]
         protected int CurrentFrameIndexValue;
 
         /// <summary>
@@ -52,16 +58,19 @@ namespace SadConsole
         /// <summary>
         /// Center of the animation used in positioning.
         /// </summary>
+        [DataMember]
         public Point Center { get; set; }
 
         /// <summary>
         /// Indicates whether or not this animation will repeat once it has finished animating.
         /// </summary>
+        [DataMember]
         public bool Repeat { get; set; }
 
         /// <summary>
         /// When true, Indicates the animation is currently animating. The <see cref="Update"/> method will advance the frames.
         /// </summary>
+        [DataMember]
         public bool IsPlaying { get; protected set; }
 
         /// <summary>
@@ -112,6 +121,7 @@ namespace SadConsole
         /// <summary>
         /// Gets the name of this animation.
         /// </summary>
+        [DataMember]
         public string Name { get; set; }
 
         /// <summary>
@@ -144,8 +154,11 @@ namespace SadConsole
         /// <param name="name">The name of the animation.</param>
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
-        public AnimatedScreenSurface(string name, int width, int height) : this(name, width, height, Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize))
+        public AnimatedScreenSurface(string name, int width, int height) : base(width, height)
         {
+            Name = name;
+            _width = width;
+            _height = height;
         }
 
         /// <summary>
@@ -164,6 +177,10 @@ namespace SadConsole
             _width = width;
             _height = height;
         }
+
+        [JsonConstructor]
+        //protected AnimatedScreenSurface() { }
+        private AnimatedScreenSurface(BoundedRectangle areaBounds, ColoredGlyph[] cells) : base(areaBounds.Area.Width, areaBounds.Area.Height, areaBounds.BoundingBox.Width, areaBounds.BoundingBox.Height, cells) { }
         #endregion
 
 
@@ -297,6 +314,22 @@ namespace SadConsole
 
             foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
+        }
+
+        [OnSerializing]
+        protected new void OnSerializingMethod(StreamingContext context)
+        {
+        }
+
+        [OnSerialized]
+        protected new void OnSerializedMethod(StreamingContext context)
+        {
+        }
+
+        [OnDeserialized]
+        protected new void OnDeserializedMethod(StreamingContext context)
+        {
+            UpdateFrameReferences();
         }
 
         /// <summary>

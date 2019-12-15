@@ -234,24 +234,24 @@ namespace SadConsole
         /// </summary>
         /// <param name="oldFont">The font prior to the change.</param>
         /// <param name="oldFontSize">The font size prior to the change.</param>
-        protected virtual void OnFontChanged(Font oldFont, Point oldFontSize) { }
+        protected void OnFontChanged(Font oldFont, Point oldFontSize) { }
 
         [OnSerializing]
-        internal void OnSerializingMethod(StreamingContext context)
+        protected void OnSerializingMethod(StreamingContext context)
         {
             _childrenSerialized = Children.ToArray();
             _componentsSerialized = Components.ToArray();
         }
 
         [OnSerialized]
-        internal void OnSerializedMethod(StreamingContext context)
+        protected void OnSerializedMethod(StreamingContext context)
         {
             _childrenSerialized = null;
             _componentsSerialized = null;
         }
 
         [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context)
+        protected void OnDeserializedMethod(StreamingContext context)
         {
             foreach (var item in _childrenSerialized)
                 Children.Add(item);
@@ -259,6 +259,7 @@ namespace SadConsole
             foreach (var item in _componentsSerialized)
                 Components.Add(item);
 
+            _componentsSerialized = null;
             _childrenSerialized = null;
 
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
