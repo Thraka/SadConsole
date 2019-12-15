@@ -61,6 +61,12 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// The default glyph used in clearing and erasing.
+        /// </summary>
+        [DataMember]
+        public int DefaultGlyph { get; set; }
+
+        /// <summary>
         /// The view presented by the surface.
         /// </summary>
         public Rectangle View

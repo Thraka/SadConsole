@@ -603,6 +603,11 @@
             The default background for glyphs on this surface.
             </summary>
         </member>
+        <member name="P:SadConsole.CellSurface.DefaultGlyph">
+            <summary>
+            The default glyph used in clearing and erasing.
+            </summary>
+        </member>
         <member name="P:SadConsole.CellSurface.View">
             <summary>
             The view presented by the surface.
@@ -752,11 +757,6 @@
         <member name="P:SadConsole.CellSurface.Effects">
             <summary>
             Processes the effects added to cells with <see cref="o:SetEffect"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.CellSurface.EraseGlyph">
-            <summary>
-            The glyph used by the <see cref="M:SadConsole.CellSurface.Erase(System.Int32,System.Int32,System.Int32)"/> method. Defaults to 0.
             </summary>
         </member>
         <member name="M:SadConsole.CellSurface.SetPixels(SadRogue.Primitives.Color[])">
@@ -1187,7 +1187,7 @@
             <param name="count">The count of glyphs to erase.</param>
             <returns>The cells processed by this method.</returns>
             <remarks>
-            Cells altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            Cells altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="!:EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurface.Erase(System.Int32,System.Int32)">
@@ -1197,7 +1197,7 @@
             <param name="x">The x position.</param>
             <param name="y">The y position.</param>
             <remarks>
-            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="!:EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurface.Erase">
@@ -1205,7 +1205,7 @@
             Erases all cells which clears the glyph, mirror, and decorators.
             </summary>
             <remarks>
-            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.CellSurface.EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="!:EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurface.Clear">

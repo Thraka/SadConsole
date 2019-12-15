@@ -45,12 +45,6 @@ namespace SadConsole
         public EffectsManager Effects { get; protected set; }
 
         /// <summary>
-        /// The glyph used by the <see cref="Erase(int, int, int)"/> method. Defaults to 0.
-        /// </summary>
-        [DataMember]
-        public int EraseGlyph { get; set; } = 0;
-
-        /// <summary>
         /// Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
         /// </summary>
         /// <param name="pixels">The colors to place.</param>
@@ -1262,7 +1256,7 @@ namespace SadConsole
             {
                 ColoredGlyph c = Cells[index];
 
-                c.Glyph = EraseGlyph;
+                c.Glyph = DefaultGlyph;
                 c.Mirror = Mirror.None;
                 c.Decorators = Array.Empty<CellDecorator>();
 
@@ -1289,7 +1283,7 @@ namespace SadConsole
                 return;
             }
 
-            Cells[index].Glyph = EraseGlyph;
+            Cells[index].Glyph = DefaultGlyph;
             Cells[index].Mirror = Mirror.None;
             Cells[index].Decorators = Array.Empty<CellDecorator>();
 
@@ -1306,7 +1300,7 @@ namespace SadConsole
         {
             for (int i = 0; i < Cells.Length; i++)
             {
-                Cells[i].Glyph = EraseGlyph;
+                Cells[i].Glyph = DefaultGlyph;
                 Cells[i].Mirror = Mirror.None;
                 Cells[i].Decorators = Array.Empty<CellDecorator>();
             }
@@ -1320,7 +1314,7 @@ namespace SadConsole
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() =>
-            Fill(DefaultForeground, DefaultBackground, 0, Mirror.None);
+            Fill(DefaultForeground, DefaultBackground, DefaultGlyph, Mirror.None);
 
         /// <summary>
         /// Clears a cell. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
@@ -1338,6 +1332,7 @@ namespace SadConsole
             cell.Clear();
             cell.Foreground = DefaultForeground;
             cell.Background = DefaultBackground;
+            cell.Glyph = DefaultGlyph;
             IsDirty = true;
         }
 
@@ -1350,14 +1345,14 @@ namespace SadConsole
         /// <remarks>This works similarly to printing a string of whitespace</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear(int x, int y, int length) =>
-            Fill(x, y, length, DefaultForeground, DefaultBackground, 0, Mirror.None);
+            Fill(x, y, length, DefaultForeground, DefaultBackground, DefaultGlyph, Mirror.None);
 
         /// <summary>
         /// Clears an area of cells. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="area">The area to clear.</param>
         public void Clear(Rectangle area) =>
-            Fill(area, DefaultForeground, DefaultBackground, 0, Mirror.None);
+            Fill(area, DefaultForeground, DefaultBackground, DefaultGlyph, Mirror.None);
 
         /// <summary>
         /// Fills the console. Clears cell decorators.
