@@ -776,6 +776,9 @@ namespace SadConsole
                 }
             }
 
+            if (didSomething)
+                ResetCursorEffect();
+
             return didSomething;
         }
     }
