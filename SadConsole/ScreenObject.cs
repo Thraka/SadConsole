@@ -13,7 +13,6 @@ namespace SadConsole
     /// <summary>
     /// A generic object processed by SadConsole. Provides parent/child, components, and position.
     /// </summary>
-    //[Newtonsoft.Json.JsonConverter(typeof(SerializedTypes.ScreenObjectJsonConverter))]
     [DataContract]
     public class ScreenObject : IScreenObject
     {
@@ -23,8 +22,10 @@ namespace SadConsole
         [DataMember(Name = "Components")]
         private IComponent[] _componentsSerialized;
 
-        private IScreenObject _parentObject;
+        [DataMember(Name = "Position")]
         private Point _position;
+
+        private IScreenObject _parentObject;
         private bool _isVisible = true;
         private bool _isEnabled = true;
 
@@ -100,7 +101,6 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        [DataMember]
         public Point Position
         {
             get => _position;
