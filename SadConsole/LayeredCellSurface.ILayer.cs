@@ -13,7 +13,7 @@ namespace SadConsole
         {
             bool IsVisible { get; set; }
             string Name { get; set; }
-            CellSurface Surface { get; }
+            ICellSurface Surface { get; }
         }
 
         private class Layer : ILayer
@@ -22,7 +22,7 @@ namespace SadConsole
 
             public bool IsVisible { get; set; }
 
-            public CellSurface Surface { get; }
+            public ICellSurface Surface { get; }
 
             public Layer(string name, int width, int height, ColoredGlyph[] cells)
             {

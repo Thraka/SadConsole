@@ -13,14 +13,14 @@ namespace FeatureDemo.CustomConsoles
         {
             UseKeyboard = false;
 
-            DrawLine(new Point(2, 2), new Point(ViewWidth - 4, 2), Color.Yellow, glyph: '=');
-            DrawBox(new Rectangle(2, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='));
-            DrawBox(new Rectangle(9, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ConnectedLineThin);
-            DrawBox(new Rectangle(16, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ConnectedLineThick);
-            DrawBox(new Rectangle(23, 4, 6, 6), new ColoredGlyph(Color.Black, Color.Yellow, '='), new ColoredGlyph(Color.Black, Color.Yellow, 0), connectedLineStyle: ConnectedLineThick);
+            this.DrawLine(new Point(2, 2), new Point(ViewWidth - 4, 2), Color.Yellow, glyph: '=');
+            this.DrawBox(new Rectangle(2, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='));
+            this.DrawBox(new Rectangle(9, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThin);
+            this.DrawBox(new Rectangle(16, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThick);
+            this.DrawBox(new Rectangle(23, 4, 6, 6), new ColoredGlyph(Color.Black, Color.Yellow, '='), new ColoredGlyph(Color.Black, Color.Yellow, 0), connectedLineStyle: ICellSurface.ConnectedLineThick);
 
-            DrawCircle(new Rectangle(2, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176));
-            DrawCircle(new Rectangle(19, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176), new ColoredGlyph(Color.Green, Color.Black, 178));
+            this.DrawCircle(new Rectangle(2, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176));
+            this.DrawCircle(new Rectangle(19, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176), new ColoredGlyph(Color.Green, Color.Black, 178));
 
             IsDirty = true;
             IsVisible = false;

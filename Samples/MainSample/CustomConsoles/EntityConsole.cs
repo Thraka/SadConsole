@@ -84,7 +84,7 @@ namespace FeatureDemo.CustomConsoles
                 if (Buffer.Contains(player.Position))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
-                    SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
+                    this.SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
                     playerPreviousPosition = player.Position;
 
                     return true;

@@ -226,18 +226,18 @@ namespace FeatureDemo.CustomConsoles
 
         protected override void OnThemeDrawn()
         {
-            Print(1, 1, "BUTTONS", Library.Default.Colors.YellowDark);
-            Print(16, 1, "BARS", Library.Default.Colors.YellowDark);
-            Print(28, 1, "LISTBOX", Library.Default.Colors.YellowDark);
-            Print(28, 10, "RADIO BUTTON", Library.Default.Colors.YellowDark);
+            this.Print(1, 1, "BUTTONS", Library.Default.Colors.YellowDark);
+            this.Print(16, 1, "BARS", Library.Default.Colors.YellowDark);
+            this.Print(28, 1, "LISTBOX", Library.Default.Colors.YellowDark);
+            this.Print(28, 10, "RADIO BUTTON", Library.Default.Colors.YellowDark);
 
-            Print(51, 1, "SELECTION BUTTON (UP/DN KEYS)", Library.Default.Colors.YellowDark);
-            Print(51, 7, "TEXTBOX", Library.Default.Colors.YellowDark);
-            Print(65, 7, "(WITH MASK)", Library.Default.Colors.YellowDark);
+            this.Print(51, 1, "SELECTION BUTTON (UP/DN KEYS)", Library.Default.Colors.YellowDark);
+            this.Print(51, 7, "TEXTBOX", Library.Default.Colors.YellowDark);
+            this.Print(65, 7, "(WITH MASK)", Library.Default.Colors.YellowDark);
 
-            Print(51, 11, "CHECKBOX", Library.Default.Colors.YellowDark);
+            this.Print(51, 11, "CHECKBOX", Library.Default.Colors.YellowDark);
 
-            Print(2, 15, "RED ".CreateColored(Library.Default.Colors.Red, null) +
+            this.Print(2, 15, "RED ".CreateColored(Library.Default.Colors.Red, null) +
                                       "PURPLE ".CreateColored(Library.Default.Colors.Purple, null) +
                                       "BLUE ".CreateColored(Library.Default.Colors.Blue, null) +
                                       "CYAN ".CreateColored(Library.Default.Colors.Cyan, null) +
@@ -249,7 +249,7 @@ namespace FeatureDemo.CustomConsoles
                                       "WHITE ".CreateColored(Library.Default.Colors.White, null)
                                       );
 
-            Print(2, 16, "RED ".CreateColored(Library.Default.Colors.RedDark, null) +
+            this.Print(2, 16, "RED ".CreateColored(Library.Default.Colors.RedDark, null) +
                                       "PURPLE ".CreateColored(Library.Default.Colors.PurpleDark, null) +
                                       "BLUE ".CreateColored(Library.Default.Colors.BlueDark, null) +
                                       "CYAN ".CreateColored(Library.Default.Colors.CyanDark, null) +
@@ -260,16 +260,16 @@ namespace FeatureDemo.CustomConsoles
                                       "GRAY ".CreateColored(Library.Default.Colors.GrayDark, null) +
                                       "BLACK ".CreateColored(Library.Default.Colors.Black, null)
                                       );
-            Print(2, 18, CreateGradientExample("RED", Library.Default.Colors.Red, Library.Default.Colors.RedDark));
-            Print(2, 19, CreateGradientExample("PURPLE", Library.Default.Colors.Purple, Library.Default.Colors.PurpleDark));
-            Print(2, 20, CreateGradientExample("BLUE", Library.Default.Colors.Blue, Library.Default.Colors.BlueDark));
-            Print(2, 21, CreateGradientExample("CYAN", Library.Default.Colors.Cyan, Library.Default.Colors.CyanDark));
-            Print(2, 22, CreateGradientExample("GREEN", Library.Default.Colors.Green, Library.Default.Colors.GreenDark));
-            Print(34, 18, CreateGradientExample("YELLOW", Library.Default.Colors.Yellow, Library.Default.Colors.YellowDark));
-            Print(34, 19, CreateGradientExample("ORANGE", Library.Default.Colors.Orange, Library.Default.Colors.OrangeDark));
-            Print(34, 20, CreateGradientExample("BROWN", Library.Default.Colors.Brown, Library.Default.Colors.BrownDark));
-            Print(34, 21, CreateGradientExample("GRAY", Library.Default.Colors.Gray, Library.Default.Colors.GrayDark));
-            Print(34, 22, CreateGradientExample("WHITE", Library.Default.Colors.White, Library.Default.Colors.Black));
+            this.Print(2, 18, CreateGradientExample("RED", Library.Default.Colors.Red, Library.Default.Colors.RedDark));
+            this.Print(2, 19, CreateGradientExample("PURPLE", Library.Default.Colors.Purple, Library.Default.Colors.PurpleDark));
+            this.Print(2, 20, CreateGradientExample("BLUE", Library.Default.Colors.Blue, Library.Default.Colors.BlueDark));
+            this.Print(2, 21, CreateGradientExample("CYAN", Library.Default.Colors.Cyan, Library.Default.Colors.CyanDark));
+            this.Print(2, 22, CreateGradientExample("GREEN", Library.Default.Colors.Green, Library.Default.Colors.GreenDark));
+            this.Print(34, 18, CreateGradientExample("YELLOW", Library.Default.Colors.Yellow, Library.Default.Colors.YellowDark));
+            this.Print(34, 19, CreateGradientExample("ORANGE", Library.Default.Colors.Orange, Library.Default.Colors.OrangeDark));
+            this.Print(34, 20, CreateGradientExample("BROWN", Library.Default.Colors.Brown, Library.Default.Colors.BrownDark));
+            this.Print(34, 21, CreateGradientExample("GRAY", Library.Default.Colors.Gray, Library.Default.Colors.GrayDark));
+            this.Print(34, 22, CreateGradientExample("WHITE", Library.Default.Colors.White, Library.Default.Colors.Black));
 
             //Print(2, 23, CreateGradientExample("GOLD", Library.Default.Colors.Gold, Library.Default.Colors.GoldDark));
         }

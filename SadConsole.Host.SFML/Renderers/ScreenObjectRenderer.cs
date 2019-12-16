@@ -80,7 +80,7 @@ namespace SadConsole.Renderers
             BackingTexture.Display();
         }
 
-        protected virtual void RefreshCells(CellSurface cellSurface, Font font)
+        protected virtual void RefreshCells(ICellSurface cellSurface, Font font)
         {
             if (cellSurface.DefaultBackground.A != 0)
                 Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.GlyphRects[font.SolidGlyphIndex].ToIntRect(), cellSurface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);

@@ -6,7 +6,7 @@ using System.Text;
 namespace SadConsole.Ansi
 {
     /// <summary>
-    /// Writes a <see cref="Document"/> to a <see cref="CellSurface"/>.
+    /// Writes a <see cref="Document"/> to a <see cref="ICellSurface"/>.
     /// </summary>
     public class AnsiWriter
     {
@@ -19,7 +19,7 @@ namespace SadConsole.Ansi
         private int _charsPerSecond;
         private int _readerIndex;
         private readonly byte[] _bytes;
-        private readonly CellSurface _editor;
+        private readonly ICellSurface _editor;
         private readonly State _ansiState;
         private Point _storedCursorLocation;
 
@@ -34,7 +34,7 @@ namespace SadConsole.Ansi
         public ICellEffect BlinkEffect { get; set; }
 
         /// <summary>
-        /// The cursor used to write to the target <see cref="CellSurface"/>.
+        /// The cursor used to write to the target <see cref="ICellSurface"/>.
         /// </summary>
         public Cursor Cursor { get; }
 
@@ -60,7 +60,7 @@ namespace SadConsole.Ansi
         /// </summary>
         /// <param name="ansiDocument">The source document containing ANSI commands.</param>
         /// <param name="editor">The surface to parse the ANSI to.</param>
-        public AnsiWriter(Document ansiDocument, CellSurface editor)
+        public AnsiWriter(Document ansiDocument, ICellSurface editor)
         {
             AnsiDocument = ansiDocument;
             _editor = editor;

@@ -11,7 +11,7 @@ namespace SadConsole
     /// </summary>
     [DataContract]
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-    public partial class CellSurface : IEnumerable<ColoredGlyph>
+    public class CellSurface : IEnumerable<ColoredGlyph>, ICellSurface
     {
         private bool _isDirty = true;
         private Color _defaultBackground;
@@ -20,14 +20,34 @@ namespace SadConsole
         [DataMember(Name = "AreaBounds")]
         private BoundedRectangle _viewArea;
 
-        /// <summary>
-        /// An event that is raised when <see cref="IsDirty"/> changes.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler IsDirtyChanged;
 
-        /// <summary>
-        /// Indicates the surface has changed and needs to be rendered.
-        /// </summary>
+        /// <inheritdoc />
+        [DataMember]
+        public int TimesShiftedDown { get; set; }
+
+        /// <inheritdoc />
+        [DataMember]
+        public int TimesShiftedRight { get; set; }
+
+        /// <inheritdoc />
+        [DataMember]
+        public int TimesShiftedLeft { get; set; }
+
+        /// <inheritdoc />
+        [DataMember]
+        public int TimesShiftedUp { get; set; }
+
+        /// <inheritdoc />
+        [DataMember]
+        public bool UsePrintProcessor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public Effects.EffectsManager Effects { get; protected set; }
+
+        /// <inheritdoc />
         public bool IsDirty
         {
             get => _isDirty;
@@ -40,9 +60,7 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// The default foreground for glyphs on this surface.
-        /// </summary>
+        /// <inheritdoc />
         [DataMember]
         public Color DefaultForeground
         {
@@ -50,9 +68,7 @@ namespace SadConsole
             set { _defaultForeground = value; IsDirty = true; }
         }
 
-        /// <summary>
-        /// The default background for glyphs on this surface.
-        /// </summary>
+        /// <inheritdoc />
         [DataMember]
         public Color DefaultBackground
         {
@@ -60,15 +76,11 @@ namespace SadConsole
             set { _defaultBackground = value; IsDirty = true; }
         }
 
-        /// <summary>
-        /// The default glyph used in clearing and erasing.
-        /// </summary>
+        /// <inheritdoc />
         [DataMember]
         public int DefaultGlyph { get; set; }
 
-        /// <summary>
-        /// The view presented by the surface.
-        /// </summary>
+        /// <inheritdoc />
         public Rectangle View
         {
             get => _viewArea.Area;
@@ -79,47 +91,33 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// Gets or sets the visible width of the surface in cells.
-        /// </summary>
+        /// <inheritdoc />
         public int ViewWidth
         {
             get => _viewArea.Area.Width;
             set => _viewArea.SetArea(_viewArea.Area.WithWidth(value));
         }
 
-        /// <summary>
-        /// Gets or sets the visible height of the surface in cells.
-        /// </summary>
+        /// <inheritdoc />
         public int ViewHeight
         {
             get => _viewArea.Area.Height;
             set => _viewArea.SetArea(_viewArea.Area.WithHeight(value));
         }
 
-        /// <summary>
-        /// Returns a rectangle that represents the size of the buffer.
-        /// </summary>
+        /// <inheritdoc />
         public Rectangle Buffer => _viewArea.BoundingBox;
 
-        /// <summary>
-        /// Width of the surface buffer.
-        /// </summary>
+        /// <inheritdoc />
         public int BufferWidth => _viewArea.BoundingBox.Width;
 
-        /// <summary>
-        /// Height of the surface buffer.
-        /// </summary>
+        /// <inheritdoc />
         public int BufferHeight => _viewArea.BoundingBox.Height;
 
-        /// <summary>
-        /// Returns <see langword="true"/> when the <see cref="CellSurface.View"/> width or height is different from <see cref="BufferHeight"/> or <see cref="BufferWidth"/>.
-        /// </summary>
+        /// <inheritdoc />
         public bool IsScrollable => BufferHeight != _viewArea.Area.Height || BufferWidth != _viewArea.Area.Width;
 
-        /// <summary>
-        /// The position of the buffer.
-        /// </summary>
+        /// <inheritdoc />
         public Point ViewPosition
         {
             get => _viewArea.Area.Position;
@@ -130,29 +128,18 @@ namespace SadConsole
             }
         }
 
-        /// <summary>
-        /// All cells of the surface.
-        /// </summary>
+        /// <inheritdoc />
         [DataMember]
         public ColoredGlyph[] Cells { get; protected set; }
 
-        /// <summary>
-        /// Gets a cell based on its coordinates on the surface.
-        /// </summary>
-        /// <param name="x">The X coordinate.</param>
-        /// <param name="y">The Y coordinate.</param>
-        /// <returns>The indicated cell.</returns>
+        /// <inheritdoc />
         public ColoredGlyph this[int x, int y]
         {
             get => Cells[Point.ToIndex(x, y, BufferWidth)];
             protected set { Cells[Point.ToIndex(x, y, BufferWidth)] = value; IsDirty = true; }
         }
 
-        /// <summary>
-        /// Gets a cell by index.
-        /// </summary>
-        /// <param name="index">The index of the cell.</param>
-        /// <returns>The indicated cell.</returns>
+        /// <inheritdoc />
         public ColoredGlyph this[int index]
         {
             get => Cells[index];
@@ -175,7 +162,7 @@ namespace SadConsole
         /// <param name="width">The width of the surface in cells.</param>
         /// <param name="height">The height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public CellSurface(int width, int height, ColoredGlyph[] initialCells): this(width, height, width, height, initialCells)
+        public CellSurface(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells)
         {
 
         }
@@ -243,6 +230,134 @@ namespace SadConsole
         {
             Effects = new Effects.EffectsManager(this);
         }
+
+
+        /// <summary>
+        /// Resizes the surface to the specified width and height.
+        /// </summary>
+        /// <param name="width">The viewable width of the surface.</param>
+        /// <param name="height">The viewable height of the surface.</param>
+        /// <param name="bufferWidth">The maximum width of the surface.</param>
+        /// <param name="bufferHeight">The maximum height of the surface.</param>
+        /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        public void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear)
+        {
+            var newCells = new ColoredGlyph[bufferWidth * bufferHeight];
+
+            for (int y = 0; y < bufferHeight; y++)
+            {
+                for (int x = 0; x < bufferWidth; x++)
+                {
+                    int index = new Point(x, y).ToIndex(bufferWidth);
+
+                    if (this.IsValidCell(x, y))
+                    {
+                        newCells[index] = this[x, y];
+
+                        if (clear)
+                        {
+                            newCells[index].Foreground = DefaultForeground;
+                            newCells[index].Background = DefaultBackground;
+                            newCells[index].Glyph = 0;
+                            newCells[index].Mirror = Mirror.None;
+                        }
+                    }
+                    else
+                    {
+                        newCells[index] = new ColoredGlyph(DefaultForeground, DefaultBackground, 0);
+                    }
+                }
+            }
+
+            Cells = newCells;
+            _viewArea = new BoundedRectangle((0, 0, width, height),
+                                             (0, 0, bufferWidth, bufferHeight));
+            Effects = new Effects.EffectsManager(this);
+            IsDirty = true;
+            OnCellsReset();
+        }
+
+        /// <summary>
+        /// Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+        /// </summary>
+        /// <param name="view">An area of the surface to create a view of.</param>
+        /// <returns>A new surface</returns>
+        public CellSurface GetSubSurface(Rectangle view)
+        {
+            if (!new Rectangle(0, 0, BufferWidth, BufferHeight).Contains(view))
+            {
+                throw new Exception("View is outside of surface bounds.");
+            }
+
+            var cells = new ColoredGlyph[view.Width * view.Height];
+
+            int index = 0;
+
+            for (int y = 0; y < view.Height; y++)
+            {
+                for (int x = 0; x < view.Width; x++)
+                {
+                    cells[index] = this[x + view.X, y + view.Y];
+                    index++;
+                }
+            }
+
+            return new CellSurface(view.Width, view.Height, cells);
+        }
+
+        /// <summary>
+        /// Remaps the cells of this surface to a view of the <paramref name="surface"/>.
+        /// </summary>
+        /// <typeparam name="T">The surface type.</typeparam>
+        /// <param name="surface">The target surface to map cells from.</param>
+        /// <param name="view">A view rectangle of the target surface.</param>
+        public void SetSurface<T>(in T surface, Rectangle view = default) where T : CellSurface
+        {
+            Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight) : view;
+
+            if (!new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight).Contains(rect))
+            {
+                throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
+            }
+
+            _viewArea = new BoundedRectangle(rect, rect);
+            Cells = new ColoredGlyph[rect.Width * rect.Height];
+
+            int index = 0;
+
+            for (int y = 0; y < rect.Height; y++)
+            {
+                for (int x = 0; x < rect.Width; x++)
+                {
+                    Cells[index] = surface.Cells[(y + rect.Y) * surface.BufferWidth + (x + rect.X)];
+                    index++;
+                }
+            }
+
+            IsDirty = true;
+            OnCellsReset();
+        }
+
+        /// <summary>
+        /// Changes the cells of the surface to the provided array.
+        /// </summary>
+        /// <param name="cells">The cells to replace in this surface.</param>
+        /// <param name="width">The viewable width of the surface.</param>
+        /// <param name="height">The viewable height of the surface.</param>
+        /// <param name="bufferWidth">The maximum width of the surface.</param>
+        /// <param name="bufferHeight">The maximum height of the surface.</param>
+        public void SetSurface(in ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight)
+        {
+            if (cells.Length != bufferWidth * bufferHeight) throw new Exception("buffer width * buffer height must match the amount of cells.");
+
+            _viewArea = new BoundedRectangle((0, 0, width, height),
+                                             (0, 0, bufferWidth, bufferHeight));
+            Cells = cells;
+
+            IsDirty = true;
+            OnCellsReset();
+        }
+
 
 
         /// <summary>

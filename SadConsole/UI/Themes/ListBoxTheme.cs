@@ -180,7 +180,7 @@ namespace SadConsole.UI.Themes
             BorderTheme.RefreshTheme(colors, control);
             BorderTheme.SetForeground(Normal.Foreground);
             BorderTheme.SetBackground(Normal.Background);
-            BorderLineStyle = (int[])CellSurface.ConnectedLineThick.Clone();
+            BorderLineStyle = (int[])ICellSurface.ConnectedLineThick.Clone();
         }
 
         /// <inheritdoc />
@@ -235,7 +235,7 @@ namespace SadConsole.UI.Themes
             MouseOver = themeColors.Appearance_ControlOver.Clone();
         }
 
-        public virtual void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
+        public virtual void Draw(ICellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             string value = item.ToString();
             if (value.Length < area.Width)
@@ -272,7 +272,7 @@ namespace SadConsole.UI.Themes
     {
         public ListBoxItemColorTheme() { }
 
-        public override void Draw(CellSurface surface, Rectangle area, object item, ControlStates itemState)
+        public override void Draw(ICellSurface surface, Rectangle area, object item, ControlStates itemState)
         {
             if (item is Color || item is Tuple<Color, Color, string>)
             {

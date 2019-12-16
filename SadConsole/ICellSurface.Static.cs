@@ -2,7 +2,7 @@
 
 namespace SadConsole
 {
-    public partial class CellSurface
+    public partial interface ICellSurface
     {
         /// <summary>
         /// Glyph indexes for a thin line.

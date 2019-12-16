@@ -17,7 +17,7 @@ namespace FeatureDemo.CustomConsoles
             UseMouse = true;
             IsVisible = false;
             Position = new Point(3, 2);
-            Fill(Color.Red, null, glyph: 176);
+            this.Fill(Color.Red, null, glyph: 176);
 
             for (int x = 0; x < width; x++)
             {
@@ -29,15 +29,15 @@ namespace FeatureDemo.CustomConsoles
 
                     if (isHexColumn && isHexRow)
                     {
-                        SetForeground(x, y, Color.Blue);
+                        this.SetForeground(x, y, Color.Blue);
                     }
                     else if (isHexRow)
                     {
-                        SetForeground(x, y, Color.AliceBlue);
+                        this.SetForeground(x, y, Color.AliceBlue);
                     }
                     else if (isHexColumn)
                     {
-                        SetForeground(x, y, Color.DarkRed);
+                        this.SetForeground(x, y, Color.DarkRed);
                     }
                 }
             }

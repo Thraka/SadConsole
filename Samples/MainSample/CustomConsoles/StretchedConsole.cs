@@ -17,9 +17,9 @@ namespace FeatureDemo.CustomConsoles
             FontSize = Font.GetFontSize(Font.Sizes.Two);
 
             ColoredString colorString = "Text using a colored string gradient".CreateGradient(Color.DarkGreen, Color.LightGreen);
-            Print(2, 1, colorString);
+            this.Print(2, 1, colorString);
 
-            Print(2, 3, "Same font as others, just doubled");
+            this.Print(2, 3, "Same font as others, just doubled");
 
             Cursor.UseStringParser = true;
             Cursor.Position = new Point(0, 5);

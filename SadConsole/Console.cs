@@ -27,13 +27,13 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// The entire width of the console. Forwards <see cref="CellSurface.BufferWidth"/>.
+        /// The entire width of the console. Forwards <see cref="ICellSurface.BufferWidth"/>.
         /// </summary>
         public int Width =>
             base.BufferWidth;
 
         /// <summary>
-        /// The entire height of the console. Forwards <see cref="CellSurface.BufferHeight"/>.
+        /// The entire height of the console. Forwards <see cref="ICellSurface.BufferHeight"/>.
         /// </summary>
         public int Height =>
             base.BufferHeight;
@@ -76,7 +76,7 @@ namespace SadConsole
         /// Creates a new console using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public Console(CellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
+        public Console(ICellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
 
         /// <summary>
         /// Creates a console with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.

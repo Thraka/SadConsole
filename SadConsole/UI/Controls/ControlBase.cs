@@ -55,7 +55,7 @@ namespace SadConsole.UI.Controls
         /// The cell data to render the control. Controlled by a theme.
         /// </summary>
         [DataMember]
-        public CellSurface Surface { get; set; }
+        public ICellSurface Surface { get; set; }
 
         /// <summary>
         /// The region the of the control used for mouse input.

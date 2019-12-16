@@ -5,7 +5,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Components
 {
     /// <summary>
-    /// Add to a <see cref="IScreenSurface"/> to have the <see cref="CellSurface.ViewPosition"/> center on a specific object.
+    /// Add to a <see cref="IScreenSurface"/> to have the <see cref="ICellSurface.ViewPosition"/> center on a specific object.
     /// </summary>
     public class SurfaceComponentFollowTarget : UpdateComponent
     {

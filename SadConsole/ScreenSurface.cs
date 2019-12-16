@@ -11,7 +11,7 @@ using SadRogue.Primitives;
 namespace SadConsole
 {
     /// <summary>
-    /// An object that renders a <see cref="CellSurface"/>.
+    /// An object that renders a <see cref="ICellSurface"/>.
     /// </summary>
     [DataContract]
     public partial class ScreenSurface : CellSurface, IDisposable, IScreenSurface
@@ -38,7 +38,7 @@ namespace SadConsole
         }
 
 
-        CellSurface IScreenSurface.Surface => this;
+        ICellSurface IScreenSurface.Surface => this;
 
         /// <inheritdoc/>
         [DataMember]
@@ -140,7 +140,7 @@ namespace SadConsole
         /// Creates a new screen object using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public ScreenSurface(CellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells)
+        public ScreenSurface(ICellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells)
         {
 
         }

@@ -27,7 +27,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets or sets the characters represneting this string. When set, first processes the string through <see cref="Parse(string, int, CellSurface, ParseCommandStacks)"/>.
+        /// Gets or sets the characters represneting this string. When set, first processes the string through <see cref="Parse(string, int, ICellSurface, ParseCommandStacks)"/>.
         /// </summary>
         public string String
         {
@@ -105,7 +105,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="Parse(string, int, CellSurface, ParseCommandStacks)"/> first to process the string.
+        /// Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="Parse(string, int, ICellSurface, ParseCommandStacks)"/> first to process the string.
         /// </summary>
         /// <param name="value">The backing string.</param>
         public ColoredString(string value) => String = value;

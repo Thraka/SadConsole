@@ -32,7 +32,7 @@ namespace SadConsole
         /// </summary>
         /// <remarks>If this collection changes, <see cref="CurrentFrameIndexValue"/>, <see cref="UpdateFrameReferences"/>, and <see cref="TimePerFrame"/> should all be recalculated.</remarks>
         [DataMember]
-        protected internal List<CellSurface> FramesList = new List<CellSurface>();
+        protected internal List<ICellSurface> FramesList = new List<ICellSurface>();
 
         /// <summary>
         /// Time counter for the animation
@@ -53,7 +53,7 @@ namespace SadConsole
         /// <summary>
         /// All frames of the animation
         /// </summary>
-        public ReadOnlyCollection<CellSurface> Frames => FramesList.AsReadOnly();
+        public ReadOnlyCollection<ICellSurface> Frames => FramesList.AsReadOnly();
 
         /// <summary>
         /// Center of the animation used in positioning.
@@ -127,7 +127,7 @@ namespace SadConsole
         /// <summary>
         /// Gets the currently frame being animated.
         /// </summary>
-        public CellSurface CurrentFrame => FramesList[CurrentFrameIndexValue];
+        public ICellSurface CurrentFrame => FramesList[CurrentFrameIndexValue];
 
         /// <summary>
         /// Gets the current animation state.
@@ -185,11 +185,11 @@ namespace SadConsole
 
 
         /// <summary>
-        /// Updates the base <see cref="CellSurface.Cells"/> references to the current frame.
+        /// Updates the base <see cref="ICellSurface.Cells"/> references to the current frame.
         /// </summary>
         protected void UpdateFrameReferences()
         {
-            CellSurface frame = FramesList[CurrentFrameIndexValue];
+            ICellSurface frame = FramesList[CurrentFrameIndexValue];
             SetSurface(frame.Cells, _width, _height, _width, _height);
             DefaultBackground = frame.DefaultBackground;
             DefaultForeground = frame.DefaultForeground;
@@ -200,11 +200,11 @@ namespace SadConsole
         /// Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
         /// </summary>
         /// <returns>The created frame.</returns>
-        public CellSurface CreateFrame()
+        public ICellSurface CreateFrame()
         {
             if (FramesList == null)
             {
-                FramesList = new List<CellSurface>();
+                FramesList = new List<ICellSurface>();
             }
 
             var frame = new CellSurface(Width, Height) { DefaultBackground = DefaultBackground, DefaultForeground = DefaultForeground };
@@ -346,7 +346,7 @@ namespace SadConsole
             animation.DefaultBackground = Color.Black;
             for (int f = 0; f < frames; f++)
             {
-                CellSurface frame = animation.CreateFrame();
+                ICellSurface frame = animation.CreateFrame();
 
                 for (int x = 0; x < width; x++)
                 {

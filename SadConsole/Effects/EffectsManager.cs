@@ -15,7 +15,7 @@ namespace SadConsole.Effects
         protected Dictionary<ICellEffect, ColoredGlyphEffectData> _effects;
         protected Dictionary<int, ColoredGlyphEffectData> _effectCells;
 
-        protected CellSurface _backingSurface;
+        protected ICellSurface _backingSurface;
 
         /// <summary>
         /// Gets the number of effects.
@@ -26,7 +26,7 @@ namespace SadConsole.Effects
         /// Creates a new effects manager associated with a text surface.
         /// </summary>
         /// <param name="surface">Text surface to manage.</param>
-        public EffectsManager(CellSurface surface)
+        public EffectsManager(ICellSurface surface)
         {
             _effects = new Dictionary<ICellEffect, ColoredGlyphEffectData>(20);
             _effectCells = new Dictionary<int, ColoredGlyphEffectData>(50);

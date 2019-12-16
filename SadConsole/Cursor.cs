@@ -11,7 +11,7 @@ namespace SadConsole
     /// </summary>
     public class Cursor
     {
-        private CellSurface _editor;
+        private ICellSurface _editor;
         private Point _position = new Point();
         private EffectsManager.ColoredGlyphState _cursorRenderCellState;
         private ColoredGlyph _cursorRenderCell;
@@ -130,7 +130,7 @@ namespace SadConsole
         /// Creates a new instance of the cursor class that will work with the specified console.
         /// </summary>
         /// <param name="console">The console this cursor will print on.</param>
-        public Cursor(CellSurface console)
+        public Cursor(ICellSurface console)
         {
             _editor = console;
 
@@ -159,7 +159,7 @@ namespace SadConsole
         /// Sets the console this cursor is targetting.
         /// </summary>
         /// <param name="console">The console the cursor works with.</param>
-        public void AttachSurface(CellSurface console)
+        public void AttachSurface(ICellSurface console)
         {
             _editor = console;
             Position = Position;
@@ -604,14 +604,14 @@ namespace SadConsole
         /// <returns>This cursor object.</returns>
         public Cursor LeftWrap(int amount)
         {
-            int index = _editor.GetIndexFromPoint(_position) - amount;
+            int index = Point.ToIndex(_position.X, _position.Y, _editor.BufferWidth) - amount;
 
             if (index < 0)
             {
                 index = 0;
             }
 
-            _position = _editor.GetPointFromIndex(index);
+            _position = Point.FromIndex(index, _editor.BufferWidth);
 
             return this;
         }
@@ -641,14 +641,14 @@ namespace SadConsole
         /// <returns>This cursor object.</returns>
         public Cursor RightWrap(int amount)
         {
-            int index = _editor.GetIndexFromPoint(_position) + amount;
+            int index = Point.ToIndex(_position.X, _position.Y, _editor.BufferWidth) + amount;
 
             if (index > _editor.Cells.Length)
             {
                 index = _editor.Cells.Length - 1;
             }
 
-            _position = _editor.GetPointFromIndex(index);
+            _position = Point.FromIndex(index, _editor.BufferWidth);
 
             return this;
         }

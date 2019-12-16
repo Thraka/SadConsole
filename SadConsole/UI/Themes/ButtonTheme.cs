@@ -312,41 +312,44 @@ namespace SadConsole.UI.Themes
                 if (button.Height == 1)
                 {
                     button.Surface.SetDecorator(0, button.Surface.BufferWidth,
-                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor),
-                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
+                                                        new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor),
+                                                        new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
                     button.Surface.AddDecorator(0, 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
                     button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
                 }
                 else if (button.Height == 2)
                 {
                     button.Surface.SetDecorator(0, button.Surface.BufferWidth,
-                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor));
+                                                        new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor));
 
-                    button.Surface.SetDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.BufferHeight - 1), button.Surface.BufferWidth,
-                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
+                    
+
+
+                    button.Surface.SetDecorator(Point.ToIndex(0,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), button.Surface.BufferWidth,
+                                                        new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
 
                     button.Surface.AddDecorator(0, 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
-                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, 1), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(0,  1, button.Surface.BufferWidth), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
                     button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
-                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.BufferWidth - 1, 1), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  1, button.Surface.BufferWidth), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
                 }
                 else
                 {
                     button.Surface.SetDecorator(0, button.Surface.BufferWidth,
-                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor));
+                                                        new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor));
 
-                    button.Surface.SetDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.BufferHeight - 1), button.Surface.BufferWidth,
-                                                        new GlyphDefinition(CellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
+                    button.Surface.SetDecorator(Point.ToIndex(0,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), button.Surface.BufferWidth,
+                                                        new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
 
                     button.Surface.AddDecorator(0, 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
-                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, button.Surface.BufferHeight - 1), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(0,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
                     button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
-                    button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.BufferWidth - 1, button.Surface.BufferHeight - 1), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
 
                     for (int y = 0; y < button.Surface.BufferHeight - 2; y++)
                     {
-                        button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(0, y + 1), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
-                        button.Surface.AddDecorator(button.Surface.GetIndexFromPoint(button.Surface.BufferWidth - 1, y + 1), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                        button.Surface.AddDecorator(Point.ToIndex(0,  y + 1, button.Surface.BufferWidth), 1, button.Parent.Font.GetDecorator("box-edge-left", topleftcolor));
+                        button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  y + 1, button.Surface.BufferWidth), 1, button.Parent.Font.GetDecorator("box-edge-right", bottomrightcolor));
                     }
                 }
             }
@@ -360,7 +363,7 @@ namespace SadConsole.UI.Themes
                 button.Surface.DrawBox(new Rectangle(0, 0, button.Width, button.Surface.BufferHeight),
                                        new ColoredGlyph(topleftcolor, appearance.Background, 0),
                                        null,
-                                       connectedLineStyle: button.Parent.Font.IsSadExtended ? CellSurface.ConnectedLineThinExtended : CellSurface.ConnectedLineThin);
+                                       connectedLineStyle: button.Parent.Font.IsSadExtended ? ICellSurface.ConnectedLineThinExtended : ICellSurface.ConnectedLineThin);
 
                 //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
 

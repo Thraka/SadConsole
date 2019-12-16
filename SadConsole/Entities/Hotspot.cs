@@ -12,8 +12,8 @@ namespace SadConsole.Entities
     [System.Diagnostics.DebuggerDisplay("Hotspot")]
     public class Hotspot : ScreenObject
     {
-        private readonly CellSurface _debugSurface;
-        private readonly CellSurface _parentSurface;
+        private readonly ICellSurface _debugSurface;
+        private readonly ICellSurface _parentSurface;
         private ColoredGlyph _debugAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
 
         /// <summary>

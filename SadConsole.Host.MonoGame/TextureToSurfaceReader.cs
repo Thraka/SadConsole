@@ -100,7 +100,7 @@ namespace SadConsole.Readers
                 float sbri = newColor.GetBrightness() * 255;
 
 
-                SadRogue.Primitives.Point surfacePoint = surface.GetPointFromIndex(i);
+                SadRogue.Primitives.Point surfacePoint = SadRogue.Primitives.Point.FromIndex(i, surface.BufferWidth);
                 if (UseBlockMode)
                 {
                     if (sbri > 204)

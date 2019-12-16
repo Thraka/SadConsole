@@ -5,10 +5,10 @@ namespace SadConsole.DrawCalls
 {
     class DrawCallSurface : SadConsole.DrawCalls.IDrawCall
     {
-        private CellSurface _surface;
+        private ICellSurface _surface;
         private Point _position;
 
-        public DrawCallSurface(CellSurface surface, Point position)
+        public DrawCallSurface(ICellSurface surface, Point position)
         {
             _surface = surface;
             _position = position;

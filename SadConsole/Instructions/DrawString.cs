@@ -35,7 +35,7 @@ namespace SadConsole.Instructions
         /// </summary>
         public Cursor Cursor { get; set; }
 
-        private CellSurface _target;
+        private ICellSurface _target;
         private double _timeElapsed = 0d;
         private double _timePerCharacter = 0d;
         private string _textCopy;
@@ -48,7 +48,7 @@ namespace SadConsole.Instructions
         /// </summary>
         /// <param name="target">The target surface to use.</param>
         /// <param name="text">The text to print.</param>
-        public DrawString(CellSurface target, ColoredString text)
+        public DrawString(ICellSurface target, ColoredString text)
         {
             _target = target;
             Cursor = new Cursor();

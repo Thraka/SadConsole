@@ -93,7 +93,7 @@ namespace SadConsole.Renderers
             MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
         }
 
-        protected virtual void RefreshCells(CellSurface cellSurface, Font font)
+        protected virtual void RefreshCells(ICellSurface cellSurface, Font font)
         {
             var fontImage = ((SadConsole.MonoGame.GameTexture)font.Image).Texture;
 
