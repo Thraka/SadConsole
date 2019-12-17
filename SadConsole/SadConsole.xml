@@ -1357,6 +1357,13 @@
             </summary>
             <param name="surface">The surface being edited.</param>
         </member>
+        <member name="M:SadConsole.CellSurfaceExtensions.ConnectLines(SadConsole.ICellSurface,System.Int32[])">
+            <summary>
+            Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>.</param>
+        </member>
         <member name="M:SadConsole.CellSurfaceExtensions.Copy(SadConsole.ICellSurface,SadConsole.ICellSurface)">
             <summary>
             Copies the contents of the cell surface to the destination.
@@ -2961,6 +2968,23 @@
             <param name="sourceFontSize">The source font translating from.</param>
             <param name="targetFontSize">The target font translating to.</param>
             <returns>The position of the cell in the <paramref name="targetFontSize"/>.</returns>
+        </member>
+        <member name="M:SadConsole.PointExtensions.GetValidDirections(SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Gets a list of indexed boolean values to indicate if the direction from the <paramref name="position"/> falls in the <paramref name="area"/>.
+            </summary>
+            <param name="position">The position to test from.</param>
+            <param name="area">The area to test.</param>
+            <returns>An array of bool values indicating if the direction is valid or not; indexed by a <see cref="T:SadRogue.Primitives.Direction.Types"/> enumeration. Index 0 in the array represents the <paramref name="position"/>.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SadConsole.PointExtensions.GetDirectionPoints(SadRogue.Primitives.Point)" -->
+        <member name="M:SadConsole.PointExtensions.GetDirectionIndexes(SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Gets an array of indexes of a surface based on a position and then a relative <see cref="F:SadRogue.Primitives.Direction.Type"/> direction enumeration..
+            </summary>
+            <param name="position">The position center.</param>
+            <param name="area">The area containing the position.</param>
+            <returns>Returns the an array of values indidcating the index in the area surface of each direction where -1 represents a position outside the bounds of the area. Indexed by a <see cref="T:SadRogue.Primitives.Direction.Types"/> enumeration.</returns>
         </member>
         <member name="M:SadConsole.RectangleExtensions.ToPixels(SadRogue.Primitives.Rectangle,SadRogue.Primitives.Point)">
             <summary>

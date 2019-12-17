@@ -1726,11 +1726,9 @@ namespace SadConsole
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ConnectLines(this ICellSurface surface)
         {
-            //ConnectLines(ConnectedLineThin);
-            //ConnectLines(ConnectedLineThick);
+            ConnectLines(surface, ICellSurface.ConnectedLineThin);
+            ConnectLines(surface, ICellSurface.ConnectedLineThick);
         }
-
-        /*
 
         /// <summary>
         /// Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
@@ -1740,26 +1738,24 @@ namespace SadConsole
         public static void ConnectLines(this ICellSurface surface, int[] lineStyle)
         {
             var area = new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight);
-
+            
             for (int x = 0; x < surface.BufferWidth; x++)
             {
                 for (int y = 0; y < surface.BufferHeight; y++)
                 {
                     var pos = new Point(x, y);
-                    int index = GetIndexFromPoint(pos);
+                    int index = pos.ToIndex(surface.BufferWidth);
 
                     // Check if this pos is a road
                     if (!lineStyle.Contains(surface.Cells[index].Glyph))
-                    {
                         continue;
-                    }
 
                     // Get all valid positions and indexes around this point
                     bool[] valids = pos.GetValidDirections(area);
                     int[] posIndexes = pos.GetDirectionIndexes(area);
                     bool[] roads = new[] { false, false, false, false, false, false, false, false, false };
 
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 1; i < 9; i++)
                     {
                         if (!valids[i])
                         {
@@ -1772,99 +1768,99 @@ namespace SadConsole
                         }
                     }
 
-                    if (roads[(int)Directions.DirectionEnum.North] &&
-                    roads[(int)Directions.DirectionEnum.South] &&
-                    roads[(int)Directions.DirectionEnum.East] &&
-                    roads[(int)Directions.DirectionEnum.West])
+                    if (roads[(int)Direction.Types.Up] &&
+                    roads[(int)Direction.Types.Down] &&
+                    roads[(int)Direction.Types.Right] &&
+                    roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.Middle];
                         surface.IsDirty = true;
                     }
-                    else if (!roads[(int)Directions.DirectionEnum.North] &&
-                    roads[(int)Directions.DirectionEnum.South] &&
-                    roads[(int)Directions.DirectionEnum.East] &&
-                    roads[(int)Directions.DirectionEnum.West])
+                    else if (!roads[(int)Direction.Types.Up] &&
+                    roads[(int)Direction.Types.Down] &&
+                    roads[(int)Direction.Types.Right] &&
+                    roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.TopMiddleToDown];
                         surface.IsDirty = true;
                     }
-                    else if (roads[(int)Directions.DirectionEnum.North] &&
-                    !roads[(int)Directions.DirectionEnum.South] &&
-                    roads[(int)Directions.DirectionEnum.East] &&
-                    roads[(int)Directions.DirectionEnum.West])
+                    else if (roads[(int)Direction.Types.Up] &&
+                    !roads[(int)Direction.Types.Down] &&
+                    roads[(int)Direction.Types.Right] &&
+                    roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.BottomMiddleToTop];
                         surface.IsDirty = true;
                     }
-                    else if (roads[(int)Directions.DirectionEnum.North] &&
-                    roads[(int)Directions.DirectionEnum.South] &&
-                    !roads[(int)Directions.DirectionEnum.East] &&
-                    roads[(int)Directions.DirectionEnum.West])
+                    else if (roads[(int)Direction.Types.Up] &&
+                    roads[(int)Direction.Types.Down] &&
+                    !roads[(int)Direction.Types.Right] &&
+                    roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.RightMiddleToLeft];
                         surface.IsDirty = true;
                     }
-                    else if (roads[(int)Directions.DirectionEnum.North] &&
-                    roads[(int)Directions.DirectionEnum.South] &&
-                    roads[(int)Directions.DirectionEnum.East] &&
-                    !roads[(int)Directions.DirectionEnum.West])
+                    else if (roads[(int)Direction.Types.Up] &&
+                    roads[(int)Direction.Types.Down] &&
+                    roads[(int)Direction.Types.Right] &&
+                    !roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.LeftMiddleToRight];
                         surface.IsDirty = true;
                     }
-                    else if (!roads[(int)Directions.DirectionEnum.North] &&
-                    !roads[(int)Directions.DirectionEnum.South] &&
-                    (roads[(int)Directions.DirectionEnum.East] ||
-                    roads[(int)Directions.DirectionEnum.West]))
+                    else if (!roads[(int)Direction.Types.Up] &&
+                    !roads[(int)Direction.Types.Down] &&
+                    (roads[(int)Direction.Types.Right] ||
+                    roads[(int)Direction.Types.Left]))
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.Top];
                         surface.IsDirty = true;
                     }
-                    else if ((roads[(int)Directions.DirectionEnum.North] ||
-                    roads[(int)Directions.DirectionEnum.South]) &&
-                    !roads[(int)Directions.DirectionEnum.East] &&
-                    !roads[(int)Directions.DirectionEnum.West])
+                    else if ((roads[(int)Direction.Types.Up] ||
+                    roads[(int)Direction.Types.Down]) &&
+                    !roads[(int)Direction.Types.Right] &&
+                    !roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.Left];
                         surface.IsDirty = true;
                     }
-                    else if (roads[(int)Directions.DirectionEnum.North] &&
-                    !roads[(int)Directions.DirectionEnum.South] &&
-                    !roads[(int)Directions.DirectionEnum.East] &&
-                    roads[(int)Directions.DirectionEnum.West])
+                    else if (roads[(int)Direction.Types.Up] &&
+                    !roads[(int)Direction.Types.Down] &&
+                    !roads[(int)Direction.Types.Right] &&
+                    roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.BottomRight];
                         surface.IsDirty = true;
                     }
-                    else if (roads[(int)Directions.DirectionEnum.North] &&
-                    !roads[(int)Directions.DirectionEnum.South] &&
-                    roads[(int)Directions.DirectionEnum.East] &&
-                    !roads[(int)Directions.DirectionEnum.West])
+                    else if (roads[(int)Direction.Types.Up] &&
+                    !roads[(int)Direction.Types.Down] &&
+                    roads[(int)Direction.Types.Right] &&
+                    !roads[(int)Direction.Types.Left])
                     {
 
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.BottomLeft];
                         surface.IsDirty = true;
                     }
-                    else if (!roads[(int)Directions.DirectionEnum.North] &&
-                    roads[(int)Directions.DirectionEnum.South] &&
-                    !roads[(int)Directions.DirectionEnum.East] &&
-                    roads[(int)Directions.DirectionEnum.West])
+                    else if (!roads[(int)Direction.Types.Up] &&
+                    roads[(int)Direction.Types.Down] &&
+                    !roads[(int)Direction.Types.Right] &&
+                    roads[(int)Direction.Types.Left])
                     {
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.TopRight];
                         surface.IsDirty = true;
                     }
-                    else if (!roads[(int)Directions.DirectionEnum.North] &&
-                    roads[(int)Directions.DirectionEnum.South] &&
-                    roads[(int)Directions.DirectionEnum.East] &&
-                    !roads[(int)Directions.DirectionEnum.West])
+                    else if (!roads[(int)Direction.Types.Up] &&
+                    roads[(int)Direction.Types.Down] &&
+                    roads[(int)Direction.Types.Right] &&
+                    !roads[(int)Direction.Types.Left])
                     {
                         surface.Cells[index].Glyph = lineStyle[(int)ICellSurface.ConnectedLineIndex.TopLeft];
                         surface.IsDirty = true;
@@ -1872,8 +1868,6 @@ namespace SadConsole
                 }
             }
         }
-
-        */
 
         /// <summary>
         /// Copies the contents of the cell surface to the destination.

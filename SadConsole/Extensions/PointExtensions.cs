@@ -58,6 +58,69 @@ namespace SadConsole
         public static Point TranslateFont(this Point point, Point sourceFontSize, Point targetFontSize) =>
             point.SurfaceLocationToPixel(sourceFontSize.X, sourceFontSize.Y).PixelLocationToSurface(targetFontSize.X, targetFontSize.Y);
 
+        /// <summary>
+        /// Gets a list of indexed boolean values to indicate if the direction from the <paramref name="position"/> falls in the <paramref name="area"/>.
+        /// </summary>
+        /// <param name="position">The position to test from.</param>
+        /// <param name="area">The area to test.</param>
+        /// <returns>An array of bool values indicating if the direction is valid or not; indexed by a <see cref="Direction.Types"/> enumeration. Index 0 in the array represents the <paramref name="position"/>.</returns>
+        public static bool[] GetValidDirections(this Point position, Rectangle area) =>
+            new bool[]
+            {
+                area.Contains(position),
+                area.Contains(position + Direction.Up),
+                area.Contains(position + Direction.UpRight),
+                area.Contains(position + Direction.Right),
+                area.Contains(position + Direction.DownRight),
+                area.Contains(position + Direction.Down),
+                area.Contains(position + Direction.DownLeft),
+                area.Contains(position + Direction.Left),
+                area.Contains(position + Direction.UpLeft),
+            };
+
+        /// <summary>
+        /// Gets an indexed array of direction positions based on the <paramref name="position"/>.
+        /// </summary>
+        /// <param name="position">The source position.</param>
+        /// <returns>An array of positions indexed by a <see cref="Direction.Types"/> enumeration. Index 0 in the array represents the <paramref name="position"/>.
+        public static Point[] GetDirectionPoints(this Point position) => new Point[]
+            {
+                position,
+                position + Direction.Up,
+                position + Direction.UpRight,
+                position + Direction.Right,
+                position + Direction.DownRight,
+                position + Direction.Down,
+                position + Direction.DownLeft,
+                position + Direction.Left,
+                position + Direction.UpLeft,
+            };
+
+        /// <summary>
+        /// Gets an array of indexes of a surface based on a position and then a relative <see cref="Direction.Type"/> direction enumeration..
+        /// </summary>
+        /// <param name="position">The position center.</param>
+        /// <param name="area">The area containing the position.</param>
+        /// <returns>Returns the an array of values indidcating the index in the area surface of each direction where -1 represents a position outside the bounds of the area. Indexed by a <see cref="Direction.Types"/> enumeration.</returns>
+        public static int[] GetDirectionIndexes(this Point position, Rectangle area)
+        {
+            bool[] valids = GetValidDirections(position, area);
+            Point[] points = GetDirectionPoints(position);
+
+            return new int[]
+            {
+                valids[0] ? points[0].ToIndex(area.Width) : -1,
+                valids[1] ? points[1].ToIndex(area.Width) : -1,
+                valids[2] ? points[2].ToIndex(area.Width) : -1,
+                valids[3] ? points[3].ToIndex(area.Width) : -1,
+                valids[4] ? points[4].ToIndex(area.Width) : -1,
+                valids[5] ? points[5].ToIndex(area.Width) : -1,
+                valids[6] ? points[6].ToIndex(area.Width) : -1,
+                valids[7] ? points[7].ToIndex(area.Width) : -1,
+                valids[8] ? points[8].ToIndex(area.Width) : -1
+            };
+        }
+
         ///// <summary>
         ///// Creates a position matrix (in pixels) based on the position of a cell.
         ///// </summary>
