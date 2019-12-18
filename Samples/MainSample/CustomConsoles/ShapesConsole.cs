@@ -13,20 +13,20 @@ namespace FeatureDemo.CustomConsoles
         {
             UseKeyboard = false;
 
-            this.DrawLine(new Point(2, 2), new Point(ViewWidth - 4, 2), Color.Yellow, glyph: '=');
-            this.DrawBox(new Rectangle(2, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='));
-            this.DrawBox(new Rectangle(9, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThin);
-            this.DrawBox(new Rectangle(16, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThick);
-            this.DrawBox(new Rectangle(23, 4, 6, 6), new ColoredGlyph(Color.Black, Color.Yellow, '='), new ColoredGlyph(Color.Black, Color.Yellow, 0), connectedLineStyle: ICellSurface.ConnectedLineThick);
+            Surface.DrawLine(new Point(2, 2), new Point(Surface.ViewWidth - 4, 2), Color.Yellow, glyph: '=');
+            Surface.DrawBox(new Rectangle(2, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='));
+            Surface.DrawBox(new Rectangle(9, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThin);
+            Surface.DrawBox(new Rectangle(16, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThick);
+            Surface.DrawBox(new Rectangle(23, 4, 6, 6), new ColoredGlyph(Color.Black, Color.Yellow, '='), new ColoredGlyph(Color.Black, Color.Yellow, 0), connectedLineStyle: ICellSurface.ConnectedLineThick);
 
-            this.DrawCircle(new Rectangle(2, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176));
-            this.DrawCircle(new Rectangle(19, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176), new ColoredGlyph(Color.Green, Color.Black, 178));
+            Surface.DrawCircle(new Rectangle(2, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176));
+            Surface.DrawCircle(new Rectangle(19, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176), new ColoredGlyph(Color.Green, Color.Black, 178));
 
             IsDirty = true;
             IsVisible = false;
 
             _mouseCursor = new SadConsole.ScreenSurface(1, 1);
-            _mouseCursor.SetGlyph(0, 0, 178);
+            _mouseCursor.Surface.SetGlyph(0, 0, 178);
             _mouseCursor.UseMouse = false;
 
             UseMouse = true;

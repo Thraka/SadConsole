@@ -192,7 +192,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="keyboard">Keyboard information.</param>
         /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        public virtual bool ProcessKeyboard(Keyboard keyboard)
+        public override bool ProcessKeyboard(Keyboard keyboard)
         {
             if (!UseKeyboard) return false;
 

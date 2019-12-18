@@ -17,7 +17,7 @@ namespace FeatureDemo.CustomConsoles
             UseMouse = true;
             IsVisible = false;
             Position = new Point(3, 2);
-            this.Fill(Color.Red, null, glyph: 176);
+            Surface.Fill(Color.Red, null, glyph: 176);
 
             for (int x = 0; x < width; x++)
             {
@@ -29,15 +29,15 @@ namespace FeatureDemo.CustomConsoles
 
                     if (isHexColumn && isHexRow)
                     {
-                        this.SetForeground(x, y, Color.Blue);
+                        Surface.SetForeground(x, y, Color.Blue);
                     }
                     else if (isHexRow)
                     {
-                        this.SetForeground(x, y, Color.AliceBlue);
+                        Surface.SetForeground(x, y, Color.AliceBlue);
                     }
                     else if (isHexColumn)
                     {
-                        this.SetForeground(x, y, Color.DarkRed);
+                        Surface.SetForeground(x, y, Color.DarkRed);
                     }
                 }
             }
@@ -54,7 +54,7 @@ namespace FeatureDemo.CustomConsoles
             var consoleLocation = new Point(worldLocation.X - Position.X, worldLocation.Y - Position.Y);
 
             // Check if mouse is within the upper/lower bounds of the console
-            if (View.Contains(info.SurfaceCellPosition))
+            if (Surface.View.Contains(info.SurfaceCellPosition))
             {
                 bool isHexRow = info.SurfaceCellPosition.Y % 2 == 1;
 
@@ -69,7 +69,7 @@ namespace FeatureDemo.CustomConsoles
                 if (info.ScreenObject == this)
                 {
                     FillHexes(lastCell, 176, lastCellHexRow);
-                    lastCell = info.SurfaceCellPosition.ToIndex(BufferWidth);
+                    lastCell = info.SurfaceCellPosition.ToIndex(Surface.BufferWidth);
                     lastCellHexRow = isHexRow;
                     FillHexes(lastCell, 45, isHexRow);
                     IsDirty = true;
@@ -98,14 +98,14 @@ namespace FeatureDemo.CustomConsoles
             SetGlyph(GetHexCellIndex(HexDirection.BottomLeft, index, isHexRow), glyphIndex);
             SetGlyph(GetHexCellIndex(HexDirection.BottomRight, index, isHexRow), glyphIndex);
 
-            if (index >= 0 && index < Cells.Length)
+            if (index >= 0 && index < Surface.Cells.Length)
                 SetGlyph(index, glyphIndex);
         }
 
         private void SetGlyph(int cellIndex, int glyphIndex)
         {
             if (cellIndex != -1)
-                this[cellIndex].Glyph = glyphIndex;
+                Surface[cellIndex].Glyph = glyphIndex;
         }
 
         public int GetHexCellIndex(HexDirection direction, int sourceHex, bool isHexRow)
@@ -115,10 +115,10 @@ namespace FeatureDemo.CustomConsoles
             switch (direction)
             {
                 case HexDirection.TopLeft:
-                    returnHex = isHexRow ? sourceHex - BufferWidth : sourceHex - BufferWidth - 1;
+                    returnHex = isHexRow ? sourceHex - Surface.BufferWidth : sourceHex - Surface.BufferWidth - 1;
                     break;
                 case HexDirection.TopRight:
-                    returnHex = isHexRow ? sourceHex - BufferWidth + 1 : sourceHex - BufferWidth ;
+                    returnHex = isHexRow ? sourceHex - Surface.BufferWidth + 1 : sourceHex - Surface.BufferWidth ;
                     break;
                 case HexDirection.Left:
                     returnHex = sourceHex - 1;
@@ -127,16 +127,16 @@ namespace FeatureDemo.CustomConsoles
                     returnHex = sourceHex + 1;
                     break;
                 case HexDirection.BottomLeft:
-                    returnHex = isHexRow ? sourceHex + BufferWidth : sourceHex + BufferWidth - 1;
+                    returnHex = isHexRow ? sourceHex + Surface.BufferWidth : sourceHex + Surface.BufferWidth - 1;
                     break;
                 case HexDirection.BottomRight:
-                    returnHex = isHexRow ? sourceHex + BufferWidth + 1 : sourceHex + BufferWidth;
+                    returnHex = isHexRow ? sourceHex + Surface.BufferWidth + 1 : sourceHex + Surface.BufferWidth;
                     break;
                 default:
                     break;
             }
 
-            if (returnHex < 0 || returnHex > Cells.Length - 1)
+            if (returnHex < 0 || returnHex > Surface.Cells.Length - 1)
                 returnHex = -1;
 
             return returnHex;

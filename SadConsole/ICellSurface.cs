@@ -124,6 +124,41 @@ namespace SadConsole
         /// </summary>
         int ViewWidth { get; set; }
 
+        /// <summary>
+        /// Resizes the surface to the specified width and height.
+        /// </summary>
+        /// <param name="width">The viewable width of the surface.</param>
+        /// <param name="height">The viewable height of the surface.</param>
+        /// <param name="bufferWidth">The maximum width of the surface.</param>
+        /// <param name="bufferHeight">The maximum height of the surface.</param>
+        /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear);
+
+        /// <summary>
+        /// Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+        /// </summary>
+        /// <param name="view">An area of the surface to create a view of.</param>
+        /// <returns>A new surface</returns>
+        ICellSurface GetSubSurface(Rectangle view);
+
+        /// <summary>
+        /// Remaps the cells of this surface to a view of the <paramref name="surface"/>.
+        /// </summary>
+        /// <param name="surface">The target surface to map cells from.</param>
+        /// <param name="view">A view rectangle of the target surface.</param>
+        void SetSurface(in ICellSurface surface, Rectangle view = default);
+
+        /// <summary>
+        /// Changes the cells of the surface to the provided array.
+        /// </summary>
+        /// <param name="cells">The cells to replace in this surface.</param>
+        /// <param name="width">The viewable width of the surface.</param>
+        /// <param name="height">The viewable height of the surface.</param>
+        /// <param name="bufferWidth">The maximum width of the surface.</param>
+        /// <param name="bufferHeight">The maximum height of the surface.</param>
+        void SetSurface(in ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight);
+
+
         IEnumerator<ColoredGlyph> GetEnumerator();
     }
 }

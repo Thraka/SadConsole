@@ -684,39 +684,16 @@
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
         <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
-            <summary>
-            Resizes the surface to the specified width and height.
-            </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
-            <param name="bufferWidth">The maximum width of the surface.</param>
-            <param name="bufferHeight">The maximum height of the surface.</param>
-            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.CellSurface.DefaultForeground"/>, <see cref="P:SadConsole.CellSurface.DefaultBackground"/> and glyph 0.</param>
+            <inheritdoc />
         </member>
         <member name="M:SadConsole.CellSurface.GetSubSurface(SadRogue.Primitives.Rectangle)">
-            <summary>
-            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
-            </summary>
-            <param name="view">An area of the surface to create a view of.</param>
-            <returns>A new surface</returns>
+            <inheritdoc />
         </member>
-        <member name="M:SadConsole.CellSurface.SetSurface``1(``0@,SadRogue.Primitives.Rectangle)">
-            <summary>
-            Remaps the cells of this surface to a view of the <paramref name="surface"/>.
-            </summary>
-            <typeparam name="T">The surface type.</typeparam>
-            <param name="surface">The target surface to map cells from.</param>
-            <param name="view">A view rectangle of the target surface.</param>
+        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ICellSurface@,SadRogue.Primitives.Rectangle)">
+            <inheritdoc />
         </member>
         <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ColoredGlyph[]@,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Changes the cells of the surface to the provided array.
-            </summary>
-            <param name="cells">The cells to replace in this surface.</param>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
-            <param name="bufferWidth">The maximum width of the surface.</param>
-            <param name="bufferHeight">The maximum height of the surface.</param>
+            <inheritdoc />
         </member>
         <member name="M:SadConsole.CellSurface.SetIsDirtySafe">
             <summary>
@@ -2146,6 +2123,72 @@
             Called when this console is focused. Shows the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.Console.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.Item(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.TimesShiftedDown">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.TimesShiftedRight">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.TimesShiftedLeft">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.TimesShiftedUp">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.UsePrintProcessor">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.Effects">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.Buffer">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.BufferHeight">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.BufferWidth">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.Cells">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.DefaultBackground">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.DefaultForeground">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.DefaultGlyph">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.IsScrollable">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.View">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.ViewHeight">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.ViewPosition">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.ViewWidth">
+            <inheritdoc/>
+        </member>
+        <member name="E:SadConsole.Console.IsDirtyChanged">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Console.GetEnumerator">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Cursor">
             <summary>
             A cursor that is attached to a <see cref="T:SadConsole.Console"/> used for printing.
@@ -3398,7 +3441,7 @@
         </member>
         <member name="M:SadConsole.GameHost.LoadFont(System.String)">
             <summary>
-            Loads a font from a file and adds it to the <see cref="!:Fonts"/> collection.
+            Loads a font from a file and adds it to the <see cref="P:SadConsole.Global.Fonts"/> collection.
             </summary>
             <param name="font">The font file to load.</param>
             <returns>A master font that you can generate a usable font from.</returns>
@@ -3667,6 +3710,40 @@
             <summary>
             Gets or sets the visible width of the surface in cells.
             </summary>
+        </member>
+        <member name="M:SadConsole.ICellSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface to the specified width and height.
+            </summary>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
+            <param name="bufferWidth">The maximum width of the surface.</param>
+            <param name="bufferHeight">The maximum height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="M:SadConsole.ICellSurface.GetSubSurface(SadRogue.Primitives.Rectangle)">
+            <summary>
+            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+            </summary>
+            <param name="view">An area of the surface to create a view of.</param>
+            <returns>A new surface</returns>
+        </member>
+        <member name="M:SadConsole.ICellSurface.SetSurface(SadConsole.ICellSurface@,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Remaps the cells of this surface to a view of the <paramref name="surface"/>.
+            </summary>
+            <param name="surface">The target surface to map cells from.</param>
+            <param name="view">A view rectangle of the target surface.</param>
+        </member>
+        <member name="M:SadConsole.ICellSurface.SetSurface(SadConsole.ColoredGlyph[]@,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Changes the cells of the surface to the provided array.
+            </summary>
+            <param name="cells">The cells to replace in this surface.</param>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
+            <param name="bufferWidth">The maximum width of the surface.</param>
+            <param name="bufferHeight">The maximum height of the surface.</param>
         </member>
         <member name="F:SadConsole.ICellSurface.ConnectedLineThin">
             <summary>
@@ -6023,6 +6100,16 @@
         <member name="P:SadConsole.ScreenSurface.Renderer">
             <inheritdoc/>
         </member>
+        <member name="P:SadConsole.ScreenSurface.Surface">
+            <summary>
+            The surface this screen object represents.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenSurface.IsDirty">
+            <summary>
+            When <see langword="true"/>, indicates that the <see cref="P:SadConsole.ScreenSurface.Surface"/> needs to be redrawn; otherwise <see langword="false"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.ScreenSurface.Font">
             <inheritdoc/>
         </member>
@@ -6068,11 +6155,13 @@
             <param name="bufferWidth">The total width of the surface in cells.</param>
             <param name="bufferHeight">The total height of the surface in cells.</param>
         </member>
-        <member name="M:SadConsole.ScreenSurface.#ctor(SadConsole.ICellSurface)">
+        <member name="M:SadConsole.ScreenSurface.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
             <summary>
             Creates a new screen object using the specified surface's cells.
             </summary>
             <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
@@ -6089,15 +6178,20 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.Draw">
             <summary>
-            Draws all <see cref="P:SadConsole.ScreenSurface.Components"/> and <see cref="P:SadConsole.ScreenSurface.Children"/>.
+            Draws the <see cref="P:SadConsole.ScreenSurface.Surface"/> and all <see cref="P:SadConsole.ScreenObject.Components"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
-            <remarks>Only processes if <see cref="P:SadConsole.ScreenSurface.IsVisible"/> is <see langword="true"/>.</remarks>
+            <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenSurface.Update">
             <summary>
-            Updates all <see cref="P:SadConsole.ScreenSurface.Components"/> and <see cref="P:SadConsole.ScreenSurface.Children"/>.
+            Updates the <see cref="P:SadConsole.ScreenSurface.Surface"/> effects and all <see cref="P:SadConsole.ScreenObject.Components"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
-            <remarks>Only processes if <see cref="P:SadConsole.ScreenSurface.IsEnabled"/> is <see langword="true"/>.</remarks>
+            <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.ScreenSurface.OnIsDirtyChanged">
+            <summary>
+            Called when the <see cref="P:SadConsole.ScreenSurface.IsDirty"/> property changes.
+            </summary>
         </member>
         <member name="M:SadConsole.ScreenSurface.OnFontChanged(SadConsole.Font,SadRogue.Primitives.Point)">
             <summary>
@@ -6105,6 +6199,12 @@
             </summary>
             <param name="oldFont">The font prior to the change.</param>
             <param name="oldFontSize">The font size prior to the change.</param>
+        </member>
+        <member name="M:SadConsole.ScreenSurface.OnSurfaceChanged(SadConsole.ICellSurface)">
+            <summary>
+            Called when the <see cref="P:SadConsole.ScreenSurface.Surface"/> property is changed.
+            </summary>
+            <param name="oldSurface">The previous surface.</param>
         </member>
         <member name="M:SadConsole.ScreenSurface.Dispose(System.Boolean)">
             <inheritdoc/>
@@ -6197,100 +6297,6 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.OnFocused">
             <inheritdoc/>
-        </member>
-        <member name="E:SadConsole.ScreenSurface.ParentChanged">
-            <inheritdoc/>
-        </member>
-        <member name="E:SadConsole.ScreenSurface.PositionChanged">
-            <inheritdoc/>
-        </member>
-        <member name="E:SadConsole.ScreenSurface.VisibleChanged">
-            <inheritdoc/>
-        </member>
-        <member name="E:SadConsole.ScreenSurface.EnabledChanged">
-            <inheritdoc/>
-        </member>
-        <member name="F:SadConsole.ScreenSurface.ComponentsUpdate">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.ScreenSurface.ComponentsDraw">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.ScreenSurface.ComponentsMouse">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.ScreenSurface.ComponentsKeyboard">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.ScreenSurface.ComponentsEmpty">
-            <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenSurface.Components"/> that is not set for update, draw, mouse, or keyboard.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.Components">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.Children">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.Parent">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.Position">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.AbsolutePosition">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.IsVisible">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.IsEnabled">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.UseKeyboard">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.UseMouse">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.GetComponents``1">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.GetComponent``1">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
-            <summary>
-            Raises the <see cref="E:SadConsole.ScreenSurface.ParentChanged"/> event.
-            </summary>
-            <param name="oldParent">The previous parent.</param>
-            <param name="newParent">The new parent.</param>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
-            <summary>
-            Raises the <see cref="E:SadConsole.ScreenSurface.PositionChanged"/> event.
-            </summary>
-            <param name="oldPosition">The previous position.</param>
-            <param name="newPosition">The new position.</param>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.OnVisibleChanged">
-            <summary>
-            Called when the visibility of the object changes.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.OnEnabledChanged">
-            <summary>
-            Called when the paused status of the object changes.
-            </summary>
         </member>
         <member name="T:SadConsole.Serializer">
             <summary>

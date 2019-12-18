@@ -46,7 +46,7 @@ namespace SadConsole
             _layers = new List<ILayer>(layers);
 
             // Create first layer from existing cells.
-            _layers.Add(new Layer("root", bufferWidth, bufferHeight, Cells));
+            _layers.Add(new Layer("root", bufferWidth, bufferHeight, Surface.Cells));
 
             for (int i = 1; i < layers; i++)
             {
@@ -86,7 +86,7 @@ namespace SadConsole
             _layers = new List<ILayer>(layers);
 
             // Create first layer from existing cells.
-            _layers.Add(new Layer("root", 0, 0, Cells));
+            _layers.Add(new Layer("root", 0, 0, Surface.Cells));
 
             for (int i = 1; i < layers; i++)
                 _layers.Add(new Layer($"layer{i}", 0, 0, ColoredGlyph.CreateArray(width * height)));

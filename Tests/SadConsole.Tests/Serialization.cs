@@ -52,7 +52,7 @@ namespace SadConsole.Tests
             new SadConsole.Tests.BasicGameHost();
 
             ScreenSurface obj = new ScreenSurface(10, 10);
-            obj.FillWithRandomGarbage();
+            obj.Surface.FillWithRandomGarbage();
             obj.Position = (10, 10);
             obj.IsEnabled = false;
             obj.IsVisible = false;
@@ -60,7 +60,7 @@ namespace SadConsole.Tests
             obj.UseMouse = false;
 
             ScreenSurface obj2 = new ScreenSurface(20, 20);
-            obj2.FillWithRandomGarbage();
+            obj2.Surface.FillWithRandomGarbage();
             obj2.Position = (15, 2);
             obj2.IsEnabled = true;
             obj2.IsVisible = false;
@@ -88,11 +88,11 @@ namespace SadConsole.Tests
 
             for (int i = 0; i < 10; i++)
             {
-                int index1 = SadConsole.Global.Random.Next(0, obj.Cells.Length);
-                int index2 = SadConsole.Global.Random.Next(0, obj.Cells.Length);
+                int index1 = SadConsole.Global.Random.Next(0, obj.Surface.Cells.Length);
+                int index2 = SadConsole.Global.Random.Next(0, obj.Surface.Cells.Length);
 
-                Assert.IsTrue(obj[index1].Equals(newObj[index1]));
-                Assert.IsTrue(obj2[index2].Equals(((ScreenSurface)newObj.Children[0])[index2]));
+                Assert.IsTrue(obj.Surface[index1].Equals(newObj.Surface[index1]));
+                Assert.IsTrue(obj2.Surface[index2].Equals(((ScreenSurface)newObj.Children[0]).Surface[index2]));
             }
 
             Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenSurface));

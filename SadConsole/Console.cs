@@ -10,7 +10,7 @@ namespace SadConsole
     /// <summary>
     /// A surface that has a cursor.
     /// </summary>
-    public class Console: ScreenSurface
+    public partial class Console: ScreenSurface
     {
         private bool _isCursorDisabled;
 
@@ -30,13 +30,13 @@ namespace SadConsole
         /// The entire width of the console. Forwards <see cref="ICellSurface.BufferWidth"/>.
         /// </summary>
         public int Width =>
-            base.BufferWidth;
+            BufferWidth;
 
         /// <summary>
         /// The entire height of the console. Forwards <see cref="ICellSurface.BufferHeight"/>.
         /// </summary>
         public int Height =>
-            base.BufferHeight;
+            BufferHeight;
 
         /// <summary>
         /// The private virtual cursor reference.
@@ -88,7 +88,7 @@ namespace SadConsole
         /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
         public Console(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
         {
-            Cursor = new Cursor(this);
+            Cursor = new Cursor(Surface);
             UseKeyboard = Settings.DefaultConsoleUseKeyboard;
         }
         
@@ -138,5 +138,7 @@ namespace SadConsole
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = true;
         }
+
+        
     }
 }

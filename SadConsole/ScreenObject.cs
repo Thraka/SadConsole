@@ -67,10 +67,10 @@ namespace SadConsole
         protected List<IComponent> ComponentsEmpty;
 
         /// <inheritdoc/>
-        public ObservableCollection<IComponent> Components { get; private set; }
+        public ObservableCollection<IComponent> Components { get; protected set; }
 
         /// <inheritdoc/>
-        public ScreenObjectCollection Children { get; }
+        public ScreenObjectCollection Children { get; protected set; }
 
         /// <inheritdoc/>
         public IScreenObject Parent

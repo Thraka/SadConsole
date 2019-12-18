@@ -96,6 +96,14 @@ namespace SadConsole
         /// <returns>A renderer.</returns>
         public abstract IRenderer GetDefaultRenderer(IScreenSurface screenObject);
 
+        ///// <summary>
+        ///// Sets the default <see cref="IRenderer"/> for a type.
+        ///// </summary>
+        ///// <param name="surfaceType">The type of <see cref="IScreenSurface"/> to add a renderer for.</param>
+        ///// <param name="rendererType">The renderer to use.</param>
+        ///// <returns>A renderer.</returns>
+        //public abstract IRenderer SetDefaultRenderer(System.Type surfaceType, System.Type rendererType);
+
         /// <summary>
         /// Gets the state of the keyboard from the implemented host.
         /// </summary>
@@ -109,7 +117,7 @@ namespace SadConsole
         public abstract IMouseState GetMouseState();
 
         /// <summary>
-        /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
+        /// Loads a font from a file and adds it to the <see cref="Global.Fonts"/> collection.
         /// </summary>
         /// <param name="font">The font file to load.</param>
         /// <returns>A master font that you can generate a usable font from.</returns>

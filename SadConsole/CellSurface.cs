@@ -230,16 +230,8 @@ namespace SadConsole
         {
             Effects = new Effects.EffectsManager(this);
         }
-
-
-        /// <summary>
-        /// Resizes the surface to the specified width and height.
-        /// </summary>
-        /// <param name="width">The viewable width of the surface.</param>
-        /// <param name="height">The viewable height of the surface.</param>
-        /// <param name="bufferWidth">The maximum width of the surface.</param>
-        /// <param name="bufferHeight">The maximum height of the surface.</param>
-        /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        
+        /// <inheritdoc />
         public void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear)
         {
             var newCells = new ColoredGlyph[bufferWidth * bufferHeight];
@@ -277,12 +269,8 @@ namespace SadConsole
             OnCellsReset();
         }
 
-        /// <summary>
-        /// Returns a new surface instance from the current instance based on the <paramref name="view"/>.
-        /// </summary>
-        /// <param name="view">An area of the surface to create a view of.</param>
-        /// <returns>A new surface</returns>
-        public CellSurface GetSubSurface(Rectangle view)
+        /// <inheritdoc />
+        public ICellSurface GetSubSurface(Rectangle view)
         {
             if (!new Rectangle(0, 0, BufferWidth, BufferHeight).Contains(view))
             {
@@ -305,13 +293,8 @@ namespace SadConsole
             return new CellSurface(view.Width, view.Height, cells);
         }
 
-        /// <summary>
-        /// Remaps the cells of this surface to a view of the <paramref name="surface"/>.
-        /// </summary>
-        /// <typeparam name="T">The surface type.</typeparam>
-        /// <param name="surface">The target surface to map cells from.</param>
-        /// <param name="view">A view rectangle of the target surface.</param>
-        public void SetSurface<T>(in T surface, Rectangle view = default) where T : CellSurface
+        /// <inheritdoc />
+        public void SetSurface(in ICellSurface surface, Rectangle view = default)
         {
             Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight) : view;
 
@@ -338,14 +321,7 @@ namespace SadConsole
             OnCellsReset();
         }
 
-        /// <summary>
-        /// Changes the cells of the surface to the provided array.
-        /// </summary>
-        /// <param name="cells">The cells to replace in this surface.</param>
-        /// <param name="width">The viewable width of the surface.</param>
-        /// <param name="height">The viewable height of the surface.</param>
-        /// <param name="bufferWidth">The maximum width of the surface.</param>
-        /// <param name="bufferHeight">The maximum height of the surface.</param>
+        /// <inheritdoc />
         public void SetSurface(in ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight)
         {
             if (cells.Length != bufferWidth * bufferHeight) throw new Exception("buffer width * buffer height must match the amount of cells.");

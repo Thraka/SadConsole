@@ -581,8 +581,6 @@ namespace SadConsole.UI
         {
             if (IsDirty)
                 RedrawTheme();
-
-            base.OnIsDirtyChanged();
         }
 
         /// <summary>

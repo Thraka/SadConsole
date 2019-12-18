@@ -179,8 +179,7 @@ namespace SadConsole
         }
 
         [JsonConstructor]
-        //protected AnimatedScreenSurface() { }
-        private AnimatedScreenSurface(BoundedRectangle areaBounds, ColoredGlyph[] cells) : base(areaBounds.Area.Width, areaBounds.Area.Height, areaBounds.BoundingBox.Width, areaBounds.BoundingBox.Height, cells) { }
+        private AnimatedScreenSurface(ICellSurface surface, Font font = null, Point? fontSize = null):base(surface, font, fontSize) { }
         #endregion
 
 
@@ -190,9 +189,10 @@ namespace SadConsole
         protected void UpdateFrameReferences()
         {
             ICellSurface frame = FramesList[CurrentFrameIndexValue];
-            SetSurface(frame.Cells, _width, _height, _width, _height);
-            DefaultBackground = frame.DefaultBackground;
-            DefaultForeground = frame.DefaultForeground;
+            Surface.SetSurface(frame.Cells, _width, _height, _width, _height);
+            Surface.DefaultBackground = frame.DefaultBackground;
+            Surface.DefaultForeground = frame.DefaultForeground;
+            Surface.DefaultGlyph = frame.DefaultGlyph;
             IsDirty = true;
         }
 
@@ -207,7 +207,7 @@ namespace SadConsole
                 FramesList = new List<ICellSurface>();
             }
 
-            var frame = new CellSurface(Width, Height) { DefaultBackground = DefaultBackground, DefaultForeground = DefaultForeground };
+            var frame = new CellSurface(Width, Height) { DefaultBackground = Surface.DefaultBackground, DefaultForeground = Surface.DefaultForeground, DefaultGlyph = Surface.DefaultGlyph };
             frame.Clear();
             FramesList.Add(frame);
             UpdateFrameReferences();
@@ -343,7 +343,7 @@ namespace SadConsole
         public static AnimatedScreenSurface CreateStatic(int width, int height, int frames, double blankChance)
         {
             var animation = new AnimatedScreenSurface("default", width, height);
-            animation.DefaultBackground = Color.Black;
+            animation.Surface.DefaultBackground = Color.Black;
             for (int f = 0; f < frames; f++)
             {
                 ICellSurface frame = animation.CreateFrame();

@@ -17,7 +17,7 @@ namespace FeatureDemo.CustomConsoles
         {
             player = new Entity(Color.Yellow, Color.Black, 1)
             {
-                Position = new Point(BufferWidth / 2, BufferHeight / 2)
+                Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
             };
             
             playerPreviousPosition = player.Position;
@@ -46,12 +46,12 @@ namespace FeatureDemo.CustomConsoles
 
             if (info.IsKeyPressed(Keys.W))
             {
-                player.Animation.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, Mirror.None) });
+                player.Animation.Surface.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, Mirror.None) });
                 keyHit = true;
             }
             if (info.IsKeyPressed(Keys.Q))
             {
-                player.Animation.ClearDecorators(0, 1);
+                player.Animation.Surface.ClearDecorators(0, 1);
                 keyHit = true;
             }
 
@@ -81,10 +81,10 @@ namespace FeatureDemo.CustomConsoles
             if (keyHit)
             {
                 // Check if the new position is valid
-                if (Buffer.Contains(player.Position))
+                if (Surface.Buffer.Contains(player.Position))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
-                    this.SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
+                    Surface.SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
                     playerPreviousPosition = player.Position;
 
                     return true;

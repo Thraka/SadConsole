@@ -14,14 +14,20 @@ namespace SadConsole
     /// An object that renders a <see cref="ICellSurface"/>.
     /// </summary>
     [DataContract]
-    public partial class ScreenSurface : CellSurface, IDisposable, IScreenSurface
+    public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     {
+        [DataMember(Name = "Font")]
         private Font _font;
+        [DataMember(Name = "FontSize")]
         private Point _fontSize;
-        private Renderers.IRenderer _renderer;
+        [DataMember(Name = "Tint")]
         private Color _tint = Color.Transparent;
         [DataMember(Name = "UsePixelPositioning")]
         private bool _usePixelPositioning;
+        [DataMember(Name = "Surface")]
+        private ICellSurface _surface;
+
+        private Renderers.IRenderer _renderer;
 
         /// <inheritdoc/>
         public bool ForceRendererRefresh { get; set; }
@@ -37,11 +43,33 @@ namespace SadConsole
             }
         }
 
+        /// <summary>
+        /// The surface this screen object represents.
+        /// </summary>
+        public ICellSurface Surface
+        {
+            get => _surface;
+            set
+            {
+                ICellSurface old = _surface;
+                _surface = value;
+                if (old != null)
+                    old.IsDirtyChanged -= _isDirtyChangedEventHadler;
+                _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+                OnSurfaceChanged(old);
+            }
+        }
 
-        ICellSurface IScreenSurface.Surface => this;
+        /// <summary>
+        /// When <see langword="true"/>, indicates that the <see cref="Surface"/> needs to be redrawn; otherwise <see langword="false"/>.
+        /// </summary>
+        public bool IsDirty
+        {
+            get => _surface.IsDirty;
+            set => _surface.IsDirty = value;
+        }
 
         /// <inheritdoc/>
-        [DataMember]
         public Font Font
         {
             get => _font;
@@ -56,7 +84,6 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        [DataMember]
         public Point FontSize
         {
             get => _fontSize;
@@ -70,7 +97,6 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        [DataMember]
         public Color Tint
         {
             get => _tint;
@@ -82,7 +108,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, View.Width * FontSize.X, View.Height * FontSize.Y);
+        public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, WidthPixels, HeightPixels);
 
         /// <inheritdoc/>
         public bool UsePixelPositioning
@@ -97,11 +123,11 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public int WidthPixels => View.Width * FontSize.X;
+        public int WidthPixels => Surface.View.Width * FontSize.X;
 
 
         /// <inheritdoc/>
-        public int HeightPixels => View.Height * FontSize.Y;
+        public int HeightPixels => Surface.View.Height * FontSize.Y;
 
         /// <summary>
         /// Creates a new screen object that can render a surface.
@@ -140,9 +166,15 @@ namespace SadConsole
         /// Creates a new screen object using the specified surface's cells.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public ScreenSurface(ICellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells)
+        /// <param name="font">The font to use with the surface.</param>
+        /// <param name="fontSize">The font size.</param>
+        [JsonConstructor]
+        public ScreenSurface(ICellSurface surface, Font font = null, Point? fontSize = null)
         {
-
+            Surface = surface;
+            Font = font ?? Global.DefaultFont;
+            FontSize = fontSize ?? Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
+            Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 
         /// <summary>
@@ -153,33 +185,16 @@ namespace SadConsole
         /// <param name="bufferWidth">The total width of the surface in cells.</param>
         /// <param name="bufferHeight">The total height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public ScreenSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells): base (width, height, bufferWidth, bufferHeight, initialCells)
+        public ScreenSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells)
         {
+            Surface = new CellSurface(width, height, bufferWidth, bufferHeight, initialCells);
             Font = Global.DefaultFont;
             FontSize = Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
-            Components = new ObservableCollection<IComponent>();
-            ComponentsUpdate = new List<IComponent>();
-            ComponentsDraw = new List<IComponent>();
-            ComponentsKeyboard = new List<IComponent>();
-            ComponentsMouse = new List<IComponent>();
-            Components.CollectionChanged += Components_CollectionChanged;
-            Children = new ScreenObjectCollection(this);
-        }
-
-        [JsonConstructor]
-        private ScreenSurface(BoundedRectangle areaBounds, ColoredGlyph[] cells) : base(areaBounds.Area.Width, areaBounds.Area.Height, areaBounds.BoundingBox.Width, areaBounds.BoundingBox.Height, cells)
-        {
-            Children = new ScreenObjectCollection(this);
-            Components = new ObservableCollection<IComponent>();
-            ComponentsUpdate = new List<IComponent>();
-            ComponentsDraw = new List<IComponent>();
-            ComponentsKeyboard = new List<IComponent>();
-            ComponentsMouse = new List<IComponent>();
         }
 
         /// <inheritdoc />
-        public virtual void UpdateAbsolutePosition()
+        public override void UpdateAbsolutePosition()
         {
             if (UsePixelPositioning)
                 AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
@@ -191,10 +206,10 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Draws all <see cref="Components"/> and <see cref="Children"/>.
+        /// Draws the <see cref="Surface"/> and all <see cref="ScreenObject.Components"/> and <see cref="ScreenObject.Children"/>.
         /// </summary>
-        /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
-        public virtual void Draw()
+        /// <remarks>Only processes if <see cref="ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
+        public override void Draw()
         {
             if (!IsVisible) return;
 
@@ -213,14 +228,14 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Updates all <see cref="Components"/> and <see cref="Children"/>.
+        /// Updates the <see cref="Surface"/> effects and all <see cref="ScreenObject.Components"/> and <see cref="ScreenObject.Children"/>.
         /// </summary>
-        /// <remarks>Only processes if <see cref="IsEnabled"/> is <see langword="true"/>.</remarks>
-        public virtual void Update()
+        /// <remarks>Only processes if <see cref="ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
+        public override void Update()
         {
             if (!IsEnabled) return;
 
-            Effects.UpdateEffects(Global.UpdateFrameDelta.TotalSeconds);
+            Surface.Effects.UpdateEffects(Global.UpdateFrameDelta.TotalSeconds);
 
             foreach (IComponent component in ComponentsUpdate.ToArray())
                 component.Update(this);
@@ -229,6 +244,14 @@ namespace SadConsole
                 child.Update();
         }
 
+        private void _isDirtyChangedEventHadler(object sender, EventArgs e) =>
+            OnIsDirtyChanged();
+
+        /// <summary>
+        /// Called when the <see cref="IsDirty"/> property changes.
+        /// </summary>
+        protected virtual void OnIsDirtyChanged() { }
+
         /// <summary>
         /// Called when the <see cref="Font"/> or <see cref="FontSize"/> property changes.
         /// </summary>
@@ -236,32 +259,16 @@ namespace SadConsole
         /// <param name="oldFontSize">The font size prior to the change.</param>
         protected void OnFontChanged(Font oldFont, Point oldFontSize) { }
 
-        [OnSerializing]
-        protected void OnSerializingMethod(StreamingContext context)
-        {
-            _childrenSerialized = Children.ToArray();
-            _componentsSerialized = Components.ToArray();
-        }
 
-        [OnSerialized]
-        protected void OnSerializedMethod(StreamingContext context)
-        {
-            _childrenSerialized = null;
-            _componentsSerialized = null;
-        }
+        /// <summary>
+        /// Called when the <see cref="Surface"/> property is changed.
+        /// </summary>
+        /// <param name="oldSurface">The previous surface.</param>
+        protected void OnSurfaceChanged(ICellSurface oldSurface) { }
 
         [OnDeserialized]
-        protected void OnDeserializedMethod(StreamingContext context)
+        protected new void OnDeserializedMethod(StreamingContext context)
         {
-            foreach (var item in _childrenSerialized)
-                Children.Add(item);
-
-            foreach (var item in _componentsSerialized)
-                Components.Add(item);
-
-            _componentsSerialized = null;
-            _childrenSerialized = null;
-
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
             UpdateAbsolutePosition();
         }
