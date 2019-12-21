@@ -49,7 +49,7 @@ namespace SadConsole
         public ICellSurface Surface
         {
             get => _surface;
-            set
+            protected set
             {
                 ICellSurface old = _surface;
                 _surface = value;

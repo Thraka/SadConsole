@@ -22,14 +22,14 @@ namespace SadConsole.Renderers
     public class ControlsConsole : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
-        public override void Attach(IScreenSurface screen)
+        public override void Attach(ISurfaceObject screen)
         {
             if (!(screen is ControlsConsole))
                 throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(ControlsConsole)}.");
         }
 
         ///  <inheritdoc/>
-        public override void Render(IScreenSurface screen)
+        public override void Render(ISurfaceObject screen)
         {
             var console = (Console)screen;
 
@@ -41,7 +41,7 @@ namespace SadConsole.Renderers
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
                                                ((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture,
-                                               new XnaRectangle(screen.AbsolutePosition.ToMonoPoint() + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
+                                               new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
                                                screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
                                                screen.Font.GlyphRects[console.Cursor.CursorRenderCell.Glyph].ToMonoRectangle()
                                               )
@@ -53,7 +53,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(IScreenSurface screen, bool force = false)
+        public override void Refresh(ISurfaceObject screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 

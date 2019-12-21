@@ -5141,7 +5141,7 @@
             <summary>
             Creates a new tint fade instruction that targets the specified console.
             </summary>
-            <param name="objectSurface">The <see cref="P:SadConsole.IScreenSurface.Tint"/> to fade.</param>
+            <param name="objectSurface">The <see cref="!:IScreenSurface.Tint"/> to fade.</param>
             <param name="colors">The gradient pattern to fade through.</param>
             <param name="duration">How long the fade takes.</param>
         </member>
@@ -5461,6 +5461,41 @@
             Sets a value for <see cref="P:SadConsole.IScreenObject.AbsolutePosition"/> based on the <see cref="P:SadConsole.IScreenObject.Position"/> of this instance and the <see cref="P:SadConsole.IScreenObject.Parent"/> instance.
             </summary>
         </member>
+        <member name="P:SadConsole.ISurfaceObject.AbsoluteArea">
+            <summary>
+            The area on the screen this surface occupies. In pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceObject.Font">
+            <summary>
+            Font used with rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceObject.FontSize">
+            <summary>
+            The size of the <see cref="P:SadConsole.ISurfaceObject.Font"/> cells applied to the object when rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceObject.ForceRendererRefresh">
+            <summary>
+            When <see langword="true"/>, the <see cref="!:Draw"/> method forces the <see cref="!:Renderer"/> to refresh the backing texture with the latest state of the object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceObject.IsDirty">
+            <summary>
+            Indicates the surface has changed and needs to be rendered.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceObject.Surface">
+            <summary>
+            The surface the screen object represents.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceObject.Tint">
+            <summary>
+            A tint used in rendering.
+            </summary>
+        </member>
         <member name="E:SadConsole.IScreenSurface.MouseButtonClicked">
             <summary>
             Raised when the a mouse button is clicked on this console.
@@ -5481,11 +5516,6 @@
             Raised when the mouse moves around the this console.
             </summary>
         </member>
-        <member name="P:SadConsole.IScreenSurface.AbsoluteArea">
-            <summary>
-            The area on the screen this surface occupies. In pixels.
-            </summary>
-        </member>
         <member name="P:SadConsole.IScreenSurface.FocusedMode">
             <summary>
             How the object should handle becoming active.
@@ -5496,29 +5526,9 @@
             When true, this console will set <see cref="P:SadConsole.IScreenSurface.IsFocused"/> to true when the mouse is clicked.
             </summary>
         </member>
-        <member name="P:SadConsole.IScreenSurface.Font">
-            <summary>
-            Font used with rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenSurface.FontSize">
-            <summary>
-            The size of the <see cref="P:SadConsole.IScreenSurface.Font"/> cells applied to the object when rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenSurface.ForceRendererRefresh">
-            <summary>
-            When <see langword="true"/>, the <see cref="!:Draw"/> method forces the <see cref="P:SadConsole.IScreenSurface.Renderer"/> to refresh the backing texture with the latest state of the object.
-            </summary>
-        </member>
         <member name="P:SadConsole.IScreenSurface.HeightPixels">
             <summary>
             The height of the surface in pixels.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenSurface.IsDirty">
-            <summary>
-            Indicates the surface has changed and needs to be rendered.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.IsExclusiveMouse">
@@ -5541,16 +5551,6 @@
             The renderer used to draw this surface.
             </summary>
         </member>
-        <member name="P:SadConsole.IScreenSurface.Surface">
-            <summary>
-            The surface the screen object represents.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenSurface.Tint">
-            <summary>
-            A tint used in rendering.
-            </summary>
-        </member>
         <member name="P:SadConsole.IScreenSurface.UsePixelPositioning">
             <summary>
             Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the console as if it is pixels and not cells.
@@ -5563,7 +5563,7 @@
         </member>
         <member name="M:SadConsole.IScreenSurface.LostMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            If the mouse is not over the console, causes the protected <see cref="!:OnMouseExit"/> method to run which raises the <see cref="E:SadConsole.IScreenSurface.MouseExit"/> event.
+            Called when the mouse is no longer over the object.
             </summary>
             <param name="state">The current state of the mouse based on this object.</param>
         </member>
@@ -5848,26 +5848,26 @@
             Draws a surface.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.ISurfaceObject)">
             <summary>
             Called when the renderer is added to a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.ISurfaceObject)">
             <summary>
             Called when the renderer is removed from a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ISurfaceObject,System.Boolean)">
             <summary>
             Refreshes a cached drawing state.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
             <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.ISurfaceObject)">
             <summary>
             Creates a drawcall in the drawing pipeline.
             </summary>
@@ -6806,7 +6806,7 @@
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.OnThemeDrawn">
             <summary>
-            Used for custom drawing. Called after the console's <see cref="P:SadConsole.IScreenSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/> is redrawn.
+            Used for custom drawing. Called after the console's <see cref="!:IScreenSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/> is redrawn.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.Update">

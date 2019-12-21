@@ -17,14 +17,14 @@ namespace SadConsole.Renderers
     public class ConsoleRenderer : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
-        public override void Attach(IScreenSurface screen)
+        public override void Attach(ISurfaceObject screen)
         {
             if (!(screen is Console))
                 throw new Exception($"The ConsoleRenderer must be added to a Console.");
         }
 
         ///  <inheritdoc/>
-        public override void Render(IScreenSurface screen)
+        public override void Render(ISurfaceObject screen)
         {
             var console = (Console)screen;
 
@@ -33,7 +33,7 @@ namespace SadConsole.Renderers
 
             if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
             {
-                var cursorPosition = screen.AbsolutePosition + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).Position;
+                var cursorPosition = screen.AbsoluteArea.Position + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).Position;
                 
                 GameHost.Instance.DrawCalls.Enqueue(
                     new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
@@ -49,7 +49,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(IScreenSurface screen, bool force = false)
+        public override void Refresh(ISurfaceObject screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 

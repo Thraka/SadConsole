@@ -5,7 +5,46 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
-    public interface IScreenSurface: IScreenObject
+    public interface ISurfaceObject
+    {
+        /// <summary>
+        /// The area on the screen this surface occupies. In pixels.
+        /// </summary>
+        Rectangle AbsoluteArea { get; }
+
+        /// <summary>
+        /// Font used with rendering.
+        /// </summary>
+        Font Font { get; set; }
+
+        /// <summary>
+        /// The size of the <see cref="Font"/> cells applied to the object when rendering.
+        /// </summary>
+        Point FontSize { get; set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the object.
+        /// </summary>
+        bool ForceRendererRefresh { get; set; }
+
+        /// <summary>
+        /// Indicates the surface has changed and needs to be rendered.
+        /// </summary>
+        bool IsDirty { get; set; }
+
+        /// <summary>
+        /// The surface the screen object represents.
+        /// </summary>
+        ICellSurface Surface { get; }
+
+        /// <summary>
+        /// A tint used in rendering.
+        /// </summary>
+        Color Tint { get; set; }
+    }
+
+
+    public interface IScreenSurface: IScreenObject, ISurfaceObject
     {
         /// <summary>
         /// Raised when the a mouse button is clicked on this console.
@@ -28,11 +67,6 @@ namespace SadConsole
         event EventHandler<MouseScreenObjectState> MouseMove;
 
         /// <summary>
-        /// The area on the screen this surface occupies. In pixels.
-        /// </summary>
-        Rectangle AbsoluteArea { get; }
-
-        /// <summary>
         /// How the object should handle becoming active.
         /// </summary>
         FocusBehavior FocusedMode { get; set; }
@@ -43,29 +77,9 @@ namespace SadConsole
         bool FocusOnMouseClick { get; set; }
 
         /// <summary>
-        /// Font used with rendering.
-        /// </summary>
-        Font Font { get; set; }
-
-        /// <summary>
-        /// The size of the <see cref="Font"/> cells applied to the object when rendering.
-        /// </summary>
-        Point FontSize { get; set; }
-
-        /// <summary>
-        /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the object.
-        /// </summary>
-        bool ForceRendererRefresh { get; set; }
-
-        /// <summary>
         /// The height of the surface in pixels.
         /// </summary>
         int HeightPixels { get; }
-
-        /// <summary>
-        /// Indicates the surface has changed and needs to be rendered.
-        /// </summary>
-        bool IsDirty { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not this console has exclusive access to the mouse events.
@@ -88,16 +102,6 @@ namespace SadConsole
         IRenderer Renderer { get; set; }
 
         /// <summary>
-        /// The surface the screen object represents.
-        /// </summary>
-        ICellSurface Surface { get; }
-
-        /// <summary>
-        /// A tint used in rendering.
-        /// </summary>
-        Color Tint { get; set; }
-
-        /// <summary>
         /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.
         /// </summary>
         bool UsePixelPositioning { get; set; }
@@ -108,7 +112,7 @@ namespace SadConsole
         int WidthPixels { get; }
 
         /// <summary>
-        /// If the mouse is not over the console, causes the protected <see cref="OnMouseExit"/> method to run which raises the <see cref="MouseExit"/> event.
+        /// Called when the mouse is no longer over the object.
         /// </summary>
         /// <param name="state">The current state of the mouse based on this object.</param>
         void LostMouse(MouseScreenObjectState state);

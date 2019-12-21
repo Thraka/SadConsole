@@ -24,26 +24,26 @@ namespace SadConsole.Renderers
         protected XnaRectangle[] _renderRects;
 
         ///  <inheritdoc/>
-        public virtual void Attach(IScreenSurface screen)
+        public virtual void Attach(ISurfaceObject screen)
         {
         }
 
         ///  <inheritdoc/>
-        public virtual void Detatch(IScreenSurface screen)
+        public virtual void Detatch(ISurfaceObject screen)
         {
             BackingTexture.Dispose();
             BackingTexture = null;
         }
 
         ///  <inheritdoc/>
-        public virtual void Render(IScreenSurface screen)
+        public virtual void Render(ISurfaceObject screen)
         {
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
         }
 
         ///  <inheritdoc/>
-        public virtual void Refresh(IScreenSurface screen, bool force = false)
+        public virtual void Refresh(ISurfaceObject screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -80,14 +80,14 @@ namespace SadConsole.Renderers
         }
 
 
-        protected virtual void RefreshBegin(IScreenSurface screen)
+        protected virtual void RefreshBegin(ISurfaceObject screen)
         {
             MonoGame.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
             MonoGame.Global.GraphicsDevice.Clear(Color.Transparent);
             MonoGame.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
         }
 
-        protected virtual void RefreshEnd(IScreenSurface screen)
+        protected virtual void RefreshEnd(ISurfaceObject screen)
         {
             MonoGame.Global.SharedSpriteBatch.End();
             MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
@@ -130,7 +130,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RefreshTint(IScreenSurface screen)
+        protected virtual void RefreshTint(ISurfaceObject screen)
         {
             if (screen.Tint.A != 0)
             {

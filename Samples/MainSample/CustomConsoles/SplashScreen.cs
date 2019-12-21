@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
-using SadConsole.DrawCalls;
+using SadRogue.Primitives;
 using SadConsole.Effects;
 using SadConsole.Instructions;
 using Console = SadConsole.Console;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class SplashScreen : ScrollingConsole
+    internal class SplashScreen : SadConsole.Console
     {
         public Action SplashCompleted { get; set; }
 
@@ -33,18 +32,21 @@ namespace FeatureDemo.CustomConsoles
             {
                 text.Append(textTemplate);
             }
-            Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
+            
+            this.Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
 
             // Load the logo and convert to a console
             using (System.IO.Stream imageStream = Microsoft.Xna.Framework.TitleContainer.OpenStream("sad.png"))
             {
-                using (var image = Texture2D.FromStream(Global.GraphicsDevice, imageStream))
+                using (var image = Texture2D.FromStream(((Game)SadConsole.Game.Instance).MonoGameInstance.GraphicsDevice, imageStream))
                 {
-                    CellSurface logo = image.ToSurface(Global.FontDefault, false);
+                    
+                    ICellSurface logo = image.ToSurface(Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize), false);
 
-                    _consoleImage = Console.FromSurface(logo, Global.FontDefault);
+                    _consoleImage = new Console(logo);
                     _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, -1);
                     _consoleImage.Tint = Color.Black;
+                    Children.Add(_consoleImage);
                 }
             }
 
@@ -58,7 +60,6 @@ namespace FeatureDemo.CustomConsoles
                 FadeDuration = 1f,
                 Repeat = false,
                 RemoveOnFinished = true,
-                Permanent = true,
                 CloneOnApply = true
             });
 
@@ -71,9 +72,9 @@ namespace FeatureDemo.CustomConsoles
                     .Code(MoveGradient)
 
                     // Clear the background text so new printing doesn't look bad
-                    .Code((console, delta) =>
+                    .Code((console) =>
                         {
-                            console.Fill(Color.Black, Color.Transparent, 0);
+                            ((IScreenSurface)console).Surface.Fill(Color.Black, Color.Transparent, 0);
                             return true;
                         })
 
@@ -105,7 +106,7 @@ namespace FeatureDemo.CustomConsoles
                                                       TimeSpan.FromSeconds(1.0d)))
 
                     // Animation has completed, call the callback this console uses to indicate it's complete
-                    .Code((con, delta) => { SplashCompleted?.Invoke(); return true; })
+                    .Code((con) => { SplashCompleted?.Invoke(); return true; })
                 ;
 
             animation.RemoveOnFinished = true;
@@ -113,29 +114,24 @@ namespace FeatureDemo.CustomConsoles
             Components.Add(animation);
         }
 
-        public override void Update(TimeSpan delta)
+        public override void Update()
         {
-            if (!IsVisible)
+            if (IsVisible)
             {
-                return;
+                base.Update();
             }
-
-            base.Update(delta);
         }
 
-        public override void Draw(TimeSpan delta)
+        public override void Draw()
         {
             // Draw the logo console...
             if (IsVisible)
             {
-                Renderer.Render(_consoleImage);
-                Global.DrawCalls.Add(new DrawCallScreenObject(_consoleImage, _consoleImagePosition, false));
-
-                base.Draw(delta);
+                base.Draw();
             }
         }
 
-        private bool MoveGradient(Console console, TimeSpan delta)
+        private bool MoveGradient(IScreenObject console)
         {
             _gradientPositionX += 1;
 
@@ -147,12 +143,12 @@ namespace FeatureDemo.CustomConsoles
             Color[] colors = new[] { Color.Black, Color.Blue, Color.White, Color.Blue, Color.Black };
             float[] colorStops = new[] { 0f, 0.2f, 0.5f, 0.8f, 1f };
 
-            Algorithms.GradientFill(Font.Size, new Point(_gradientPositionX, 12), 10, 45, new Rectangle(0, 0, Width, Height), new ColorGradient(colors, colorStops), SetForeground);
+            Algorithms.GradientFill(FontSize, new Point(_gradientPositionX, 12), 10, 45, new Rectangle(0, 0, Width, Height), new ColorGradient(colors, colorStops), (f,b,c) => ((IScreenSurface)console).Surface.SetForeground(f,b,c));
 
             return false;
         }
 
-        private bool SetBlinkOnLogoText(Console console, TimeSpan delta)
+        private bool SetBlinkOnLogoText(IScreenObject console)
         {
             var fadeEffect = new Fade
             {
@@ -165,14 +161,14 @@ namespace FeatureDemo.CustomConsoles
                 RemoveOnFinished = true
             };
 
-            var cells = new List<Cell>();
+            var cells = new List<ColoredGlyph>();
             for (int index = 0; index < 10; index++)
             {
                 int point = new Point(26, Height - 1).ToIndex(Width) + 14 + index;
                 cells.Add(Cells[point]);
             }
 
-            SetEffect(cells, fadeEffect);
+            this.SetEffect(cells, fadeEffect);
             return true;
         }
     }
