@@ -18,23 +18,23 @@ namespace SadConsole.Renderers
 
         protected IntRect[] _renderRects;
 
-        public virtual void Attach(ISurfaceObject screen)
+        public virtual void Attach(ISurfaceRenderData screen)
         {
         }
 
-        public virtual void Detatch(ISurfaceObject screen)
+        public virtual void Detatch(ISurfaceRenderData screen)
         {
             BackingTexture.Dispose();
             BackingTexture = null;
         }
 
-        public virtual void Render(ISurfaceObject screen)
+        public virtual void Render(ISurfaceRenderData screen)
         {
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
         }
 
-        public virtual void Refresh(ISurfaceObject screen, bool force = false)
+        public virtual void Refresh(ISurfaceRenderData screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -68,13 +68,13 @@ namespace SadConsole.Renderers
         }
 
 
-        protected virtual void RefreshBegin(ISurfaceObject surface)
+        protected virtual void RefreshBegin(ISurfaceRenderData surface)
         {
             BackingTexture.Clear(Color.Transparent);
             Host.Global.SharedSpriteBatch.Reset(BackingTexture, RenderStates.Default, Transform.Identity);
         }
 
-        protected virtual void RefreshEnd(ISurfaceObject surface)
+        protected virtual void RefreshEnd(ISurfaceRenderData surface)
         {
             Host.Global.SharedSpriteBatch.End();
             BackingTexture.Display();
@@ -107,7 +107,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        protected virtual void RefreshTint(ISurfaceObject surface)
+        protected virtual void RefreshTint(ISurfaceRenderData surface)
         {
             if (surface.Tint.A != 0)
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(surface.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)surface.Font.Image).Texture, surface.AbsoluteArea.ToIntRect(), surface.Font.SolidGlyphRectangle.ToIntRect()));

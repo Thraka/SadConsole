@@ -17,14 +17,14 @@ namespace SadConsole.Renderers
     public class ConsoleRenderer : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
-        public override void Attach(ISurfaceObject screen)
+        public override void Attach(ISurfaceRenderData screen)
         {
             if (!(screen is Console))
                 throw new Exception($"The ConsoleRenderer must be added to a Console.");
         }
 
         ///  <inheritdoc/>
-        public override void Render(ISurfaceObject screen)
+        public override void Render(ISurfaceRenderData screen)
         {
             var console = (Console)screen;
 
@@ -49,7 +49,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(ISurfaceObject screen, bool force = false)
+        public override void Refresh(ISurfaceRenderData screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 

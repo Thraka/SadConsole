@@ -10,23 +10,23 @@ namespace SadConsole.Renderers
         public string RedrawString;
         private StringBuilder _redrawStringBuilder;
 
-        public void Attach(ISurfaceObject surface)
+        public void Attach(ISurfaceRenderData surface)
         {
             //RedrawString = new string(' ', console.Width * console.Height);
             _redrawStringBuilder = new StringBuilder(surface.Surface.View.Width * surface.Surface.View.Height * 4);
         }
 
-        public void Detatch(ISurfaceObject surface)
+        public void Detatch(ISurfaceRenderData surface)
         {
             
         }
 
-        public void Render(ISurfaceObject surface)
+        public void Render(ISurfaceRenderData surface)
         {
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallSurface(surface.Surface, surface.AbsoluteArea.Position));            
         }
 
-        public void Refresh(ISurfaceObject surface, bool force)
+        public void Refresh(ISurfaceRenderData surface, bool force)
         {
             //_redrawStringBuilder.Clear();
             //foreach (Cell cell in console)

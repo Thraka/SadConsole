@@ -22,14 +22,14 @@ namespace SadConsole.Renderers
     public class ControlsConsole : ScreenObjectRenderer
     {
         ///  <inheritdoc/>
-        public override void Attach(ISurfaceObject screen)
+        public override void Attach(ISurfaceRenderData screen)
         {
             if (!(screen is ControlsConsole))
                 throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(ControlsConsole)}.");
         }
 
         ///  <inheritdoc/>
-        public override void Render(ISurfaceObject screen)
+        public override void Render(ISurfaceRenderData screen)
         {
             var console = (Console)screen;
 
@@ -53,7 +53,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(ISurfaceObject screen, bool force = false)
+        public override void Refresh(ISurfaceRenderData screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 

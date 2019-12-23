@@ -40,13 +40,12 @@ namespace FeatureDemo.CustomConsoles
             {
                 using (var image = Texture2D.FromStream(((Game)SadConsole.Game.Instance).MonoGameInstance.GraphicsDevice, imageStream))
                 {
-                    
                     ICellSurface logo = image.ToSurface(Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize), false);
 
                     _consoleImage = new Console(logo);
-                    _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, -1);
+                    _consoleImage.Position = 
+                    _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, -2);
                     _consoleImage.Tint = Color.Black;
-                    Children.Add(_consoleImage);
                 }
             }
 
@@ -62,7 +61,7 @@ namespace FeatureDemo.CustomConsoles
                 RemoveOnFinished = true,
                 CloneOnApply = true
             });
-
+            
             // Configure the animation
             InstructionSet animation = new InstructionSet()
 
@@ -84,6 +83,9 @@ namespace FeatureDemo.CustomConsoles
                         Position = new Point(26, Height - 1),
                         TotalTimeToPrint = 1f
                     })
+
+                    // Add the logo to the console children
+                    .Code((o) => { Children.Add(_consoleImage); return true; })
 
                     // Fade in the logo
                     .Instruct(new FadeTextSurfaceTint(_consoleImage,
