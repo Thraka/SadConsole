@@ -71,9 +71,9 @@ namespace FeatureDemo.CustomConsoles
                     .Code(MoveGradient)
 
                     // Clear the background text so new printing doesn't look bad
-                    .Code((console) =>
+                    .Code((host) =>
                         {
-                            ((IScreenSurface)console).Surface.Fill(Color.Black, Color.Transparent, 0);
+                            ((IScreenSurface)host).Surface.Fill(Color.Black, Color.Transparent, 0);
                             return true;
                         })
 
@@ -108,7 +108,7 @@ namespace FeatureDemo.CustomConsoles
                                                       TimeSpan.FromSeconds(1.0d)))
 
                     // Animation has completed, call the callback this console uses to indicate it's complete
-                    .Code((con) => { SplashCompleted?.Invoke(); return true; })
+                    .Code((host) => { SplashCompleted?.Invoke(); return true; })
                 ;
 
             animation.RemoveOnFinished = true;
