@@ -4,6 +4,9 @@ using SadConsole.Renderers;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// A screen object that has mouse input, surface, and render information.
+    /// </summary>
     public interface IScreenSurface: IScreenObject, ISurfaceRenderData
     {
         /// <summary>

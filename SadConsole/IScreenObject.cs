@@ -8,7 +8,7 @@ using SadRogue.Primitives;
 namespace SadConsole
 {
     /// <summary>
-    /// A generic object processed by SadConsole. Provides parent/child, components, and position.
+    /// A generic object processed by SadConsole. Provides parent/child, components, position, and input callbacks.
     /// </summary>
     public interface IScreenObject
     {
