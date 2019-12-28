@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d2708caa-394b-473d-a891-2d3f8cf7f2ab</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SadConsoleEditor</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\BorderConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\BrushConsoleContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\QuickSelectPane.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Consoles\ToolPane.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CharacterPicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ColorBar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ColorPicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ColorPresenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\FileDirectoryListbox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Editors\GameObjectEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Editors\SceneEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\Ansi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Editors\IEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Editors\LayeredConsoleEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\Animation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\Zones.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\IFileLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\TextFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\LayeredTextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\Hotspots.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaders\TextSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HSLColor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\Animation\AnimationFramesPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\Animation\AnimationsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\Animation\GameObjectNamePanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\CharacterPickPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\CustomPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\FilesPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\LayersPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\Scene\GameObjectManagementPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\Scene\HotspotTool.Panel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\Scene\RegionManagementPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ToolsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ToolSpecific\BoxTool.Panel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ToolSpecific\Circle.Panel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ToolSpecific\LinePanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ToolSpecific\RecolorTool.Panel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ToolSpecific\SelectionTool.Panel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ResizableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TheDraw\Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\Animation\EntityCenterTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\BoxTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\Circle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\DrawTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\FillTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\ITool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\LineTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\RecolorTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\Scene\HotspotTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\Scene\SceneObjectMoveResizeTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\SelectionTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\TextTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\Animation\AnimationPreviewPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\Animation\AnimationSpeedPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\CharacterQuickSelectPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\ColorPickerPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\EditHotspotPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\KeyValueEditPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\NewConsolePopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\OtherColorsPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\RenamePopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\ResizeSurfacePopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\SelectFilePopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\TextMakerPopup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)16x16_sm.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Cheepicus_12x12.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)EditorFont_IBM8x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Icon.ico" />
+    <Content Include="$(MSBuildThisFileDirectory)quickselect.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)16sm.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Cheepicus12.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Editor.font">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)TheDraw\4MAXX.TDF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)TheDraw\ABBADON.TDF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)TheDraw\BIGICE_F.TDF">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)TheDraw\DESTRUCX.TDF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)TheDraw\LARRY3D.TDF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)TheDraw\TDFONTS0.TDF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Examples\" />
+  </ItemGroup>
+</Project>

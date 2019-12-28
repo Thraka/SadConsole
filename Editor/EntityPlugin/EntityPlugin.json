@@ -1,0 +1,23 @@
+[
+  {
+    "EditorId": "ENTITY",
+    "BoundsHeight": 10,
+    "BoundsWidth": 10,
+    "DefaultBackground": {
+      "A": 255,
+      "B": 0,
+      "G": 0,
+      "R": 0
+    },
+    "DefaultForeground": {
+      "A": 255,
+      "B": 255,
+      "G": 255,
+      "R": 255
+    },
+    "DefaultHeight": 10,
+    "DefaultWidth": 10,
+    "Tools": [ "PENCIL", "EMPTY", "RECOLOR", "FILL", "TEXT", "LINE", "BOX", "CIRCLE", "SELECT" ],
+    "FileLoaders": [ "ENTITY" ]
+  }
+]
