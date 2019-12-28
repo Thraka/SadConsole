@@ -2810,6 +2810,16 @@
             A friendly name of the game object.
             </summary>
         </member>
+        <member name="P:SadConsole.Entities.Entity.Width">
+            <summary>
+            The width of the <see cref="P:SadConsole.Entities.Entity.Animation"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Height">
+            <summary>
+            The height of the <see cref="P:SadConsole.Entities.Entity.Animation"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.Entities.Entity.Animation">
             <summary>
             The current animation.
@@ -5355,7 +5365,7 @@
         </member>
         <member name="T:SadConsole.IScreenObject">
             <summary>
-            A generic object processed by SadConsole. Provides parent/child, components, and position.
+            A generic object processed by SadConsole. Provides parent/child, components, position, and input callbacks.
             </summary>
         </member>
         <member name="E:SadConsole.IScreenObject.EnabledChanged">
@@ -5461,39 +5471,9 @@
             Sets a value for <see cref="P:SadConsole.IScreenObject.AbsolutePosition"/> based on the <see cref="P:SadConsole.IScreenObject.Position"/> of this instance and the <see cref="P:SadConsole.IScreenObject.Parent"/> instance.
             </summary>
         </member>
-        <member name="P:SadConsole.ISurfaceObject.AbsoluteArea">
+        <member name="T:SadConsole.IScreenSurface">
             <summary>
-            The area on the screen this surface occupies. In pixels.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ISurfaceObject.Font">
-            <summary>
-            Font used with rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ISurfaceObject.FontSize">
-            <summary>
-            The size of the <see cref="P:SadConsole.ISurfaceObject.Font"/> cells applied to the object when rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ISurfaceObject.ForceRendererRefresh">
-            <summary>
-            When <see langword="true"/>, the <see cref="!:Draw"/> method forces the <see cref="!:Renderer"/> to refresh the backing texture with the latest state of the object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ISurfaceObject.IsDirty">
-            <summary>
-            Indicates the surface has changed and needs to be rendered.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ISurfaceObject.Surface">
-            <summary>
-            The surface the screen object represents.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ISurfaceObject.Tint">
-            <summary>
-            A tint used in rendering.
+            A screen object that has mouse input, surface, and render information.
             </summary>
         </member>
         <member name="E:SadConsole.IScreenSurface.MouseButtonClicked">
@@ -5583,6 +5563,41 @@
             </summary>
             <param name="state">The mouse state related to this console.</param>
             <returns>True when the mouse is over this console and processing should stop.</returns>
+        </member>
+        <member name="P:SadConsole.ISurfaceRenderData.AbsoluteArea">
+            <summary>
+            The area on the screen this surface occupies. In pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceRenderData.Font">
+            <summary>
+            Font used with rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceRenderData.FontSize">
+            <summary>
+            The size of the <see cref="P:SadConsole.ISurfaceRenderData.Font"/> cells applied to the object when rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceRenderData.ForceRendererRefresh">
+            <summary>
+            When <see langword="true"/>, the <see cref="!:Draw"/> method forces the <see cref="!:Renderer"/> to refresh the backing texture with the latest state of the object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceRenderData.IsDirty">
+            <summary>
+            Indicates the surface has changed and needs to be rendered.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceRenderData.Surface">
+            <summary>
+            The surface the screen object represents.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceRenderData.Tint">
+            <summary>
+            A tint used in rendering.
+            </summary>
         </member>
         <member name="T:SadConsole.LayeredScreenSurface">
             <summary>
@@ -5848,26 +5863,26 @@
             Draws a surface.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.ISurfaceObject)">
+        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.ISurfaceRenderData)">
             <summary>
             Called when the renderer is added to a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.ISurfaceObject)">
+        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.ISurfaceRenderData)">
             <summary>
             Called when the renderer is removed from a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ISurfaceObject,System.Boolean)">
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
             <summary>
             Refreshes a cached drawing state.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
             <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.ISurfaceObject)">
+        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.ISurfaceRenderData)">
             <summary>
             Creates a drawcall in the drawing pipeline.
             </summary>
@@ -6384,6 +6399,11 @@
         <member name="P:SadConsole.Settings.UseDefaultExtendedFont">
             <summary>
             When set to true, and a font is not specified with the <see cref="T:SadConsole.GameHost"/>, the IBM 8x16 extended SadConsole font will be used.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Settings.WindowTitle">
+            <summary>
+            The window title to display when the app is windowed.
             </summary>
         </member>
         <member name="T:SadConsole.Settings.Input">
@@ -8494,7 +8514,7 @@
         </member>
         <member name="M:SadConsole.UI.Window.RedrawTheme">
             <summary>
-            Causes the window to be redrawn with the selected <see cref="!:Theme"/>. When overridden, call this method first.
+            Causes the window to be redrawn with the selected <see cref="P:SadConsole.UI.ControlsConsole.Theme"/>. When overridden, call this method first.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Window.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">

@@ -160,7 +160,7 @@ namespace SadConsole.UI
         }
 
         /// <summary>
-        /// Causes the window to be redrawn with the selected <see cref="Theme"/>. When overridden, call this method first.
+        /// Causes the window to be redrawn with the selected <see cref="ControlsConsole.Theme"/>. When overridden, call this method first.
         /// </summary>
         public override void RedrawTheme()
         {
