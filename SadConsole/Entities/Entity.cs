@@ -34,6 +34,16 @@ namespace SadConsole.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// The width of the <see cref="Animation"/>.
+        /// </summary>
+        public int Width => _animation.Width;
+
+        /// <summary>
+        /// The height of the <see cref="Animation"/>.
+        /// </summary>
+        public int Height => _animation.Height;
+
+        /// <summary>
         /// The current animation.
         /// </summary>
         public AnimatedScreenSurface Animation
