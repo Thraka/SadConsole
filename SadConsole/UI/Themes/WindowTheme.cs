@@ -80,7 +80,7 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override void Draw(UI.ControlsConsole console)
         {
-            var themeColors = console.ThemeColors ?? Library.Default.Colors;
+            var themeColors = console.FindThemeColors();
 
             FillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
             TitleStyle = new ColoredGlyph(themeColors.TitleText, FillStyle.Background, FillStyle.Glyph);
@@ -140,5 +140,6 @@ namespace SadConsole.UI.Themes
                 console.Print(TitleAreaX, TitleAreaY, adjustedText, TitleStyle);
             }
         }
+
     }
 }
