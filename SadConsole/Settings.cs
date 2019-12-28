@@ -69,6 +69,11 @@ namespace SadConsole
         public static bool UseDefaultExtendedFont { get; set; } = false;
 
         /// <summary>
+        /// The window title to display when the app is windowed.
+        /// </summary>
+        public static string WindowTitle { get; set; } = "SadConsole Game";
+
+        /// <summary>
         /// Settings related to input.
         /// </summary>
         public static class Input
