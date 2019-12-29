@@ -172,7 +172,8 @@ namespace SadConsole.UI
             DisableControlFocusing = false;
 
             _theme = Library.Default.GetConsoleTheme(GetType());
-            OnIsDirtyChanged();        }
+            OnIsDirtyChanged();
+        }
 
         /// <summary>
         /// Adds an existing control to this console.
