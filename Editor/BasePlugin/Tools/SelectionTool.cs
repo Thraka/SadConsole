@@ -72,6 +72,7 @@
             Brush.Animations.Add(animation.Name, animation);
 
             animation = new AnimatedScreenSurface(AnimationSelection, 1, 1, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
+            animation.CreateFrame();
             Brush.Animations.Add(animation.Name, animation);
 
             _frameEffect = new SadConsole.Effects.Fade()

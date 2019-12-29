@@ -7,6 +7,7 @@ namespace SadConsoleEditor.Windows
 {
     class OtherColorsPopup : SadConsole.UI.Window
     {
+        private bool _isCreated;
         private RadioButton _ansiSelectButton;
         private RadioButton _knownSelectButton;
 
@@ -201,6 +202,9 @@ namespace SadConsoleEditor.Windows
             this.CloseOnEscKey = true;
             this.Title = "Pick a known color";
 
+            _isCreated = true;
+            IsDirty = true;
+
             _ansiButtons[0].DoClick();
         }
 
@@ -238,6 +242,8 @@ namespace SadConsoleEditor.Windows
         
         protected override void OnThemeDrawn()
         {
+            if (!_isCreated) return;
+
             var colors = FindThemeColors();
 
             if (!_namedColorsList.IsVisible)

@@ -46,6 +46,12 @@ namespace SadConsoleEditor
             windowTheme.BorderLineStyle = ICellSurface.ConnectedLineThick;
             SadConsole.UI.Themes.Library.Default.SetConsoleTheme(typeof(SadConsole.UI.Window), windowTheme);
 
+            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.CharacterPicker), new Controls.CharacterPicker.ThemeType());
+            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorBar), new Controls.ColorBar.ThemeType());
+            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorPresenter), new Controls.ColorPresenter.ThemeType());
+            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorPicker), new Controls.ColorPicker.ThemeType());
+            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.HueBar), new Controls.HueBar.ThemeType());
+
             //Global.MouseState.ProcessMouseWhenOffScreen = true;
 
             // We'll instead use our demo consoles that show various features of SadConsole.

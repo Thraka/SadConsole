@@ -8,6 +8,7 @@ namespace SadConsoleEditor.Windows
 {
     public class TextMakerPopup : SadConsole.UI.Window
     {
+        private bool _isCreated;
         DrawingSurface previewPane;
         TextBox textInput;
         Button okButton;
@@ -126,6 +127,8 @@ namespace SadConsoleEditor.Windows
             textInput.Text = "Example!";
 
             Title = "Text Maker";
+            _isCreated = true;
+            IsDirty = true;
         }
 
         private void BuildFinalResult()
@@ -185,6 +188,7 @@ namespace SadConsoleEditor.Windows
 
         protected override void OnThemeDrawn()
         {
+            if (!_isCreated) return;
             var colors = FindThemeColors();
 
             this.Print(fontsListbox.Bounds.X, fontsListbox.Bounds.Y - 2, "Fonts", colors.TitleText);

@@ -45,6 +45,7 @@
         public CircleTool()
         {
             animSinglePoint = new AnimatedScreenSurface("single", 1, 1, Config.Program.ScreenFont, Config.Program.ScreenFontSize);
+            animSinglePoint.CreateFrame();
             animSinglePoint.CurrentFrame[0].Glyph = 42;
 
             frameEffect = new SadConsole.Effects.Fade()
