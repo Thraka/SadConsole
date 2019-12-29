@@ -201,7 +201,7 @@ namespace SadConsole.UI.Controls
                 _parent = null;
                 if (_parent != null) _parent.Remove(this);
                 _parent = value;
-                _parent.Add(this);
+                _parent?.Add(this);
 
                 OnParentChanged();
             }
