@@ -206,7 +206,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Draws the <see cref="Surface"/> and all <see cref="ScreenObject.Components"/> and <see cref="ScreenObject.Children"/>.
+        /// Draws the <see cref="Surface"/> and all <see cref="ScreenObject.SadComponents"/> and <see cref="ScreenObject.Children"/>.
         /// </summary>
         /// <remarks>Only processes if <see cref="ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
         public override void Draw()
@@ -228,7 +228,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Updates the <see cref="Surface"/> effects and all <see cref="ScreenObject.Components"/> and <see cref="ScreenObject.Children"/>.
+        /// Updates the <see cref="Surface"/> effects and all <see cref="ScreenObject.SadComponents"/> and <see cref="ScreenObject.Children"/>.
         /// </summary>
         /// <remarks>Only processes if <see cref="ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
         public override void Update()

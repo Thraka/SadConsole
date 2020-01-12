@@ -12,7 +12,7 @@ namespace SadConsole.Input
     {
         private TimeSpan _leftLastClickedTime;
         private TimeSpan _rightLastClickedTime;
-        private IScreenSurface _lastMouseScreenObject;
+        private IScreenObject _lastMouseScreenObject;
 
         /// <summary>
         /// The pixel position of the mouse on the screen.
@@ -160,7 +160,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Builds information about the mouse state based on the <see cref="Global.FocusedScreenObjects"/> or <see cref="Global.CurrentScreen"/>. Should be called each frame.
+        /// Builds information about the mouse state based on the <see cref="Global.FocusedScreenObjects"/> or <see cref="Global.Screen"/>. Should be called each frame.
         /// </summary>
         public virtual void Process()
         {
@@ -195,7 +195,7 @@ namespace SadConsole.Input
                 bool foundMouseTarget = false;
 
                 // Build a list of all screen objects
-                var screenObjects = new List<IScreenSurface>();
+                var screenObjects = new List<IScreenObject>();
                 GetConsoles(Global.Screen, ref screenObjects);
 
                 // Process top-most screen objects first.
@@ -226,13 +226,12 @@ namespace SadConsole.Input
 
         }
 
-        private void GetConsoles(IScreenObject screen, ref List<IScreenSurface> list)
+        private void GetConsoles(IScreenObject screen, ref List<IScreenObject> list)
         {
             if (!screen.IsVisible) return;
 
-            if (screen is IScreenSurface surface)
-                if (screen.UseMouse)
-                    list.Add(surface);
+            if (screen.UseMouse)
+                list.Add(screen);
 
             foreach (IScreenObject child in screen.Children)
             {

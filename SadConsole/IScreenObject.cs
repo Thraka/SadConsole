@@ -33,6 +33,11 @@ namespace SadConsole
         event EventHandler VisibleChanged;
 
         /// <summary>
+        /// How the object should handle becoming active.
+        /// </summary>
+        FocusBehavior FocusedMode { get; set; }
+
+        /// <summary>
         /// A position that is based on the current <see cref="Position"/> and <see cref="Parent"/> position, in pixels.
         /// </summary>
         Point AbsolutePosition { get; }
@@ -45,12 +50,22 @@ namespace SadConsole
         /// <summary>
         /// A collection of components processed by this console.
         /// </summary>
-        ObservableCollection<IComponent> Components { get; }
+        ObservableCollection<IComponent> SadComponents { get; }
 
         /// <summary>
         /// Gets or sets the visibility of this object.
         /// </summary>
         bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not this object has exclusive access to the mouse events.
+        /// </summary>
+        bool IsExclusiveMouse { get; set; }
+
+        /// <summary>
+        /// Gets or sets this console as the focused object for input.
+        /// </summary>
+        bool IsFocused { get; set; }
 
         /// <summary>
         /// Gets or sets the visibility of this object.
@@ -78,24 +93,34 @@ namespace SadConsole
         bool UseMouse { get; set; }
 
         /// <summary>
-        /// Draws all <see cref="Components"/> and <see cref="Children"/>.
+        /// Draws all <see cref="SadComponents"/> and <see cref="Children"/>.
         /// </summary>
         /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
         void Draw();
+
+        /// <summary>
+        /// Called when this object is focused.
+        /// </summary>
+        void OnFocused();
+
+        /// <summary>
+        /// Called when this object's focus has been lost.
+        /// </summary>
+        void OnFocusLost();
 
         /// <summary>
         /// Gets components of the specified types.
         /// </summary>
         /// <typeparam name="TComponent">THe component to find</typeparam>
         /// <returns>The components found.</returns>
-        IComponent GetComponent<TComponent>() where TComponent : IComponent;
+        IComponent GetSadComponent<TComponent>() where TComponent : IComponent;
 
         /// <summary>
         /// Gets the first component of the specified type.
         /// </summary>
         /// <typeparam name="TComponent">THe component to find</typeparam>
         /// <returns>The component if found, otherwise null.</returns>
-        IEnumerable<IComponent> GetComponents<TComponent>() where TComponent : IComponent;
+        IEnumerable<IComponent> GetSadComponents<TComponent>() where TComponent : IComponent;
 
         /// <summary>
         /// Called by the engine to process the keyboard.
@@ -105,7 +130,20 @@ namespace SadConsole
         bool ProcessKeyboard(Keyboard keyboard);
 
         /// <summary>
-        /// Updates all <see cref="Components"/> and <see cref="Children"/>.
+        /// Processes the mouse.
+        /// </summary>
+        /// <param name="state">The mouse state related to this object.</param>
+        /// <returns>True when this object should halt further mouse processing..</returns>
+        bool ProcessMouse(MouseScreenObjectState state);
+
+        /// <summary>
+        /// Called when the mouse is being used by something else.
+        /// </summary>
+        /// <param name="state">The current state of the mouse based on this object.</param>
+        void LostMouse(MouseScreenObjectState state);
+
+        /// <summary>
+        /// Updates all <see cref="SadComponents"/> and <see cref="Children"/>.
         /// </summary>
         /// <remarks>Only processes if <see cref="IsEnabled"/> is <see langword="true"/>.</remarks>
         void Update();

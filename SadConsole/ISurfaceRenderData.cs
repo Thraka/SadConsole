@@ -2,10 +2,13 @@
 
 namespace SadConsole
 {
+    /// <summary>
+    /// Provides the basic information needed to render a surface.
+    /// </summary>
     public interface ISurfaceRenderData
     {
         /// <summary>
-        /// The area on the screen this surface occupies. In pixels.
+        /// The pixel area on the screen this surface occupies.
         /// </summary>
         Rectangle AbsoluteArea { get; }
 

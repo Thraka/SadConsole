@@ -87,7 +87,7 @@ namespace SadConsole.Instructions
 
             if (RemoveOnFinished)
             {
-                componentHost.Components.Remove(this);
+                componentHost.SadComponents.Remove(this);
             }
         }
 

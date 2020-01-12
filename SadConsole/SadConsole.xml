@@ -3177,19 +3177,19 @@
             Clears all screen objects from the active stack along with the current active screen object.
             </summary>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Push(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Push(SadConsole.IScreenObject)">
             <summary>
             Adds another screen object to active stack, setting it as the active (top most in the stack) screen object.
             </summary>
             <param name="screenObject"></param>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Set(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Set(SadConsole.IScreenObject)">
             <summary>
-            Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="T:SadConsole.IScreenSurface"/> to this instance.
+            Replaces the top screen object (active screen object) with the provided instance. Sets <see cref="T:SadConsole.IScreenObject"/> to this instance.
             </summary>
             <param name="screenObject">The screen object to make active.</param>
         </member>
-        <member name="M:SadConsole.FocusedScreenObjectStack.Pop(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.FocusedScreenObjectStack.Pop(SadConsole.IScreenObject)">
             <summary>
             Removes the screen object from the active stack. If the instance is the current active screen object, the active screen object is set to the last screen object in the previous screen object.
             </summary>
@@ -4954,7 +4954,7 @@
         </member>
         <member name="M:SadConsole.Input.Mouse.Process">
             <summary>
-            Builds information about the mouse state based on the <see cref="P:SadConsole.Global.FocusedScreenObjects"/> or <see cref="!:Global.CurrentScreen"/>. Should be called each frame.
+            Builds information about the mouse state based on the <see cref="P:SadConsole.Global.FocusedScreenObjects"/> or <see cref="P:SadConsole.Global.Screen"/>. Should be called each frame.
             </summary>
         </member>
         <member name="M:SadConsole.Input.Mouse.ClearLastMouseScreenObject">
@@ -5020,9 +5020,9 @@
             Indicates that the mouse is within the bounds of <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Input.MouseScreenObjectState.#ctor(SadConsole.IScreenSurface,SadConsole.Input.Mouse)">
+        <member name="M:SadConsole.Input.MouseScreenObjectState.#ctor(SadConsole.IScreenObject,SadConsole.Input.Mouse)">
             <summary>
-            Calculates a new <see cref="T:SadConsole.Input.MouseScreenObjectState"/> based on an <see cref="F:SadConsole.Input.MouseScreenObjectState.ScreenObject"/> and <see cref="F:SadConsole.Input.MouseScreenObjectState.Mouse"/> state.
+            Calculates a new <see cref="T:SadConsole.Input.MouseScreenObjectState"/> based on an <see cref="T:SadConsole.IScreenObject"/> and <see cref="T:SadConsole.Input.Mouse"/> state.
             </summary>
             <param name="screenObject">The screen object to process with the mouse state.</param>
             <param name="mouseData">The current mouse state.</param>
@@ -5388,6 +5388,11 @@
             Raised when the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property changes.
             </summary>
         </member>
+        <member name="P:SadConsole.IScreenObject.FocusedMode">
+            <summary>
+            How the object should handle becoming active.
+            </summary>
+        </member>
         <member name="P:SadConsole.IScreenObject.AbsolutePosition">
             <summary>
             A position that is based on the current <see cref="P:SadConsole.IScreenObject.Position"/> and <see cref="P:SadConsole.IScreenObject.Parent"/> position, in pixels.
@@ -5398,7 +5403,7 @@
             The child objects of this instance.
             </summary>
         </member>
-        <member name="P:SadConsole.IScreenObject.Components">
+        <member name="P:SadConsole.IScreenObject.SadComponents">
             <summary>
             A collection of components processed by this console.
             </summary>
@@ -5406,6 +5411,16 @@
         <member name="P:SadConsole.IScreenObject.IsEnabled">
             <summary>
             Gets or sets the visibility of this object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IScreenObject.IsExclusiveMouse">
+            <summary>
+            Gets or sets whether or not this object has exclusive access to the mouse events.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IScreenObject.IsFocused">
+            <summary>
+            Gets or sets this console as the focused object for input.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenObject.IsVisible">
@@ -5435,18 +5450,28 @@
         </member>
         <member name="M:SadConsole.IScreenObject.Draw">
             <summary>
-            Draws all <see cref="P:SadConsole.IScreenObject.Components"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
+            Draws all <see cref="P:SadConsole.IScreenObject.SadComponents"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
             </summary>
             <remarks>Only processes if <see cref="P:SadConsole.IScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
-        <member name="M:SadConsole.IScreenObject.GetComponent``1">
+        <member name="M:SadConsole.IScreenObject.OnFocused">
+            <summary>
+            Called when this object is focused.
+            </summary>
+        </member>
+        <member name="M:SadConsole.IScreenObject.OnFocusLost">
+            <summary>
+            Called when this object's focus has been lost.
+            </summary>
+        </member>
+        <member name="M:SadConsole.IScreenObject.GetSadComponent``1">
             <summary>
             Gets components of the specified types.
             </summary>
             <typeparam name="TComponent">THe component to find</typeparam>
             <returns>The components found.</returns>
         </member>
-        <member name="M:SadConsole.IScreenObject.GetComponents``1">
+        <member name="M:SadConsole.IScreenObject.GetSadComponents``1">
             <summary>
             Gets the first component of the specified type.
             </summary>
@@ -5460,9 +5485,22 @@
             <param name="keyboard">Keyboard information.</param>
             <returns>True when the keyboard had data and this console did something with it.</returns>
         </member>
+        <member name="M:SadConsole.IScreenObject.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Processes the mouse.
+            </summary>
+            <param name="state">The mouse state related to this object.</param>
+            <returns>True when this object should halt further mouse processing..</returns>
+        </member>
+        <member name="M:SadConsole.IScreenObject.LostMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Called when the mouse is being used by something else.
+            </summary>
+            <param name="state">The current state of the mouse based on this object.</param>
+        </member>
         <member name="M:SadConsole.IScreenObject.Update">
             <summary>
-            Updates all <see cref="P:SadConsole.IScreenObject.Components"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
+            Updates all <see cref="P:SadConsole.IScreenObject.SadComponents"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
             </summary>
             <remarks>Only processes if <see cref="P:SadConsole.IScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
         </member>
@@ -5496,29 +5534,14 @@
             Raised when the mouse moves around the this console.
             </summary>
         </member>
-        <member name="P:SadConsole.IScreenSurface.FocusedMode">
-            <summary>
-            How the object should handle becoming active.
-            </summary>
-        </member>
         <member name="P:SadConsole.IScreenSurface.FocusOnMouseClick">
             <summary>
-            When true, this console will set <see cref="P:SadConsole.IScreenSurface.IsFocused"/> to true when the mouse is clicked.
+            When true, this console will set <see cref="P:SadConsole.IScreenObject.IsFocused"/> to true when the mouse is clicked.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.HeightPixels">
             <summary>
             The height of the surface in pixels.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenSurface.IsExclusiveMouse">
-            <summary>
-            Gets or sets whether or not this console has exclusive access to the mouse events.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenSurface.IsFocused">
-            <summary>
-            Gets or sets this console as the focused object for input.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.MoveToFrontOnMouseClick">
@@ -5541,32 +5564,14 @@
             The width of the surface in pixels.
             </summary>
         </member>
-        <member name="M:SadConsole.IScreenSurface.LostMouse(SadConsole.Input.MouseScreenObjectState)">
+        <member name="T:SadConsole.ISurfaceRenderData">
             <summary>
-            Called when the mouse is no longer over the object.
+            Provides the basic information needed to render a surface.
             </summary>
-            <param name="state">The current state of the mouse based on this object.</param>
-        </member>
-        <member name="M:SadConsole.IScreenSurface.OnFocused">
-            <summary>
-            Called when this object is focused.
-            </summary>
-        </member>
-        <member name="M:SadConsole.IScreenSurface.OnFocusLost">
-            <summary>
-            Called when this object's focus has been lost.
-            </summary>
-        </member>
-        <member name="M:SadConsole.IScreenSurface.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
-            <summary>
-            Processes the mouse.
-            </summary>
-            <param name="state">The mouse state related to this console.</param>
-            <returns>True when the mouse is over this console and processing should stop.</returns>
         </member>
         <member name="P:SadConsole.ISurfaceRenderData.AbsoluteArea">
             <summary>
-            The area on the screen this surface occupies. In pixels.
+            The pixel area on the screen this surface occupies.
             </summary>
         </member>
         <member name="P:SadConsole.ISurfaceRenderData.Font">
@@ -5907,30 +5912,30 @@
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsUpdate">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsDraw">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsMouse">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsMouse"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsKeyboard">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsKeyboard"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsEmpty">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObject.Components"/> that is not set for update, draw, mouse, or keyboard.
+            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> that is not set for update, draw, mouse, or keyboard.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenObject.Components">
+        <member name="P:SadConsole.ScreenObject.SadComponents">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenObject.Children">
@@ -5949,6 +5954,15 @@
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenObject.IsEnabled">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ScreenObject.IsFocused">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ScreenObject.FocusedMode">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ScreenObject.IsExclusiveMouse">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenObject.UseKeyboard">
@@ -5971,10 +5985,22 @@
         <member name="M:SadConsole.ScreenObject.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.ScreenObject.GetComponents``1">
+        <member name="M:SadConsole.ScreenObject.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.ScreenObject.GetComponent``1">
+        <member name="M:SadConsole.ScreenObject.LostMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObject.OnFocusLost">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObject.OnFocused">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObject.GetSadComponents``1">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObject.GetSadComponent``1">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenObject.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
@@ -6193,13 +6219,13 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.Draw">
             <summary>
-            Draws the <see cref="P:SadConsole.ScreenSurface.Surface"/> and all <see cref="P:SadConsole.ScreenObject.Components"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
+            Draws the <see cref="P:SadConsole.ScreenSurface.Surface"/> and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
             <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenSurface.Update">
             <summary>
-            Updates the <see cref="P:SadConsole.ScreenSurface.Surface"/> effects and all <see cref="P:SadConsole.ScreenObject.Components"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
+            Updates the <see cref="P:SadConsole.ScreenSurface.Surface"/> effects and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
             <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
         </member>
@@ -6249,19 +6275,10 @@
             Indicates that the mouse is currently over this console.
             </summary>
         </member>
-        <member name="P:SadConsole.ScreenSurface.FocusedMode">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.IsExclusiveMouse">
-            <inheritdoc/>
-        </member>
         <member name="P:SadConsole.ScreenSurface.MoveToFrontOnMouseClick">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenSurface.FocusOnMouseClick">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.IsFocused">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenSurface.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
@@ -6298,19 +6315,6 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenSurface.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <summary>
-            Called by the engine to process the keyboard.
-            </summary>
-            <param name="keyboard">Keyboard information.</param>
-            <returns>True when the keyboard had data and this console did something with it.</returns>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.OnFocusLost">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.ScreenSurface.OnFocused">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.Serializer">
@@ -8424,7 +8428,7 @@
         </member>
         <member name="F:SadConsole.UI.Window.PreviousMouseExclusiveDrag">
             <summary>
-            Temporary value to hold the state of <see cref="P:SadConsole.ScreenSurface.IsExclusiveMouse"/> prior to dragging.
+            Temporary value to hold the state of <see cref="!:ScreenSurface.IsExclusiveMouse"/> prior to dragging.
             </summary>
         </member>
         <member name="F:SadConsole.UI.Window.AddedToParent">

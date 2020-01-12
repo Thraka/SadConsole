@@ -10,7 +10,7 @@ namespace SadConsole.Input
         /// <summary>
         /// The screen object used to create the mouse state.
         /// </summary>
-        public readonly IScreenSurface ScreenObject;
+        public readonly IScreenObject ScreenObject;
 
         /// <summary>
         /// The mouse data.
@@ -48,41 +48,41 @@ namespace SadConsole.Input
         public readonly bool IsOnScreenObject;
 
         /// <summary>
-        /// Calculates a new <see cref="MouseScreenObjectState"/> based on an <see cref="ScreenObject"/> and <see cref="Mouse"/> state.
+        /// Calculates a new <see cref="MouseScreenObjectState"/> based on an <see cref="IScreenObject"/> and <see cref="SadConsole.Input.Mouse"/> state.
         /// </summary>
         /// <param name="screenObject">The screen object to process with the mouse state.</param>
         /// <param name="mouseData">The current mouse state.</param>
-        public MouseScreenObjectState(IScreenSurface screenObject, Mouse mouseData)
+        public MouseScreenObjectState(IScreenObject screenObject, Mouse mouseData)
         {
             bool isNegative = false;
             Mouse = mouseData.Clone();
             ScreenObject = screenObject;
 
-            if (screenObject != null)
+            if (screenObject != null && screenObject is IScreenSurface screenSurface)
             {
-                if (screenObject.UsePixelPositioning)
+                if (screenSurface.UsePixelPositioning)
                 {
-                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToSurface(screenObject.FontSize);
-                    SurfacePixelPosition = mouseData.ScreenPosition - screenObject.AbsolutePosition;
+                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToSurface(screenSurface.FontSize);
+                    SurfacePixelPosition = mouseData.ScreenPosition - screenSurface.AbsolutePosition;
 
                     if (SurfacePixelPosition.X < 0 || SurfacePixelPosition.Y < 0)
                     {
                         isNegative = true;
                     }
 
-                    SurfaceCellPosition = SurfacePixelPosition.PixelLocationToSurface(screenObject.FontSize);
+                    SurfaceCellPosition = SurfacePixelPosition.PixelLocationToSurface(screenSurface.FontSize);
                 }
                 else
                 {
-                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToSurface(screenObject.FontSize);
-                    SurfacePixelPosition = mouseData.ScreenPosition - screenObject.AbsolutePosition;
+                    WorldCellPosition = mouseData.ScreenPosition.PixelLocationToSurface(screenSurface.FontSize);
+                    SurfacePixelPosition = mouseData.ScreenPosition - screenSurface.AbsolutePosition;
 
                     if (SurfacePixelPosition.X < 0 || SurfacePixelPosition.Y < 0)
                     {
                         isNegative = true;
                     }
 
-                    SurfaceCellPosition = SurfacePixelPosition.PixelLocationToSurface(screenObject.FontSize);
+                    SurfaceCellPosition = SurfacePixelPosition.PixelLocationToSurface(screenSurface.FontSize);
                 }
 
                 if (isNegative)
@@ -91,24 +91,24 @@ namespace SadConsole.Input
                     return;
                 }
 
-                if (screenObject.Surface.IsScrollable)
+                if (screenSurface.Surface.IsScrollable)
                 {
-                    Point tempCellPosition = SurfaceCellPosition + screenObject.Surface.ViewPosition;
-                    IsOnScreenObject = screenObject.Surface.View.Contains(tempCellPosition);
+                    Point tempCellPosition = SurfaceCellPosition + screenSurface.Surface.ViewPosition;
+                    IsOnScreenObject = screenSurface.Surface.View.Contains(tempCellPosition);
 
                     if (IsOnScreenObject)
                     {
                         CellPosition = tempCellPosition;
-                        Cell = screenObject.Surface[CellPosition.X, CellPosition.Y];
+                        Cell = screenSurface.Surface[CellPosition.X, CellPosition.Y];
                     }
                 }
                 else
                 {
-                    if (screenObject.Surface.IsValidCell(SurfaceCellPosition.X, SurfaceCellPosition.Y))
+                    if (screenSurface.Surface.IsValidCell(SurfaceCellPosition.X, SurfaceCellPosition.Y))
                     {
                         IsOnScreenObject = true;
                         CellPosition = SurfaceCellPosition;
-                        Cell = ScreenObject.Surface[SurfaceCellPosition.X, SurfaceCellPosition.Y];
+                        Cell = screenSurface.Surface[SurfaceCellPosition.X, SurfaceCellPosition.Y];
                     }
                 }
             }

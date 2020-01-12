@@ -26,50 +26,11 @@ namespace SadConsole
 
         /// <inheritdoc/>
         [DataMember]
-        public FocusBehavior FocusedMode { get; set; }
-
-        /// <inheritdoc/>
-        [DataMember]
-        public bool IsExclusiveMouse { get; set; }
-
-        /// <inheritdoc/>
-        [DataMember]
         public bool MoveToFrontOnMouseClick { get; set; }
 
         /// <inheritdoc/>
         [DataMember]
         public bool FocusOnMouseClick { get; set; }
-
-        /// <inheritdoc/>
-        public bool IsFocused
-        {
-            get => Global.FocusedScreenObjects.ScreenObject == this;
-            set
-            {
-                if (Global.FocusedScreenObjects.ScreenObject != null)
-                {
-                    if (value && Global.FocusedScreenObjects.ScreenObject != this)
-                    {
-                        if (FocusedMode == FocusBehavior.Push)
-                            Global.FocusedScreenObjects.Push(this);
-                        else
-                            Global.FocusedScreenObjects.Set(this);
-                    }
-                    else if (!value && Global.FocusedScreenObjects.ScreenObject == this)
-                        Global.FocusedScreenObjects.Pop(this);
-                }
-                else
-                {
-                    if (value)
-                    {
-                        if (FocusedMode == FocusBehavior.Push)
-                            Global.FocusedScreenObjects.Push(this);
-                        else
-                            Global.FocusedScreenObjects.Set(this);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Raises the <see cref="MouseEnter"/> event.
@@ -124,7 +85,7 @@ namespace SadConsole
         protected virtual void OnRightMouseClicked(MouseScreenObjectState state) => MouseButtonClicked?.Invoke(this, state);
 
         /// <inheritdoc/>
-        public void LostMouse(MouseScreenObjectState state)
+        public override void LostMouse(MouseScreenObjectState state)
         {
             if (IsMouseOver)
             {
@@ -133,27 +94,19 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public virtual bool ProcessMouse(MouseScreenObjectState state)
+        public override bool ProcessMouse(MouseScreenObjectState state)
         {
-            if (!IsVisible)
-            {
-                return false;
-            }
+            if (!IsVisible) return false;
 
             foreach (SadConsole.Components.IComponent component in ComponentsMouse.ToArray())
             {
                 component.ProcessMouse(this, state, out bool isHandled);
 
                 if (isHandled)
-                {
                     return true;
-                }
             }
 
-            if (!UseMouse)
-            {
-                return false;
-            }
+            if (!UseMouse) return false;
 
             if (state.IsOnScreenObject)
             {
@@ -187,30 +140,5 @@ namespace SadConsole
             return false;
         }
 
-        /// <summary>
-        /// Called by the engine to process the keyboard.
-        /// </summary>
-        /// <param name="keyboard">Keyboard information.</param>
-        /// <returns>True when the keyboard had data and this console did something with it.</returns>
-        public override bool ProcessKeyboard(Keyboard keyboard)
-        {
-            if (!UseKeyboard) return false;
-
-            foreach (Components.IComponent component in ComponentsKeyboard.ToArray())
-            {
-                component.ProcessKeyboard(this, keyboard, out bool isHandled);
-
-                if (isHandled)
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc/>
-        public virtual void OnFocusLost() { }
-
-        /// <inheritdoc/>
-        public virtual void OnFocused() { }
     }
 }

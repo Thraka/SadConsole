@@ -30,12 +30,7 @@ namespace SadConsole
         event EventHandler<MouseScreenObjectState> MouseMove;
 
         /// <summary>
-        /// How the object should handle becoming active.
-        /// </summary>
-        FocusBehavior FocusedMode { get; set; }
-
-        /// <summary>
-        /// When true, this console will set <see cref="IsFocused"/> to true when the mouse is clicked.
+        /// When true, this console will set <see cref="IScreenObject.IsFocused"/> to true when the mouse is clicked.
         /// </summary>
         bool FocusOnMouseClick { get; set; }
 
@@ -43,16 +38,6 @@ namespace SadConsole
         /// The height of the surface in pixels.
         /// </summary>
         int HeightPixels { get; }
-
-        /// <summary>
-        /// Gets or sets whether or not this console has exclusive access to the mouse events.
-        /// </summary>
-        bool IsExclusiveMouse { get; set; }
-
-        /// <summary>
-        /// Gets or sets this console as the focused object for input.
-        /// </summary>
-        bool IsFocused { get; set; }
 
         /// <summary>
         /// When true, this console will move to the front of its parent console when the mouse is clicked.
@@ -73,28 +58,5 @@ namespace SadConsole
         /// The width of the surface in pixels.
         /// </summary>
         int WidthPixels { get; }
-
-        /// <summary>
-        /// Called when the mouse is no longer over the object.
-        /// </summary>
-        /// <param name="state">The current state of the mouse based on this object.</param>
-        void LostMouse(MouseScreenObjectState state);
-
-        /// <summary>
-        /// Called when this object is focused.
-        /// </summary>
-        void OnFocused();
-
-        /// <summary>
-        /// Called when this object's focus has been lost.
-        /// </summary>
-        void OnFocusLost();
-
-        /// <summary>
-        /// Processes the mouse.
-        /// </summary>
-        /// <param name="state">The mouse state related to this console.</param>
-        /// <returns>True when the mouse is over this console and processing should stop.</returns>
-        bool ProcessMouse(MouseScreenObjectState state);
     }
 }

@@ -42,32 +42,32 @@ namespace SadConsole
         public event EventHandler EnabledChanged;
 
         /// <summary>
-        /// A filtered list from <see cref="Components"/> where <see cref="IComponent.IsUpdate"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsUpdate"/> is <see langword="true"/>.
         /// </summary>
         protected List<IComponent> ComponentsUpdate;
 
         /// <summary>
-        /// A filtered list from <see cref="Components"/> where <see cref="IComponent.IsDraw"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsDraw"/> is <see langword="true"/>.
         /// </summary>
         protected List<IComponent> ComponentsDraw;
 
         /// <summary>
-        /// A filtered list from <see cref="Components"/> where <see cref="IComponent.IsMouse"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsMouse"/> is <see langword="true"/>.
         /// </summary>
         protected List<IComponent> ComponentsMouse;
 
         /// <summary>
-        /// A filtered list from <see cref="Components"/> where <see cref="IComponent.IsKeyboard"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsKeyboard"/> is <see langword="true"/>.
         /// </summary>
         protected List<IComponent> ComponentsKeyboard;
 
         /// <summary>
-        /// A filtered list from <see cref="Components"/> that is not set for update, draw, mouse, or keyboard.
+        /// A filtered list from <see cref="SadComponents"/> that is not set for update, draw, mouse, or keyboard.
         /// </summary>
         protected List<IComponent> ComponentsEmpty;
 
         /// <inheritdoc/>
-        public ObservableCollection<IComponent> Components { get; protected set; }
+        public ObservableCollection<IComponent> SadComponents { get; protected set; }
 
         /// <inheritdoc/>
         public ScreenObjectCollection Children { get; protected set; }
@@ -146,6 +146,44 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
+        public bool IsFocused
+        {
+            get => Global.FocusedScreenObjects.ScreenObject == this;
+            set
+            {
+                if (Global.FocusedScreenObjects.ScreenObject != null)
+                {
+                    if (value && Global.FocusedScreenObjects.ScreenObject != this)
+                    {
+                        if (FocusedMode == FocusBehavior.Push)
+                            Global.FocusedScreenObjects.Push(this);
+                        else
+                            Global.FocusedScreenObjects.Set(this);
+                    }
+                    else if (!value && Global.FocusedScreenObjects.ScreenObject == this)
+                        Global.FocusedScreenObjects.Pop(this);
+                }
+                else
+                {
+                    if (value)
+                    {
+                        if (FocusedMode == FocusBehavior.Push)
+                            Global.FocusedScreenObjects.Push(this);
+                        else
+                            Global.FocusedScreenObjects.Set(this);
+                    }
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        [DataMember]
+        public FocusBehavior FocusedMode { get; set; }
+
+        /// <inheritdoc/>
+        [DataMember]
+        public bool IsExclusiveMouse { get; set; }
+        /// <inheritdoc/>
         [DataMember]
         public bool UseKeyboard { get; set; }
 
@@ -158,12 +196,12 @@ namespace SadConsole
         /// </summary>
         public ScreenObject()
         {
-            Components = new ObservableCollection<IComponent>();
+            SadComponents = new ObservableCollection<IComponent>();
             ComponentsUpdate = new List<IComponent>();
             ComponentsDraw = new List<IComponent>();
             ComponentsKeyboard = new List<IComponent>();
             ComponentsMouse = new List<IComponent>();
-            Components.CollectionChanged += Components_CollectionChanged;
+            SadComponents.CollectionChanged += Components_CollectionChanged;
             Children = new ScreenObjectCollection(this);
         }
 
@@ -208,10 +246,39 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public IEnumerable<IComponent> GetComponents<TComponent>()
+        public virtual bool ProcessMouse(MouseScreenObjectState state)
+        {
+            if (!IsVisible)
+                return false;
+
+            foreach (SadConsole.Components.IComponent component in ComponentsMouse.ToArray())
+            {
+                component.ProcessMouse(this, state, out bool isHandled);
+
+                if (isHandled)
+                    return true;
+            }
+
+            if (!UseMouse)
+                return false;
+            
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public virtual void LostMouse(MouseScreenObjectState state) { }
+
+        /// <inheritdoc/>
+        public virtual void OnFocusLost() { }
+
+        /// <inheritdoc/>
+        public virtual void OnFocused() { }
+
+        /// <inheritdoc/>
+        public IEnumerable<IComponent> GetSadComponents<TComponent>()
             where TComponent : IComponent
         {
-            foreach (IComponent component in Components)
+            foreach (IComponent component in SadComponents)
             {
                 if (component is TComponent)
                     yield return component;
@@ -219,10 +286,10 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public IComponent GetComponent<TComponent>()
+        public IComponent GetSadComponent<TComponent>()
             where TComponent : IComponent
         {
-            foreach (IComponent component in Components)
+            foreach (IComponent component in SadComponents)
             {
                 if (component is TComponent)
                     return component;
@@ -405,7 +472,7 @@ namespace SadConsole
         protected void OnSerializingMethod(StreamingContext context)
         {
             _childrenSerialized = Children.ToArray();
-            _componentsSerialized = Components.ToArray();
+            _componentsSerialized = SadComponents.ToArray();
         }
 
         [OnSerialized]
@@ -422,7 +489,7 @@ namespace SadConsole
                 Children.Add(item);
 
             foreach (var item in _componentsSerialized)
-                Components.Add(item);
+                SadComponents.Add(item);
 
             _componentsSerialized = null;
             _childrenSerialized = null;
