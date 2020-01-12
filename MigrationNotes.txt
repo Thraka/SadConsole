@@ -1,0 +1,14 @@
+ControlsConsole/Window
+- Invalidate -> OnThemeDrawn
+- ViewPort -> View
+
+Input
+- MouseConsoleState -> MouseScreenObjectState
+
+CellSurface/Console
+- Width -> BufferWidth
+- Height -> BufferHeight
+
+ContainerConsole -> ScreenObject
+
+Console.Components -> ScreenObjet.SadComponents
