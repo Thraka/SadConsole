@@ -108,7 +108,9 @@ namespace SadConsole.Renderers
 
                 for (int x = 0; x < cellSurface.View.Width; x++)
                 {
-                    ref ColoredGlyph cell = ref cellSurface.Cells[i];
+                    ColoredGlyph cell = cellSurface.Cells[i];
+
+                    cell.IsDirty = false;
 
                     if (!cell.IsVisible) continue;
 
@@ -121,8 +123,6 @@ namespace SadConsole.Renderers
                     foreach (CellDecorator decorator in cell.Decorators)
                         if (!decorator.Color.Equals(Color.Transparent))
                             MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GlyphRects[decorator.Glyph].ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
-
-                    cell.IsDirty = false;
 
                     i++;
                     rectIndex++;

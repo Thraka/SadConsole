@@ -107,7 +107,9 @@ namespace SadConsole.Renderers
 
             for (int i = 0; i < control.Surface.Cells.Length; i++)
             {
-                ref ColoredGlyph cell = ref control.Surface.Cells[i];
+                ColoredGlyph cell = control.Surface.Cells[i];
+
+                cell.IsDirty = false;
 
                 if (!cell.IsVisible) continue;
 

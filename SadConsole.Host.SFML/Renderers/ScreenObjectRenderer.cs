@@ -95,11 +95,11 @@ namespace SadConsole.Renderers
                 {
                     ColoredGlyph cell = cellSurface.Cells[i];
 
+                    cell.IsDirty = false;
+
                     if (!cell.IsVisible) continue;
 
                     Host.Global.SharedSpriteBatch.DrawCell(cell, _renderRects[rectIndex], !cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground, font);
-
-                    cell.IsDirty = false;
 
                     i++;
                     rectIndex++;
