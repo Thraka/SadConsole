@@ -8,9 +8,6 @@ namespace Game
 {
     internal class Program
     {
-        public static ClassicBasic.Interpreter.Interpreter Interpreter;
-        public static ClassicBasic.Interpreter.Executor Executor;
-
         private static void Main(string[] args)
         {
             //SadConsole.Settings.UnlimitedFPS = true;
@@ -21,33 +18,48 @@ namespace Game
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
         }
-        
+
         /// <summary>
         /// <c>test</c>
         /// </summary>
         private static void Init()
         {
             //SadConsole.Settings.gam.Window.Title = "DemoProject Core";
+            using var reader = System.IO.File.OpenRead("DEMO.ZZT");
+            var world = ZReader.ZWorld.Load(reader);
 
-            //Global.Screen.Renderer = null;
-            Global.Screen.DrawBox(new Rectangle(1, 1, 10, 10), new ColoredGlyph(Color.AliceBlue), null, ICellSurface.CreateLine(ICellSurface.ConnectedLineThin[2]));
-            Global.Screen.DrawBox(new Rectangle(4, 4, 10, 10), new ColoredGlyph(Color.Magenta), null, ICellSurface.CreateLine(ICellSurface.ConnectedLineThin[5]));
-            Global.Screen.DrawBox(new Rectangle(8, 8, 10, 10), new ColoredGlyph(Color.PapayaWhip), null, ICellSurface.CreateLine(ICellSurface.ConnectedLineThin[7]));
-
-            Global.Screen.DrawLine((6, 0), (6, 20), Color.IndianRed, null, ICellSurface.ConnectedLineThin[0]);
-            Global.Screen.Components.Add(new keyboardComponent());
-
-            Global.Screen.IsFocused = true;
+            Global.Screen.Renderer = null;
+            var worldScreen = new Screens.WorldPlay();
+            Global.Screen.Children.Add(worldScreen);
+            worldScreen.SadComponents.Add(new KeyboardChangeBoard(world));
+            worldScreen.UseKeyboard = true;
+            worldScreen.IsFocused = true;
         }
 
-        class keyboardComponent: SadConsole.Components.KeyboardConsoleComponent
+
+        private class KeyboardChangeBoard : SadConsole.Components.KeyboardConsoleComponent
         {
+            int mapIndex = 0;
+            ZReader.ZWorld world;
+
+            public KeyboardChangeBoard(ZReader.ZWorld world) =>
+                this.world = world;
+
             public override void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
             {
-                if (keyboard.IsKeyReleased(Keys.Space))
-                    ((ICellSurface)host).ConnectLines();
+                if (keyboard.IsKeyPressed(Keys.Space))
+                    LoadNextMap((Screens.WorldPlay)host);
 
                 handled = true;
+            }
+
+            private void LoadNextMap(Screens.WorldPlay worldScreen)
+            {
+                worldScreen.SetActiveBoard(worldScreen.ImportZZTBoard(world.Boards[mapIndex]).Name);
+                mapIndex++;
+
+                if (mapIndex >= world.Boards.Length)
+                    mapIndex = 0;
             }
         }
     }

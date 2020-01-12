@@ -46,7 +46,7 @@ namespace FeatureDemo.CustomConsoles
             progressTimer = new Timer(TimeSpan.FromSeconds(0.5));
             progressTimer.TimerElapsed += (timer, e) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; };
 
-            Components.Add(progressTimer);
+            SadComponents.Add(progressTimer);
 
             var listbox = new ListBox(20, 6)
             {

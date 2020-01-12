@@ -21,8 +21,8 @@ namespace FeatureDemo.CustomConsoles
             };
             
             playerPreviousPosition = player.Position;
-            Components.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
-            Components.Add(new SadConsole.Components.SurfaceComponentEntityOffsets());
+            SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
+            SadComponents.Add(new SadConsole.Components.SurfaceComponentEntityOffsets());
             //player.Components.Add(new SadConsole.Components.EntityViewSync());
 
             Children.Add(player);

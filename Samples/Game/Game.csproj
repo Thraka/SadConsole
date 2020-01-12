@@ -20,6 +20,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="GoRogue" Version="2.5.1" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
   </ItemGroup>
 
@@ -28,9 +29,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ClassicBasic.Interpreter">
-      <HintPath>..\..\..\ClassicBasic\ClassicBasic.Interpreter\bin\Debug\netstandard2.0\ClassicBasic.Interpreter.dll</HintPath>
-    </Reference>
+    <None Update="CAVES.ZZT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="CITY.ZZT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DEMO.ZZT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DEMO1.ZZT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TOWN.ZZT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
