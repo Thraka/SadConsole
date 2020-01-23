@@ -3,20 +3,48 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
+    <Version>9.0.0-alpha1</Version>
+    <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole. Targets SFML and .NET Standard 2.1.</Description>
+    <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SadConsole.Host.SFML</PackageId>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageTags>sfml;roguelike;cli;xna;game;development;console;ansi;ascii;textmode</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="SFML.Net" Version="2.5.0" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
     <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.0.0-alpha1-debug" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
-  </ItemGroup>
+  <Target Name="MyPostCompileTarget" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet inheritdoc -o -b $(OutDir)" />
+  </Target>
 
 </Project>

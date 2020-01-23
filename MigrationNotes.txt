@@ -1,3 +1,10 @@
+- A lot of structual changes to split out rendering from SadConsole. You now need to add SadConsole.Host.MonoGame or SadConsole.Host SFML to your project.
+
+- All console's have a viewport again, eliminating the ScrollingConsole type. This is implemented in a few properties.
+  - ScrollingConsole.ViewPort -> Console.View
+
+  The Console.View is slightly different. In the old SadConsole when the 
+
 CellSurface/Console
 - Width -> BufferWidth
 - Height -> BufferHeight

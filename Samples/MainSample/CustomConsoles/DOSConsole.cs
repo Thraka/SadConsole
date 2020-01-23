@@ -22,11 +22,6 @@ namespace FeatureDemo.CustomConsoles
             // This is our cusotmer keyboard handler we'll be using to process the cursor on this console.
             _keyboardHandlerObject = new InputHandling.ClassicConsoleKeyboardHandler();
 
-            // Assign our custom handler method from our handler object to this consoles keyboard handler.
-            // We could have overridden the ProcessKeyboard method, but I wanted to demonstrate how you
-            // can use your own handler on any console type.
-            SadComponents.Add(_keyboardHandlerObject);
-
             // Our custom handler has a call back for processing the commands the user types. We could handle
             // this in any method object anywhere, but we've implemented it on this console directly.
             _keyboardHandlerObject.EnterPressedAction = EnterPressedActionHandler;
@@ -47,6 +42,11 @@ namespace FeatureDemo.CustomConsoles
             Cursor.DisableWordBreak = true;
             Cursor.Print(Prompt);
             Cursor.DisableWordBreak = false;
+
+            // Assign our custom handler method from our handler object to this consoles keyboard handler.
+            // We could have overridden the ProcessKeyboard method, but I wanted to demonstrate how you
+            // can use your own handler on any console type.
+            SadComponents.Add(_keyboardHandlerObject);
         }
 
         public void ClearText()

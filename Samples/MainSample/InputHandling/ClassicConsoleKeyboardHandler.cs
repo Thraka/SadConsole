@@ -15,6 +15,13 @@ namespace FeatureDemo.InputHandling
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public Action<string> EnterPressedAction = (s) => { int i = s.Length; };
 
+        public override void OnAdded(IScreenObject host)
+        {
+            var console = (Console)host;
+
+            CursorLastY = console.Cursor.Position.Y;
+        }
+
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
             // Upcast this because we know we're only using it with a Console type.
