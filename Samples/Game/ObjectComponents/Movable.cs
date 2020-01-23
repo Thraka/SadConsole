@@ -8,16 +8,7 @@ namespace Game.ObjectComponents
 {
     class Movable: IGameObjectComponent
     {
-        public enum MoveResults
-        {
-            Moved,
-            TouchedObject,
-            TouchedObjectThenMoved,
-            TouchedWall,
-            TouchedWallThenMoved,
-            BlockedByWall,
-            BlockedByObject
-        }
+        public static Movable Singleton { get; } = new Movable();
 
         public void Added(GameObject obj)
         {
@@ -27,74 +18,53 @@ namespace Game.ObjectComponents
         {
         }
 
-        public MoveResults RequestMove(Direction direction, Screens.Board board, GameObject source)
+        public bool RequestMove(Direction direction, Screens.Board board, GameObject source)
         {
             var newPosition = source.Position + direction;
 
             if (board.Surface.IsValidCell(newPosition.X, newPosition.Y))
             {
-                GoRogue.IHasComponents targetComponents;
-                GameObject targetObj;
-                Tiles.BasicTile targetTile = null;
-                bool touchedSomething = false;
+                bool result = true;
+                GameObject[] targetObjs;
+                bool objectsRemain = false;
 
                 // Check for another object
-                if (board.IsObjectAtPosition(newPosition, out targetObj))
+                if (board.GetObjectsAtPosition(newPosition, out targetObjs))
                 {
-                    targetComponents = targetObj;
-                }
-                else
-                {
-                    targetTile = (Tiles.BasicTile)board.Surface[newPosition.X, newPosition.Y];
-                    targetComponents = targetTile;
+                    // Handle objects
+                    foreach (GameObject obj in targetObjs)
+                    {
+                        if (obj.HasComponent<Touchable>())
+                            obj.GetComponent<Touchable>().Touch(obj, null, source, board);
+
+                        // Check if (1) the object still alive (2) still positioned in same spot (3) blocks move
+                        if (obj.Parent != null && obj.Position == newPosition && obj.HasComponent<BlockingMove>())
+                            result = false;
+                    }
+
+                    if (board.GetObjectsAtPosition(newPosition, out _))
+                        objectsRemain = true;
                 }
 
-                if (targetComponents.HasComponent<Touchable>())
+                if (!objectsRemain)
                 {
-                    var touch = targetComponents.GetComponent<Touchable>();
-                    
-                    touchedSomething = true;
+                    var tile = (Tiles.BasicTile)board.Surface[newPosition.X, newPosition.Y]; ;
 
-                    touch.Touch(targetObj, targetTile, source, board);
+                    if (tile.HasComponent<Touchable>())
+                        tile.GetComponent<Touchable>().Touch(null, tile, source, board);
+
+                    // Check if something will block the move
+                    if (tile.HasComponent<BlockingMove>())
+                        result = false;
                 }
 
-                // After being touched, the object could have moved or removed BlockingMove. Refresh and check.
-                if (board.IsObjectAtPosition(newPosition, out targetObj))
-                {
-                    targetTile = null;
-                    targetComponents = targetObj;
-                }
-                else
-                {
-                    targetObj = null;
-                    targetTile = (Tiles.BasicTile)board.Surface[newPosition.X, newPosition.Y];
-                    targetComponents = targetTile;
-                }
-
-                // Check if something will block the move
-                if (targetComponents.HasComponent<BlockingMove>())
-                {
-                    if (targetObj != null)
-                        return MoveResults.BlockedByObject;
-                    else
-                        return MoveResults.BlockedByWall;
-                }
-
-                if (touchedSomething)
-                {
+                if (result)
                     source.Position = newPosition;
 
-                    if (targetObj != null)
-                        return MoveResults.TouchedObjectThenMoved;
-                    else
-                        return MoveResults.TouchedWallThenMoved;
-                }
-
-                source.Position = newPosition;
-                return MoveResults.Moved;
+                return result;
             }
 
-            return MoveResults.BlockedByWall;
+            return false;
         }
     }
 }

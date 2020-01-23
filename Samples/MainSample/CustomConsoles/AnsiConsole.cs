@@ -1,11 +1,9 @@
 ﻿using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using ScrollingConsole = SadConsole.ScrollingConsole;
+using SadConsole;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class AnsiConsole : ScrollingConsole
+    internal class AnsiConsole : Console
     {
         private int fileIndex = -1;
         private readonly string[] files;

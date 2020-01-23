@@ -9,6 +9,9 @@ CellSurface/Console
 - Width -> BufferWidth
 - Height -> BufferHeight
 
+ScrollingConsole -> Console
+- ViewPort
+
 ContainerConsole -> ScreenObject
 
-Console.Components -> ScreenObjet.SadComponents
+Console.Components -> ScreenObject.SadComponents

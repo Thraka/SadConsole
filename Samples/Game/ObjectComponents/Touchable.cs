@@ -8,40 +8,33 @@ namespace Game.ObjectComponents
 {
     class Touchable: IGameObjectComponent, ITileComponent
     {
-        private readonly Action<GameObject, BasicTile, GameObject, Screens.Board> _reaction;
-
-        public Touchable(Action<GameObject, BasicTile, GameObject, Screens.Board> reaction) =>
-            _reaction = reaction;
-
-        public Touchable() { }
+        public static Touchable Singleton { get; } = new Touchable();
 
         public void Touch(GameObject targetObject, BasicTile targetTile, GameObject source, Screens.Board board)
         {
-            if (_reaction != null)
-                _reaction(targetObject, targetTile, source, board);
-            else
+            if (targetObject != null)
             {
-                if (targetObject != null)
+                if (targetObject.HasComponents(typeof(Pushable), typeof(Movable)))
                 {
-                    if (targetObject.HasComponents(typeof(Pushable), typeof(Movable)))
-                    {
-                        Pushable pushComponent = targetObject.GetComponent<Pushable>();
-                        var pushDirection = Direction.GetDirection(source.Position, targetObject.Position);
+                    Pushable pushComponent = targetObject.GetComponent<Pushable>();
+                    var pushDirection = Direction.GetDirection(source.Position, targetObject.Position);
 
-                        if (pushComponent.Mode == Pushable.Modes.Horizontal && (pushDirection == Direction.Down || pushDirection == Direction.Up))
-                            return;
-                        else if (pushComponent.Mode == Pushable.Modes.Vertical && (pushDirection == Direction.Left || pushDirection == Direction.Right))
-                            return;
+                    if (!(pushComponent.Direction == Pushable.Directions.Horizontal && (pushDirection == Direction.Down || pushDirection == Direction.Up)) &&
+                        !(pushComponent.Direction == Pushable.Directions.Vertical && (pushDirection == Direction.Left || pushDirection == Direction.Right)) &&
+                        pushComponent.Mode == Pushable.Modes.All || (pushComponent.Mode == Pushable.Modes.PlayerOnly && source.HasComponent<PlayerControlled>()) || (pushComponent.Mode == Pushable.Modes.CreatureOnly && !source.HasComponent<PlayerControlled>())
+                        )
 
-                        var moveResult = targetObject.GetComponent<Movable>().RequestMove(pushDirection, board, targetObject);
-
-                        if (moveResult == Movable.MoveResults.Moved || moveResult == Movable.MoveResults.TouchedObjectThenMoved || moveResult == Movable.MoveResults.TouchedWallThenMoved)
-                        {
-
-                        }
-                    }
+                        targetObject.GetComponent<Movable>().RequestMove(pushDirection, board, targetObject);
                 }
+
+                targetObject.SendMessage(new Messages.Touched(source, targetObject, targetTile, board));
             }
+
+            if (targetTile != null)
+            {
+                targetTile.SendMessage(new Messages.Touched(source, targetObject, targetTile, board));
+            }
+
         }
 
         public void Added(GameObject obj)

@@ -132,10 +132,24 @@ namespace Game.Screens
             {
                 if (state.Mouse.LeftButtonDown)
                 {
-                    if (!world.GameBoard.IsObjectAtPosition(state.CellPosition, out _))
+                    if (!world.GameBoard.GetObjectsAtPosition(state.CellPosition, out _))
                     {
                         //world.GameBoard.PlayerControlledObject = obj;
-                        world.GameBoard.CreateGameObject(state.CellPosition, "pusher-east", Factories.GameObjectBlueprint.Config.Empty);
+                        world.GameBoard.CreateGameObject(state.CellPosition, "pusher-east", Factories.GameObjectConfig.Empty);
+                    }
+                }
+
+                if (state.Mouse.RightClicked)
+                {
+                    if (world.GameBoard.GetObjectsAtPosition(state.CellPosition, out var objects))
+                    {
+                        if (objects[0].HasComponent<ObjectComponents.Pusher>())
+                            objects[0].RemoveComponent(objects[0].GetComponent<ObjectComponents.Pusher>());
+
+                        var pusher = new ObjectComponents.Pusher();
+                        pusher.Direction = Direction.Types.Down;
+
+                        objects[0].AddComponent(pusher);
                     }
                 }
 

@@ -9,6 +9,8 @@ namespace Game.ObjectComponents
 {
     class BlockingMove : IFlag, IGameObjectComponent, ITileComponent
     {
+        public static BlockingMove Singleton { get; } = new BlockingMove();
+
         public void Added(GameObject obj)
         {
         }

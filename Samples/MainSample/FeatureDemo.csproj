@@ -6,9 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="CustomConsoles\AnsiConsole.cs" />
-    <Compile Remove="CustomConsoles\AutoTypingConsole.cs" />
-    <Compile Remove="CustomConsoles\BorderedConsole.cs" />
     <Compile Remove="CustomConsoles\CursorConsole.cs" />
     <Compile Remove="CustomConsoles\DOSConsole.cs" />
     <Compile Remove="CustomConsoles\FadeConsole.cs" />

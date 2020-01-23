@@ -9,14 +9,19 @@ using Game.Screens;
 
 namespace Game
 {
-    class GameObject: Entity, GoRogue.IHasComponents
+    class GameObject: Entity, GoRogue.IHasComponents, SadConsole.Factory.IFactoryObject
     {
         private GoRogue.ComponentContainer _components = new ComponentContainer();
+        private GoRogue.Messaging.MessageBus _messages = new GoRogue.Messaging.MessageBus();
+
+        public string DefinitionId { get; set; }
 
         public GameObject() : this(Color.White, Color.Black, 0) { }
         public GameObject(Color foreground, Color background, int glyph) : base(foreground, background, glyph)
         {
             Animation.CurrentFrame.SetGlyph(0, 0, glyph, foreground, background);
+            
+
         }
 
         public void ProcessTickComponents(WorldPlay world)
@@ -74,6 +79,17 @@ namespace Game
             foreach (var item in components)
                 ((ObjectComponents.IGameObjectComponent)item).Removed(this);
         }
+        #endregion
+
+        #region GoRogue Messages
+        public void RegisterSubscriber<TMessage>(GoRogue.Messaging.ISubscriber<TMessage> instance) =>
+            _messages.RegisterSubscriber(instance);
+
+        public void UnregisterSubscriber<TMessage>(GoRogue.Messaging.ISubscriber<TMessage> instance) =>
+            _messages.UnregisterSubscriber(instance);
+
+        public void SendMessage<TMessage>(TMessage message) =>
+            _messages.Send(message);
         #endregion
     }
 }

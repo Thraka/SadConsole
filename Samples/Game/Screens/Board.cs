@@ -18,12 +18,14 @@ namespace Game.Screens
             get => _playerControlledObject;
             set
             {
+                _playerControlledObject?.RemoveComponent(_playerControlledObject.GetComponent<ObjectComponents.PlayerControlled>());
+
                 _playerControlledObject = value;
 
                 if (value != null && !value.HasComponent<ObjectComponents.Movable>())
                     throw new Exception("Cannot assign object as player controlled when it doesn't have a movable component.");
 
-
+                _playerControlledObject.AddComponent(new ObjectComponents.PlayerControlled());
             }
         }
 
@@ -114,6 +116,7 @@ namespace Game.Screens
         public void SetTerrain(Point position, string blueprint, Factories.TileBlueprint.Config config)
         {
             var tile = (Tiles.BasicTile)Surface[position.X, position.Y];
+            tile.SendMessage(new Messages.TileDestroyed(tile, this));
 
             var producedTile = Factories.TileFactory.Instance.Create(blueprint, config);
 
@@ -121,18 +124,20 @@ namespace Game.Screens
 
             foreach (var component in producedTile.GetComponents<object>())
                 tile.AddComponent(component);
+
+            tile.SendMessage(new Messages.TileCreated(tile, this));
         }
 
         public GameObject ImportZGameObject(ZReader.ZElement.Types type, Point position, byte data, ZStatusElement status = null)
         {
             var element = new ZReader.ZElement(type, data);
-            var config = new Factories.GameObjectBlueprint.Config(ZReaderExtensions.GetColor(element.ForeColor), ZReaderExtensions.GetColor(element.BackColor), element.Glyph);
-            var configColors = new Factories.GameObjectBlueprint.Config(ZReaderExtensions.GetColor(element.ForeColor), ZReaderExtensions.GetColor(element.BackColor));
+            var config = new Factories.GameObjectConfig(ZReaderExtensions.GetColor(element.ForeColor), ZReaderExtensions.GetColor(element.BackColor), element.Glyph);
+            var configColors = new Factories.GameObjectConfig(ZReaderExtensions.GetColor(element.ForeColor), ZReaderExtensions.GetColor(element.BackColor), null);
 
             if (type == ZElement.Types.Pusher)
                 status = new ZStatusElement() { StepX = 1 };
 
-            (string blueprint, Factories.GameObjectBlueprint.Config config) factoryDef = type switch
+            (string blueprint, Factories.GameObjectConfig config) factoryDef = type switch
             {
                 ZElement.Types.Player => ("player", config),
                 ZElement.Types.Boulder => ("boulder", config),
@@ -146,12 +151,13 @@ namespace Game.Screens
                                               (-1, 0) => "pusher-west",
                                               _ => "pusher-idle",
                                           }, configColors),
+
                 ZElement.Types.Ammo => ("ammo", config),
                 ZElement.Types.Key => ("key", config),
                 ZElement.Types.Door => ("door", config),
                 ZElement.Types.Gem => ("gem", config),
                 ZElement.Types.Torch => ("torch", config),
-                _ => ("dead", Factories.GameObjectBlueprint.Config.Empty)
+                _ => ("dead", Factories.GameObjectConfig.Empty)
             };
 
             if (factoryDef.blueprint == "dead")
@@ -165,17 +171,21 @@ namespace Game.Screens
             return gameObject;
         }
 
-        public GameObject CreateGameObject(Point position, string blueprint, Factories.GameObjectBlueprint.Config config)
+        public GameObject CreateGameObject(Point position, string blueprint, Factories.GameObjectConfig config)
         {
             var gameObject = Factories.GameObjectFactory.Instance.Create(blueprint, config);
             gameObject.Position = position;
 
             Children.Add(gameObject);
+            gameObject.SendMessage(new Messages.ObjectCreated(gameObject, this));
             return gameObject;
         }
 
-        public void DestroyGameObject(GameObject obj) =>
+        public void DestroyGameObject(GameObject obj)
+        {
             Children.Remove(obj);
+            obj.SendMessage(new Messages.ObjectDestroyed(obj, this));
+        }
 
         public IEnumerable<GameObject> GetObjects()
         {
@@ -188,17 +198,36 @@ namespace Game.Screens
             }
         }
 
-        public bool IsObjectAtPosition(Point position, out GameObject obj)
+        public bool IsObjectAtPosition(Point position)
         {
             foreach (var item in GetObjects())
             {
                 if (item.Position == position)
-                {
-                    obj = item;
                     return true;
+            }
+
+            return false;
+        }
+
+        public bool GetObjectsAtPosition(Point position, out GameObject[] obj)
+        {
+            List<GameObject> objects = new List<GameObject>(2);
+
+            foreach (var item in GetObjects())
+            {
+                if (item.Position == position)
+                {
+                    objects.Add(item);
                 }
             }
-            obj = null;
+            if (objects.Count != 0)
+            {
+                obj = objects.ToArray();
+                return true;
+            }
+            else
+                obj = null;
+
             return false;
         }
     }

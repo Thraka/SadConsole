@@ -10,6 +10,7 @@ namespace Game.Tiles
     class BasicTile : ColoredGlyph, GoRogue.IHasComponents
     {
         private GoRogue.ComponentContainer _components = new ComponentContainer();
+        private GoRogue.Messaging.MessageBus _messages = new GoRogue.Messaging.MessageBus();
 
         public Point Position { get; set; }
 
@@ -66,6 +67,17 @@ namespace Game.Tiles
             foreach (var item in components)
                 ((ObjectComponents.ITileComponent)item).Added(this);
         }
-    #endregion
+        #endregion
+
+        #region GoRogue Messages
+        public void RegisterSubscriber<TMessage>(GoRogue.Messaging.ISubscriber<TMessage> instance) =>
+            _messages.RegisterSubscriber(instance);
+
+        public void UnregisterSubscriber<TMessage>(GoRogue.Messaging.ISubscriber<TMessage> instance) =>
+            _messages.UnregisterSubscriber(instance);
+
+        public void SendMessage<TMessage>(TMessage message) =>
+            _messages.Send(message);
+        #endregion
     }
 }
