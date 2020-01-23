@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-
-using SadConsole.Surfaces;
-using System;
+﻿using System;
 using Console = SadConsole.Console;
 using SadConsole.Input;
 
@@ -11,17 +7,9 @@ namespace FeatureDemo.CustomConsoles
 
     // Using a ConsoleList which lets us group multiple consoles 
     // into a single processing entity
-    class AutoTypingConsole : CustomConsole
+    class AutoTypingConsole : Console
     {
         SadConsole.Instructions.DrawString typingInstruction;
-
-        public ConsoleMetadata Metadata
-        {
-            get
-            {
-                return new ConsoleMetadata() { Title = "SadConsole.Instructions", Summary = "Automatic typing to a console." };
-            }
-        }
 
         public AutoTypingConsole(): base(80, 23)
         {
@@ -45,33 +33,14 @@ namespace FeatureDemo.CustomConsoles
                                          };
 
             // We want this to print on a sub region of the main console, so we'll create a sub view and use that
-            typingInstruction = new SadConsole.Instructions.DrawString(
-                                                                       new SurfaceEditor(
-                                                                            new SurfaceView(this.TextSurface, new Rectangle(2, 1, 76, 21)) { IsDirty = false }
-                                                                       ));
-
-            typingInstruction.Text = SadConsole.ColoredString.Parse(string.Join("\r\n", text));
+            typingInstruction = new SadConsole.Instructions.DrawString(SadConsole.ColoredString.Parse(string.Join("\r\n", text)));
             typingInstruction.TotalTimeToPrint = 8; // 0.5 seconds per line of text
+
+            Cursor.Position = new SadRogue.Primitives.Point(1, 1);
+            SadComponents.Add(typingInstruction);
 
             //Cursor.IsVisible = true;
             IsVisible = false;
         }
-
-        public override void Update(TimeSpan elapsed)
-        {
-            if (IsVisible)
-            {
-                if (!typingInstruction.IsFinished)
-                    typingInstruction.Run();
-
-                base.Update(elapsed);
-            }
-        }
-
-        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
-        {
-            return true;
-        }
-
     }
 }

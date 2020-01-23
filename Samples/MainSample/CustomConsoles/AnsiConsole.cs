@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using SadConsole;
+using SadConsole.Input;
+using SadRogue.Primitives;
 
 namespace FeatureDemo.CustomConsoles
 {
@@ -7,7 +9,7 @@ namespace FeatureDemo.CustomConsoles
     {
         private int fileIndex = -1;
         private readonly string[] files;
-        private ScrollingConsole ansiSurface;
+        private Console ansiSurface;
 
         public AnsiConsole() : base(80, 23)
         {
@@ -39,14 +41,15 @@ namespace FeatureDemo.CustomConsoles
 
         private void LoadAnsi()
         {
-            Clear();
+            this.Clear();
 
-            ansiSurface = new ScrollingConsole(80, 25);
+            ansiSurface = new Console(80, 25);
             writer = new SadConsole.Ansi.AnsiWriter(doc, ansiSurface);
             writer.ReadEntireDocument();
 
-            Resize(80, ansiSurface.Height + ansiSurface.TimesShiftedUp, true);
-            ViewPort = new Rectangle(0, 0, 80, 25);
+            // TODO: Why did I need to add + 2? Wierd. Something broken with ansi :( :( :(
+            this.Resize(80, 23, 80, ansiSurface.Height + ansiSurface.TimesShiftedUp + 2, true);
+            this.View = new Rectangle(0, 0, 80, 25);
 
             writer = new SadConsole.Ansi.AnsiWriter(doc, this);
             writer.ReadEntireDocument();
@@ -57,22 +60,22 @@ namespace FeatureDemo.CustomConsoles
         {
             if (info.IsKeyDown(Keys.Left))
             {
-                ViewPort = new Rectangle(ViewPort.Left - 1, ViewPort.Top, 80, 23);
+                View = View.WithPosition(new Point(View.Position.X - 1, View.Position.Y));
             }
 
             if (info.IsKeyDown(Keys.Right))
             {
-                ViewPort = new Rectangle(ViewPort.Left + 1, ViewPort.Top, 80, 23);
+                View = View.WithPosition(new Point(View.Position.X + 1, View.Position.Y));
             }
 
             if (info.IsKeyDown(Keys.Up))
             {
-                ViewPort = new Rectangle(ViewPort.Left, ViewPort.Top - 1, 80, 23);
+                View = View.WithPosition(new Point(View.Position.X, View.Position.Y - 1));
             }
 
             if (info.IsKeyDown(Keys.Down))
             {
-                ViewPort = new Rectangle(ViewPort.Left, ViewPort.Top + 1, 80, 23);
+                View = View.WithPosition(new Point(View.Position.X, View.Position.Y + 1));
             }
 
             if (info.IsKeyReleased(Keys.Space))
@@ -87,7 +90,7 @@ namespace FeatureDemo.CustomConsoles
                 {
                     NextAnsi();
                     lineCounter = 0;
-                    Clear();
+                    this.Clear();
                     lines = doc.AnsiString.Split('\n');
                     writer = new SadConsole.Ansi.AnsiWriter(doc, this);
                 }

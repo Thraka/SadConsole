@@ -1,17 +1,23 @@
+CellSurface/Console
+- Width -> BufferWidth
+- Height -> BufferHeight
+- Compontents -> SadComponents
+
+Console
+- FontSize property is a point x,y size now no longer the enum. Use Font.GetFontSize
+
 ControlsConsole/Window
 - Invalidate -> OnThemeDrawn
+- ViewPort -> View
+
+ScrollingConsole -> Console
 - ViewPort -> View
 
 Input
 - MouseConsoleState -> MouseScreenObjectState
 
-CellSurface/Console
-- Width -> BufferWidth
-- Height -> BufferHeight
-
-ScrollingConsole -> Console
-- ViewPort
-
+SadConsole.Controls -> SadConsole.UI.Controls
+SadConsole.Themes -> SadConsole.UI.Themes
 ContainerConsole -> ScreenObject
 
-Console.Components -> ScreenObject.SadComponents
+Font/FontMaster -> Font

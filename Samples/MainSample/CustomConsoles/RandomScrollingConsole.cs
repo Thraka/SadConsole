@@ -1,23 +1,23 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
 using SadConsole;
-using ScrollingConsole = SadConsole.ScrollingConsole;
+using SadRogue.Primitives;
+using Console = SadConsole.Console;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class RandomScrollingConsole : ScrollingConsole
+    internal class RandomScrollingConsole : Console
     {
-        private readonly ScrollingConsole mainData;
-        private readonly ScrollingConsole messageData;
+        private readonly Console mainData;
+        private readonly Console messageData;
         private bool initialized;
         private bool initializedStep2;
         private bool initializedStep3;
 
         public RandomScrollingConsole() : base(80, 23)
         {
-            messageData = new ScrollingConsole(80, 1);
+            messageData = new Console(80, 1);
             messageData.Print(0, 0, "Generating random console data, please wait...");
-            mainData = new ScrollingConsole(1, 1);
+            mainData = new Console(1, 1);
             IsVisible = false;
             mainData.IsVisible = false;
 
@@ -34,7 +34,7 @@ namespace FeatureDemo.CustomConsoles
             }
         }
 
-        public override void Draw(TimeSpan delta)
+        public override void Draw()
         {
             // These 3 render calls are a hack to get the console data generated and display a message to the user
             // Should add in async calls that let us generate these in the background... That would be cool.
@@ -42,22 +42,22 @@ namespace FeatureDemo.CustomConsoles
             {
                 if (!initialized)
                 {
-                    base.Draw(delta);
+                    base.Draw();
                 }
                 else if (!initializedStep2)
                 {
                     initializedStep2 = true;
-                    base.Draw(delta);
+                    base.Draw();
                 }
                 else if (!initializedStep3)
                 {
-                    base.Draw(delta);
+                    base.Draw();
 
-                    mainData.Components.RemoveAll();
+                    mainData.SadComponents.Clear();
 
                     // Generate the content
-                    mainData.Resize(2000, 2000, false, new Rectangle(0, 0, 80, 23));
-                    mainData.Components.Add(new InputHandling.MoveViewPortKeyboardHandler());
+                    mainData.Resize(80, 23, 2000, 2000, false);
+                    mainData.SadComponents.Add(new InputHandling.MoveViewPortKeyboardHandler());
                     mainData.FillWithRandomGarbage();
                     mainData.IsVisible = true;
 
@@ -74,7 +74,7 @@ namespace FeatureDemo.CustomConsoles
                     //messageData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Y}            ", Color.White, Color.Black);
 
                     // Create a faux layering system.
-                    base.Draw(delta);
+                    base.Draw();
 
                     //Renderer.Render(messageData.TextSurface, new Point(0, 0));
                 }

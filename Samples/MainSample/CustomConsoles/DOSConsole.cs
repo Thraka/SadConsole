@@ -1,13 +1,16 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
+using SadConsole;
+using Console = SadConsole.Console;
+using FeatureDemo.InputHandling;
+using SadRogue.Primitives;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class DOSConsole : SadConsole.ScrollingConsole
+    internal class DOSConsole : Console
     {
         public string Prompt { get; set; }
 
-        private readonly InputHandling.ClassicConsoleKeyboardHandler _keyboardHandlerObject;
+        private readonly ClassicConsoleKeyboardHandler _keyboardHandlerObject;
 
 
         // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
@@ -22,7 +25,7 @@ namespace FeatureDemo.CustomConsoles
             // Assign our custom handler method from our handler object to this consoles keyboard handler.
             // We could have overridden the ProcessKeyboard method, but I wanted to demonstrate how you
             // can use your own handler on any console type.
-            Components.Add(_keyboardHandlerObject);
+            SadComponents.Add(_keyboardHandlerObject);
 
             // Our custom handler has a call back for processing the commands the user types. We could handle
             // this in any method object anywhere, but we've implemented it on this console directly.
@@ -48,7 +51,7 @@ namespace FeatureDemo.CustomConsoles
 
         public void ClearText()
         {
-            Clear();
+            this.Clear();
             Cursor.Position = new Point(0, 24);
             _keyboardHandlerObject.CursorLastY = 24;
         }

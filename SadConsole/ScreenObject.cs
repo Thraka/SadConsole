@@ -201,6 +201,7 @@ namespace SadConsole
             ComponentsDraw = new List<IComponent>();
             ComponentsKeyboard = new List<IComponent>();
             ComponentsMouse = new List<IComponent>();
+            ComponentsEmpty = new List<IComponent>();
             SadComponents.CollectionChanged += Components_CollectionChanged;
             Children = new ScreenObjectCollection(this);
         }
@@ -332,7 +333,10 @@ namespace SadConsole
                 case NotifyCollectionChangedAction.Move:
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException("Calling Clear in this object is not supported. Use the RemoveAll extension method.");
+                    foreach (var item in SadComponents.ToArray())
+                        SadComponents.Remove(item);
+
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

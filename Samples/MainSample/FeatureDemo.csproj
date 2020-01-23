@@ -7,10 +7,8 @@
 
   <ItemGroup>
     <Compile Remove="CustomConsoles\CursorConsole.cs" />
-    <Compile Remove="CustomConsoles\DOSConsole.cs" />
     <Compile Remove="CustomConsoles\FadeConsole.cs" />
     <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />
-    <Compile Remove="CustomConsoles\RandomScrollingConsole.cs" />
     <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Remove="CustomConsoles\SerializationTests.cs" />
     <Compile Remove="CustomConsoles\SplashScreen.cs" />
@@ -43,6 +41,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Ansi\files.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\QS-SIERR.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\ROY-BTC1.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\ROY-CCU3.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ansi\ROY-DGZN.ANS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="sad.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
