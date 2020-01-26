@@ -5,6 +5,9 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// Supporting properties for the current SadConsole app.
+    /// </summary>
     public static class Global
     {
         /// <summary>

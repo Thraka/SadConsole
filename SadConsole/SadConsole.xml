@@ -3484,6 +3484,11 @@
             Loads the <c>IBM.font</c> built into the binary.
             </summary>
         </member>
+        <member name="T:SadConsole.Global">
+            <summary>
+            Supporting properties for the current SadConsole app.
+            </summary>
+        </member>
         <member name="P:SadConsole.Global.Screen">
             <summary>
             The active screen processed by the game.

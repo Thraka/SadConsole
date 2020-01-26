@@ -1,10 +1,9 @@
-Thank you for trying out SadConsole. Please visit the documentation:
-http://sadconsole.com/
+Welcome to SadConsole. This is a test release of the next version of SadConsole. Things have changed since the preivous version. 
 
 Questions? Join the Discord channel
 https://discord.gg/mttxqAs
 
-Be sure to add a MonoGame 3.7 NuGet package of your choice.
+You must add a host NuGet package to your project, either SadConsole.Host.SFML or SadConsole.Host.MonoGame.
 
 Here is an example program.cs file that let's you get started with SadConsole quickly. If you're using Visual Basic, starter code is listed below the C# code.
 

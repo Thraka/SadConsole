@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
+    <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
     <Version>9.0.0-alpha1</Version>
     <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
     <Authors>Thraka</Authors>
@@ -29,22 +30,26 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseProjectReferences>true</UseProjectReferences>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SFML.Net" Version="2.5.0" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
     <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.0.0-alpha1-debug" />
+    <PackageReference Include="SFML.Net" Version="2.5.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="MyPostCompileTarget" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="dotnet tool restore" />
     <Exec Command="dotnet inheritdoc -o -b $(OutDir)" />
+  </Target>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\..\nuget" />
   </Target>
 
 </Project>

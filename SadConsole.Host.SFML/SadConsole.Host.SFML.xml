@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Host.SFML</name>
+    </assembly>
+    <members>
+        <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
+            <summary>
+            Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.FPS">
+            <summary>
+            The target frames per second for the game window. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.WindowTitle">
+            <summary>
+            The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
+            <summary>
+            Opens a read-only stream with MonoGame.
+            </summary>
+            <param name="file">The file to open.</param>
+            <param name="mode">File open or create mode.</param>
+            <param name="access">Read or write access.</param>
+            <returns>The stream.</returns>
+        </member>
+        <member name="M:SadConsole.Game.ToggleFullScreen">
+            <summary>
+            Toggles between windowed and fullscreen rendering for SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
+            <summary>
+            Resizes the game window.
+            </summary>
+            <param name="width">The width of the window in pixels.</param>
+            <param name="height">The height of the window in pixels.</param>
+        </member>
+        <member name="M:SadConsole.Game.ResetRendering">
+            <summary>
+            Resets the <see cref="!:RenderOutput"/> target and determines the appropriate <see cref="!:RenderRect"/> and <see cref="!:RenderScale"/> based on the window or fullscreen state.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.ConsoleRenderer">
+             <summary>
+             Draws a <see cref="T:SadConsole.Console"/>.
+             </summary>
+             <remarks>
+             This renderer only caches drawing of the surface's cells. When the <see cref="!:Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+            
+             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Renderers.ConsoleRenderer.Attach(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ConsoleRenderer.Render(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ConsoleRenderer.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ControlsConsole">
+             <summary>
+             Draws a <see cref="T:SadConsole.Renderers.ControlsConsole"/>.
+             </summary>
+             <remarks>
+             This renderer only caches drawing of the surface's cells. When the <see cref="!:Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+            
+             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlsConsole.Attach(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlsConsole.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredScreenObject">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> when it uses a <see cref="T:SadConsole.LayeredScreenSurface"/> type for the <see cref="!:IScreenSurface.Surface"/>.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredScreenObject.Attach(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredScreenObject.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ScreenObjectRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="T:SadConsole.Renderers.Window">
+             <summary>
+             Draws a <see cref="T:SadConsole.Renderers.Window"/>.
+             </summary>
+             <remarks>
+             This renderer only caches drawing of the surface's cells. When the <see cref="!:Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+            
+             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Renderers.Window.Attach(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.Window.Render(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
+    </members>
+</doc>

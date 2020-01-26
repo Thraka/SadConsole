@@ -27,21 +27,28 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode</PackageTags>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+  </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.2" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
     <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0-alpha1-debug" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="MyPostCompileTarget" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="dotnet tool restore" />
     <Exec Command="dotnet inheritdoc -o -b $(OutDir)" />
+  </Target>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\..\nuget" />
   </Target>
 
 </Project>
