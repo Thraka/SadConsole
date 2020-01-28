@@ -41,7 +41,7 @@ namespace Game
 
 
             //Interpreter = new ClassicBasic.Interpreter.Interpreter(keyboardComponent, tokenizer, runtimeEnv, programRep, Executor);
-            Global.Screen.Components.Add(new ConsoleBASICInterpreter());
+            Global.Screen.SadComponents.Add(new ConsoleBASICInterpreter());
             Global.Screen.Cursor.IsVisible = true;
             Global.Screen.Cursor.IsEnabled = true;
             Global.Screen.IsFocused = true;

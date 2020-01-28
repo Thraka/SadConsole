@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using ClassicBasic.Interpreter;
 using ClassicBasic.Interpreter.Exceptions;
 using SadConsole;
@@ -20,6 +21,8 @@ namespace Game
         public IVariableRepository BASICVariableRepository;
         public IDataStatementReader BASICDataStatement;
         public IExpressionEvaluator BASICExpresionEval;
+
+        private Task RunProgramTask;
 
         public ConsoleBASICInterpreter()
         {
@@ -116,39 +119,44 @@ namespace Game
                 var command = Read();
                 if (command != null)
                 {
-                    try
+                    RunProgramTask = new Task(() =>
                     {
-                        var parsedLine = BASICTokeniser.Tokenise(command.Trim());
-                        if (parsedLine.LineNumber.HasValue)
-                        {
-                            BASICProgramRepository.SetProgramLine(parsedLine);
-                            NewLine();
-                        }
-                        else
-                        {
-                            BASICRunEnvironment.CurrentLine = parsedLine;
-                            NewLine();
-                            bool quit = BASICExecutor.ExecuteLine();
 
-                            if (!BASICExecutor.IsExecuting)
-                                WritePrompt();
+                        try
+                        {
+                            var parsedLine = BASICTokeniser.Tokenise(command.Trim());
+                            if (parsedLine.LineNumber.HasValue)
+                            {
+                                BASICProgramRepository.SetProgramLine(parsedLine);
+                                NewLine();
+                            }
+                            else
+                            {
+                                BASICRunEnvironment.CurrentLine = parsedLine;
+                                NewLine();
+                                bool quit = BASICExecutor.ExecuteLine();
+
+                                if (!BASICExecutor.IsExecuting)
+                                    WritePrompt();
+                            }
                         }
-                    }
-                    catch (BreakException endError)
-                    {
-                        if (endError.ErrorMessage != string.Empty)
+                        catch (BreakException endError)
+                        {
+                            if (endError.ErrorMessage != string.Empty)
+                            {
+                                WriteErrorToTeletype(
+                                    BASICRunEnvironment.CurrentLine.LineNumber,
+                                    endError.ErrorMessage);
+                            }
+                        }
+                        catch (BasicException basicError)
                         {
                             WriteErrorToTeletype(
-                                BASICRunEnvironment.CurrentLine.LineNumber,
-                                endError.ErrorMessage);
+                                BASICRunEnvironment.DataErrorLine ?? BASICRunEnvironment.CurrentLine?.LineNumber,
+                                "?" + basicError.ErrorMessage + " ERROR");
                         }
-                    }
-                    catch (BasicException basicError)
-                    {
-                        WriteErrorToTeletype(
-                            BASICRunEnvironment.DataErrorLine ?? BASICRunEnvironment.CurrentLine?.LineNumber,
-                            "?" + basicError.ErrorMessage + " ERROR");
-                    }
+                    });
+                    RunProgramTask.Start();
                 }
 
                 handled = true;
