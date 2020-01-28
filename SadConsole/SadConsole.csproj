@@ -25,44 +25,44 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>sfml;roguelike;cli;xna;game;development;console;ansi;ascii;textmode</PackageTags>
     <PackageReleaseNotes>
-      A lot of structual changes to split out rendering from SadConsole. You now need to add SadConsole.Host.MonoGame
-      or SadConsole.Host SFML to your project.
+A lot of structual changes to split out rendering from SadConsole. You now need to add SadConsole.Host.MonoGame
+or SadConsole.Host SFML to your project.
 
-      Major changes:
+Major changes:
 
-      - Object model has changed a lot. Console's no longer inherits from CellSurface and instead are based on some new base
-      classes and interfaces: ScreenObject. Everything in SadConsole is now a ScreenObject.
+- Object model has changed a lot. Console's no longer inherits from CellSurface and instead are based on some new base
+classes and interfaces: ScreenObject. Everything in SadConsole is now a ScreenObject.
 
-      - Console.Surface represents the cell surface of the console. Extension methods are provided so that you can use
-      Console.Print and related methods. If you coding inside a Console instance though, the extension methods only work if
-      you qualify the call with this.Print.
+- Console.Surface represents the cell surface of the console. Extension methods are provided so that you can use
+Console.Print and related methods. If you coding inside a Console instance though, the extension methods only work if
+you qualify the call with this.Print.
 
-      - Font/FontMaster are now merged into a single type: Font.
+- Font/FontMaster are now merged into a single type: Font.
 
-      - Font sizes are always represented in an X,Y value now, and are seperate from the font itself. This means every
-      console has a Font and FontSize property now instead of a single Font property.
+- Font sizes are always represented in an X,Y value now, and are seperate from the font itself. This means every
+console has a Font and FontSize property now instead of a single Font property.
 
-      - All UI objects were moved into the SadConsole.UI namespace.
+- All UI objects were moved into the SadConsole.UI namespace.
 
-      - The theme system was overhauled (and mostly backported to SadConsole v8).
+- The theme system was overhauled (and mostly backported to SadConsole v8).
 
-      - A lot of misc name changes, swapping out where it specified Console and substituting ScreenObject. For example,
-      SadConsole.Input.MouseConsoleState is now SadConsole.Input.MouseScreenObjectState
+- A lot of misc name changes, swapping out where it specified Console and substituting ScreenObject. For example,
+SadConsole.Input.MouseConsoleState is now SadConsole.Input.MouseScreenObjectState
 
-      - SadConsole.Global had a lot of changes. SadConsole.Global.Screen is the root console displayed on the screen
-      to which all other objects are attached to. It is a console and you cannot change this. It makes it simpler for new
-      users. To disable it, disable the renderer: SadConsole.Global.Screen.Renderer = null. Objects added to the Children
-      collection will still work; SadConsole will not bother drawing the root console itself.
+- SadConsole.Global had a lot of changes. SadConsole.Global.Screen is the root console displayed on the screen
+to which all other objects are attached to. It is a console and you cannot change this. It makes it simpler for new
+users. To disable it, disable the renderer: SadConsole.Global.Screen.Renderer = null. Objects added to the Children
+collection will still work; SadConsole will not bother drawing the root console itself.
 
-      - Entity is no longer a Console but a ScreenObject.
+- Entity is no longer a Console but a ScreenObject.
 
-      - App creation is slightly different with a few names migrated and events for draw/update callbacks
+- App creation is slightly different with a few names migrated and events for draw/update callbacks
 
-        SadConsole.Game.Create(80, 25);
-        SadConsole.Game.Instance.OnStart = Init;
-        SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
-        SadConsole.Game.Instance.Run();
-        SadConsole.Game.Instance.Dispose();
+  SadConsole.Game.Create(80, 25);
+  SadConsole.Game.Instance.OnStart = Init;
+  SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
+  SadConsole.Game.Instance.Run();
+  SadConsole.Game.Instance.Dispose();
     </PackageReleaseNotes>
   </PropertyGroup>
 

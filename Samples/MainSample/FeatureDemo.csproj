@@ -20,24 +20,29 @@
 
   <PropertyGroup>
     <GameHost>monogame</GameHost>
+    <UseProjectReferences>true</UseProjectReferences>
+
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
-    <ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.0.0-alpha2" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">
-    <ProjectReference Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="9.0.0-alpha2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-alpha1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HostSpecific\SFML\" />
+    <Folder Condition=" '$(GameHost)' == 'sfml' " Include="HostSpecific\SFML\" />
   </ItemGroup>
 
   <ItemGroup>
