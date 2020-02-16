@@ -15,6 +15,7 @@ namespace SadConsole
     public class Cursor
     {
         private CellSurface editor;
+        private Cell _cursorRenderCell;
         private Point position = new Point();
 
         private readonly int cursorCharacter = 219;
@@ -22,7 +23,18 @@ namespace SadConsole
         /// <summary>
         /// Cell used to render the cursor on the screen.
         /// </summary>
-        public Cell CursorRenderCell { get; set; }
+        public Cell CursorRenderCell
+        {
+            get => _cursorRenderCell;
+            set
+            {
+                CursorEffect?.ClearCell(_cursorRenderCell);
+
+                _cursorRenderCell = value ?? throw new NullReferenceException("The render cell cannot be null. To hide the cursor, use the IsVisible property.");
+
+                CursorEffect?.AddCell(_cursorRenderCell);
+            }
+        }
 
         /// <summary>
         /// Appearance used when printing text.

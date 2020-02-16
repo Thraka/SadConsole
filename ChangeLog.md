@@ -1,3 +1,9 @@
+## XX/XX/2020 V8.99.1
+
+- Ported controls console tab logic from v9. Fixed logic bug when tabbing controls would tab to controls with `control.TabStop = false`.
+- Fixed bug with changing the cursor render cell affecting the special effect on the cell. (thanks axoeu)
+
+
 ## 11/26/2019 V8.99.0
 
 - **Breaking changes to themes and controls**
