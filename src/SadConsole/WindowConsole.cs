@@ -21,6 +21,9 @@ namespace SadConsole
     [DebuggerDisplay("Window")]
     public partial class Window : ControlsConsole
     {
+        [DataMember]
+        private WindowTheme _theme;
+
         /// <summary>
         /// Raised when the window is closed.
         /// </summary>
@@ -28,9 +31,6 @@ namespace SadConsole
 
         [DataMember(Name = "Title")]
         private string _title;
-
-        [DataMember(Name = "Theme")]
-        private readonly Library _theme;
 
         [DataMember(Name = "TitleAlignment")]
         private HorizontalAlignment _titleAlignment;
@@ -73,6 +73,19 @@ namespace SadConsole
             {
                 _titleAlignment = value;
                 Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// The theme for the window. Defaults to <see cref="Library.WindowTheme"/>.
+        /// </summary>
+        public new Themes.WindowTheme Theme
+        {
+            get => _theme ?? Library.Default.WindowTheme;
+            set
+            {
+                _theme = value;
+                IsDirty = true;
             }
         }
 
@@ -143,9 +156,9 @@ namespace SadConsole
         /// <inheritdoc />
         public override void Draw(TimeSpan drawTime)
         {
-            if (IsModal && Theme.WindowTheme.ModalTint.A != 0)
+            if (IsModal && Theme.ModalTint.A != 0)
             {
-                Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), Theme.WindowTheme.ModalTint));
+                Global.DrawCalls.Add(new DrawCallColoredRect(new Rectangle(0, 0, Global.RenderWidth, Global.RenderHeight), Theme.ModalTint));
             }
 
             base.Draw(drawTime);
@@ -154,16 +167,9 @@ namespace SadConsole
         /// <summary>
         /// Causes the window to be redrawn with the selected <see cref="Theme"/>. When overridden, call this method first.
         /// </summary>
-        public new virtual void Invalidate()
+        protected override void Invalidate()
         {
-            Theme.WindowTheme.RefreshTheme(Theme.Colors);
-            Theme.WindowTheme.Draw(this, this);
-            IsDirty = true;
-
-            foreach (Controls.ControlBase control in ControlsList)
-            {
-                control.IsDirty = true;
-            }
+            Theme.Draw(this, this);
         }
 
         /// <inheritdoc />
@@ -174,7 +180,7 @@ namespace SadConsole
                 return false;
             }
 
-            if (!CanDrag || Theme.WindowTheme.TitleAreaLength == 0)
+            if (!CanDrag || Theme.TitleAreaLength == 0)
             {
                 PreviousMouseInfo = state;
                 return base.ProcessMouse(state);
@@ -210,7 +216,7 @@ namespace SadConsole
             // Left button freshly down and we're not already dragging, check to see if in title
             if (CapturedControl == null && state.IsOnConsole && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
             {
-                if (state.CellPosition.Y == Theme.WindowTheme.TitleAreaY && state.CellPosition.X >= Theme.WindowTheme.TitleAreaX && state.CellPosition.X < Theme.WindowTheme.TitleAreaX + Theme.WindowTheme.TitleAreaLength)
+                if (state.CellPosition.Y == Theme.TitleAreaY && state.CellPosition.X >= Theme.TitleAreaX && state.CellPosition.X < Theme.TitleAreaX + Theme.TitleAreaLength)
                 {
                     PreviousMouseExclusiveDrag = IsExclusiveMouse;
 

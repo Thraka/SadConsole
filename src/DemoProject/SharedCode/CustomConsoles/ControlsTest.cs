@@ -211,11 +211,11 @@ namespace StarterProject.CustomConsoles
                     backIndex = 0;
                 }
 
-                Library theme = Theme.Clone();
-                theme.Colors.ControlBack = backgroundcycle[backIndex];
-                theme.Colors.RebuildAppearances();
-                Theme = theme;
-
+                var colors = (ThemeColors ?? Library.Default.Colors);
+                colors.ControlBack = backgroundcycle[backIndex];
+                colors.RebuildAppearances();
+                //ThemeColors = colors;
+                IsDirty = true;
             }
 
 
@@ -226,7 +226,7 @@ namespace StarterProject.CustomConsoles
 
         public override void Update(TimeSpan time) => base.Update(time);
 
-        public override void Invalidate()
+        protected override void Invalidate()
         {
             base.Invalidate();
 

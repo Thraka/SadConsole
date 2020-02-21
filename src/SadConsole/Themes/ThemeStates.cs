@@ -1,13 +1,10 @@
-﻿#if XNA
+﻿using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endif
+using SadConsole.Controls;
 
 namespace SadConsole.Themes
 {
-    using System.Runtime.Serialization;
-    using SadConsole.Controls;
-
     /// <summary>
     /// Has the basic appearances of each control state.
     /// </summary>
@@ -18,47 +15,37 @@ namespace SadConsole.Themes
         /// The normal appearance of the control.
         /// </summary>
         [DataMember]
-        public Cell Normal;
+        public Cell Normal { get; set; } = new Cell();
 
         /// <summary>
         /// The appearance of the control when it is disabled.
         /// </summary>
         [DataMember]
-        public Cell Disabled;
+        public Cell Disabled { get; set; } = new Cell();
 
         /// <summary>
         /// The appearance of the control when it is focused.
         /// </summary>
         [DataMember]
-        public Cell Focused;
+        public Cell Focused { get; set; } = new Cell();
 
         /// <summary>
         /// The appearence of the control when it is in a selected state.
         /// </summary>
         [DataMember]
-        public Cell Selected;
+        public Cell Selected { get; set; } = new Cell();
 
         /// <summary>
         /// The appearance of the control when the mouse is over it.
         /// </summary>
         [DataMember]
-        public Cell MouseOver;
+        public Cell MouseOver { get; set; } = new Cell();
 
         /// <summary>
         /// THe appearance of the control when a mouse button is held down.
         /// </summary>
         [DataMember]
-        public Cell MouseDown;
-
-        /// <summary>
-        /// Creates a new instance of the theme states object.
-        /// </summary>
-        public ThemeStates(Colors themeColors = null)
-        {
-            themeColors = themeColors ?? Library.Default.Colors;
-
-            RefreshTheme(themeColors);
-        }
+        public Cell MouseDown { get; set; } = new Cell();
 
         /// <summary>
         /// Sets the same foreground color to all theme states.
@@ -123,27 +110,27 @@ namespace SadConsole.Themes
         /// <returns>A cell appearance.</returns>
         public Cell GetStateAppearance(ControlStates state)
         {
-            if (Helpers.HasFlag(state, ControlStates.Disabled))
+            if (Helpers.HasFlag((int)state, (int)ControlStates.Disabled))
             {
                 return Disabled;
             }
 
-            if (Helpers.HasFlag(state, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(state, ControlStates.MouseRightButtonDown))
+            if (Helpers.HasFlag((int)state, (int)ControlStates.MouseLeftButtonDown) || Helpers.HasFlag((int)state, (int)ControlStates.MouseRightButtonDown))
             {
                 return MouseDown;
             }
 
-            if (Helpers.HasFlag(state, ControlStates.MouseOver))
+            if (Helpers.HasFlag((int)state, (int)ControlStates.MouseOver))
             {
                 return MouseOver;
             }
 
-            if (Helpers.HasFlag(state, ControlStates.Focused))
+            if (Helpers.HasFlag((int)state, (int)ControlStates.Focused))
             {
                 return Focused;
             }
 
-            if (Helpers.HasFlag(state, ControlStates.Selected))
+            if (Helpers.HasFlag((int)state, (int)ControlStates.Selected))
             {
                 return Selected;
             }
@@ -169,8 +156,11 @@ namespace SadConsole.Themes
         /// Reloads the theme values based on the colors provided.
         /// </summary>
         /// <param name="themeColors">The colors to create the theme with.</param>
-        public virtual void RefreshTheme(Colors themeColors)
+        /// <param name="control">The control being drawn with the theme.</param>
+        public virtual void RefreshTheme(Colors themeColors, ControlBase control)
         {
+            if (themeColors == null) themeColors = Library.Default.Colors;
+
             Normal = themeColors.Appearance_ControlNormal.Clone();
             Disabled = themeColors.Appearance_ControlDisabled.Clone();
             MouseOver = themeColors.Appearance_ControlOver.Clone();
@@ -178,41 +168,5 @@ namespace SadConsole.Themes
             Selected = themeColors.Appearance_ControlSelected.Clone();
             Focused = themeColors.Appearance_ControlFocused.Clone();
         }
-    }
-
-    /// <summary> 
-    /// The base class for a theme.
-    /// </summary>
-    [DataContract]
-    public abstract class ThemeBase : ThemeStates
-    {
-        /// <summary>
-        /// The colors to set for the theme. If <see langword="null"/>, then colors are pulled from the parent control or <see cref="Themes.Library.Default"/>.
-        /// </summary>
-        public Colors Colors { get; set; }
-
-        /// <summary>
-        /// Draws the control state to the control.
-        /// </summary>
-        /// <param name="control">The control to draw.</param>
-        /// <param name="time">The time since the last update frame call.</param>
-        public abstract void UpdateAndDraw(ControlBase control, System.TimeSpan time);
-
-        /// <summary>
-        /// Called when the theme is attached to a control.
-        /// </summary>
-        /// <param name="control">The control that will use this theme instance.</param>
-        public virtual void Attached(ControlBase control)
-        {
-            Colors colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
-
-            RefreshTheme(colors);
-        }
-
-        /// <summary>
-        /// Creates a new theme instance based on the current instance.
-        /// </summary>
-        /// <returns>A new theme instance.</returns>
-        public new abstract ThemeBase Clone();
     }
 }

@@ -58,28 +58,8 @@ namespace SadConsole.Themes
                 return;
             }
 
-            Cell appearance;
-
-            if (Helpers.HasFlag(button.State, ControlStates.Disabled))
-            {
-                appearance = Disabled;
-            }
-            else if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
-            {
-                appearance = MouseDown;
-            }
-            else if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
-            {
-                appearance = MouseOver;
-            }
-            else if (Helpers.HasFlag(button.State, ControlStates.Focused))
-            {
-                appearance = Focused;
-            }
-            else
-            {
-                appearance = Normal;
-            }
+            RefreshTheme(control.ThemeColors, control);
+            Cell appearance = GetStateAppearance(control.State);
 
             int middle = (button.Height != 1 ? button.Height / 2 : 0);
 
@@ -106,7 +86,6 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new ButtonTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
@@ -126,7 +105,12 @@ namespace SadConsole.Themes
     public class Button3dTheme : ButtonTheme
     {
         [DataMember]
-        public Cell Shade { get; set; }
+        public Cell Shade { get; protected set; }
+
+        public Button3dTheme()
+        {
+            Shade = new Cell(Library.Default.Colors.ControlBackDark, Color.Transparent, 176);
+        }
 
         /// <inheritdoc />
         public override void Attached(ControlBase control)
@@ -136,16 +120,14 @@ namespace SadConsole.Themes
                 DefaultBackground = Color.Transparent
             };
             control.Surface.Clear();
-
-            Colors colors = Colors ?? control.Parent?.Theme.Colors ?? Library.Default.Colors;
-
-            RefreshTheme(colors);
         }
 
         /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors)
+        public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            base.RefreshTheme(themeColors);
+            if (themeColors == null) themeColors = Library.Default.Colors;
+
+            base.RefreshTheme(themeColors, control);
 
             //TODO shade should not hard code the glyph
             Shade = new Cell(themeColors.ControlBackDark, Color.Transparent, 176);
@@ -165,28 +147,8 @@ namespace SadConsole.Themes
                 return;
             }
 
-            Cell appearance;
-
-            if (Helpers.HasFlag(button.State, ControlStates.Disabled))
-            {
-                appearance = Disabled;
-            }
-            else if (Helpers.HasFlag(button.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(button.State, ControlStates.MouseRightButtonDown))
-            {
-                appearance = MouseDown;
-            }
-            else if (Helpers.HasFlag(button.State, ControlStates.MouseOver))
-            {
-                appearance = MouseOver;
-            }
-            else if (Helpers.HasFlag(button.State, ControlStates.Focused))
-            {
-                appearance = Focused;
-            }
-            else
-            {
-                appearance = Normal;
-            }
+            RefreshTheme(control.ThemeColors, control);
+            Cell appearance = GetStateAppearance(control.State);
 
             int middle = button.Height != 1 ? button.Height / 2 : 0;
 
@@ -242,7 +204,6 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new Button3dTheme()
         {
-            Colors = Colors.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
@@ -271,13 +232,19 @@ namespace SadConsole.Themes
         [DataMember]
         public bool UseExtended;
 
-        public ButtonLinesTheme() =>
+        public ButtonLinesTheme()
+        {
             UseExtended = true;
+            TopLeftLineColors = new Cell(Library.Default.Colors.Gray, Color.Transparent);
+            BottomRightLineColors = new Cell(Library.Default.Colors.GrayDark, Color.Transparent);
+        }
 
         /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors)
+        public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            base.RefreshTheme(themeColors);
+            if (themeColors == null) themeColors = Library.Default.Colors;
+
+            base.RefreshTheme(themeColors, control);
 
             TopLeftLineColors = new Cell(themeColors.Gray, Color.Transparent);
             BottomRightLineColors = new Cell(themeColors.GrayDark, Color.Transparent);
@@ -296,7 +263,9 @@ namespace SadConsole.Themes
                 return;
             }
 
+            RefreshTheme(control.ThemeColors, control);
             Cell appearance;
+
             bool mouseDown = false;
             bool mouseOver = false;
             bool focused = false;
@@ -421,7 +390,6 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new ButtonLinesTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),

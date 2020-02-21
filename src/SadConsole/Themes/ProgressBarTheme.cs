@@ -18,20 +18,21 @@ namespace SadConsole.Themes
         /// The theme of the unprogressed part of the bar.
         /// </summary>
         [DataMember]
-        public ThemeStates Background;
+        public ThemeStates Background { get; protected set; }
 
         /// <summary>
         /// The theme of the progressed part of the bar.
         /// </summary>
         [DataMember]
-        public ThemeStates Foreground;
+        public ThemeStates Foreground { get; protected set; }
 
         /// <summary>
         /// Creates a new theme used by the <see cref="ProgressBar"/>.
         /// </summary>
         public ProgressBarTheme()
         {
-
+            Background = new ThemeStates();
+            Foreground = new ThemeStates();
         }
 
         /// <inheritdoc />
@@ -47,23 +48,6 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors)
-        {
-            base.RefreshTheme(themeColors);
-
-            Background = new ThemeStates(themeColors);
-            Background.SetForeground(Normal.Foreground);
-            Background.SetBackground(Normal.Background);
-            Background.SetGlyph(176);
-            Background.Disabled = new Cell(Color.Gray, Color.Black, 176);
-            Foreground = new ThemeStates(themeColors);
-            Foreground.SetForeground(Normal.Foreground);
-            Foreground.SetBackground(Normal.Background);
-            Foreground.SetGlyph(219);
-            Foreground.Disabled = new Cell(Color.Gray, Color.Black, 219);
-        }
-
-        /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
             if (!(control is ProgressBar progressbar))
@@ -75,6 +59,8 @@ namespace SadConsole.Themes
             {
                 return;
             }
+
+            RefreshTheme(control.ThemeColors, control);
 
             Cell foregroundAppearance;
             Cell backgroundAppearance;
@@ -149,18 +135,35 @@ namespace SadConsole.Themes
             progressbar.IsDirty = false;
         }
 
+        public override void RefreshTheme(Colors themeColors, ControlBase control)
+        {
+            if (themeColors == null) themeColors = Library.Default.Colors;
+
+            base.RefreshTheme(themeColors, control);
+
+            Background.RefreshTheme(themeColors, control);
+            Background.SetForeground(Normal.Foreground);
+            Background.SetBackground(Normal.Background);
+            Background.SetGlyph(176);
+            Background.Disabled = new Cell(Color.Gray, Color.Black, 176);
+            Foreground.RefreshTheme(themeColors, control);
+            Foreground.SetForeground(Normal.Foreground);
+            Foreground.SetBackground(Normal.Background);
+            Foreground.SetGlyph(219);
+            Foreground.Disabled = new Cell(Color.Gray, Color.Black, 219);
+        }
+
         /// <inheritdoc />
         public override ThemeBase Clone() => new ProgressBarTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
-            Foreground = Foreground.Clone(),
-            Background = Background.Clone()
+            Foreground = Foreground?.Clone(),
+            Background = Background?.Clone()
         };
     }
 }

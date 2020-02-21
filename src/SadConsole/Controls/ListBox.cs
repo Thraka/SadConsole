@@ -196,12 +196,14 @@ namespace SadConsole.Controls
             ScrollBar.ValueChanged += new EventHandler(_scrollbar_ValueChanged);
             ScrollBar.IsVisible = false;
             ScrollBar.Position = Position + new Point(Width - 1, 0);
-
+            OnThemeChanged();
             DetermineState();
         }
 
         protected override void OnThemeChanged()
         {
+            if (ScrollBar == null) return;
+
             if (ActiveTheme is ListBoxTheme theme)
             {
                 ScrollBar.Theme = theme.ScrollBarTheme;

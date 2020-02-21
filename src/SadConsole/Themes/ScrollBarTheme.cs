@@ -77,9 +77,11 @@ namespace SadConsole.Themes
         }
 
         /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors)
+        public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            base.RefreshTheme(themeColors);
+            if (themeColors == null) themeColors = Library.Default.Colors;
+
+            base.RefreshTheme(themeColors, control);
 
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
@@ -99,6 +101,8 @@ namespace SadConsole.Themes
             {
                 return;
             }
+
+            RefreshTheme(control.ThemeColors, control);
 
             Cell appearance;
 
@@ -179,7 +183,6 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new ScrollBarTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),

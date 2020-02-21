@@ -52,6 +52,7 @@ namespace SadConsole.Themes
                 return;
             }
 
+            RefreshTheme(control.ThemeColors, control);
             Cell appearance;
 
             if (!UseNormalStateOnly)
@@ -143,7 +144,6 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new LabelTheme()
         {
-            Colors = Colors?.Clone(),
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
             MouseOver = MouseOver.Clone(),
