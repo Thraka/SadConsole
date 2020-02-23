@@ -27,7 +27,7 @@ namespace SadConsole.UI.Themes
                 if (_libraryInstance != null) return _libraryInstance;
 
                 _libraryInstance = new Library();
-                _libraryInstance.Init();
+                _libraryInstance.ApplyDefaults();
 
                 return _libraryInstance;
             }
@@ -36,7 +36,7 @@ namespace SadConsole.UI.Themes
                 if (null == value)
                 {
                     _libraryInstance = new Library();
-                    _libraryInstance.Init();
+                    _libraryInstance.ApplyDefaults();
                 }
                 else
                     _libraryInstance = value;
@@ -54,14 +54,14 @@ namespace SadConsole.UI.Themes
             if (Default == null)
             {
                 Default = new Library();
-                Default.Init();
+                Default.ApplyDefaults();
             }
         }
 
         /// <summary>
         /// Seeds the library with the default themes.
         /// </summary>
-        protected void Init()
+        public void ApplyDefaults()
         {
             SetConsoleTheme(typeof(UI.Window), new Window());
             SetConsoleTheme(typeof(UI.ControlsConsole), new ControlsConsole());
