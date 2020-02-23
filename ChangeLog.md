@@ -2,6 +2,7 @@
 
 - Ported controls console tab logic from v9. Fixed logic bug when tabbing controls would tab to controls with `control.TabStop = false`.
 - Fixed bug with changing the cursor render cell affecting the special effect on the cell. (thanks axoeu)
+- Exposed the Theme Library Init method as ApplyDefaults.
 
 
 ## 11/26/2019 V8.99.0
