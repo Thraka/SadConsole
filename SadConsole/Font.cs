@@ -101,11 +101,6 @@ namespace SadConsole
         public string FilePath { get; set; }
 
         /// <summary>
-        /// The path to the .font definition file.
-        /// </summary>
-        public string LoadedFilePath { get; private set; }
-
-        /// <summary>
         /// The height of each glyph in pixels.
         /// </summary>
         [DataMember]
@@ -259,7 +254,7 @@ namespace SadConsole
                     Image = GameHost.Instance.GetTexture(fontStream);
             }
             else
-                Image = GameHost.Instance.GetTexture(FilePath);
+                Image = GameHost.Instance.GetTexture(System.IO.Path.Combine(SadConsole.GameHost.SerializerPathHint, FilePath));
             
 
             ConfigureRects();

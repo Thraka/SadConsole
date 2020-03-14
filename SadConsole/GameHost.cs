@@ -133,14 +133,21 @@ namespace SadConsole
             //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
             try
             {
+                var oldSettings = SadConsole.Serializer.Settings;
+                SadConsole.Serializer.Settings = new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
+                };
+
                 Font masterFont = SadConsole.Serializer.Load<Font>(font, false);
 
                 if (Global.Fonts.ContainsKey(masterFont.Name))
-                {
                     Global.Fonts.Remove(masterFont.Name);
-                }
 
                 Global.Fonts.Add(masterFont.Name, masterFont);
+
+                SadConsole.Serializer.Settings = oldSettings;
+
                 return masterFont;
             }
             catch (System.Runtime.Serialization.SerializationException)

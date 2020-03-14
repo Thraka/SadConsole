@@ -110,6 +110,7 @@ namespace SadConsole
                         using (var sr = new System.IO.StreamReader(sw, Encoding.UTF32))
                         {
                             string value = sr.ReadToEnd();
+                            
                             //return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
                             return (T)JsonConvert.DeserializeObject(value, typeof(T), _settings);
                         }

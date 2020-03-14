@@ -3275,11 +3275,6 @@
             The name of the image file as defined in the .font file.
             </summary>
         </member>
-        <member name="P:SadConsole.Font.LoadedFilePath">
-            <summary>
-            The path to the .font definition file.
-            </summary>
-        </member>
         <member name="P:SadConsole.Font.GlyphHeight">
             <summary>
             The height of each glyph in pixels.
@@ -8023,7 +8018,7 @@
             Colors for the theme library.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.Library.Init">
+        <member name="M:SadConsole.UI.Themes.Library.ApplyDefaults">
             <summary>
             Seeds the library with the default themes.
             </summary>
