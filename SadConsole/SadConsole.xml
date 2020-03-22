@@ -7912,9 +7912,144 @@
             Default colors used by control themes.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.Colors.ModalBackground">
+        <member name="P:SadConsole.UI.Themes.Colors.IsLibrary">
             <summary>
-            The color used to darken the background when <see cref="o:Window.Show"/> is called and <see cref="!:Window.IsModal"/> is <see langword="true"/>.
+            Indicates that this color object is set to a library object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.White">
+            <summary>
+            The white color. Defaults to <see cref="P:SadRogue.Primitives.Color.White"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Black">
+            <summary>
+            The black color. Defaults to <see cref="P:SadRogue.Primitives.Color.Black"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Gray">
+            <summary>
+            The gray color. Defaults to (176, 196, 222).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.GrayDark">
+            <summary>
+            The dark gray color. Defaults to (66, 66, 66).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Red">
+            <summary>
+            The red color. Defaults to (255, 0, 51).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Green">
+            <summary>
+            The green color. Defaults to (153, 224, 0).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Blue">
+            <summary>
+            The blue color. Defaults to (102, 204, 255).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Purple">
+            <summary>
+            The purple color. Defaults to (132, 0, 214).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Yellow">
+            <summary>
+            The yellow color. Defaults to (255, 255, 102).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Orange">
+            <summary>
+            The orange color. Defaults to (255, 153, 0).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Cyan">
+            <summary>
+            The cyan color. Defaults to (82, 242, 234).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Brown">
+            <summary>
+            The brown color. Defaults to (100, 59, 15).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.RedDark">
+            <summary>
+            The dark red color. Defaults to (153, 51, 51).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.GreenDark">
+            <summary>
+            The dark green color. Defaults to (110, 166, 23).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.BlueDark">
+            <summary>
+            The dark blue color. Defaults to (51, 102, 153).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.PurpleDark">
+            <summary>
+            The dark purple color. Defaults to (70, 0, 114).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.YellowDark">
+            <summary>
+            The dark yellow color. Defaults to (255, 207, 15).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.OrangeDark">
+            <summary>
+            The dark orange color. Defaults to (255, 102, 0).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.CyanDark">
+            <summary>
+            The dark cyan color. Defaults to (33, 182, 168).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.BrownDark">
+            <summary>
+            The dark brown color. Defaults to (119, 17, 0).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Gold">
+            <summary>
+            The gold color. Defaults to (255, 215, 0).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.GoldDark">
+            <summary>
+            The dark gold color. Defaults to (127, 107, 0).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Silver">
+            <summary>
+            The silver color. Defaults to (192, 192, 192).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.SilverDark">
+            <summary>
+            The dark silver color. Defaults to (169, 169, 169).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.Bronze">
+            <summary>
+            The bronze color. Defaults to (205, 127, 50).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.BronzeDark">
+            <summary>
+            The dark bronze color. Defaults to (144, 89, 35).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.Colors.ModalBackground">
+            <summary>
+            The color used to darken the background when <see cref="o:UI.Window.Show"/> is called and <see cref="P:SadConsole.UI.Window.IsModal"/> is <see langword="true"/>. Defaults to (20, 20, 20, 200).
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.Colors.RebuildAppearances">
@@ -7927,6 +8062,18 @@
             Returns a clone of this object.
             </summary>
             <returns>A new Colors object.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Colors.CreateDefault">
+            <summary>
+            Creates a new colors object with the default blue colors theme of SadConsole.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Colors.CreateFromAnsi">
+            <summary>
+            Creates a new colors object with a standard black-based theme.
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:SadConsole.UI.Themes.ControlsConsole">
             <summary>
