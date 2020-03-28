@@ -6830,7 +6830,7 @@
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.OnThemeDrawn">
             <summary>
-            Used for custom drawing. Called after the console's <see cref="!:IScreenSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/> is redrawn.
+            Used for custom drawing. Called after the console's <see cref="P:SadConsole.ICellSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/> is redrawn.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.Update">

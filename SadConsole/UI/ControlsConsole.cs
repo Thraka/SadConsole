@@ -36,6 +36,7 @@ namespace SadConsole.UI
         private bool _exclusiveBeforeCapture;
         private Themes.ControlsConsole _theme;
         private Themes.Colors _themeColors;
+        private bool _isRedrawingTheme;
 
         /// <summary>
         /// When set to false, uses the static <see cref="ControlsConsole.KeyboardState"/> keyboard instead of <see cref="Global.KeyboardState"/>
@@ -580,7 +581,7 @@ namespace SadConsole.UI
         /// <inheritdoc />
         protected override void OnIsDirtyChanged()
         {
-            if (IsDirty)
+            if (IsDirty && !_isRedrawingTheme)
                 RedrawTheme();
         }
 
@@ -589,16 +590,18 @@ namespace SadConsole.UI
         /// </summary>
         public virtual void RedrawTheme()
         {
+            _isRedrawingTheme = true;
             IsDirty = true;
             Theme?.Draw(this);
             OnThemeDrawn();
 
             foreach (ControlBase control in ControlsList)
                 control.IsDirty = true;
+            _isRedrawingTheme = false;
         }
 
         /// <summary>
-        /// Used for custom drawing. Called after the console's <see cref="IScreenSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="Theme"/> is redrawn.
+        /// Used for custom drawing. Called after the console's <see cref="ICellSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="Theme"/> is redrawn.
         /// </summary>
         protected virtual void OnThemeDrawn() { }
 
