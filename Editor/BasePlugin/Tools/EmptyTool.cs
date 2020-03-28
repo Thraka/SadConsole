@@ -64,8 +64,8 @@ namespace SadConsoleEditor.Tools
         {
             if (MainConsole.Instance.ActiveEditor != null)
             {
-                if (MainConsole.Instance.ActiveEditor.Surface.Children.Contains(_console))
-                    MainConsole.Instance.ActiveEditor.Surface.Children.Remove(_console);
+                if (MainConsole.Instance.ActiveEditor.Object.Children.Contains(_console))
+                    MainConsole.Instance.ActiveEditor.Object.Children.Remove(_console);
             }
         }
 
@@ -73,20 +73,20 @@ namespace SadConsoleEditor.Tools
         {
             if (MainConsole.Instance.ActiveEditor != null)
             {
-                _oldViewPort = MainConsole.Instance.ActiveEditor.Surface.View;
+                _oldViewPort = MainConsole.Instance.ActiveEditor.Object.Surface.View;
 
-                if (MainConsole.Instance.ActiveEditor.Surface.Children.Contains(_console))
-                    MainConsole.Instance.ActiveEditor.Surface.Children.Remove(_console);
+                if (MainConsole.Instance.ActiveEditor.Object.Children.Contains(_console))
+                    MainConsole.Instance.ActiveEditor.Object.Children.Remove(_console);
 
-                _console = new Console(MainConsole.Instance.ActiveEditor.Surface.View.Width, MainConsole.Instance.ActiveEditor.Surface.View.Height);
+                _console = new Console(MainConsole.Instance.ActiveEditor.Object.Surface.View.Width, MainConsole.Instance.ActiveEditor.Object.Surface.View.Height);
                 _console.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
                 _console.Clear();
                 
-                var clearCell = new ColoredGlyph(MainConsole.Instance.ActiveEditor.Surface.DefaultForeground, MainConsole.Instance.ActiveEditor.Surface.DefaultBackground, 0);
+                var clearCell = new ColoredGlyph(MainConsole.Instance.ActiveEditor.Object.Surface.DefaultForeground, MainConsole.Instance.ActiveEditor.Object.Surface.DefaultBackground, 0);
 
                 for (int index = 0; index < _console.Cells.Length; index++)
                 {
-                    var renderCell = MainConsole.Instance.ActiveEditor.Surface.Cells[(Point.FromIndex(index, _console.BufferWidth) + MainConsole.Instance.ActiveEditor.Surface.ViewPosition).ToIndex(MainConsole.Instance.ActiveEditor.Surface.BufferWidth)];
+                    var renderCell = MainConsole.Instance.ActiveEditor.Object.Surface.Cells[(Point.FromIndex(index, _console.BufferWidth) + MainConsole.Instance.ActiveEditor.Object.Surface.ViewPosition).ToIndex(MainConsole.Instance.ActiveEditor.Object.Surface.BufferWidth)];
 
                     if (renderCell.Foreground == clearCell.Foreground &&
                         renderCell.Background == clearCell.Background &&
@@ -95,7 +95,7 @@ namespace SadConsoleEditor.Tools
                         _console[index].Background = _emptyCellColor;
                 }
 
-                MainConsole.Instance.ActiveEditor.Surface.Children.Add(_console);
+                MainConsole.Instance.ActiveEditor.Object.Children.Add(_console);
             }
         }
 
@@ -106,11 +106,11 @@ namespace SadConsoleEditor.Tools
                 RefreshTool();
                 _firstSelect = false;
             }
-            else if (_oldViewPort != MainConsole.Instance.ActiveEditor.Surface.View)
+            else if (_oldViewPort != MainConsole.Instance.ActiveEditor.Object.Surface.View)
                 RefreshTool();
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject)
         {
             //if (info.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space))
             //{
@@ -121,7 +121,7 @@ namespace SadConsoleEditor.Tools
             return false;
         }
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
             if (MainConsole.Instance.ActiveEditor == null)
                 return;
@@ -131,9 +131,9 @@ namespace SadConsoleEditor.Tools
 
                 if (info.Mouse.LeftButtonDown)
                 {
-                    var position = new MouseScreenObjectState(MainConsole.Instance.ActiveEditor.Surface, info.Mouse).CellPosition;
-                    MainConsole.Instance.ActiveEditor.Surface.Clear(position.X, position.Y);
-                    var editPosition = position - MainConsole.Instance.ActiveEditor.Surface.ViewPosition;
+                    var position = new MouseScreenObjectState(MainConsole.Instance.ActiveEditor.Object, info.Mouse).CellPosition;
+                    MainConsole.Instance.ActiveEditor.Object.Surface.Clear(position.X, position.Y);
+                    var editPosition = position - MainConsole.Instance.ActiveEditor.Object.Surface.ViewPosition;
                     _console.SetBackground(editPosition.X, editPosition.Y, _emptyCellColor);
                 }
 

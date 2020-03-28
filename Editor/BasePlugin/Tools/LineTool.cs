@@ -107,12 +107,12 @@
         {
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject)
         {
             return false;
         }
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
             if (cancelled)
             {
@@ -203,10 +203,7 @@
 
                 var borderCell = new ColoredGlyph(_settingsPanel.LineForeColor, _settingsPanel.LineBackColor, _settingsPanel.LineGlyph);
 
-                if (info.ScreenObject.Surface.IsScrollable)
-                    surface.DrawLine(firstPoint.Value + surface.ViewPosition, secondPoint + surface.ViewPosition, borderCell.Foreground, borderCell.Background, borderCell.Glyph);
-                else
-                    surface.DrawLine(firstPoint.Value, secondPoint, borderCell.Foreground, borderCell.Background, borderCell.Glyph);
+                screenObject.Surface.DrawLine(firstPoint.Value + screenObject.Surface.ViewPosition, secondPoint + screenObject.Surface.ViewPosition, borderCell.Foreground, borderCell.Background, borderCell.Glyph);
 
                 firstPoint = null;
 

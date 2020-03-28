@@ -70,12 +70,12 @@ namespace SadConsoleEditor.Tools
         {
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject)
         {
             return false;
         }
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
             if (info.IsOnScreenObject)
             {
@@ -86,7 +86,7 @@ namespace SadConsoleEditor.Tools
                     cell.Foreground = CharacterPickPanel.SharedInstance.SettingForeground;
                     cell.Background = CharacterPickPanel.SharedInstance.SettingBackground;
                     cell.Mirror = CharacterPickPanel.SharedInstance.SettingMirrorEffect;
-                    surface.IsDirty = true;
+                    screenObject.Surface.IsDirty = true;
                 }
 
                 if (info.Mouse.RightButtonDown)

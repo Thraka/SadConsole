@@ -30,7 +30,7 @@ namespace SadConsoleEditor.Editors
 
         private Console _surface;
 
-        public Console Surface => _surface;
+        public SadConsole.IScreenSurface Object => _surface;
 
         public IEditor LinkedEditor { get; set; }
 

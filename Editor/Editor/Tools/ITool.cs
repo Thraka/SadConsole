@@ -22,9 +22,9 @@ namespace SadConsoleEditor.Tools
 
         void OnDeselected();
 
-        bool ProcessKeyboard(Keyboard info, Console surface);
+        bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject);
 
-        void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds);
+        void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds);
 
         void RefreshTool();
 

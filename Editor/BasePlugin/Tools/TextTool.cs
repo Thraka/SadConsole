@@ -96,8 +96,12 @@
             //blinkManager.UpdateEffects(SadConsole.Global.GameTimeElapsedUpdate);
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject)
         {
+            // Ideas for changing this?
+            // - Instead create a cursor object each time the cursor is shown.
+            //   Host the cursor object in a 
+            
             if (writing)
             {
                 if (info.IsKeyDown(Keys.Escape))
@@ -122,7 +126,7 @@
             return false;
         }
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
             if (info.IsOnScreenObject && info.Mouse.LeftClicked)
             {
@@ -130,21 +134,21 @@
                 MainConsole.Instance.DisableBrush = true;
                 writing = true;
                 Brush.IsVisible = false;
-                tempConsole = surface;
+                //tempConsole = screenObject;
 
-                if (surface.IsScrollable)
-                {
-                    tempConsole.Cursor.IsVisible = true;
-                    tempConsole.Cursor.AutomaticallyShiftRowsUp = false;
-                    tempConsole.Cursor.Position = info.SurfaceCellPosition + surface.ViewPosition;
-                }
-                else
-                {
-                    tempConsole = surface;
-                    tempConsole.Cursor.IsVisible = true;
-                    Brush.Position = info.SurfaceCellPosition;
-                    tempConsole.Cursor.Position = info.SurfaceCellPosition;
-                }
+                //if (screenObject.IsScrollable)
+                //{
+                //    tempConsole.Cursor.IsVisible = true;
+                //    tempConsole.Cursor.AutomaticallyShiftRowsUp = false;
+                //    tempConsole.Cursor.Position = info.SurfaceCellPosition + screenObject.ViewPosition;
+                //}
+                //else
+                //{
+                //    tempConsole = screenObject;
+                //    tempConsole.Cursor.IsVisible = true;
+                //    Brush.Position = info.SurfaceCellPosition;
+                //    tempConsole.Cursor.Position = info.SurfaceCellPosition;
+                //}
             }
         }
        

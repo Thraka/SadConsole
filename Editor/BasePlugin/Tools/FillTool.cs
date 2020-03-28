@@ -74,12 +74,12 @@
         {
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject)
         {
             return false;
         }
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
             if (info.Mouse.LeftClicked && info.IsOnScreenObject)
             {
@@ -110,18 +110,18 @@
                     //console.TextSurface.SetEffect(c, _currentFillCell.Effect);
                 };
 
-                System.Collections.Generic.List<ColoredGlyph> cells = new System.Collections.Generic.List<ColoredGlyph>(surface.Cells);
+                System.Collections.Generic.List<ColoredGlyph> cells = new System.Collections.Generic.List<ColoredGlyph>(screenObject.Surface.Cells);
 
                 Func<ColoredGlyph, SadConsole.Algorithms.NodeConnections<ColoredGlyph>> getConnectedCells = (c) =>
                 {
                     Algorithms.NodeConnections<ColoredGlyph> connections = new Algorithms.NodeConnections<ColoredGlyph>();
 
-                    Point position = Point.FromIndex(cells.IndexOf(c), surface.Width);
+                    Point position = Point.FromIndex(cells.IndexOf(c), screenObject.Surface.BufferWidth);
 
-                    connections.West = surface.IsValidCell(position.X - 1, position.Y) ? surface[position.X - 1, position.Y] : null;
-                    connections.East = surface.IsValidCell(position.X + 1, position.Y) ? surface[position.X + 1, position.Y] : null;
-                    connections.North = surface.IsValidCell(position.X, position.Y - 1) ? surface[position.X, position.Y - 1] : null;
-                    connections.South = surface.IsValidCell(position.X, position.Y + 1) ? surface[position.X, position.Y + 1] : null;
+                    connections.West = screenObject.Surface.IsValidCell(position.X - 1, position.Y) ? screenObject.Surface[position.X - 1, position.Y] : null;
+                    connections.East = screenObject.Surface.IsValidCell(position.X + 1, position.Y) ? screenObject.Surface[position.X + 1, position.Y] : null;
+                    connections.North = screenObject.Surface.IsValidCell(position.X, position.Y - 1) ? screenObject.Surface[position.X, position.Y - 1] : null;
+                    connections.South = screenObject.Surface.IsValidCell(position.X, position.Y + 1) ? screenObject.Surface[position.X, position.Y + 1] : null;
 
                     return connections;
                 };
@@ -129,7 +129,7 @@
                 if (!isTargetCell(currentFillCell))
                     SadConsole.Algorithms.FloodFill<ColoredGlyph>(info.Cell, isTargetCell, fillCell, getConnectedCells);
 
-                info.ScreenObject.IsDirty = true;
+                ((IScreenSurface)info.ScreenObject).IsDirty = true;
             }
 
             if (info.Mouse.RightButtonDown && info.IsOnScreenObject)

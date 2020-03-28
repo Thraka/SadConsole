@@ -107,12 +107,12 @@
         {
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject)
         {
             return false;
         }
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
             if (cancelled)
             {
@@ -192,16 +192,10 @@
                 var fillCell = _settingsPanel.UseFill ? new ColoredGlyph(_settingsPanel.FillForeColor, _settingsPanel.FillBackColor, _settingsPanel.FillGlyph) : null;
                 var borderCell = new ColoredGlyph(_settingsPanel.LineForeColor, _settingsPanel.LineBackColor, _settingsPanel.LineGlyph);
 
-                if (info.ScreenObject.Surface.IsScrollable)
-                    surface.DrawCircle(new Rectangle(Math.Min(firstPoint.Value.X, secondPoint.X) + surface.ViewPosition.X,
-                                                  Math.Min(firstPoint.Value.Y, secondPoint.Y) + surface.ViewPosition.Y,
-                                                  Brush.Animation.Width, Brush.Animation.Height),
-                                    borderCell, fillCell);
-                else
-                    surface.DrawCircle(new Rectangle(Math.Min(firstPoint.Value.X, secondPoint.X),
-                                                  Math.Min(firstPoint.Value.Y, secondPoint.Y),
-                                                  Brush.Animation.Width, Brush.Animation.Height),
-                                    borderCell, fillCell);
+                screenObject.Surface.DrawCircle(new Rectangle(Math.Min(firstPoint.Value.X, secondPoint.X) + screenObject.Surface.ViewPosition.X,
+                                                              Math.Min(firstPoint.Value.Y, secondPoint.Y) + screenObject.Surface.ViewPosition.Y,
+                                                              Brush.Animation.Width, Brush.Animation.Height),
+                                                              borderCell, fillCell);
 
                 firstPoint = null;
 

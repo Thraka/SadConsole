@@ -39,7 +39,7 @@
         private SelectionToolPanel _panel;
         private SelectionToolAltPanel _altPanel;
         private SadConsole.Effects.Fade _pulseAnimation;
-        private Console _previousSurface;
+        private IScreenSurface _previousSurface;
 
         private SelectionToolPanel.CloneState _previousState;
 
@@ -138,9 +138,8 @@
                 Brush.ShowSelectedSurface = true;
 
                 var editPosition = firstPoint.Value;
-
-                if (_previousSurface.IsScrollable)
-                    editPosition += _previousSurface.ViewPosition;
+                
+                editPosition += _previousSurface.Surface.ViewPosition;
 
                 ClearBrush(editPosition.X, editPosition.Y, _previousSurface.Surface);
                 animation.Center = new Point(animation.Width / 2, animation.Height / 2);
@@ -154,10 +153,9 @@
 
                 var editPosition = firstPoint.Value;
 
-                if (_previousSurface.IsScrollable)
-                    editPosition += _previousSurface.ViewPosition;
+                editPosition += _previousSurface.Surface.ViewPosition;
 
-                ClearBrush(editPosition.X, editPosition.Y, _previousSurface);
+                ClearBrush(editPosition.X, editPosition.Y, _previousSurface.Surface);
                 _panel.State = SelectionToolPanel.CloneState.SelectingPoint1;
             }
             else if (state == SelectionToolPanel.CloneState.Stamp)
@@ -281,7 +279,7 @@
             { }
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface screenObject)
         {
             return false;
         }
@@ -289,9 +287,9 @@
         private bool cancelled;
         private Point finalPostion;
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
-            _previousSurface = surface;
+            _previousSurface = screenObject;
 
             if (cancelled)
             {
@@ -364,23 +362,15 @@
                         return;
                     }
 
-                    if (info.ScreenObject.Surface.IsScrollable)
-                    {
-                        secondPoint = info.SurfaceCellPosition + info.ScreenObject.Surface.ViewPosition;
-                        firstPoint = firstPoint.Value + info.ScreenObject.Surface.ViewPosition;
-                    }
-                    else
-                    {
-                        secondPoint = info.SurfaceCellPosition;
-                        firstPoint = firstPoint.Value;
-                    }
+                    secondPoint = info.SurfaceCellPosition + ((IScreenSurface)info.ScreenObject).Surface.ViewPosition;
+                    firstPoint = firstPoint.Value + ((IScreenSurface)info.ScreenObject).Surface.ViewPosition;
                     
 
                     // Copy data to new animation
                     AnimatedScreenSurface cloneAnimation = new AnimatedScreenSurface("clone", Brush.Animation.Width, Brush.Animation.Height, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
                     var frame = cloneAnimation.CreateFrame();
                     Point topLeftPoint = new Point(Math.Min(firstPoint.Value.X, secondPoint.X), Math.Min(firstPoint.Value.Y, secondPoint.Y));
-                    surface.Copy(topLeftPoint.X, topLeftPoint.Y, cloneAnimation.Width, cloneAnimation.Height, frame, 0, 0);
+                    screenObject.Surface.Copy(topLeftPoint.X, topLeftPoint.Y, cloneAnimation.Width, cloneAnimation.Height, frame, 0, 0);
 
                     if (_altPanel.SkipEmptyCells && _altPanel.UseAltEmptyColor)
                     {
@@ -423,11 +413,11 @@
             {
                 if (_panel.State == SelectionToolPanel.CloneState.Stamp)
                 {
-                    StampBrush(info.SurfaceCellPosition.X, info.SurfaceCellPosition.Y, surface);
+                    StampBrush(info.SurfaceCellPosition.X, info.SurfaceCellPosition.Y, screenObject.Surface);
                 }
                 else if (_panel.State == SelectionToolPanel.CloneState.Move)
                 {
-                    StampBrush(info.SurfaceCellPosition.X, info.SurfaceCellPosition.Y, surface);
+                    StampBrush(info.SurfaceCellPosition.X, info.SurfaceCellPosition.Y, screenObject.Surface);
                     _panel.State = SelectionToolPanel.CloneState.SelectingPoint1;
                 }
             }

@@ -314,7 +314,7 @@ namespace SadConsoleEditor
             if (ActiveEditor != null)
             {
                 ActiveEditor.OnDeselected();
-                ActiveEditor.Surface.Parent = null;
+                ActiveEditor.Object.Parent = null;
                 _borderConsole.Clear();
             }
 
@@ -322,7 +322,7 @@ namespace SadConsoleEditor
             {
                 ActiveEditor = editor;
                 ActiveEditor.OnSelected();
-                Children.Add(ActiveEditor.Surface);
+                Children.Add(ActiveEditor.Object);
                 ToolsPane.RedrawPanels();
                 
                 CenterEditor();
@@ -383,17 +383,17 @@ namespace SadConsoleEditor
                 if (ActiveEditor.Width > editorBounds.Width && ActiveEditor.Height > editorBounds.Height)
                 {
                     position = editorBounds.Position;
-                    ActiveEditor.Surface.View = new Rectangle(0, 0, editorBounds.Width, editorBounds.Height);
+                    ActiveEditor.Object.Surface.View = new Rectangle(0, 0, editorBounds.Width, editorBounds.Height);
                 }
                 else if (ActiveEditor.Width > editorBounds.Width)
                 {
                     position = new Point(editorBounds.Position.X, (editorBounds.Height + editorBounds.Y - ActiveEditor.Height) / 2);
-                    ActiveEditor.Surface.View = new Rectangle(0, 0, editorBounds.Width, ActiveEditor.Height);
+                    ActiveEditor.Object.Surface.View = new Rectangle(0, 0, editorBounds.Width, ActiveEditor.Height);
                 }
                 else if (ActiveEditor.Height > editorBounds.Height)
                 {
                     position = new Point((editorBounds.Width + editorBounds.X - ActiveEditor.Width) / 2, editorBounds.Position.Y);
-                    ActiveEditor.Surface.View = new Rectangle(0, 0, ActiveEditor.Width, editorBounds.Height);
+                    ActiveEditor.Object.Surface.View = new Rectangle(0, 0, ActiveEditor.Width, editorBounds.Height);
                 }
             }
             else
@@ -408,8 +408,8 @@ namespace SadConsoleEditor
             if (position.Y < editorBounds.Y)
                 position = position.WithY(editorBounds.Y);
 
-            ActiveEditor.Surface.Position = position;
-            BorderBounds = new Rectangle(ActiveEditor.Surface.Position.X - 1 - _borderConsole.Position.X, ActiveEditor.Surface.Position.Y - 1 - _borderConsole.Position.Y, ActiveEditor.Surface.View.Width + 2, ActiveEditor.Surface.View.Height + 2);
+            ActiveEditor.Object.Position = position;
+            BorderBounds = new Rectangle(ActiveEditor.Object.Position.X - 1 - _borderConsole.Position.X, ActiveEditor.Object.Position.Y - 1 - _borderConsole.Position.Y, ActiveEditor.Object.Surface.View.Width + 2, ActiveEditor.Object.Surface.View.Height + 2);
             _borderConsole.Clear();
             _borderConsole.DrawBox(BorderBounds, new ColoredGlyph(Surface.DefaultForeground, Color.Black, 177));
         }
@@ -443,7 +443,7 @@ namespace SadConsoleEditor
                     brush.Position = state.WorldCellPosition;
                     if (MainConsole.Instance.ActiveEditor != null)
                     {
-                        state = new MouseScreenObjectState(MainConsole.Instance.ActiveEditor.Surface, state.Mouse);
+                        state = new MouseScreenObjectState(MainConsole.Instance.ActiveEditor.Object, state.Mouse);
                         SurfaceMouseLocation = state.CellPosition;
                         return MainConsole.Instance.ActiveEditor.ProcessMouse(state, true);
                     }
@@ -466,24 +466,24 @@ namespace SadConsoleEditor
             {
                 bool movekeyPressed = false;
 
-                if (AllowKeyboardToMoveConsole && ActiveEditor != null && ActiveEditor.Surface != null)
+                if (AllowKeyboardToMoveConsole && ActiveEditor != null && ActiveEditor.Object != null)
                 {
                     bool shifted = Global.Keyboard.IsKeyDown(Keys.LeftShift) || Global.Keyboard.IsKeyDown(Keys.RightShift);
-                    var oldRenderArea = ActiveEditor.Surface.View;
+                    var oldRenderArea = ActiveEditor.Object.Surface.View;
 
                     if (!shifted && Global.Keyboard.IsKeyDown(Keys.Left))
-                        ActiveEditor.Surface.View = new Rectangle(ActiveEditor.Surface.View.X - 1, ActiveEditor.Surface.View.Y, BorderBounds.Width - 2, BorderBounds.Height - 2);
+                        ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X - 1, ActiveEditor.Object.Surface.View.Y, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
                     else if (!shifted && Global.Keyboard.IsKeyDown(Keys.Right))
-                        ActiveEditor.Surface.View = new Rectangle(ActiveEditor.Surface.View.X + 1, ActiveEditor.Surface.View.Y, BorderBounds.Width - 2, BorderBounds.Height - 2);
+                        ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X + 1, ActiveEditor.Object.Surface.View.Y, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
                     if (!shifted && Global.Keyboard.IsKeyDown(Keys.Up))
-                        ActiveEditor.Surface.View = new Rectangle(ActiveEditor.Surface.View.X, ActiveEditor.Surface.View.Y - 1, BorderBounds.Width - 2, BorderBounds.Height - 2);
+                        ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X, ActiveEditor.Object.Surface.View.Y - 1, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
                     else if (!shifted && Global.Keyboard.IsKeyDown(Keys.Down))
-                        ActiveEditor.Surface.View = new Rectangle(ActiveEditor.Surface.View.X, ActiveEditor.Surface.View.Y + 1, BorderBounds.Width - 2, BorderBounds.Height - 2);
+                        ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X, ActiveEditor.Object.Surface.View.Y + 1, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
-                    movekeyPressed = oldRenderArea != ActiveEditor.Surface.View;
+                    movekeyPressed = oldRenderArea != ActiveEditor.Object.Surface.View;
 
                 }
 

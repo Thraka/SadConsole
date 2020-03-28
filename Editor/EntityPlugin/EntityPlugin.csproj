@@ -1,24 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Editor\bin\Debug\netcoreapp3.0\Plugins\EntityPlugin\</OutputPath>
+    <OutputPath>..\Editor\bin\Debug\$(TargetFramework)\Plugins\EntityPlugin\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
+    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Editor\Editor\SadConsoleEditor.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--<ItemGroup>
     <Reference Include="SadConsoleEditor">
       <HintPath>..\Editor\bin\Debug\netcoreapp3.0\SadConsoleEditor.dll</HintPath>
     </Reference>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Update="EntityPlugin.json">

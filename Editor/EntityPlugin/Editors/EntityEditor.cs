@@ -39,7 +39,7 @@ namespace EntityPlugin.Editors
         private AnimatedScreenSurface _animation;
         private SadConsole.Entities.Entity _entity;
 
-        public Console Surface => _surface;
+        public SadConsole.IScreenSurface Object => _surface;
 
         public IEditor LinkedEditor { get; set; }
 

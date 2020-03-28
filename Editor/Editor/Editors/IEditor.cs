@@ -10,7 +10,7 @@ namespace SadConsoleEditor.Editors
     {
         Tools.ITool SelectedTool { get; }
 
-        Console Surface { get; }
+        IScreenSurface Object { get; }
 
         IEditor LinkedEditor { get; set; }
 

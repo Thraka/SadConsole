@@ -74,12 +74,12 @@
         {
         }
 
-        public bool ProcessKeyboard(Keyboard info, Console surface)
+        public bool ProcessKeyboard(Keyboard info, IScreenSurface surface)
         {
             return false;
         }
 
-        public void ProcessMouse(MouseScreenObjectState info, Console surface, bool isInBounds)
+        public void ProcessMouse(MouseScreenObjectState info, IScreenSurface surface, bool isInBounds)
         {
             if (info.IsOnScreenObject)
             {
@@ -93,7 +93,7 @@
                     if (!settingsPanel.IgnoreBackground)
                         cell.Background = CharacterPickPanel.SharedInstance.SettingBackground;
 
-                    info.ScreenObject.IsDirty = true;
+                    ((IScreenSurface)info.ScreenObject).IsDirty = true;
                 }
                 else if (info.Mouse.RightButtonDown)
                 {
