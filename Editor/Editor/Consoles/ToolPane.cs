@@ -12,6 +12,7 @@ namespace SadConsoleEditor.Consoles
     public class ToolPane : ControlsConsole
     {
         private ControlsConsole ScrollerConsole;
+        private bool _isInitialized;
 
         public static int PanelWidth;
         public static int PanelWidthControls;
@@ -20,6 +21,7 @@ namespace SadConsoleEditor.Consoles
 
         private List<Tuple<CustomPanel, int>> _hotSpots;
         public Dictionary<string, ITool> Tools;
+        private List<(int, int, string)> _redrawCommands;
 
         public FilesPanel PanelFiles;
 
@@ -42,8 +44,6 @@ namespace SadConsoleEditor.Consoles
             ScrollerConsole.IsVisible = true;
             ScrollerConsole.FocusOnMouseClick = false;
 
-            
-
             PanelWidth = Config.Program.ToolPaneWidth - 1;
             PanelWidthControls = PanelWidth - 2;
 
@@ -57,6 +57,9 @@ namespace SadConsoleEditor.Consoles
             PanelFiles = new FilesPanel();
 
             Children.Add(ScrollerConsole);
+
+            _redrawCommands = new List<(int, int, string)>();
+            _isInitialized = true;
         }
 
         internal void RegisterTool(ITool tool)
@@ -81,10 +84,19 @@ namespace SadConsoleEditor.Consoles
             }
         }
 
+        protected override void OnThemeDrawn()
+        {
+            if (!_isInitialized) return;
+
+            foreach (var item in _redrawCommands)
+                this.Print(item.Item1, item.Item2, item.Item3);
+        }
+
         public void RedrawPanels()
         {
             int activeRow = 0;
-            this.Clear();
+            //this.Clear();
+            _redrawCommands.Clear();
             RemoveAll();
             _hotSpots.Clear();
 
@@ -113,8 +125,8 @@ namespace SadConsoleEditor.Consoles
                         _hotSpots.Add(new Tuple<CustomPanel, int>(pane, activeRow));
                         if (pane.IsCollapsed == false)
                         {
-                            this.Print(1, activeRow++, open + " " + pane.Title);
-                            this.Print(0, activeRow++, new string((char)196, Width));
+                            _redrawCommands.Add((1, activeRow++, $"{open} {pane.Title}"));
+                            _redrawCommands.Add((0, activeRow++, new string((char)196, Width)));
 
                             foreach (var control in pane.Controls)
                             {
@@ -134,7 +146,7 @@ namespace SadConsoleEditor.Consoles
                             activeRow += 1;
                         }
                         else
-                            this.Print(1, activeRow++, closed + " " + pane.Title);
+                            _redrawCommands.Add((1, activeRow++, $"{closed} {pane.Title}"));
                     }
                 }
             }
@@ -152,6 +164,8 @@ namespace SadConsoleEditor.Consoles
                 ToolsPaneScroller.Maximum = scrollAbility;
                 ToolsPaneScroller.IsEnabled = true;
             }
+
+            RedrawTheme();
         }
         
         public override bool ProcessMouse(MouseScreenObjectState state)
@@ -163,7 +177,7 @@ namespace SadConsoleEditor.Consoles
                 if (state.Mouse.ScrollWheelValueChange != 0)
                 {
                     if (ToolsPaneScroller.IsEnabled)
-                        ToolsPaneScroller.Value += state.Mouse.ScrollWheelValueChange / 20;
+                        ToolsPaneScroller.Value += state.Mouse.ScrollWheelValueChange;
 
                     return true;
                 }

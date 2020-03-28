@@ -454,7 +454,7 @@ namespace SadConsoleEditor
                 }
             }
 
-            if (ToolsPane.ProcessMouse(state))
+            if (ToolsPane.ProcessMouse(new MouseScreenObjectState(ToolsPane, state.Mouse)))
                 return true;
 
             return false;
