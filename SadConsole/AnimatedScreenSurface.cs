@@ -189,10 +189,11 @@ namespace SadConsole
         protected void UpdateFrameReferences()
         {
             ICellSurface frame = FramesList[CurrentFrameIndexValue];
-            Surface.SetSurface(frame.Cells, _width, _height, _width, _height);
-            Surface.DefaultBackground = frame.DefaultBackground;
-            Surface.DefaultForeground = frame.DefaultForeground;
-            Surface.DefaultGlyph = frame.DefaultGlyph;
+            //Surface.SetSurface(frame.Cells, _width, _height, _width, _height);
+            //Surface.DefaultBackground = frame.DefaultBackground;
+            //Surface.DefaultForeground = frame.DefaultForeground;
+            //Surface.DefaultGlyph = frame.DefaultGlyph;
+            Surface = frame;
             IsDirty = true;
         }
 
