@@ -41,7 +41,6 @@
             settingsPanel = new RecolorToolPanel();
 
             ControlPanels = new CustomPanel[] { settingsPanel, CharacterPickPanel.SharedInstance };
-            tempConsole = new Console(1, 1);
         }
 
         public void OnSelected()
@@ -80,14 +79,13 @@
 
         public void RefreshTool()
         {
-            Brush.Animation.Frames[0].Fill(CharacterPickPanel.SharedInstance.SettingForeground,
+            Brush.Animation.CurrentFrame.Fill(CharacterPickPanel.SharedInstance.SettingForeground,
                                            CharacterPickPanel.SharedInstance.SettingBackground, 
                                            95);
 
             SadConsole.Effects.Blink blinkEffect = new SadConsole.Effects.Blink();
             blinkEffect.BlinkSpeed = 0.35f;
-            //blinkManager.SetEffect(Brush.Animation.Frames[0][0], blinkEffect);
-            Brush.Animation.Frames[0].SetEffect(Brush.Animation.Frames[0][0], blinkEffect);
+            Brush.Animation.CurrentFrame.SetEffect(0, blinkEffect);
             Brush.Animation.IsDirty = true;
         }
 
@@ -109,15 +107,18 @@
                     writing = false;
                     MainConsole.Instance.AllowKeyboardToMoveConsole = true;
                     MainConsole.Instance.DisableBrush = false;
-                    tempConsole.Cursor.IsVisible = false;
-                    tempConsole.IsDirty = true;
-                    Brush.IsVisible = true;
+                    tempConsole = null;
                 }
                 else
                 {
-                    //tempConsole.SadConsole.Surfaces.Basic = (SurfaceBaseRendered)surface;
+                    Point oldPosition = tempConsole.Cursor.Position;
                     tempConsole.Cursor.PrintAppearance = new ColoredGlyph(CharacterPickPanel.SharedInstance.SettingForeground, CharacterPickPanel.SharedInstance.SettingBackground);
                     tempConsole.ProcessKeyboard(info);
+
+                    if (oldPosition != tempConsole.Cursor.Position)
+                        screenObject.IsDirty = true;
+
+                    Brush.Position = screenObject.AbsolutePosition.PixelLocationToSurface(tempConsole.FontSize) + tempConsole.Cursor.Position;
                 }
 
                 return true;
@@ -128,13 +129,20 @@
 
         public void ProcessMouse(MouseScreenObjectState info, IScreenSurface screenObject, bool isInBounds)
         {
-            if (info.IsOnScreenObject && info.Mouse.LeftClicked)
+            if (writing)
+                Brush.Position = screenObject.AbsolutePosition.PixelLocationToSurface(tempConsole.FontSize) + tempConsole.Cursor.Position;
+            
+            else if (info.IsOnScreenObject && info.Mouse.LeftClicked)
             {
                 MainConsole.Instance.AllowKeyboardToMoveConsole = false;
-                MainConsole.Instance.DisableBrush = true;
+                //MainConsole.Instance.DisableBrush = true;
                 writing = true;
-                Brush.IsVisible = false;
-                //tempConsole = screenObject;
+                tempConsole = new Console(screenObject.Surface.GetSubSurface(screenObject.Surface.Buffer));
+                tempConsole.Font = screenObject.Font;
+                tempConsole.FontSize = screenObject.FontSize;
+                tempConsole.Cursor.AutomaticallyShiftRowsUp = false;
+                tempConsole.Cursor.IsVisible = true;
+                tempConsole.Cursor.Position = info.SurfaceCellPosition - screenObject.Surface.ViewPosition;
 
                 //if (screenObject.IsScrollable)
                 //{

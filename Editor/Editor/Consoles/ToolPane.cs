@@ -95,7 +95,6 @@ namespace SadConsoleEditor.Consoles
         public void RedrawPanels()
         {
             int activeRow = 0;
-            //this.Clear();
             _redrawCommands.Clear();
             RemoveAll();
             _hotSpots.Clear();
