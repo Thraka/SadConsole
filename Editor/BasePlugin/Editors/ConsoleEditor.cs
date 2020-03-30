@@ -6,6 +6,7 @@ using System.Linq;
 using SadConsole.Input;
 using SadConsoleEditor.Panels;
 using SadRogue.Primitives;
+using SadConsole;
 
 namespace SadConsoleEditor.Editors
 {
@@ -25,18 +26,16 @@ namespace SadConsoleEditor.Editors
         private Tools.ITool[] _tools;
         private Tools.ITool selectedTool;
         private ToolsPanel toolsPanel;
-
-        private CustomPanel[] _panels;
-
         private Console _surface;
+        private ConsoleEditorSettings _settingsPanel;
 
         public SadConsole.IScreenSurface Object => _surface;
 
         public IEditor LinkedEditor { get; set; }
 
-        public IEditorMetadata Metadata { get; set; } = new ConsoleEditorMetadata(); 
+        public IEditorMetadata Metadata { get; set; } = new ConsoleEditorMetadata();
 
-        public CustomPanel[] Panels => _panels;
+        public CustomPanel[] Panels { get; private set; }
 
         public int Width => _surface.Width;
 
@@ -55,6 +54,10 @@ namespace SadConsoleEditor.Editors
             // Fill tools
             var settings = Config.Program.GetSettings(Metadata.Id);
 
+            _settingsPanel = new ConsoleEditorSettings(settings.DefaultForeground, settings.DefaultBackground);
+            _settingsPanel.ForegroundChanged += (s, e) => _surface.DefaultForeground = ((Controls.ColorPresenter)s).SelectedColor;
+            _settingsPanel.BackgroundChanged += (s, e) => _surface.DefaultBackground = ((Controls.ColorPresenter)s).SelectedColor;
+
             _tools = MainConsole.Instance.ToolsPane.GetTools(settings.Tools).ToArray();
 
             toolsPanel = new ToolsPanel();
@@ -64,12 +67,10 @@ namespace SadConsoleEditor.Editors
                 toolsPanel.ToolsListBox.Items.Add(tool);
             }
 
-            toolsPanel.ToolsListBox.SelectedItemChanged += ToolsListBox_SelectedItemChanged;
-
-            //panels = new CustomPanel[] { layerManagementPanel, toolsPanel };
-            _panels = new CustomPanel[] { toolsPanel };
+            Panels = new CustomPanel[] { _settingsPanel, toolsPanel };
 
             toolsPanel.ToolsListBox.SelectedItem = _tools[0];
+            toolsPanel.ToolsListBox.SelectedItemChanged += ToolsListBox_SelectedItemChanged;
         }
 
         public void Load(string file, FileLoaders.IFileLoader loader)
@@ -78,10 +79,16 @@ namespace SadConsoleEditor.Editors
             {
                 Reset();
 
+                var settings = Config.Program.GetSettings(Metadata.Id);
+
                 var cellSurface = (SadConsole.CellSurface)loader.Load(file);
                 _surface = new Console(Math.Min(MainConsole.Instance.InnerEmptyBounds.Width, cellSurface.BufferWidth),
                                        Math.Min(MainConsole.Instance.InnerEmptyBounds.Height, cellSurface.BufferHeight),
                                        cellSurface.BufferWidth, cellSurface.BufferHeight, cellSurface.Cells);
+
+                _settingsPanel.Foreground = _surface.DefaultForeground;
+                _settingsPanel.Background = _surface.DefaultBackground;
+
                 _surface.Font = Config.Program.ScreenFont;
                 _surface.FontSize = Config.Program.ScreenFontSize;
                 //layerManagementPanel.SetLayeredSurface(surface);
@@ -125,8 +132,15 @@ namespace SadConsoleEditor.Editors
             _surface = new SadConsole.Console(renderWidth, renderHeight, width, height);
             _surface.Font = SadConsoleEditor.Config.Program.ScreenFont;
             _surface.FontSize = SadConsoleEditor.Config.Program.ScreenFontSize;
+
+            _settingsPanel.Foreground = foreground;
+            _settingsPanel.Background = background;
+
             _surface.DefaultForeground = foreground;
             _surface.DefaultBackground = background;
+
+            _surface.Surface.Clear();
+
             //_surface.FillWithRandomGarbage();
             //LayerMetadata.Create("Root", true, false, true, surface.ActiveLayer);
 
@@ -223,12 +237,12 @@ namespace SadConsoleEditor.Editors
             if (e.Item != null)
             {
                 selectedTool = tool;
-                List<CustomPanel> newPanels = new List<CustomPanel>() { toolsPanel };
+                List<CustomPanel> newPanels = new List<CustomPanel>() { _settingsPanel, toolsPanel };
 
                 if (tool.ControlPanels != null && tool.ControlPanels.Length != 0)
                     newPanels.AddRange(tool.ControlPanels);
 
-                _panels = newPanels.ToArray();
+                Panels = newPanels.ToArray();
                 MainConsole.Instance.ToolsPane.RedrawPanels();
             }
         }
