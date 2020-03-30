@@ -163,7 +163,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new screen object using the specified surface's cells.
+        /// Creates a new screen object wrapping an existing surface.
         /// </summary>
         /// <param name="surface">The surface.</param>
         /// <param name="font">The font to use with the surface.</param>

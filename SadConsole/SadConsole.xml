@@ -2088,11 +2088,13 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
         </member>
-        <member name="M:SadConsole.Console.#ctor(SadConsole.ICellSurface)">
+        <member name="M:SadConsole.Console.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
             <summary>
-            Creates a new console using the specified surface's cells.
+            Creates a new console using the existing surface.
             </summary>
             <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
@@ -6198,7 +6200,7 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
             <summary>
-            Creates a new screen object using the specified surface's cells.
+            Creates a new screen object wrapping an existing surface.
             </summary>
             <param name="surface">The surface.</param>
             <param name="font">The font to use with the surface.</param>

@@ -73,10 +73,16 @@ namespace SadConsole
         public Console(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null) { }
 
         /// <summary>
-        /// Creates a new console using the specified surface's cells.
+        /// Creates a new console using the existing surface.
         /// </summary>
         /// <param name="surface">The surface.</param>
-        public Console(ICellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
+        /// <param name="font">The font to use with the surface.</param>
+        /// <param name="fontSize">The font size.</param>
+        public Console(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
+        {
+            Cursor = new Cursor(Surface);
+            UseKeyboard = Settings.DefaultConsoleUseKeyboard;
+        }
 
         /// <summary>
         /// Creates a console with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.

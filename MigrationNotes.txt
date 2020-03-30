@@ -28,3 +28,5 @@ SadConsole.Themes -> SadConsole.UI.Themes
 ContainerConsole -> ScreenObject
 
 Font/FontMaster -> Font
+
+- Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
