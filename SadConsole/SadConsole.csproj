@@ -30,8 +30,8 @@ or SadConsole.Host SFML to your project.
 
 Major changes:
 
-- Object model has changed a lot. Console's no longer inherits from CellSurface and instead are based on some new base
-classes and interfaces: ScreenObject. Everything in SadConsole is now a ScreenObject.
+- Object model has changed a lot. Console types no longer inherit from CellSurface and are based on a few different base
+classes and interfaces implemented through ScreenObject. Everything in SadConsole is now a ScreenObject.
 
 - Console.Surface represents the cell surface of the console. Extension methods are provided so that you can use
 Console.Print and related methods. If you coding inside a Console instance though, the extension methods only work if

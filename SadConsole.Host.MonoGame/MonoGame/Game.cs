@@ -86,6 +86,7 @@ namespace SadConsole.MonoGame
             }
         }
 
+        /// <inheritdoc/>
         protected override void Initialize()
         {
             Global.GraphicsDevice = GraphicsDevice;
@@ -139,7 +140,7 @@ namespace SadConsole.MonoGame
         }
 
         /// <summary>
-        /// Resets the <see cref="RenderOutput"/> target and determines the appropriate <see cref="RenderRect"/> and <see cref="RenderScale"/> based on the window or fullscreen state.
+        /// Resets the <see cref="Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
         /// </summary>
         public void ResetRendering()
         {

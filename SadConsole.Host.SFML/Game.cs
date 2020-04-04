@@ -8,6 +8,9 @@ using SadConsole.Host;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// The SadConsole game object.
+    /// </summary>
     public class Game : GameHost
     {
         private int _preFullScreenWidth;
@@ -18,6 +21,9 @@ namespace SadConsole
         private Keyboard _keyboard;
         private Mouse _mouse;
 
+        /// <summary>
+        /// Static instance to the game after the <see cref="Create(int, int, string, RenderWindow)"/> method has been called.
+        /// </summary>
         public new static Game Instance
         {
             get => (Game)GameHost.Instance;
@@ -29,6 +35,13 @@ namespace SadConsole
 
         private Game() { }
 
+        /// <summary>
+        /// Create's a new SadConsole game.
+        /// </summary>
+        /// <param name="cellCountX">How many cells wide the window should be based on the font used.</param>
+        /// <param name="cellCountY">How many cells high the window should be based on the font used.</param>
+        /// <param name="font">An optional font; otherwise a default 8x16 IBM font is used.</param>
+        /// <param name="window">A optional window object; otherwise the window is created for you.</param>
         public static void Create(int cellCountX, int cellCountY, string font = "", RenderWindow window = null)
         {
             var game = new Game();
@@ -91,7 +104,7 @@ namespace SadConsole
             SadConsole.Global.Screen = new Console(ScreenCellsX, ScreenCellsY);
         }
 
-
+        /// <inheritdoc/>
         public override void Run()
         {
             OnStart?.Invoke();
@@ -179,12 +192,15 @@ namespace SadConsole
             OnEnd?.Invoke();
         }
 
+        /// <inheritdoc/> 
         public override ITexture GetTexture(string resourcePath) =>
             new SadConsole.Host.GameTexture(resourcePath);
 
+        /// <inheritdoc/> 
         public override ITexture GetTexture(Stream textureStream) =>
             new SadConsole.Host.GameTexture(textureStream);
 
+        /// <inheritdoc/> 
         public override Renderers.IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
             screenObject switch
             {
@@ -195,9 +211,11 @@ namespace SadConsole
             };
 
 
+        /// <inheritdoc/> 
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
             _keyboard;
 
+        /// <inheritdoc/> 
         public override SadConsole.Input.IMouseState GetMouseState() =>
             _mouse;
 
@@ -221,7 +239,7 @@ namespace SadConsole
             Host.Global.GraphicsDevice.Size = new SFML.System.Vector2u((uint)width, (uint)height);
 
         /// <summary>
-        /// Resets the <see cref="RenderOutput"/> target and determines the appropriate <see cref="RenderRect"/> and <see cref="RenderScale"/> based on the window or fullscreen state.
+        /// Resets the <see cref="Host.Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
         /// </summary>
         public void ResetRendering()
         {

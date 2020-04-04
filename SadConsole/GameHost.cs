@@ -20,8 +20,14 @@ namespace SadConsole
         /// </summary>
         public static GameHost Instance { get; protected set; }
 
+        /// <summary>
+        /// Temp variable to indicate that the fonts being loaded are the embedded fonts.
+        /// </summary>
         protected static bool LoadingEmbeddedFont = false;
 
+        /// <summary>
+        /// Contains the path to a file being serialized or deserialized.
+        /// </summary>
         protected internal static string SerializerPathHint { get; set; }
 
         /// <summary>
@@ -49,10 +55,19 @@ namespace SadConsole
         /// </summary>
         public Queue<DrawCalls.IDrawCall> DrawCalls { get; } = new Queue<DrawCalls.IDrawCall>();
 
+        /// <summary>
+        /// The size of the game window.
+        /// </summary>
         public Point WindowSize { get; protected set; }
 
+        /// <summary>
+        /// How many cells fit in the render area width used by SadConsole.
+        /// </summary>
         public int ScreenCellsX { get; protected set; }
 
+        /// <summary>
+        /// How many cells fit in the render area width used by SadConsole.
+        /// </summary>
         public int ScreenCellsY { get; protected set; }
 
         /// <summary>
@@ -230,7 +245,8 @@ namespace SadConsole
 
         #region IDisposable Support
         private bool _disposedValue = false; // To detect redundant calls
-
+        
+        /// <inheritdoc/> 
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
@@ -250,12 +266,17 @@ namespace SadConsole
             }
         }
 
+        /// <summary>
+        /// Disposes this object.
+        /// </summary>
         ~GameHost()
         {
             Dispose(false);
         }
 
-        // This code added to correctly implement the disposable pattern.
+        /// <summary>
+        /// Disposes this object.
+        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.

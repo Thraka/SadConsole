@@ -19,6 +19,43 @@
             The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
             </summary>
         </member>
+        <member name="T:SadConsole.Game">
+            <summary>
+            The SadConsole game object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.Instance">
+            <summary>
+            Static instance to the game after the <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/> method has been called.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)">
+            <summary>
+            Create's a new SadConsole game.
+            </summary>
+            <param name="cellCountX">How many cells wide the window should be based on the font used.</param>
+            <param name="cellCountY">How many cells high the window should be based on the font used.</param>
+            <param name="font">An optional font; otherwise a default 8x16 IBM font is used.</param>
+            <param name="window">A optional window object; otherwise the window is created for you.</param>
+        </member>
+        <member name="M:SadConsole.Game.Run">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.String)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetDefaultRenderer(SadConsole.IScreenSurface)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetKeyboardState">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetMouseState">
+            <inheritdoc/> 
+        </member>
         <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
             <summary>
             Opens a read-only stream with MonoGame.
@@ -37,7 +74,7 @@
         </member>
         <member name="M:SadConsole.Game.ResetRendering">
             <summary>
-            Resets the <see cref="!:RenderOutput"/> target and determines the appropriate <see cref="!:RenderRect"/> and <see cref="!:RenderScale"/> based on the window or fullscreen state.
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.ConsoleRenderer">

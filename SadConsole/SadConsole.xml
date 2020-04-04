@@ -3373,6 +3373,16 @@
             Instance of the game host.
             </summary>
         </member>
+        <member name="F:SadConsole.GameHost.LoadingEmbeddedFont">
+            <summary>
+            Temp variable to indicate that the fonts being loaded are the embedded fonts.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.SerializerPathHint">
+            <summary>
+            Contains the path to a file being serialized or deserialized.
+            </summary>
+        </member>
         <member name="E:SadConsole.GameHost.FrameDraw">
             <summary>
             Raised when the game draws a frame.
@@ -3396,6 +3406,21 @@
         <member name="P:SadConsole.GameHost.DrawCalls">
             <summary>
             Draw calls registered for the next drawing frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.WindowSize">
+            <summary>
+            The size of the game window.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.ScreenCellsX">
+            <summary>
+            How many cells fit in the render area width used by SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.ScreenCellsY">
+            <summary>
+            How many cells fit in the render area width used by SadConsole.
             </summary>
         </member>
         <member name="M:SadConsole.GameHost.OnFrameDraw">
@@ -3481,6 +3506,19 @@
             Loads the <c>IBM.font</c> built into the binary.
             </summary>
         </member>
+        <member name="M:SadConsole.GameHost.Dispose(System.Boolean)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.GameHost.Finalize">
+            <summary>
+            Disposes this object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.Dispose">
+            <summary>
+            Disposes this object.
+            </summary>
+        </member>
         <member name="T:SadConsole.Global">
             <summary>
             Supporting properties for the current SadConsole app.
@@ -3524,6 +3562,16 @@
         <member name="P:SadConsole.Global.DefaultFontSize">
             <summary>
             The default font to use with <see cref="P:SadConsole.Global.DefaultFont"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.EmbeddedFont">
+            <summary>
+            The font automatically loaded by SadConsole. Standard IBM style font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.EmbeddedFontExtended">
+            <summary>
+            The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
             </summary>
         </member>
         <member name="P:SadConsole.Global.Keyboard">
