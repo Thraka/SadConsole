@@ -130,7 +130,7 @@ namespace SadConsole
                     }
 
                     SadConsole.Global.Screen?.Update();
-
+                    
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
 
                     Host.Global.UpdateTimer.Restart();
@@ -211,51 +211,6 @@ namespace SadConsole
         /// <returns>The stream.</returns>
         public override Stream OpenStream(string file, FileMode mode = FileMode.Open, FileAccess access = FileAccess.Read) =>
              File.Open(file, mode, access);
-
-        /// <summary>
-        /// Toggles between windowed and fullscreen rendering for SadConsole.
-        /// </summary>
-        public void ToggleFullScreen()
-        {
-            // TODO full screen
-
-            //MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
-
-            //// Coming back from fullscreen
-            //if (MonoGame.Global.GraphicsDeviceManager.IsFullScreen)
-            //{
-            //    MonoGame.Global.GraphicsDeviceManager.IsFullScreen = !MonoGame.Global.GraphicsDeviceManager.IsFullScreen;
-
-            //    MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferWidth = _preFullScreenWidth;
-            //    MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferHeight = _preFullScreenHeight;
-            //    MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
-            //}
-
-            //// Going full screen
-            //else
-            //{
-            //    _preFullScreenWidth = MonoGame.Global.GraphicsDevice.PresentationParameters.BackBufferWidth;
-            //    _preFullScreenHeight = MonoGame.Global.GraphicsDevice.PresentationParameters.BackBufferHeight;
-
-            //    if (Settings.ResizeMode == Settings.WindowResizeOptions.None)
-            //    {
-            //        _handleResizeNone = true;
-            //        Settings.ResizeMode = Settings.WindowResizeOptions.Scale;
-            //    }
-
-            //    MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferWidth = MonoGame.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
-            //    MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferHeight = MonoGame.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
-
-            //    MonoGame.Global.GraphicsDeviceManager.IsFullScreen = !MonoGame.Global.GraphicsDeviceManager.IsFullScreen;
-            //    MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
-
-            //    if (_handleResizeNone)
-            //    {
-            //        _handleResizeNone = false;
-            //        Settings.ResizeMode = Settings.WindowResizeOptions.None;
-            //    }
-            //}
-        }
 
         /// <summary>
         /// Resizes the game window.
