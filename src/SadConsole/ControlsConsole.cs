@@ -69,7 +69,7 @@ namespace SadConsole
         public Colors ThemeColors
         {
             get => _themeColors;
-            set { _themeColors = value; OnThemeColorsChanged(_themeColors); }
+            set { _themeColors = value; IsDirty = true; OnThemeColorsChanged(_themeColors); }
         }
 
         /// <summary>
