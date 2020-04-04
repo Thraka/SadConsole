@@ -272,83 +272,92 @@ namespace SadConsole
         {
             Host.Global.RenderOutput?.Dispose();
 
-            //if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Center)
-            //{
-            //    Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-            //    SadConsole.Settings.Rendering.RenderRect = new Rectangle(
-            //                                                (Host.Global.GraphicsDevice.DefaultView.Viewport.Width - SadConsole.Settings.Rendering.RenderWidth) / 2,
-            //                                                (GraphicsDevice.PresentationParameters.BackBufferHeight - SadConsole.Settings.Rendering.RenderHeight) / 2,
-            //                                                SadConsole.Settings.Rendering.RenderWidth,
-            //                                                SadConsole.Settings.Rendering.RenderHeight).ToRectangle();
-
-            //    SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(1);
-            //}
-            //else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Scale)
-            //{
-            //    Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-            //    int multiple = 2;
-
-            //    // Find the bounds
-            //    while (true)
-            //    {
-            //        if (SadConsole.Settings.Rendering.RenderWidth * multiple > GraphicsDevice.PresentationParameters.BackBufferWidth || SadConsole.Settings.Rendering.RenderHeight * multiple > GraphicsDevice.PresentationParameters.BackBufferHeight)
-            //        {
-            //            multiple--;
-            //            break;
-            //        }
-
-            //        multiple++;
-            //    }
-
-            //    SadConsole.Settings.Rendering.RenderRect = new Rectangle((GraphicsDevice.PresentationParameters.BackBufferWidth - (SadConsole.Settings.Rendering.RenderWidth * multiple)) / 2,
-            //                                                             (GraphicsDevice.PresentationParameters.BackBufferHeight - (SadConsole.Settings.Rendering.RenderHeight * multiple)) / 2,
-            //                                                             SadConsole.Settings.Rendering.RenderWidth * multiple,
-            //                                                             SadConsole.Settings.Rendering.RenderHeight * multiple).ToRectangle();
-            //    SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / ((float)SadConsole.Settings.Rendering.RenderWidth * multiple), SadConsole.Settings.Rendering.RenderHeight / (float)(SadConsole.Settings.Rendering.RenderHeight * multiple));
-            //}
-            //else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
-            //{
-            //    Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-            //    float heightRatio = GraphicsDevice.PresentationParameters.BackBufferHeight / (float)SadConsole.Settings.Rendering.RenderHeight;
-            //    float widthRatio = GraphicsDevice.PresentationParameters.BackBufferWidth / (float)SadConsole.Settings.Rendering.RenderWidth;
-
-            //    float fitHeight = SadConsole.Settings.Rendering.RenderHeight * widthRatio;
-            //    float fitWidth = SadConsole.Settings.Rendering.RenderWidth * heightRatio;
-
-            //    if (fitHeight <= GraphicsDevice.PresentationParameters.BackBufferHeight)
-            //    {
-            //        // Render width = window width, pad top and bottom
-
-            //        SadConsole.Settings.Rendering.RenderRect = new Rectangle(0,
-            //                                                                (int)((GraphicsDevice.PresentationParameters.BackBufferHeight - fitHeight) / 2),
-            //                                                                GraphicsDevice.PresentationParameters.BackBufferWidth,
-            //                                                                (int)fitHeight).ToRectangle();
-
-            //        SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / fitHeight);
-            //    }
-            //    else
-            //    {
-            //        // Render height = window height, pad left and right
-
-            //        SadConsole.Settings.Rendering.RenderRect = new Rectangle((int)((GraphicsDevice.PresentationParameters.BackBufferWidth - fitWidth) / 2),
-            //                                                                 0,
-            //                                                                 (int)fitWidth,
-            //                                                                 GraphicsDevice.PresentationParameters.BackBufferHeight).ToRectangle();
-
-            //        SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / fitWidth, SadConsole.Settings.Rendering.RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
-            //    }
-            //}
-            //else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.None)
-            //{
-            //    SadConsole.Settings.Rendering.RenderWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
-            //    SadConsole.Settings.Rendering.RenderHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-            //    Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-            //    SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
-            //    SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(1);
-            //}
-            //else
+            if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Center)
             {
                 Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
+
+                SadConsole.Settings.Rendering.RenderRect = new Rectangle(
+                                                            ((int)Host.Global.GraphicsDevice.Size.X - SadConsole.Settings.Rendering.RenderWidth) / 2,
+                                                            ((int)Host.Global.GraphicsDevice.Size.Y - SadConsole.Settings.Rendering.RenderHeight) / 2,
+                                                            SadConsole.Settings.Rendering.RenderWidth,
+                                                            SadConsole.Settings.Rendering.RenderHeight);
+
+                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+
+                SadConsole.Settings.Rendering.RenderScale = (1, 1);
+            }
+            else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Scale)
+            {
+                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
+                int multiple = 2;
+
+                // Find the bounds
+                while (true)
+                {
+                    if (SadConsole.Settings.Rendering.RenderWidth * multiple > Host.Global.GraphicsDevice.Size.X || SadConsole.Settings.Rendering.RenderHeight * multiple > Host.Global.GraphicsDevice.Size.Y)
+                    {
+                        multiple--;
+                        break;
+                    }
+
+                    multiple++;
+                }
+
+                SadConsole.Settings.Rendering.RenderRect = new Rectangle(((int)Host.Global.GraphicsDevice.Size.X - (SadConsole.Settings.Rendering.RenderWidth * multiple)) / 2,
+                                                                         ((int)Host.Global.GraphicsDevice.Size.Y - (SadConsole.Settings.Rendering.RenderHeight * multiple)) / 2,
+                                                                         SadConsole.Settings.Rendering.RenderWidth * multiple,
+                                                                         SadConsole.Settings.Rendering.RenderHeight * multiple);
+                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / ((float)SadConsole.Settings.Rendering.RenderWidth * multiple), SadConsole.Settings.Rendering.RenderHeight / (float)(SadConsole.Settings.Rendering.RenderHeight * multiple));
+
+                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+            }
+            else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
+            {
+                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
+                float heightRatio = Host.Global.GraphicsDevice.Size.Y / (float)SadConsole.Settings.Rendering.RenderHeight;
+                float widthRatio = Host.Global.GraphicsDevice.Size.X / (float)SadConsole.Settings.Rendering.RenderWidth;
+
+                float fitHeight = SadConsole.Settings.Rendering.RenderHeight * widthRatio;
+                float fitWidth = SadConsole.Settings.Rendering.RenderWidth * heightRatio;
+
+                if (fitHeight <= Host.Global.GraphicsDevice.Size.Y)
+                {
+                    // Render width = window width, pad top and bottom
+
+                    SadConsole.Settings.Rendering.RenderRect = new Rectangle(0,
+                                                                            (int)((Host.Global.GraphicsDevice.Size.Y - fitHeight) / 2),
+                                                                            (int)Host.Global.GraphicsDevice.Size.X,
+                                                                            (int)fitHeight);
+
+                    SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / fitHeight);
+                }
+                else
+                {
+                    // Render height = window height, pad left and right
+
+                    SadConsole.Settings.Rendering.RenderRect = new Rectangle((int)((Host.Global.GraphicsDevice.Size.X - fitWidth) / 2),
+                                                                             0,
+                                                                             (int)fitWidth,
+                                                                             (int)Host.Global.GraphicsDevice.Size.Y);
+
+                    SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / fitWidth, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
+                }
+
+                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+            }
+            else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.None)
+            {
+                SadConsole.Settings.Rendering.RenderWidth = (int)Host.Global.GraphicsDevice.Size.X;
+                SadConsole.Settings.Rendering.RenderHeight = (int)Host.Global.GraphicsDevice.Size.Y;
+                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
+                SadConsole.Settings.Rendering.RenderRect = new Rectangle(0, 0, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                SadConsole.Settings.Rendering.RenderScale = (1, 1);
+                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+            }
+            else
+            {
+                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
+                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
                 var view = Host.Global.GraphicsDevice.GetView();
                 SadConsole.Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
                 SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
