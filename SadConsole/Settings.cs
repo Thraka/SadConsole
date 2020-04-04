@@ -117,7 +117,7 @@ namespace SadConsole
             /// <summary>
             /// If the <see cref="RenderRect"/> is stretched, this is the ratio difference between unstretched.
             /// </summary>
-            public static System.Numerics.Vector2 RenderScale { get; set; }
+            public static (float X, float Y) RenderScale { get; set; }
         }
 
         /// <summary>

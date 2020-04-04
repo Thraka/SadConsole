@@ -42,8 +42,13 @@ namespace SadConsole
 
         private void MonoGameInit(MonoGame.Game game)
         {
+            LoadEmbeddedFont();
+
             if (string.IsNullOrEmpty(_font))
-                LoadEmbeddedFont();
+                if (Settings.UseDefaultExtendedFont)
+                    Global.DefaultFont = Global.EmbeddedFontExtended;
+                else
+                    Global.DefaultFont = Global.EmbeddedFont;
             else
                 Global.DefaultFont = LoadFont(_font);
 
@@ -75,7 +80,6 @@ namespace SadConsole
                 Console _ => new Renderers.ConsoleRenderer(),
                 _ => new Renderers.ScreenObjectRenderer(),
             };
-            
 
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
             new SadConsole.MonoGame.Keyboard();
@@ -98,9 +102,6 @@ namespace SadConsole
             
             return Microsoft.Xna.Framework.TitleContainer.OpenStream(file);
         }
-
-        internal void MonoGameLoadEmbeddedFont() =>
-            LoadEmbeddedFont();
 
         /// <summary>
         /// Toggles between windowed and fullscreen rendering for SadConsole.

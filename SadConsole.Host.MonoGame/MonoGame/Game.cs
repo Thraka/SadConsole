@@ -106,7 +106,7 @@ namespace SadConsole.MonoGame
             base.Initialize();
 
             // Hook window change for resolution fixes
-            //Window.ClientSizeChanged += Window_ClientSizeChanged;
+            Window.ClientSizeChanged += Window_ClientSizeChanged;
             Window.AllowUserResizing = SadConsole.Settings.AllowWindowResize;
 
             Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice);
@@ -120,9 +120,9 @@ namespace SadConsole.MonoGame
         }
 
         /// <summary>
-        /// Resizes the graphics device manager based on this font's glyph size.
+        /// Resizes the <see cref="Global.GraphicsDeviceManager"/> by the specified font size.
         /// </summary>
-        /// <param name="manager">Graphics device manager to resize.</param>
+        /// <param name="fontSize">The size of the font to base the final values on.</param>
         /// <param name="width">The width glyphs.</param>
         /// <param name="height">The height glyphs.</param>
         /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
@@ -154,7 +154,7 @@ namespace SadConsole.MonoGame
                                                             SadConsole.Settings.Rendering.RenderWidth,
                                                             SadConsole.Settings.Rendering.RenderHeight).ToRectangle();
 
-                SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(1);
+                SadConsole.Settings.Rendering.RenderScale = (1, 1);
             }
             else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Scale)
             {
@@ -177,7 +177,7 @@ namespace SadConsole.MonoGame
                                                                          (GraphicsDevice.PresentationParameters.BackBufferHeight - (SadConsole.Settings.Rendering.RenderHeight * multiple)) / 2,
                                                                          SadConsole.Settings.Rendering.RenderWidth * multiple,
                                                                          SadConsole.Settings.Rendering.RenderHeight * multiple).ToRectangle();
-                SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / ((float)SadConsole.Settings.Rendering.RenderWidth * multiple), SadConsole.Settings.Rendering.RenderHeight / (float)(SadConsole.Settings.Rendering.RenderHeight * multiple));
+                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / ((float)SadConsole.Settings.Rendering.RenderWidth * multiple), SadConsole.Settings.Rendering.RenderHeight / (float)(SadConsole.Settings.Rendering.RenderHeight * multiple));
             }
             else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
             {
@@ -197,7 +197,7 @@ namespace SadConsole.MonoGame
                                                                             GraphicsDevice.PresentationParameters.BackBufferWidth,
                                                                             (int)fitHeight).ToRectangle();
 
-                    SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / fitHeight);
+                    SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / fitHeight);
                 }
                 else
                 {
@@ -208,7 +208,7 @@ namespace SadConsole.MonoGame
                                                                              (int)fitWidth,
                                                                              GraphicsDevice.PresentationParameters.BackBufferHeight).ToRectangle();
 
-                    SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / fitWidth, SadConsole.Settings.Rendering.RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
+                    SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / fitWidth, SadConsole.Settings.Rendering.RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
                 }
             }
             else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.None)
@@ -217,13 +217,13 @@ namespace SadConsole.MonoGame
                 SadConsole.Settings.Rendering.RenderHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
                 Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
-                SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(1);
+                SadConsole.Settings.Rendering.RenderScale = (1, 1);
             }
             else
             {
                 Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
-                SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
+                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             }
         }
     }

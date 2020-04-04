@@ -13,10 +13,11 @@ namespace SadConsole
         private int _preFullScreenWidth;
         private int _preFullScreenHeight;
         private bool _handleResizeNone;
+        private bool _isResizing;
 
         private Keyboard _keyboard;
         private Mouse _mouse;
-        
+
         public new static Game Instance
         {
             get => (Game)GameHost.Instance;
@@ -41,14 +42,20 @@ namespace SadConsole
 
         private void Initialize(RenderWindow window)
         {
+            LoadEmbeddedFont();
+
             if (string.IsNullOrEmpty(_font))
-                LoadEmbeddedFont();
+                if (Settings.UseDefaultExtendedFont)
+                    Global.DefaultFont = Global.EmbeddedFontExtended;
+                else
+                    Global.DefaultFont = Global.EmbeddedFont;
             else
                 Global.DefaultFont = LoadFont(_font);
 
             if (window == null)
             {
-                window = new RenderWindow(new SFML.Window.VideoMode((uint)(Global.DefaultFont.GetFontSize(Global.DefaultFontSize).X * ScreenCellsX), (uint)(Global.DefaultFont.GetFontSize(Global.DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close);
+                window = new RenderWindow(new SFML.Window.VideoMode((uint)(Global.DefaultFont.GetFontSize(Global.DefaultFontSize).X * ScreenCellsX), (uint)(Global.DefaultFont.GetFontSize(Global.DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
+
                 // SETUP RENDER vars for global screen size data.
             }
 
@@ -57,6 +64,12 @@ namespace SadConsole
             window.Closed += (o, e) =>
             {
                 ((SFML.Window.Window)o).Close();
+            };
+
+            window.Resized += (o, e) =>
+            {
+
+                ResetRendering();
             };
 
             if (Host.Settings.FPS != 0)
@@ -78,9 +91,14 @@ namespace SadConsole
             SadConsole.Global.Screen = new Console(ScreenCellsX, ScreenCellsY);
         }
 
+
         public override void Run()
         {
             OnStart?.Invoke();
+
+            // Update keyboard/mouse with base info
+            SadConsole.Global.Keyboard.Update(TimeSpan.Zero);
+            SadConsole.Global.Mouse.Update(TimeSpan.Zero);
 
             while (SadConsole.Host.Global.GraphicsDevice.IsOpen)
             {
@@ -194,9 +212,6 @@ namespace SadConsole
         public override Stream OpenStream(string file, FileMode mode = FileMode.Open, FileAccess access = FileAccess.Read) =>
              File.Open(file, mode, access);
 
-        internal void MonoGameLoadEmbeddedFont() =>
-            LoadEmbeddedFont();
-
         /// <summary>
         /// Toggles between windowed and fullscreen rendering for SadConsole.
         /// </summary>
@@ -247,15 +262,8 @@ namespace SadConsole
         /// </summary>
         /// <param name="width">The width of the window in pixels.</param>
         /// <param name="height">The height of the window in pixels.</param>
-        public void ResizeWindow(int width, int height)
-        {
-            // TODO: Resize window
-            //MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
-            //MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
-            //MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
-
-            //((Game)SadConsole.Game.Instance).MonoGameInstance.ResetRendering();
-        }
+        public void ResizeWindow(int width, int height) =>
+            Host.Global.GraphicsDevice.Size = new SFML.System.Vector2u((uint)width, (uint)height);
 
         /// <summary>
         /// Resets the <see cref="RenderOutput"/> target and determines the appropriate <see cref="RenderRect"/> and <see cref="RenderScale"/> based on the window or fullscreen state.
@@ -343,7 +351,7 @@ namespace SadConsole
                 Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
                 var view = Host.Global.GraphicsDevice.GetView();
                 SadConsole.Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
-                SadConsole.Settings.Rendering.RenderScale = new System.Numerics.Vector2(SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
+                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
             }
         }
 

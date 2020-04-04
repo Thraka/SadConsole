@@ -57,9 +57,9 @@
         </member>
         <member name="M:SadConsole.MonoGame.Game.ResizeGraphicsDeviceManager(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Resizes the graphics device manager based on this font's glyph size.
+            Resizes the <see cref="P:SadConsole.MonoGame.Global.GraphicsDeviceManager"/> by the specified font size.
             </summary>
-            <param name="manager">Graphics device manager to resize.</param>
+            <param name="fontSize">The size of the font to base the final values on.</param>
             <param name="width">The width glyphs.</param>
             <param name="height">The height glyphs.</param>
             <param name="additionalWidth">Additional pixel width to add to the resize.</param>
