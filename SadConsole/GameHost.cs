@@ -200,19 +200,15 @@ namespace SadConsole
         protected void LoadEmbeddedFont()
         {
             System.Reflection.Assembly assembly = typeof(SadConsole.Font).Assembly;
-            string resourceNameFont;
 
-            if (Settings.UseDefaultExtendedFont)
-                resourceNameFont = "SadConsole.Resources.IBM_ext.font";
-            else
-                resourceNameFont = "SadConsole.Resources.IBM.font";
-
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceNameFont))
-            using (StreamReader sr = new StreamReader(stream))
+            Font LoadFont(string fontName)
             {
-                LoadingEmbeddedFont = true;
+                using Stream stream = assembly.GetManifestResourceStream(fontName);
+                using StreamReader sr = new StreamReader(stream);
+
                 SerializerPathHint = "";
+
+                LoadingEmbeddedFont = true;
                 var masterFont = (Font)Newtonsoft.Json.JsonConvert.DeserializeObject(
                     sr.ReadToEnd(),
                     typeof(Font),
@@ -221,12 +217,15 @@ namespace SadConsole
                         TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All,
                         Converters = null
                     });
+                LoadingEmbeddedFont = false;
 
                 Global.Fonts.Add(masterFont.Name, masterFont);
-                Global.DefaultFont = masterFont;
 
-                LoadingEmbeddedFont = false;
+                return masterFont;
             }
+
+            Global.EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
+            Global.EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
         }
 
         #region IDisposable Support

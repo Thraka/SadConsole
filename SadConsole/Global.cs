@@ -51,6 +51,16 @@ namespace SadConsole
         public static Font.Sizes DefaultFontSize { get; set; } = Font.Sizes.One;
 
         /// <summary>
+        /// The font automatically loaded by SadConsole. Standard IBM style font.
+        /// </summary>
+        public static Font EmbeddedFont { get; internal set; }
+
+        /// <summary>
+        /// The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
+        /// </summary>
+        public static Font EmbeddedFontExtended { get; internal set; }
+
+        /// <summary>
         /// Global keyboard object used by SadConsole during the update frame.
         /// </summary>
         public static Input.Keyboard Keyboard { get; } = new Input.Keyboard();
