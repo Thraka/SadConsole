@@ -5075,6 +5075,16 @@
             The default font for any type that does not provide a font.
             </summary>
         </member>
+        <member name="P:SadConsole.Global.FontEmbedded">
+            <summary>
+            The font automatically loaded by SadConsole. Standard IBM style font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Global.FontEmbeddedExtended">
+            <summary>
+            The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
+            </summary>
+        </member>
         <member name="P:SadConsole.Global.GraphicsDevice">
             <summary>
             The MonoGame graphics device.
@@ -6902,6 +6912,16 @@
             The color used to darken the background when <see cref="o:Window.Show"/> is called and <see cref="P:SadConsole.Window.IsModal"/> is <see langword="true"/>.
             </summary>
         </member>
+        <member name="M:SadConsole.Themes.Colors.#ctor">
+            <summary>
+            Creates a new colors object with the default blue theme of SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Themes.Colors.SetMemberValues">
+            <summary>
+            Sets the color values of all members, such as <see cref="F:SadConsole.Themes.Colors.Text"/>, to the current color values, and then calls <see cref="M:SadConsole.Themes.Colors.RebuildAppearances"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.Themes.Colors.RebuildAppearances">
             <summary>
             Sets all Appearance* properties based on the existing colors and settings.
@@ -6912,6 +6932,18 @@
             Returns a clone of this object.
             </summary>
             <returns>A new Colors object.</returns>
+        </member>
+        <member name="M:SadConsole.Themes.Colors.CreateDefault">
+            <summary>
+            Creates a new colors object with the default blue colors theme of SadConsole.
+            </summary>
+            <returns>A colors object with the default colors.</returns>
+        </member>
+        <member name="M:SadConsole.Themes.Colors.CreateAnsi">
+            <summary>
+            Creates a new colors object with a standard black-based theme.
+            </summary>
+            <returns>A colors object based on classic ANSI colors.</returns>
         </member>
         <member name="T:SadConsole.Themes.ControlsConsoleTheme">
             <summary>
@@ -7009,7 +7041,7 @@
             Theme for the <see cref="T:SadConsole.Window"/> control.
             </summary>
         </member>
-        <member name="M:SadConsole.Themes.Library.Init">
+        <member name="M:SadConsole.Themes.Library.ApplyDefaults">
             <summary>
             Seeds the library with the default themes.
             </summary>
