@@ -576,17 +576,17 @@ namespace SadConsole
         /// <summary>
         /// Signals that the console should be considered dirty and draws <see cref="Theme"/>, calls the customizable <see cref="Invalidate"/> method, then rasies the <see cref="Invalidated"/> event.
         /// </summary>
-        protected virtual void OnInvalidate()
+        protected virtual void Invalidate()
         {
             Theme.Draw(this, this);
-            Invalidate();
+            OnInvalidate();
             RaiseInvalidated();
         }
 
         /// <summary>
         /// Called by <see cref="OnInvalidate"/> as a way to customize drawing on teh console.
         /// </summary>
-        protected virtual void Invalidate() { }
+        protected virtual void OnInvalidate() { }
 
         /// <summary>
         /// Raises the <see cref="Invalidated"/> event.

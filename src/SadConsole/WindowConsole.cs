@@ -167,10 +167,10 @@ namespace SadConsole
         /// <summary>
         /// Signals that the window should be considered dirty and draws <see cref="Theme"/>, calls the customizable <see cref="ControlsConsole.Invalidate"/> method, then rasies the <see cref="ControlsConsole.Invalidated"/> event.
         /// </summary>
-        protected override void OnInvalidate()
+        protected override void Invalidate()
         {
             Theme.Draw(this, this);
-            Invalidate();
+            OnInvalidate();
             RaiseInvalidated();
         }
 

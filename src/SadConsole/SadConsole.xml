@@ -2668,6 +2668,11 @@
             A basic console that can contain controls.
             </summary>
         </member>
+        <member name="E:SadConsole.ControlsConsole.Invalidated">
+            <summary>
+            Raised when the console has been redrawn.
+            </summary>
+        </member>
         <member name="F:SadConsole.ControlsConsole.KeyboardState">
             <summary>
             Keyboard processor shared by all Controls Consoles.
@@ -2814,7 +2819,17 @@
         </member>
         <member name="M:SadConsole.ControlsConsole.Invalidate">
             <summary>
-            Signals that the console should be considered dirty and reapplies the <see cref="P:SadConsole.ControlsConsole.Theme"/>. When overridden, call this method first.
+            Signals that the console should be considered dirty and draws <see cref="P:SadConsole.ControlsConsole.Theme"/>, calls the customizable <see cref="M:SadConsole.ControlsConsole.Invalidate"/> method, then rasies the <see cref="E:SadConsole.ControlsConsole.Invalidated"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ControlsConsole.OnInvalidate">
+            <summary>
+            Called by <see cref="M:SadConsole.ControlsConsole.OnInvalidate"/> as a way to customize drawing on teh console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ControlsConsole.RaiseInvalidated">
+            <summary>
+            Raises the <see cref="E:SadConsole.ControlsConsole.Invalidated"/> event.
             </summary>
         </member>
         <member name="M:SadConsole.ControlsConsole.Update(System.TimeSpan)">
@@ -7563,7 +7578,7 @@
         </member>
         <member name="M:SadConsole.Window.Invalidate">
             <summary>
-            Causes the window to be redrawn with the selected <see cref="P:SadConsole.Window.Theme"/>. When overridden, call this method first.
+            Signals that the window should be considered dirty and draws <see cref="P:SadConsole.Window.Theme"/>, calls the customizable <see cref="M:SadConsole.ControlsConsole.Invalidate"/> method, then rasies the <see cref="E:SadConsole.ControlsConsole.Invalidated"/> event.
             </summary>
         </member>
         <member name="M:SadConsole.Window.ProcessMouse(SadConsole.Input.MouseConsoleState)">
