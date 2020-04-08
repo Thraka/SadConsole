@@ -5,6 +5,7 @@
 - Exposed the Theme Library Init method as ApplyDefaults.
 - The embedded fonts always load to `Global.FontEmbedded` and `Global.FontEmbeddedExtended`. This way you can provide a new default and also use the embedded versions when you want.
 - The theme colors object has some static methods to create either the default theme or a theme based on classic EGA ANSI colors.
+- ControlsConsole and Window have a `Invalidated` event that can be used for drawing after the theme as refreshed the console.
 
 ## 11/26/2019 V8.99.0
 
