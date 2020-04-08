@@ -20,6 +20,11 @@ namespace SadConsole.UI
     public class ControlsConsole : Console, IEnumerable<ControlBase>
     {
         /// <summary>
+        /// Raised when the console has been redrawn.
+        /// </summary>
+        public event EventHandler Invalidated;
+
+        /// <summary>
         /// Keyboard processor shared by all Controls Consoles.
         /// </summary>
         public static Keyboard KeyboardState = new Keyboard();
@@ -36,12 +41,16 @@ namespace SadConsole.UI
         private bool _exclusiveBeforeCapture;
         private Themes.ControlsConsole _theme;
         private Themes.Colors _themeColors;
-        private bool _isRedrawingTheme;
 
         /// <summary>
         /// When set to false, uses the static <see cref="ControlsConsole.KeyboardState"/> keyboard instead of <see cref="Global.KeyboardState"/>
         /// </summary>
         protected bool UseGlobalKeyboardInput = false;
+
+        /// <summary>
+        /// When set to <see langword="true" /> indicates the console is in the middle of redrawing; otherwise <see langword="false" />.
+        /// </summary>
+        protected bool IsRedrawingTheme;
 
         #region Properties
 
@@ -581,7 +590,7 @@ namespace SadConsole.UI
         /// <inheritdoc />
         protected override void OnIsDirtyChanged()
         {
-            if (IsDirty && !_isRedrawingTheme)
+            if (IsDirty && !IsRedrawingTheme)
                 RedrawTheme();
         }
 
@@ -590,20 +599,27 @@ namespace SadConsole.UI
         /// </summary>
         public virtual void RedrawTheme()
         {
-            _isRedrawingTheme = true;
+            IsRedrawingTheme = true;
             IsDirty = true;
             Theme?.Draw(this);
             OnThemeDrawn();
+            RaiseInvalidated();
 
             foreach (ControlBase control in ControlsList)
                 control.IsDirty = true;
-            _isRedrawingTheme = false;
+            IsRedrawingTheme = false;
         }
 
         /// <summary>
         /// Used for custom drawing. Called after the console's <see cref="ICellSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="Theme"/> is redrawn.
         /// </summary>
         protected virtual void OnThemeDrawn() { }
+
+        /// <summary>
+        /// Riases the <see cref="Invalidated"/> event.
+        /// </summary>
+        protected void RaiseInvalidated() =>
+            Invalidated?.Invoke(this, EventArgs.Empty)
 
         /// <summary>
         /// Calls the Update method of the base class and then Update on each control.

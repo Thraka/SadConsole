@@ -164,11 +164,15 @@ namespace SadConsole.UI
         /// </summary>
         public override void RedrawTheme()
         {
+            IsRedrawingTheme = true;
+            IsDirty = true;
             Theme?.Draw(this);
             OnThemeDrawn();
+            RaiseInvalidated();
 
             foreach (ControlBase control in ControlsList)
                 control.IsDirty = true;
+            IsRedrawingTheme = false;
         }
 
         /// <inheritdoc />
