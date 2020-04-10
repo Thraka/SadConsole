@@ -649,6 +649,9 @@
         <member name="P:SadConsole.CellSurface.Item(System.Int32)">
             <inheritdoc />
         </member>
+        <member name="P:SadConsole.CellSurface.Item(SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
         <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
@@ -1512,6 +1515,13 @@
             </summary>
             <returns>The new cell.</returns>
         </member>
+        <member name="M:SadConsole.ColoredGlyph.Matches(SadConsole.ColoredGlyph)">
+            <summary>
+            Checks if this <see cref="T:SadConsole.ColoredGlyph"/> object's properties match another's.
+            </summary>
+            <param name="other">The other object to check.</param>
+            <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="M:SadConsole.ColoredGlyph.CreateArray(System.Int32)">
             <summary>
             Creates an array of colored glyphs.
@@ -2130,6 +2140,9 @@
         </member>
         <member name="P:SadConsole.Console.Item(System.Int32,System.Int32)">
             <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.Item(SadRogue.Primitives.Point)">
+            <inheritdoc />
         </member>
         <member name="P:SadConsole.Console.TimesShiftedDown">
             <inheritdoc/>
@@ -3676,6 +3689,13 @@
             <param name="y">The Y coordinate.</param>
             <returns>The indicated cell.</returns>
         </member>
+        <member name="P:SadConsole.ICellSurface.Item(SadRogue.Primitives.Point)">
+            <summary>
+            Gets a cell based on its position on the surface.
+            </summary>
+            <param name="position">Position of the cell.</param>
+            <returns>The indicated cell.</returns>
+        </member>
         <member name="P:SadConsole.ICellSurface.TimesShiftedDown">
             <summary>
             A variable that tracks how many times this editor shifted the surface down.
@@ -3698,7 +3718,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.UsePrintProcessor">
             <summary>
-            When true, the <see cref="!:ColoredString.Parse(string, int, ICellSurface, ParseCommandStacks)"/> command is used to print strings.
+            When true, the <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> command is used to print strings.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.Effects">
@@ -6698,6 +6718,11 @@
             A basic console that can contain controls.
             </summary>
         </member>
+        <member name="E:SadConsole.UI.ControlsConsole.Invalidated">
+            <summary>
+            Raised when the console has been redrawn.
+            </summary>
+        </member>
         <member name="F:SadConsole.UI.ControlsConsole.KeyboardState">
             <summary>
             Keyboard processor shared by all Controls Consoles.
@@ -6711,6 +6736,11 @@
         <member name="F:SadConsole.UI.ControlsConsole.UseGlobalKeyboardInput">
             <summary>
             When set to false, uses the static <see cref="F:SadConsole.UI.ControlsConsole.KeyboardState"/> keyboard instead of <see cref="!:Global.KeyboardState"/>
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.ControlsConsole.IsRedrawingTheme">
+            <summary>
+            When set to <see langword="true" /> indicates the console is in the middle of redrawing; otherwise <see langword="false" />.
             </summary>
         </member>
         <member name="P:SadConsole.UI.ControlsConsole.Theme">
@@ -6881,6 +6911,11 @@
         <member name="M:SadConsole.UI.ControlsConsole.OnThemeDrawn">
             <summary>
             Used for custom drawing. Called after the console's <see cref="P:SadConsole.ICellSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="P:SadConsole.UI.ControlsConsole.Theme"/> is redrawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.RaiseInvalidated">
+            <summary>
+            Riases the <see cref="E:SadConsole.UI.ControlsConsole.Invalidated"/> event.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.Update">
@@ -8160,6 +8195,11 @@
         <member name="P:SadConsole.UI.Themes.DrawingSurfaceTheme.UseNormalStateOnly">
             <summary>
             When true, only uses <see cref="P:SadConsole.UI.Themes.ThemeStates.Normal"/> for drawing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.DrawingSurfaceTheme.Appearance">
+            <summary>
+            The current appearance based on the control state.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.Attached(SadConsole.UI.Controls.ControlBase)">

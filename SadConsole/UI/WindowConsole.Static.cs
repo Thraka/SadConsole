@@ -47,7 +47,14 @@ namespace SadConsole.UI
 
             var printArea = new DrawingSurface(window.Width, window.Height)
             {
-                OnDraw = (ds) => ds.Surface.Print(2, 2, message)
+                OnDraw = (ds) =>
+                {
+                    if (!ds.IsDirty) return;
+                    ColoredGlyph appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;
+                    ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
+                    ds.Surface.Print(2, 2, message);
+                    ds.IsDirty = true;
+                }
             };
 
             yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.BufferHeight);
@@ -124,7 +131,14 @@ namespace SadConsole.UI
 
             var printArea = new DrawingSurface(window.Width, window.Height)
             {
-                OnDraw = (ds) => ds.Surface.Print(2, 2, message)
+                OnDraw = (ds) =>
+                {
+                    if (!ds.IsDirty) return;
+                    ColoredGlyph appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;
+                    ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
+                    ds.Surface.Print(2, 2, message);
+                    ds.IsDirty = true;
+                }
             };
             window.Add(printArea);
 

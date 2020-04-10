@@ -619,7 +619,7 @@ namespace SadConsole.UI
         /// Riases the <see cref="Invalidated"/> event.
         /// </summary>
         protected void RaiseInvalidated() =>
-            Invalidated?.Invoke(this, EventArgs.Empty)
+            Invalidated?.Invoke(this, EventArgs.Empty);
 
         /// <summary>
         /// Calls the Update method of the base class and then Update on each control.
