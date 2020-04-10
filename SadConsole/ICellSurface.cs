@@ -30,6 +30,13 @@ namespace SadConsole
         ColoredGlyph this[int x, int y] { get; }
 
         /// <summary>
+        /// Gets a cell based on its position on the surface.
+        /// </summary>
+        /// <param name="position">Position of the cell.</param>
+        /// <returns>The indicated cell.</returns>
+        ColoredGlyph this[Point position] { get; }
+
+        /// <summary>
         /// A variable that tracks how many times this editor shifted the surface down.
         /// </summary>
         public int TimesShiftedDown { get; set; }
@@ -50,7 +57,7 @@ namespace SadConsole
         public int TimesShiftedUp { get; set; }
 
         /// <summary>
-        /// When true, the <see cref="ColoredString.Parse(string, int, ICellSurface, ParseCommandStacks)"/> command is used to print strings.
+        /// When true, the <see cref="ColoredString.Parse(string, int, ICellSurface, StringParser.ParseCommandStacks)"/> command is used to print strings.
         /// </summary>
         public bool UsePrintProcessor { get; set; }
 

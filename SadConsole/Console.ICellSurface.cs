@@ -14,6 +14,9 @@ namespace SadConsole
         /// <inheritdoc/>
         public ColoredGlyph this[int x, int y] => Surface[x, y];
 
+        /// <inheritdoc />
+        public ColoredGlyph this[Point position] => Surface[position.ToIndex(BufferWidth)];
+
         /// <inheritdoc/>
         public int TimesShiftedDown { get => Surface.TimesShiftedDown; set => Surface.TimesShiftedDown = value; }
         /// <inheritdoc/>

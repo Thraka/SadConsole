@@ -146,6 +146,14 @@ namespace SadConsole
             protected set => Cells[index] = value;
         }
 
+        /// <inheritdoc />
+        public ColoredGlyph this[Point position]
+        {
+            get => Cells[position.ToIndex(BufferWidth)];
+            protected set => Cells[position.ToIndex(BufferWidth)] = value;
+        }
+
+
         /// <summary>
         /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
