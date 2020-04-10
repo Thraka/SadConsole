@@ -49,7 +49,12 @@ namespace SadConsole
 
             var printArea = new DrawingSurface(window.Width, window.Height)
             {
-                OnDraw = (ds) => ds.Surface.Print(2, 2, message)
+                OnDraw = (ds) =>
+                {
+                    Cell appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;
+                    ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
+                    ds.Surface.Print(2, 2, message);
+                }
             };
 
             yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.Height);
@@ -130,7 +135,12 @@ namespace SadConsole
 
             var printArea = new DrawingSurface(window.Width, window.Height)
             {
-                OnDraw = (ds) => ds.Surface.Print(2, 2, message)
+                OnDraw = (ds) =>
+                {
+                    Cell appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;
+                    ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
+                    ds.Surface.Print(2, 2, message);
+                }
             };
             window.Add(printArea);
 

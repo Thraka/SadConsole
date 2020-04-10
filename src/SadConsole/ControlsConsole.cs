@@ -564,8 +564,6 @@ namespace SadConsole
         {
             if (IsDirty)
             {
-                Invalidate();
-
                 foreach (ControlBase control in ControlsList)
                     control.IsDirty = true;
             }
@@ -627,10 +625,8 @@ namespace SadConsole
                 }
             }
 
-            // This should be how you draw on a controlsconsole/window. But, Prompt windows draw from the outside...
-            // What to do?
-            //if (IsDirty)
-            //    Invalidate();
+            if (IsDirty)
+                Invalidate();
 
             base.Draw(update);
         }

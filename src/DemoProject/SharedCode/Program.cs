@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Input;
 using Console = SadConsole.Console;
+using System.Threading.Tasks;
 
 namespace StarterProject
 {
@@ -16,7 +17,7 @@ namespace StarterProject
         {
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseHardwareFullScreen = true;
-            //SadConsole.Settings.UseDefaultExtendedFont = true;
+            SadConsole.Settings.UseDefaultExtendedFont = true;
 
             // Setup the engine and creat the main window.
             SadConsole.Game.Create(80, 25);
@@ -70,7 +71,6 @@ namespace StarterProject
                 {
                     SadConsole.Settings.ToggleFullScreen();
                 }
-                
             }
         }
 
@@ -94,18 +94,61 @@ namespace StarterProject
 
             // We'll instead use our demo consoles that show various features of SadConsole.
             Global.CurrentScreen = MainConsole;
-            
+            //Global.CurrentScreen.Print(1, 1, "Test".CreateColored(ColorAnsi.CyanBright, ColorAnsi.Cyan), ColorAnsi.BlueBright, ColorAnsi.Blue);
+
+            var console = new SadConsole.ControlsConsole(50, 30)
+            {
+                new SadConsole.Controls.Button(7, 1)
+                {
+                    Text = "Click",
+                    Position = new Point(5, 5)
+                }
+            };
+
+            console.Invalidated += (s, e) =>
+            {
+                Rectangle boxArea = console.Controls[0].Bounds;
+                boxArea.Inflate(1, 1);
+                ((ControlsConsole)s).DrawBox(boxArea, new Cell(Color.Yellow), null, CellSurface.ConnectedLineThin);
+            };
+
+
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
 
 
-Console con = new Console(80, 25);
-con.Print(1, 1, "Hello, welcome to SadConsole", Color.Yellow);
-con.SetForeground(4, 1, Color.Brown);
-con.SetForeground(5, 1, Color.Brown);
-con.SetGlyph(6, 1, '!');
-con.Cursor.Move(1, 20).Print("Printing with cursor");
+        }
 
+        private class ConsoleProcessor : SadConsole.Components.ConsoleComponent
+        {
+            protected bool _readingLine = false;
+
+            public Func<Task> Logic;
+
+            public void ReadLine()
+            {
+
+            }
+
+            public override void Draw(Console console, TimeSpan delta)
+            {
+                
+            }
+
+            public override void ProcessKeyboard(Console console, Keyboard info, out bool handled)
+            {
+                handled = false;
+            }
+
+            public override void ProcessMouse(Console console, MouseConsoleState state, out bool handled)
+            {
+                handled = false;
+            }
+
+            public override void Update(Console console, TimeSpan delta)
+            {
+                
+            }
         }
     }
 }

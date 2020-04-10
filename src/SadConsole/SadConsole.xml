@@ -6993,6 +6993,11 @@
             When true, only uses <see cref="P:SadConsole.Themes.ThemeStates.Normal"/> for drawing.
             </summary>
         </member>
+        <member name="P:SadConsole.Themes.DrawingSurfaceTheme.Appearance">
+            <summary>
+            The current appearance based on the control state.
+            </summary>
+        </member>
         <member name="M:SadConsole.Themes.DrawingSurfaceTheme.Attached(SadConsole.Controls.ControlBase)">
             <inheritdoc />
         </member>
