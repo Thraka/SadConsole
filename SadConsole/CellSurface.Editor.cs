@@ -754,7 +754,7 @@ namespace SadConsole
             if (!surface.IsValidCell(x, y, out int index)) return;
 
             ColoredGlyph cell = surface.Cells[index];
-            cell.CopyAppearanceFrom(glyph);
+            glyph.CopyAppearanceTo(cell);
             cell.Glyph = glyph.Glyph;
             surface.IsDirty = true;
         }

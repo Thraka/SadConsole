@@ -132,7 +132,7 @@ namespace SadConsole.UI.Themes
 
             button.Surface.Clear();
 
-            if (appearance == MouseDown)
+            if (appearance.Matches(MouseDown))
             {
                 middle += 1;
 

@@ -9,7 +9,7 @@ namespace SadConsole
     /// Represents an individual piece of a <see cref="ICellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
     /// </summary>
     [Newtonsoft.Json.JsonConverter(typeof(SerializedTypes.ColoredGlyphJsonConverter))]
-    public class ColoredGlyph : IEquatable<ColoredGlyph>
+    public class ColoredGlyph
     {
         private Color _foreground;
         private Color _background;
@@ -240,12 +240,12 @@ namespace SadConsole
                 Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>()
             };
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ColoredGlyph);
-        }
-
-        public bool Equals(ColoredGlyph other)
+        /// <summary>
+        /// Checks if this <see cref="ColoredGlyph"/> object's properties match another's.
+        /// </summary>
+        /// <param name="other">The other object to check.</param>
+        /// <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
+        public bool Matches(ColoredGlyph other)
         {
             return other != null &&
                    EqualityComparer<CellDecorator[]>.Default.Equals(Decorators, other.Decorators) &&
@@ -256,20 +256,36 @@ namespace SadConsole
                    IsVisible == other.IsVisible;
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Decorators, Foreground, Background, Glyph, Mirror, IsVisible, IsDirty);
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    return Equals(obj as ColoredGlyph);
+        //}
 
-        public static bool operator ==(ColoredGlyph left, ColoredGlyph right)
-        {
-            return EqualityComparer<ColoredGlyph>.Default.Equals(left, right);
-        }
+        //public bool Equals(ColoredGlyph other)
+        //{
+        //    return other != null &&
+        //           EqualityComparer<CellDecorator[]>.Default.Equals(Decorators, other.Decorators) &&
+        //           Foreground.Equals(other.Foreground) &&
+        //           Background.Equals(other.Background) &&
+        //           Glyph == other.Glyph &&
+        //           EqualityComparer<Mirror>.Default.Equals(Mirror, other.Mirror) &&
+        //           IsVisible == other.IsVisible;
+        //}
 
-        public static bool operator !=(ColoredGlyph left, ColoredGlyph right)
-        {
-            return !(left == right);
-        }
+        //public override int GetHashCode()
+        //{
+        //    return HashCode.Combine(Decorators, Foreground, Background, Glyph, Mirror, IsVisible, IsDirty);
+        //}
+
+        //public static bool operator ==(ColoredGlyph left, ColoredGlyph right)
+        //{
+        //    return EqualityComparer<ColoredGlyph>.Default.Equals(left, right);
+        //}
+
+        //public static bool operator !=(ColoredGlyph left, ColoredGlyph right)
+        //{
+        //    return !(left == right);
+        //}
 
         /// <summary>
         /// Creates an array of colored glyphs.
