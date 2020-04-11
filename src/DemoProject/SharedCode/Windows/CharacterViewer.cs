@@ -14,14 +14,15 @@ namespace StarterProject.Windows
         private readonly Button _closeButton;
         #endregion
 
-        private Rectangle trackedRegion = new Rectangle(1, 1, 16, 16);
-        private SadConsole.Input.MouseConsoleState lastMouseState = null;
+        private Point? _lastMousePos = null;
         private readonly SadConsole.Effects.Recolor highlightedEffect;
         private readonly SadConsole.Effects.Fade unhighlightEffect;
         private int fontRowOffset = 0;
         private ColoredString selectedGlyphString;
         private int hoverGlyph;
         private bool isHover;
+        private DrawingSurface _characterSurface;
+        private bool hasDrawn = false;
 
         public event EventHandler ColorsChanged;
         public int SelectedCharacterIndex = 0;
@@ -83,6 +84,116 @@ namespace StarterProject.Windows
 
             // The frame will have been drawn by the base class, so redraw and our close button will be put on top of it
             //Invalidate();
+
+
+            // Get the existing colors object
+            var colors = SadConsole.Themes.Colors.CreateAnsi();
+
+            // Use a common background color
+            var backgroundColor = Color.Black;
+
+            // Assign the background color to both the hosts (console) and controls
+            colors.ControlHostBack = backgroundColor;
+            colors.ControlBack = backgroundColor;
+
+            // Build other colors used by themes based on the background color
+            colors.ControlBackLight = (backgroundColor * 1.3f).FillAlpha();
+            colors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
+
+            // When a control is selected, a color indicates it. this is either some other color or a lighter color
+            // the colors object also defines a palette of colors, we'll use this.
+            colors.ControlBackSelected = colors.GrayDark;
+
+            // Build the colors into theme objects for control appearance states
+            colors.RebuildAppearances();
+
+            _characterSurface = new DrawingSurface(16, 16);
+            _characterSurface.Position = new Point(1, 1);
+            _characterSurface.OnDraw = (ds) =>
+            {
+                ds.Surface.Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+
+                if (hasDrawn) return;
+
+                ds.Surface.Fill(Foreground, Background, 0);
+
+                int charIndex = fontRowOffset * 16;
+                for (int y = 0; y < 16; y++)
+                {
+                    for (int x = 0; x < 16; x++)
+                    {
+                        ds.Surface.SetGlyph(x, y, charIndex);
+                        charIndex++;
+                    }
+                }
+                hasDrawn = true;
+            };
+            _characterSurface.MouseMove += _characterSurface_MouseMove;
+            _characterSurface.MouseButtonClicked += _characterSurface_MouseButtonClicked;
+            _characterSurface.MouseExit += _characterSurface_MouseExit;
+            Add(_characterSurface);
+
+            ThemeColors = colors;
+            IsDirty = true;
+        }
+
+        private void _characterSurface_MouseExit(object sender, SadConsole.Input.MouseEventArgs e)
+        {
+            var ds = (DrawingSurface)sender;
+
+            isHover = false;
+
+            // Clear the special effect on the last known character
+            if (_lastMousePos != null)
+            {
+                ds.Surface.SetEffect(_lastMousePos.Value.X, _lastMousePos.Value.Y, unhighlightEffect);
+                _lastMousePos = null;
+            }
+
+            DrawSelectedItemString();
+        }
+
+        private void _characterSurface_MouseButtonClicked(object sender, SadConsole.Input.MouseEventArgs e)
+        {
+            var state = e.MouseState;
+
+            if (!state.Mouse.LeftClicked) return;
+
+            var pos = e.MouseState.CellPosition - _characterSurface.Position;
+
+            if (state.Cell != null)// && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
+            {
+                SelectedCharacterIndex = _characterSurface.Surface[pos.X, pos.Y].Glyph;
+            }
+        }
+
+        private void _characterSurface_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)
+        {
+            var state = e.MouseState;
+            var ds = (DrawingSurface)sender;
+            var mousePos = state.CellPosition - _characterSurface.Position;
+
+            if (state.Cell != null)// && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
+            {
+                isHover = true;
+                hoverGlyph = ds.Surface[mousePos.X, mousePos.Y].Glyph;
+
+                // Set the special effect on the current known character and clear it on the last known
+                if (_lastMousePos == null)
+                {
+                }
+                else if (_lastMousePos != mousePos)
+                {
+                    ds.Surface.SetEffect(_lastMousePos.Value.X, _lastMousePos.Value.Y, unhighlightEffect);
+                }
+
+                ds.Surface.SetEffect(mousePos.X, mousePos.Y, highlightedEffect);
+                _lastMousePos = mousePos;
+
+                DrawHoverItemString();
+            }
+
+            ds.Surface.IsDirty = true;
         }
 
         #endregion
@@ -91,16 +202,7 @@ namespace StarterProject.Windows
         private void _charScrollBar_ValueChanged(object sender, EventArgs e)
         {
             fontRowOffset = ((SadConsole.Controls.ScrollBar)sender).Value;
-
-            int charIndex = fontRowOffset * 16;
-            for (int y = 1; y < 17; y++)
-            {
-                for (int x = 1; x < 17; x++)
-                {
-                    SetGlyph(x, y, charIndex);
-                    charIndex++;
-                }
-            }
+            hasDrawn = false;
         }
 
         protected override void Invalidate()
@@ -116,72 +218,10 @@ namespace StarterProject.Windows
             }
             //SetCharacter(this.Width - 1, 0, 256);
 
-            int charIndex = 0;
-            for (int y = 1; y < 17; y++)
-            {
-                for (int x = 1; x < 17; x++)
-                {
-                    SetGlyph(x, y, charIndex);
-                    charIndex++;
-                }
-            }
-
             if (isHover)
                 DrawHoverItemString();
             else
                 DrawSelectedItemString();
-        }
-
-        protected override void OnMouseLeftClicked(SadConsole.Input.MouseConsoleState state)
-        {
-            if (state.Cell != null && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
-            {
-                SelectedCharacterIndex = state.Cell.Glyph;
-            }
-            else if (state.ConsoleCellPosition.X == Width - 1 && state.ConsoleCellPosition.Y == 0)
-            {
-                Hide();
-            }
-
-            base.OnMouseLeftClicked(state);
-        }
-
-        protected override void OnMouseMove(SadConsole.Input.MouseConsoleState state)
-        {
-            if (state.Cell != null && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
-            {
-                isHover = true;
-                hoverGlyph = state.Cell.Glyph;
-
-                // Set the special effect on the current known character and clear it on the last known
-                if (lastMouseState == null)
-                {
-                }
-                else if (lastMouseState.ConsoleCellPosition != state.ConsoleCellPosition)
-                {
-                    SetEffect(lastMouseState.ConsoleCellPosition.X, lastMouseState.ConsoleCellPosition.Y,
-                    unhighlightEffect
-                    );
-                }
-
-                SetEffect(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y, highlightedEffect);
-                lastMouseState = state.Clone();
-            }
-            else
-            {
-                isHover = false;
-                
-                // Clear the special effect on the last known character
-                if (lastMouseState != null)
-                {
-                    SetEffect(lastMouseState.ConsoleCellPosition.X, lastMouseState.ConsoleCellPosition.Y, unhighlightEffect);
-                    lastMouseState = null;
-                }
-            }
-
-            base.OnMouseMove(state);
-
-            IsDirty = true;
         }
 
         private void DrawHoverItemString()
@@ -222,41 +262,20 @@ namespace StarterProject.Windows
             Print(1, Height - 2, text);
         }
 
-        protected override void OnMouseExit(SadConsole.Input.MouseConsoleState state)
-        {
-            if (lastMouseState != null)
-            {
-                //                _lastInfo.Cell.Effect = null;
-            }
 
-            DrawSelectedItemString();
+        //public void UpdateCharSheetColors()
+        //{
+        //    for (int y = 1; y < 17; y++)
+        //    {
+        //        for (int x = 1; x < 17; x++)
+        //        {
+        //            SetForeground(x, y, Foreground);
+        //            SetBackground(x, y, Background);
+        //        }
+        //    }
 
-            base.OnMouseExit(state);
-        }
-
-        protected override void OnMouseEnter(SadConsole.Input.MouseConsoleState state)
-        {
-            if (lastMouseState != null)
-            {
-                //                _lastInfo.Cell.Effect = null;
-            }
-
-            base.OnMouseEnter(state);
-        }
-
-        public void UpdateCharSheetColors()
-        {
-            for (int y = 1; y < 17; y++)
-            {
-                for (int x = 1; x < 17; x++)
-                {
-                    SetForeground(x, y, Foreground);
-                    SetBackground(x, y, Background);
-                }
-            }
-
-            ColorsChanged?.Invoke(this, EventArgs.Empty);
-        }
+        //    ColorsChanged?.Invoke(this, EventArgs.Empty);
+        //}
 
         public override void Show(bool modal)
         {
@@ -270,8 +289,7 @@ namespace StarterProject.Windows
             base.Show(modal);
 
 
-            UpdateCharSheetColors();
-
+            //UpdateCharSheetColors();
 
             string[] items = new string[] { "Current Index:", SelectedCharacterIndex.ToString() + " ", ((char)SelectedCharacterIndex).ToString() };
 

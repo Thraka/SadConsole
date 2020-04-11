@@ -165,11 +165,13 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Causes the window to be redrawn with the selected <see cref="Theme"/>. When overridden, call this method first.
+        /// Signals that the window should be considered dirty and draws <see cref="Theme"/>, calls the customizable <see cref="ControlsConsole.Invalidate"/> method, then rasies the <see cref="ControlsConsole.Invalidated"/> event.
         /// </summary>
         protected override void Invalidate()
         {
             Theme.Draw(this, this);
+            OnInvalidate();
+            RaiseInvalidated();
         }
 
         /// <inheritdoc />

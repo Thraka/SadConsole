@@ -1,3 +1,13 @@
+## 04/11/2020 V8.99.1
+
+- Ported controls console tab logic from v9. Fixed logic bug when tabbing controls would tab to controls with `control.TabStop = false`.
+- Fixed bug with changing the cursor render cell affecting the special effect on the cell. (thanks axoeu)
+- Exposed the Theme Library Init method as ApplyDefaults.
+- The embedded fonts always load to `Global.FontEmbedded` and `Global.FontEmbeddedExtended`. This way you can provide a new default and also use the embedded versions when you want.
+- The theme colors object has some static methods to create either the default theme or a theme based on classic EGA ANSI colors.
+- ControlsConsole and Window have a `Invalidated` event that can be used for drawing after the theme as refreshed the console.
+- DrawingSurface always calls OnDraw each frame now.
+
 ## 11/26/2019 V8.99.0
 
 - **Breaking changes to themes and controls**

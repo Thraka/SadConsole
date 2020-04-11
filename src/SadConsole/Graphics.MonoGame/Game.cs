@@ -151,9 +151,14 @@ namespace SadConsole
             Global.GraphicsDeviceManager = GraphicsDeviceManager;
             Global.SpriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
 
+            Global.LoadEmbeddedFont();
+
             if (string.IsNullOrEmpty(font))
             {
-                Global.LoadEmbeddedFont();
+                if (Settings.UseDefaultExtendedFont)
+                    Global.FontDefault = Global.FontEmbeddedExtended;
+                else
+                    Global.FontDefault = Global.FontEmbedded;
             }
             else
             {

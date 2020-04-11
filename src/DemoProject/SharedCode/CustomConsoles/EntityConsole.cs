@@ -29,7 +29,7 @@ namespace StarterProject.CustomConsoles
             };
             player.Components.Add(new SadConsole.Components.EntityViewSyncComponent());
             playerPreviousPosition = player.Position;
-
+            //SadConsole.Global.KeyboardState.InitialRepeatDelay = SadConsole.Global.KeyboardState.RepeatDelay;
             Children.Add(player);
 
             // Setup this console to accept keyboard input.
@@ -60,23 +60,23 @@ namespace StarterProject.CustomConsoles
                 keyHit = true;
             }
 
-            if (info.IsKeyReleased(Keys.Up))
+            if (info.IsKeyPressed(Keys.Up))
             {
                 player.Position = new Point(player.Position.X, player.Position.Y - 1);
                 keyHit = true;
             }
-            else if (info.IsKeyReleased(Keys.Down))
+            else if (info.IsKeyPressed(Keys.Down))
             {
                 player.Position = new Point(player.Position.X, player.Position.Y + 1);
                 keyHit = true;
             }
 
-            if (info.IsKeyReleased(Keys.Left))
+            if (info.IsKeyPressed(Keys.Left))
             {
                 player.Position = new Point(player.Position.X - 1, player.Position.Y);
                 keyHit = true;
             }
-            else if (info.IsKeyReleased(Keys.Right))
+            else if (info.IsKeyPressed(Keys.Right))
             {
                 player.Position = new Point(player.Position.X + 1, player.Position.Y);
                 keyHit = true;

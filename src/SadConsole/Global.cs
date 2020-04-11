@@ -29,6 +29,16 @@ namespace SadConsole
         public static Font FontDefault { get; set; }
 
         /// <summary>
+        /// The font automatically loaded by SadConsole. Standard IBM style font.
+        /// </summary>
+        public static Font FontEmbedded { get; internal set; }
+
+        /// <summary>
+        /// The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
+        /// </summary>
+        public static Font FontEmbeddedExtended { get; internal set; }
+
+        /// <summary>
         /// The MonoGame graphics device.
         /// </summary>
         public static GraphicsDevice GraphicsDevice { get; set; }
@@ -174,45 +184,38 @@ namespace SadConsole
 #else
             var assembly = Assembly.GetExecutingAssembly();
 #endif
-            string resourceNameFont;
-            string resourceNameImage;
-
-            if (Settings.UseDefaultExtendedFont)
+            
+            Font LoadFont(string fontName, string imageName)
             {
-                resourceNameFont = "SadConsole.Resources.IBM_ext.font";
-                resourceNameImage = "SadConsole.Resources.IBM8x16_NoPadding_extended.png";
-            }
-            else
-            {
-                resourceNameFont = "SadConsole.Resources.IBM.font";
-                resourceNameImage = "SadConsole.Resources.IBM8x16.png";
-            }
-
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceNameFont))
-            using (StreamReader sr = new StreamReader(stream))
-            {
-                Settings.LoadingEmbeddedFont = true;
-                Global.SerializerPathHint = "";
-                var masterFont = (FontMaster)Newtonsoft.Json.JsonConvert.DeserializeObject(
-                    sr.ReadToEnd(),
-                    typeof(FontMaster),
-                    new Newtonsoft.Json.JsonSerializerSettings()
-                    {
-                        TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
-                    });
-
-                using (Stream fontStream = assembly.GetManifestResourceStream(resourceNameImage))
+                using (Stream stream = assembly.GetManifestResourceStream(fontName))
+                using (StreamReader sr = new StreamReader(stream))
                 {
-                    masterFont.Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+                    Settings.LoadingEmbeddedFont = true;
+                    Global.SerializerPathHint = "";
+                    var masterFont = (FontMaster)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                        sr.ReadToEnd(),
+                        typeof(FontMaster),
+                        new Newtonsoft.Json.JsonSerializerSettings()
+                        {
+                            TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
+                        });
+
+                    using (Stream fontStream = assembly.GetManifestResourceStream(imageName))
+                    {
+                        masterFont.Image = Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+                    }
+
+                    masterFont.ConfigureRects();
+                    Fonts.Add(masterFont.Name, masterFont);
+
+                    Settings.LoadingEmbeddedFont = false;
+
+                    return masterFont.GetFont(Font.FontSizes.One);
                 }
-
-                masterFont.ConfigureRects();
-                Fonts.Add(masterFont.Name, masterFont);
-                FontDefault = masterFont.GetFont(Font.FontSizes.One);
-
-                Settings.LoadingEmbeddedFont = false;
             }
+
+            FontEmbedded = LoadFont("SadConsole.Resources.IBM.font", "SadConsole.Resources.IBM8x16.png");
+            FontEmbeddedExtended = LoadFont("SadConsole.Resources.IBM_ext.font", "SadConsole.Resources.IBM8x16_NoPadding_extended.png");
         }
 
 

@@ -24,6 +24,11 @@ namespace SadConsole
     public class ControlsConsole : ScrollingConsole, IEnumerable<ControlBase>
     {
         /// <summary>
+        /// Raised when the console has been redrawn.
+        /// </summary>
+        public event EventHandler Invalidated;
+
+        /// <summary>
         /// Keyboard processor shared by all Controls Consoles.
         /// </summary>
         public static Keyboard KeyboardState = new Keyboard();
@@ -53,7 +58,7 @@ namespace SadConsole
         /// <summary>
         /// The theme for the console. Defaults to <see cref="Library.ControlsConsoleTheme"/>.
         /// </summary>
-        public Themes.ControlsConsoleTheme Theme
+        public  Themes.ControlsConsoleTheme Theme
         {
             get => _theme ?? Library.Default.ControlsConsoleTheme;
             set
@@ -69,7 +74,7 @@ namespace SadConsole
         public Colors ThemeColors
         {
             get => _themeColors;
-            set { _themeColors = value; OnThemeColorsChanged(_themeColors); }
+            set { _themeColors = value; IsDirty = true; OnThemeColorsChanged(_themeColors); }
         }
 
         /// <summary>
@@ -559,8 +564,6 @@ namespace SadConsole
         {
             if (IsDirty)
             {
-                Invalidate();
-
                 foreach (ControlBase control in ControlsList)
                     control.IsDirty = true;
             }
@@ -569,12 +572,25 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Signals that the console should be considered dirty and reapplies the <see cref="Theme"/>. When overridden, call this method first.
+        /// Signals that the console should be considered dirty and draws <see cref="Theme"/>, calls the customizable <see cref="Invalidate"/> method, then rasies the <see cref="Invalidated"/> event.
         /// </summary>
         protected virtual void Invalidate()
         {
-            Theme?.Draw(this, this);
+            Theme.Draw(this, this);
+            OnInvalidate();
+            RaiseInvalidated();
         }
+
+        /// <summary>
+        /// Called by <see cref="OnInvalidate"/> as a way to customize drawing on teh console.
+        /// </summary>
+        protected virtual void OnInvalidate() { }
+
+        /// <summary>
+        /// Raises the <see cref="Invalidated"/> event.
+        /// </summary>
+        protected void RaiseInvalidated() =>
+            Invalidated?.Invoke(this, EventArgs.Empty);
 
         /// <summary>
         /// Calls the Update method of the base class and then Update on each control.
@@ -609,10 +625,8 @@ namespace SadConsole
                 }
             }
 
-            // This should be how you draw on a controlsconsole/window. But, Prompt windows draw from the outside...
-            // What to do?
-            //if (IsDirty)
-            //    Invalidate();
+            if (IsDirty)
+                Invalidate();
 
             base.Draw(update);
         }

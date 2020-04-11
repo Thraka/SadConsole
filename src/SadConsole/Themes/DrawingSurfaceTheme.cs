@@ -17,6 +17,11 @@ namespace SadConsole.Themes
         /// </summary>
         public bool UseNormalStateOnly { get; set; } = true;
 
+        /// <summary>
+        /// The current appearance based on the control state.
+        /// </summary>
+        public Cell Appearance { get; protected set; }
+
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
@@ -32,51 +37,43 @@ namespace SadConsole.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!control.IsDirty)
-            {
-                return;
-            }
-
             if (!(control is DrawingSurface drawingSurface))
             {
                 return;
             }
 
             RefreshTheme(control.ThemeColors, control);
-            Cell appearance;
 
             if (!UseNormalStateOnly)
             {
                 if (Helpers.HasFlag(control.State, ControlStates.Disabled))
                 {
-                    appearance = Disabled;
+                    Appearance = Disabled;
                 }
                 else if (Helpers.HasFlag(control.State, ControlStates.MouseLeftButtonDown) ||
                          Helpers.HasFlag(control.State, ControlStates.MouseRightButtonDown))
                 {
-                    appearance = MouseDown;
+                    Appearance = MouseDown;
                 }
                 else if (Helpers.HasFlag(control.State, ControlStates.MouseOver))
                 {
-                    appearance = MouseOver;
+                    Appearance = MouseOver;
                 }
                 else if (Helpers.HasFlag(control.State, ControlStates.Focused))
                 {
-                    appearance = Focused;
+                    Appearance = Focused;
                 }
                 else
                 {
-                    appearance = Normal;
+                    Appearance = Normal;
                 }
             }
             else
             {
-                appearance = Normal;
+                Appearance = Normal;
             }
 
-            control.Surface.Fill(appearance.Foreground, appearance.Background, null);
             drawingSurface?.OnDraw(drawingSurface);
-            control.IsDirty = false;
         }
 
         /// <inheritdoc />

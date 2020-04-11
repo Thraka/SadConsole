@@ -26,7 +26,7 @@
                 if (_libraryInstance != null) return _libraryInstance;
 
                 _libraryInstance = new Library();
-                _libraryInstance.Init();
+                _libraryInstance.ApplyDefaults();
 
                 return _libraryInstance;
             }
@@ -35,7 +35,7 @@
                 if (null == value)
                 {
                     _libraryInstance = new Library();
-                    _libraryInstance.Init();
+                    _libraryInstance.ApplyDefaults();
                 }
                 else
                     _libraryInstance = value;
@@ -74,14 +74,14 @@
             if (Default == null)
             {
                 Default = new Library(false);
-                Default.Init();
+                Default.ApplyDefaults();
             }
         }
 
         /// <summary>
         /// Seeds the library with the default themes.
         /// </summary>
-        protected void Init()
+        public void ApplyDefaults()
         {
             ControlsConsoleTheme = new ControlsConsoleTheme();
             WindowTheme = new WindowTheme();

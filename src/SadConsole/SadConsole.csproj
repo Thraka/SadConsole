@@ -4,17 +4,19 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <AssemblyVersion>8.99.0.0</AssemblyVersion>
-    <Version>8.99.0</Version>
+    <AssemblyVersion>8.99.1.0</AssemblyVersion>
+    <Version>8.99.1</Version>
+    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole (.NET Standard) for MonoGame</AssemblyTitle>
     <Description>A MonoGame library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.0</Description>
-    <Copyright>Copyright © 2019 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
     <PackageReleaseNotes>Fix xml docs</PackageReleaseNotes>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -53,6 +55,7 @@
     <EmbeddedResource Include="Resources\IBM8x16.png" />
     <EmbeddedResource Include="Resources\IBM.font" />
     <None Include="Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="Resources\icon.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>

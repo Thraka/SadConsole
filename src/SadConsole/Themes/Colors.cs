@@ -71,8 +71,16 @@ namespace SadConsole.Themes
         public Cell Appearance_ControlMouseDown;
         public Cell Appearance_ControlFocused;
 
+        /// <summary>
+        /// Creates a new colors object with the default blue theme of SadConsole.
+        /// </summary>
+        public Colors() =>
+            SetMemberValues();
 
-        public Colors()
+        /// <summary>
+        /// Sets the color values of all members, such as <see cref="Text"/>, to the current color values, and then calls <see cref="RebuildAppearances"/>.
+        /// </summary>
+        public void SetMemberValues()
         {
             TitleText = Orange;
 
@@ -171,6 +179,76 @@ namespace SadConsole.Themes
             Appearance_ControlMouseDown = Appearance_ControlMouseDown.Clone(),
             Appearance_ControlFocused = Appearance_ControlFocused.Clone(),
         };
+
+        /// <summary>
+        /// Creates a new colors object with the default blue colors theme of SadConsole.
+        /// </summary>
+        /// <returns>A colors object with the default colors.</returns>
+        public static Colors CreateDefault() =>
+            new Colors();
+
+        /// <summary>
+        /// Creates a new colors object with a standard black-based theme.
+        /// </summary>
+        /// <returns>A colors object based on classic ANSI colors.</returns>
+        public static Colors CreateAnsi()
+        {
+            // Create a new 
+            var colors = new Colors()
+            {
+                White = Color.White,
+                Black = Color.Black,
+                Gray = ColorAnsi.White,
+                GrayDark = (ColorAnsi.White * 0.50f).FillAlpha(),
+                Red = ColorAnsi.RedBright,
+                Green = ColorAnsi.GreenBright,
+                Blue = ColorAnsi.BlueBright,
+                Purple = ColorAnsi.MagentaBright,
+                Yellow = ColorAnsi.YellowBright,
+                Orange = Color.Orange,
+                Cyan = ColorAnsi.CyanBright,
+                Brown = ColorAnsi.Yellow,
+                RedDark = ColorAnsi.Red,
+                GreenDark = ColorAnsi.Green,
+                BlueDark = ColorAnsi.Blue,
+                PurpleDark = ColorAnsi.Magenta,
+                YellowDark = (ColorAnsi.YellowBright * 0.50f).FillAlpha(),
+                OrangeDark = Color.DarkOrange,
+                CyanDark = ColorAnsi.Cyan,
+                BrownDark = (ColorAnsi.Yellow * 0.50f).FillAlpha(),
+                Gold = Color.Goldenrod,
+                GoldDark = Color.DarkGoldenrod,
+                Silver = Color.Silver,
+                SilverDark = (Color.Silver * 0.50f).FillAlpha(),
+                Bronze = new Color(205, 127, 50),
+                BronzeDark = (new Color(205, 127, 50) * 0.50f).FillAlpha(),
+            };
+
+            // Set the default values for controls and control elements
+            colors.SetMemberValues();
+
+            // Overwrite some of the control elements
+            colors.TitleText = colors.Orange;
+            colors.TextBright = colors.White;
+            colors.Text = colors.Blue;
+            colors.TextSelected = colors.Yellow;
+            colors.TextSelectedDark = colors.YellowDark;
+            colors.TextLight = colors.Gray;
+            colors.TextDark = colors.GrayDark;
+            colors.TextFocused = colors.White;
+
+            colors.ControlBack = colors.Black;
+            colors.ControlBackLight = (colors.ControlBack * 1.3f).FillAlpha();
+            //colors.ControlBackSelected = GreenDark;
+            colors.ControlBackDark = (colors.ControlBack * 0.7f).FillAlpha();
+            colors.ControlHostBack = colors.Black;
+            colors.ControlHostFore = colors.Text;
+
+            // Rebuild the controls
+            colors.RebuildAppearances();
+
+            return colors;
+        }
     }
 }
 
