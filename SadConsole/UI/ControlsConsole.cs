@@ -22,7 +22,7 @@ namespace SadConsole.UI
         /// <summary>
         /// Raised when the console has been redrawn.
         /// </summary>
-        public event EventHandler Invalidated;
+        public event EventHandler<HandledEventArgs> Invalidated;
 
         /// <summary>
         /// Keyboard processor shared by all Controls Consoles.
@@ -39,7 +39,6 @@ namespace SadConsole.UI
         private ControlBase _focusedControl;
         private bool _wasFocusedBeforeCapture;
         private bool _exclusiveBeforeCapture;
-        private Themes.ControlsConsole _theme;
         private Themes.Colors _themeColors;
 
         /// <summary>
@@ -47,28 +46,10 @@ namespace SadConsole.UI
         /// </summary>
         protected bool UseGlobalKeyboardInput = false;
 
-        /// <summary>
-        /// When set to <see langword="true" /> indicates the console is in the middle of redrawing; otherwise <see langword="false" />.
-        /// </summary>
-        protected bool IsRedrawingTheme;
-
         #region Properties
 
         /// <summary>
-        /// Gets or sets the theme of the window.
-        /// </summary>
-        public Themes.ControlsConsole Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                IsDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the colors to use with the <see cref="Theme"/>.
+        /// Gets or sets the colors to use with drawing the console and controls.
         /// </summary>
         public Colors ThemeColors
         {
@@ -164,7 +145,7 @@ namespace SadConsole.UI
         public ControlsConsole(ICellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
 
         /// <summary>
-        /// Creates a console with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// Creates a console with the specified width and height, with <see cref="SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="SadRogue.Primitives.Color.White"/> for the foreground.
         /// </summary>
         /// <param name="width">The width of the console in cells.</param>
         /// <param name="height">The height of the console in cells.</param>
@@ -180,9 +161,6 @@ namespace SadConsole.UI
             UseMouse = true;
             AutoCursorOnFocus = false;
             DisableControlFocusing = false;
-
-            _theme = Library.Default.GetConsoleTheme(GetType());
-            OnIsDirtyChanged();
         }
 
         /// <summary>
@@ -199,17 +177,10 @@ namespace SadConsole.UI
             control.Parent = this;
             control.TabIndex = ControlsList.Count - 1;
 
-            control.IsDirtyChanged += ControlOnIsDirtyChanged;
-
             IsDirty = true;
 
             ReOrderControls();
         }
-
-        private void ControlOnIsDirtyChanged(object sender, EventArgs e) =>
-                // TODO: This is ineffecient and causes the listbox to hold mouse over visual status. Fix below
-                //if (sender is ControlBase control && control.IsDirty)
-                IsDirty = true;
 
         /// <summary>
         /// Removes a control from this console.
@@ -244,8 +215,6 @@ namespace SadConsole.UI
                 {
                     ControlsList.Remove(control);
                 }
-
-                control.IsDirtyChanged -= ControlOnIsDirtyChanged;
 
                 IsDirty = true;
 
@@ -524,7 +493,7 @@ namespace SadConsole.UI
         /// Returns the colors assigned to this console or the library default.
         /// </summary>
         /// <returns>The found colors.</returns>
-        public Colors FindThemeColors() =>
+        public Colors GetThemeColors() =>
             _themeColors ?? Library.Default.Colors;
 
         /// <summary>
@@ -587,39 +556,27 @@ namespace SadConsole.UI
                                            return 1;
                                        });
 
-        /// <inheritdoc />
-        protected override void OnIsDirtyChanged()
-        {
-            if (IsDirty && !IsRedrawingTheme)
-                RedrawTheme();
-        }
-
         /// <summary>
-        /// Causes the console to redraw the <see cref="Theme"/>.
+        /// Called when the console is redrawn. Clears the console and allows custom drawing prior to control drawing.
         /// </summary>
-        public virtual void RedrawTheme()
+        public virtual void OnInvalidated()
         {
-            IsRedrawingTheme = true;
-            IsDirty = true;
-            Theme?.Draw(this);
-            OnThemeDrawn();
-            RaiseInvalidated();
+            if (RaiseInvalidated()) return;
 
-            foreach (ControlBase control in ControlsList)
-                control.IsDirty = true;
-            IsRedrawingTheme = false;
+            var colors = GetThemeColors();
+
+            Surface.Fill(colors.ControlHostBack, colors.ControlHostFore, 0, 0);
         }
-
-        /// <summary>
-        /// Used for custom drawing. Called after the console's <see cref="ICellSurface.IsDirty"/> property is <see langword="true"/> and the <see cref="Theme"/> is redrawn.
-        /// </summary>
-        protected virtual void OnThemeDrawn() { }
 
         /// <summary>
         /// Riases the <see cref="Invalidated"/> event.
         /// </summary>
-        protected void RaiseInvalidated() =>
-            Invalidated?.Invoke(this, EventArgs.Empty);
+        protected bool RaiseInvalidated()
+        {
+            var args = new HandledEventArgs();
+            Invalidated?.Invoke(this, args);
+            return args.IsHandled;
+        }
 
         /// <summary>
         /// Calls the Update method of the base class and then Update on each control.
@@ -630,8 +587,16 @@ namespace SadConsole.UI
 
             base.Update();
 
-            foreach (ControlBase control in ControlsList)
+            foreach (ControlBase control in ControlsList.ToArray())
+            {
+                if (control.IsDirty)
+                    IsDirty = true;
+
                 control.Update(Global.UpdateFrameDelta);
+            }
+
+            if (IsDirty)
+                OnInvalidated();
         }
 
         /// <inheritdoc />

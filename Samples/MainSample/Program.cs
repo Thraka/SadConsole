@@ -14,7 +14,7 @@ namespace FeatureDemo
         private static void Main(string[] args)
         {
             //SadConsole.Settings.UseDefaultExtendedFont = true;
-
+            SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
             SadConsole.Game.Create(80, 25);
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
@@ -72,7 +72,6 @@ namespace FeatureDemo
             Global.Screen.Children.Add(MainConsole);
             // Initialize the windows
             //_characterWindow = new Windows.CharacterViewer();
-
         }
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent

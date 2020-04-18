@@ -33,10 +33,10 @@ namespace FeatureDemo
                 //new CustomConsole(new CustomConsoles.HexSurface(80 / 2, 23 / 2) { FontSize = SadConsole.Global.DefaultFont.GetFontSize(Font.Sizes.Two) }, "Hex surface", "Using a custom renderer and custom mouse logic to draw hex cells"),
                 //new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
 
+                new CustomConsole(new CustomConsoles.ControlsTest(), "Controls Test", "Interact with SadConsole controls"),
                 new CustomConsole(new CustomConsoles.AutoTypingConsole(), "Auto Typing", "Automatic typing to a console"),
                 new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
                 new CustomConsole(new CustomConsoles.BorderedConsole(), "Border Component", "A component that draws a border around a console"),
-                new CustomConsole(new CustomConsoles.ControlsTest(), "Controls Test", "Interact with SadConsole controls"),
                 new CustomConsole(new CustomConsoles.AnsiConsole(), "Ansi parsing", "Read in old DOS ANSI files."),
                 new CustomConsole(new CustomConsoles.StringParsingConsole(), "String Parser", "Examples of using the string parser"),
                 new CustomConsole(new CustomConsoles.ScrollableConsole(20, 10, 60), "Text scrolling", "Renders a tiny console with a cursor along with a scroll bar"),

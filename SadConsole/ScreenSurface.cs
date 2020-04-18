@@ -266,6 +266,7 @@ namespace SadConsole
         /// <param name="oldSurface">The previous surface.</param>
         protected void OnSurfaceChanged(ICellSurface oldSurface) { }
 
+        /// <inheritdoc/>
         [OnDeserialized]
         protected new void OnDeserializedMethod(StreamingContext context)
         {

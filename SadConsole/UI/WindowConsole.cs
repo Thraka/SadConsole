@@ -31,6 +31,32 @@ namespace SadConsole.UI
 
         private bool _isVisibleProcessing;
 
+        #region Theme related
+        /// <summary>
+        /// The Y coordinate of the title drawing area. This can be set to any value > 0 and &lt; the height.
+        /// </summary>
+        [DataMember]
+        public int TitleAreaY { get; set; }
+
+        /// <summary>
+        /// The X coordinate of the title drawing area. This is automatically set by the theme.
+        /// </summary>
+        [DataMember]
+        public int TitleAreaX { get; set; }
+
+        /// <summary>
+        /// The width of the title drawing area. This is automatically set by the theme.
+        /// </summary>
+        [DataMember]
+        public int TitleAreaLength { get; set; }
+
+        /// <summary>
+        /// The line sytle for the border.
+        /// </summary>
+        [DataMember]
+        public int[] BorderLineStyle { get; set; }
+        #endregion
+
         /// <summary>
         /// The mouse state of the previous update frame.
         /// </summary>
@@ -159,22 +185,6 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
         }
 
-        /// <summary>
-        /// Causes the window to be redrawn with the selected <see cref="ControlsConsole.Theme"/>. When overridden, call this method first.
-        /// </summary>
-        public override void RedrawTheme()
-        {
-            IsRedrawingTheme = true;
-            IsDirty = true;
-            Theme?.Draw(this);
-            OnThemeDrawn();
-            RaiseInvalidated();
-
-            foreach (ControlBase control in ControlsList)
-                control.IsDirty = true;
-            IsRedrawingTheme = false;
-        }
-
         /// <inheritdoc />
         public override bool ProcessMouse(MouseScreenObjectState state)
         {
@@ -183,12 +193,7 @@ namespace SadConsole.UI
                 return false;
             }
 
-            var theme = Theme as Themes.Window;
-
-            if (theme == null)
-                return false;
-
-            if (!CanDrag || theme.TitleAreaLength == 0)
+            if (!CanDrag || TitleAreaLength == 0)
             {
                 PreviousMouseInfo = state;
                 return base.ProcessMouse(state);
@@ -224,7 +229,7 @@ namespace SadConsole.UI
             // Left button freshly down and we're not already dragging, check to see if in title
             if (CapturedControl == null && state.IsOnScreenObject && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
             {
-                if (state.CellPosition.Y == theme.TitleAreaY && state.CellPosition.X >= theme.TitleAreaX && state.CellPosition.X < theme.TitleAreaX + theme.TitleAreaLength)
+                if (state.CellPosition.Y == TitleAreaY && state.CellPosition.X >= TitleAreaX && state.CellPosition.X < TitleAreaX + TitleAreaLength)
                 {
                     PreviousMouseExclusiveDrag = IsExclusiveMouse;
 
@@ -250,6 +255,65 @@ namespace SadConsole.UI
 
             PreviousMouseInfo = state;
             return base.ProcessMouse(state);
+        }
+
+        /// <inheritdoc/>
+        public override void OnInvalidated()
+        {
+            if (RaiseInvalidated()) return;
+
+            var themeColors = GetThemeColors();
+
+            var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
+            var titleStyle = new ColoredGlyph(themeColors.TitleText, fillStyle.Background, fillStyle.Glyph);
+            var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
+
+            DefaultForeground = fillStyle.Foreground;
+            DefaultBackground = fillStyle.Background;
+            Surface.Fill(DefaultForeground, DefaultBackground, fillStyle.Glyph, null);
+
+            if (BorderLineStyle != null)
+                Surface.DrawBox(new Rectangle(0, 0, Width, Height),
+                                new ColoredGlyph(borderStyle.Foreground, borderStyle.Background, 0),
+                                null, BorderLineStyle);
+
+            // Draw title
+            string adjustedText = "";
+            int adjustedWidth = Width - 2;
+            TitleAreaLength = 0;
+            TitleAreaX = 0;
+
+            if (!string.IsNullOrEmpty(Title))
+            {
+                if (Title.Length > adjustedWidth)
+                {
+                    adjustedText = Title.Substring(0, Title.Length - (Title.Length - adjustedWidth));
+                }
+                else
+                {
+                    adjustedText = Title;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(adjustedText))
+            {
+                TitleAreaLength = adjustedText.Length;
+
+                if (TitleAlignment == HorizontalAlignment.Left)
+                {
+                    TitleAreaX = 1;
+                }
+                else if (TitleAlignment == HorizontalAlignment.Center)
+                {
+                    TitleAreaX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
+                }
+                else
+                {
+                    TitleAreaX = Width - 1 - adjustedText.Length;
+                }
+
+                Surface.Print(TitleAreaX, TitleAreaY, adjustedText, titleStyle);
+            }
         }
 
         /// <summary>

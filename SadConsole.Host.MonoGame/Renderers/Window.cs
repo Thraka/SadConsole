@@ -32,10 +32,10 @@ namespace SadConsole.Renderers
         public override void Render(ISurfaceRenderData screen)
         {
             var console = (SadConsole.UI.Window)screen;
-            var theme = (SadConsole.UI.Themes.Window)console.Theme;
+            var colors = console.GetThemeColors();
 
-            if (console.IsModal && theme.ModalTint.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(theme.ModalTint.ToMonoColor(), ((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture, new Microsoft .Xna.Framework.Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
+            if (console.IsModal && colors.ModalBackground.A != 0)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToMonoColor(), ((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture, new Microsoft .Xna.Framework.Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
 
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
