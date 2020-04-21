@@ -14,8 +14,9 @@ Console
 - FontSize property is a point x,y size now no longer the enum. Use Font.GetFontSize
 
 ControlsConsole/Window
-- Invalidate -> OnThemeDrawn
+- Invalidate -> OnInvalidated
 - ViewPort -> View
+- Themes removed
 
 ScrollingConsole -> Console
 - ViewPort -> View
