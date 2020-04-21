@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Thraka",
+    "classifications": [
+        "Console",
+        "SadConsole"
+    ],
+    "identity": "SadConsole.v8.Console.CSharp",
+    "groupIdentity":"SadConsole.v8.Console",
+    "name": "SadConsole v8 Console Class",
+    "sourceName": "MyConsole",
+    "shortName": "sadconsole8console",
+    "tags": {
+        "language": "C#",
+        "type": "item"
+    },
+    "symbols":{
+        "width": {
+            "type": "parameter",
+            "description": "The width of the console in cells.",
+            "defaultValue": "80",
+            "replaces":"80",
+            "datatype": "int",
+            "isRequired": false
+        },
+        "height": {
+            "type": "parameter",
+            "description": "The height of the console in cells.",
+            "defaultValue": "25",
+            "replaces":"25",
+            "datatype": "int",
+            "isRequired": false
+        },
+        "namespace": {
+            "type": "parameter",
+            "description": "The namespace to use for the class.",
+            "defaultValue": "MyGame",
+            "replaces":"MyGame",
+            "datatype":"text",
+            "isRequired": false
+        }
+    }
+}

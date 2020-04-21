@@ -1,0 +1,21 @@
+﻿{
+  "Name": "$fontName",
+  "FilePath": "$graphicFile",
+  "GlyphHeight": $glyphHeight,
+  "GlyphWidth": $glyphWidth,
+  "GlyphPadding": 0,
+  "SolidGlyphIndex": $solidGlyph,
+  "Columns": $cols,
+  "Rows": $rows,
+  "IsSadExtended": false,
+  "GlyphDefinitions": {
+    "underline": {
+      "Glyph": 95,
+      "Mirror": 0
+    },
+    "strikethrough": {
+      "Glyph": 196,
+      "Mirror": 0
+    }
+  }
+}

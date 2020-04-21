@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageId>SadConsole.Templates</PackageId>
+    <Title>SadConsole Game Templates</Title>
+    <Authors>Thraka</Authors>
+    <Description>Templates to create new SadConsole projects</Description>
+    <PackageTags>dotnet-new;templates;template;sadconsole;roguelike;roguelikes;sadrogue;thesadrogue</PackageTags>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="template_code\**\*" Exclude="template_code\**\bin\**;template_code\**\obj\**" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>

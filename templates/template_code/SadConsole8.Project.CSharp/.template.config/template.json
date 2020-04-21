@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Thraka",
+    "classifications": [
+        "Console",
+        "Roguelike",
+        "SadConsole"
+    ],
+    "identity": "SadConsole.v8.Project.CSharp",
+    "groupIdentity":"SadConsole.v8.Project",
+    "name": "SadConsole v8 Game",
+    "shortName": "sadconsole8",
+    "preferNameDirectory": true,
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "MyGame"
+}
