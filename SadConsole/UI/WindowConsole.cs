@@ -258,7 +258,7 @@ namespace SadConsole.UI
         }
 
         /// <inheritdoc/>
-        public override void OnInvalidated()
+        protected override void OnInvalidated()
         {
             if (RaiseInvalidated()) return;
 

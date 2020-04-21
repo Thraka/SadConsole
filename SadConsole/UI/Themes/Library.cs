@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
-using System.Linq;
 
 namespace SadConsole.UI.Themes
 {
@@ -14,6 +13,7 @@ namespace SadConsole.UI.Themes
     {
         private static Library _libraryInstance;
 
+        [DataMember(Name = "ControlThemes")]
         private Dictionary<System.Type, ThemeBase> _controlThemes;
 
         /// <summary>

@@ -559,7 +559,7 @@ namespace SadConsole.UI
         /// <summary>
         /// Called when the console is redrawn. Clears the console and allows custom drawing prior to control drawing.
         /// </summary>
-        public virtual void OnInvalidated()
+        protected virtual void OnInvalidated()
         {
             if (RaiseInvalidated()) return;
 

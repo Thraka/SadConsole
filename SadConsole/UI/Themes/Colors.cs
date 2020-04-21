@@ -290,7 +290,7 @@ namespace SadConsole.UI.Themes
         /// Creates a new colors object with a standard black-based theme.
         /// </summary>
         /// <returns></returns>
-        public static Colors CreateFromAnsi()
+        public static Colors CreateAnsi()
         {
             // Create a new 
             var colors = new Colors()
