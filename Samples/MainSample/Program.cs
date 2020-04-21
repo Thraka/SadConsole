@@ -8,7 +8,7 @@ namespace FeatureDemo
 {
     internal class Program
     {
-        //private static Windows.CharacterViewer _characterWindow;
+        private static Windows.CharacterViewer _characterWindow;
         private static Container MainConsole;
 
         private static void Main(string[] args)
@@ -36,7 +36,7 @@ namespace FeatureDemo
                 }
                 else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F2))
                 {
-                    //_characterWindow.Show(true);
+                    _characterWindow.Show(true);
                 }
                 else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F3))
                 {
@@ -70,8 +70,9 @@ namespace FeatureDemo
             // We'll instead use our demo consoles that show various features of SadConsole.
             Global.Screen.Renderer = null;
             Global.Screen.Children.Add(MainConsole);
+
             // Initialize the windows
-            //_characterWindow = new Windows.CharacterViewer();
+            _characterWindow = new Windows.CharacterViewer();
         }
 
         class MouseTest : SadConsole.Components.MouseConsoleComponent

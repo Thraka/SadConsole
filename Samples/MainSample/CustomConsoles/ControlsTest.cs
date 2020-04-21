@@ -199,7 +199,6 @@ namespace FeatureDemo.CustomConsoles
         }
 
 
-
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if (info.IsKeyReleased(Keys.C))
@@ -228,7 +227,7 @@ namespace FeatureDemo.CustomConsoles
 
         public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState state) => base.ProcessMouse(state);
 
-        public override void OnInvalidated()
+        protected override void OnInvalidated()
         {
             var colors = GetThemeColors();
 
