@@ -23,7 +23,7 @@ namespace Game.SadConsoleComponents
             TickThisFrame = true;
         }
 
-        public override void Update(IScreenObject host)
+        public override void Update(IScreenObject host, TimeSpan delta)
         {
             var world = (Game.Screens.WorldPlay)host;
 
@@ -31,7 +31,7 @@ namespace Game.SadConsoleComponents
 
             if (!world.IsTickerPaused)
             {
-                _timer.Update(host);
+                _timer.Update(host, delta);
             }
         }
     }

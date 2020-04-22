@@ -16,7 +16,7 @@ namespace SadConsole.MonoGame
             private readonly Console surface;
             private int frameRate = 0;
             private int frameCounter = 0;
-            private TimeSpan elapsedTime = TimeSpan.Zero;
+            private TimeSpan delta = TimeSpan.Zero;
 
 
             public FPSCounterComponent(Microsoft.Xna.Framework.Game game)
@@ -32,11 +32,11 @@ namespace SadConsole.MonoGame
 
             public override void Update(GameTime gameTime)
             {
-                elapsedTime += gameTime.ElapsedGameTime;
+                delta += gameTime.ElapsedGameTime;
 
-                if (elapsedTime > TimeSpan.FromSeconds(1))
+                if (delta > TimeSpan.FromSeconds(1))
                 {
-                    elapsedTime -= TimeSpan.FromSeconds(1);
+                    delta -= TimeSpan.FromSeconds(1);
                     frameRate = frameCounter;
                     frameCounter = 0;
                 }
@@ -48,7 +48,7 @@ namespace SadConsole.MonoGame
                 frameCounter++;
                 surface.Clear();
                 surface.Print(0, 0, $"fps: {frameRate}", Color.White, Color.Black);
-                surface.Draw();
+                surface.Draw(gameTime.ElapsedGameTime);
                 
                 Game.GraphicsDevice.SetRenderTarget(null);
                 Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);

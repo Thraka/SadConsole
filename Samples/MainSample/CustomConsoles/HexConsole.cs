@@ -84,9 +84,9 @@ namespace FeatureDemo.CustomConsoles
             return true;
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
-            base.Update();
+            base.Update(delta);
         }
 
         private void FillHexes(int index, int glyphIndex, bool isHexRow)

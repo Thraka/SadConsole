@@ -175,7 +175,7 @@ namespace Game
         private void WritePrompt() =>
                 _console.Cursor.NewLine().Print("READY.").NewLine();
 
-        public void Update(IScreenObject host)
+        public void Update(IScreenObject host, System.TimeSpan delta)
         {
             if (BASICExecutor.IsExecuting)
             {
@@ -191,7 +191,7 @@ namespace Game
             throw new System.NotImplementedException();
 
         
-        public void Draw(IScreenObject host) { }
+        public void Draw(IScreenObject host, System.TimeSpan delta) { }
 
 
 

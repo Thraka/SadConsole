@@ -66,7 +66,7 @@ namespace SadConsole.Instructions
         }
 
         /// <inheritdoc />
-        public override void Update(IScreenObject componentHost)
+        public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             if (!FadeAnimationSettings.IsStarted)
             {
@@ -85,7 +85,7 @@ namespace SadConsole.Instructions
 
             _objectSurface.Tint = Colors.Lerp((float)FadeAnimationSettings.CurrentValue);
 
-            base.Update(componentHost);
+            base.Update(componentHost, delta);
         }
 
         /// <summary>

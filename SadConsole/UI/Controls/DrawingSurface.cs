@@ -10,9 +10,9 @@ namespace SadConsole.UI.Controls
     public class DrawingSurface : ControlBase
     {
         /// <summary>
-        /// 
+        /// Called when the surface is redrawn.
         /// </summary>
-        public Action<DrawingSurface> OnDraw { get; set; }
+        public Action<DrawingSurface, TimeSpan> OnDraw { get; set; }
 
         /// <summary>
         /// Creates a new drawing surface control with the specified width and height.

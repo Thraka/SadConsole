@@ -70,13 +70,13 @@ namespace FeatureDemo.CustomConsoles
             _borderConsole = null;
         }
 
-        public void Draw(IScreenObject console) => throw new NotImplementedException();
+        public void Draw(IScreenObject console, TimeSpan delta) => throw new NotImplementedException();
 
         public void ProcessKeyboard(IScreenObject console, Keyboard info, out bool handled) => throw new NotImplementedException();
 
         public void ProcessMouse(IScreenObject console, MouseScreenObjectState state, out bool handled) => throw new NotImplementedException();
 
-        public void Update(IScreenObject console) => throw new NotImplementedException();
+        public void Update(IScreenObject console, TimeSpan delta) => throw new NotImplementedException();
     }
 
     internal class BorderedConsole : Console

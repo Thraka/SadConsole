@@ -208,8 +208,9 @@ namespace SadConsole
         /// <summary>
         /// Draws the <see cref="Surface"/> and all <see cref="ScreenObject.SadComponents"/> and <see cref="ScreenObject.Children"/>.
         /// </summary>
+        /// <param name="delta">The time that has elapsed since the last call.</param>
         /// <remarks>Only processes if <see cref="ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
-        public override void Draw()
+        public override void Draw(TimeSpan delta)
         {
             if (!IsVisible) return;
 
@@ -221,27 +222,28 @@ namespace SadConsole
             }
 
             foreach (IComponent component in ComponentsDraw.ToArray())
-                component.Draw(this);
+                component.Draw(this, delta);
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Draw();
+                child.Draw(delta);
         }
 
         /// <summary>
         /// Updates the <see cref="Surface"/> effects and all <see cref="ScreenObject.SadComponents"/> and <see cref="ScreenObject.Children"/>.
         /// </summary>
+        /// <param name="delta">The time that has elapsed since this method was last called.</param>
         /// <remarks>Only processes if <see cref="ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             if (!IsEnabled) return;
 
-            Surface.Effects.UpdateEffects(Global.UpdateFrameDelta.TotalSeconds);
+            Surface.Effects.UpdateEffects(delta.TotalSeconds);
 
             foreach (IComponent component in ComponentsUpdate.ToArray())
-                component.Update(this);
+                component.Update(this, delta);
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Update();
+                child.Update(delta);
         }
 
         private void _isDirtyChangedEventHadler(object sender, EventArgs e) =>

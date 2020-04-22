@@ -46,7 +46,7 @@ namespace SadConsole.UI
 
             var printArea = new DrawingSurface(window.Width, window.Height)
             {
-                OnDraw = (ds) =>
+                OnDraw = (ds, time) =>
                 {
                     if (!ds.IsDirty) return;
                     ColoredGlyph appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;
@@ -129,7 +129,7 @@ namespace SadConsole.UI
 
             var printArea = new DrawingSurface(window.Width, window.Height)
             {
-                OnDraw = (ds) =>
+                OnDraw = (ds, time) =>
                 {
                     if (!ds.IsDirty) return;
                     ColoredGlyph appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;

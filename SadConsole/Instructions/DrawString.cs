@@ -75,7 +75,7 @@ namespace SadConsole.Instructions
         }
 
         /// <inheritdoc />
-        public override void Update(IScreenObject componentHost)
+        public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             if (!_started)
             {
@@ -92,7 +92,7 @@ namespace SadConsole.Instructions
                 if (_textCopy.Length == 0)
                 {
                     IsFinished = true;
-                    base.Update(componentHost);
+                    base.Update(componentHost, delta);
                     return;
                 }
 
@@ -113,7 +113,7 @@ namespace SadConsole.Instructions
             }
             else
             {
-                _timeElapsed += Global.UpdateFrameDelta.TotalSeconds;
+                _timeElapsed += delta.TotalSeconds;
                 if (_timeElapsed >= _timePerCharacter)
                 {
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
@@ -135,7 +135,7 @@ namespace SadConsole.Instructions
                 }
             }
 
-            base.Update(componentHost);
+            base.Update(componentHost, delta);
         }
 
         /// <inheritdoc />

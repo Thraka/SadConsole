@@ -109,9 +109,9 @@ namespace FeatureDemo.Windows
 
             _characterSurface = new DrawingSurface(16, 16);
             _characterSurface.Position = new Point(1, 1);
-            _characterSurface.OnDraw = (ds) =>
+            _characterSurface.OnDraw = (ds, time) =>
             {
-                ds.Surface.Effects.UpdateEffects(Global.UpdateFrameDelta.TotalMilliseconds);
+                ds.Surface.Effects.UpdateEffects(time.TotalSeconds);
 
                 if (hasDrawn) return;
 

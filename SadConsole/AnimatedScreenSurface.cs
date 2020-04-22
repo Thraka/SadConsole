@@ -264,12 +264,13 @@ namespace SadConsole
         /// <summary>
         /// Updates the animation frames and calls update on the base class.
         /// </summary>
-        public override void Update()
+        /// <param name="delta">The time that has elapsed since this method was last called.</param>
+        public override void Update(TimeSpan delta)
         {
             if (IsPlaying && TimePerFrame != 0)
             {
                 // TODO: Evaluate if we should change this to calculate current frame based on total time passed, \\not calculate frame based on individual frame duration on screen.
-                AddedTime += Global.UpdateFrameDelta.TotalSeconds;
+                AddedTime += delta.TotalSeconds;
 
                 if (AddedTime > TimePerFrame)
                 {
@@ -296,7 +297,7 @@ namespace SadConsole
                 }
             }
 
-            base.Update();
+            base.Update(delta);
         }
 
         /// <summary>

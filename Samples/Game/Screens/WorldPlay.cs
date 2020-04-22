@@ -71,13 +71,13 @@ namespace Game.Screens
             return base.ProcessMouse(state);
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             if (GameBoard == null) return;
 
             // Update any tick/component on this world object.
             foreach (var component in ComponentsUpdate.ToArray())
-                component.Update(this);
+                component.Update(this, delta);
 
             if (_tempPositionMovementValue == Direction.None)
             {
@@ -115,7 +115,7 @@ namespace Game.Screens
             }
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Update();
+                child.Update(delta);
         }
     }
 

@@ -81,7 +81,7 @@ namespace SadConsole.Entities
         protected override void OnVisibleChanged() => Rebuild();
 
         /// <inheritdoc />
-        public override void Draw()
+        public override void Draw(TimeSpan delta)
         {
             // TODO verify zone works.
             if (IsVisible && Parent != null)
@@ -114,7 +114,7 @@ namespace SadConsole.Entities
 
             }
 
-            base.Draw();
+            base.Draw(delta);
         }
 
         private void Rebuild()

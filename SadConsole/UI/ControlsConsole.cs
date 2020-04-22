@@ -41,11 +41,6 @@ namespace SadConsole.UI
         private bool _exclusiveBeforeCapture;
         private Themes.Colors _themeColors;
 
-        /// <summary>
-        /// When set to false, uses the static <see cref="ControlsConsole.KeyboardState"/> keyboard instead of <see cref="Global.KeyboardState"/>
-        /// </summary>
-        protected bool UseGlobalKeyboardInput = false;
-
         #region Properties
 
         /// <summary>
@@ -581,18 +576,19 @@ namespace SadConsole.UI
         /// <summary>
         /// Calls the Update method of the base class and then Update on each control.
         /// </summary>
-        public override void Update()
+        /// <param name="delta">The time that has elapsed since this method was last called.</param>
+        public override void Update(TimeSpan delta)
         {
             if (!IsEnabled) return;
 
-            base.Update();
+            base.Update(delta);
 
             foreach (ControlBase control in ControlsList.ToArray())
             {
                 if (control.IsDirty)
                     IsDirty = true;
 
-                control.Update(Global.UpdateFrameDelta);
+                control.Update(delta);
             }
 
             if (IsDirty)
@@ -600,11 +596,11 @@ namespace SadConsole.UI
         }
 
         /// <inheritdoc />
-        public override void Draw()
+        public override void Draw(TimeSpan delta)
         {
             if (!IsVisible) return;
 
-            base.Draw();
+            base.Draw(delta);
         }
 
         /// <summary>
@@ -613,13 +609,6 @@ namespace SadConsole.UI
         /// <param name="info">Keyboard information sent by the engine.</param>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            if (!UseGlobalKeyboardInput)
-            {
-                KeyboardState.Update(Global.UpdateFrameDelta);
-                info = KeyboardState;
-            }
-
-
             if (!UseKeyboard) return false;
 
             foreach (Components.IComponent component in ComponentsKeyboard.ToArray())

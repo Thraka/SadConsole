@@ -28,13 +28,13 @@ namespace SadConsole.Instructions
             _instructions = instructions;
 
         /// <inheritdoc />
-        public override void Update(IScreenObject componentHost)
+        public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             bool stillRunning = false;
 
             foreach (InstructionBase item in _instructions)
             {
-                item.Update(componentHost);
+                item.Update(componentHost, delta);
 
                 if (!item.IsFinished)
                 {
@@ -44,7 +44,7 @@ namespace SadConsole.Instructions
 
             IsFinished = !stillRunning;
 
-            base.Update(componentHost);
+            base.Update(componentHost, delta);
         }
 
         /// <inheritdoc />

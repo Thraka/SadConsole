@@ -26,7 +26,7 @@ namespace SadConsole.Components
 
 
         /// <inheritdoc />
-        public override void Update(IScreenObject hostObject)
+        public override void Update(IScreenObject hostObject, TimeSpan delta)
         {
             var host = (Entity)hostObject;
 

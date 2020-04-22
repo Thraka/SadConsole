@@ -56,18 +56,19 @@ namespace FeatureDemo.CustomConsoles
             _controlsContainer.IsVisible = this.IsVisible;
         }
 
-        public override void Draw()
+        /// <inheritdoc />
+        public override void Draw(TimeSpan delta)
         {
             // Draw our console and then draw the scroll bar.
-            base.Draw();
-            _controlsContainer.Draw();
+            base.Draw(delta);
+            _controlsContainer.Draw(delta);
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             // Update our console and then update the scroll bar
-            base.Update();
-            _controlsContainer.Update();
+            base.Update(delta);
+            _controlsContainer.Update(delta);
 
             //If cursor position exceeds our displayable content viewport, 
             //move the ScrollOffset automatically to display new content.

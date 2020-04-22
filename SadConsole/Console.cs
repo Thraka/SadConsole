@@ -108,14 +108,14 @@ namespace SadConsole
         }
 
         ///  <inheritdoc/>
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             if (!IsEnabled) return;
 
-            base.Update();
+            base.Update(delta);
 
             if (!IsCursorDisabled && Cursor.IsVisible)
-                Cursor.Update(Global.UpdateFrameDelta);
+                Cursor.Update(delta);
         }
 
         /// <inheritdoc />

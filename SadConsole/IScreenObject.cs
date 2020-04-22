@@ -95,8 +95,9 @@ namespace SadConsole
         /// <summary>
         /// Draws all <see cref="SadComponents"/> and <see cref="Children"/>.
         /// </summary>
+        /// <param name="delta">The time that has elapsed since the last call.</param>
         /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
-        void Draw();
+        void Draw(TimeSpan delta);
 
         /// <summary>
         /// Called when this object is focused.
@@ -145,8 +146,9 @@ namespace SadConsole
         /// <summary>
         /// Updates all <see cref="SadComponents"/> and <see cref="Children"/>.
         /// </summary>
+        /// <param name="delta">The time that has elapsed since the last call.</param>
         /// <remarks>Only processes if <see cref="IsEnabled"/> is <see langword="true"/>.</remarks>
-        void Update();
+        void Update(TimeSpan delta);
 
         /// <summary>
         /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.

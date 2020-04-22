@@ -24,11 +24,11 @@ namespace SadConsole.Instructions
         private PredicateInstruction() { }
 
         /// <inheritdoc />
-        public override void Update(IScreenObject componentHost)
+        public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             IsFinished = _callback();
 
-            base.Update(componentHost);
+            base.Update(componentHost, delta);
         }
 
         /// <summary>

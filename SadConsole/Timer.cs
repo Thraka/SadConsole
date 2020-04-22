@@ -46,11 +46,11 @@ namespace SadConsole
         /// </summary>
         /// <param name="console">The parent object.</param>
         /// <param name="delta">The time since the last frame update.</param>
-        public override void Update(IScreenObject console)
+        public override void Update(IScreenObject console, TimeSpan delta)
         {
             if (!IsPaused)
             {
-                _countedTime += Global.UpdateFrameDelta;
+                _countedTime += delta;
 
                 if (_countedTime >= TimerAmount)
                 {

@@ -42,7 +42,7 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Runs the instruction set. Once all instructions are finished, this set will set the <see cref="InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
         /// </summary>
-        public override void Update(IScreenObject componentHost)
+        public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             if (!IsFinished && Instructions.Count != 0)
             {
@@ -51,7 +51,7 @@ namespace SadConsole.Instructions
                     _currentInstructionNode = Instructions.First;
                 }
 
-                _currentInstructionNode.Value.Update(componentHost);
+                _currentInstructionNode.Value.Update(componentHost, delta);
 
                 if (_currentInstructionNode.Value.IsFinished)
                 {
@@ -68,7 +68,7 @@ namespace SadConsole.Instructions
                 IsFinished = true;
             }
 
-            base.Update(componentHost);
+            base.Update(componentHost, delta);
         }
 
         /// <summary>

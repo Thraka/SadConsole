@@ -142,7 +142,7 @@ namespace SadConsole
                         }
                     }
 
-                    SadConsole.Global.Screen?.Update();
+                    SadConsole.Global.Screen?.Update(SadConsole.Global.UpdateFrameDelta);
                     
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
 
@@ -158,7 +158,7 @@ namespace SadConsole
                     SadConsole.Game.Instance.DrawCalls.Clear();
 
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    SadConsole.Global.Screen?.Draw();
+                    SadConsole.Global.Screen?.Draw(SadConsole.Global.DrawFrameDelta);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
 

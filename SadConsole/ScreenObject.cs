@@ -207,27 +207,27 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public virtual void Draw()
+        public virtual void Draw(TimeSpan delta)
         {
             if (!IsVisible) return;
 
             foreach (IComponent component in ComponentsDraw.ToArray())
-                component.Draw(this);
+                component.Draw(this, delta);
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Draw();
+                child.Draw(delta);
         }
 
         /// <inheritdoc/>
-        public virtual void Update()
+        public virtual void Update(TimeSpan delta)
         {
             if (!IsEnabled) return;
 
             foreach (IComponent component in ComponentsUpdate.ToArray())
-                component.Update(this);
+                component.Update(this, delta);
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Update();
+                child.Update(delta);
         }
 
         /// <inheritdoc/>

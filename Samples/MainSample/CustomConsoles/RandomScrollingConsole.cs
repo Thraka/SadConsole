@@ -34,7 +34,8 @@ namespace FeatureDemo.CustomConsoles
             }
         }
 
-        public override void Draw()
+        /// <inheritdoc />
+        public override void Draw(TimeSpan delta)
         {
             // These 3 render calls are a hack to get the console data generated and display a message to the user
             // Should add in async calls that let us generate these in the background... That would be cool.
@@ -42,16 +43,16 @@ namespace FeatureDemo.CustomConsoles
             {
                 if (!initialized)
                 {
-                    base.Draw();
+                    base.Draw(delta);
                 }
                 else if (!initializedStep2)
                 {
                     initializedStep2 = true;
-                    base.Draw();
+                    base.Draw(delta);
                 }
                 else if (!initializedStep3)
                 {
-                    base.Draw();
+                    base.Draw(delta);
 
                     mainData.SadComponents.Clear();
 
@@ -74,7 +75,7 @@ namespace FeatureDemo.CustomConsoles
                     //messageData.Print(0, 0, $"{ViewArea.X} , {ViewArea.Y}            ", Color.White, Color.Black);
 
                     // Create a faux layering system.
-                    base.Draw();
+                    base.Draw(delta);
 
                     //Renderer.Render(messageData.TextSurface, new Point(0, 0));
                 }

@@ -146,7 +146,7 @@
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.IsPlaying">
             <summary>
-            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedScreenSurface.Update"/> method will advance the frames.
+            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedScreenSurface.Update(System.TimeSpan)"/> method will advance the frames.
             </summary>
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.AnimationDuration">
@@ -238,10 +238,11 @@
             Restarts the animation from the first frame.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.Update">
+        <member name="M:SadConsole.AnimatedScreenSurface.Update(System.TimeSpan)">
             <summary>
             Updates the animation frames and calls update on the base class.
             </summary>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.ToString">
             <summary>
@@ -1740,7 +1741,7 @@
         <member name="M:SadConsole.Components.EntityComponentParentViewSync.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Components.EntityComponentParentViewSync.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.EntityComponentParentViewSync.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Components.EntityComponentParentViewSync.OnRemoved(SadConsole.IScreenObject)">
@@ -1758,12 +1759,12 @@
         </member>
         <member name="P:SadConsole.Components.IComponent.IsUpdate">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsDraw">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsMouse">
@@ -1776,17 +1777,19 @@
             When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> method.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed from the last call to this component.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed from the last call to this component.</param>
         </member>
         <member name="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
             <summary>
@@ -1818,7 +1821,7 @@
         </member>
         <member name="T:SadConsole.Components.UpdateComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.UpdateComponent.SortOrder">
@@ -1826,11 +1829,12 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
         </member>
         <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
@@ -1840,7 +1844,7 @@
         </member>
         <member name="T:SadConsole.Components.DrawComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.DrawComponent.SortOrder">
@@ -1848,11 +1852,12 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed from the last call to this component.</param>
         </member>
         <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
@@ -1942,7 +1947,7 @@
         </member>
         <member name="T:SadConsole.Components.LogicComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject)"/> and <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> and <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.LogicComponent.SortOrder">
@@ -1950,17 +1955,19 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed from the last call to this component.</param>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.LogicComponent.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the update frame.
             </summary>
             <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed from the last call to this component.</param>
         </member>
         <member name="M:SadConsole.Components.LogicComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
@@ -1988,10 +1995,10 @@
         <member name="P:SadConsole.Components.ComponentBase.IsKeyboard">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Components.ComponentBase.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
@@ -2019,7 +2026,7 @@
         <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.OnRemoved(SadConsole.IScreenObject)">
@@ -2038,7 +2045,7 @@
         <member name="M:SadConsole.Components.SurfaceComponentFollowTarget.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Components.SurfaceComponentFollowTarget.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.SurfaceComponentFollowTarget.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Console">
@@ -2119,7 +2126,7 @@
         <member name="M:SadConsole.Console.OnVisibleChanged">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Console.Update">
+        <member name="M:SadConsole.Console.Update(System.TimeSpan)">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
@@ -2957,6 +2964,9 @@
         <member name="M:SadConsole.Entities.Hotspot.OnVisibleChanged">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.Entities.Hotspot.Draw(System.TimeSpan)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Entities.Zone">
             <summary>
             Defines an area for a scene.
@@ -2991,7 +3001,7 @@
         <member name="M:SadConsole.Entities.Zone.OnVisibleChanged">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Entities.Zone.Draw">
+        <member name="M:SadConsole.Entities.Zone.Draw(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,System.Int32,System.Int32)">
@@ -5129,7 +5139,7 @@
             </summary>
             <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
         </member>
-        <member name="M:SadConsole.Instructions.CodeInstruction.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.CodeInstruction.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.CodeInstruction.SetCallback(System.Func{SadConsole.IScreenObject,System.Boolean})">
@@ -5154,7 +5164,7 @@
             </summary>
             <param name="instructions">The instructions</param>
         </member>
-        <member name="M:SadConsole.Instructions.ConcurrentInstructions.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.ConcurrentInstructions.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.ConcurrentInstructions.Repeat">
@@ -5197,16 +5207,16 @@
         </member>
         <member name="M:SadConsole.Instructions.DrawString.#ctor(SadConsole.ColoredString)">
             <summary>
-            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject)"/>.
+            Draws a string on the surface passed to <see cref="!:Update(IScreenObject)"/>.
             </summary>
             <param name="text"></param>
         </member>
         <member name="M:SadConsole.Instructions.DrawString.#ctor">
             <summary>
-            Draws a string on the surface passed to <see cref="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject)"/>. <see cref="P:SadConsole.Instructions.DrawString.Text"/> must be set manually.
+            Draws a string on the surface passed to <see cref="!:Update(IScreenObject)"/>. <see cref="P:SadConsole.Instructions.DrawString.Text"/> must be set manually.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.DrawString.Repeat">
@@ -5253,7 +5263,7 @@
               - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.FadeAnimationSettings"/>: 1 second
             </remarks>
         </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Reset">
@@ -5283,7 +5293,7 @@
         </member>
         <member name="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished">
             <summary>
-            When true, this instruction will automatically remove itself from the parent's <see cref="!:SadConsole.Console.Components"/> collection.
+            When true, this instruction will automatically remove itself from the parent's <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection.
             </summary>
         </member>
         <member name="P:SadConsole.Instructions.InstructionBase.IsFinished">
@@ -5308,10 +5318,12 @@
             Repeats the current instruction. Decrements the <see cref="P:SadConsole.Instructions.InstructionBase.RepeatCount"/> value (if applicable), and raises the <see cref="E:SadConsole.Instructions.InstructionBase.Repeating"/> event. This method should be overridden in derived classes to customize how the object is reset for a repeat.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.InstructionBase.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.InstructionBase.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
             </summary>
+            <param name="componentHost">The object that hosts this instruction.</param>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
         </member>
         <member name="M:SadConsole.Instructions.InstructionBase.OnFinished(SadConsole.IScreenObject)">
             <summary>
@@ -5351,7 +5363,7 @@
         <member name="M:SadConsole.Instructions.InstructionSet.Reset">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Instructions.InstructionSet.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.InstructionSet.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Runs the instruction set. Once all instructions are finished, this set will set the <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
             </summary>
@@ -5407,7 +5419,7 @@
             </summary>
             <param name="callback">The code invoked by this instruction. Return <see langword="true"/> to set <see cref="P:SadConsole.Instructions.InstructionBase.IsFinished"/>.</param>
         </member>
-        <member name="M:SadConsole.Instructions.PredicateInstruction.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.PredicateInstruction.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.PredicateInstruction.SetCallback(System.Func{System.Boolean})">
@@ -5437,7 +5449,7 @@
             Creates a new wait timer with a 1-second delay.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.Wait.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Instructions.Wait.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.Wait.Reset">
@@ -5528,10 +5540,11 @@
             When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.IScreenObject.Draw">
+        <member name="M:SadConsole.IScreenObject.Draw(System.TimeSpan)">
             <summary>
             Draws all <see cref="P:SadConsole.IScreenObject.SadComponents"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
             </summary>
+            <param name="delta">The time that has elapsed since the last call.</param>
             <remarks>Only processes if <see cref="P:SadConsole.IScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.IScreenObject.OnFocused">
@@ -5578,10 +5591,11 @@
             </summary>
             <param name="state">The current state of the mouse based on this object.</param>
         </member>
-        <member name="M:SadConsole.IScreenObject.Update">
+        <member name="M:SadConsole.IScreenObject.Update(System.TimeSpan)">
             <summary>
             Updates all <see cref="P:SadConsole.IScreenObject.SadComponents"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
             </summary>
+            <param name="delta">The time that has elapsed since the last call.</param>
             <remarks>Only processes if <see cref="P:SadConsole.IScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.IScreenObject.UpdateAbsolutePosition">
@@ -6056,10 +6070,10 @@
             Creates a new instance of this class.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObject.Draw">
+        <member name="M:SadConsole.ScreenObject.Draw(System.TimeSpan)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.ScreenObject.Update">
+        <member name="M:SadConsole.ScreenObject.Update(System.TimeSpan)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenObject.ProcessKeyboard(SadConsole.Input.Keyboard)">
@@ -6297,16 +6311,18 @@
         <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.ScreenSurface.Draw">
+        <member name="M:SadConsole.ScreenSurface.Draw(System.TimeSpan)">
             <summary>
             Draws the <see cref="P:SadConsole.ScreenSurface.Surface"/> and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
+            <param name="delta">The time that has elapsed since the last call.</param>
             <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
-        <member name="M:SadConsole.ScreenSurface.Update">
+        <member name="M:SadConsole.ScreenSurface.Update(System.TimeSpan)">
             <summary>
             Updates the <see cref="P:SadConsole.ScreenSurface.Surface"/> effects and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
             <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenSurface.OnIsDirtyChanged">
@@ -6460,7 +6476,7 @@
         </member>
         <member name="F:SadConsole.Settings.DoDraw">
             <summary>
-            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Draw"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Draw(System.TimeSpan)"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoFinalDraw">
@@ -6470,7 +6486,7 @@
         </member>
         <member name="F:SadConsole.Settings.DoUpdate">
             <summary>
-            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Update"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each object in <see cref="P:SadConsole.Global.Screen"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Settings.WindowMinimumSize">
@@ -6714,7 +6730,7 @@
             </summary>
             <param name="triggerTime">Duration of the timer.</param>
         </member>
-        <member name="M:SadConsole.Timer.Update(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Timer.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Updates the timer with the time since the last call.
             </summary>
@@ -6744,11 +6760,6 @@
         <member name="F:SadConsole.UI.ControlsConsole.ControlsList">
             <summary>
             The collection of controls.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.ControlsConsole.UseGlobalKeyboardInput">
-            <summary>
-            When set to false, uses the static <see cref="F:SadConsole.UI.ControlsConsole.KeyboardState"/> keyboard instead of <see cref="!:Global.KeyboardState"/>
             </summary>
         </member>
         <member name="P:SadConsole.UI.ControlsConsole.ThemeColors">
@@ -6913,12 +6924,13 @@
             Riases the <see cref="E:SadConsole.UI.ControlsConsole.Invalidated"/> event.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.ControlsConsole.Update">
+        <member name="M:SadConsole.UI.ControlsConsole.Update(System.TimeSpan)">
             <summary>
             Calls the Update method of the base class and then Update on each control.
             </summary>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
         </member>
-        <member name="M:SadConsole.UI.ControlsConsole.Draw">
+        <member name="M:SadConsole.UI.ControlsConsole.Draw(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
@@ -7360,7 +7372,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.DrawingSurface.OnDraw">
             <summary>
-            
+            Called when the surface is redrawn.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.DrawingSurface.#ctor(System.Int32,System.Int32)">

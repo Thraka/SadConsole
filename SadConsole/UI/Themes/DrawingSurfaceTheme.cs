@@ -70,7 +70,7 @@ namespace SadConsole.UI.Themes
                 Appearance = Normal;
             }
 
-            drawingSurface?.OnDraw(drawingSurface);
+            drawingSurface?.OnDraw(drawingSurface, time);
             control.IsDirty = false;
         }
 

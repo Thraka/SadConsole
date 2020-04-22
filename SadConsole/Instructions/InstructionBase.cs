@@ -24,7 +24,7 @@ namespace SadConsole.Instructions
         public event EventHandler Repeating;
 
         /// <summary>
-        /// When true, this instruction will automatically remove itself from the parent's <see cref="SadConsole.Console.Components"/> collection.
+        /// When true, this instruction will automatically remove itself from the parent's <see cref="SadConsole.IScreenObject.SadComponents"/> collection.
         /// </summary>
         public bool RemoveOnFinished { get; set; }
 
@@ -63,7 +63,9 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Executes the instruction. This base class method should be called from derived classes. If the IsFinished property is set to true, will try to repeat if needed and will raise all appropriate events.
         /// </summary>
-        public override void Update(IScreenObject componentHost)
+        /// <param name="componentHost">The object that hosts this instruction.</param>
+        /// <param name="delta">The time that has elapsed since this method was last called.</param>
+        public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             if (IsFinished)
             {

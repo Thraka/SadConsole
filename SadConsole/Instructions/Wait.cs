@@ -29,7 +29,7 @@ namespace SadConsole.Instructions
             => Duration = TimeSpan.FromSeconds(1);
 
         /// <inheritdoc />
-        public override void Update(IScreenObject componentHost)
+        public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             if (!_started)
             {
@@ -38,7 +38,7 @@ namespace SadConsole.Instructions
             }
             else
             {
-                _lastUpdateTime += Global.UpdateFrameDelta;
+                _lastUpdateTime += delta;
             }
 
             if (_lastUpdateTime > Duration)
@@ -46,7 +46,7 @@ namespace SadConsole.Instructions
                 IsFinished = true;
             }
 
-            base.Update(componentHost);
+            base.Update(componentHost, delta);
         }
 
         /// <inheritdoc />
