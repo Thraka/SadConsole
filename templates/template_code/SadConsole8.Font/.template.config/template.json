@@ -42,14 +42,6 @@
             "datatype": "int",
             "isRequired": true
         },
-        "rows": {
-            "type": "parameter",
-            "description": "The count of glyphs along the Y-axis of the graphic file.",
-            "replaces":"$rows",
-            "defaultValue": "16",
-            "datatype": "int",
-            "isRequired": false
-        },
         "columns": {
             "type": "parameter",
             "description": "The count of glyphs along the X-axis of the graphic file.",

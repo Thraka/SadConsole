@@ -6,7 +6,6 @@
   "GlyphPadding": 0,
   "SolidGlyphIndex": $solidGlyph,
   "Columns": $cols,
-  "Rows": $rows,
   "IsSadExtended": false,
   "GlyphDefinitions": {
     "underline": {
