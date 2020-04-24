@@ -363,7 +363,7 @@ namespace SadConsole.UI.Themes
                 button.Surface.DrawBox(new Rectangle(0, 0, button.Width, button.Surface.BufferHeight),
                                        new ColoredGlyph(topleftcolor, appearance.Background, 0),
                                        null,
-                                       connectedLineStyle: button.Parent.Font.IsSadExtended ? ICellSurface.ConnectedLineThinExtended : ICellSurface.ConnectedLineThin);
+                                       connectedLineStyle: focused ? ICellSurface.ConnectedLineThick : ICellSurface.ConnectedLineThin);
 
                 //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
 
