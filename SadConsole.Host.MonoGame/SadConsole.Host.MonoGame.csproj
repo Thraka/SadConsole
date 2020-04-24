@@ -34,8 +34,8 @@
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-alpha1" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha1-debug" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-alpha2" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha2-debug" />
     <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0-alpha1-debug" />
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
