@@ -560,7 +560,9 @@ namespace SadConsole.UI
 
             var colors = GetThemeColors();
 
-            Surface.Fill(colors.ControlHostBack, colors.ControlHostFore, 0, 0);
+            Surface.DefaultForeground = colors.ControlHostFore;
+            Surface.DefaultBackground = colors.ControlHostBack;
+            Surface.Clear();
         }
 
         /// <summary>
