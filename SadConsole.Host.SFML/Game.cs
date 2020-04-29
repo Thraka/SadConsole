@@ -115,8 +115,6 @@ namespace SadConsole
 
             while (SadConsole.Host.Global.GraphicsDevice.IsOpen)
             {
-                SadConsole.Host.Global.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
-
                 // Update game loop part
                 if (SadConsole.Settings.DoUpdate)
                 {
@@ -152,6 +150,8 @@ namespace SadConsole
                 // Draw game loop part
                 if (SadConsole.Settings.DoDraw)
                 {
+                    SadConsole.Host.Global.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
+
                     SadConsole.Global.DrawFrameDelta = TimeSpan.FromSeconds(Host.Global.DrawTimer.ElapsedTime.AsSeconds());
 
                     // Clear draw calls for next run
