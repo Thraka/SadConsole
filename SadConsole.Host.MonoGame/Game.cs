@@ -67,10 +67,10 @@ namespace SadConsole
         }
 
         public override ITexture GetTexture(string resourcePath) =>
-            new MonoGame.GameTexture(resourcePath);
+            new Host.GameTexture(resourcePath);
 
         public override ITexture GetTexture(Stream textureStream) =>
-            new MonoGame.GameTexture(textureStream);
+            new Host.GameTexture(textureStream);
 
         public override Renderers.IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
             screenObject switch
@@ -82,10 +82,10 @@ namespace SadConsole
             };
 
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
-            new SadConsole.MonoGame.Keyboard();
+            new Host.Keyboard();
 
         public override SadConsole.Input.IMouseState GetMouseState() =>
-            new SadConsole.MonoGame.Mouse();
+            new Host.Mouse();
 
 
         /// <summary>

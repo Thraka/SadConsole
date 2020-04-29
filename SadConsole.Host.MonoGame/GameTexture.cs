@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     class GameTexture : ITexture
     {
@@ -21,13 +21,13 @@ namespace SadConsole.MonoGame
         public GameTexture(string path)
         {
             using (Stream fontStream = Microsoft.Xna.Framework.TitleContainer.OpenStream(path))
-                _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Global.GraphicsDevice, fontStream);
+                _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.MonoGame.Global.GraphicsDevice, fontStream);
 
             _resourcePath = path;
         }
 
         public GameTexture(Stream stream) =>
-            _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Global.GraphicsDevice, stream);
+            _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.MonoGame.Global.GraphicsDevice, stream);
 
         public void Dispose()
         {

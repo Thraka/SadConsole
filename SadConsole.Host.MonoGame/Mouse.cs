@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Point = SadRogue.Primitives.Point;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     class Mouse : SadConsole.Input.IMouseState
     {

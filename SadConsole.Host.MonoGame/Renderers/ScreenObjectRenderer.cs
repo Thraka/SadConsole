@@ -95,7 +95,7 @@ namespace SadConsole.Renderers
 
         protected virtual void RefreshCells(ICellSurface cellSurface, Font font)
         {
-            var fontImage = ((SadConsole.MonoGame.GameTexture)font.Image).Texture;
+            var fontImage = ((SadConsole.Host.GameTexture)font.Image).Texture;
 
             if (cellSurface.DefaultBackground.A != 0)
                 MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.GlyphRects[font.SolidGlyphIndex].ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
@@ -134,7 +134,7 @@ namespace SadConsole.Renderers
         {
             if (screen.Tint.A != 0)
             {
-                MonoGame.Global.SharedSpriteBatch.Draw(((SadConsole.MonoGame.GameTexture)screen.Font.Image).Texture, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), screen.Font.GlyphRects[screen.Font.SolidGlyphIndex].ToMonoRectangle(), screen.Tint.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
+                MonoGame.Global.SharedSpriteBatch.Draw(((SadConsole.Host.GameTexture)screen.Font.Image).Texture, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), screen.Font.GlyphRects[screen.Font.SolidGlyphIndex].ToMonoRectangle(), screen.Tint.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
             }
         }
 
