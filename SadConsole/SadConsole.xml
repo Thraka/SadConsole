@@ -3227,7 +3227,7 @@
         </member>
         <member name="T:SadConsole.Font">
             <summary>
-            Represents a specific font size from a <see cref="!:FontMaster"/>.
+            Represents a graphical font used by SadConsole.
             </summary>
         </member>
         <member name="T:SadConsole.Font.Sizes">
@@ -3330,6 +3330,19 @@
             Standard decorators used by your app.
             </summary>
         </member>
+        <member name="M:SadConsole.Font.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ITexture,System.String)">
+            <summary>
+            Creates a new font with the specified settings.
+            </summary>
+            <param name="glyphWidth">The pixel width of each glyph.</param>
+            <param name="glyphHeight">The pixel height of each glyph.</param>
+            <param name="glyphPadding">The pixel padding between each glyph.</param>
+            <param name="rows">Number of glyph rows in the <paramref name="image"/>.</param>
+            <param name="columns">Number of glyph columns in the <paramref name="image"/>.</param>
+            <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
+            <param name="image">The texture for of the font.</param>
+            <param name="name">A font identifier used for serialization of resources using this font.</param>
+        </member>
         <member name="M:SadConsole.Font.GetDecorator(System.String,SadRogue.Primitives.Color)">
             <summary>
             Gets a <see cref="T:SadConsole.CellDecorator"/> by the <see cref="T:SadConsole.GlyphDefinition"/> defined by the font file.
@@ -3361,11 +3374,6 @@
             <param name="name">The name of the glyph</param>
             <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Font.Generate">
-            <summary>
-            After the font has been loaded, (with the <see cref="P:SadConsole.Font.FilePath"/>, <see cref="P:SadConsole.Font.GlyphHeight"/>, and <see cref="P:SadConsole.Font.GlyphWidth"/> fields filled out) this method will create the actual texture.
-            </summary>
-        </member>
         <member name="M:SadConsole.Font.ConfigureRects">
             <summary>
             Builds the <see cref="P:SadConsole.Font.GlyphRects"/> array based on the current font settings.
@@ -3377,14 +3385,16 @@
             </summary>
             <param name="x">The x-axis of the cell position.</param>
             <param name="y">The y-axis of the cell position.</param>
-            <returns>A new rectangle.</returns>
+            <param name="fontSize">The size of the output cell.</param>
+            <returns>A rectangle to representing a specific cell.</returns>
         </member>
         <member name="M:SadConsole.Font.GetWorldPosition(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
             Gets the pixel position of a cell position based on the font size.
             </summary>
-            <param name="position">The position to convert.</param>
-            <returns>A new pixel point.</returns>
+            <param name="position">The cell position to convert.</param>
+            <param name="fontSize">The size of the font used to calculate the pixel position.</param>
+            <returns>A new pixel-positioned point.</returns>
         </member>
         <member name="T:SadConsole.GameHost">
             <summary>
@@ -6921,7 +6931,7 @@
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.RaiseInvalidated">
             <summary>
-            Riases the <see cref="E:SadConsole.UI.ControlsConsole.Invalidated"/> event.
+            Raises the <see cref="E:SadConsole.UI.ControlsConsole.Invalidated"/> event.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.Update(System.TimeSpan)">
@@ -7117,6 +7127,11 @@
         <member name="P:SadConsole.UI.Controls.ControlBase.IsVisible">
             <summary>
             Indicates weather or not this control is visible.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Tag">
+            <summary>
+            A user-definable data object.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.TabStop">
@@ -8569,6 +8584,11 @@
             Raised when the window is closed.
             </summary>
         </member>
+        <member name="E:SadConsole.UI.Window.Shown">
+            <summary>
+            Raised when the window is shown.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Window.TitleAreaY">
             <summary>
             The Y coordinate of the title drawing area. This can be set to any value > 0 and &lt; the height.
@@ -8704,6 +8724,16 @@
         <member name="M:SadConsole.UI.Window.OnVisibleChanged">
             <summary>
             Depending on if the window is visible, calls <see cref="M:SadConsole.UI.Window.Show(System.Boolean)"/> or <see cref="M:SadConsole.UI.Window.Hide"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.OnShown">
+            <summary>
+            User-definable code called when the window is shown.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.OnHidden">
+            <summary>
+            User-definable code called when the window is hidden.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Window.Show">

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
-    <Version>9.0.0-alpha2</Version>
+    <Version>9.0.0-alpha3</Version>
     <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -34,7 +34,7 @@
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-alpha2" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-alpha3" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha2-debug" />
     <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0-alpha1-debug" />
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.2" />

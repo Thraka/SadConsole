@@ -37,7 +37,7 @@ namespace SadConsole.MonoGame
             };
 
             Content.RootDirectory = "Content";
-
+            
             Global.GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
             ctorCallback?.Invoke(this);
         }

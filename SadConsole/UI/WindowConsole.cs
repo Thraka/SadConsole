@@ -23,6 +23,11 @@ namespace SadConsole.UI
         /// </summary>
         public event EventHandler Closed;
 
+        /// <summary>
+        /// Raised when the window is shown.
+        /// </summary>
+        public event EventHandler Shown;
+
         [DataMember(Name = "Title")]
         private string _title;
 
@@ -265,7 +270,7 @@ namespace SadConsole.UI
             var themeColors = GetThemeColors();
 
             var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
-            var titleStyle = new ColoredGlyph(themeColors.TitleText, fillStyle.Background, fillStyle.Glyph);
+            var titleStyle = new ColoredGlyph(Color.Orange, fillStyle.Background, fillStyle.Glyph);
             var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
 
             DefaultForeground = fillStyle.Foreground;
@@ -357,6 +362,16 @@ namespace SadConsole.UI
         }
 
         /// <summary>
+        /// User-definable code called when the window is shown.
+        /// </summary>
+        protected virtual void OnShown() { }
+
+        /// <summary>
+        /// User-definable code called when the window is hidden.
+        /// </summary>
+        protected virtual void OnHidden() { }
+
+        /// <summary>
         /// Displays this window using the modal value of the <see cref="IsModalDefault"/> property.
         /// </summary>
         public void Show() => Show(IsModalDefault);
@@ -400,6 +415,8 @@ namespace SadConsole.UI
                 IsFocused = true;
                 Global.Mouse.ClearLastMouseScreenObject();
             }
+            Shown?.Invoke(this, new EventArgs());
+            OnShown();
             _isVisibleProcessing = false;
         }
 
@@ -428,6 +445,7 @@ namespace SadConsole.UI
             }
 
             Closed?.Invoke(this, new EventArgs());
+            OnHidden();
             _isVisibleProcessing = false;
         }
 

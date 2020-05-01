@@ -566,7 +566,7 @@ namespace SadConsole.UI
         }
 
         /// <summary>
-        /// Riases the <see cref="Invalidated"/> event.
+        /// Raises the <see cref="Invalidated"/> event.
         /// </summary>
         protected bool RaiseInvalidated()
         {
@@ -591,10 +591,16 @@ namespace SadConsole.UI
                     IsDirty = true;
 
                 control.Update(delta);
+
+                if (control.IsDirty)
+                    IsDirty = true;
             }
 
             if (IsDirty)
+            {
                 OnInvalidated();
+                IsDirty = false;
+            }
         }
 
         /// <inheritdoc />

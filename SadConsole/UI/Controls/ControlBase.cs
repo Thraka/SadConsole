@@ -88,6 +88,11 @@ namespace SadConsole.UI.Controls
         public bool IsVisible { get; set; }
 
         /// <summary>
+        /// A user-definable data object.
+        /// </summary>
+        public object Tag { get; set; }
+
+        /// <summary>
         /// Indicates weather or not this control can be tabbed to.
         /// </summary>
         [DataMember]
