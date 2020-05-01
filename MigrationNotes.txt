@@ -31,3 +31,17 @@ ContainerConsole -> ScreenObject
 Font/FontMaster -> Font
 
 - Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
+
+===== TODO
+
+- Test if ConnectedLineStyle arrays elements can be modified.
+
+====== New Features
+
+- Controls have a Tag property for user-definable data.
+- Window now has the following features:
+  - Shown event when the window is made visible.
+  - OnShown protected virtual method.
+  - OnHidden protected virtual method.
+- Draw/Update have restored the TimeSpan parameter
+
