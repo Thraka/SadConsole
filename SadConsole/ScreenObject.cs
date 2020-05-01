@@ -196,6 +196,8 @@ namespace SadConsole
         /// </summary>
         public ScreenObject()
         {
+            UseMouse = Settings.DefaultScreenObjectUseMouse;
+            UseKeyboard = Settings.DefaultScreenObjectUseKeyboard;
             SadComponents = new ObservableCollection<IComponent>();
             ComponentsUpdate = new List<IComponent>();
             ComponentsDraw = new List<IComponent>();

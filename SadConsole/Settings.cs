@@ -19,6 +19,16 @@ namespace SadConsole
         public static bool DefaultConsoleUseKeyboard = true;
 
         /// <summary>
+        /// Gets and sets the default value for <see cref="ScreenObject.UseKeyboard"/>.
+        /// </summary>
+        public static bool DefaultScreenObjectUseKeyboard = true;
+
+        /// <summary>
+        /// Gets and sets the default value for <see cref="ScreenObject.UseMouse"/>.
+        /// </summary>
+        public static bool DefaultScreenObjectUseMouse = true;
+
+        /// <summary>
         /// The color to automatically clear the device with.
         /// </summary>
         public static Color ClearColor = Color.Black;
