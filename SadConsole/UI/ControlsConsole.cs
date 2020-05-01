@@ -597,10 +597,7 @@ namespace SadConsole.UI
             }
 
             if (IsDirty)
-            {
                 OnInvalidated();
-                IsDirty = false;
-            }
         }
 
         /// <inheritdoc />
