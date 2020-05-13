@@ -16,7 +16,7 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// Mask input with a certain character.
         /// </summary>
-        public string PasswordChar;
+        public char? Mask { get; set; }
 
         /// <summary>
         /// Indicates the caret is visible.

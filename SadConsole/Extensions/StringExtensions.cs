@@ -193,16 +193,7 @@ namespace SadConsole
         /// <param name="toMask">The string to mask.</param>
         /// <param name="mask">The mask to use.</param>
         /// <returns>A string of masks.</returns>
-        public static string Masked(this string toMask, string mask)
-        {
-            if (mask.Length == 1)
-            {
-                return new string(char.Parse(mask), toMask.Length);
-            }
-            else
-            {
-                throw new System.NotImplementedException("Can't generate multiple character password masks.");
-            }
-        }
+        public static string Masked(this string toMask, char mask) =>
+            new string(mask, toMask.Length);
     }
 }
