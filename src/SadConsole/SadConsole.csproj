@@ -65,7 +65,7 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" PrivateAssets="All" />
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" PrivateAssets="All" />
-    <PackageReference Include="newtonsoft.json" Version="11.*" />
+    <PackageReference Include="newtonsoft.json" Version="12.*" />
   </ItemGroup>
 
   <ItemGroup>
