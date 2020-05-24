@@ -18,6 +18,9 @@ namespace SadConsole
         /// </summary>
         public MonoGame.Game MonoGameInstance { get; private set; }
 
+        /// <summary>
+        /// Strongly typed version of <see cref="GameHost.Instance"/>.
+        /// </summary>
         public new static Game Instance
         {
             get => (Game)GameHost.Instance;
@@ -26,9 +29,15 @@ namespace SadConsole
 
         internal string _font;
 
-
         private Game() { }
 
+        /// <summary>
+        /// Creates a new game and assigns it to the <see cref="MonoGameInstance"/> property.
+        /// </summary>
+        /// <param name="cellCountX"></param>
+        /// <param name="cellCountY"></param>
+        /// <param name="font"></param>
+        /// <param name="monogameCtorCallback"></param>
         public static void Create(int cellCountX, int cellCountY, string font = "", Action<MonoGame.Game> monogameCtorCallback = null)
         {
             var game = new Game();
@@ -59,6 +68,7 @@ namespace SadConsole
             OnStart?.Invoke();
         }
 
+        /// <inheritdoc/>
         public override void Run()
         {
             MonoGameInstance.Run();
@@ -66,24 +76,42 @@ namespace SadConsole
             MonoGameInstance.Dispose();
         }
 
+        /// <inheritdoc/>
         public override ITexture GetTexture(string resourcePath) =>
             new Host.GameTexture(resourcePath);
 
+        /// <inheritdoc/>
         public override ITexture GetTexture(Stream textureStream) =>
             new Host.GameTexture(textureStream);
 
+        /// <inheritdoc/>
+        public override Renderers.IRenderer GetRenderer(string name) =>
+            name switch
+            {
+                "window" => new Renderers.Window(),
+                "controls" => new Renderers.ControlsConsole(),
+                "console" => new Renderers.ConsoleRenderer(),
+                "layered" => new Renderers.LayeredScreenObject(),
+                _ => new Renderers.ScreenObjectRenderer(),
+            };
+
+
+        /// <inheritdoc/>
         public override Renderers.IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
             screenObject switch
             {
                 UI.Window _ => new Renderers.Window(),
                 UI.ControlsConsole _ => new Renderers.ControlsConsole(),
+                LayeredScreenSurface _ => new Renderers.LayeredScreenObject(),
                 Console _ => new Renderers.ConsoleRenderer(),
                 _ => new Renderers.ScreenObjectRenderer(),
             };
 
+        /// <inheritdoc/>
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
             new Host.Keyboard();
 
+        /// <inheritdoc/>
         public override SadConsole.Input.IMouseState GetMouseState() =>
             new Host.Mouse();
 

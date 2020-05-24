@@ -111,6 +111,13 @@ namespace SadConsole
         /// <returns>A renderer.</returns>
         public abstract IRenderer GetDefaultRenderer(IScreenSurface screenObject);
 
+        /// <summary>
+        /// Creates and returns a renderer by name.
+        /// </summary>
+        /// <param name="name">The name of the renderer.</param>
+        /// <returns>A new renderer.</returns>
+        public abstract IRenderer GetRenderer(string name);
+
         ///// <summary>
         ///// Sets the default <see cref="IRenderer"/> for a type.
         ///// </summary>

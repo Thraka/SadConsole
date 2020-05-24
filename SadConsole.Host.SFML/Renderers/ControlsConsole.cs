@@ -16,6 +16,11 @@ namespace SadConsole.Renderers
     /// </remarks>
     public class ControlsConsole : ScreenObjectRenderer
     {
+        /// <summary>
+        /// Name of this renderer type.
+        /// </summary>
+        public static new string Name => "controls";
+
         ///  <inheritdoc/>
         public override void Attach(ISurfaceRenderData screen)
         {

@@ -19,6 +19,11 @@ namespace SadConsole.Renderers
     /// </remarks>
     public class ScreenObjectRenderer : IRenderer
     {
+        /// <summary>
+        /// Name of this renderer type.
+        /// </summary>
+        public static string Name => "screenobject";
+
         public RenderTarget2D BackingTexture;
 
         protected XnaRectangle[] _renderRects;

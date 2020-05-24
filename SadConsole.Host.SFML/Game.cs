@@ -200,12 +200,24 @@ namespace SadConsole
         public override ITexture GetTexture(Stream textureStream) =>
             new SadConsole.Host.GameTexture(textureStream);
 
+        /// <inheritdoc/>
+        public override Renderers.IRenderer GetRenderer(string name) =>
+            name switch
+            {
+                "window" => new Renderers.Window(),
+                "controls" => new Renderers.ControlsConsole(),
+                "console" => new Renderers.ConsoleRenderer(),
+                "layered" => new Renderers.LayeredScreenObject(),
+                _ => new Renderers.ScreenObjectRenderer(),
+            };
+
         /// <inheritdoc/> 
         public override Renderers.IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
             screenObject switch
             {
                 UI.Window _ => new Renderers.Window(),
                 UI.ControlsConsole _ => new Renderers.ControlsConsole(),
+                LayeredScreenSurface _ => new Renderers.LayeredScreenObject(),
                 Console _ => new Renderers.ConsoleRenderer(),
                 _ => new Renderers.ScreenObjectRenderer(),
             };
