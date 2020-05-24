@@ -15,7 +15,7 @@ namespace FeatureDemo
         {
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
-            SadConsole.Game.Create(80, 25, "Res/Fonts/C64.font");
+            SadConsole.Game.Create(80, 25); //, "Res/Fonts/C64.font");
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
             SadConsole.Game.Instance.Run();
