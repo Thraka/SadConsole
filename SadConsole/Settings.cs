@@ -84,6 +84,11 @@ namespace SadConsole
         public static string WindowTitle { get; set; } = "SadConsole Game";
 
         /// <summary>
+        /// The identifier of the named pipe used to communicate with the in game debugger app.
+        /// </summary>
+        public static string DebuggerPipeId { get; } = "AE38CE3C-53B8-4FB9-AD7F-11D748590733";
+
+        /// <summary>
         /// Settings related to input.
         /// </summary>
         public static class Input

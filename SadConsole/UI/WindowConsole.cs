@@ -188,6 +188,9 @@ namespace SadConsole.UI
             _isVisibleProcessing = false;
             CanDrag = true;
             MoveToFrontOnMouseClick = true;
+            // todo: Perhaps a new design with windows.
+            // A border surface so that the surface of the window contains just the controls and print code.
+            //DrawingArea = Surface.GetSubSurface(Surface.Buffer.WithPosition((1, 1)).Expand(-1, -1));
         }
 
         /// <inheritdoc />

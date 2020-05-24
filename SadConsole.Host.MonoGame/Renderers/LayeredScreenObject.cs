@@ -12,7 +12,7 @@ using SadConsole.Host.MonoGame;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="IScreenSurface"/> when it uses a <see cref="SadConsole.LayeredScreenSurface"/> type for the <see cref="IScreenSurface.Surface"/>.
+    /// Draws a <see cref="SadConsole.LayeredScreenSurface"/>.
     /// </summary>
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.

@@ -10,7 +10,7 @@ namespace SadConsole.Renderers
     /// Draws a <see cref="ControlsConsole"/>.
     /// </summary>
     /// <remarks>
-    /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+    /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
     ///
     /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
     /// </remarks>
@@ -20,7 +20,7 @@ namespace SadConsole.Renderers
         public override void Attach(ISurfaceRenderData screen)
         {
             if (!(screen is ControlsConsole))
-                throw new Exception($"The {nameof(ConsoleRenderer)} must be added to a {nameof(ControlsConsole)}.");
+                throw new Exception($"The ControlsConsole Renderer must be added to a {nameof(ControlsConsole)}.");
         }
 
         ///  <inheritdoc/>

@@ -62,6 +62,12 @@
     <None Update="Ansi\ROY-DGZN.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Res\Fonts\C64.font">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Res\Fonts\Yayo_c64.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="sad.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

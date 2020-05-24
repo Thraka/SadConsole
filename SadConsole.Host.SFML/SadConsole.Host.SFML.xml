@@ -144,7 +144,7 @@
              Draws a <see cref="T:SadConsole.Console"/>.
              </summary>
              <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="!:Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.ConsoleRenderer.Render(SadConsole.ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
             
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>
@@ -163,7 +163,7 @@
              Draws a <see cref="T:SadConsole.Renderers.ControlsConsole"/>.
              </summary>
              <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="!:Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
             
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>
@@ -179,7 +179,7 @@
         </member>
         <member name="T:SadConsole.Renderers.LayeredScreenObject">
             <summary>
-            Draws a <see cref="T:SadConsole.IScreenSurface"/> when it uses a <see cref="T:SadConsole.LayeredScreenSurface"/> type for the <see cref="!:IScreenSurface.Surface"/>.
+            Draws a <see cref="T:SadConsole.LayeredScreenSurface"/>.
             </summary>
             <remarks>
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
@@ -204,7 +204,7 @@
              Draws a <see cref="T:SadConsole.Renderers.Window"/>.
              </summary>
              <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="!:Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.Window.Render(SadConsole.ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
             
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>

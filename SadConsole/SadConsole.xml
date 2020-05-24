@@ -3159,7 +3159,7 @@
             <param name="item">The string to convert</param>
             <returns>The converted boolean value, otherwise false.</returns>
         </member>
-        <member name="M:SadConsole.StringExtensions.Masked(System.String,System.String)">
+        <member name="M:SadConsole.StringExtensions.Masked(System.String,System.Char)">
             <summary>
             Returns a string of mask characters the same length as the input string.
             </summary>
@@ -6464,6 +6464,16 @@
             Gets and sets the default value for <see cref="P:SadConsole.IScreenObject.UseKeyboard"/> when the console is created.
             </summary>
         </member>
+        <member name="F:SadConsole.Settings.DefaultScreenObjectUseKeyboard">
+            <summary>
+            Gets and sets the default value for <see cref="P:SadConsole.ScreenObject.UseKeyboard"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Settings.DefaultScreenObjectUseMouse">
+            <summary>
+            Gets and sets the default value for <see cref="P:SadConsole.ScreenObject.UseMouse"/>.
+            </summary>
+        </member>
         <member name="F:SadConsole.Settings.ClearColor">
             <summary>
             The color to automatically clear the device with.
@@ -6517,6 +6527,11 @@
         <member name="P:SadConsole.Settings.WindowTitle">
             <summary>
             The window title to display when the app is windowed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Settings.DebuggerPipeId">
+            <summary>
+            The identifier of the named pipe used to communicate with the in game debugger app.
             </summary>
         </member>
         <member name="T:SadConsole.Settings.Input">
@@ -7274,6 +7289,15 @@
             Called when the control changes position.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.PlaceRelativeTo(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Direction.Types,System.Int32)">
+            <summary>
+            Plases this control relative to another, taking into account the bounds of the control.
+            </summary>
+            <param name="control">The other control to place this one relative to.</param>
+            <param name="direction">The direction this control should be placed.</param>
+            <param name="padding">Additional space between the controls after placement.</param>
+            <remarks>If this control hasn't been added to the parent of <paramref name="control"/>, it will be added.</remarks>
+        </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.DetermineState">
             <summary>
             Sets the appropriate theme for the control based on the current state of the control.
@@ -7710,7 +7734,7 @@
             InputBox control that allows text input.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.TextBox.PasswordChar">
+        <member name="P:SadConsole.UI.Controls.TextBox.Mask">
             <summary>
             Mask input with a certain character.
             </summary>

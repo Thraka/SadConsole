@@ -112,7 +112,7 @@ namespace FeatureDemo.CustomConsoles
 
             var password = new TextBox(10)
             {
-                PasswordChar = "*",
+                Mask = '*',
                 Position = new Point(65, 9)
             };
             Add(password);
