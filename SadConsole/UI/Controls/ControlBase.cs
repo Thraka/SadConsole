@@ -384,6 +384,53 @@ namespace SadConsole.UI.Controls
         protected virtual void OnPositionChanged() { }
 
         /// <summary>
+        /// Plases this control relative to another, taking into account the bounds of the control.
+        /// </summary>
+        /// <param name="control">The other control to place this one relative to.</param>
+        /// <param name="direction">The direction this control should be placed.</param>
+        /// <param name="padding">Additional space between the controls after placement.</param>
+        /// <remarks>If this control hasn't been added to the parent of <paramref name="control"/>, it will be added.</remarks>
+        public void PlaceRelativeTo(ControlBase control, SadRogue.Primitives.Direction.Types direction, int padding = 1)
+        {
+            if (control.Parent != null && Parent != control.Parent)
+                Parent = control.Parent;
+
+            Point calculatedDirection = (0, 0) + Direction.ToDirection(direction);
+            Position = control.Position + (calculatedDirection.X * padding, calculatedDirection.Y * padding);
+
+            switch (direction)
+            {
+                case Direction.Types.None:
+                    Position = control.Position;
+                    break;
+                case Direction.Types.Up:
+                    Position = (control.Position.X, control.Position.Y - Height - padding);
+                    break;
+                case Direction.Types.UpRight:
+                    Position = (control.Bounds.MaxExtentX + 1 + padding, control.Position.Y - Height - padding);
+                    break;
+                case Direction.Types.Right:
+                    Position = (control.Bounds.MaxExtentX + 1 + padding, control.Position.Y);
+                    break;
+                case Direction.Types.DownRight:
+                    Position = (control.Bounds.MaxExtentX + 1 + padding, control.Bounds.MaxExtentY + 1 + padding);
+                    break;
+                case Direction.Types.Down:
+                    Position = (control.Position.X, control.Bounds.MaxExtentY + 1 + padding);
+                    break;
+                case Direction.Types.DownLeft:
+                    Position = (control.Position.X - Width - padding, control.Bounds.MaxExtentY + 1 + padding);
+                    break;
+                case Direction.Types.Left:
+                    Position = (control.Position.X - Width - padding, control.Position.Y);
+                    break;
+                case Direction.Types.UpLeft:
+                    Position = (control.Position.X - Width - padding, control.Position.Y - Height - padding);
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Sets the appropriate theme for the control based on the current state of the control.
         /// </summary>
         /// <remarks>Called by the control as the mouse state changes, like when the mouse is clicked on top of the control or leaves the area of the control. This method is implemented by each derived control.</remarks>
@@ -509,7 +556,8 @@ namespace SadConsole.UI.Controls
         /// </summary>
         /// <param name="consolePosition">Position of the console to get the relative control position from.</param>
         /// <returns>The x,y position of the mouse over the control.</returns>
-        protected Point TransformConsolePositionByControlPosition(Point consolePosition) => consolePosition - _position;
+        protected Point TransformConsolePositionByControlPosition(Point consolePosition) =>
+            consolePosition - _position;
 
         /// <summary>
         /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.
