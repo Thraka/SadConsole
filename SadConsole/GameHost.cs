@@ -11,7 +11,7 @@ namespace SadConsole
     /// <summary>
     /// Represents the SadConsole game engine.
     /// </summary>
-    public abstract class GameHost : IDisposable
+    public abstract partial class GameHost : IDisposable
     {
         private DateTime _gameStartedAt = DateTime.Now;
 
@@ -81,7 +81,7 @@ namespace SadConsole
         /// </summary>
         protected virtual void OnFrameUpdate()
         {
-            Global.GameRunningTotalTime = DateTime.Now - _gameStartedAt;
+            GameHost.Instance.GameRunningTotalTime = DateTime.Now - _gameStartedAt;
             FrameUpdate?.Invoke(this, this);
         }
 
@@ -132,7 +132,7 @@ namespace SadConsole
         public abstract IMouseState GetMouseState();
 
         /// <summary>
-        /// Loads a font from a file and adds it to the <see cref="Global.Fonts"/> collection.
+        /// Loads a font from a file and adds it to the <see cref="GameHost.Instance.Fonts"/> collection.
         /// </summary>
         /// <param name="font">The font file to load.</param>
         /// <returns>A master font that you can generate a usable font from.</returns>
@@ -156,10 +156,10 @@ namespace SadConsole
 
                 Font masterFont = SadConsole.Serializer.Load<Font>(font, false);
 
-                if (Global.Fonts.ContainsKey(masterFont.Name))
-                    Global.Fonts.Remove(masterFont.Name);
+                if (GameHost.Instance.Fonts.ContainsKey(masterFont.Name))
+                    GameHost.Instance.Fonts.Remove(masterFont.Name);
 
-                Global.Fonts.Add(masterFont.Name, masterFont);
+                GameHost.Instance.Fonts.Add(masterFont.Name, masterFont);
 
                 SadConsole.Serializer.Settings = oldSettings;
 
@@ -234,13 +234,13 @@ namespace SadConsole
                     });
                 LoadingEmbeddedFont = false;
 
-                Global.Fonts.Add(masterFont.Name, masterFont);
+                GameHost.Instance.Fonts.Add(masterFont.Name, masterFont);
 
                 return masterFont;
             }
 
-            Global.EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
-            Global.EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
+            EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
+            EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
         }
 
         #region IDisposable Support
@@ -253,10 +253,12 @@ namespace SadConsole
             {
                 if (disposing)
                 {
-                    foreach (var font in Global.Fonts.Values)
-                    {
+                    foreach (Font font in GameHost.Instance.Fonts.Values)
                         font.Image.Dispose();
-                    }
+
+                    EmbeddedFont.Image.Dispose();
+                    EmbeddedFontExtended.Image.Dispose();
+                    DefaultFont.Image.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

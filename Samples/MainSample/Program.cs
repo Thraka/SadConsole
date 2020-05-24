@@ -30,19 +30,19 @@ namespace FeatureDemo
                 // This block of code cycles through the consoles in the SadConsole.Engine.ConsoleRenderStack, showing only a single console
                 // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
                 // in the Initialize method above.
-                if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F1))
+                if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F1))
                 {
                     MainConsole.MoveNextConsole();
                 }
-                else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F2))
+                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F2))
                 {
                     _characterWindow.Show(true);
                 }
-                else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F3))
+                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F3))
                 {
                     //SadConsole.Debug.CurrentScreen.Show();
                 }
-                else if (SadConsole.Global.Keyboard.IsKeyReleased(Keys.F5))
+                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F5))
                 {
                     //SadConsole.Settings.ToggleFullScreen();
                 }
@@ -64,12 +64,12 @@ namespace FeatureDemo
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
 
-            //Global.MouseState.ProcessMouseWhenOffScreen = true;
+            //GameHost.Instance.MouseState.ProcessMouseWhenOffScreen = true;
             MainConsole = new Container();
 
             // We'll instead use our demo consoles that show various features of SadConsole.
-            Global.Screen.Renderer = null;
-            Global.Screen.Children.Add(MainConsole);
+            GameHost.Instance.Screen.Renderer = null;
+            GameHost.Instance.Screen.Children.Add(MainConsole);
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();

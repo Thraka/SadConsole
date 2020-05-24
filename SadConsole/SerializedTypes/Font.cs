@@ -24,7 +24,7 @@ namespace SadConsole.SerializedTypes
             if (font == null)
                 return null;
 
-            return Global.Fonts.ContainsKey(font.Name) ? Global.Fonts[font.Name] : Global.DefaultFont;
+            return GameHost.Instance.Fonts.ContainsKey(font.Name) ? GameHost.Instance.Fonts[font.Name] : GameHost.Instance.DefaultFont;
         }
     }
 }

@@ -46,15 +46,15 @@ namespace SadConsole
 
             if (string.IsNullOrEmpty(_font))
                 if (Settings.UseDefaultExtendedFont)
-                    Global.DefaultFont = Global.EmbeddedFontExtended;
+                    DefaultFont = EmbeddedFontExtended;
                 else
-                    Global.DefaultFont = Global.EmbeddedFont;
+                    DefaultFont = EmbeddedFont;
             else
-                Global.DefaultFont = LoadFont(_font);
+                DefaultFont = LoadFont(_font);
 
-            MonoGameInstance.ResizeGraphicsDeviceManager(Global.DefaultFont.GetFontSize(Global.DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
+            MonoGameInstance.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
 
-            SadConsole.Global.Screen = new Console(ScreenCellsX, ScreenCellsY);
+            SadConsole.GameHost.Instance.Screen = new Console(ScreenCellsX, ScreenCellsY);
 
             OnStart?.Invoke();
         }

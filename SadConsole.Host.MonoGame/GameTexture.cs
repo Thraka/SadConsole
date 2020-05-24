@@ -31,7 +31,7 @@ namespace SadConsole.Host
 
         public void Dispose()
         {
-            _texture.Dispose();
+            _texture?.Dispose();
             _texture = null;
         }
     }

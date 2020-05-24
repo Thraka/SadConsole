@@ -406,7 +406,7 @@ namespace SadConsole.UI
 
             if (Parent == null)
             {
-                Parent = Global.Screen;
+                Parent = GameHost.Instance.Screen;
                 AddedToParent = true;
             }
 
@@ -414,9 +414,9 @@ namespace SadConsole.UI
 
             if (modal)
             {
-                Global.FocusedScreenObjects.Push(this);
+                GameHost.Instance.FocusedScreenObjects.Push(this);
                 IsFocused = true;
-                Global.Mouse.ClearLastMouseScreenObject();
+                GameHost.Instance.Mouse.ClearLastMouseScreenObject();
             }
             Shown?.Invoke(this, new EventArgs());
             OnShown();
@@ -439,7 +439,7 @@ namespace SadConsole.UI
 
             if (IsModal)
             {
-                Global.FocusedScreenObjects.Pop(this);
+                GameHost.Instance.FocusedScreenObjects.Pop(this);
             }
 
             if (AddedToParent && Parent != null)

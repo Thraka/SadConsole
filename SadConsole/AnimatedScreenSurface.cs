@@ -354,15 +354,15 @@ namespace SadConsole
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        int character = Global.Random.Next(48, 168);
+                        int character = GameHost.Instance.Random.Next(48, 168);
 
-                        if (Global.Random.NextDouble() <= blankChance)
+                        if (GameHost.Instance.Random.NextDouble() <= blankChance)
                         {
                             character = 32;
                         }
 
                         frame.SetGlyph(x, y, character);
-                        frame.SetForeground(x, y, Color.White * (float)(Global.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
+                        frame.SetForeground(x, y, Color.White * (float)(GameHost.Instance.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
                     }
                 }
 

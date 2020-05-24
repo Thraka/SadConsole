@@ -89,7 +89,7 @@ namespace SadConsole
         public int Rows { get; private set; }
 
         /// <summary>
-        /// The name of the font used when it is registered with the <see cref="Global.Fonts"/> collection.
+        /// The name of the font used when it is registered with the <see cref="GameHost.Instance.Fonts"/> collection.
         /// </summary>
         [DataMember]
         public string Name { get; private set; }

@@ -29,7 +29,7 @@ namespace Game
         {
             //SadConsole.Settings.gam.Window.Title = "DemoProject Core";
 
-            //Global.Screen.Renderer = null;
+            //GameHost.Instance.Screen.Renderer = null;
             //Teletype keyboardComponent = new Teletype();
 
             //var runtimeEnv = new ClassicBasic.Interpreter.RunEnvironment();
@@ -41,10 +41,10 @@ namespace Game
 
 
             //Interpreter = new ClassicBasic.Interpreter.Interpreter(keyboardComponent, tokenizer, runtimeEnv, programRep, Executor);
-            Global.Screen.SadComponents.Add(new ConsoleBASICInterpreter());
-            Global.Screen.Cursor.IsVisible = true;
-            Global.Screen.Cursor.IsEnabled = true;
-            Global.Screen.IsFocused = true;
+            GameHost.Instance.Screen.SadComponents.Add(new ConsoleBASICInterpreter());
+            GameHost.Instance.Screen.Cursor.IsVisible = true;
+            GameHost.Instance.Screen.Cursor.IsEnabled = true;
+            GameHost.Instance.Screen.IsFocused = true;
         }
     }
 }

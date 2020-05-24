@@ -19,13 +19,13 @@ namespace SadConsole.MonoGame
                 {
                     MonoGame.Game game = (MonoGame.Game)Game;
 
-                    SadConsole.Global.DrawFrameDelta = gameTime.ElapsedGameTime;
+                    SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
 
                     // Clear draw calls for next run
                     SadConsole.Game.Instance.DrawCalls.Clear();
 
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    SadConsole.Global.Screen?.Draw(SadConsole.Global.DrawFrameDelta);
+                    SadConsole.GameHost.Instance.Screen?.Draw(SadConsole.GameHost.Instance.DrawFrameDelta);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
 
@@ -59,29 +59,29 @@ namespace SadConsole.MonoGame
                 {
                     var game = (Game)Game;
 
-                    SadConsole.Global.UpdateFrameDelta = gameTime.ElapsedGameTime;
+                    SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
 
                     if (Game.IsActive)
                     {
                         if (SadConsole.Settings.Input.DoKeyboard)
                         {
-                            SadConsole.Global.Keyboard.Update(SadConsole.Global.UpdateFrameDelta);
+                            SadConsole.GameHost.Instance.Keyboard.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
 
-                            if (SadConsole.Global.FocusedScreenObjects.ScreenObject != null && SadConsole.Global.FocusedScreenObjects.ScreenObject.UseKeyboard)
+                            if (SadConsole.GameHost.Instance.FocusedScreenObjects.ScreenObject != null && SadConsole.GameHost.Instance.FocusedScreenObjects.ScreenObject.UseKeyboard)
                             {
-                                SadConsole.Global.FocusedScreenObjects.ScreenObject.ProcessKeyboard(SadConsole.Global.Keyboard);
+                                SadConsole.GameHost.Instance.FocusedScreenObjects.ScreenObject.ProcessKeyboard(SadConsole.GameHost.Instance.Keyboard);
                             }
 
                         }
 
                         if (SadConsole.Settings.Input.DoMouse)
                         {
-                            SadConsole.Global.Mouse.Update(SadConsole.Global.UpdateFrameDelta);
-                            SadConsole.Global.Mouse.Process();
+                            SadConsole.GameHost.Instance.Mouse.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
+                            SadConsole.GameHost.Instance.Mouse.Process();
                         }
                     }
 
-                    SadConsole.Global.Screen?.Update(SadConsole.Global.UpdateFrameDelta);
+                    SadConsole.GameHost.Instance.Screen?.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
                 }

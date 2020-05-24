@@ -436,7 +436,7 @@ namespace SadConsole.UI
             }
 
             // Set focus to this new console
-            Global.FocusedScreenObjects.Set(newConsole);
+            GameHost.Instance.FocusedScreenObjects.Set(newConsole);
             FocusedControl = null;
             newConsole.FocusedControl = null;
             newConsole.TabPreviousControl();
@@ -476,7 +476,7 @@ namespace SadConsole.UI
                 newConsole = NextTabConsole;
 
             // Set focus to this new console
-            Global.FocusedScreenObjects.Set(newConsole);
+            GameHost.Instance.FocusedScreenObjects.Set(newConsole);
             FocusedControl = null;
             newConsole.FocusedControl = null;
             newConsole.TabNextControl();
@@ -708,9 +708,9 @@ namespace SadConsole.UI
         /// <param name="control">The control to capture</param>
         public void CaptureControl(ControlBase control)
         {
-            if (Global.FocusedScreenObjects.ScreenObject != this)
+            if (GameHost.Instance.FocusedScreenObjects.ScreenObject != this)
             {
-                Global.FocusedScreenObjects.Push(this);
+                GameHost.Instance.FocusedScreenObjects.Push(this);
                 _wasFocusedBeforeCapture = false;
             }
             else
@@ -730,7 +730,7 @@ namespace SadConsole.UI
         {
             if (!_wasFocusedBeforeCapture)
             {
-                Global.FocusedScreenObjects.Pop(this);
+                GameHost.Instance.FocusedScreenObjects.Pop(this);
             }
 
             IsExclusiveMouse = _exclusiveBeforeCapture;

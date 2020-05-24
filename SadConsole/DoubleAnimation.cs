@@ -36,7 +36,7 @@ namespace SadConsole
                     return _finishedValue;
                 }
 
-                double value = GetValueForDuration((Global.GameRunningTotalTime - _totalTimeAtStart).TotalMilliseconds);
+                double value = GetValueForDuration((GameHost.Instance.GameRunningTotalTime - _totalTimeAtStart).TotalMilliseconds);
 
                 if (CheckEnd())
                 {
@@ -81,14 +81,14 @@ namespace SadConsole
 
         public void Start()
         {
-            _totalTimeAtStart = Global.GameRunningTotalTime;
+            _totalTimeAtStart = GameHost.Instance.GameRunningTotalTime;
             IsFinished = false;
             IsStarted = true;
         }
 
         private bool CheckEnd()
         {
-            double value = (Global.GameRunningTotalTime - _totalTimeAtStart).TotalMilliseconds;
+            double value = (GameHost.Instance.GameRunningTotalTime - _totalTimeAtStart).TotalMilliseconds;
             if (value >= Duration.TotalMilliseconds)
             {
                 IsFinished = true;

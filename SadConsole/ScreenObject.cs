@@ -148,29 +148,29 @@ namespace SadConsole
         /// <inheritdoc/>
         public bool IsFocused
         {
-            get => Global.FocusedScreenObjects.ScreenObject == this;
+            get => GameHost.Instance.FocusedScreenObjects.ScreenObject == this;
             set
             {
-                if (Global.FocusedScreenObjects.ScreenObject != null)
+                if (GameHost.Instance.FocusedScreenObjects.ScreenObject != null)
                 {
-                    if (value && Global.FocusedScreenObjects.ScreenObject != this)
+                    if (value && GameHost.Instance.FocusedScreenObjects.ScreenObject != this)
                     {
                         if (FocusedMode == FocusBehavior.Push)
-                            Global.FocusedScreenObjects.Push(this);
+                            GameHost.Instance.FocusedScreenObjects.Push(this);
                         else
-                            Global.FocusedScreenObjects.Set(this);
+                            GameHost.Instance.FocusedScreenObjects.Set(this);
                     }
-                    else if (!value && Global.FocusedScreenObjects.ScreenObject == this)
-                        Global.FocusedScreenObjects.Pop(this);
+                    else if (!value && GameHost.Instance.FocusedScreenObjects.ScreenObject == this)
+                        GameHost.Instance.FocusedScreenObjects.Pop(this);
                 }
                 else
                 {
                     if (value)
                     {
                         if (FocusedMode == FocusBehavior.Push)
-                            Global.FocusedScreenObjects.Push(this);
+                            GameHost.Instance.FocusedScreenObjects.Push(this);
                         else
-                            Global.FocusedScreenObjects.Set(this);
+                            GameHost.Instance.FocusedScreenObjects.Set(this);
                     }
                 }
             }

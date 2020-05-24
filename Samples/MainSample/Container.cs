@@ -30,7 +30,7 @@ namespace FeatureDemo
             consoles = new CustomConsole[] {
                 //consoleReal,
                 
-                //new CustomConsole(new CustomConsoles.HexSurface(80 / 2, 23 / 2) { FontSize = SadConsole.Global.DefaultFont.GetFontSize(Font.Sizes.Two) }, "Hex surface", "Using a custom renderer and custom mouse logic to draw hex cells"),
+                //new CustomConsole(new CustomConsoles.HexSurface(80 / 2, 23 / 2) { FontSize = SadConsole.GameHost.Instance.DefaultFont.GetFontSize(Font.Sizes.Two) }, "Hex surface", "Using a custom renderer and custom mouse logic to draw hex cells"),
                 //new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
 
                 new CustomConsole(new CustomConsoles.ControlsTest(), "Controls Test", "Interact with SadConsole controls"),
@@ -75,7 +75,7 @@ namespace FeatureDemo
             selectedConsole.IsFocused = true;
             selectedConsole.Position = new Point(0, 2);
 
-            Global.FocusedScreenObjects.Set(selectedConsole);
+            GameHost.Instance.FocusedScreenObjects.Set(selectedConsole);
             headerConsole.SetConsole(consoles[currentConsoleIndex].Title, consoles[currentConsoleIndex].Summary);
         }
         

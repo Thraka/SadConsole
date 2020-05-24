@@ -102,7 +102,7 @@ namespace SadConsole
         protected override void OnVisibleChanged()
         {
             if (!IsVisible && IsMouseOver)
-                OnMouseExit(new Input.MouseScreenObjectState(this, SadConsole.Global.Mouse));
+                OnMouseExit(new Input.MouseScreenObjectState(this, SadConsole.GameHost.Instance.Mouse));
 
             base.OnVisibleChanged();
         }

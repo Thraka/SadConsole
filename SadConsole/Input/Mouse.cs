@@ -160,7 +160,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Builds information about the mouse state based on the <see cref="Global.FocusedScreenObjects"/> or <see cref="Global.Screen"/>. Should be called each frame.
+        /// Builds information about the mouse state based on the <see cref="GameHost.Instance.FocusedScreenObjects"/> or <see cref="GameHost.Instance.Screen"/>. Should be called each frame.
         /// </summary>
         public virtual void Process()
         {
@@ -173,30 +173,30 @@ namespace SadConsole.Input
             }
 
             // Check if the focused input screen object wants exclusive mouse
-            else if (Global.FocusedScreenObjects.ScreenObject != null && Global.FocusedScreenObjects.ScreenObject.IsExclusiveMouse)
+            else if (GameHost.Instance.FocusedScreenObjects.ScreenObject != null && GameHost.Instance.FocusedScreenObjects.ScreenObject.IsExclusiveMouse)
             {
-                var state = new MouseScreenObjectState(Global.FocusedScreenObjects.ScreenObject, this);
+                var state = new MouseScreenObjectState(GameHost.Instance.FocusedScreenObjects.ScreenObject, this);
 
                 // if the last screen object to have the mouse is not our global, signal
-                if (_lastMouseScreenObject != null && _lastMouseScreenObject != Global.FocusedScreenObjects.ScreenObject)
+                if (_lastMouseScreenObject != null && _lastMouseScreenObject != GameHost.Instance.FocusedScreenObjects.ScreenObject)
                 {
                     _lastMouseScreenObject.LostMouse(state);
                     _lastMouseScreenObject = null;
                 }
 
-                Global.FocusedScreenObjects.ScreenObject.ProcessMouse(state);
+                GameHost.Instance.FocusedScreenObjects.ScreenObject.ProcessMouse(state);
 
-                _lastMouseScreenObject = Global.FocusedScreenObjects.ScreenObject;
+                _lastMouseScreenObject = GameHost.Instance.FocusedScreenObjects.ScreenObject;
             }
 
             // Scan through each "screen object" in the current screen, including children.
-            else if (Global.Screen != null)
+            else if (GameHost.Instance.Screen != null)
             {
                 bool foundMouseTarget = false;
 
                 // Build a list of all screen objects
                 var screenObjects = new List<IScreenObject>();
-                GetConsoles(Global.Screen, ref screenObjects);
+                GetConsoles(GameHost.Instance.Screen, ref screenObjects);
 
                 // Process top-most screen objects first.
                 screenObjects.Reverse();

@@ -172,8 +172,8 @@ namespace SadConsole
         public ScreenSurface(ICellSurface surface, Font font = null, Point? fontSize = null)
         {
             Surface = surface;
-            Font = font ?? Global.DefaultFont;
-            FontSize = fontSize ?? Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
+            Font = font ?? GameHost.Instance.DefaultFont;
+            FontSize = fontSize ?? Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 
@@ -188,8 +188,8 @@ namespace SadConsole
         public ScreenSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells)
         {
             Surface = new CellSurface(width, height, bufferWidth, bufferHeight, initialCells);
-            Font = Global.DefaultFont;
-            FontSize = Font?.GetFontSize(Global.DefaultFontSize) ?? new Point(1, 1);
+            Font = GameHost.Instance.DefaultFont;
+            FontSize = Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
             Renderer = GameHost.Instance.GetDefaultRenderer(this);
         }
 

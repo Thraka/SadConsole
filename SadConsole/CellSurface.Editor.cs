@@ -1979,10 +1979,10 @@ namespace SadConsole
                 for (int x = 0; x < surface.BufferWidth; x++)
                 {
                     SetGlyph(surface, x, y, charCounter);
-                    SetForeground(surface, x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)255));
+                    SetForeground(surface, x, y, new Color((byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)255));
                     SetBackground(surface, x, y, surface.DefaultBackground);
-                    SetBackground(surface, x, y, new Color((byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)Global.Random.Next(0, 256), (byte)255));
-                    SetMirror(surface, x, y, (Mirror)Global.Random.Next(0, 4));
+                    SetBackground(surface, x, y, new Color((byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)255));
+                    SetMirror(surface, x, y, (Mirror)GameHost.Instance.Random.Next(0, 4));
                     charCounter++;
                     if (charCounter > 255)
                     {

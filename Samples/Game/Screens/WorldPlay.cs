@@ -84,13 +84,13 @@ namespace Game.Screens
                 if (GameBoard.PlayerControlledObject != null)
                 {
                     //if (GameBoard.PlayerControlledObject.HasComponent<>)
-                    if (Global.Keyboard.IsKeyPressed(Keys.Left))
+                    if (GameHost.Instance.Keyboard.IsKeyPressed(Keys.Left))
                         _tempPositionMovementValue = Direction.Left;
-                    else if (Global.Keyboard.IsKeyPressed(Keys.Right))
+                    else if (GameHost.Instance.Keyboard.IsKeyPressed(Keys.Right))
                         _tempPositionMovementValue = Direction.Right;
-                    else if (Global.Keyboard.IsKeyPressed(Keys.Up))
+                    else if (GameHost.Instance.Keyboard.IsKeyPressed(Keys.Up))
                         _tempPositionMovementValue = Direction.Up;
-                    else if (Global.Keyboard.IsKeyPressed(Keys.Down))
+                    else if (GameHost.Instance.Keyboard.IsKeyPressed(Keys.Down))
                         _tempPositionMovementValue = Direction.Down;
                 }
             }

@@ -63,7 +63,7 @@ namespace SadConsole.StringParser
         {
             if (RandomGlyph)
             {
-                glyphState.GlyphCharacter = (char)SadConsole.Global.Random.Next(RandomGlyphMin, RandomGlyphMax);
+                glyphState.GlyphCharacter = (char)SadConsole.GameHost.Instance.Random.Next(RandomGlyphMin, RandomGlyphMax);
             }
             else
             {

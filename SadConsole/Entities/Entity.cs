@@ -90,7 +90,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// Creates a new Entity with the default font.
         /// </summary>
-        public Entity(int width, int height) : this(width, height, Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize)) { }
+        public Entity(int width, int height) : this(width, height, GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize)) { }
 
         /// <summary>
         /// Creates a new Entity.
@@ -108,7 +108,7 @@ namespace SadConsole.Entities
         /// <param name="foreground">The foreground color of the entity.</param>
         /// <param name="background">The background color of the entity.</param>
         /// <param name="glyph">The glyph color of the entity.</param>
-        public Entity(Color foreground, Color background, int glyph) : this(1, 1, Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize))
+        public Entity(Color foreground, Color background, int glyph) : this(1, 1, GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize))
         {
             _animation.CurrentFrame.SetGlyph(0, 0, glyph, foreground, background);
             _animation.IsDirty = true;
