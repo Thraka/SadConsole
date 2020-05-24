@@ -62,7 +62,7 @@ namespace EntityPlugin.Panels
 
             // Frames area
             framesCounterBox = new DrawingSurface(ToolPane.PanelWidthControls, 1);
-            framesCounterBox.OnDraw = (drawSurface) =>
+            framesCounterBox.OnDraw = (drawSurface, delta) =>
             {
                 ColoredString frameNumber = new ColoredString((currentAnimation.Frames.IndexOf(selectedFrame) + 1).ToString(), SadConsole.UI.Themes.Library.Default.Colors.Blue, drawSurface.Theme.Normal.Background);
                 ColoredString frameSep = new ColoredString(" \\ ", SadConsole.UI.Themes.Library.Default.Colors.Gray, drawSurface.Theme.Normal.Background);

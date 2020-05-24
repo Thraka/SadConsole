@@ -203,10 +203,11 @@ namespace SadConsoleEditor.Windows
             _blueInput.Text = _barB.SelectedColor.B.ToString();
         }
 
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
-            var colors = FindThemeColors();
-            var theme = ((SadConsole.UI.Themes.Window)Theme);
+            base.OnInvalidated();
+            var colors = GetThemeColors();
+            var fillStyle = new ColoredGlyph(colors.ControlHostFore, colors.ControlHostBack);
 
             int lineY = Height - 10;
             int lineX = Width - RideSideX;
@@ -246,7 +247,7 @@ namespace SadConsoleEditor.Windows
             // Preview area
             this.Print(lineX + 2, 1, "Selected Color");
 
-            this.DrawBox(new Rectangle(lineX + 2, 2, 14, 3), theme.FillStyle, new SadConsole.ColoredGlyph(theme.FillStyle.Foreground, SelectedColor));
+            this.DrawBox(new Rectangle(lineX + 2, 2, 14, 3), fillStyle, new SadConsole.ColoredGlyph(fillStyle.Foreground, SelectedColor));
 
             // Current selected gradient colors
             this.Print(lineX + 2, 5, SelectedColor.R.ToString().PadLeft(3, '0'), colors.Red);

@@ -157,9 +157,9 @@ namespace SadConsoleEditor.Controls
 
         public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            base.RefreshTheme(themeColors, control);
-
             if (themeColors == null) themeColors = Library.Default.Colors;
+
+            base.RefreshTheme(themeColors, control);
 
             _directoryAppNormal.Background = themeColors.ControlBack;
             _directoryAppMouseOver.Background = themeColors.ControlBackLight;

@@ -55,9 +55,9 @@ namespace SadConsoleEditor.Consoles
             return true;
         }
 
-        public override void Draw()
+        public override void Draw(TimeSpan delta)
         {
-            base.Draw();
+            base.Draw(delta);
 
             MainConsole.Instance.ActiveEditor?.Draw();
         }

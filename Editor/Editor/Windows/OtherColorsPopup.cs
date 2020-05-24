@@ -236,15 +236,16 @@ namespace SadConsoleEditor.Windows
                 _selectedAnsiColorIconPrevious = _selectedAnsiColorIcon;
                 _selectedAnsiColorIcon = new Point(((Button)sender).Position.X - 1, ((Button)sender).Position.Y);
 
-                OnThemeDrawn();
+                IsDirty = true;
             }
         }
         
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
             if (!_isCreated) return;
 
-            var colors = FindThemeColors();
+            base.OnInvalidated();
+            var colors = GetThemeColors();
 
             if (!_namedColorsList.IsVisible)
             {

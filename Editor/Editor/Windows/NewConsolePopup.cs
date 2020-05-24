@@ -81,13 +81,11 @@ namespace SadConsoleEditor.Windows
             //    Position = new SadRogue.Primitives.Point(9, 3)
             //};
 
-            var theme = (SadConsole.UI.Themes.Window)Theme;
-            
-            _foregroundPicker = new SadConsoleEditor.Controls.ColorPresenter("Foreground", theme.FillStyle.Foreground, Width - 4);
+            _foregroundPicker = new SadConsoleEditor.Controls.ColorPresenter("Foreground", Color.White, Width - 4);
             _foregroundPicker.Position = new Point(2, 9);
             _foregroundPicker.SelectedColor = Color.White;
 
-            _backgroundPicker = new SadConsoleEditor.Controls.ColorPresenter("Background", theme.FillStyle.Foreground, Width - 4);
+            _backgroundPicker = new SadConsoleEditor.Controls.ColorPresenter("Background", Color.Transparent, Width - 4);
             _backgroundPicker.Position = new Point(2, 10);
             _backgroundPicker.SelectedColor = Color.Black;
 
@@ -107,8 +105,18 @@ namespace SadConsoleEditor.Windows
             _editorsListBox.SelectedItem = _editorsListBox.Items[0];
         }
 
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
+            base.OnInvalidated();
+
+            var colors = GetThemeColors();
+            var fillStyle = new ColoredGlyph(colors.ControlHostFore, colors.ControlHostBack);
+
+
+            //_foregroundPicker.SelectedColor = fillStyle.Foreground;
+            //_backgroundPicker.SelectedColor = fillStyle.Background;
+
+
             //this.Print(2, 3, "Name");
             this.Print(2, 2, "Editor");
             this.Print(2, 7, "Width");

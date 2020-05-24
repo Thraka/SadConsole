@@ -18,6 +18,6 @@
     "DefaultHeight": 25,
     "DefaultWidth": 80,
     "Tools": [ "PENCIL", "EMPTY", "RECOLOR", "FILL", "TEXT", "LINE", "BOX", "CIRCLE", "SELECT" ],
-    "FileLoaders": [ "SURFACE", "CONSOLE", "SCROLLING" ]
+    "FileLoaders": [ "SURFACE", "CONSOLE" ]
   }
 ]

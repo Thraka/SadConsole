@@ -40,7 +40,7 @@ namespace EntityPlugin.Panels
             Controls = new ControlBase[] { setName, nameTitle };
         }
 
-        private void PrintName(DrawingSurface drawing)
+        private void PrintName(DrawingSurface drawing, TimeSpan delta)
         {
             drawing.Surface.Clear();
             drawing.Surface.Print(0, 0, "Name", SadConsole.UI.Themes.Library.Default.Colors.Green);

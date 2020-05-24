@@ -118,16 +118,16 @@
 
                     Point position = Point.FromIndex(cells.IndexOf(c), screenObject.Surface.BufferWidth);
 
-                    connections.West = screenObject.Surface.IsValidCell(position.X - 1, position.Y) ? screenObject.Surface[position.X - 1, position.Y] : null;
-                    connections.East = screenObject.Surface.IsValidCell(position.X + 1, position.Y) ? screenObject.Surface[position.X + 1, position.Y] : null;
-                    connections.North = screenObject.Surface.IsValidCell(position.X, position.Y - 1) ? screenObject.Surface[position.X, position.Y - 1] : null;
-                    connections.South = screenObject.Surface.IsValidCell(position.X, position.Y + 1) ? screenObject.Surface[position.X, position.Y + 1] : null;
+                    connections.West = screenObject.Surface.IsValidCell(position.X - 1, position.Y, out int index) ? screenObject.Surface[index] : null;
+                    connections.East = screenObject.Surface.IsValidCell(position.X + 1, position.Y, out index) ? screenObject.Surface[index] : null;
+                    connections.North = screenObject.Surface.IsValidCell(position.X, position.Y - 1, out index) ? screenObject.Surface[index] : null;
+                    connections.South = screenObject.Surface.IsValidCell(position.X, position.Y + 1, out index) ? screenObject.Surface[index] : null;
 
                     return connections;
                 };
 
                 if (!isTargetCell(currentFillCell))
-                    SadConsole.Algorithms.FloodFill<ColoredGlyph>(info.Cell, isTargetCell, fillCell, getConnectedCells);
+                    SadConsole.Algorithms.FloodFill(info.Cell, isTargetCell, fillCell, getConnectedCells);
 
                 ((IScreenSurface)info.ScreenObject).IsDirty = true;
             }

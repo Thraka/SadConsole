@@ -12,6 +12,7 @@ namespace SadConsoleEditor.Windows
 {
     public class SelectEditorFilePopup : SadConsole.UI.Window
     {
+        private bool _initialized;
         private string currentFolder;
         private string fileFilterString;
         private Controls.FileDirectoryListbox directoryListBox;
@@ -113,6 +114,7 @@ namespace SadConsoleEditor.Windows
 
             editorsListBox.SelectedItem = editorsListBox.Items[0];
             Title = "Select File";
+            _initialized = true;
         }
 
         private void EditorsListBox_SelectedItemChanged(object sender, ListBox.SelectedItemEventArgs e)
@@ -197,9 +199,13 @@ namespace SadConsoleEditor.Windows
             selectButton.IsEnabled = fileName.Text != "" && (SkipFileExistCheck || System.IO.File.Exists(System.IO.Path.Combine(directoryListBox.CurrentFolder, fileName.Text)));
         }
 
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
-            var colors = FindThemeColors();
+            if (!_initialized) return;
+
+            base.OnInvalidated();
+
+            var colors = GetThemeColors();
 
             //    this.Print(2, Height - 2, fileFilterString.Replace(';', ' ').Replace("*", ""));
 

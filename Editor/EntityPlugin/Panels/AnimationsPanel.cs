@@ -89,7 +89,7 @@ namespace EntityPlugin.Panels
             setBoundingBoxButton.Click += (s, e) => invokeCustomToolCallback(CustomTool.CollisionBox);
 
             animationSpeedLabel = new DrawingSurface(ToolPane.PanelWidthControls - changeSpeedButton.Width, 1);
-            animationSpeedLabel.OnDraw = (label) =>
+            animationSpeedLabel.OnDraw = (label, delta) =>
             {
                 label.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Green, label.Theme.Normal.Background, 0, null);
                 label.Surface.Print(0, 0, new ColoredString("Speed: ", SadConsole.UI.Themes.Library.Default.Colors.Green, label.Theme.Normal.Background) + new ColoredString(((AnimatedScreenSurface)animations.SelectedItem).AnimationDuration.ToString(), SadConsole.UI.Themes.Library.Default.Colors.Blue, label.Theme.Normal.Background));

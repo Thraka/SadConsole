@@ -65,7 +65,7 @@ namespace SadConsoleEditor.Panels
             DocumentsListbox.SelectedItemChanged += DocumentsListbox_SelectedItemChanged;
 
             documentsTitle = new DrawingSurface(13, 1);
-            documentsTitle.OnDraw = (control) =>
+            documentsTitle.OnDraw = (control, ts) =>
             {
                 var colors = control.FindThemeColors();
                 control.Surface.Fill(colors.Green, colors.ControlHostBack, 0, null);

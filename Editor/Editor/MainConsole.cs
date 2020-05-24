@@ -110,7 +110,7 @@ namespace SadConsoleEditor
 
             InnerEmptyBounds = new Rectangle(boundsLocation,
                                     new Point(
-                                        new Point(ToolsPane.Position.X, 0).TranslateFont(Global.DefaultFont.GetFontSize(Global.DefaultFontSize), Config.Program.ScreenFontSize).X - boundsLocation.X - 1,
+                                        new Point(ToolsPane.Position.X, 0).TranslateFont(SadConsole.GameHost.Instance.DefaultFont.GetFontSize(SadConsole.GameHost.Instance.DefaultFontSize), Config.Program.ScreenFontSize).X - boundsLocation.X - 1,
                                         new Point(0, QuickSelectPane.Position.Y).PixelLocationToSurface(Config.Program.ScreenFontSize).Y - 1 - boundsLocation.Y));
 
             InnerEmptyBoundsPixels = new Rectangle(InnerEmptyBounds.Position.SurfaceLocationToPixel(Config.Program.ScreenFontSize), InnerEmptyBounds.Size.SurfaceLocationToPixel(Config.Program.ScreenFontSize));
@@ -188,7 +188,7 @@ namespace SadConsoleEditor
                 ToolsPane.RegisterTool(tool);
 
             IsExclusiveMouse = true;
-            SadConsole.Global.FocusedScreenObjects.Set(this);
+            SadConsole.GameHost.Instance.FocusedScreenObjects.Set(this);
         }
 
         public void ShowStartup()
@@ -426,9 +426,9 @@ namespace SadConsoleEditor
             topBarPane.Print(0, 0, text);
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
-            base.Update();
+            base.Update(delta);
 
             ActiveEditor?.Update();
         }
@@ -468,19 +468,19 @@ namespace SadConsoleEditor
 
                 if (AllowKeyboardToMoveConsole && ActiveEditor != null && ActiveEditor.Object != null)
                 {
-                    bool shifted = Global.Keyboard.IsKeyDown(Keys.LeftShift) || Global.Keyboard.IsKeyDown(Keys.RightShift);
+                    bool shifted = SadConsole.GameHost.Instance.Keyboard.IsKeyDown(Keys.LeftShift) || SadConsole.GameHost.Instance.Keyboard.IsKeyDown(Keys.RightShift);
                     var oldRenderArea = ActiveEditor.Object.Surface.View;
 
-                    if (!shifted && Global.Keyboard.IsKeyDown(Keys.Left))
+                    if (!shifted && SadConsole.GameHost.Instance.Keyboard.IsKeyDown(Keys.Left))
                         ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X - 1, ActiveEditor.Object.Surface.View.Y, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
-                    else if (!shifted && Global.Keyboard.IsKeyDown(Keys.Right))
+                    else if (!shifted && SadConsole.GameHost.Instance.Keyboard.IsKeyDown(Keys.Right))
                         ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X + 1, ActiveEditor.Object.Surface.View.Y, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
-                    if (!shifted && Global.Keyboard.IsKeyDown(Keys.Up))
+                    if (!shifted && SadConsole.GameHost.Instance.Keyboard.IsKeyDown(Keys.Up))
                         ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X, ActiveEditor.Object.Surface.View.Y - 1, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
-                    else if (!shifted && Global.Keyboard.IsKeyDown(Keys.Down))
+                    else if (!shifted && SadConsole.GameHost.Instance.Keyboard.IsKeyDown(Keys.Down))
                         ActiveEditor.Object.Surface.View = new Rectangle(ActiveEditor.Object.Surface.View.X, ActiveEditor.Object.Surface.View.Y + 1, BorderBounds.Width - 2, BorderBounds.Height - 2);
 
                     movekeyPressed = oldRenderArea != ActiveEditor.Object.Surface.View;
@@ -500,16 +500,16 @@ namespace SadConsoleEditor
                     //else
                     {
                         // Look for tool hotkeys
-                        if (ToolsPane.ProcessKeyboard(Global.Keyboard))
+                        if (ToolsPane.ProcessKeyboard(SadConsole.GameHost.Instance.Keyboard))
                         {
                         }
                         // Look for quick select F* keys
-                        else if (QuickSelectPane.ProcessKeyboard(Global.Keyboard))
+                        else if (QuickSelectPane.ProcessKeyboard(SadConsole.GameHost.Instance.Keyboard))
                         {
                         }
                         else if (ActiveEditor != null)
                         {
-                            ActiveEditor.ProcessKeyboard(Global.Keyboard);
+                            ActiveEditor.ProcessKeyboard(SadConsole.GameHost.Instance.Keyboard);
                         }
                     }
                 }

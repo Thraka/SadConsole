@@ -65,8 +65,9 @@ namespace SadConsoleEditor.Windows
             //Add(_name);
         }
 
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
+            base.OnInvalidated();
             //this.Print(2, 3, "Name");
             this.Print(2, 2, "Width");
             this.Print(2, 3, "Height");

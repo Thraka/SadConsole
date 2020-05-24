@@ -82,7 +82,7 @@ namespace SadConsoleEditor
                     frame.Print(0, 0, Name, Color.DarkGray);
 
                     Entity.Animation = newAnimation;
-                    Entity.Update();
+                    Entity.Update(TimeSpan.Zero);
 
                     Entity.Position = new Point(positionX ?? Entity.Position.X, positionY ?? Entity.Position.Y);
 
@@ -103,12 +103,12 @@ namespace SadConsoleEditor
             Entity.Animation.CurrentFrame.Print(0, 0, Name, Color.DarkGray);
         }
 
-        public void Draw()
+        public void Draw(TimeSpan delta)
         {
             // This steals the code from the renderer. This DRAW method is called in the middle of
-            // an existing draw call chain, so the existing state of the Global.SpriteBatch is reused.
+            // an existing draw call chain, so the existing state of the SadConsole.GameHost.Instance.SpriteBatch is reused.
             Entity.PositionOffset = RenderOffset;
-            Entity.Draw();
+            Entity.Draw(delta);
             //tempRenderer.RenderCells(Entity.Animation, true);
 
             if (isSelected)
@@ -116,7 +116,7 @@ namespace SadConsoleEditor
                 overlay.PositionOffset = Entity.PositionOffset = renderOffset;
                 overlay.Position = Entity.Position - Entity.Animation.Center - new Point(1, 1);
                 //tempRenderer.RenderCells(overlay.Animation, true);
-                overlay.Draw();
+                overlay.Draw(delta);
             }
 
         }

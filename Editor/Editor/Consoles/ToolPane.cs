@@ -83,10 +83,12 @@ namespace SadConsoleEditor.Consoles
                     yield return Tools[id];
             }
         }
-
-        protected override void OnThemeDrawn()
+        
+        protected override void OnInvalidated()
         {
             if (!_isInitialized) return;
+
+            base.OnInvalidated();
 
             foreach (var item in _redrawCommands)
                 this.Print(item.Item1, item.Item2, item.Item3);
@@ -163,8 +165,6 @@ namespace SadConsoleEditor.Consoles
                 ToolsPaneScroller.Maximum = scrollAbility;
                 ToolsPaneScroller.IsEnabled = true;
             }
-
-            RedrawTheme();
         }
         
         public override bool ProcessMouse(MouseScreenObjectState state)

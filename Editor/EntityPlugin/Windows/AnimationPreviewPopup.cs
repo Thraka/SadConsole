@@ -37,9 +37,14 @@ namespace EntityPlugin.Windows
             Add(restartAnimation);
         }
 
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
-            var borderStyle = ((SadConsole.UI.Themes.Window)Theme).BorderStyle;
+            base.OnInvalidated();
+
+            var themeColors = GetThemeColors();
+
+            var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
+            var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
 
             // Draw bar
             for (int i = 1; i < Width - 1; i++)

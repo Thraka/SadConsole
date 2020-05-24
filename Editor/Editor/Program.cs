@@ -34,28 +34,29 @@ namespace SadConsoleEditor
 
         private static void Init()
         {
-            Config.Program.ScreenFont = Global.DefaultFont;
-            Config.Program.ScreenFontSize = Global.DefaultFont.GetFontSize(Font.Sizes.One);
+            Config.Program.ScreenFont = SadConsole.GameHost.Instance.DefaultFont;
+            Config.Program.ScreenFontSize = SadConsole.GameHost.Instance.DefaultFont.GetFontSize(Font.Sizes.One);
 
             // Any setup
             //            if (Settings.UnlimitedFPS)
             //                SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
 
             Settings.WindowTitle = "SadConsole Editor - v" + System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
-            var windowTheme = (SadConsole.UI.Themes.Window)SadConsole.UI.Themes.Library.Default.GetConsoleTheme(typeof(SadConsole.UI.Window));
-            windowTheme.BorderLineStyle = ICellSurface.ConnectedLineThick;
-            SadConsole.UI.Themes.Library.Default.SetConsoleTheme(typeof(SadConsole.UI.Window), windowTheme);
+            //var windowTheme = (SadConsole.UI.Themes.Window)SadConsole.UI.Themes.Library.Default.GetConsoleTheme(typeof(SadConsole.UI.Window));
+            //windowTheme.BorderLineStyle = ICellSurface.ConnectedLineThick;
+            //SadConsole.UI.Themes.Library.Default.SetConsoleTheme(typeof(SadConsole.UI.Window), windowTheme);
 
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.CharacterPicker), new Controls.CharacterPicker.ThemeType());
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorBar), new Controls.ColorBar.ThemeType());
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorPresenter), new Controls.ColorPresenter.ThemeType());
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorPicker), new Controls.ColorPicker.ThemeType());
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.HueBar), new Controls.HueBar.ThemeType());
-
-            //Global.MouseState.ProcessMouseWhenOffScreen = true;
+            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.FileDirectoryListbox), new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme()));
+            
+            //SadConsole.GameHost.Instance.MouseState.ProcessMouseWhenOffScreen = true;
 
             // We'll instead use our demo consoles that show various features of SadConsole.
-            Global.Screen = new MainConsole();
+            SadConsole.GameHost.Instance.Screen = new MainConsole();
             
             MainConsole.Instance.ShowStartup();
         }

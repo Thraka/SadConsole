@@ -176,9 +176,10 @@ namespace SadConsoleEditor.Windows
             selectButton.IsEnabled = fileName.Text != "" && (SkipFileExistCheck || System.IO.File.Exists(System.IO.Path.Combine(directoryListBox.CurrentFolder, fileName.Text)));
         }
 
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
-            var themeColors = FindThemeColors();
+            base.OnInvalidated();
+            var themeColors = GetThemeColors();
 
             //    this.Print(2, Height - 2, fileFilterString.Replace(';', ' ').Replace("*", ""));
             this.Print(fileLoadersList.Bounds.X, fileLoadersList.Bounds.Y - 2, "Type of file", themeColors.TitleText);

@@ -46,7 +46,7 @@ namespace SadConsoleEditor.Windows
 
 
             previewPane = new DrawingSurface(Width - fontsListbox.Bounds.MaxExtentX - 3, Height - fontsListbox.Bounds.Y - 8);
-            previewPane.OnDraw = (d) =>
+            previewPane.OnDraw = (d, ts) =>
             {
                 if (textInput.Text == "")
                 {
@@ -186,10 +186,11 @@ namespace SadConsoleEditor.Windows
             
         }
 
-        protected override void OnThemeDrawn()
+        protected override void OnInvalidated()
         {
             if (!_isCreated) return;
-            var colors = FindThemeColors();
+            base.OnInvalidated();
+            var colors = GetThemeColors();
 
             this.Print(fontsListbox.Bounds.X, fontsListbox.Bounds.Y - 2, "Fonts", colors.TitleText);
             this.Print(fontsListbox.Bounds.X, fontsListbox.Bounds.Y - 1, new string((char)196, fontsListbox.Width));
