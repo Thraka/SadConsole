@@ -7,7 +7,7 @@ namespace SadConsole.Tests.UI
     class ConsoleTabing
     {
         /*
-        var controlsConsole = new SadConsole.UI.ControlsConsole(Global.Screen.Width, 11);
+        var controlsConsole = new SadConsole.UI.ControlsConsole(GameHost.Instance.Screen.Width, 11);
 
         controlsConsole.Add(new SadConsole.UI.Controls.Button(10, 1) { Text = "Button", Position = (2, 2), TabStop = false });
             controlsConsole.Add(new SadConsole.UI.Controls.Button(10, 1) { Text = "Button", Position = (2, 4) });
@@ -16,11 +16,11 @@ namespace SadConsole.Tests.UI
             controlsConsole.Add(new SadConsole.UI.Controls.Button(10, 1) { Text = "Button", Position = (2, 10) });
             controlsConsole.CanTabToNextConsole = true;
             
-            Global.Screen.Children.Add(controlsConsole);
+            GameHost.Instance.Screen.Children.Add(controlsConsole);
 
             controlsConsole.IsFocused = true;
 
-            controlsConsole = new SadConsole.UI.ControlsConsole(Global.Screen.Width, 11);
+            controlsConsole = new SadConsole.UI.ControlsConsole(GameHost.Instance.Screen.Width, 11);
 
             controlsConsole.Add(new SadConsole.UI.Controls.Button(10, 1) { Text = "Button 2", Position = (2, 2) });
             controlsConsole.Add(new SadConsole.UI.Controls.Button(10, 1) { Text = "Button 2", Position = (2, 4), TabStop = false });
@@ -30,7 +30,7 @@ namespace SadConsole.Tests.UI
             controlsConsole.CanTabToNextConsole = true;
             controlsConsole.Position = (0, 12);
 
-            Global.Screen.Children.Add(controlsConsole);
+            GameHost.Instance.Screen.Children.Add(controlsConsole);
             */
     }
 }

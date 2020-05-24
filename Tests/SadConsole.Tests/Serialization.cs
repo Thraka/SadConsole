@@ -88,8 +88,8 @@ namespace SadConsole.Tests
 
             for (int i = 0; i < 10; i++)
             {
-                int index1 = SadConsole.Global.Random.Next(0, obj.Surface.Cells.Length);
-                int index2 = SadConsole.Global.Random.Next(0, obj.Surface.Cells.Length);
+                int index1 = SadConsole.GameHost.Instance.Random.Next(0, obj.Surface.Cells.Length);
+                int index2 = SadConsole.GameHost.Instance.Random.Next(0, obj.Surface.Cells.Length);
 
                 Assert.IsTrue(obj.Surface[index1].Equals(newObj.Surface[index1]));
                 Assert.IsTrue(obj2.Surface[index2].Equals(((ScreenSurface)newObj.Children[0]).Surface[index2]));
