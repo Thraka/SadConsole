@@ -33,6 +33,16 @@ namespace SadConsole
         event EventHandler VisibleChanged;
 
         /// <summary>
+        /// Raised when the <see cref="IsFocused"/> property is <see langword="false"/>.
+        /// </summary>
+        event EventHandler FocusLost;
+
+        /// <summary>
+        /// Raised when the <see cref="IsFocused"/> property is <see langword="true"/>.
+        /// </summary>
+        event EventHandler FocusGained;
+
+        /// <summary>
         /// How the object should handle becoming active.
         /// </summary>
         FocusBehavior FocusedMode { get; set; }
@@ -114,14 +124,14 @@ namespace SadConsole
         /// </summary>
         /// <typeparam name="TComponent">The component to find</typeparam>
         /// <returns>The components found.</returns>
-        TComponent GetSadComponent<TComponent>() where TComponent : IComponent;
+        TComponent GetSadComponent<TComponent>() where TComponent : class, IComponent;
 
         /// <summary>
         /// Gets the first component of the specified type.
         /// </summary>
         /// <typeparam name="TComponent">The component to find.</typeparam>
         /// <returns>The component if found, otherwise null.</returns>
-        IEnumerable<TComponent> GetSadComponents<TComponent>() where TComponent : IComponent;
+        IEnumerable<TComponent> GetSadComponents<TComponent>() where TComponent : class, IComponent;
 
         /// <summary>
         /// Indicates whether or not the component exists in the <see cref="SadComponents"/> collection.

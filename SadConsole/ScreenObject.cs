@@ -41,6 +41,12 @@ namespace SadConsole
         /// <inheritdoc/>
         public event EventHandler EnabledChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler FocusLost;
+
+        /// <inheritdoc/>
+        public event EventHandler FocusGained;
+
         /// <summary>
         /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsUpdate"/> is <see langword="true"/>.
         /// </summary>
@@ -278,27 +284,40 @@ namespace SadConsole
         public virtual void OnFocused() { }
 
         /// <inheritdoc/>
-        public IEnumerable<IComponent> GetSadComponents<TComponent>()
-            where TComponent : IComponent
+        public IEnumerable<TComponent> GetSadComponents<TComponent>()
+            where TComponent : class, IComponent
         {
             foreach (IComponent component in SadComponents)
             {
                 if (component is TComponent)
-                    yield return component;
+                    yield return (TComponent)component;
             }
         }
 
         /// <inheritdoc/>
-        public IComponent GetSadComponent<TComponent>()
-            where TComponent : IComponent
+        public TComponent GetSadComponent<TComponent>()
+            where TComponent : class, IComponent
         {
             foreach (IComponent component in SadComponents)
             {
                 if (component is TComponent)
-                    return component;
+                    return (TComponent)component;
             }
 
             return null;
+        }
+
+        /// <inheritdoc/>
+        public bool HasSadComponent<TComponent>()
+            where TComponent: IComponent
+        {
+            foreach (IComponent component in SadComponents)
+            {
+                if (component is TComponent)
+                    return true;
+            }
+
+            return false;
         }
 
 
