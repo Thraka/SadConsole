@@ -659,14 +659,16 @@ namespace SadConsole
         //    batch.Draw(font.FontImage, renderArea, font.GlyphRects[CursorRenderCell.Glyph], CursorRenderCell.Foreground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
         //}
 
-        internal void Update(TimeSpan elapsed)
+        /// <summary>
+        /// Redraws the <see cref="CursorEffect"/> to <see cref="CursorRenderCell"/>.
+        /// </summary>
+        /// <param name="elapsed"></param>
+        public void UpdateRenderCell(TimeSpan elapsed)
         {
             if (CursorEffect != null)
             {
                 CursorEffect.Update(elapsed.TotalSeconds);
-
-                if (CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState))
-                    _editor.IsDirty = true;
+                CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
             }
         }
 

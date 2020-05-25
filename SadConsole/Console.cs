@@ -115,7 +115,7 @@ namespace SadConsole
             base.Update(delta);
 
             if (!IsCursorDisabled && Cursor.IsVisible)
-                Cursor.Update(delta);
+                Cursor.UpdateRenderCell(delta);
         }
 
         /// <inheritdoc />
