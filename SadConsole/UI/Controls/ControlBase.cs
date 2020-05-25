@@ -82,7 +82,7 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
-        /// Indicates weather or not this control is visible.
+        /// Indicates whether or not this control is visible.
         /// </summary>
         [DataMember]
         public bool IsVisible { get; set; }
@@ -93,7 +93,7 @@ namespace SadConsole.UI.Controls
         public object Tag { get; set; }
 
         /// <summary>
-        /// Indicates weather or not this control can be tabbed to.
+        /// Indicates whether or not this control can be tabbed to.
         /// </summary>
         [DataMember]
         public bool TabStop { get; set; }
@@ -105,7 +105,7 @@ namespace SadConsole.UI.Controls
         public int TabIndex { get; set; }
 
         /// <summary>
-        /// Indicates weather or not this control is dirty and should be redrawn.
+        /// Indicates whether or not this control is dirty and should be redrawn.
         /// </summary>
         public bool IsDirty
         {
@@ -127,7 +127,7 @@ namespace SadConsole.UI.Controls
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets weather or not this control will become focused when the mouse is clicked.
+        /// Gets or sets whether or not this control will become focused when the mouse is clicked.
         /// </summary>
         [DataMember]
         public bool FocusOnClick { get; set; }
@@ -144,7 +144,7 @@ namespace SadConsole.UI.Controls
 
 
         /// <summary>
-        /// Gets or sets weather or not this control is focused.
+        /// Gets or sets whether or not this control is focused.
         /// </summary>
         public bool IsFocused
         {
@@ -176,7 +176,7 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
-        /// Gets or sets weather or not this control is enabled.
+        /// Gets or sets whether or not this control is enabled.
         /// </summary>
         [DataMember]
         public bool IsEnabled

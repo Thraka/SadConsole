@@ -2420,6 +2420,12 @@
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
+        <member name="M:SadConsole.Cursor.UpdateRenderCell(System.TimeSpan)">
+            <summary>
+            Redraws the <see cref="P:SadConsole.Cursor.CursorEffect"/> to <see cref="P:SadConsole.Cursor.CursorRenderCell"/>.
+            </summary>
+            <param name="elapsed"></param>
+        </member>
         <member name="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
             Automates the cursor based on keyboard input.
@@ -3494,6 +3500,13 @@
             </summary>
             <param name="screenObject">The object to get a renderer for.</param>
             <returns>A renderer.</returns>
+        </member>
+        <member name="M:SadConsole.GameHost.GetRenderer(System.String)">
+            <summary>
+            Creates and returns a renderer by name.
+            </summary>
+            <param name="name">The name of the renderer.</param>
+            <returns>A new renderer.</returns>
         </member>
         <member name="M:SadConsole.GameHost.GetKeyboardState">
             <summary>
@@ -5488,6 +5501,16 @@
             Raised when the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property changes.
             </summary>
         </member>
+        <member name="E:SadConsole.IScreenObject.FocusLost">
+            <summary>
+            Raised when the <see cref="P:SadConsole.IScreenObject.IsFocused"/> property is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="E:SadConsole.IScreenObject.FocusGained">
+            <summary>
+            Raised when the <see cref="P:SadConsole.IScreenObject.IsFocused"/> property is <see langword="true"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.IScreenObject.FocusedMode">
             <summary>
             How the object should handle becoming active.
@@ -5569,15 +5592,22 @@
             <summary>
             Gets components of the specified types.
             </summary>
-            <typeparam name="TComponent">THe component to find</typeparam>
+            <typeparam name="TComponent">The component to find</typeparam>
             <returns>The components found.</returns>
         </member>
         <member name="M:SadConsole.IScreenObject.GetSadComponents``1">
             <summary>
             Gets the first component of the specified type.
             </summary>
-            <typeparam name="TComponent">THe component to find</typeparam>
+            <typeparam name="TComponent">The component to find.</typeparam>
             <returns>The component if found, otherwise null.</returns>
+        </member>
+        <member name="M:SadConsole.IScreenObject.HasSadComponent``1">
+            <summary>
+            Indicates whether or not the component exists in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection.
+            </summary>
+            <typeparam name="TComponent">The component to find.</typeparam>
+            <returns><see langword="true"/> when the component exists; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.IScreenObject.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
@@ -6012,6 +6042,12 @@
         <member name="E:SadConsole.ScreenObject.EnabledChanged">
             <inheritdoc/>
         </member>
+        <member name="E:SadConsole.ScreenObject.FocusLost">
+            <inheritdoc/>
+        </member>
+        <member name="E:SadConsole.ScreenObject.FocusGained">
+            <inheritdoc/>
+        </member>
         <member name="F:SadConsole.ScreenObject.ComponentsUpdate">
             <summary>
             A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
@@ -6103,6 +6139,9 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenObject.GetSadComponent``1">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObject.HasSadComponent``1">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenObject.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
@@ -7139,7 +7178,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsVisible">
             <summary>
-            Indicates weather or not this control is visible.
+            Indicates whether or not this control is visible.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Tag">
@@ -7149,7 +7188,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.TabStop">
             <summary>
-            Indicates weather or not this control can be tabbed to.
+            Indicates whether or not this control can be tabbed to.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.TabIndex">
@@ -7159,7 +7198,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsDirty">
             <summary>
-            Indicates weather or not this control is dirty and should be redrawn.
+            Indicates whether or not this control is dirty and should be redrawn.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Name">
@@ -7169,7 +7208,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.FocusOnClick">
             <summary>
-            Gets or sets weather or not this control will become focused when the mouse is clicked.
+            Gets or sets whether or not this control will become focused when the mouse is clicked.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Width">
@@ -7184,12 +7223,12 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsFocused">
             <summary>
-            Gets or sets weather or not this control is focused.
+            Gets or sets whether or not this control is focused.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsEnabled">
             <summary>
-            Gets or sets weather or not this control is enabled.
+            Gets or sets whether or not this control is enabled.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Bounds">
@@ -7834,12 +7873,12 @@
         </member>
         <member name="P:SadConsole.UI.Controls.TextBox.IsNumeric">
             <summary>
-            Gets or sets weather or not this input box only allows numeric input.
+            Gets or sets whether or not this input box only allows numeric input.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.TextBox.AllowDecimal">
             <summary>
-            Gets or sets weather or not this input box should restrict numeric input should allow a decimal point.
+            Gets or sets whether or not this input box should restrict numeric input should allow a decimal point.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.TextBox.#ctor(System.Int32)">

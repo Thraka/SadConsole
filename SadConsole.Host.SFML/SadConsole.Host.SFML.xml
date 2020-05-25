@@ -109,6 +109,9 @@
         <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
             <inheritdoc/> 
         </member>
+        <member name="M:SadConsole.Game.GetRenderer(System.String)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.Game.GetDefaultRenderer(SadConsole.IScreenSurface)">
             <inheritdoc/> 
         </member>
@@ -149,6 +152,11 @@
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>
         </member>
+        <member name="P:SadConsole.Renderers.ConsoleRenderer.Name">
+            <summary>
+            Name of this renderer type.
+            </summary>
+        </member>
         <member name="M:SadConsole.Renderers.ConsoleRenderer.Attach(SadConsole.ISurfaceRenderData)">
              <inheritdoc/>
         </member>
@@ -168,6 +176,11 @@
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>
         </member>
+        <member name="P:SadConsole.Renderers.ControlsConsole.Name">
+            <summary>
+            Name of this renderer type.
+            </summary>
+        </member>
         <member name="M:SadConsole.Renderers.ControlsConsole.Attach(SadConsole.ISurfaceRenderData)">
              <inheritdoc/>
         </member>
@@ -185,6 +198,11 @@
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
         </member>
+        <member name="P:SadConsole.Renderers.LayeredScreenObject.Name">
+            <summary>
+            Name of this renderer type.
+            </summary>
+        </member>
         <member name="M:SadConsole.Renderers.LayeredScreenObject.Attach(SadConsole.ISurfaceRenderData)">
              <inheritdoc/>
         </member>
@@ -199,6 +217,11 @@
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
         </member>
+        <member name="P:SadConsole.Renderers.ScreenObjectRenderer.Name">
+            <summary>
+            Name of this renderer type.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.Window">
              <summary>
              Draws a <see cref="T:SadConsole.Renderers.Window"/>.
@@ -208,6 +231,11 @@
             
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>
+        </member>
+        <member name="P:SadConsole.Renderers.Window.Name">
+            <summary>
+            Name of this renderer type.
+            </summary>
         </member>
         <member name="M:SadConsole.Renderers.Window.Attach(SadConsole.ISurfaceRenderData)">
              <inheritdoc/>
