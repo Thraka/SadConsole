@@ -1,7 +1,7 @@
 ﻿namespace SadConsole
 {
     /// <summary>
-    /// How the console handles becoming focused and added to the <see cref="GameHost.Instance.FocusedScreenObjects"/> collection.
+    /// How the console handles becoming focused and added to the <see cref="GameHost.FocusedScreenObjects"/> collection.
     /// </summary>
     public enum FocusBehavior
     {
@@ -13,6 +13,11 @@
         /// <summary>
         /// Pushes to the top of the stack when it becomes the active input object.
         /// </summary>
-        Push
+        Push,
+
+        /// <summary>
+        /// Don't use the global focus manager.
+        /// </summary>
+        None
     }
 }

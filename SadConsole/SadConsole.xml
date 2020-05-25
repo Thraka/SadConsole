@@ -3175,7 +3175,7 @@
         </member>
         <member name="T:SadConsole.FocusBehavior">
             <summary>
-            How the console handles becoming focused and added to the <see cref="!:GameHost.Instance.FocusedScreenObjects"/> collection.
+            How the console handles becoming focused and added to the <see cref="P:SadConsole.GameHost.FocusedScreenObjects"/> collection.
             </summary>
         </member>
         <member name="F:SadConsole.FocusBehavior.Set">
@@ -3186,6 +3186,11 @@
         <member name="F:SadConsole.FocusBehavior.Push">
             <summary>
             Pushes to the top of the stack when it becomes the active input object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.FocusBehavior.None">
+            <summary>
+            Don't use the global focus manager.
             </summary>
         </member>
         <member name="T:SadConsole.FocusedScreenObjectStack">
@@ -3201,6 +3206,11 @@
         <member name="F:SadConsole.FocusedScreenObjectStack._screenObjects">
             <summary>
             The stack of screen objects for input processing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FocusedScreenObjectStack.#ctor">
+            <summary>
+            Creates a new instance of the class.
             </summary>
         </member>
         <member name="M:SadConsole.FocusedScreenObjectStack.Clear">
@@ -5506,7 +5516,7 @@
             Raised when the <see cref="P:SadConsole.IScreenObject.IsFocused"/> property is <see langword="false"/>.
             </summary>
         </member>
-        <member name="E:SadConsole.IScreenObject.FocusGained">
+        <member name="E:SadConsole.IScreenObject.Focused">
             <summary>
             Raised when the <see cref="P:SadConsole.IScreenObject.IsFocused"/> property is <see langword="true"/>.
             </summary>
@@ -6045,7 +6055,7 @@
         <member name="E:SadConsole.ScreenObject.FocusLost">
             <inheritdoc/>
         </member>
-        <member name="E:SadConsole.ScreenObject.FocusGained">
+        <member name="E:SadConsole.ScreenObject.Focused">
             <inheritdoc/>
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsUpdate">

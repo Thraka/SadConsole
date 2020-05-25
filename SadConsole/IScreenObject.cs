@@ -40,7 +40,7 @@ namespace SadConsole
         /// <summary>
         /// Raised when the <see cref="IsFocused"/> property is <see langword="true"/>.
         /// </summary>
-        event EventHandler FocusGained;
+        event EventHandler Focused;
 
         /// <summary>
         /// How the object should handle becoming active.

@@ -20,6 +20,9 @@ namespace SadConsole
         /// </summary>
         private readonly List<IScreenObject> _screenObjects;
 
+        /// <summary>
+        /// Creates a new instance of the class.
+        /// </summary>
         public FocusedScreenObjectStack()
         {
             _screenObjects = new List<IScreenObject>();
@@ -31,14 +34,16 @@ namespace SadConsole
         /// </summary>
         public void Clear()
         {
+            if (_activeScreenObject == null) return;
+
             _screenObjects.Clear();
 
-            if (_activeScreenObject != null)
-            {
-                _activeScreenObject.OnFocusLost();
-            }
-
+            IScreenObject temp = _activeScreenObject;
             _activeScreenObject = null;
+
+            if (temp != null)
+                temp.IsFocused = false;
+
         }
 
         /// <summary>
@@ -50,18 +55,18 @@ namespace SadConsole
             if (screenObject != _activeScreenObject && screenObject != null)
             {
                 if (_screenObjects.Contains(screenObject))
-                {
                     _screenObjects.Remove(screenObject);
-                }
 
                 if (_activeScreenObject != null)
                 {
-                    _activeScreenObject.OnFocusLost();
+                    IScreenObject temp = _activeScreenObject;
+                    _activeScreenObject = null;
+                    temp.IsFocused = false;
                 }
 
                 _screenObjects.Add(screenObject);
                 _activeScreenObject = screenObject;
-                _activeScreenObject.OnFocused();
+                _activeScreenObject.IsFocused = true;
             }
         }
 
@@ -71,10 +76,7 @@ namespace SadConsole
         /// <param name="screenObject">The screen object to make active.</param>
         public void Set(IScreenObject screenObject)
         {
-            if (_activeScreenObject == screenObject)
-            {
-                return;
-            }
+            if (_activeScreenObject == screenObject) return;
 
             if (_screenObjects.Count != 0)
             {
@@ -92,23 +94,18 @@ namespace SadConsole
         {
             if (screenObject == _activeScreenObject)
             {
-                _activeScreenObject.OnFocusLost();
+                _activeScreenObject = null;
                 _screenObjects.Remove(screenObject);
+                screenObject.IsFocused = false;
 
                 if (_screenObjects.Count != 0)
                 {
                     _activeScreenObject = _screenObjects.Last();
-                    _activeScreenObject.OnFocused();
-                }
-                else
-                {
-                    _activeScreenObject = null;
+                    _activeScreenObject.IsFocused = true;
                 }
             }
             else
-            {
                 _screenObjects.Remove(screenObject);
-            }
         }
 
         /// <summary>
@@ -117,9 +114,7 @@ namespace SadConsole
         public void Pop()
         {
             if (_screenObjects.Count != 0)
-            {
                 Pop(_screenObjects.Last());
-            }
         }
 
         public static bool operator !=(FocusedScreenObjectStack left, IScreenObject right) => left._activeScreenObject != right;

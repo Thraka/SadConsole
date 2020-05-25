@@ -28,6 +28,8 @@ namespace SadConsole
         private IScreenObject _parentObject;
         private bool _isVisible = true;
         private bool _isEnabled = true;
+        private bool _isfocused;
+
 
         /// <inheritdoc/>
         public event EventHandler<NewOldValueEventArgs<IScreenObject>> ParentChanged;
@@ -45,7 +47,7 @@ namespace SadConsole
         public event EventHandler FocusLost;
 
         /// <inheritdoc/>
-        public event EventHandler FocusGained;
+        public event EventHandler Focused;
 
         /// <summary>
         /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsUpdate"/> is <see langword="true"/>.
@@ -154,37 +156,44 @@ namespace SadConsole
         /// <inheritdoc/>
         public bool IsFocused
         {
-            get => GameHost.Instance.FocusedScreenObjects.ScreenObject == this;
+            get => _isfocused;
             set
             {
-                if (GameHost.Instance.FocusedScreenObjects.ScreenObject != null)
+                if ((_isfocused && value) || (!_isfocused && !value)) return;
+
+                _isfocused = value;
+
+                if (value)
                 {
-                    if (value && GameHost.Instance.FocusedScreenObjects.ScreenObject != this)
+                    switch (FocusedMode)
                     {
-                        if (FocusedMode == FocusBehavior.Push)
-                            GameHost.Instance.FocusedScreenObjects.Push(this);
-                        else
+                        case FocusBehavior.Set:
                             GameHost.Instance.FocusedScreenObjects.Set(this);
+                            break;
+                        case FocusBehavior.Push:
+                            GameHost.Instance.FocusedScreenObjects.Push(this);
+                            break;
+                        default:
+                            break;
                     }
-                    else if (!value && GameHost.Instance.FocusedScreenObjects.ScreenObject == this)
-                        GameHost.Instance.FocusedScreenObjects.Pop(this);
+
+                    Focused?.Invoke(this, EventArgs.Empty);
+                    OnFocused();
                 }
                 else
                 {
-                    if (value)
-                    {
-                        if (FocusedMode == FocusBehavior.Push)
-                            GameHost.Instance.FocusedScreenObjects.Push(this);
-                        else
-                            GameHost.Instance.FocusedScreenObjects.Set(this);
-                    }
+                    if (GameHost.Instance.FocusedScreenObjects.ScreenObject == this && FocusedMode != FocusBehavior.None)
+                        GameHost.Instance.FocusedScreenObjects.Pop(this);
+
+                    FocusLost?.Invoke(this, EventArgs.Empty);
+                    OnFocusLost();
                 }
             }
         }
 
         /// <inheritdoc/>
         [DataMember]
-        public FocusBehavior FocusedMode { get; set; }
+        public FocusBehavior FocusedMode { get; set; } = FocusBehavior.Set;
 
         /// <inheritdoc/>
         [DataMember]
