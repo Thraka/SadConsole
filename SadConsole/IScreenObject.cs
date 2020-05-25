@@ -112,16 +112,23 @@ namespace SadConsole
         /// <summary>
         /// Gets components of the specified types.
         /// </summary>
-        /// <typeparam name="TComponent">THe component to find</typeparam>
+        /// <typeparam name="TComponent">The component to find</typeparam>
         /// <returns>The components found.</returns>
-        IComponent GetSadComponent<TComponent>() where TComponent : IComponent;
+        TComponent GetSadComponent<TComponent>() where TComponent : IComponent;
 
         /// <summary>
         /// Gets the first component of the specified type.
         /// </summary>
-        /// <typeparam name="TComponent">THe component to find</typeparam>
+        /// <typeparam name="TComponent">The component to find.</typeparam>
         /// <returns>The component if found, otherwise null.</returns>
-        IEnumerable<IComponent> GetSadComponents<TComponent>() where TComponent : IComponent;
+        IEnumerable<TComponent> GetSadComponents<TComponent>() where TComponent : IComponent;
+
+        /// <summary>
+        /// Indicates whether or not the component exists in the <see cref="SadComponents"/> collection.
+        /// </summary>
+        /// <typeparam name="TComponent">The component to find.</typeparam>
+        /// <returns><see langword="true"/> when the component exists; otherwise <see langword="false"/>.</returns>
+        bool HasSadComponent<TComponent>() where TComponent : IComponent;
 
         /// <summary>
         /// Called by the engine to process the keyboard.
