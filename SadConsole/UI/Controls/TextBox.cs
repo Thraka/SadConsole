@@ -192,7 +192,7 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
-        /// Gets or sets weather or not this input box only allows numeric input.
+        /// Gets or sets whether or not this input box only allows numeric input.
         /// </summary>
         public bool IsNumeric
         {
@@ -201,7 +201,7 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
-        /// Gets or sets weather or not this input box should restrict numeric input should allow a decimal point.
+        /// Gets or sets whether or not this input box should restrict numeric input should allow a decimal point.
         /// </summary>
         public bool AllowDecimal
         {

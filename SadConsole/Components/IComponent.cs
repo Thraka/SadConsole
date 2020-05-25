@@ -319,7 +319,6 @@ namespace SadConsole.Components
         /// </summary>
         public int SortOrder { get; set; }
 
-
         /// <summary>
         /// Called by a host on the draw frame.
         /// </summary>

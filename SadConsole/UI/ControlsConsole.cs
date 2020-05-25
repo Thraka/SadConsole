@@ -149,13 +149,10 @@ namespace SadConsole.UI
         /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
         public ControlsConsole(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
         {
-            Cursor.IsVisible = false;
             IsCursorDisabled = true;
-            AutoCursorOnFocus = false;
             UseKeyboard = true;
             UseMouse = true;
             AutoCursorOnFocus = false;
-            DisableControlFocusing = false;
         }
 
         /// <summary>
@@ -626,15 +623,11 @@ namespace SadConsole.UI
 
             if (UseKeyboard)
             {
-                if (
-                    ((info.IsKeyDown(Keys.LeftShift) ||
-                    info.IsKeyDown(Keys.RightShift)) ||
-
-                    info.IsKeyReleased(Keys.LeftShift) ||
-                    info.IsKeyReleased(Keys.RightShift))
-
-                    &&
-                    info.IsKeyReleased(Keys.Tab))
+                if ((info.IsKeyDown(Keys.LeftShift) ||
+                     info.IsKeyDown(Keys.RightShift) ||
+                     info.IsKeyReleased(Keys.LeftShift) ||
+                     info.IsKeyReleased(Keys.RightShift)) &&
+                     info.IsKeyReleased(Keys.Tab))
                 {
                     TabPreviousControl();
                     return true;
