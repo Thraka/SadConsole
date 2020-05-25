@@ -39,6 +39,11 @@ namespace SadConsole.Tests
             throw new NotImplementedException();
         }
 
+        public override IRenderer GetRenderer(string name)
+        {
+            return null;
+        }
+
         public override void Run()
         {
             throw new NotImplementedException();
