@@ -1,9 +1,30 @@
+====== Intro
+
 - A lot of structual changes to split out rendering from SadConsole. You now need to add SadConsole.Host.MonoGame or SadConsole.Host.SFML to your project.
 
 - All console's have a viewport again, eliminating the ScrollingConsole type. This is implemented in a few properties.
   - ScrollingConsole.ViewPort -> Console.View
 
   The Console.View is slightly different. In the old SadConsole when the 
+
+- SadConsole.Global is gone. All properties moved to SadConsole.GameHost.Instance
+
+===== TODO
+
+- Test if ConnectedLineStyle arrays elements can be modified.
+
+====== New Features
+
+- Controls have a Tag property for user-definable data.
+- Window now has the following features:
+  - Shown event when the window is made visible.
+  - OnShown protected virtual method.
+  - OnHidden protected virtual method.
+- Draw/Update have restored the TimeSpan parameter.
+- ControlHost component can add the GUI framework to any console.
+- SadConsole.Global no longer exists. Properties from this static type now live in SadConsole.GameHost.Instance.
+
+====== Migration specifics
 
 CellSurface/Console
 - Width -> BufferWidth
@@ -14,9 +35,14 @@ Console
 - FontSize property is a point x,y size now no longer the enum. Use Font.GetFontSize
 
 ControlsConsole/Window
-- Invalidate -> OnInvalidated
 - ViewPort -> View
 - Themes removed
+
+Window
+- Invalidate -> OnInvalidated
+
+ControlsConsole
+- No longer a specialized type. The ControlHost component was created and provides the entire controls framework. This can be applied to any console. The ControlsConsole is now just a simple Console with this component automatically added.
 
 ScrollingConsole -> Console
 - ViewPort -> View
@@ -32,16 +58,4 @@ Font/FontMaster -> Font
 
 - Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
 
-===== TODO
-
-- Test if ConnectedLineStyle arrays elements can be modified.
-
-====== New Features
-
-- Controls have a Tag property for user-definable data.
-- Window now has the following features:
-  - Shown event when the window is made visible.
-  - OnShown protected virtual method.
-  - OnHidden protected virtual method.
-- Draw/Update have restored the TimeSpan parameter
 

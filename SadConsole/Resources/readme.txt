@@ -27,7 +27,7 @@ namespace MyProject
             SadConsole.Game.Create(Width, Height);
 
             // Hook the start event so we can add consoles to the system.
-            SadConsole.Game.OnInitialize = Init;
+            SadConsole.Game.OnStart = Init;
                         
             // Start the game.
             SadConsole.Game.Instance.Run();
@@ -37,7 +37,7 @@ namespace MyProject
         private static void Init()
         {
             // Any startup code for your game. We will use an example console for now
-            var startingConsole = SadConsole.Global.CurrentScreen;
+            var startingConsole = GameHost.Instance.Screen;
             startingConsole.FillWithRandomGarbage();
             startingConsole.Fill(new Rectangle(3, 3, 27, 5), null, Color.Black, 0, Mirror.None);
             startingConsole.Print(6, 5, "Hello from SadConsole", ColorAnsi.CyanBright);
@@ -59,7 +59,7 @@ Module Module1
         SadConsole.Game.Create(80, 25)
 
         ' Hook the start event so we can add consoles to the system.
-        SadConsole.Game.OnInitialize = AddressOf Init
+        SadConsole.Game.OnStart = AddressOf Init
 
         ' Start the game.
         SadConsole.Game.Instance.Run()
@@ -69,7 +69,7 @@ Module Module1
 
     Sub Init()
 
-        Dim Console = SadConsole.Global.CurrentScreen
+        Dim Console = GameHost.Instance.Screen
 
         Console.FillWithRandomGarbage()
         Console.Fill(New Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, 0)
