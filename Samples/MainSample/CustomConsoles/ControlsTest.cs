@@ -17,31 +17,32 @@ namespace FeatureDemo.CustomConsoles
 
         public ControlsTest() : base(80, 23)
         {
+            SadComponents.Add(ControlHostComponent);
             var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
             {
                 Position = new Point(16, 5)
             };
-            Add(prog1);
+            ControlHostComponent.Add(prog1);
 
             var prog2 = new ProgressBar(1, 6, VerticalAlignment.Bottom)
             {
                 Position = new Point(18, 7)
             };
-            Add(prog2);
+            ControlHostComponent.Add(prog2);
 
             var slider = new ScrollBar(Orientation.Horizontal, 10)
             {
                 Position = new Point(16, 3),
                 Maximum = 18
             };
-            Add(slider);
+            ControlHostComponent.Add(slider);
 
             slider = new ScrollBar(Orientation.Vertical, 6)
             {
                 Position = new Point(16, 7),
                 Maximum = 6
             };
-            Add(slider);
+            ControlHostComponent.Add(slider);
 
             progressTimer = new Timer(TimeSpan.FromSeconds(0.5));
             progressTimer.TimerElapsed += (timer, e) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; };
@@ -60,42 +61,42 @@ namespace FeatureDemo.CustomConsoles
             listbox.Items.Add("item 6");
             listbox.Items.Add("item 7");
             listbox.Items.Add("item 8");
-            Add(listbox);
+            ControlHostComponent.Add(listbox);
 
             var radioButton = new RadioButton(20, 1)
             {
                 Text = "Group 1 Option 1",
                 Position = new Point(28, 12)
             };
-            Add(radioButton);
+            ControlHostComponent.Add(radioButton);
 
             radioButton = new RadioButton(20, 1)
             {
                 Text = "Group 1 Option 2",
                 Position = new Point(28, 13)
             };
-            Add(radioButton);
+            ControlHostComponent.Add(radioButton);
 
             var selButton = new SelectionButton(24, 1)
             {
                 Text = "Selection Button 1",
                 Position = new Point(51, 3)
             };
-            Add(selButton);
+            ControlHostComponent.Add(selButton);
 
             var selButton1 = new SelectionButton(24, 1)
             {
                 Text = "Selection Button 2",
                 Position = new Point(51, 4)
             };
-            Add(selButton1);
+            ControlHostComponent.Add(selButton1);
 
             var selButton2 = new SelectionButton(24, 1)
             {
                 Text = "Selection Button 3",
                 Position = new Point(51, 5)
             };
-            Add(selButton2);
+            ControlHostComponent.Add(selButton2);
 
             selButton.PreviousSelection = selButton2;
             selButton.NextSelection = selButton1;
@@ -108,14 +109,14 @@ namespace FeatureDemo.CustomConsoles
             {
                 Position = new Point(51, 9)
             };
-            Add(input);
+            ControlHostComponent.Add(input);
 
             var password = new TextBox(10)
             {
                 Mask = '*',
                 Position = new Point(65, 9)
             };
-            Add(password);
+            ControlHostComponent.Add(password);
 
             var button = new Button(11, 1)
             {
@@ -123,7 +124,7 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(1, 3)
             };
             button.Click += (s, a) => SadConsole.UI.Window.Message("This has been clicked -- and your password field contains '" + password.Text + "'", "Close");
-            Add(button);
+            ControlHostComponent.Add(button);
 
             button = new Button(11, 3)
             {
@@ -132,7 +133,7 @@ namespace FeatureDemo.CustomConsoles
                 Theme = new Button3dTheme()
             };
             //button.AlternateFont = SadConsole.Global.LoadFont("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.One);
-            Add(button);
+            ControlHostComponent.Add(button);
 
             button = new Button(11, 3)
             {
@@ -140,16 +141,16 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(1, 10),
                 Theme = new ButtonLinesTheme()
             };
-            Add(button);
+            ControlHostComponent.Add(button);
 
             var checkbox = new CheckBox(13, 1)
             {
                 Text = "Check box",
                 Position = new Point(51, 13)
             };
-            Add(checkbox);
+            ControlHostComponent.Add(checkbox);
 
-            FocusedControl = null;
+            ControlHostComponent.FocusedControl = null;
             //DisableControlFocusing = true;
 
             List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>
@@ -195,7 +196,7 @@ namespace FeatureDemo.CustomConsoles
             //    x += colorLength;
             //}
 
-
+            OnInvalidated();
         }
 
 
@@ -210,15 +211,13 @@ namespace FeatureDemo.CustomConsoles
                     backIndex = 0;
                 }
 
-                var colors = (ThemeColors ?? Library.Default.Colors);
+                var colors = ControlHostComponent.GetThemeColors();
                 colors.ControlBack = backgroundcycle[backIndex];
                 colors.ControlHostBack = colors.ControlBack;
                 colors.RebuildAppearances();
-                //ThemeColors = colors;
                 IsDirty = true;
-
-                foreach (var item in Controls)
-                    item.IsDirty = true;
+                ControlHostComponent.ThemeColors = colors;
+                OnInvalidated();
             }
 
 
@@ -227,9 +226,9 @@ namespace FeatureDemo.CustomConsoles
 
         public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState state) => base.ProcessMouse(state);
 
-        protected override void OnInvalidated()
+        protected void OnInvalidated()
         {
-            var colors = GetThemeColors();
+            var colors = ControlHostComponent.GetThemeColors();
 
             Surface.Fill(colors.ControlHostFore, colors.ControlHostBack, 0, 0);
 

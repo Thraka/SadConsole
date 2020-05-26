@@ -6814,64 +6814,172 @@
             Restarts the timer; sets <see cref="P:SadConsole.Timer.IsPaused"/> to false.
             </summary>
         </member>
+        <member name="T:SadConsole.UI.ControlHost">
+            <summary>
+            Adds the ability for a host to contain and display controls from <see cref="N:SadConsole.UI.Controls"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.ControlHost.ControlsList">
+            <summary>
+            The collection of controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.ParentConsole">
+            <summary>
+            The parent object hosting the controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.ThemeColors">
+            <summary>
+            Gets or sets the colors to use with drawing the console and controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.Controls">
+            <summary>
+            Gets a read-only collection of the controls this console contains.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.CapturedControl">
+            <summary>
+            Gets the control currently capturing mouse events.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.FocusedControl">
+            <summary>
+            Gets or sets the control that has keyboard focus.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.CanTabToNextConsole">
+            <summary>
+            When true, allows the tab command to move to the next console (when there is a parent) instead of cycling back to the first control on this console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.NextTabConsole">
+            <summary>
+            Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlHost.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.PreviousTabConsole">
+            <summary>
+            Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlHost.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.DisableControlFocusing">
+            <summary>
+            When set to true, child controls are not alerted to (non-)focused states.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Add(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Adds an existing control to this console.
+            </summary>
+            <param name="control">The control to add.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Remove(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Removes a control from this console.
+            </summary>
+            <param name="control">The control to remove.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.TabNextControl">
+            <summary>
+            Gives the focus to the next control in the tab order.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.TabPreviousControl">
+            <summary>
+            Gives focus to the previous control in the tab order.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.TryTabPreviousConsole">
+            <summary>
+            Tries to tab to the console that comes before this one in the <see cref="P:SadConsole.IScreenObject.Parent"/> collection of <see cref="P:SadConsole.IScreenObject.Children"/>. Sets focus to the target console if found.
+            </summary>
+            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.TryTabNextConsole">
+            <summary>
+            Tries to tab to the console that comes after this one in the <see cref="P:SadConsole.IScreenObject.Parent"/> collection of <see cref="P:SadConsole.IScreenObject.Children"/>. Sets focus to the target console if found.
+            </summary>
+            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.GetThemeColors">
+            <summary>
+            Returns the colors assigned to this console or the library default.
+            </summary>
+            <returns>The found colors.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.RemoveAll">
+            <summary>
+            Removes all controls from this console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Contains(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Checks if the specified control exists in this console.
+            </summary>
+            <param name="control">The control to check.</param>
+            <returns>True when the control exists in this console; otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.FocusedControlChanging(SadConsole.UI.Controls.ControlBase,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            When overridden, allows you to prevent a control from taking focus from another control.
+            </summary>
+            <param name="newControl">The control requesting focus.</param>
+            <param name="oldControl">The control that has focus.</param>
+            <returns>True when the focus change is allowed; otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.FocusedControlChanged(SadConsole.UI.Controls.ControlBase,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            This method is called when a control gains focus.
+            </summary>
+            <param name="newControl">The control that has focus.</param>
+            <param name="oldControl">The control that previously had focus.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.ReOrderControls">
+            <summary>
+            Reorders the control collection based on the tab index of each control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Surface_MouseExit(System.Object,SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.CaptureControl(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Captures a control for exclusive mouse focus. Sets the ExclusiveMouse property to true.
+            </summary>
+            <param name="control">The control to capture</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.ReleaseControl">
+            <summary>
+            Releases the control from exclusive mouse focus. Sets the ExclusiveMouse property to false and sets the CapturedControl property to null.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.GetEnumerator">
+            <summary>
+            Gets an enumerator of the controls collection.
+            </summary>
+            <returns>The enumerator of the controls collection.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets an enumerator of the controls collection.
+            </summary>
+            <returns>The enumerator of the controls collection.</returns>
+        </member>
         <member name="T:SadConsole.UI.ControlsConsole">
             <summary>
             A basic console that can contain controls.
             </summary>
         </member>
-        <member name="E:SadConsole.UI.ControlsConsole.Invalidated">
+        <member name="P:SadConsole.UI.ControlsConsole.ControlHostComponent">
             <summary>
-            Raised when the console has been redrawn.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.ControlsConsole.KeyboardState">
-            <summary>
-            Keyboard processor shared by all Controls Consoles.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.ControlsConsole.ControlsList">
-            <summary>
-            The collection of controls.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.ThemeColors">
-            <summary>
-            Gets or sets the colors to use with drawing the console and controls.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.Controls">
-            <summary>
-            Gets a read-only collection of the controls this console contains.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.CapturedControl">
-            <summary>
-            Gets the control currently capturing mouse events.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.FocusedControl">
-            <summary>
-            Gets or sets the control that has keyboard focus.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.CanTabToNextConsole">
-            <summary>
-            When true, allows the tab command to move to the next console (when there is a parent) instead of cycling back to the first control on this console.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.NextTabConsole">
-            <summary>
-            Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlsConsole.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.PreviousTabConsole">
-            <summary>
-            Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlsConsole.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlsConsole.DisableControlFocusing">
-            <summary>
-            When set to true, child controls are not alerted to (non-)focused states.
+            The controls host holding all the controls.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32)">
@@ -6913,142 +7021,6 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
             <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.Add(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Adds an existing control to this console.
-            </summary>
-            <param name="control">The control to add.</param>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.Remove(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Removes a control from this console.
-            </summary>
-            <param name="control">The control to remove.</param>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.TabNextControl">
-            <summary>
-            Gives the focus to the next control in the tab order.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.TabPreviousControl">
-            <summary>
-            Gives focus to the previous control in the tab order.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.TryTabPreviousConsole">
-            <summary>
-            Tries to tab to the console that comes before this one in the <see cref="P:SadConsole.IScreenObject.Parent"/> collection of <see cref="P:SadConsole.IScreenObject.Children"/>. Sets focus to the target console if found.
-            </summary>
-            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.TryTabNextConsole">
-            <summary>
-            Tries to tab to the console that comes after this one in the <see cref="P:SadConsole.IScreenObject.Parent"/> collection of <see cref="P:SadConsole.IScreenObject.Children"/>. Sets focus to the target console if found.
-            </summary>
-            <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.GetThemeColors">
-            <summary>
-            Returns the colors assigned to this console or the library default.
-            </summary>
-            <returns>The found colors.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.RemoveAll">
-            <summary>
-            Removes all controls from this console.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.Contains(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Checks if the specified control exists in this console.
-            </summary>
-            <param name="control">The control to check.</param>
-            <returns>True when the control exists in this console; otherwise false.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.FocusedControlChanging(SadConsole.UI.Controls.ControlBase,SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            When overridden, allows you to prevent a control from taking focus from another control.
-            </summary>
-            <param name="newControl">The control requesting focus.</param>
-            <param name="oldControl">The control that has focus.</param>
-            <returns>True when the focus change is allowed; otherwise false.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.FocusedControlChanged(SadConsole.UI.Controls.ControlBase,SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            This method is called when a control gains focus.
-            </summary>
-            <param name="newControl">The control that has focus.</param>
-            <param name="oldControl">The control that previously had focus.</param>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.ReOrderControls">
-            <summary>
-            Reorders the control collection based on the tab index of each control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.OnInvalidated">
-            <summary>
-            Called when the console is redrawn. Clears the console and allows custom drawing prior to control drawing.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.RaiseInvalidated">
-            <summary>
-            Raises the <see cref="E:SadConsole.UI.ControlsConsole.Invalidated"/> event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.Update(System.TimeSpan)">
-            <summary>
-            Calls the Update method of the base class and then Update on each control.
-            </summary>
-            <param name="delta">The time that has elapsed since this method was last called.</param>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.Draw(System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <summary>
-            Processes the keyboard for the console.
-            </summary>
-            <param name="info">Keyboard information sent by the engine.</param>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
-            <summary>
-            Processes the mouse for the console.
-            </summary>
-            <param name="state">Mouse information sent by the engine.</param>
-            <returns>True when the mouse is over this console and it is the active console; otherwise false.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.CaptureControl(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Captures a control for exclusive mouse focus. Sets the ExclusiveMouse property to true.
-            </summary>
-            <param name="control">The control to capture</param>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.ReleaseControl">
-            <summary>
-            Releases the control from exclusive mouse focus. Sets the ExclusiveMouse property to false and sets the CapturedControl property to null.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.GetEnumerator">
-            <summary>
-            Gets an enumerator of the controls collection.
-            </summary>
-            <returns>The enumerator of the controls collection.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            Gets an enumerator of the controls collection.
-            </summary>
-            <returns>The enumerator of the controls collection.</returns>
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.OnFocused">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.ControlsConsole.OnFocusLost">
-            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Controls.ButtonBase">
             <summary>
@@ -8660,6 +8632,16 @@
             Raised when the window is shown.
             </summary>
         </member>
+        <member name="E:SadConsole.UI.Window.Invalidated">
+            <summary>
+            Raised when the console has been redrawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.ControlHostComponent">
+            <summary>
+            The controls host holding all the controls.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Window.TitleAreaY">
             <summary>
             The Y coordinate of the title drawing area. This can be set to any value > 0 and &lt; the height.
@@ -8785,6 +8767,11 @@
         </member>
         <member name="M:SadConsole.UI.Window.OnInvalidated">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Window.RaiseInvalidated">
+            <summary>
+            Raises the <see cref="E:SadConsole.UI.Window.Invalidated"/> event.
+            </summary>
         </member>
         <member name="M:SadConsole.UI.Window.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>

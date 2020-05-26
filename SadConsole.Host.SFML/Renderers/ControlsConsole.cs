@@ -31,12 +31,10 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public override void Render(ISurfaceRenderData screen)
         {
-            var console = (SadConsole.UI.ControlsConsole)screen;
-
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-            if (console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
+            if (screen is Console console && console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
             {
                 var cursorPosition = screen.AbsoluteArea.Position + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).Position;
                 
@@ -83,7 +81,7 @@ namespace SadConsole.Renderers
             {
                 RefreshCells(screen.Surface, screen.Font);
 
-                foreach (SadConsole.UI.Controls.ControlBase control in ((SadConsole.UI.ControlsConsole)screen).Controls)
+                foreach (UI.Controls.ControlBase control in ((IScreenSurface)screen).GetSadComponent<UI.ControlHost>().Controls)
                 {
                     if (!control.IsVisible) continue;
 
@@ -98,17 +96,17 @@ namespace SadConsole.Renderers
 
         protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control)
         {
-            Font font = control.AlternateFont ?? control.Parent.Font;
+            Font font = control.AlternateFont ?? control.Parent.ParentConsole.Font;
 
             if (control.Surface.DefaultBackground.A != 0)
             {
-                (int x, int y) = (control.Position - control.Parent.ViewPosition).SurfaceLocationToPixel(control.Parent.FontSize);
-                (int width, int height) = new Point(control.Surface.View.Width, control.Surface.View.Height) * control.Parent.FontSize;
+                (int x, int y) = (control.Position - control.Parent.ParentConsole.Surface.ViewPosition).SurfaceLocationToPixel(control.Parent.ParentConsole.FontSize);
+                (int width, int height) = new Point(control.Surface.View.Width, control.Surface.View.Height) * control.Parent.ParentConsole.FontSize;
 
                 Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.GlyphRects[font.SolidGlyphIndex].ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
             }
 
-            var parentViewRect = control.Parent.View;
+            var parentViewRect = control.Parent.ParentConsole.Surface.View;
 
             for (int i = 0; i < control.Surface.Cells.Length; i++)
             {
@@ -122,7 +120,7 @@ namespace SadConsole.Renderers
 
                 if (!parentViewRect.Contains(cellRenderPosition)) continue;
 
-                IntRect renderRect = _renderRects[(cellRenderPosition - control.Parent.ViewPosition).ToIndex(control.Parent.BufferWidth)];
+                IntRect renderRect = _renderRects[(cellRenderPosition - control.Parent.ParentConsole.Surface.ViewPosition).ToIndex(control.Parent.ParentConsole.Surface.BufferWidth)];
 
                 Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, !cell.Background.Equals(Color.Transparent) && cell.Background != control.Surface.DefaultBackground, font);
             }

@@ -15,7 +15,7 @@ namespace SadConsole.UI.Controls
         protected Point _position;
         protected bool _isMouseOver = false;
         protected bool _isEnabled = true;
-        protected ControlsConsole _parent;
+        protected ControlHost _parent;
         protected ControlStates _state;
 
         protected Themes.ThemeBase ActiveTheme;
@@ -197,14 +197,15 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// Gets or sets the parent console of this control.
         /// </summary>
-        public ControlsConsole Parent
+        public ControlHost Parent
         {
             get => _parent;
             set
             {
                 if (_parent == value) return;
+                ControlHost temp = _parent;
                 _parent = null;
-                if (_parent != null) _parent.Remove(this);
+                temp?.Remove(this);
                 _parent = value;
                 _parent?.Add(this);
 
@@ -332,8 +333,8 @@ namespace SadConsole.UI.Controls
         {
             if (IsEnabled && UseMouse)
             {
-                
-                if ((state.ScreenObject as ControlsConsole) == _parent && state.IsOnScreenObject && MouseBounds.Contains(state.CellPosition))
+
+                if (state.IsOnScreenObject && state.ScreenObject == _parent.ParentConsole && MouseBounds.Contains(state.CellPosition))
                 {
                     if (_isMouseOver != true)
                     {

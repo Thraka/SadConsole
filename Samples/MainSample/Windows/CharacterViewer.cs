@@ -55,9 +55,9 @@ namespace FeatureDemo.Windows
             _charScrollBar.IsEnabled = Font.Rows > 16;
 
             // Add all controls
-            Add(_charScrollBar);
+            ControlHostComponent.Add(_charScrollBar);
 
-            _closeButton = new Button(6, 1) { Text = "Ok", Position = new Point(19, 1) }; Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
+            _closeButton = new Button(6, 1) { Text = "Ok", Position = new Point(19, 1) }; ControlHostComponent.Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
 
             // Effects
             highlightedEffect = new Recolor
@@ -131,9 +131,9 @@ namespace FeatureDemo.Windows
             _characterSurface.MouseMove += _characterSurface_MouseMove;
             _characterSurface.MouseButtonClicked += _characterSurface_MouseButtonClicked;
             _characterSurface.MouseExit += _characterSurface_MouseExit;
-            Add(_characterSurface);
+            ControlHostComponent.Add(_characterSurface);
 
-            ThemeColors = colors;
+            ControlHostComponent.ThemeColors = colors;
             IsDirty = true;
         }
 
@@ -206,7 +206,7 @@ namespace FeatureDemo.Windows
         }
 
         protected override void OnInvalidated()
-        { 
+        {
             base.OnInvalidated();
 
             // Draw the border between char sheet area and the text area
@@ -226,7 +226,7 @@ namespace FeatureDemo.Windows
 
         private void DrawHoverItemString()
         {
-            var themeColors = GetThemeColors();
+            var themeColors = ControlHostComponent.GetThemeColors();
             var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBack, 0);
 
             // Draw the character index and value in the status area
@@ -246,7 +246,7 @@ namespace FeatureDemo.Windows
 
         private void DrawSelectedItemString()
         {
-            var themeColors = GetThemeColors();
+            var themeColors = ControlHostComponent.GetThemeColors();
             var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBack, 0);
 
             // Clear the information area and redraw

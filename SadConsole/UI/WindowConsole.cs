@@ -16,7 +16,7 @@ namespace SadConsole.UI
     /// </summary>
     [DataContract]
     [DebuggerDisplay("Window")]
-    public partial class Window : ControlsConsole
+    public partial class Window : Console
     {
         /// <summary>
         /// Raised when the window is closed.
@@ -27,6 +27,16 @@ namespace SadConsole.UI
         /// Raised when the window is shown.
         /// </summary>
         public event EventHandler Shown;
+
+        /// <summary>
+        /// Raised when the console has been redrawn.
+        /// </summary>
+        public event EventHandler<HandledEventArgs> Invalidated;
+
+        /// <summary>
+        /// The controls host holding all the controls.
+        /// </summary>
+        public ControlHost ControlHostComponent { get; }
 
         [DataMember(Name = "Title")]
         private string _title;
@@ -188,6 +198,11 @@ namespace SadConsole.UI
             _isVisibleProcessing = false;
             CanDrag = true;
             MoveToFrontOnMouseClick = true;
+            ControlHostComponent = new ControlHost();
+            SadComponents.Add(ControlHostComponent);
+            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+
+
             // todo: Perhaps a new design with windows.
             // A border surface so that the surface of the window contains just the controls and print code.
             //DrawingArea = Surface.GetSubSurface(Surface.Buffer.WithPosition((1, 1)).Expand(-1, -1));
@@ -235,7 +250,7 @@ namespace SadConsole.UI
             }
 
             // Left button freshly down and we're not already dragging, check to see if in title
-            if (CapturedControl == null && state.IsOnScreenObject && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
+            if (ControlHostComponent.CapturedControl == null && state.IsOnScreenObject && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
             {
                 if (state.CellPosition.Y == TitleAreaY && state.CellPosition.X >= TitleAreaX && state.CellPosition.X < TitleAreaX + TitleAreaLength)
                 {
@@ -265,12 +280,20 @@ namespace SadConsole.UI
             return base.ProcessMouse(state);
         }
 
+        public override void Update(TimeSpan delta)
+        {
+            base.Update(delta);
+
+            if (IsDirty)
+                OnInvalidated();
+        }
+
         /// <inheritdoc/>
-        protected override void OnInvalidated()
+        protected virtual void OnInvalidated()
         {
             if (RaiseInvalidated()) return;
 
-            var themeColors = GetThemeColors();
+            var themeColors = ControlHostComponent.GetThemeColors();
 
             var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
             var titleStyle = new ColoredGlyph(Color.Orange, fillStyle.Background, fillStyle.Glyph);
@@ -322,6 +345,16 @@ namespace SadConsole.UI
 
                 Surface.Print(TitleAreaX, TitleAreaY, adjustedText, titleStyle);
             }
+        }
+
+        /// <summary>
+        /// Raises the <see cref="Invalidated"/> event.
+        /// </summary>
+        protected bool RaiseInvalidated()
+        {
+            var args = new HandledEventArgs();
+            Invalidated?.Invoke(this, args);
+            return args.IsHandled;
         }
 
         /// <summary>

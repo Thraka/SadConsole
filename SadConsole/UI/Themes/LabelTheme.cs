@@ -79,7 +79,7 @@ namespace SadConsole.UI.Themes
             label.IsDirty = false;
         }
 
-        private Font GetFontUsed(Label label) => label.AlternateFont ?? label.Parent?.Font;
+        private Font GetFontUsed(Label label) => label.AlternateFont ?? label.Parent?.ParentConsole?.Font;
 
         private CellDecorator GetStrikethrough(Font font, Color color)
         {

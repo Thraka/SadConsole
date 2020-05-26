@@ -42,7 +42,7 @@ namespace SadConsole.UI
 
             var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.BufferHeight);
 
-            if (colors != null) window.ThemeColors = colors;
+            if (colors != null) window.ControlHostComponent.ThemeColors = colors;
 
             var printArea = new DrawingSurface(window.Width, window.Height)
             {
@@ -68,9 +68,9 @@ namespace SadConsole.UI
             yesButton.Theme = null;
             noButton.Theme = null;
 
-            window.Add(printArea);
-            window.Add(yesButton);
-            window.Add(noButton);
+            window.ControlHostComponent.Add(printArea);
+            window.ControlHostComponent.Add(yesButton);
+            window.ControlHostComponent.Add(noButton);
 
             noButton.IsFocused = true;
 
@@ -123,7 +123,7 @@ namespace SadConsole.UI
 
             var window = new Window(width, 5 + closeButton.Surface.BufferHeight);
 
-            if (colors != null) window.ThemeColors = colors;
+            if (colors != null) window.ControlHostComponent.ThemeColors = colors;
 
             message.IgnoreBackground = true;
 
@@ -138,13 +138,13 @@ namespace SadConsole.UI
                     ds.IsDirty = true;
                 }
             };
-            window.Add(printArea);
+            window.ControlHostComponent.Add(printArea);
 
             closeButton.Position = new Point(2, window.Height - 1 - closeButton.Surface.BufferHeight);
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
             closeButton.Theme = null;
 
-            window.Add(closeButton);
+            window.ControlHostComponent.Add(closeButton);
             closeButton.IsFocused = true;
             window.CloseOnEscKey = true;
             window.Show(true);

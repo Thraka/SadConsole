@@ -8,7 +8,7 @@ namespace FeatureDemo.CustomConsoles
 {
     public class ScrollableConsole : SadConsole.Console
     {
-        private readonly ControlsConsole _controlsContainer;
+        private readonly SadConsole.Console _controlsContainer;
         private readonly SadConsole.UI.Controls.ScrollBar _scrollBar;
 
         ///<summary>Scroll bar position.</summary>
@@ -22,13 +22,15 @@ namespace FeatureDemo.CustomConsoles
 
         public ScrollableConsole(int width, int height, int bufferHeight) : base(width - 1, height, width -1, bufferHeight)
         {
-            _controlsContainer = new ControlsConsole(1, height);
+            _controlsContainer = new SadConsole.Console(1, height);
 
             _scrollBar = new SadConsole.UI.Controls.ScrollBar(Orientation.Vertical, height);
             _scrollBar.IsEnabled = false;
             _scrollBar.ValueChanged += ScrollBar_ValueChanged;
 
-            _controlsContainer.Add(_scrollBar);
+            var controlHost = new SadConsole.UI.ControlHost();
+            controlHost.Add(_scrollBar);
+            _controlsContainer.SadComponents.Add(controlHost);
             _controlsContainer.Position = new Point(Position.X + width, Position.Y);
             _controlsContainer.IsVisible = true;
 
