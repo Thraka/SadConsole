@@ -41,8 +41,6 @@ namespace FeatureDemo.HostSpecific.MonoGame
             if (screen.Tint.A != 255)
                 RefreshCells(screen.Surface, screen.Font);
 
-            RefreshTint(screen);
-
             RefreshEnd(screen);
 
             screen.IsDirty = false;

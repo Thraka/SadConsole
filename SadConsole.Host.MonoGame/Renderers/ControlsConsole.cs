@@ -49,22 +49,34 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public override void Render(ISurfaceRenderData screen)
         {
-            // Draw call for texture
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
-
-            // Draw call for controls
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTextureControls, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
-
-            if (screen is Console console && console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
+            // If the tint is covering the whole area, don't draw anything
+            if (screen.Tint.A != 255)
             {
-                GameHost.Instance.DrawCalls.Enqueue(
-                    new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
-                                               ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
-                                               new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
-                                               screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                               screen.Font.GlyphRects[console.Cursor.CursorRenderCell.Glyph].ToMonoRectangle()
-                                              )
-                    );
+                // Draw call for surface
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
+
+                // Draw call for controls
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTextureControls, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
+
+                // Draw call for cursors
+                if (screen is IScreenObject screenObject)
+                {
+                    foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
+                    {
+
+                        if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
+                        {
+                            GameHost.Instance.DrawCalls.Enqueue(
+                                new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                                                           ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
+                                                           new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
+                                                           screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
+                                                           screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
+                                                          )
+                                );
+                        }
+                    }
+                }
             }
 
             if (screen.Tint.A != 0)

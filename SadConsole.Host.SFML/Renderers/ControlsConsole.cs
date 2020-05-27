@@ -44,22 +44,33 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public override void Render(ISurfaceRenderData screen)
         {
-            // Draw call for texture
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
-
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTextureControls.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
-
-            if (screen is Console console && console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
+            if (screen.Tint.A != 255)
             {
-                var cursorPosition = screen.AbsoluteArea.Position + screen.Font.GetRenderRect(console.Cursor.Position.X - console.ViewPosition.X, console.Cursor.Position.Y - console.ViewPosition.Y, console.FontSize).Position;
-                
-                GameHost.Instance.DrawCalls.Enqueue(
-                    new DrawCalls.DrawCallCell(console.Cursor.CursorRenderCell,
-                                               new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, screen.FontSize.X, screen.FontSize.Y).ToIntRect(),
-                                               screen.Font,
-                                               true
-                                              )
-                    );
+                // Draw call for surface
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
+
+                // Draw call for control surface
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTextureControls.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
+
+                if (screen is IScreenObject screenObject)
+                {
+                    // Draw any cursors
+                    foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
+                    {
+                        if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
+                        {
+                            var cursorPosition = screen.AbsoluteArea.Position + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).Position;
+
+                            GameHost.Instance.DrawCalls.Enqueue(
+                                new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                                                           new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, screen.FontSize.X, screen.FontSize.Y).ToIntRect(),
+                                                           screen.Font,
+                                                           true
+                                                          )
+                                );
+                        }
+                    }
+                }
             }
 
             if (screen.Tint.A != 0)

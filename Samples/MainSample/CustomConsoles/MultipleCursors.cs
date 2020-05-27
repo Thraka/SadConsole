@@ -44,7 +44,6 @@ namespace FeatureDemo.CustomConsoles
             CursorGreen.Position = (23, 11);
             CursorYellow.Position = (11, 20);
             CursorPurple.Position = (2, 6);
-
         }
 
         public override bool ProcessKeyboard(Keyboard keyboard)

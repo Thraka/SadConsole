@@ -142,30 +142,6 @@
             Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
             </summary>
         </member>
-        <member name="T:SadConsole.Renderers.ConsoleRenderer">
-             <summary>
-             Draws a <see cref="T:SadConsole.Console"/>.
-             </summary>
-             <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.ConsoleRenderer.Render(SadConsole.ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
-            
-             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
-             </remarks>
-        </member>
-        <member name="P:SadConsole.Renderers.ConsoleRenderer.Name">
-            <summary>
-            Name of this renderer type.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Renderers.ConsoleRenderer.Attach(SadConsole.ISurfaceRenderData)">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.ConsoleRenderer.Render(SadConsole.ISurfaceRenderData)">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.ConsoleRenderer.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
-             <inheritdoc/>
-        </member>
         <member name="T:SadConsole.Renderers.ControlsConsole">
              <summary>
              Draws a <see cref="T:SadConsole.Renderers.ControlsConsole"/>.

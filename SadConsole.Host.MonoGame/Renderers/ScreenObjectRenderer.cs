@@ -43,27 +43,35 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public virtual void Render(ISurfaceRenderData screen)
         {
-            // Draw call for texture
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
-
-            if (screen is IScreenObject screenObject)
+            // If the tint is covering the whole area, don't draw anything
+            if (screen.Tint.A != 255)
             {
-                foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
-                {
+                // Draw call for surface
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-                    if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
+                if (screen is IScreenObject screenObject)
+                {
+                    // Draw call for cursors
+                    foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
                     {
-                        GameHost.Instance.DrawCalls.Enqueue(
-                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
-                                                       ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
-                                                       new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
-                                                       screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                                       screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
-                                                      )
-                            );
+                        if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
+                        {
+                            GameHost.Instance.DrawCalls.Enqueue(
+                                new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                                                           ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
+                                                           new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
+                                                           screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
+                                                           screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
+                                                          )
+                                );
+                        }
                     }
                 }
             }
+
+            // If tint is visible, draw it
+            if (screen.Tint.A != 0)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToMonoColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToMonoRectangle(), screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
         }
 
         ///  <inheritdoc/>
@@ -95,8 +103,6 @@ namespace SadConsole.Renderers
 
             if (screen.Tint.A != 255)
                 RefreshCells(screen.Surface, screen.Font);
-
-            RefreshTint(screen);
 
             RefreshEnd(screen);
 
@@ -153,15 +159,6 @@ namespace SadConsole.Renderers
                 }
             }
         }
-
-        protected virtual void RefreshTint(ISurfaceRenderData screen)
-        {
-            if (screen.Tint.A != 0)
-            {
-                MonoGame.Global.SharedSpriteBatch.Draw(((SadConsole.Host.GameTexture)screen.Font.Image).Texture, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), screen.Font.GlyphRects[screen.Font.SolidGlyphIndex].ToMonoRectangle(), screen.Tint.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
-            }
-        }
-
 
         #region IDisposable Support
         protected bool disposedValue = false; // To detect redundant calls

@@ -2357,9 +2357,6 @@
         <member name="M:SadConsole.Console.OnVisibleChanged">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <inheritdoc />
-        </member>
         <member name="M:SadConsole.Console.OnFocusLost">
             <summary>
             Called when this console's focus has been lost. Hides the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.

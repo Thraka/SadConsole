@@ -64,8 +64,6 @@ namespace SadConsole.Renderers
                     base.RefreshCells(layer.Surface, screen.Font);
             }
 
-            RefreshTint(screen);
-
             RefreshEnd(screen);
 
             screen.IsDirty = false;

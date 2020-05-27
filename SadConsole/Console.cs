@@ -95,14 +95,6 @@ namespace SadConsole
             base.OnVisibleChanged();
         }
 
-        /// <inheritdoc />
-        public override bool ProcessKeyboard(Keyboard keyboard)
-        {
-            if (!UseKeyboard) return false;
-            else if (base.ProcessKeyboard(keyboard)) return true;
-            return false;
-        }
-
         /// <summary>
         /// Called when this console's focus has been lost. Hides the <see cref="Cursor"/> if <see cref="AutoCursorOnFocus"/> is <see langword="true"/>.
         /// </summary>

@@ -17,7 +17,6 @@ namespace FeatureDemo.CustomConsoles
 
         public ControlsTest() : base(80, 23)
         {
-            SadComponents.Add(ControlHostComponent);
             var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
             {
                 Position = new Point(16, 5)
@@ -219,7 +218,6 @@ namespace FeatureDemo.CustomConsoles
                 ControlHostComponent.ThemeColors = colors;
                 OnInvalidated();
             }
-
 
             return base.ProcessKeyboard(info);
         }

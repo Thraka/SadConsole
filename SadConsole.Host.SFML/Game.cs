@@ -206,7 +206,6 @@ namespace SadConsole
             {
                 "window" => new Renderers.Window(),
                 "controls" => new Renderers.ControlsConsole(),
-                "console" => new Renderers.ConsoleRenderer(),
                 "layered" => new Renderers.LayeredScreenObject(),
                 _ => new Renderers.ScreenObjectRenderer(),
             };
@@ -218,7 +217,6 @@ namespace SadConsole
                 UI.Window _ => new Renderers.Window(),
                 //UI.ControlsConsole _ => new Renderers.ControlsConsole(),
                 LayeredScreenSurface _ => new Renderers.LayeredScreenObject(),
-                Console _ => new Renderers.ConsoleRenderer(),
                 _ => new Renderers.ScreenObjectRenderer(),
             };
 
