@@ -184,6 +184,9 @@
         <member name="M:SadConsole.Renderers.ControlsConsole.Attach(SadConsole.ISurfaceRenderData)">
              <inheritdoc/>
         </member>
+        <member name="M:SadConsole.Renderers.ControlsConsole.Detatch(SadConsole.ISurfaceRenderData)">
+             <inheritdoc/>
+        </member>
         <member name="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.ISurfaceRenderData)">
              <inheritdoc/>
         </member>

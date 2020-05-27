@@ -138,7 +138,7 @@ namespace SadConsole
         /// </summary>
         /// <typeparam name="TComponent">The component to find.</typeparam>
         /// <returns><see langword="true"/> when the component exists; otherwise <see langword="false"/>.</returns>
-        bool HasSadComponent<TComponent>() where TComponent : IComponent;
+        bool HasSadComponent<TComponent>(out TComponent component) where TComponent : class, IComponent;
 
         /// <summary>
         /// Called by the engine to process the keyboard.

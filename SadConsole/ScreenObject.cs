@@ -317,15 +317,19 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public bool HasSadComponent<TComponent>()
-            where TComponent: IComponent
+        public bool HasSadComponent<TComponent>(out TComponent component)
+            where TComponent: class, IComponent
         {
-            foreach (IComponent component in SadComponents)
+            foreach (IComponent comp in SadComponents)
             {
-                if (component is TComponent)
+                if (comp is TComponent)
+                {
+                    component = (TComponent)comp;
                     return true;
+                }
             }
 
+            component = null;
             return false;
         }
 
@@ -446,17 +450,6 @@ namespace SadConsole
                 ComponentsKeyboard.Sort(CompareComponent);
                 ComponentsMouse.Sort(CompareComponent);
             }
-
-            static int CompareComponent(IComponent left, IComponent right)
-            {
-                if (left.SortOrder > right.SortOrder)
-                    return 1;
-
-                if (left.SortOrder < right.SortOrder)
-                    return -1;
-
-                return 0;
-            }
         }
 
         /// <summary>
@@ -500,6 +493,28 @@ namespace SadConsole
 
             foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
+        }
+
+        /// <summary>
+        /// Sorts the components based on the <see cref="IComponent.SortOrder"/> value.
+        /// </summary>
+        public void SortComponents()
+        {
+            ComponentsDraw.Sort(CompareComponent);
+            ComponentsUpdate.Sort(CompareComponent);
+            ComponentsKeyboard.Sort(CompareComponent);
+            ComponentsMouse.Sort(CompareComponent);
+        }
+
+        static int CompareComponent(IComponent left, IComponent right)
+        {
+            if (left.SortOrder > right.SortOrder)
+                return 1;
+
+            if (left.SortOrder < right.SortOrder)
+                return -1;
+
+            return 0;
         }
 
         [OnSerializing]

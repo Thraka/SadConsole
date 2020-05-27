@@ -29,7 +29,7 @@ namespace SadConsole.Renderers
 
         public virtual void Detatch(ISurfaceRenderData screen)
         {
-            BackingTexture.Dispose();
+            BackingTexture?.Dispose();
             BackingTexture = null;
         }
 
@@ -120,7 +120,7 @@ namespace SadConsole.Renderers
 
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        protected bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {

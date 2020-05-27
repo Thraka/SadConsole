@@ -66,6 +66,11 @@ namespace SadConsole.UI
         }
 
         /// <summary>
+        /// Indicates that the control host needs to be redrawn.
+        /// </summary>
+        public bool IsDirty { get; set; }
+
+        /// <summary>
         /// Gets a read-only collection of the controls this console contains.
         /// </summary>
         public ReadOnlyCollection<ControlBase> Controls => ControlsList.AsReadOnly();
@@ -220,12 +225,12 @@ namespace SadConsole.UI
             foreach (ControlBase control in ControlsList.ToArray())
             {
                 if (control.IsDirty)
-                    _parent.IsDirty = true;
+                    IsDirty = true;
 
                 control.Update(delta);
 
                 if (control.IsDirty)
-                    _parent.IsDirty = true;
+                    IsDirty = true;
             }
         }
 
@@ -469,7 +474,7 @@ namespace SadConsole.UI
         }
 
         private bool ParentHasComponent(IScreenSurface surface) =>
-            surface.HasSadComponent<ControlHost>();
+            surface.HasSadComponent<ControlHost>(out _);
 
         /// <summary>
         /// Tries to tab to the console that comes before this one in the <see cref="IScreenObject.Parent"/> collection of <see cref="IScreenObject.Children"/>. Sets focus to the target console if found.

@@ -16,6 +16,8 @@ namespace SadConsole.Renderers
     /// </remarks>
     public class ControlsConsole : ScreenObjectRenderer
     {
+        public RenderTexture BackingTextureControls;
+
         /// <summary>
         /// Name of this renderer type.
         /// </summary>
@@ -24,8 +26,19 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public override void Attach(ISurfaceRenderData screen)
         {
-            if (!(screen is ControlsConsole))
-                throw new Exception($"The ControlsConsole Renderer must be added to a {nameof(ControlsConsole)}.");
+            if (screen is IScreenObject obj && obj.HasSadComponent<UI.ControlHost>(out _))
+                return;
+
+            throw new Exception($"The ControlsConsole Renderer must be added to a {nameof(IScreenObject)} that contains a {nameof(UI.ControlHost)} component.");
+        }
+
+        ///  <inheritdoc/>
+        public override void Detatch(ISurfaceRenderData screen)
+        {
+            BackingTexture?.Dispose();
+            BackingTexture = null;
+            BackingTextureControls?.Dispose();
+            BackingTextureControls = null;
         }
 
         ///  <inheritdoc/>
@@ -33,6 +46,8 @@ namespace SadConsole.Renderers
         {
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
+
+            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTextureControls.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
             if (screen is Console console && console.Cursor.IsVisible && console.IsValidCell(console.Cursor.Position.X, console.Cursor.Position.Y) && screen.Surface.View.Contains(console.Cursor.Position))
             {
@@ -54,13 +69,14 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public override void Refresh(ISurfaceRenderData screen, bool force = false)
         {
-            if (!force && !screen.IsDirty && BackingTexture != null) return;
-
             // Update texture if something is out of size.
             if (BackingTexture == null || screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
                 BackingTexture?.Dispose();
                 BackingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
+                BackingTextureControls?.Dispose();
+                BackingTextureControls = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
+                force = true;
             }
 
             // Update cached drawing rectangles if something is out of size.
@@ -74,24 +90,39 @@ namespace SadConsole.Renderers
                     _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
                 }
             }
-           
-            // Rendering code from sadconsole
-            RefreshBegin(screen);
-            if (screen.Tint.A != 255)
+
+
+            // Render the main console
+            if (force || screen.IsDirty)
             {
-                RefreshCells(screen.Surface, screen.Font);
+                RefreshBegin(screen);
+                if (screen.Tint.A != 255)
+                    RefreshCells(screen.Surface, screen.Font);
 
-                foreach (UI.Controls.ControlBase control in ((IScreenSurface)screen).GetSadComponent<UI.ControlHost>().Controls)
-                {
-                    if (!control.IsVisible) continue;
-
-                    RenderControlCells(control);
-                }
-
+                RefreshEnd(screen);
             }
-            RefreshEnd(screen);
+
+            UI.ControlHost uiComponent = ((IScreenSurface)screen).GetSadComponent<UI.ControlHost>();
+
+            if (force || uiComponent.IsDirty)
+            {
+                BackingTextureControls.Clear(Color.Transparent);
+                Host.Global.SharedSpriteBatch.Reset(BackingTextureControls, RenderStates.Default, Transform.Identity);
+
+                if (screen.Tint.A != 255)
+                    foreach (UI.Controls.ControlBase control in ((IScreenSurface)screen).GetSadComponent<UI.ControlHost>().Controls)
+                    {
+                        if (!control.IsVisible) continue;
+
+                        RenderControlCells(control);
+                    }
+
+                Host.Global.SharedSpriteBatch.End();
+                BackingTextureControls.Display();
+            }
 
             screen.IsDirty = false;
+            uiComponent.IsDirty = false;
         }
 
         protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control)
@@ -123,6 +154,24 @@ namespace SadConsole.Renderers
                 IntRect renderRect = _renderRects[(cellRenderPosition - control.Parent.ParentConsole.Surface.ViewPosition).ToIndex(control.Parent.ParentConsole.Surface.BufferWidth)];
 
                 Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, !cell.Background.Equals(Color.Transparent) && cell.Background != control.Surface.DefaultBackground, font);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _renderRects = null;
+                }
+
+                BackingTexture?.Dispose();
+                BackingTexture = null;
+                BackingTextureControls?.Dispose();
+                BackingTextureControls = null;
+
+                disposedValue = true;
             }
         }
     }

@@ -5612,7 +5612,7 @@
             <typeparam name="TComponent">The component to find.</typeparam>
             <returns>The component if found, otherwise null.</returns>
         </member>
-        <member name="M:SadConsole.IScreenObject.HasSadComponent``1">
+        <member name="M:SadConsole.IScreenObject.HasSadComponent``1(``0@)">
             <summary>
             Indicates whether or not the component exists in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection.
             </summary>
@@ -6151,7 +6151,7 @@
         <member name="M:SadConsole.ScreenObject.GetSadComponent``1">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.ScreenObject.HasSadComponent``1">
+        <member name="M:SadConsole.ScreenObject.HasSadComponent``1(``0@)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenObject.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
@@ -6180,6 +6180,11 @@
         </member>
         <member name="M:SadConsole.ScreenObject.UpdateAbsolutePosition">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObject.SortComponents">
+            <summary>
+            Sorts the components based on the <see cref="P:SadConsole.Components.IComponent.SortOrder"/> value.
+            </summary>
         </member>
         <member name="T:SadConsole.ScreenObjectCollection">
             <summary>
@@ -6837,6 +6842,11 @@
         <member name="P:SadConsole.UI.ControlHost.ThemeColors">
             <summary>
             Gets or sets the colors to use with drawing the console and controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.IsDirty">
+            <summary>
+            Indicates that the control host needs to be redrawn.
             </summary>
         </member>
         <member name="P:SadConsole.UI.ControlHost.Controls">
