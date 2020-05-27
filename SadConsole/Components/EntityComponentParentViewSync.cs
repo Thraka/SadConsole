@@ -21,7 +21,7 @@ namespace SadConsole.Components
         public override void OnAdded(IScreenObject host)
         {
             if (!(host is Entity))
-                throw new Exception($"{nameof(EntityComponentParentViewSync)} can only be added to an {nameof(Entity)}.");
+                throw new ArgumentException($"{nameof(EntityComponentParentViewSync)} can only be added to an {nameof(Entity)}.");
         }
 
 

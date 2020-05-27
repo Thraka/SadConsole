@@ -125,7 +125,7 @@ namespace SadConsole.UI
 
         void Components.IComponent.OnAdded(IScreenObject host)
         {
-            if (!(host is IScreenSurface surface)) throw new Exception($"Must add this component to a type that implements {nameof(IScreenSurface)}");
+            if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
             surface.Renderer = SadConsole.GameHost.Instance.GetRenderer("controls");
             surface.UseKeyboard = true;
