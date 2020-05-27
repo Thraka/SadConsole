@@ -37,6 +37,10 @@ namespace FeatureDemo.CustomConsoles
             typingInstruction.TotalTimeToPrint = 8; // 0.5 seconds per line of text
 
             Cursor.Position = new SadRogue.Primitives.Point(1, 1);
+            Cursor.IsEnabled = false;
+            Cursor.IsVisible = true;
+            typingInstruction.Cursor = Cursor;
+
             SadComponents.Add(typingInstruction);
 
             //Cursor.IsVisible = true;

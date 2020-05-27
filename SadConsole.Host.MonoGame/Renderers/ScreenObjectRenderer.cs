@@ -45,6 +45,25 @@ namespace SadConsole.Renderers
         {
             // Draw call for texture
             GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
+
+            if (screen is IScreenObject screenObject)
+            {
+                foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
+                {
+
+                    if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
+                    {
+                        GameHost.Instance.DrawCalls.Enqueue(
+                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                                                       ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
+                                                       new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
+                                                       screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
+                                                       screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
+                                                      )
+                            );
+                    }
+                }
+            }
         }
 
         ///  <inheritdoc/>

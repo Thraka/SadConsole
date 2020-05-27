@@ -35,6 +35,7 @@ namespace FeatureDemo.CustomConsoles
             _controlsContainer.IsVisible = true;
 
             Cursor.IsVisible = true;
+            Cursor.IsEnabled = true;
             Cursor.Print("Just start typing!");
 
             UseMouse = true;

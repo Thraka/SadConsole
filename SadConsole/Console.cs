@@ -12,20 +12,6 @@ namespace SadConsole
     /// </summary>
     public partial class Console: ScreenSurface
     {
-        private bool _isCursorDisabled;
-
-        /// <summary>
-        /// When <see langword="true"/>, indicates that the <see cref="Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
-        /// </summary>
-        /// <remarks>
-        /// This property should only be used to indicate that this object can never use the <see cref="Cursor"/>. To simply disable or enable the <see cref="Cursor"/>, use <see cref="Cursor.IsEnabled"/> and <see cref="Cursor.IsVisible"/>.
-        /// </remarks>
-        public bool IsCursorDisabled
-        {
-            get => _isCursorDisabled;
-            set { _isCursorDisabled = value; IsDirty = true; }
-        }
-
         /// <summary>
         /// The entire width of the console. Forwards <see cref="ICellSurface.BufferWidth"/>.
         /// </summary>
@@ -39,7 +25,7 @@ namespace SadConsole
             BufferHeight;
 
         /// <summary>
-        /// The private virtual cursor reference.
+        /// The virtual cursor reference.
         /// </summary>
         public Cursor Cursor { get; }
 
@@ -80,7 +66,8 @@ namespace SadConsole
         /// <param name="fontSize">The font size.</param>
         public Console(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
         {
-            Cursor = new Cursor(Surface);
+            Cursor = new Cursor() { IsVisible = false, IsEnabled = false };
+            SadComponents.Add(Cursor);
             UseKeyboard = Settings.DefaultConsoleUseKeyboard;
         }
 
@@ -94,7 +81,8 @@ namespace SadConsole
         /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
         public Console(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
         {
-            Cursor = new Cursor(Surface);
+            Cursor = new Cursor() { IsVisible = false, IsEnabled = false };
+            SadComponents.Add(Cursor);
             UseKeyboard = Settings.DefaultConsoleUseKeyboard;
         }
         
@@ -107,24 +95,12 @@ namespace SadConsole
             base.OnVisibleChanged();
         }
 
-        ///  <inheritdoc/>
-        public override void Update(TimeSpan delta)
-        {
-            if (!IsEnabled) return;
-
-            base.Update(delta);
-
-            if (!IsCursorDisabled && Cursor.IsVisible)
-                Cursor.UpdateRenderCell(delta);
-        }
-
         /// <inheritdoc />
         public override bool ProcessKeyboard(Keyboard keyboard)
         {
             if (!UseKeyboard) return false;
             else if (base.ProcessKeyboard(keyboard)) return true;
-
-            return !IsCursorDisabled && Cursor.IsEnabled && Cursor.ProcessKeyboard(keyboard);
+            return false;
         }
 
         /// <summary>

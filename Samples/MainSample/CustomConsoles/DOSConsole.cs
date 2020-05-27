@@ -34,6 +34,9 @@ namespace FeatureDemo.CustomConsoles
 
             // Startup description
             ClearText();
+
+            // Disable the cursor since our keyboard handler will do the work.
+            Cursor.IsEnabled = false;
             Cursor.Position = new Point(0, 24);
             Cursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
             _keyboardHandlerObject.CursorLastY = 24;

@@ -10,6 +10,7 @@ namespace SadConsole.Instructions
     public class DrawString : InstructionBase
     {
         private ColoredString _text;
+        private Components.Cursor _privateCursor;
 
         /// <summary>
         /// Gets or sets the text to print.
@@ -33,7 +34,7 @@ namespace SadConsole.Instructions
         /// <summary>
         /// Represents the cursor used in printing. Use this for styling and printing behavior.
         /// </summary>
-        public Cursor Cursor { get; set; }
+        public Components.Cursor Cursor { get; set; }
 
         private ICellSurface _target;
         private double _timeElapsed = 0d;
@@ -44,39 +45,22 @@ namespace SadConsole.Instructions
         private Point _tempLocation;
 
         /// <summary>
-        /// Draws a string on the specified surface.
-        /// </summary>
-        /// <param name="target">The target surface to use.</param>
-        /// <param name="text">The text to print.</param>
-        public DrawString(ICellSurface target, ColoredString text)
-        {
-            _target = target;
-            Cursor = new Cursor();
-            Text = text;
-        }
-
-        /// <summary>
-        /// Draws a string on the surface passed to <see cref="Update(IScreenObject)"/>.
+        /// Creates a new instance of the object with the specified text.
         /// </summary>
         /// <param name="text"></param>
-        public DrawString(ColoredString text)
-        {
-            Cursor = new Cursor();
+        public DrawString(ColoredString text) =>
             Text = text;
-        }
 
         /// <summary>
-        /// Draws a string on the surface passed to <see cref="Update(IScreenObject)"/>. <see cref="Text"/> must be set manually.
+        /// Creates a new instance of the object. <see cref="Text"/> must be set manually.
         /// </summary>
-        public DrawString()
-        {
-            Cursor = new Cursor();
-            Text = new ColoredString();
-        }
+        public DrawString(): this(new ColoredString()) { }
 
         /// <inheritdoc />
         public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
+            var cursor = Cursor ?? _privateCursor;
+
             if (!_started)
             {
                 _started = true;
@@ -86,8 +70,7 @@ namespace SadConsole.Instructions
                 if (_target == null)
                     _target = (componentHost as IScreenSurface)?.Surface;
 
-                Cursor.AttachSurface(_target);
-                Cursor.DisableWordBreak = true;
+                cursor.DisableWordBreak = true;
 
                 if (_textCopy.Length == 0)
                 {
@@ -107,8 +90,8 @@ namespace SadConsole.Instructions
 
             if (TotalTimeToPrint == 0f)
             {
-                Cursor.Position = Position;
-                Cursor.Print(Text);
+                cursor.Position = Position;
+                cursor.Print(Text);
                 IsFinished = true;
             }
             else
@@ -119,7 +102,7 @@ namespace SadConsole.Instructions
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
                     _timeElapsed = 0d;
 
-                    Cursor.Position = _tempLocation;
+                    cursor.Position = _tempLocation;
 
                     if (charCount >= _textCopy.Length - _textIndex)
                     {
@@ -128,10 +111,10 @@ namespace SadConsole.Instructions
                     }
 
                     ColoredString textToPrint = Text.SubString(_textIndex, charCount);
-                    Cursor.Print(textToPrint);
+                    cursor.Print(textToPrint);
                     _textIndex += (short)charCount;
 
-                    _tempLocation = Cursor.Position;
+                    _tempLocation = cursor.Position;
                 }
             }
 
@@ -145,6 +128,19 @@ namespace SadConsole.Instructions
             _textIndex = 0;
 
             base.Repeat();
+        }
+
+        public override void OnAdded(IScreenObject host)
+        {
+            if (host is IScreenSurface surface)
+            {
+                if (Cursor == null)
+                    _privateCursor = new Components.Cursor(surface.Surface) { IsVisible = false };
+
+                return;
+            }
+
+            throw new ArgumentException($"This component can only bedded to a type that implements {nameof(IScreenSurface)}.");
         }
     }
 }

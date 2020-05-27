@@ -4,19 +4,24 @@ using SadRogue.Primitives;
 using SadConsole.Input;
 using SadConsole.Effects;
 
-namespace SadConsole
+namespace SadConsole.Components
 {
     /// <summary>
     /// A cursor that is attached to a <see cref="Console"/> used for printing.
     /// </summary>
-    public class Cursor
+    public class Cursor: IComponent
     {
         private ICellSurface _editor;
         private Point _position = new Point();
         private EffectsManager.ColoredGlyphState _cursorRenderCellState;
         private ColoredGlyph _cursorRenderCell;
+        private bool _applyCursorEffect = true;
+        private ICellEffect _cursorEffect;
 
-        private readonly int cursorCharacter = 219;
+        /// <summary>
+        /// The default glyph used for a new cursor. Value 219.
+        /// </summary>
+        public static readonly int DefaultCursorGlyph = 219;
 
         /// <summary>
         /// Cell used to render the cursor on the screen.
@@ -32,7 +37,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Appearance used when printing text.
+        /// Appearance used when printing text. <see cref="PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
         /// </summary>
         public ColoredGlyph PrintAppearance { get; set; }
 
@@ -44,12 +49,35 @@ namespace SadConsole
         /// <summary>
         /// This is the cursor visible effect, like blinking.
         /// </summary>
-        public ICellEffect CursorEffect { get; set; }
+        public ICellEffect CursorEffect
+        {
+            get => _cursorEffect;
+            set
+            {
+                _cursorEffect = value;
+                _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+            }
+        }
+
 
         /// <summary>
-        /// When true, indicates that the cursor, when printing, should not use the <see cref="PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
+        /// Sets the glyph used in rendering. A shortcut to <see cref="CursorRenderCell"/>.
+        /// </summary>
+        public int CursorGlyph
+        {
+            get => _cursorRenderCell.Glyph;
+            set => CursorRenderCell = new ColoredGlyph(_cursorRenderCell.Foreground, _cursorRenderCell.Background, value);
+        }
+
+        /// <summary>
+        /// When <see langword="true"/>, indicates that the cursor, when printing, should not use the <see cref="PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
         /// </summary>
         public bool PrintOnlyCharacterData { get; set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, left-clicking on the host surface will reposition the cursor to the clicked position.
+        /// </summary>
+        public bool MouseClickReposition { get; set; }
 
         /// <summary>
         /// Shows or hides the cursor. This does not affect how the cursor operates.
@@ -57,9 +85,25 @@ namespace SadConsole
         public bool IsVisible { get; set; }
 
         /// <summary>
-        /// When true, allows the <see cref="ProcessKeyboard(Input.Keyboard)"/> method to run.
+        /// When <see langword="false"/>, prevents the cursor from running on the host.
         /// </summary>
         public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// When <see langword="false"/>, prevents the <see cref="CursorEffect"/> from being applied.
+        /// </summary>
+        public bool ApplyCursorEffect
+        {
+            get => _applyCursorEffect;
+            set
+            {
+                _applyCursorEffect = value;
+
+                // If this is disabled, restore cell state
+                if (!_applyCursorEffect)
+                    _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+            }
+        }
 
         /// <summary>
         /// When <see langword="true"/>, applies the <see cref="PrintEffect"/> to the cursor when it prints.
@@ -81,9 +125,6 @@ namespace SadConsole
 
                     if (!(value.Y < 0 || value.Y >= _editor.BufferHeight))
                         _position = new Point(_position.X, value.Y);
-
-                    if (_position != null && _editor != null)
-                        _editor.IsDirty = true;
                 }
             }
         }
@@ -109,7 +150,7 @@ namespace SadConsole
         public int Row
         {
             get => _position.Y;
-            set => _position = new Point(_position.X, value);
+            set => Position = new Point(_position.X, value);
         }
 
         /// <summary>
@@ -118,7 +159,7 @@ namespace SadConsole
         public int Column
         {
             get => _position.X;
-            set => _position = new Point(value, _position.Y);
+            set => Position = new Point(value, _position.Y);
         }
 
         /// <summary>
@@ -127,48 +168,45 @@ namespace SadConsole
         public bool AutomaticallyShiftRowsUp { get; set; }
 
         /// <summary>
-        /// Creates a new instance of the cursor class that will work with the specified console.
+        /// Sets the sort order of this component within the host.
         /// </summary>
-        /// <param name="console">The console this cursor will print on.</param>
-        public Cursor(ICellSurface console)
-        {
-            _editor = console;
+        public int SortOrder { get; set; }
 
-            Constructor();
-        }
+        bool IComponent.IsUpdate => true;
 
-        private void Constructor()
+        bool IComponent.IsDraw => false;
+
+        bool IComponent.IsMouse => true;
+
+        bool IComponent.IsKeyboard => true;
+
+        /// <summary>
+        /// Creates a new instance of the cursor as a component.
+        /// </summary>
+        public Cursor()
         {
             IsEnabled = true;
-            IsVisible = false;
+            IsVisible = true;
             AutomaticallyShiftRowsUp = true;
 
             PrintAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
 
-            CursorRenderCell = new ColoredGlyph(Color.White, Color.Transparent, cursorCharacter);
+            CursorRenderCell = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph);
 
-            ResetCursorEffect();
-        }
-
-        internal Cursor()
-        {
-
+            ApplyDefaultCursorEffect();
         }
 
         /// <summary>
-        /// Sets the console this cursor is targetting.
+        /// Creates a new instance of teh cursor that works with the specified surface.
         /// </summary>
-        /// <param name="console">The console the cursor works with.</param>
-        public void AttachSurface(ICellSurface console)
-        {
-            _editor = console;
-            Position = Position;
-        }
+        /// <param name="surface"></param>
+        public Cursor(ICellSurface surface): this() =>
+            _editor = surface;
 
         /// <summary>
         /// Resets the <see cref="CursorRenderCell"/> back to the default.
         /// </summary>
-        public Cursor ResetCursorEffect()
+        public Cursor ApplyDefaultCursorEffect()
         {
             if (CursorEffect != null)
                 _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
@@ -179,15 +217,32 @@ namespace SadConsole
             };
             CursorEffect = blinkEffect;
             CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
+
             return this;
         }
 
         /// <summary>
-        /// Resets the cursor appearance to the console's default foreground and background.
+        /// Clones and reassigns <see cref="CursorEffect"/> to restart it.
+        /// </summary>
+        /// <returns></returns>
+        public Cursor RestartCursorEffect()
+        {
+            if (CursorEffect == null) return this;
+
+            _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+
+            CursorEffect = CursorEffect.Clone();
+            CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the cursor appearance to the console's default foreground and background.
         /// </summary>
         /// <returns>This cursor object.</returns>
-        /// <exception cref="Exception">Thrown when the backing console's CellData is null.</exception>
-        public Cursor ResetAppearanceToConsole()
+        /// <exception cref="Exception">Thrown when the cursor is not attached to any surface.</exception>
+        public Cursor SetPrintAppearanceToHost()
         {
             if (_editor != null)
             {
@@ -195,7 +250,7 @@ namespace SadConsole
             }
             else
             {
-                throw new Exception("Attached console is null. Cannot reset appearance.");
+                throw new Exception("A host is not attached, cannot reset appearance.");
             }
 
             return this;
@@ -659,34 +714,39 @@ namespace SadConsole
         //    batch.Draw(font.FontImage, renderArea, font.GlyphRects[CursorRenderCell.Glyph], CursorRenderCell.Foreground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
         //}
 
-        /// <summary>
-        /// Redraws the <see cref="CursorEffect"/> to <see cref="CursorRenderCell"/>.
-        /// </summary>
-        /// <param name="elapsed"></param>
-        public void UpdateRenderCell(TimeSpan elapsed)
+
+        void IComponent.Update(IScreenObject host, TimeSpan delta)
         {
-            if (CursorEffect != null)
+            if (IsVisible && _applyCursorEffect && CursorEffect != null)
             {
-                CursorEffect.Update(elapsed.TotalSeconds);
+                CursorEffect.Update(delta.TotalSeconds);
                 CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
             }
         }
 
-        /// <summary>
-        /// Automates the cursor based on keyboard input.
-        /// </summary>
-        /// <param name="info">The state of the keyboard</param>
-        /// <returns>Returns true when the keyboard caused the cursor to do something.</returns>
-        public virtual bool ProcessKeyboard(Input.Keyboard info)
+        void IComponent.Draw(IScreenObject host, TimeSpan delta)
         {
-            if (!IsEnabled)
+            throw new NotImplementedException();
+        }
+
+        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
+        {
+            handled = false;
+
+            if (MouseClickReposition && state.IsOnScreenObject && state.ScreenObject == host)
             {
-                return false;
+                Position = state.CellPosition;
+                handled = true;
             }
+        }
 
-            bool didSomething = false;
+        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
+        {
+            handled = false;
 
-            foreach (Input.AsciiKey key in info.KeysPressed)
+            if (!IsEnabled) return;
+
+            foreach (Input.AsciiKey key in keyboard.KeysPressed)
             {
                 if (key.Character == '\0')
                 {
@@ -694,11 +754,11 @@ namespace SadConsole
                     {
                         case Keys.Space:
                             Print(key.Character.ToString());
-                            didSomething = true;
+                            handled = true;
                             break;
                         case Keys.Enter:
                             CarriageReturn().LineFeed();
-                            didSomething = true;
+                            handled = true;
                             break;
 
                         case Keys.Pause:
@@ -745,43 +805,54 @@ namespace SadConsole
                             break;
                         case Keys.Up:
                             Up(1);
-                            didSomething = true;
+                            handled = true;
                             break;
                         case Keys.Left:
                             Left(1);
-                            didSomething = true;
+                            handled = true;
                             break;
                         case Keys.Right:
                             Right(1);
-                            didSomething = true;
+                            handled = true;
                             break;
                         case Keys.Down:
                             Down(1);
-                            didSomething = true;
+                            handled = true;
                             break;
                         case Keys.None:
                             break;
                         case Keys.Back:
                             Left(1).Print(" ").Left(1);
-                            didSomething = true;
+                            handled = true;
                             break;
                         default:
                             Print(key.Character.ToString());
-                            didSomething = true;
+                            handled = true;
                             break;
                     }
                 }
                 else
                 {
                     Print(key.Character.ToString());
-                    didSomething = true;
+                    handled = true;
                 }
             }
 
-            if (didSomething)
-                ResetCursorEffect();
+            if (handled)
+                RestartCursorEffect();
+        }
 
-            return didSomething;
+        void IComponent.OnAdded(IScreenObject host)
+        {
+            if (host is IScreenSurface surface)
+                _editor = surface.Surface;
+            else
+                throw new ArgumentException($"This component can only bedded to a type that implements {nameof(IScreenSurface)}.");
+        }
+
+        void IComponent.OnRemoved(IScreenObject host)
+        {
+            _editor = null;
         }
     }
 }

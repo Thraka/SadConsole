@@ -36,7 +36,7 @@ namespace SadConsole.Ansi
         /// <summary>
         /// The cursor used to write to the target <see cref="ICellSurface"/>.
         /// </summary>
-        public Cursor Cursor { get; }
+        public Components.Cursor Cursor { get; }
 
         /// <summary>
         /// How many characters to process a second. When set to 0 reads the entire document at once.
@@ -64,8 +64,8 @@ namespace SadConsole.Ansi
         {
             AnsiDocument = ansiDocument;
             _editor = editor;
-            Cursor = new Cursor(editor) { UseStringParser = false, DisableWordBreak = true };
-
+            Cursor = new Components.Cursor(editor) { UseStringParser = false, DisableWordBreak = true, PrintOnlyCharacterData = false };
+            
             CharactersPerSecond = 800;
 
             _bytes = ansiDocument.AnsiBytes;

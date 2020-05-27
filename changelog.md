@@ -2,6 +2,10 @@
 
 - Revamped control rendering. `ControlConsole` renderer now has a 2nd surface which only controls are rendered to. This way the control layer system can update independently of the actual console.
 - Fixed bug in renderers which the renderer wasn't attached and detached from the object when added.
+- `Cursor` is now a component.
+- `Cursor` has a new property named `MouseClickReposition` which when `true` allows a mouse click on the host console to move the cursor.
+- `Cursor` a lot of quality of life improvements.
+
 
 ## v9.0 Alpha 5
 

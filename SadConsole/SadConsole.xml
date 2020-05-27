@@ -382,7 +382,7 @@
             Reads a line of ANSI.SYS code.
             </summary>
             <param name="line">The line to read.</param>
-            <param name="moreLines">When <see langword="true"/>, calls <see cref="M:SadConsole.Cursor.LineFeed"/>; otherwise does nothing.</param>
+            <param name="moreLines">When <see langword="true"/>, calls <see cref="!:SadConsole.Cursor.LineFeed"/>; otherwise does nothing.</param>
             <returns>Returns false when character 26 is encountered; otherwise true.</returns>
         </member>
         <member name="M:SadConsole.Ansi.AnsiWriter.ReadEntireDocument">
@@ -1728,6 +1728,245 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
+        <member name="T:SadConsole.Components.Cursor">
+            <summary>
+            A cursor that is attached to a <see cref="T:SadConsole.Console"/> used for printing.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.Cursor.DefaultCursorGlyph">
+            <summary>
+            The default glyph used for a new cursor. Value 219.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.CursorRenderCell">
+            <summary>
+            Cell used to render the cursor on the screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.PrintAppearance">
+            <summary>
+            Appearance used when printing text. <see cref="P:SadConsole.Components.Cursor.PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.PrintEffect">
+            <summary>
+            This effect is applied to each cell printed by the cursor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.CursorEffect">
+            <summary>
+            This is the cursor visible effect, like blinking.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.CursorGlyph">
+            <summary>
+            Sets the glyph used in rendering. A shortcut to <see cref="P:SadConsole.Components.Cursor.CursorRenderCell"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.PrintOnlyCharacterData">
+            <summary>
+            When <see langword="true"/>, indicates that the cursor, when printing, should not use the <see cref="P:SadConsole.Components.Cursor.PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.MouseClickReposition">
+            <summary>
+            When <see langword="true"/>, left-clicking on the host surface will reposition the cursor to the clicked position.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.IsVisible">
+            <summary>
+            Shows or hides the cursor. This does not affect how the cursor operates.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.IsEnabled">
+            <summary>
+            When <see langword="false"/>, prevents the cursor from running on the host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.ApplyCursorEffect">
+            <summary>
+            When <see langword="false"/>, prevents the <see cref="P:SadConsole.Components.Cursor.CursorEffect"/> from being applied.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.UsePrintEffect">
+            <summary>
+            When <see langword="true"/>, applies the <see cref="P:SadConsole.Components.Cursor.PrintEffect"/> to the cursor when it prints.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.Position">
+            <summary>
+            Gets or sets the location of the cursor on the console.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.Cursor.DisableWordBreak">
+            <summary>
+            When true, prevents the any print method from breaking words up by spaces when wrapping lines.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.Cursor.UseLinuxLineEndings">
+            <summary>
+            Enables linux-like string parsing where a \n behaves like a \r\n.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.Cursor.UseStringParser">
+            <summary>
+            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="!:Print(string, Cell, ICellEffect)"/>
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.Row">
+            <summary>
+            Gets or sets the row of the cursor postion.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.Column">
+            <summary>
+            Gets or sets the column of the cursor postion.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.AutomaticallyShiftRowsUp">
+            <summary>
+            Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.SortOrder">
+            <summary>
+            Sets the sort order of this component within the host.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.#ctor">
+            <summary>
+            Creates a new instance of the cursor as a component.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.#ctor(SadConsole.ICellSurface)">
+            <summary>
+            Creates a new instance of teh cursor that works with the specified surface.
+            </summary>
+            <param name="surface"></param>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.ApplyDefaultCursorEffect">
+            <summary>
+            Resets the <see cref="P:SadConsole.Components.Cursor.CursorRenderCell"/> back to the default.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.RestartCursorEffect">
+            <summary>
+            Clones and reassigns <see cref="P:SadConsole.Components.Cursor.CursorEffect"/> to restart it.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.SetPrintAppearanceToHost">
+            <summary>
+            Sets the cursor appearance to the console's default foreground and background.
+            </summary>
+            <returns>This cursor object.</returns>
+            <exception cref="T:System.Exception">Thrown when the cursor is not attached to any surface.</exception>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.SetPrintAppearance(SadConsole.ColoredGlyph)">
+            <summary>
+            Sets <see cref="P:SadConsole.Components.Cursor.PrintAppearance"/>.
+            </summary>
+            <param name="appearance">The appearance to set.</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Print(System.String)">
+            <summary>
+            Prints text to the console using the default print appearance.
+            </summary>
+            <param name="text">The text to print.</param>
+            <returns>Returns this cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Prints text on the console.
+            </summary>
+            <param name="text">The text to print.</param>
+            <param name="template">The way the text will look when it is printed.</param>
+            <param name="templateEffect">Effect to apply to the text as its printed.</param>
+            <returns>Returns this cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Print(SadConsole.ColoredString)">
+            <summary>
+            Prints text to the console using the appearance of the colored string.
+            </summary>
+            <param name="text">The text to print.</param>
+            <returns>Returns this cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.CarriageReturn">
+            <summary>
+            Returns the cursor to the start of the current line.
+            </summary>
+            <returns>The current cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.LineFeed">
+            <summary>
+            Moves the cursor down a line.
+            </summary>
+            <returns>The current cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.NewLine">
+            <summary>
+            Calls the <see cref="M:SadConsole.Components.Cursor.CarriageReturn"/> and <see cref="M:SadConsole.Components.Cursor.LineFeed"/> methods in a single call.
+            </summary>
+            <returns>The current cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Move(SadRogue.Primitives.Point)">
+            <summary>
+            Moves the cursor to the specified position.
+            </summary>
+            <param name="position">The destination of the cursor.</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Move(System.Int32,System.Int32)">
+            <summary>
+            Moves the cursor to the specified position.
+            </summary>
+            <param name="x">The x (horizontal) of the position.</param>
+            <param name="y">The x (vertical) of the position.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Up(System.Int32)">
+            <summary>
+            Moves the cusor up by the specified amount of lines.
+            </summary>
+            <param name="amount">The amount of lines to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Down(System.Int32)">
+            <summary>
+            Moves the cusor down by the specified amount of lines.
+            </summary>
+            <param name="amount">The amount of lines to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Left(System.Int32)">
+            <summary>
+            Moves the cusor left by the specified amount of columns.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.LeftWrap(System.Int32)">
+            <summary>
+            Moves the cusor left by the specified amount of columns, wrapping the cursor if needed.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Right(System.Int32)">
+            <summary>
+            Moves the cusor right by the specified amount of columns.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.RightWrap(System.Int32)">
+            <summary>
+            Moves the cusor right by the specified amount of columns, wrapping the cursor if needed.
+            </summary>
+            <param name="amount">The amount of columns to move the cursor</param>
+            <returns>This cursor object.</returns>
+        </member>
         <member name="T:SadConsole.Components.EntityComponentParentViewSync">
             <summary>
             Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
@@ -2053,14 +2292,6 @@
             A surface that has a cursor.
             </summary>
         </member>
-        <member name="P:SadConsole.Console.IsCursorDisabled">
-            <summary>
-            When <see langword="true"/>, indicates that the <see cref="P:SadConsole.Console.Cursor"/> cannot be used on this console; otherwise, <see langword="false"/>.
-            </summary>
-            <remarks>
-            This property should only be used to indicate that this object can never use the <see cref="P:SadConsole.Console.Cursor"/>. To simply disable or enable the <see cref="P:SadConsole.Console.Cursor"/>, use <see cref="P:SadConsole.Cursor.IsEnabled"/> and <see cref="P:SadConsole.Cursor.IsVisible"/>.
-            </remarks>
-        </member>
         <member name="P:SadConsole.Console.Width">
             <summary>
             The entire width of the console. Forwards <see cref="P:SadConsole.ICellSurface.BufferWidth"/>.
@@ -2073,7 +2304,7 @@
         </member>
         <member name="P:SadConsole.Console.Cursor">
             <summary>
-            The private virtual cursor reference.
+            The virtual cursor reference.
             </summary>
         </member>
         <member name="P:SadConsole.Console.AutoCursorOnFocus">
@@ -2125,9 +2356,6 @@
         </member>
         <member name="M:SadConsole.Console.OnVisibleChanged">
             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Console.Update(System.TimeSpan)">
-             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Console.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <inheritdoc />
@@ -2210,228 +2438,6 @@
         </member>
         <member name="M:SadConsole.Console.GetEnumerator">
             <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.Cursor">
-            <summary>
-            A cursor that is attached to a <see cref="T:SadConsole.Console"/> used for printing.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.CursorRenderCell">
-            <summary>
-            Cell used to render the cursor on the screen.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.PrintAppearance">
-            <summary>
-            Appearance used when printing text.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.PrintEffect">
-            <summary>
-            This effect is applied to each cell printed by the cursor.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.CursorEffect">
-            <summary>
-            This is the cursor visible effect, like blinking.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.PrintOnlyCharacterData">
-            <summary>
-            When true, indicates that the cursor, when printing, should not use the <see cref="P:SadConsole.Cursor.PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.IsVisible">
-            <summary>
-            Shows or hides the cursor. This does not affect how the cursor operates.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.IsEnabled">
-            <summary>
-            When true, allows the <see cref="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)"/> method to run.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.UsePrintEffect">
-            <summary>
-            When <see langword="true"/>, applies the <see cref="P:SadConsole.Cursor.PrintEffect"/> to the cursor when it prints.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.Position">
-            <summary>
-            Gets or sets the location of the cursor on the console.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cursor.DisableWordBreak">
-            <summary>
-            When true, prevents the any print method from breaking words up by spaces when wrapping lines.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cursor.UseLinuxLineEndings">
-            <summary>
-            Enables linux-like string parsing where a \n behaves like a \r\n.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Cursor.UseStringParser">
-            <summary>
-            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Cursor.Print(System.String)"/> or <see cref="!:Print(string, Cell, ICellEffect)"/>
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.Row">
-            <summary>
-            Gets or sets the row of the cursor postion.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.Column">
-            <summary>
-            Gets or sets the column of the cursor postion.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Cursor.AutomaticallyShiftRowsUp">
-            <summary>
-            Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cursor.#ctor(SadConsole.ICellSurface)">
-            <summary>
-            Creates a new instance of the cursor class that will work with the specified console.
-            </summary>
-            <param name="console">The console this cursor will print on.</param>
-        </member>
-        <member name="M:SadConsole.Cursor.AttachSurface(SadConsole.ICellSurface)">
-            <summary>
-            Sets the console this cursor is targetting.
-            </summary>
-            <param name="console">The console the cursor works with.</param>
-        </member>
-        <member name="M:SadConsole.Cursor.ResetCursorEffect">
-            <summary>
-            Resets the <see cref="P:SadConsole.Cursor.CursorRenderCell"/> back to the default.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Cursor.ResetAppearanceToConsole">
-            <summary>
-            Resets the cursor appearance to the console's default foreground and background.
-            </summary>
-            <returns>This cursor object.</returns>
-            <exception cref="T:System.Exception">Thrown when the backing console's CellData is null.</exception>
-        </member>
-        <member name="M:SadConsole.Cursor.SetPrintAppearance(SadConsole.ColoredGlyph)">
-            <summary>
-            Sets <see cref="P:SadConsole.Cursor.PrintAppearance"/>.
-            </summary>
-            <param name="appearance">The appearance to set.</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Print(System.String)">
-            <summary>
-            Prints text to the console using the default print appearance.
-            </summary>
-            <param name="text">The text to print.</param>
-            <returns>Returns this cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Prints text on the console.
-            </summary>
-            <param name="text">The text to print.</param>
-            <param name="template">The way the text will look when it is printed.</param>
-            <param name="templateEffect">Effect to apply to the text as its printed.</param>
-            <returns>Returns this cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Print(SadConsole.ColoredString)">
-            <summary>
-            Prints text to the console using the appearance of the colored string.
-            </summary>
-            <param name="text">The text to print.</param>
-            <returns>Returns this cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.CarriageReturn">
-            <summary>
-            Returns the cursor to the start of the current line.
-            </summary>
-            <returns>The current cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.LineFeed">
-            <summary>
-            Moves the cursor down a line.
-            </summary>
-            <returns>The current cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.NewLine">
-            <summary>
-            Calls the <see cref="M:SadConsole.Cursor.CarriageReturn"/> and <see cref="M:SadConsole.Cursor.LineFeed"/> methods in a single call.
-            </summary>
-            <returns>The current cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Move(SadRogue.Primitives.Point)">
-            <summary>
-            Moves the cursor to the specified position.
-            </summary>
-            <param name="position">The destination of the cursor.</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Move(System.Int32,System.Int32)">
-            <summary>
-            Moves the cursor to the specified position.
-            </summary>
-            <param name="x">The x (horizontal) of the position.</param>
-            <param name="y">The x (vertical) of the position.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Up(System.Int32)">
-            <summary>
-            Moves the cusor up by the specified amount of lines.
-            </summary>
-            <param name="amount">The amount of lines to move the cursor</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Down(System.Int32)">
-            <summary>
-            Moves the cusor down by the specified amount of lines.
-            </summary>
-            <param name="amount">The amount of lines to move the cursor</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Left(System.Int32)">
-            <summary>
-            Moves the cusor left by the specified amount of columns.
-            </summary>
-            <param name="amount">The amount of columns to move the cursor</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.LeftWrap(System.Int32)">
-            <summary>
-            Moves the cusor left by the specified amount of columns, wrapping the cursor if needed.
-            </summary>
-            <param name="amount">The amount of columns to move the cursor</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.Right(System.Int32)">
-            <summary>
-            Moves the cusor right by the specified amount of columns.
-            </summary>
-            <param name="amount">The amount of columns to move the cursor</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.RightWrap(System.Int32)">
-            <summary>
-            Moves the cusor right by the specified amount of columns, wrapping the cursor if needed.
-            </summary>
-            <param name="amount">The amount of columns to move the cursor</param>
-            <returns>This cursor object.</returns>
-        </member>
-        <member name="M:SadConsole.Cursor.UpdateRenderCell(System.TimeSpan)">
-            <summary>
-            Redraws the <see cref="P:SadConsole.Cursor.CursorEffect"/> to <see cref="P:SadConsole.Cursor.CursorRenderCell"/>.
-            </summary>
-            <param name="elapsed"></param>
-        </member>
-        <member name="M:SadConsole.Cursor.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <summary>
-            Automates the cursor based on keyboard input.
-            </summary>
-            <param name="info">The state of the keyboard</param>
-            <returns>Returns true when the keyboard caused the cursor to do something.</returns>
         </member>
         <member name="P:SadConsole.DoubleAnimation.EasingFunction">
             <summary>
@@ -5229,22 +5235,15 @@
             Represents the cursor used in printing. Use this for styling and printing behavior.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.DrawString.#ctor(SadConsole.ICellSurface,SadConsole.ColoredString)">
-            <summary>
-            Draws a string on the specified surface.
-            </summary>
-            <param name="target">The target surface to use.</param>
-            <param name="text">The text to print.</param>
-        </member>
         <member name="M:SadConsole.Instructions.DrawString.#ctor(SadConsole.ColoredString)">
             <summary>
-            Draws a string on the surface passed to <see cref="!:Update(IScreenObject)"/>.
+            Creates a new instance of the object with the specified text.
             </summary>
             <param name="text"></param>
         </member>
         <member name="M:SadConsole.Instructions.DrawString.#ctor">
             <summary>
-            Draws a string on the surface passed to <see cref="!:Update(IScreenObject)"/>. <see cref="P:SadConsole.Instructions.DrawString.Text"/> must be set manually.
+            Creates a new instance of the object. <see cref="P:SadConsole.Instructions.DrawString.Text"/> must be set manually.
             </summary>
         </member>
         <member name="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject,System.TimeSpan)">

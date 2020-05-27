@@ -45,6 +45,10 @@ namespace Game
             GameHost.Instance.Screen.Cursor.IsVisible = true;
             GameHost.Instance.Screen.Cursor.IsEnabled = true;
             GameHost.Instance.Screen.IsFocused = true;
+
+            // Move the cursor's processing to AFTER our basic processor
+            GameHost.Instance.Screen.Cursor.SortOrder = 1;
+            GameHost.Instance.Screen.SortComponents();
         }
     }
 }
