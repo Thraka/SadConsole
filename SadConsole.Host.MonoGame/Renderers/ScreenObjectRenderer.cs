@@ -29,19 +29,19 @@ namespace SadConsole.Renderers
         protected XnaRectangle[] _renderRects;
 
         ///  <inheritdoc/>
-        public virtual void Attach(ISurfaceRenderData screen)
+        public virtual void Attach(IScreenSurface screen)
         {
         }
 
         ///  <inheritdoc/>
-        public virtual void Detatch(ISurfaceRenderData screen)
+        public virtual void Detatch(IScreenSurface screen)
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
         }
 
         ///  <inheritdoc/>
-        public virtual void Render(ISurfaceRenderData screen)
+        public virtual void Render(IScreenSurface screen)
         {
             // If the tint is covering the whole area, don't draw anything
             if (screen.Tint.A != 255)
@@ -49,22 +49,19 @@ namespace SadConsole.Renderers
                 // Draw call for surface
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-                if (screen is IScreenObject screenObject)
+                // Draw call for cursors
+                foreach (var cursor in screen.GetSadComponents<Components.Cursor>())
                 {
-                    // Draw call for cursors
-                    foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
+                    if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
                     {
-                        if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
-                        {
-                            GameHost.Instance.DrawCalls.Enqueue(
-                                new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
-                                                           ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
-                                                           new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
-                                                           screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                                           screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
-                                                          )
-                                );
-                        }
+                        GameHost.Instance.DrawCalls.Enqueue(
+                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                                                        ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
+                                                        new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
+                                                        screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
+                                                        screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
+                                                        )
+                            );
                     }
                 }
             }
@@ -75,7 +72,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public virtual void Refresh(ISurfaceRenderData screen, bool force = false)
+        public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -110,14 +107,14 @@ namespace SadConsole.Renderers
         }
 
 
-        protected virtual void RefreshBegin(ISurfaceRenderData screen)
+        protected virtual void RefreshBegin(IScreenSurface screen)
         {
             MonoGame.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
             MonoGame.Global.GraphicsDevice.Clear(Color.Transparent);
             MonoGame.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
         }
 
-        protected virtual void RefreshEnd(ISurfaceRenderData screen)
+        protected virtual void RefreshEnd(IScreenSurface screen)
         {
             MonoGame.Global.SharedSpriteBatch.End();
             MonoGame.Global.GraphicsDevice.SetRenderTarget(null);

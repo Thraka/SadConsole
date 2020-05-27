@@ -23,17 +23,17 @@ namespace SadConsole.Renderers
 
         protected IntRect[] _renderRects;
 
-        public virtual void Attach(ISurfaceRenderData screen)
+        public virtual void Attach(IScreenSurface screen)
         {
         }
 
-        public virtual void Detatch(ISurfaceRenderData screen)
+        public virtual void Detatch(IScreenSurface screen)
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
         }
 
-        public virtual void Render(ISurfaceRenderData screen)
+        public virtual void Render(IScreenSurface screen)
         {
             // If the tint isn't covering everything
             if (screen.Tint.A != 255)
@@ -41,23 +41,20 @@ namespace SadConsole.Renderers
                 // Draw call for surface
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
-                if (screen is IScreenObject screenObject)
+                // Draw any cursors
+                foreach (var cursor in screen.GetSadComponents<Components.Cursor>())
                 {
-                    // Draw any cursors
-                    foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
+                    if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
                     {
-                        if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
-                        {
-                            var cursorPosition = screen.AbsoluteArea.Position + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).Position;
+                        var cursorPosition = screen.AbsoluteArea.Position + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).Position;
 
-                            GameHost.Instance.DrawCalls.Enqueue(
-                                new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
-                                                           new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, screen.FontSize.X, screen.FontSize.Y).ToIntRect(),
-                                                           screen.Font,
-                                                           true
-                                                          )
-                                );
-                        }
+                        GameHost.Instance.DrawCalls.Enqueue(
+                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                                                        new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, screen.FontSize.X, screen.FontSize.Y).ToIntRect(),
+                                                        screen.Font,
+                                                        true
+                                                        )
+                            );
                     }
                 }
             }
@@ -66,7 +63,7 @@ namespace SadConsole.Renderers
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToIntRect(), screen.Font.SolidGlyphRectangle.ToIntRect()));
         }
 
-        public virtual void Refresh(ISurfaceRenderData screen, bool force = false)
+        public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -84,7 +81,7 @@ namespace SadConsole.Renderers
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.View.Width);
+                    var position = Point.FromIndex(i, screen.Surface.View.Width);
                     _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
                 }
             }
@@ -101,13 +98,13 @@ namespace SadConsole.Renderers
         }
 
 
-        protected virtual void RefreshBegin(ISurfaceRenderData surface)
+        protected virtual void RefreshBegin(IScreenSurface surface)
         {
             BackingTexture.Clear(Color.Transparent);
             Host.Global.SharedSpriteBatch.Reset(BackingTexture, RenderStates.Default, Transform.Identity);
         }
 
-        protected virtual void RefreshEnd(ISurfaceRenderData surface)
+        protected virtual void RefreshEnd(IScreenSurface surface)
         {
             Host.Global.SharedSpriteBatch.End();
             BackingTexture.Display();

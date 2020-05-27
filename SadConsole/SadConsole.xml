@@ -5268,7 +5268,7 @@
             <summary>
             Creates a new tint fade instruction that targets the specified console.
             </summary>
-            <param name="objectSurface">The <see cref="!:IScreenSurface.Tint"/> to fade.</param>
+            <param name="objectSurface">The <see cref="P:SadConsole.IScreenSurface.Tint"/> to fade.</param>
             <param name="colors">The gradient pattern to fade through.</param>
             <param name="duration">How long the fade takes.</param>
         </member>
@@ -5702,44 +5702,59 @@
             The width of the surface in pixels.
             </summary>
         </member>
-        <member name="T:SadConsole.ISurfaceRenderData">
-            <summary>
-            Provides the basic information needed to render a surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ISurfaceRenderData.AbsoluteArea">
+        <member name="P:SadConsole.IScreenSurface.AbsoluteArea">
             <summary>
             The pixel area on the screen this surface occupies.
             </summary>
         </member>
-        <member name="P:SadConsole.ISurfaceRenderData.Font">
+        <member name="P:SadConsole.IScreenSurface.Font">
             <summary>
             Font used with rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.ISurfaceRenderData.FontSize">
+        <member name="P:SadConsole.IScreenSurface.FontSize">
             <summary>
-            The size of the <see cref="P:SadConsole.ISurfaceRenderData.Font"/> cells applied to the object when rendering.
+            The size of the <see cref="P:SadConsole.IScreenSurface.Font"/> cells applied to the object when rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.ISurfaceRenderData.ForceRendererRefresh">
+        <member name="P:SadConsole.IScreenSurface.ForceRendererRefresh">
             <summary>
-            When <see langword="true"/>, the <see cref="!:Draw"/> method forces the <see cref="!:Renderer"/> to refresh the backing texture with the latest state of the object.
+            When <see langword="true"/>, the <see cref="!:Draw"/> method forces the <see cref="P:SadConsole.IScreenSurface.Renderer"/> to refresh the backing texture with the latest state of the object.
             </summary>
         </member>
-        <member name="P:SadConsole.ISurfaceRenderData.IsDirty">
+        <member name="P:SadConsole.IScreenSurface.IsDirty">
             <summary>
             Indicates the surface has changed and needs to be rendered.
             </summary>
         </member>
-        <member name="P:SadConsole.ISurfaceRenderData.Surface">
+        <member name="P:SadConsole.IScreenSurface.Surface">
             <summary>
             The surface the screen object represents.
             </summary>
         </member>
-        <member name="P:SadConsole.ISurfaceRenderData.Tint">
+        <member name="P:SadConsole.IScreenSurface.Tint">
             <summary>
             A tint used in rendering.
+            </summary>
+        </member>
+        <member name="T:SadConsole.ITexture">
+            <summary>
+            Represents a texture provided by a game host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ITexture.ResourcePath">
+            <summary>
+            The file path to the texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ITexture.Height">
+            <summary>
+            The height of the texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ITexture.Width">
+            <summary>
+            The width of the texture.
             </summary>
         </member>
         <member name="T:SadConsole.LayeredScreenSurface">
@@ -6006,26 +6021,26 @@
             Draws a surface.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenSurface)">
             <summary>
             Called when the renderer is added to a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.IScreenSurface)">
             <summary>
             Called when the renderer is removed from a surface.
             </summary>
             <param name="surfaceObject">The surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
             <summary>
             Refreshes a cached drawing state.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
             <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.IScreenSurface)">
             <summary>
             Creates a drawcall in the drawing pipeline.
             </summary>

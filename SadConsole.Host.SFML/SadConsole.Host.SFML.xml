@@ -147,7 +147,7 @@
              Draws a <see cref="T:SadConsole.Renderers.ControlsConsole"/>.
              </summary>
              <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
             
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>
@@ -157,16 +157,16 @@
             Name of this renderer type.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Attach(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.ControlsConsole.Attach(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Detatch(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.ControlsConsole.Detatch(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
+        <member name="M:SadConsole.Renderers.ControlsConsole.Refresh(SadConsole.IScreenSurface,System.Boolean)">
              <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.LayeredScreenObject">
@@ -182,10 +182,10 @@
             Name of this renderer type.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.LayeredScreenObject.Attach(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.LayeredScreenObject.Attach(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.LayeredScreenObject.Refresh(SadConsole.ISurfaceRenderData,System.Boolean)">
+        <member name="M:SadConsole.Renderers.LayeredScreenObject.Refresh(SadConsole.IScreenSurface,System.Boolean)">
              <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.ScreenObjectRenderer">
@@ -206,7 +206,7 @@
              Draws a <see cref="T:SadConsole.Renderers.Window"/>.
              </summary>
              <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.Window.Render(SadConsole.ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.Window.Render(SadConsole.IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
             
              If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
              </remarks>
@@ -216,10 +216,10 @@
             Name of this renderer type.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.Window.Attach(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.Window.Attach(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.Window.Render(SadConsole.ISurfaceRenderData)">
+        <member name="M:SadConsole.Renderers.Window.Render(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
     </members>

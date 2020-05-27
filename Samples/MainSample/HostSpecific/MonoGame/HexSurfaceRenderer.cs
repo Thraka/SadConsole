@@ -9,7 +9,7 @@ namespace FeatureDemo.HostSpecific.MonoGame
 {
     class HexSurfaceRenderer: SadConsole.Renderers.ScreenObjectRenderer
     {
-        public override void Refresh(ISurfaceRenderData screen, bool force = false)
+        public override void Refresh(IScreenSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
@@ -27,7 +27,7 @@ namespace FeatureDemo.HostSpecific.MonoGame
 
                 for (int i = 0; i < _renderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.View.Width);
+                    var position = Point.FromIndex(i, screen.Surface.View.Width);
                     _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
 
                     if (position.Y % 2 == 1)

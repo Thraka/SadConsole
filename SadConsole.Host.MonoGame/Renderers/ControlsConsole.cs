@@ -15,7 +15,7 @@ namespace SadConsole.Renderers
     /// Draws a <see cref="ControlsConsole"/>.
     /// </summary>
     /// <remarks>
-    /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(ISurfaceRenderData)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
+    /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
     ///
     /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
     /// </remarks>
@@ -29,16 +29,16 @@ namespace SadConsole.Renderers
         public static new string Name => "controls";
 
         ///  <inheritdoc/>
-        public override void Attach(ISurfaceRenderData screen)
+        public override void Attach(IScreenSurface screen)
         {
-            if (screen is IScreenObject obj && obj.HasSadComponent<UI.ControlHost>(out _))
+            if (screen.HasSadComponent<UI.ControlHost>(out _))
                 return;
 
-            throw new Exception($"The ControlsConsole Renderer must be added to a {nameof(IScreenObject)} that contains a {nameof(UI.ControlHost)} component.");
+            throw new Exception($"The {nameof(ControlsConsole)} renderer must be added to an object contains a {nameof(UI.ControlHost)} component.");
         }
 
         ///  <inheritdoc/>
-        public override void Detatch(ISurfaceRenderData screen)
+        public override void Detatch(IScreenSurface screen)
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
@@ -47,7 +47,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public override void Render(ISurfaceRenderData screen)
+        public override void Render(IScreenSurface screen)
         {
             // If the tint is covering the whole area, don't draw anything
             if (screen.Tint.A != 255)
@@ -59,22 +59,19 @@ namespace SadConsole.Renderers
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTextureControls, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
 
                 // Draw call for cursors
-                if (screen is IScreenObject screenObject)
+                foreach (var cursor in screen.GetSadComponents<Components.Cursor>())
                 {
-                    foreach (var cursor in screenObject.GetSadComponents<Components.Cursor>())
-                    {
 
-                        if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
-                        {
-                            GameHost.Instance.DrawCalls.Enqueue(
-                                new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
-                                                           ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
-                                                           new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
-                                                           screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                                           screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
-                                                          )
-                                );
-                        }
+                    if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
+                    {
+                        GameHost.Instance.DrawCalls.Enqueue(
+                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                                                        ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
+                                                        new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
+                                                        screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
+                                                        screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
+                                                        )
+                            );
                     }
                 }
             }
@@ -84,7 +81,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(ISurfaceRenderData screen, bool force = false)
+        public override void Refresh(IScreenSurface screen, bool force = false)
         {
             // Update texture if something is out of size.
             if (BackingTexture == null || screen.AbsoluteArea.Width != BackingTexture.Width || screen.AbsoluteArea.Height != BackingTexture.Height)
@@ -119,7 +116,7 @@ namespace SadConsole.Renderers
                 RefreshEnd(screen);
             }
 
-            UI.ControlHost uiComponent = ((IScreenSurface)screen).GetSadComponent<UI.ControlHost>();
+            UI.ControlHost uiComponent = screen.GetSadComponent<UI.ControlHost>();
 
             // render controls
             if (force || uiComponent.IsDirty)

@@ -5,7 +5,7 @@
 - `Cursor` is now a component.
 - `Cursor` has a new property named `MouseClickReposition` which when `true` allows a mouse click on the host console to move the cursor.
 - `Cursor` a lot of quality of life improvements.
-
+- Removed `ISurfaceRenderData` and went back to normal `IScreenSurface` for renderers.
 
 ## v9.0 Alpha 5
 

@@ -20,14 +20,14 @@ namespace SadConsole.Renderers
         public static new string Name => "layered";
 
         ///  <inheritdoc/>
-        public override void Attach(ISurfaceRenderData screen)
+        public override void Attach(IScreenSurface screen)
         {
             if (!(screen.Surface is SadConsole.LayeredScreenSurface))
-                throw new Exception($"The {nameof(Renderers.LayeredScreenObject)} renderer must be added to a screen object that has a {nameof(SadConsole.LayeredScreenSurface)} for a surface.");
+                throw new Exception($"The {nameof(LayeredScreenObject)} renderer must be added to a {nameof(SadConsole.LayeredScreenSurface)} object.");
         }
 
         ///  <inheritdoc/>
-        public override void Refresh(ISurfaceRenderData screen, bool force = false)
+        public override void Refresh(IScreenSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
 
