@@ -109,7 +109,10 @@ namespace SadConsole.UI.Themes
                     _oldCaretPosition = textbox.CaretPosition;
                     _oldState = control.State;
                     _editingText = textbox.EditingText;
+
                 }
+
+                textbox.IsDirty = true;
             }
             else
             {
@@ -121,9 +124,9 @@ namespace SadConsole.UI.Themes
                     textbox.Surface.Print(0, 0, textbox.Text.Align(textbox.TextAlignment, textbox.Width));
                 else
                     textbox.Surface.Print(0, 0, textbox.Text.Masked(textbox.Mask.Value).Align(textbox.TextAlignment, textbox.Width));
-            }
 
-            textbox.IsDirty = false;
+                textbox.IsDirty = false;
+            }
         }
 
 
