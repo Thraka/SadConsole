@@ -38,7 +38,12 @@ namespace SadConsole
             get => _renderer;
             set
             {
+                if (_renderer == value) return;
+
+                _renderer?.Detatch(this);
                 _renderer = value;
+                _renderer?.Attach(this);
+
                 IsDirty = true;
             }
         }
