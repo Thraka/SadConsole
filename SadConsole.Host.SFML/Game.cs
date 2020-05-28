@@ -215,7 +215,6 @@ namespace SadConsole
             screenObject switch
             {
                 UI.Window _ => new Renderers.Window(),
-                //UI.ControlsConsole _ => new Renderers.ControlsConsole(),
                 LayeredScreenSurface _ => new Renderers.LayeredScreenObject(),
                 _ => new Renderers.ScreenObjectRenderer(),
             };
