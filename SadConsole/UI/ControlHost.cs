@@ -211,10 +211,8 @@ namespace SadConsole.UI
                     var controls = ControlsList.ToList();
                     foreach (ControlBase control in controls)
                     {
-                        if (control.IsVisible && control.ProcessMouse(state))
-                        {
+                        if (control.IsVisible && control.Parent == this && control.ProcessMouse(state))
                             break;
-                        }
                     }
                 }
             }
@@ -243,9 +241,7 @@ namespace SadConsole.UI
         public void Add(ControlBase control)
         {
             if (!ControlsList.Contains(control))
-            {
                 ControlsList.Add(control);
-            }
 
             control.Parent = this;
             control.TabIndex = ControlsList.Count - 1;
@@ -265,7 +261,9 @@ namespace SadConsole.UI
             if (ControlsList.Contains(control))
             {
                 control.TabIndex = -1;
-                control.Parent = null;
+
+                if (CapturedControl == control)
+                    ReleaseControl();
 
                 if (FocusedControl == control)
                 {
@@ -273,23 +271,16 @@ namespace SadConsole.UI
                     ControlsList.Remove(control);
 
                     if (ControlsList.Count == 0)
-                    {
                         FocusedControl = null;
-                    }
                     else if (index > ControlsList.Count - 1)
-                    {
                         FocusedControl = ControlsList[ControlsList.Count - 1];
-                    }
                     else
-                    {
                         FocusedControl = ControlsList[index];
-                    }
                 }
                 else
-                {
                     ControlsList.Remove(control);
-                }
 
+                control.Parent = null;
                 _parent.IsDirty = true;
 
                 ReOrderControls();
