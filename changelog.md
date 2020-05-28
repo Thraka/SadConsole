@@ -6,6 +6,9 @@
 - `Cursor` has a new property named `MouseClickReposition` which when `true` allows a mouse click on the host console to move the cursor.
 - `Cursor` a lot of quality of life improvements.
 - Removed `ISurfaceRenderData` and went back to normal `IScreenSurface` for renderers.
+- ControlHost correctly checks the parent of the control when processing the mouse.
+- ControlHost no longer listens to the tab button when a control indicates it handled input
+- Textbox bug fixes (thanks Doctor Triagony).
 
 ## v9.0 Alpha 5
 

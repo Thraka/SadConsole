@@ -172,27 +172,30 @@ namespace SadConsole.UI
 
             if (!host.UseKeyboard) return;
 
-            if (
-                (info.IsKeyDown(Keys.LeftShift) ||
-                info.IsKeyDown(Keys.RightShift)) ||
-                (info.IsKeyReleased(Keys.LeftShift) ||
-                info.IsKeyReleased(Keys.RightShift)) &&
-                info.IsKeyReleased(Keys.Tab))
-            {
-                TabPreviousControl();
-                handled = true;
-                return;
-            }
-
-            if (info.IsKeyReleased(Keys.Tab))
-            {
-                TabNextControl();
-                handled = true;
-                return;
-            }
-
             if (FocusedControl != null && FocusedControl.IsEnabled && FocusedControl.UseKeyboard)
                 handled = FocusedControl.ProcessKeyboard(info);
+
+            if (!handled)
+            {
+                if (
+                    (info.IsKeyDown(Keys.LeftShift) ||
+                    info.IsKeyDown(Keys.RightShift) ||
+                    info.IsKeyReleased(Keys.LeftShift) ||
+                    info.IsKeyReleased(Keys.RightShift)) &&
+                    info.IsKeyReleased(Keys.Tab))
+                {
+                    TabPreviousControl();
+                    handled = true;
+                    return;
+                }
+
+                if (info.IsKeyReleased(Keys.Tab))
+                {
+                    TabNextControl();
+                    handled = true;
+                    return;
+                }
+            }
         }
 
         void Components.IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
@@ -204,7 +207,7 @@ namespace SadConsole.UI
 
             if (state.IsOnScreenObject || host.IsExclusiveMouse)
             {
-                if (CapturedControl != null)
+                if (CapturedControl != null && CapturedControl.Parent == this)
                     CapturedControl.ProcessMouse(state);
                 else
                 {

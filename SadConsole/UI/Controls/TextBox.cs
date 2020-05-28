@@ -162,6 +162,7 @@ namespace SadConsole.UI.Controls
                 _caretPos = value;
                 DetermineState();
                 IsDirty = true;
+                ValidateCursorPosition();
             }
         }
 
@@ -264,12 +265,10 @@ namespace SadConsole.UI.Controls
         /// </summary>
         protected void ValidateCursorPosition()
         {
-            if (MaxLength != 0)
+            if (MaxLength != 0 && EditingText.Length == MaxLength)
             {
                 if (_caretPos > EditingText.Length)
-                {
                     _caretPos = EditingText.Length - 1;
-                }
             }
             else if (_caretPos > EditingText.Length)
             {
@@ -279,18 +278,13 @@ namespace SadConsole.UI.Controls
 
             // Test to see if caret is off edge of box
             if (_caretPos >= Width)
-            {
                 LeftDrawOffset = EditingText.Length - Width + 1;
 
-                if (LeftDrawOffset < 0)
-                {
-                    LeftDrawOffset = 0;
-                }
-            }
-            else
-            {
+            if (LeftDrawOffset < 0)
                 LeftDrawOffset = 0;
-            }
+
+            if (_caretPos < LeftDrawOffset)
+                LeftDrawOffset = _caretPos;
 
             DetermineState();
             IsDirty = true;
@@ -318,172 +312,166 @@ namespace SadConsole.UI.Controls
         /// <returns>True if the keyboard was handled by this control.</returns>
         public override bool ProcessKeyboard(Input.Keyboard info)
         {
-            if (info.KeysPressed.Count != 0)
+            if (DisableKeyboard)
             {
-                if (DisableKeyboard)
+                for (int i = 0; i < info.KeysPressed.Count; i++)
                 {
-                    for (int i = 0; i < info.KeysPressed.Count; i++)
-                    {
-                        if (info.KeysPressed[i].Key == Keys.Enter)
-                        {
-                            if (TriggerKeyPressEvent(info.KeysPressed[i]))
-                            {
-                                return false;
-                            }
-
-                            IsDirty = true;
-                            DisableKeyboard = false;
-                            Text = EditingText;
-                        }
-                    }
-                    return true;
-                }
-                else
-                {
-                    var newText = new System.Text.StringBuilder(EditingText, Width - 1);
-
-                    IsDirty = true;
-
-                    for (int i = 0; i < info.KeysPressed.Count; i++)
+                    if (info.KeysPressed[i].Key == Keys.Enter)
                     {
                         if (TriggerKeyPressEvent(info.KeysPressed[i]))
                         {
                             return false;
                         }
 
-                        if (_isNumeric)
+                        IsDirty = true;
+                        DisableKeyboard = false;
+                        Text = EditingText;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                var newText = new System.Text.StringBuilder(EditingText, Width - 1);
+
+                IsDirty = true;
+
+                for (int i = 0; i < info.KeysPressed.Count; i++)
+                {
+                    if (TriggerKeyPressEvent(info.KeysPressed[i]))
+                    {
+                        return true;
+                    }
+
+                    if (_isNumeric)
+                    {
+                        if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
                         {
-                            if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
-                            {
-                                newText.Remove(newText.Length - 1, 1);
-                                _caretPos -= 1;
+                            newText.Remove(newText.Length - 1, 1);
+                            _caretPos -= 1;
 
-                                if (_caretPos == -1)
-                                {
-                                    _caretPos = 0;
-                                }
-                            }
-                            else if (info.KeysPressed[i].Key == Keys.Enter)
-                            {
-                                DisableKeyboard = true;
-                                Text = EditingText;
-                                return true;
-                            }
-                            else if (info.KeysPressed[i].Key == Keys.Escape)
-                            {
-                                DisableKeyboard = true;
-                                return true;
-                            }
-
-                            else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
-                            {
-                                newText.Append(info.KeysPressed[i].Character);
-                                _caretPos += 1;
-                            }
-
+                            if (_caretPos == -1)
+                                _caretPos = 0;
+                        }
+                        else if (info.KeysPressed[i].Key == Keys.Enter)
+                        {
+                            DisableKeyboard = true;
+                            Text = EditingText;
+                            return true;
+                        }
+                        else if (info.KeysPressed[i].Key == Keys.Escape)
+                        {
+                            DisableKeyboard = true;
+                            return true;
                         }
 
-                        else
+                        else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
                         {
-                            if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _caretPos != 0)
-                            {
-                                if (_caretPos == newText.Length)
-                                {
-                                    newText.Remove(newText.Length - 1, 1);
-                                }
-                                else
-                                {
-                                    newText.Remove(_caretPos - 1, 1);
-                                }
-
-                                _caretPos -= 1;
-
-                                if (_caretPos == -1)
-                                {
-                                    _caretPos = 0;
-                                }
-                            }
-                            else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
-                            {
-                                newText.Insert(_caretPos, ' ');
-                                _caretPos++;
-
-                                if (_caretPos > newText.Length)
-                                {
-                                    _caretPos = newText.Length;
-                                }
-                            }
-
-                            else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
-                            {
-                                newText.Remove(_caretPos, 1);
-
-                                if (_caretPos > newText.Length)
-                                {
-                                    _caretPos = newText.Length;
-                                }
-                            }
-
-                            else if (info.KeysPressed[i].Key == Keys.Enter)
-                            {
-                                Text = EditingText;
-                                DisableKeyboard = true;
-                                return true;
-                            }
-                            else if (info.KeysPressed[i].Key == Keys.Escape)
-                            {
-                                DisableKeyboard = true;
-                                return true;
-                            }
-                            else if (info.KeysPressed[i].Key == Keys.Left)
-                            {
-                                _caretPos -= 1;
-
-                                if (_caretPos == -1)
-                                {
-                                    _caretPos = 0;
-                                }
-                            }
-                            else if (info.KeysPressed[i].Key == Keys.Right)
-                            {
-                                _caretPos += 1;
-
-                                if (_caretPos > newText.Length)
-                                {
-                                    _caretPos = newText.Length;
-                                }
-                            }
-
-                            else if (info.KeysPressed[i].Key == Keys.Home)
-                            {
-                                _caretPos = 0;
-                            }
-
-                            else if (info.KeysPressed[i].Key == Keys.End)
-                            {
-                                _caretPos = newText.Length;
-                            }
-
-                            else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
-                            {
-                                newText.Insert(_caretPos, info.KeysPressed[i].Character);
-                                _caretPos++;
-
-                                if (_caretPos > newText.Length)
-                                {
-                                    _caretPos = newText.Length;
-                                }
-                            }
+                            newText.Append(info.KeysPressed[i].Character);
+                            _caretPos += 1;
                         }
                     }
 
-                    EditingText = newText.ToString();
+                    else
+                    {
+                        if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _caretPos != 0)
+                        {
+                            if (_caretPos == newText.Length)
+                            {
+                                newText.Remove(newText.Length - 1, 1);
+                            }
+                            else
+                            {
+                                newText.Remove(_caretPos - 1, 1);
+                            }
+
+                            _caretPos -= 1;
+
+                            if (_caretPos == -1)
+                            {
+                                _caretPos = 0;
+                            }
+                        }
+                        else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+                        {
+                            newText.Insert(_caretPos, ' ');
+                            _caretPos++;
+
+                            if (_caretPos > newText.Length)
+                            {
+                                _caretPos = newText.Length;
+                            }
+                        }
+
+                        else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
+                        {
+                            newText.Remove(_caretPos, 1);
+
+                            if (_caretPos > newText.Length)
+                            {
+                                _caretPos = newText.Length;
+                            }
+                        }
+
+                        else if (info.KeysPressed[i].Key == Keys.Enter)
+                        {
+                            Text = EditingText;
+                            DisableKeyboard = true;
+                            return true;
+                        }
+                        else if (info.KeysPressed[i].Key == Keys.Escape)
+                        {
+                            DisableKeyboard = true;
+                            return true;
+                        }
+                        else if (info.KeysPressed[i].Key == Keys.Left)
+                        {
+                            _caretPos -= 1;
+
+                            if (_caretPos == -1)
+                            {
+                                _caretPos = 0;
+                            }
+                        }
+                        else if (info.KeysPressed[i].Key == Keys.Right)
+                        {
+                            _caretPos += 1;
+
+                            if (_caretPos > newText.Length)
+                            {
+                                _caretPos = newText.Length;
+                            }
+                        }
+
+                        else if (info.KeysPressed[i].Key == Keys.Home)
+                        {
+                            _caretPos = 0;
+                        }
+
+                        else if (info.KeysPressed[i].Key == Keys.End)
+                        {
+                            _caretPos = newText.Length;
+                        }
+
+                        else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+                        {
+                            newText.Insert(_caretPos, info.KeysPressed[i].Character);
+                            _caretPos++;
+                            LeftDrawOffset -= 1;
+
+                            if (_caretPos > newText.Length)
+                            {
+                                _caretPos = newText.Length;
+                            }
+                        }
+                    }
                 }
 
+                EditingText = newText.ToString();
                 return true;
             }
-
-            return false;
         }
 
         /// <summary>
