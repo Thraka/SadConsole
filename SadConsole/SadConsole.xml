@@ -3339,6 +3339,11 @@
             The rectangle associated with the <see cref="P:SadConsole.Font.UnsupportedGlyphIndex"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.Font.GlyphRectangles">
+            <summary>
+            A dictionary that stores the source rectangles of the font by glyph id.
+            </summary>
+        </member>
         <member name="P:SadConsole.Font.IsSadExtended">
             <summary>
             True when the font supports SadConsole extended decorators; otherwise false.

@@ -16,9 +16,6 @@ namespace SadConsole
         private int _solidGlyphIndex;
         private int _unsupportedGlyphIndex = 173;
 
-        [DataMember(Name = "GlyphRectangles")]
-        private Dictionary<int, Rectangle> _glyphRects = new Dictionary<int, Rectangle>();
-
         /// <summary>
         /// The size options of a font.
         /// </summary>
@@ -141,6 +138,11 @@ namespace SadConsole
         public Rectangle UnsupportedGlyphRectangle { get; private set; }
 
         /// <summary>
+        /// A dictionary that stores the source rectangles of the font by glyph id.
+        /// </summary>
+        public Dictionary<int, Rectangle> GlyphRectangles { get; set; } = new Dictionary<int, Rectangle>();
+
+        /// <summary>
         /// True when the font supports SadConsole extended decorators; otherwise false.
         /// </summary>
         [DataMember]
@@ -177,7 +179,7 @@ namespace SadConsole
             GlyphPadding = glyphPadding;
             Image = image;
             Name = name;
-            _glyphRects = glyphRectangles;
+            GlyphRectangles = glyphRectangles;
 
             ConfigureRects();
 
@@ -192,7 +194,7 @@ namespace SadConsole
         /// </summary>
         public Rectangle GetGlyphSourceRectangle(int glyph)
         {
-            if (glyph >= 0 && _glyphRects.TryGetValue(glyph, out Rectangle value))
+            if (glyph >= 0 && GlyphRectangles.TryGetValue(glyph, out Rectangle value))
                 return value;
 
             return UnsupportedGlyphRectangle;
@@ -262,7 +264,7 @@ namespace SadConsole
         public void ConfigureRects()
         {
             // If this is empty, it's an old-style font.
-            if (_glyphRects.Count == 0)
+            if (GlyphRectangles.Count == 0)
             {
                 for (int i = 0; i < Rows * Columns; i++)
                 {
@@ -271,13 +273,13 @@ namespace SadConsole
 
                     if (GlyphPadding != 0)
                     {
-                        _glyphRects.Add(i, new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
+                        GlyphRectangles.Add(i, new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
                                                          (cy * GlyphHeight) + ((cy + 1) * GlyphPadding),
                                                          GlyphWidth, GlyphHeight));
                     }
                     else
                     {
-                        _glyphRects.Add(i, new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight));
+                        GlyphRectangles.Add(i, new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight));
                     }
                 }
             }
