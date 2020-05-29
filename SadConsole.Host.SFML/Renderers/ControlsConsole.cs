@@ -142,7 +142,7 @@ namespace SadConsole.Renderers
                 (int x, int y) = (control.Position - control.Parent.ParentConsole.Surface.ViewPosition).SurfaceLocationToPixel(control.Parent.ParentConsole.FontSize);
                 (int width, int height) = new Point(control.Surface.View.Width, control.Surface.View.Height) * control.Parent.ParentConsole.FontSize;
 
-                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.GlyphRects[font.SolidGlyphIndex].ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.SolidGlyphRectangle.ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
             }
 
             var parentViewRect = control.Parent.ParentConsole.Surface.View;

@@ -97,7 +97,7 @@ namespace SFML.Graphics
                 _maxIndex = _lastDrawCall.Verticies.Length - 200;
             }
 
-            var glyphRect = font.GlyphRects[cell.Glyph].ToIntRect();
+            var glyphRect = font.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
             var background = cell.Background.ToSFMLColor();
             var foreground = cell.Foreground.ToSFMLColor();
 
@@ -189,7 +189,7 @@ namespace SFML.Graphics
                 {
                     foreach (var decorator in cell.Decorators)
                     {
-                        glyphRect = font.GlyphRects[decorator.Glyph].ToIntRect();
+                        glyphRect = font.GetGlyphSourceRectangle(decorator.Glyph).ToIntRect();
                         foreground = decorator.Color.ToSFMLColor();
 
                         if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)

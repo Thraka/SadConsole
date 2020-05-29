@@ -59,7 +59,7 @@ namespace SadConsole.Renderers
                                                         ((SadConsole.Host.GameTexture)screen.Font.Image).Texture,
                                                         new XnaRectangle(screen.AbsoluteArea.Position.ToMonoPoint() + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).ToMonoRectangle().Location, screen.FontSize.ToMonoPoint()),
                                                         screen.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                                        screen.Font.GlyphRects[cursor.CursorRenderCell.Glyph].ToMonoRectangle()
+                                                        screen.Font.GetGlyphSourceRectangle(cursor.CursorRenderCell.Glyph).ToMonoRectangle()
                                                         )
                             );
                     }
@@ -125,7 +125,7 @@ namespace SadConsole.Renderers
             var fontImage = ((SadConsole.Host.GameTexture)font.Image).Texture;
 
             if (cellSurface.DefaultBackground.A != 0)
-                MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.GlyphRects[font.SolidGlyphIndex].ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
             int rectIndex = 0;
 
@@ -145,11 +145,11 @@ namespace SadConsole.Renderers
                         MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                     if (!cell.Foreground.Equals(Color.Transparent))
-                        MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GlyphRects[cell.Glyph].ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                        MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
                     foreach (CellDecorator decorator in cell.Decorators)
                         if (!decorator.Color.Equals(Color.Transparent))
-                            MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GlyphRects[decorator.Glyph].ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                            MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
 
                     i++;
                     rectIndex++;

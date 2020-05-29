@@ -14,6 +14,10 @@ namespace SadConsole
     public sealed class Font
     {
         private int _solidGlyphIndex;
+        private int _unsupportedGlyphIndex = 173;
+
+        [DataMember(Name = "GlyphRectangles")]
+        private Dictionary<int, Rectangle> _glyphRects = new Dictionary<int, Rectangle>();
 
         /// <summary>
         /// The size options of a font.
@@ -61,8 +65,7 @@ namespace SadConsole
             set
             {
                 _solidGlyphIndex = value;
-                if (GlyphRects != null)
-                    SolidGlyphRectangle = GlyphRects[value];
+                SolidGlyphRectangle = GetGlyphSourceRectangle(value);
             }
         }
 
@@ -74,7 +77,7 @@ namespace SadConsole
         /// <summary>
         /// A cached array of rectangles of individual glyphs.
         /// </summary>
-        public Rectangle[] GlyphRects { get; private set; }
+        //public Rectangle[] GlyphRects { get; private set; }
 
         /// <summary>
         /// How many columns are in the this font.
@@ -119,6 +122,25 @@ namespace SadConsole
         public int GlyphPadding { get; set; }
 
         /// <summary>
+        /// The glyph index to use when a glyph used during rendering is not available.
+        /// </summary>
+        [DataMember]
+        public int UnsupportedGlyphIndex
+        {
+            get => _unsupportedGlyphIndex;
+            set
+            {
+                _unsupportedGlyphIndex = value;
+                SolidGlyphRectangle = GetGlyphSourceRectangle(value);
+            }
+        }
+
+        /// <summary>
+        /// The rectangle associated with the <see cref="UnsupportedGlyphIndex"/>.
+        /// </summary>
+        public Rectangle UnsupportedGlyphRectangle { get; private set; }
+
+        /// <summary>
         /// True when the font supports SadConsole extended decorators; otherwise false.
         /// </summary>
         [DataMember]
@@ -146,7 +168,7 @@ namespace SadConsole
         /// <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
         /// <param name="image">The texture for of the font.</param>
         /// <param name="name">A font identifier used for serialization of resources using this font.</param>
-        public Font(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name)
+        public Font(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle> glyphRectangles)
         {
             Columns = columns;
             Rows = rows;
@@ -155,6 +177,7 @@ namespace SadConsole
             GlyphPadding = glyphPadding;
             Image = image;
             Name = name;
+            _glyphRects = glyphRectangles;
 
             ConfigureRects();
 
@@ -163,6 +186,17 @@ namespace SadConsole
 
         [Newtonsoft.Json.JsonConstructor]
         private Font() { }
+
+        /// <summary>
+        /// Standard decorators used by your app.
+        /// </summary>
+        public Rectangle GetGlyphSourceRectangle(int glyph)
+        {
+            if (glyph >= 0 && _glyphRects.TryGetValue(glyph, out Rectangle value))
+                return value;
+
+            return UnsupportedGlyphRectangle;
+        }
 
         /// <summary>
         /// Gets a <see cref="CellDecorator"/> by the <see cref="GlyphDefinition"/> defined by the font file.
@@ -227,25 +261,29 @@ namespace SadConsole
         /// </summary>
         public void ConfigureRects()
         {
-            GlyphRects = new Rectangle[Rows * Columns];
-
-            for (int i = 0; i < GlyphRects.Length; i++)
+            // If this is empty, it's an old-style font.
+            if (_glyphRects.Count == 0)
             {
-                int cx = i % Columns;
-                int cy = i / Columns;
+                for (int i = 0; i < Rows * Columns; i++)
+                {
+                    int cx = i % Columns;
+                    int cy = i / Columns;
 
-                if (GlyphPadding != 0)
-                {
-                    GlyphRects[i] = new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
-                        (cy * GlyphHeight) + ((cy + 1) * GlyphPadding), GlyphWidth, GlyphHeight);
-                }
-                else
-                {
-                    GlyphRects[i] = new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
+                    if (GlyphPadding != 0)
+                    {
+                        _glyphRects.Add(i, new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
+                                                         (cy * GlyphHeight) + ((cy + 1) * GlyphPadding),
+                                                         GlyphWidth, GlyphHeight));
+                    }
+                    else
+                    {
+                        _glyphRects.Add(i, new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight));
+                    }
                 }
             }
 
-            SolidGlyphRectangle = GlyphRects[SolidGlyphIndex];
+            SolidGlyphRectangle = GetGlyphSourceRectangle(SolidGlyphIndex);
+            UnsupportedGlyphRectangle = GetGlyphSourceRectangle(UnsupportedGlyphIndex);
         }
 
         [System.Runtime.Serialization.OnDeserialized]

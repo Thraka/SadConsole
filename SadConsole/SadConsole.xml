@@ -3294,11 +3294,6 @@
             The rectangle associated with the <see cref="P:SadConsole.Font.SolidGlyphIndex"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Font.GlyphRects">
-            <summary>
-            A cached array of rectangles of individual glyphs.
-            </summary>
-        </member>
         <member name="P:SadConsole.Font.Columns">
             <summary>
             How many columns are in the this font.
@@ -3334,6 +3329,16 @@
             The amount of pixels between glyphs.
             </summary>
         </member>
+        <member name="P:SadConsole.Font.UnsupportedGlyphIndex">
+            <summary>
+            The glyph index to use when a glyph used during rendering is not available.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Font.UnsupportedGlyphRectangle">
+            <summary>
+            The rectangle associated with the <see cref="P:SadConsole.Font.UnsupportedGlyphIndex"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.Font.IsSadExtended">
             <summary>
             True when the font supports SadConsole extended decorators; otherwise false.
@@ -3349,7 +3354,7 @@
             Standard decorators used by your app.
             </summary>
         </member>
-        <member name="M:SadConsole.Font.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ITexture,System.String)">
+        <member name="M:SadConsole.Font.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ITexture,System.String,System.Collections.Generic.Dictionary{System.Int32,SadRogue.Primitives.Rectangle})">
             <summary>
             Creates a new font with the specified settings.
             </summary>
@@ -3361,6 +3366,11 @@
             <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
             <param name="image">The texture for of the font.</param>
             <param name="name">A font identifier used for serialization of resources using this font.</param>
+        </member>
+        <member name="M:SadConsole.Font.GetGlyphSourceRectangle(System.Int32)">
+            <summary>
+            Standard decorators used by your app.
+            </summary>
         </member>
         <member name="M:SadConsole.Font.GetDecorator(System.String,SadRogue.Primitives.Color)">
             <summary>
@@ -3395,7 +3405,7 @@
         </member>
         <member name="M:SadConsole.Font.ConfigureRects">
             <summary>
-            Builds the <see cref="P:SadConsole.Font.GlyphRects"/> array based on the current font settings.
+            Builds the <see cref="!:GlyphRects"/> array based on the current font settings.
             </summary>
         </member>
         <member name="M:SadConsole.Font.GetRenderRect(System.Int32,System.Int32,SadRogue.Primitives.Point)">
