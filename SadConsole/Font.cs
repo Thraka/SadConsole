@@ -14,7 +14,7 @@ namespace SadConsole
     public sealed class Font
     {
         private int _solidGlyphIndex;
-        private int _unsupportedGlyphIndex = 173;
+        private int _unsupportedGlyphIndex;
 
         /// <summary>
         /// The size options of a font.
