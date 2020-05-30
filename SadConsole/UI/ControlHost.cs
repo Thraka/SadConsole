@@ -572,12 +572,12 @@ namespace SadConsole.UI
         {
             FocusedControl = null;
 
-            foreach (ControlBase control in ControlsList)
-            {
-                control.Parent = null;
-            }
-
+            var controls = ControlsList.ToArray();
             ControlsList.Clear();
+
+            foreach (ControlBase control in controls)
+                control.Parent = null;
+
             _parent.IsDirty = true;
         }
 
