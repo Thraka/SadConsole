@@ -109,6 +109,13 @@ namespace SadConsole.UI.Themes
         }
 
         /// <summary>
+        /// Copies the colors from the specified <see cref="SadConsole.UI.Themes.Colors"/> object to <see cref="Colors"/> property.
+        /// </summary>
+        /// <param name="colors">The colors to copy.</param>
+        public void SetColors(Colors colors) =>
+            colors.CopyTo(Colors);
+
+        /// <summary>
         /// Clones this library.
         /// </summary>
         /// <returns>A new instance of a library.</returns>
