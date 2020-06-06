@@ -36,7 +36,6 @@ namespace SadConsole.Instructions
         /// </summary>
         public Components.Cursor Cursor { get; set; }
 
-        private ICellSurface _target;
         private double _timeElapsed = 0d;
         private double _timePerCharacter = 0d;
         private string _textCopy;
@@ -59,6 +58,14 @@ namespace SadConsole.Instructions
         /// <inheritdoc />
         public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
+            var surface = componentHost as IScreenSurface;
+
+            if (Cursor == null && surface == null)
+                throw new ArgumentException($"For {nameof(DrawString)} either the {nameof(Cursor)} must be set or run with a {nameof(IScreenSurface)}.");
+
+            else if (surface != null && _privateCursor == null)
+                SetPrivateCursor(surface);
+
             var cursor = Cursor ?? _privateCursor;
 
             if (!_started)
@@ -66,9 +73,6 @@ namespace SadConsole.Instructions
                 _started = true;
                 _textCopy = Text.ToString();
                 _textIndex = 0;
-
-                if (_target == null)
-                    _target = (componentHost as IScreenSurface)?.Surface;
 
                 cursor.DisableWordBreak = true;
 
@@ -135,12 +139,15 @@ namespace SadConsole.Instructions
             if (host is IScreenSurface surface)
             {
                 if (Cursor == null)
-                    _privateCursor = new Components.Cursor(surface.Surface) { IsVisible = false };
+                    SetPrivateCursor(surface);
 
                 return;
             }
 
             throw new ArgumentException($"This component can only bedded to a type that implements {nameof(IScreenSurface)}.");
         }
+
+        private void SetPrivateCursor(IScreenSurface surface) =>
+            _privateCursor = new Components.Cursor(surface.Surface) { IsVisible = false };
     }
 }
