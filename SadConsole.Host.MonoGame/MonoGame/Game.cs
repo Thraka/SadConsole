@@ -110,7 +110,7 @@ namespace SadConsole.MonoGame
             Window.ClientSizeChanged += Window_ClientSizeChanged;
             Window.AllowUserResizing = SadConsole.Settings.AllowWindowResize;
 
-            Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice);
+            Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice, 5000);
 
             _initCallback?.Invoke(this);
 

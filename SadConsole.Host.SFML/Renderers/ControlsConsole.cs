@@ -118,11 +118,11 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Reset(BackingTextureControls, RenderStates.Default, Transform.Identity);
 
                 if (screen.Tint.A != 255)
-                    foreach (UI.Controls.ControlBase control in ((IScreenSurface)screen).GetSadComponent<UI.ControlHost>().Controls)
+                    foreach (UI.Controls.ControlBase control in screen.GetSadComponent<UI.ControlHost>().Controls)
                     {
                         if (!control.IsVisible) continue;
 
-                        RenderControlCells(control);
+                        RenderControlCells(control, screen.Font, screen.FontSize, screen.Surface.View, screen.Surface.BufferWidth);
                     }
 
                 Host.Global.SharedSpriteBatch.End();
@@ -133,19 +133,17 @@ namespace SadConsole.Renderers
             uiComponent.IsDirty = false;
         }
 
-        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control)
+        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, Font font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
         {
-            Font font = control.AlternateFont ?? control.Parent.ParentConsole.Font;
+            font = control.AlternateFont ?? font;
 
             if (control.Surface.DefaultBackground.A != 0)
             {
-                (int x, int y) = (control.Position - control.Parent.ParentConsole.Surface.ViewPosition).SurfaceLocationToPixel(control.Parent.ParentConsole.FontSize);
-                (int width, int height) = new Point(control.Surface.View.Width, control.Surface.View.Height) * control.Parent.ParentConsole.FontSize;
+                (int x, int y) = (control.Position - parentViewRect.Position).SurfaceLocationToPixel(fontSize);
+                (int width, int height) = new Point(control.Surface.View.Width, control.Surface.View.Height) * fontSize;
 
                 Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.SolidGlyphRectangle.ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
             }
-
-            var parentViewRect = control.Parent.ParentConsole.Surface.View;
 
             for (int i = 0; i < control.Surface.Cells.Length; i++)
             {
@@ -159,7 +157,7 @@ namespace SadConsole.Renderers
 
                 if (!parentViewRect.Contains(cellRenderPosition)) continue;
 
-                IntRect renderRect = _renderRects[(cellRenderPosition - control.Parent.ParentConsole.Surface.ViewPosition).ToIndex(control.Parent.ParentConsole.Surface.BufferWidth)];
+                IntRect renderRect = _renderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
                 Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, !cell.Background.Equals(Color.Transparent) && cell.Background != control.Surface.DefaultBackground, font);
             }

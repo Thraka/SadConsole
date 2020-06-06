@@ -130,7 +130,7 @@ namespace SadConsole.Renderers
                     foreach (UI.Controls.ControlBase control in uiComponent.Controls)
                     {
                         if (!control.IsVisible) continue;
-                        RenderControlCells(control);
+                        RenderControlCells(control, screen.Font, screen.FontSize, screen.Surface.View, screen.Surface.BufferWidth);
                     }
                 }
 
@@ -143,21 +143,19 @@ namespace SadConsole.Renderers
         }
 
 
-        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control)
+        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, Font font, SadRogue.Primitives.Point fontSize, SadRectangle parentViewRect, int bufferWidth)
         {
-            Font font = control.AlternateFont ?? control.Parent.ParentConsole.Font;
+            font = control.AlternateFont ?? font;
 
             var fontImage = ((SadConsole.Host.GameTexture)font.Image).Texture;
 
             if (control.Surface.DefaultBackground.A != 0)
             {
-                (int x, int y) = (control.Position - control.Parent.ParentConsole.Surface.ViewPosition).SurfaceLocationToPixel(control.Parent.ParentConsole.FontSize);
-                (int width, int height) = new SadRogue.Primitives.Point(control.Surface.View.Width, control.Surface.View.Height) * control.Parent.ParentConsole.FontSize;
+                (int x, int y) = (control.Position - parentViewRect.Position).SurfaceLocationToPixel(fontSize);
+                (int width, int height) = new SadRogue.Primitives.Point(control.Surface.View.Width, control.Surface.View.Height) * fontSize;
 
                 MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, width, height), font.SolidGlyphRectangle.ToMonoRectangle(), control.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
             }
-
-            var parentViewRect = control.Parent.ParentConsole.Surface.View;
 
             for (int i = 0; i < control.Surface.Cells.Length; i++)
             {
@@ -171,7 +169,7 @@ namespace SadConsole.Renderers
 
                 if (!parentViewRect.Contains(cellRenderPosition)) continue;
 
-                XnaRectangle renderRect = _renderRects[(cellRenderPosition - control.Parent.ParentConsole.Surface.ViewPosition).ToIndex(control.Parent.ParentConsole.Surface.BufferWidth)];
+                XnaRectangle renderRect = _renderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
                 if (cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != control.Surface.DefaultBackground)
                 {

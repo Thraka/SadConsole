@@ -1840,7 +1840,7 @@
         </member>
         <member name="M:SadConsole.Components.Cursor.#ctor(SadConsole.ICellSurface)">
             <summary>
-            Creates a new instance of teh cursor that works with the specified surface.
+            Creates a new instance of the cursor that works with the specified surface.
             </summary>
             <param name="surface"></param>
         </member>
@@ -1966,6 +1966,12 @@
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.ChangeTarget(SadConsole.IScreenSurface)">
+            <summary>
+            Changes the target of the cursor. Careful, may desync the host if this component is added to one.
+            </summary>
+            <param name="surface">The target surface</param>
         </member>
         <member name="T:SadConsole.Components.EntityComponentParentViewSync">
             <summary>
@@ -3400,6 +3406,13 @@
             </summary>
             <param name="size">The desired size.</param>
             <returns>The width and height of a font cell.</returns>
+        </member>
+        <member name="M:SadConsole.Font.GetGlyphRatio(SadRogue.Primitives.Point)">
+            <summary>
+            Returns the ratio in size difference between the font's glyph width and height.
+            </summary>
+            <param name="fontSize">The glyph size of the font used.</param>
+            <returns>A tuple with the names (X, Y) where X is the difference of width to height and Y is the difference of height to width.</returns>
         </member>
         <member name="M:SadConsole.Font.HasGlyphDefinition(System.String)">
             <summary>
@@ -5770,6 +5783,98 @@
         <member name="P:SadConsole.ITexture.Width">
             <summary>
             The width of the texture.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ITexture.GetPixels">
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ITexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+            <summary>
+            Sets a specific pixel in the texture to a color by x,y coordinate.
+            </summary>
+            <param name="position">The position of the pixel to set.</param>
+            <param name="color">The color to set.</param>
+        </member>
+        <member name="M:SadConsole.ITexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Sets a specific pixel in the texture to a color by index. Row-major ordered.
+            </summary>
+            <param name="index"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:SadConsole.ITexture.GetPixel(SadRogue.Primitives.Point)">
+            <summary>
+            Gets a pixel in the texture by x,y coordinate.
+            </summary>
+            <param name="position">The x,y coordinate of the pixel.</param>
+            <returns>The color of the pixel.</returns>
+        </member>
+        <member name="M:SadConsole.ITexture.GetPixel(System.Int32)">
+            <summary>
+            Gets a pixel in the texture by index. Row-major ordered.
+            </summary>
+            <param name="index">The index of the pixel.</param>
+            <returns>The color of the pixel.</returns>
+        </member>
+        <member name="M:SadConsole.ITexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+            <summary>
+            Converts the texture into a cell surface based on the specified mode.
+            </summary>
+            <param name="mode">The mode used when converting the texture to a surface.</param>
+            <param name="surfaceWidth">How many cells wide the returned surface is.</param>
+            <param name="surfaceHeight">How many cells high the returned surface is.</param>
+            <param name="backgroundStyle">The style to use when <paramref name="mode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
+            <param name="foregroundStyle">The style to use when <paramref name="mode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
+            <param name="cachedColorArray">When provided, this array is used for color data. It must match the texture's expected <see cref="M:SadConsole.ITexture.GetPixels"/> bounds. Used with <paramref name="cachedColorArray"/>.</param>
+            <param name="cachedSurface">The cell surface to use instead of creating a new one. Used with <paramref name="cachedColorArray"/>.</param>
+            <returns>A new surface.</returns>
+            <remarks></remarks>
+        </member>
+        <member name="T:SadConsole.TextureConvertMode">
+            <summary>
+            The conversion mode from <see cref="T:SadConsole.ITexture"/> to <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertMode.Background">
+            <summary>
+            Fills the background of each cell with the pixel color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertMode.Foreground">
+            <summary>
+            Fills the foreground of each cell with the pixel color.
+            </summary>
+        </member>
+        <member name="T:SadConsole.TextureConvertForegroundStyle">
+            <summary>
+            The style applied when <see cref="F:SadConsole.TextureConvertMode.Foreground"/> is set.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertForegroundStyle.Block">
+            <summary>
+            Fills the surface with block ascii that represents the brightness of the pixel. Foreground is set to the pixel color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertForegroundStyle.AsciiSymbol">
+            <summary>
+            Fills the surface with ascii symbols that represents the brightness of the pixel. Foreground is set to the pixel color.
+            </summary>
+        </member>
+        <member name="T:SadConsole.TextureConvertBackgroundStyle">
+            <summary>
+            The style applied when <see cref="F:SadConsole.TextureConvertMode.Background"/> is set.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertBackgroundStyle.Pixel">
+            <summary>
+            Simply resizes the image and maps the cell to the pixel without any other color conversion.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertBackgroundStyle.Smooth">
+            <summary>
+            Calculates the cell color based on the surrounding colors of the image.
             </summary>
         </member>
         <member name="T:SadConsole.LayeredScreenSurface">
@@ -8353,6 +8458,12 @@
             <param name="control">The control type to register a theme.</param>
             <param name="theme">The theme to associate with the control.</param>
             <returns>A theme that is associated with the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.SetColors(SadConsole.UI.Themes.Colors)">
+            <summary>
+            Copies the colors from the specified <see cref="T:SadConsole.UI.Themes.Colors"/> object to <see cref="P:SadConsole.UI.Themes.Library.Colors"/> property.
+            </summary>
+            <param name="colors">The colors to copy.</param>
         </member>
         <member name="M:SadConsole.UI.Themes.Library.Clone">
             <summary>

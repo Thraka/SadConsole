@@ -66,6 +66,53 @@
             Positions by the font of the host in cells.
             </summary>
         </member>
+        <member name="T:SadConsole.Host.GameTexture">
+            <summary>
+            Wraps a <see cref="T:SFML.Graphics.Texture"/> object in a way that SadConsole can interact with it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Texture">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.ResourcePath">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Height">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Width">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture)">
+            <summary>
+            Wraps a texture. Doesn't dispose it when this object is disposed!
+            </summary>
+            <param name="texture">The texture to wrap</param>
+            <remarks>The only time the backing texture resource is disposed is when the <see cref="T:SadConsole.Host.GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.Dispose">
+            <summary>
+            Disposes the underlaying texture object and releases reference to it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+            <inheritdoc />
+        </member>
         <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
             <summary>
             Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.

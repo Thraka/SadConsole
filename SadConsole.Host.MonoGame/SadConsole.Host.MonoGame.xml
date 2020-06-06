@@ -66,6 +66,52 @@
             Positions by the font of the host in cells.
             </summary>
         </member>
+        <member name="T:SadConsole.Host.GameTexture">
+            <summary>
+            Create's a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Texture">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.ResourcePath">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Height">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Width">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
+            </summary>
+            <param name="texture"></param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.Dispose">
+            <summary>
+            Disposes the underlaying texture object and releases reference to it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+            <inheritdoc />
+        </member>
         <member name="P:SadConsole.Game.MonoGameInstance">
             <summary>
             The <see cref="T:Microsoft.Xna.Framework.Game"/> instance.
