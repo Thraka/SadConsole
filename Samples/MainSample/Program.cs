@@ -71,6 +71,17 @@ namespace FeatureDemo
             GameHost.Instance.Screen.Renderer = null;
             GameHost.Instance.Screen.Children.Add(MainConsole);
 
+            var font = Font.LoadBMFont("Res/Fonts/font.fnt", 9, 12);
+
+            var con = new Console(20, 20);
+            con.Font = font;
+
+            con.Print(0, 0, "hello", Color.Green, Color.White);
+
+            //GameHost.Instance.Screen = con;
+            SadConsole.UI.ControlHost a;
+
+
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
         }

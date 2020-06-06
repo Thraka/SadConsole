@@ -5,7 +5,6 @@ using SadRogue.Primitives;
 using SadConsole.Effects;
 using SadConsole.Instructions;
 using Console = SadConsole.Console;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FeatureDemo.CustomConsoles
 {
@@ -35,19 +34,25 @@ namespace FeatureDemo.CustomConsoles
             
             this.Print(0, 0, text.ToString(), Color.Black, Color.Transparent);
 
-            // Load the logo and convert to a console
-            using (System.IO.Stream imageStream = Microsoft.Xna.Framework.TitleContainer.OpenStream("sad.png"))
-            {
-                using (var image = Texture2D.FromStream(((Game)SadConsole.Game.Instance).MonoGameInstance.GraphicsDevice, imageStream))
-                {
-                    ICellSurface logo = image.ToSurface(Global.DefaultFont, Global.DefaultFont.GetFontSize(Global.DefaultFontSize), false);
+            using ITexture sadImage = GameHost.Instance.GetTexture("Res/Images/sad.png");
 
-                    _consoleImage = new Console(logo);
-                    _consoleImage.Position = 
-                    _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, -2);
-                    _consoleImage.Tint = Color.Black;
-                }
-            }
+            var defaultFontSize = SadConsole.Game.Instance.DefaultFont.GetFontSize(SadConsole.Game.Instance.DefaultFontSize);
+            var defaultFontSizeRatio = SadConsole.Game.Instance.DefaultFont.GetGlyphRatio(defaultFontSize);
+
+            // Load the logo and convert to a console
+            ICellSurface logo;// = sadImage.ToSurface(TextureConvertMode.Background, sadImage.Width / (int)(defaultFontSize.X * defaultFontSizeRatio.Y), sadImage.Height / (int)(defaultFontSize.Y * defaultFontSizeRatio.X));
+
+            if (defaultFontSizeRatio.X == 0 && defaultFontSizeRatio.Y == 0)
+                logo = sadImage.ToSurface(TextureConvertMode.Foreground, BufferWidth, BufferHeight - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
+            else if (defaultFontSizeRatio.Y > defaultFontSizeRatio.X)
+                logo = sadImage.ToSurface(TextureConvertMode.Foreground, (int)((BufferHeight - 1)* defaultFontSizeRatio.Y), BufferHeight - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
+            else
+                logo = sadImage.ToSurface(TextureConvertMode.Foreground, BufferWidth, (int)(BufferWidth * defaultFontSize.X), foregroundStyle: TextureConvertForegroundStyle.Block);
+
+            _consoleImage = new Console(logo);
+            _consoleImage.Position =
+                    _consoleImagePosition = new Point(Width / 2 - _consoleImage.Width / 2, 0);
+            _consoleImage.Tint = Color.Black;
 
             // Animation for the logo text.
             var logoText = new ColorGradient(new[] { Color.Magenta, Color.Yellow }, new[] { 0.0f, 1f })
@@ -113,24 +118,21 @@ namespace FeatureDemo.CustomConsoles
 
             animation.RemoveOnFinished = true;
 
-            Components.Add(animation);
+            SadComponents.Add(animation);
         }
 
-        public override void Update()
+        public override void Update(TimeSpan delta)
         {
             if (IsVisible)
-            {
-                base.Update();
-            }
+                base.Update(delta);
         }
 
-        public override void Draw()
+
+        public override void Draw(TimeSpan delta)
         {
             // Draw the logo console...
             if (IsVisible)
-            {
-                base.Draw();
-            }
+                base.Draw(delta);
         }
 
         private bool MoveGradient(IScreenObject console)

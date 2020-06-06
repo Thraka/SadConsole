@@ -11,7 +11,6 @@
     <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />
     <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Remove="CustomConsoles\SerializationTests.cs" />
-    <Compile Remove="CustomConsoles\SplashScreen.cs" />
     <Compile Remove="CustomConsoles\SubConsoleCursor.cs" />
     <Compile Remove="CustomConsoles\TextCursorConsole.cs" />
     <Compile Remove="CustomConsoles\ViewsAndSubViews.cs" />
@@ -62,13 +61,25 @@
     <None Update="Ansi\ROY-DGZN.ANS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Res\Fonts\Dawnlike2.atlas">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Res\Fonts\Dawnlike2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Res\Fonts\font.fnt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Res\Fonts\font.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Res\Fonts\C64.font">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Res\Fonts\Yayo_c64.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="sad.png">
+    <None Update="Res\Images\sad.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
