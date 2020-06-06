@@ -59,6 +59,7 @@ namespace SadConsole.UI
             {
                 _themeColors = value;
                 _parent.IsDirty = true;
+                IsDirty = true;
 
                 foreach (ControlBase control in ControlsList)
                     control.IsDirty = true;
@@ -249,8 +250,7 @@ namespace SadConsole.UI
             control.Parent = this;
             control.TabIndex = ControlsList.Count - 1;
 
-            if (_parent != null)
-                _parent.IsDirty = true;
+            IsDirty = true;
 
             ReOrderControls();
         }
@@ -284,7 +284,7 @@ namespace SadConsole.UI
                     ControlsList.Remove(control);
 
                 control.Parent = null;
-                _parent.IsDirty = true;
+                IsDirty = true;
 
                 ReOrderControls();
             }
@@ -578,7 +578,7 @@ namespace SadConsole.UI
             foreach (ControlBase control in controls)
                 control.Parent = null;
 
-            _parent.IsDirty = true;
+            IsDirty = true;
         }
 
         /// <summary>
