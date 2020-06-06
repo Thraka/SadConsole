@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using SadRogue.Primitives;
 
 namespace SadConsole
 {
+    public interface IFont
+    {
+        Rectangle SolidGlyphRectangle { get; }
+        Rectangle UnsupportedGlyphRectangle { get; }
+    }
+
     /// <summary>
     /// Represents a graphical font used by SadConsole.
     /// </summary>
@@ -252,6 +259,14 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Returns the ratio in size difference between the font's glyph width and height.
+        /// </summary>
+        /// <param name="fontSize">The glyph size of the font used.</param>
+        /// <returns>A tuple with the names (X, Y) where X is the difference of width to height and Y is the difference of height to width.</returns>
+        public (float X, float Y) GetGlyphRatio(Point fontSize) =>
+            ((float)fontSize.X / fontSize.Y, (float)fontSize.Y / fontSize.X);
+
+        /// <summary>
         /// Returns <see langword="true"/> when the glyph has been defined by name.
         /// </summary>
         /// <param name="name">The name of the glyph</param>
@@ -306,6 +321,22 @@ namespace SadConsole
                 Rows = (int)System.Math.Ceiling((double)Image.Height / (GlyphHeight + GlyphPadding));
 
             ConfigureRects();
+        }
+
+        public static Font LoadBMFont(string file, int baseWidth, int baseHeight)
+        {
+            var bmFont = SharpFNT.BitmapFont.FromFile(file);
+            
+            var mapping = new Dictionary<int, Rectangle>();
+            var texture = GameHost.Instance.GetTexture(Path.Combine(Path.GetDirectoryName(file), bmFont.Pages[0]));
+
+            foreach (var key in bmFont.Characters.Keys)
+            {
+                var bmRect = bmFont.Characters[key];
+                mapping.Add(key, new Rectangle(bmRect.X, bmRect.Y, bmRect.Width, bmRect.Height));
+            }
+
+            return new Font(baseWidth, baseHeight, 0, 1, 1, 0, texture, bmFont.Info.Face, mapping);
         }
 
         /// <summary>
