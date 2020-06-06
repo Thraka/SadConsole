@@ -197,7 +197,7 @@ namespace SadConsole.Components
         }
 
         /// <summary>
-        /// Creates a new instance of teh cursor that works with the specified surface.
+        /// Creates a new instance of the cursor that works with the specified surface.
         /// </summary>
         /// <param name="surface"></param>
         public Cursor(ICellSurface surface): this() =>
@@ -322,15 +322,6 @@ namespace SadConsole.Components
         {
             Print(text, PrintAppearance, PrintEffect);
             return this;
-        }
-
-        public IEnumerable<int> GetDataSetItems()
-        {
-            var dataset = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            List<int> results = new List<int>();
-
-            foreach (var item in dataset)
-                yield return item;
         }
 
         /// <summary>
@@ -841,6 +832,13 @@ namespace SadConsole.Components
             if (handled)
                 RestartCursorEffect();
         }
+
+        /// <summary>
+        /// Changes the target of the cursor. Careful, may desync the host if this component is added to one.
+        /// </summary>
+        /// <param name="surface">The target surface</param>
+        public void ChangeTarget(IScreenSurface surface) =>
+            _editor = surface.Surface;
 
         void IComponent.OnAdded(IScreenObject host)
         {
