@@ -60,7 +60,7 @@ namespace SadConsole.UI
                 _themeColors = value;
                 _parent.IsDirty = true;
 
-                foreach (ControlBase control in Controls)
+                foreach (ControlBase control in ControlsList)
                     control.IsDirty = true;
             }
         }
@@ -71,9 +71,9 @@ namespace SadConsole.UI
         public bool IsDirty { get; set; }
 
         /// <summary>
-        /// Gets a read-only collection of the controls this console contains.
+        /// Gets an array containing all of the controls this host contains.
         /// </summary>
-        public ReadOnlyCollection<ControlBase> Controls => ControlsList.AsReadOnly();
+        public ControlBase[] Controls => ControlsList.ToArray();
 
         /// <summary>
         /// Gets the control currently capturing mouse events.
@@ -146,7 +146,7 @@ namespace SadConsole.UI
                 con.AutoCursorOnFocus = false;
             }
 
-            foreach (ControlBase control in Controls)
+            foreach (ControlBase control in ControlsList)
                 control.Parent = this;
 
             surface.MouseExit += Surface_MouseExit;
@@ -156,7 +156,7 @@ namespace SadConsole.UI
 
         void Components.IComponent.OnRemoved(IScreenObject host)
         {
-            foreach (var control in Controls)
+            foreach (var control in ControlsList)
                 control.Parent = null;
 
             _parent.MouseExit -= Surface_MouseExit;

@@ -6982,7 +6982,7 @@
         </member>
         <member name="P:SadConsole.UI.ControlHost.Controls">
             <summary>
-            Gets a read-only collection of the controls this console contains.
+            Gets an array containing all of the controls this host contains.
             </summary>
         </member>
         <member name="P:SadConsole.UI.ControlHost.CapturedControl">
