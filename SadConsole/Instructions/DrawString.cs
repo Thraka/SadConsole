@@ -104,14 +104,35 @@ namespace SadConsole.Instructions
                 if (_timeElapsed >= _timePerCharacter)
                 {
                     int charCount = (int)(_timeElapsed / _timePerCharacter);
+                    int charsLeft = _textCopy.Length - _textIndex;
                     _timeElapsed = 0d;
 
                     cursor.Position = _tempLocation;
 
-                    if (charCount >= _textCopy.Length - _textIndex)
+                    if (charCount >= charsLeft)
                     {
-                        charCount = _textCopy.Length - _textIndex;
+                        charCount = charsLeft;
                         IsFinished = true;
+                    }
+                    else
+                    {
+                        // TODO: Change drawstring to look for \r or \n and when found, loop and consume all of them until something else is found.
+
+                        // If we happen to end near a \r\n sequence, consume both.
+                        if (Text[_textIndex + charCount].GlyphCharacter == '\r' && charsLeft > 2 && Text[_textIndex + charCount + 1].GlyphCharacter == '\n')
+                        {
+                            charCount += 2;
+
+                            if (charCount >= charsLeft)
+                                IsFinished = true;
+                        }
+                        else if (Text[_textIndex + charCount - 1].GlyphCharacter == '\r' && Text[_textIndex + charCount].GlyphCharacter == '\n')
+                        {
+                            charCount++;
+
+                            if (charCount >= charsLeft)
+                                IsFinished = true;
+                        }
                     }
 
                     ColoredString textToPrint = Text.SubString(_textIndex, charCount);
