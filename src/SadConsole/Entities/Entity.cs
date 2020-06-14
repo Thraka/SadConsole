@@ -98,8 +98,9 @@ namespace SadConsole.Entities
         /// </summary>
         public Entity(int width, int height, Font font)
         {
+            Font = font;
             IsCursorDisabled = true;
-            Animation = new AnimatedConsole("default", width, height, Global.FontDefault);
+            Animation = new AnimatedConsole("default", width, height, font);
             animation.CreateFrame();
             Animations.Add("default", animation);
         }
@@ -124,6 +125,7 @@ namespace SadConsole.Entities
         /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedConsole.Name"/> property changesd to "default".</param>
         public Entity(AnimatedConsole animation)
         {
+            Font = animation.Font;
             IsCursorDisabled = true;
             animation.Name = "default";
             Animation = animation;

@@ -1,3 +1,9 @@
+## 06/XX/2020 V8.99.2
+
+- Added DrawImageComponent.
+- Added templates.
+- Fix bug where creating an entity and specifying the font didn't actually set it. (thanks thateye)
+
 ## 04/11/2020 V8.99.1
 
 - Ported controls console tab logic from v9. Fixed logic bug when tabbing controls would tab to controls with `control.TabStop = false`.
