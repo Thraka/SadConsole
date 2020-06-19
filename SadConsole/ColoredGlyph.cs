@@ -252,7 +252,7 @@ namespace SadConsole
                    Foreground.Equals(other.Foreground) &&
                    Background.Equals(other.Background) &&
                    Glyph == other.Glyph &&
-                   EqualityComparer<Mirror>.Default.Equals(Mirror, other.Mirror) &&
+                   Mirror == other.Mirror &&
                    IsVisible == other.IsVisible;
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SadConsole.StringParser;
-using SadConsole.Effects;
+﻿using SadConsole.Effects;
 
 namespace SadConsole
 {
@@ -31,7 +28,7 @@ namespace SadConsole
             /// Creates a copy of this <see cref="ColoredGlyphEffect"/>.
             /// </summary>
             /// <returns>A copy of this <see cref="ColoredGlyphEffect"/>.</returns>
-            public ColoredGlyphEffect Clone()
+            public new ColoredGlyphEffect Clone()
             {
                 return new ColoredGlyphEffect()
                 {
@@ -42,6 +39,15 @@ namespace SadConsole
                     Effect = Effect
                 };
             }
+
+            /// <summary>
+            /// Creates a new <see cref="ColoredGlyphEffect"/> from a <see cref="ColoredGlyph"/> with the specified effect.
+            /// </summary>
+            /// <param name="glyph">The glyph.</param>
+            /// <param name="effect">When provided, sets the <see cref="ColoredGlyphEffect.Effect"/>.</param>
+            /// <returns></returns>
+            public static ColoredGlyphEffect FromColoredGlyph(ColoredGlyph glyph, ICellEffect effect = null) =>
+                new ColoredGlyphEffect() { Foreground = glyph.Foreground, Background = glyph.Background, Glyph = glyph.Glyph, Effect = effect };
         }
     }        
 }

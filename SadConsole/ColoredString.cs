@@ -140,6 +140,17 @@ namespace SadConsole
         public ColoredString(params ColoredGlyphEffect[] glyphs) => _characters = glyphs.ToArray();
 
         /// <summary>
+        /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.
+        /// </summary>
+        /// <param name="glyphs">The glyphs to combine.</param>
+        public ColoredString(params ColoredGlyph[] glyphs)
+        {
+            _characters = new ColoredGlyphEffect[glyphs.Length];
+            for (int i = 0; i < glyphs.Length; i++)
+                _characters[i] = ColoredGlyphEffect.FromColoredGlyph(glyphs[i]);
+        }
+
+        /// <summary>
         /// Returns a new <see cref="ColoredString"/> object by cloning this instance.
         /// </summary>
         /// <returns>A new <see cref="ColoredString"/> object.</returns>
