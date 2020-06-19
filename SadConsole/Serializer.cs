@@ -57,7 +57,25 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Serializes the <paramref name="instance"/> instance to the specified file.
+        /// A shortcut for serialization that uses <see cref="JsonConvert.SerializeObject(object?, Type?, JsonSerializerSettings?)"/> with the <see cref="Settings"/> property defined by this class.
+        /// </summary>
+        /// <typeparam name="T">The object type to serialize.</typeparam>
+        /// <param name="instance">The object to serialize.</param>
+        /// <returns>A json encoded string.</returns>
+        public static string Serialize<T>(T instance) =>
+            JsonConvert.SerializeObject(instance, Formatting.Indented, _settings);
+
+        /// <summary>
+        /// A shortcut for serialization that uses <see cref="JsonConvert.DeserializeObject(string, Type?, JsonSerializerSettings?)"/> with the <see cref="Settings"/> property defined by this class.
+        /// </summary>
+        /// <param name="json">The json string to create an object from.</param>
+        /// <returns>An object created from the <paramref name="json"/> parameter.</returns>
+        public static T Deserialize<T>(string json) =>
+            (T)JsonConvert.DeserializeObject(json, typeof(T), _settings);
+
+
+        /// <summary>
+        /// Serializes the <paramref name="instance"/> to the specified file.
         /// </summary>
         /// <typeparam name="T">Type of object to serialize</typeparam>
         /// <param name="instance">The object to serialize.</param>
