@@ -131,6 +131,12 @@
             <param name="font"></param>
             <param name="monogameCtorCallback"></param>
         </member>
+        <member name="M:SadConsole.Game.MonoGameInit(SadConsole.MonoGame.Game)">
+            <summary>
+            Method called by the <see cref="T:SadConsole.MonoGame.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="M:SadConsole.MonoGame.Game.ResetRendering"/>.
+            </summary>
+            <param name="game">The game instance.</param>
+        </member>
         <member name="M:SadConsole.Game.Run">
             <inheritdoc/>
         </member>

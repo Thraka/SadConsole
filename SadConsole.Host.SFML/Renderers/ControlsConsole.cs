@@ -16,6 +16,9 @@ namespace SadConsole.Renderers
     /// </remarks>
     public class ControlsConsole : ScreenObjectRenderer
     {
+        /// <summary>
+        /// The cached texture of the drawn controls layer.
+        /// </summary>
         public RenderTexture BackingTextureControls;
 
         /// <summary>

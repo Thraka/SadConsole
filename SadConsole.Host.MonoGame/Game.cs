@@ -49,7 +49,11 @@ namespace SadConsole
             game.MonoGameInstance = new MonoGame.Game(monogameCtorCallback, game.MonoGameInit);
         }
 
-        private void MonoGameInit(MonoGame.Game game)
+        /// <summary>
+        /// Method called by the <see cref="MonoGame.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="MonoGame.Game.ResetRendering"/>.
+        /// </summary>
+        /// <param name="game">The game instance.</param>
+        protected void MonoGameInit(MonoGame.Game game)
         {
             LoadEmbeddedFont();
 
