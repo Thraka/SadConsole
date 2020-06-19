@@ -8,7 +8,7 @@ using SadRogue.Primitives;
 namespace SadConsole
 {
     /// <summary>
-    /// Animates a list of frames.
+    /// Animates a collection of frames.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Console (Animated)")]
     [DataContract]
@@ -176,6 +176,8 @@ namespace SadConsole
             FontSize = fontSize;
             _width = width;
             _height = height;
+            UseMouse = false;
+            UseKeyboard = false;
         }
 
         [JsonConstructor]
