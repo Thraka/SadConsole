@@ -100,7 +100,7 @@
         </member>
         <member name="T:SadConsole.AnimatedScreenSurface">
             <summary>
-            Animates a list of frames.
+            Animates a collection of frames.
             </summary>
         </member>
         <member name="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged">
@@ -6619,9 +6619,24 @@
             The settings to use during <see cref="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean)"/> and <see cref="M:SadConsole.Serializer.Load``1(System.String,System.Boolean)"/>.
             </summary>
         </member>
+        <member name="M:SadConsole.Serializer.Serialize``1(``0)">
+            <summary>
+            A shortcut for serialization that uses <see cref="M:Newtonsoft.Json.JsonConvert.SerializeObject(System.Object,System.Type,Newtonsoft.Json.JsonSerializerSettings)"/> with the <see cref="P:SadConsole.Serializer.Settings"/> property defined by this class.
+            </summary>
+            <typeparam name="T">The object type to serialize.</typeparam>
+            <param name="instance">The object to serialize.</param>
+            <returns>A json encoded string.</returns>
+        </member>
+        <member name="M:SadConsole.Serializer.Deserialize``1(System.String)">
+            <summary>
+            A shortcut for serialization that uses <see cref="M:Newtonsoft.Json.JsonConvert.DeserializeObject(System.String,System.Type,Newtonsoft.Json.JsonSerializerSettings)"/> with the <see cref="P:SadConsole.Serializer.Settings"/> property defined by this class.
+            </summary>
+            <param name="json">The json string to create an object from.</param>
+            <returns>An object created from the <paramref name="json"/> parameter.</returns>
+        </member>
         <member name="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean)">
             <summary>
-            Serializes the <paramref name="instance"/> instance to the specified file.
+            Serializes the <paramref name="instance"/> to the specified file.
             </summary>
             <typeparam name="T">Type of object to serialize</typeparam>
             <param name="instance">The object to serialize.</param>
@@ -6679,7 +6694,7 @@
         </member>
         <member name="F:SadConsole.Settings.DoDraw">
             <summary>
-            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Draw(System.TimeSpan)"/> on each object in <see cref="!:GameHost.Instance.Screen"/>.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Draw(System.TimeSpan)"/> on each object in <see cref="P:SadConsole.GameHost.Screen"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoFinalDraw">
@@ -6689,7 +6704,7 @@
         </member>
         <member name="F:SadConsole.Settings.DoUpdate">
             <summary>
-            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each object in <see cref="!:GameHost.Instance.Screen"/>.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each object in <see cref="P:SadConsole.GameHost.Screen"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Settings.WindowMinimumSize">
