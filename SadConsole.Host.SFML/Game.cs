@@ -13,13 +13,13 @@ namespace SadConsole
     /// </summary>
     public class Game : GameHost
     {
-        private int _preFullScreenWidth;
-        private int _preFullScreenHeight;
-        private bool _handleResizeNone;
-        private bool _isResizing;
+        protected int _preFullScreenWidth;
+        protected int _preFullScreenHeight;
+        protected bool _handleResizeNone;
+        protected bool _isResizing;
 
-        private Keyboard _keyboard;
-        private Mouse _mouse;
+        protected Keyboard _keyboard;
+        protected Mouse _mouse;
 
         /// <summary>
         /// Static instance to the game after the <see cref="Create(int, int, string, RenderWindow)"/> method has been called.
@@ -33,7 +33,7 @@ namespace SadConsole
         internal string _font;
 
 
-        private Game() { }
+        protected Game() { }
 
         /// <summary>
         /// Create's a new SadConsole game.
@@ -53,7 +53,7 @@ namespace SadConsole
             game.Initialize(window);
         }
 
-        private void Initialize(RenderWindow window)
+        protected void Initialize(RenderWindow window)
         {
             LoadEmbeddedFont();
 

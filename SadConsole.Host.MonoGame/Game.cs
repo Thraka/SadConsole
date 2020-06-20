@@ -9,14 +9,14 @@ namespace SadConsole
 {
     public class Game : GameHost
     {
-        private int _preFullScreenWidth;
-        private int _preFullScreenHeight;
-        private bool _handleResizeNone;
+        protected int _preFullScreenWidth;
+        protected int _preFullScreenHeight;
+        protected bool _handleResizeNone;
 
         /// <summary>
         /// The <see cref="Microsoft.Xna.Framework.Game"/> instance.
         /// </summary>
-        public MonoGame.Game MonoGameInstance { get; private set; }
+        public MonoGame.Game MonoGameInstance { get; protected set; }
 
         /// <summary>
         /// Strongly typed version of <see cref="GameHost.Instance"/>.
@@ -29,7 +29,7 @@ namespace SadConsole
 
         internal string _font;
 
-        private Game() { }
+        protected Game() { }
 
         /// <summary>
         /// Creates a new game and assigns it to the <see cref="MonoGameInstance"/> property.
