@@ -106,8 +106,8 @@ access to the component instance automatically added to the console.
   </Target>
 
   <Target Name="CopyPackage" AfterTargets="Pack">
-    <Copy SourceFiles="$(OutputPath)..\..\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\..\..\nuget" />
-    <Copy SourceFiles="$(OutputPath)..\..\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
   </Target>
 
 </Project>
