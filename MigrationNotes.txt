@@ -5,13 +5,17 @@
 - All console's have a viewport again, eliminating the ScrollingConsole type. This is implemented in a few properties.
   - ScrollingConsole.ViewPort -> Console.View
 
-  The Console.View is slightly different. In the old SadConsole when the 
-
 - SadConsole.Global is gone. All properties moved to SadConsole.GameHost.Instance
 
 ===== TODO
 
 - Test if ConnectedLineStyle arrays elements can be modified.
+- (?) Components should have a before/after ability where SortOrder < 5 run before the core code and >=5 run after.
+- (?) Make Layers component for adding multiple layers to a console.
+  - With how nice the screen object system is, do layers matter? just add a new child!
+  - Maybe I can make a new renderer -> target renderer where you can choose another object to render to? this way
+    you can render an object within the bounds of another. Just use the BackingTexture as the render target and skip the 
+    clear call!
 
 ====== New Features
 
@@ -24,38 +28,41 @@
 - ControlHost component can add the GUI framework to any console.
 - SadConsole.Global no longer exists. Properties from this static type now live in SadConsole.GameHost.Instance.
 
-====== Migration specifics
+
+====== Migration notes
+
+Core
+- (RENAME) Font/FontMaster -> Font
+- (RENAME) SadConsole.Global -> SadConsole.GameHost
 
 CellSurface/Console
-- Width -> BufferWidth
-- Height -> BufferHeight
-- Compontents -> SadComponents
+- (RENAME) Width -> BufferWidth (Console still has Width which just forward BufferWidth)
+- (RENAME) Height -> BufferHeight (Console still has Height which just forward BufferHeight)
+- (RENAME) Components -> SadComponents
+- (CHANGE) Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
 
 Console
-- FontSize property is a point x,y size now no longer the enum. Use Font.GetFontSize
+- (CHANGE) FontSize property is a point x,y size now no longer the enum. Use Font.GetFontSize
 
 ControlsConsole/Window
-- ViewPort -> View
-- Themes removed
+- (RENAME) ViewPort -> View
+- (CHANGE) Themes removed
 
 Window
-- Invalidate -> OnInvalidated
+- (RENAME) Invalidate -> OnInvalidated
 
 ControlsConsole
-- No longer a specialized type. The ControlHost component was created and provides the entire controls framework. This can be applied to any console. The ControlsConsole is now just a simple Console with this component automatically added.
+- (CHANGE) No longer a specialized type. The ControlHost component was created and provides the entire controls framework.
+  This can be applied to any console. The ControlsConsole is now just a simple Console with this component automatically added.
 
 ScrollingConsole -> Console
-- ViewPort -> View
+- (RENAME) ViewPort -> View
 
 Input
-- MouseConsoleState -> MouseScreenObjectState
+- (RENAME) MouseConsoleState -> MouseScreenObjectState
 
-SadConsole.Controls -> SadConsole.UI.Controls
-SadConsole.Themes -> SadConsole.UI.Themes
-ContainerConsole -> ScreenObject
-
-Font/FontMaster -> Font
-
-- Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
-
+UI
+- (MOVE) SadConsole.Controls -> SadConsole.UI.Controls
+- (MOVE) SadConsole.Themes -> SadConsole.UI.Themes
+- (RENAME) ContainerConsole -> ScreenObject
 
