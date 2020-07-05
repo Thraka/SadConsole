@@ -34,8 +34,8 @@ Core
 - (RENAME) SadConsole.Global -> SadConsole.GameHost
 
 CellSurface/Console
-- (RENAME) Width -> BufferWidth (Console still has Width which just forward BufferWidth)
-- (RENAME) Height -> BufferHeight (Console still has Height which just forward BufferHeight)
+- (RENAME) Width -> BufferWidth (Console specifically has Width which just forward BufferWidth)
+- (RENAME) Height -> BufferHeight (Console specifically has Height which just forward BufferHeight)
 - (RENAME) Components -> SadComponents
 - (CHANGE) Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
 
@@ -53,8 +53,12 @@ ControlsConsole
 - (CHANGE) No longer a specialized type. The ControlHost component was created and provides the entire controls framework.
   This can be applied to any console. The ControlsConsole is now just a simple Console with this component automatically added.
 
-ScrollingConsole -> Console
+ScrollingConsole
+- (MOVE) All ViewPort stuff is implemented on ICellSurface, meaning all surfaces can scroll.
 - (RENAME) ViewPort -> View
+
+LayeredConsole
+- (RENAME) LayeredScreenSurface
 
 Input
 - (RENAME) MouseConsoleState -> MouseScreenObjectState

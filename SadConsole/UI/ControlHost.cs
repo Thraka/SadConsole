@@ -36,18 +36,17 @@ namespace SadConsole.UI
         [DataMember]
         protected List<ControlBase> ControlsList = new List<ControlBase>();
 
-        [DataMember]
         private ControlBase _focusedControl;
         private bool _wasFocusedBeforeCapture;
         private bool _exclusiveBeforeCapture;
         private Themes.Colors _themeColors;
-        private IScreenSurface _parent;
+
         #region Properties
 
         /// <summary>
         /// The parent object hosting the controls.
         /// </summary>
-        public IScreenSurface ParentConsole => _parent;
+        public IScreenSurface ParentConsole { get; private set; }
 
         /// <summary>
         /// Gets or sets the colors to use with drawing the console and controls.
@@ -58,7 +57,7 @@ namespace SadConsole.UI
             set
             {
                 _themeColors = value;
-                _parent.IsDirty = true;
+                ParentConsole.IsDirty = true;
                 IsDirty = true;
 
                 foreach (ControlBase control in ControlsList)
@@ -103,6 +102,18 @@ namespace SadConsole.UI
         }
 
         /// <summary>
+        /// When <see langword="true"/>, the component will clear the console it's attached to with the theme color.
+        /// </summary>
+        [DataMember]
+        public bool ClearOnAdded { get; set; } = true;
+
+        /// <summary>
+        /// When <see langword="true"/>, the component will disable the cursor of the console it's attached to.
+        /// </summary>
+        [DataMember]
+        public bool DisableCursorOnAdded { get; set; } = true;
+
+        /// <summary>
         /// When true, allows the tab command to move to the next console (when there is a parent) instead of cycling back to the first control on this console.
         /// </summary>
         [DataMember]
@@ -119,8 +130,9 @@ namespace SadConsole.UI
         public IScreenSurface PreviousTabConsole { get; set; }
 
         /// <summary>
-        /// When set to true, child controls are not alerted to (non-)focused states.
+        /// When set to true, child controls are not alerted to focused and non-focused states.
         /// </summary>
+        [DataMember]
         public bool DisableControlFocusing { get; set; }
         #endregion
 
@@ -132,14 +144,17 @@ namespace SadConsole.UI
             surface.UseKeyboard = true;
             surface.UseMouse = true;
 
-            var colors = GetThemeColors();
-            surface.Surface.DefaultBackground = colors.ControlHostBack;
-            surface.Surface.DefaultForeground = colors.ControlHostFore;
-            surface.Surface.Clear();
+            if (ClearOnAdded)
+            {
+                var colors = GetThemeColors();
+                surface.Surface.DefaultBackground = colors.ControlHostBack;
+                surface.Surface.DefaultForeground = colors.ControlHostFore;
+                surface.Surface.Clear();
+            }
 
-            _parent = surface;
+            ParentConsole = surface;
 
-            if (host is Console con)
+            if (host is Console con && DisableCursorOnAdded)
             {
                 // Configure the console.
                 con.Cursor.IsVisible = false;
@@ -160,11 +175,11 @@ namespace SadConsole.UI
             foreach (var control in ControlsList)
                 control.Parent = null;
 
-            _parent.MouseExit -= Surface_MouseExit;
-            _parent.Focused -= Surface_Focused;
-            _parent.FocusLost -= Surface_FocusLost;
+            ParentConsole.MouseExit -= Surface_MouseExit;
+            ParentConsole.Focused -= Surface_Focused;
+            ParentConsole.FocusLost -= Surface_FocusLost;
 
-            _parent = null;
+            ParentConsole = null;
         }
 
         void Components.IComponent.ProcessKeyboard(IScreenObject host, Keyboard info, out bool handled)
@@ -476,10 +491,10 @@ namespace SadConsole.UI
         /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
         protected bool TryTabPreviousConsole()
         {
-            if (!CanTabToNextConsole || _parent.Parent == null) return false;
+            if (!CanTabToNextConsole || ParentConsole.Parent == null) return false;
 
             IScreenSurface newConsole;
-            var consoles = _parent.Parent.Children.OfType<IScreenSurface>().Where(ParentHasComponent).ToList();
+            var consoles = ParentConsole.Parent.Children.OfType<IScreenSurface>().Where(ParentHasComponent).ToList();
 
             // If no consoles found, get out
             if (consoles.Count == 0)
@@ -490,7 +505,7 @@ namespace SadConsole.UI
             // If a previous console has not be explicitly set, find the previous console.
             if (PreviousTabConsole == null || !consoles.Contains(PreviousTabConsole))
             {
-                int parentIndex = consoles.IndexOf(_parent);
+                int parentIndex = consoles.IndexOf(ParentConsole);
                 if (parentIndex == 0)
                 {
                     parentIndex = consoles.Count - 1;
@@ -524,10 +539,10 @@ namespace SadConsole.UI
         /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
         protected bool TryTabNextConsole()
         {
-            if (!CanTabToNextConsole || _parent.Parent == null) return false;
+            if (!CanTabToNextConsole || ParentConsole.Parent == null) return false;
 
             IScreenSurface newConsole;
-            var consoles = _parent.Parent.Children.OfType<IScreenSurface>().Where(ParentHasComponent).ToList();
+            var consoles = ParentConsole.Parent.Children.OfType<IScreenSurface>().Where(ParentHasComponent).ToList();
 
             // If no consoles found, get out
             if (consoles.Count == 0)
@@ -536,7 +551,7 @@ namespace SadConsole.UI
             // If a previous console has not be explicitly set, find the previous console.
             if (NextTabConsole == null || !consoles.Contains(NextTabConsole))
             {
-                int parentIndex = consoles.IndexOf(_parent);
+                int parentIndex = consoles.IndexOf(ParentConsole);
                 if (parentIndex == consoles.Count - 1)
                     parentIndex = 0;
                 else
@@ -671,7 +686,7 @@ namespace SadConsole.UI
         {
             if (GameHost.Instance.FocusedScreenObjects.ScreenObject != this)
             {
-                GameHost.Instance.FocusedScreenObjects.Push(_parent);
+                GameHost.Instance.FocusedScreenObjects.Push(ParentConsole);
                 _wasFocusedBeforeCapture = false;
             }
             else
@@ -679,8 +694,8 @@ namespace SadConsole.UI
                 _wasFocusedBeforeCapture = true;
             }
 
-            _exclusiveBeforeCapture = _parent.IsExclusiveMouse;
-            _parent.IsExclusiveMouse = true;
+            _exclusiveBeforeCapture = ParentConsole.IsExclusiveMouse;
+            ParentConsole.IsExclusiveMouse = true;
             CapturedControl = control;
         }
 
@@ -691,10 +706,10 @@ namespace SadConsole.UI
         {
             if (!_wasFocusedBeforeCapture)
             {
-                GameHost.Instance.FocusedScreenObjects.Pop(_parent);
+                GameHost.Instance.FocusedScreenObjects.Pop(ParentConsole);
             }
 
-            _parent.IsExclusiveMouse = _exclusiveBeforeCapture;
+            ParentConsole.IsExclusiveMouse = _exclusiveBeforeCapture;
             CapturedControl = null;
         }
 

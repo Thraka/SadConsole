@@ -67,17 +67,17 @@ namespace SadConsole
         public Effects.EffectsManager Effects { get; }
 
         /// <summary>
-        /// Returns a rectangle that represents the size of the buffer.
+        /// Returns a rectangle that represents the maximum size of the surface.
         /// </summary>
         Rectangle Buffer { get; }
 
         /// <summary>
-        /// Height of the surface buffer.
+        /// Maximum height of the surface buffer.
         /// </summary>
         int BufferHeight { get; }
 
         /// <summary>
-        /// Width of the surface buffer.
+        /// Maximum width of the surface buffer.
         /// </summary>
         int BufferWidth { get; }
 
@@ -112,7 +112,7 @@ namespace SadConsole
         bool IsScrollable { get; }
 
         /// <summary>
-        /// The view presented by the surface.
+        /// The visible portion of the surface.
         /// </summary>
         Rectangle View { get; set; }
 
@@ -122,7 +122,7 @@ namespace SadConsole
         int ViewHeight { get; set; }
 
         /// <summary>
-        /// The position of the buffer.
+        /// The position of the view within the buffer.
         /// </summary>
         Point ViewPosition { get; set; }
 
