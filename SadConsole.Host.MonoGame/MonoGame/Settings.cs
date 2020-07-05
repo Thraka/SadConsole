@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SadRogue.Primitives;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     public static class Settings
     {

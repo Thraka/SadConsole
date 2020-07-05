@@ -18,7 +18,7 @@ namespace SadConsole
         /// <summary>
         /// The <see cref="Microsoft.Xna.Framework.Game"/> instance.
         /// </summary>
-        public MonoGame.Game MonoGameInstance { get; protected set; }
+        public Host.Game MonoGameInstance { get; protected set; }
 
         /// <summary>
         /// Strongly typed version of <see cref="GameHost.Instance"/>.
@@ -40,7 +40,7 @@ namespace SadConsole
         /// <param name="cellCountY"></param>
         /// <param name="font"></param>
         /// <param name="monogameCtorCallback"></param>
-        public static void Create(int cellCountX, int cellCountY, string font = "", Action<MonoGame.Game> monogameCtorCallback = null)
+        public static void Create(int cellCountX, int cellCountY, string font = "", Action<Host.Game> monogameCtorCallback = null)
         {
             var game = new Game();
             game.ScreenCellsX = cellCountX;
@@ -48,14 +48,14 @@ namespace SadConsole
             game._font = font;
 
             Instance = game;
-            game.MonoGameInstance = new MonoGame.Game(monogameCtorCallback, game.MonoGameInit);
+            game.MonoGameInstance = new Host.Game(monogameCtorCallback, game.MonoGameInit);
         }
 
         /// <summary>
-        /// Method called by the <see cref="MonoGame.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="MonoGame.Game.ResetRendering"/>.
+        /// Method called by the <see cref="Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="Host.Game.ResetRendering"/>.
         /// </summary>
         /// <param name="game">The game instance.</param>
-        protected void MonoGameInit(MonoGame.Game game)
+        protected void MonoGameInit(Host.Game game)
         {
             LoadEmbeddedFont();
 
@@ -124,23 +124,23 @@ namespace SadConsole
         /// </summary>
         public void ToggleFullScreen()
         {
-            MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
+            Host.Global.GraphicsDeviceManager.ApplyChanges();
 
             // Coming back from fullscreen
-            if (MonoGame.Global.GraphicsDeviceManager.IsFullScreen)
+            if (Host.Global.GraphicsDeviceManager.IsFullScreen)
             {
-                MonoGame.Global.GraphicsDeviceManager.IsFullScreen = !MonoGame.Global.GraphicsDeviceManager.IsFullScreen;
+                Host.Global.GraphicsDeviceManager.IsFullScreen = !Host.Global.GraphicsDeviceManager.IsFullScreen;
 
-                MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferWidth = _preFullScreenWidth;
-                MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferHeight = _preFullScreenHeight;
-                MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
+                Host.Global.GraphicsDeviceManager.PreferredBackBufferWidth = _preFullScreenWidth;
+                Host.Global.GraphicsDeviceManager.PreferredBackBufferHeight = _preFullScreenHeight;
+                Host.Global.GraphicsDeviceManager.ApplyChanges();
             }
 
             // Going full screen
             else
             {
-                _preFullScreenWidth = MonoGame.Global.GraphicsDevice.PresentationParameters.BackBufferWidth;
-                _preFullScreenHeight = MonoGame.Global.GraphicsDevice.PresentationParameters.BackBufferHeight;
+                _preFullScreenWidth = Host.Global.GraphicsDevice.PresentationParameters.BackBufferWidth;
+                _preFullScreenHeight = Host.Global.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
                 if (Settings.ResizeMode == Settings.WindowResizeOptions.None)
                 {
@@ -148,11 +148,11 @@ namespace SadConsole
                     Settings.ResizeMode = Settings.WindowResizeOptions.Scale;
                 }
 
-                MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferWidth = MonoGame.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
-                MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferHeight = MonoGame.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+                Host.Global.GraphicsDeviceManager.PreferredBackBufferWidth = Host.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+                Host.Global.GraphicsDeviceManager.PreferredBackBufferHeight = Host.Global.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-                MonoGame.Global.GraphicsDeviceManager.IsFullScreen = !MonoGame.Global.GraphicsDeviceManager.IsFullScreen;
-                MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
+                Host.Global.GraphicsDeviceManager.IsFullScreen = !Host.Global.GraphicsDeviceManager.IsFullScreen;
+                Host.Global.GraphicsDeviceManager.ApplyChanges();
 
                 if (_handleResizeNone)
                 {
@@ -169,9 +169,9 @@ namespace SadConsole
         /// <param name="height">The height of the window in pixels.</param>
         public void ResizeWindow(int width, int height)
         {
-            MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
-            MonoGame.Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
-            MonoGame.Global.GraphicsDeviceManager.ApplyChanges();
+            Host.Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
+            Host.Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
+            Host.Global.GraphicsDeviceManager.ApplyChanges();
 
             ((Game)SadConsole.Game.Instance).MonoGameInstance.ResetRendering();
         }

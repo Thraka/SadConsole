@@ -32,7 +32,7 @@ namespace SadConsole.Renderers
 
             // Create backing texture.
             if (layeredObject.RenderClipped)
-                BackingTexture = new RenderTarget2D(MonoGame.Global.GraphicsDevice, layeredObject.RenderClippedWidth, layeredObject.RenderClippedHeight, false, MonoGame.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, layeredObject.RenderClippedWidth, layeredObject.RenderClippedHeight, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
 
         ///  <inheritdoc/>
@@ -64,7 +64,7 @@ namespace SadConsole.Renderers
                     {
                         // Layers are parented, when rendering clipped, we need an relative position in pixels.
                         SadRogue.Primitives.Point transformedPosition = item.AbsolutePosition - screen.AbsolutePosition;
-                        MonoGame.Global.SharedSpriteBatch.Draw(((ScreenSurfaceRenderer)item.Renderer).BackingTexture, new Vector2(transformedPosition.X, transformedPosition.Y), Color.White);
+                        Host.Global.SharedSpriteBatch.Draw(((ScreenSurfaceRenderer)item.Renderer).BackingTexture, new Vector2(transformedPosition.X, transformedPosition.Y), Color.White);
                     }
                 } 
 

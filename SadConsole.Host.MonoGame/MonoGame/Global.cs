@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     public static class Global
     {

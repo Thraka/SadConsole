@@ -24,8 +24,8 @@ namespace SadConsole.DrawCalls
 
         public void Draw()
         {
-            MonoGame.Global.SharedSpriteBatch.Draw(Texture, TargetRect, FontSolidRect, Cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
-            MonoGame.Global.SharedSpriteBatch.Draw(Texture, TargetRect, FontGlyphRect, Cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.65f);
+            Host.Global.SharedSpriteBatch.Draw(Texture, TargetRect, FontSolidRect, Cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
+            Host.Global.SharedSpriteBatch.Draw(Texture, TargetRect, FontGlyphRect, Cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.65f);
         }
     }
 }

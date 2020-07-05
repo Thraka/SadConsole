@@ -124,6 +124,54 @@
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Host.Game">
+            <summary>
+            A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.Game.FPSCounterComponent">
+            <summary>
+            A component to draw how many frames per second the engine is performing at.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Game.WindowWidth">
+            <summary>
+            The current game window width.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Game.WindowHeight">
+            <summary>
+            The current game window height.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Host.Game.WindowResized">
+            <summary>
+            Raised when the window is resized and the render area has been calculated.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Game.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.Game.ResizeGraphicsDeviceManager(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
+            </summary>
+            <param name="fontSize">The size of the font to base the final values on.</param>
+            <param name="width">The width glyphs.</param>
+            <param name="height">The height glyphs.</param>
+            <param name="additionalWidth">Additional pixel width to add to the resize.</param>
+            <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        </member>
+        <member name="M:SadConsole.Host.Game.ResetRendering">
+            <summary>
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
+            <summary>
+            Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
+            </summary>
+        </member>
         <member name="P:SadConsole.Game.UseTitleContainer">
             <summary>
             When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
@@ -139,7 +187,7 @@
             Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.Action{SadConsole.MonoGame.Game})">
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.Action{SadConsole.Host.Game})">
             <summary>
             Creates a new game and assigns it to the <see cref="P:SadConsole.Game.MonoGameInstance"/> property.
             </summary>
@@ -148,9 +196,9 @@
             <param name="font"></param>
             <param name="monogameCtorCallback"></param>
         </member>
-        <member name="M:SadConsole.Game.MonoGameInit(SadConsole.MonoGame.Game)">
+        <member name="M:SadConsole.Game.MonoGameInit(SadConsole.Host.Game)">
             <summary>
-            Method called by the <see cref="T:SadConsole.MonoGame.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="M:SadConsole.MonoGame.Game.ResetRendering"/>.
+            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="M:SadConsole.Host.Game.ResetRendering"/>.
             </summary>
             <param name="game">The game instance.</param>
         </member>
@@ -189,54 +237,6 @@
             </summary>
             <param name="width">The width of the window in pixels.</param>
             <param name="height">The height of the window in pixels.</param>
-        </member>
-        <member name="T:SadConsole.MonoGame.Game">
-            <summary>
-            A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
-            </summary>
-        </member>
-        <member name="T:SadConsole.MonoGame.Game.FPSCounterComponent">
-            <summary>
-            A component to draw how many frames per second the engine is performing at.
-            </summary>
-        </member>
-        <member name="P:SadConsole.MonoGame.Game.WindowWidth">
-            <summary>
-            The current game window width.
-            </summary>
-        </member>
-        <member name="P:SadConsole.MonoGame.Game.WindowHeight">
-            <summary>
-            The current game window height.
-            </summary>
-        </member>
-        <member name="E:SadConsole.MonoGame.Game.WindowResized">
-            <summary>
-            Raised when the window is resized and the render area has been calculated.
-            </summary>
-        </member>
-        <member name="M:SadConsole.MonoGame.Game.Initialize">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.MonoGame.Game.ResizeGraphicsDeviceManager(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Resizes the <see cref="P:SadConsole.MonoGame.Global.GraphicsDeviceManager"/> by the specified font size.
-            </summary>
-            <param name="fontSize">The size of the font to base the final values on.</param>
-            <param name="width">The width glyphs.</param>
-            <param name="height">The height glyphs.</param>
-            <param name="additionalWidth">Additional pixel width to add to the resize.</param>
-            <param name="additionalHeight">Additional pixel height to add to the resize.</param>
-        </member>
-        <member name="M:SadConsole.MonoGame.Game.ResetRendering">
-            <summary>
-            Resets the <see cref="P:SadConsole.MonoGame.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.MonoGame.Settings.UseHardwareFullScreen">
-            <summary>
-            Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
-            </summary>
         </member>
         <member name="T:SadConsole.Readers.TextureToSurfaceReader">
             <summary>

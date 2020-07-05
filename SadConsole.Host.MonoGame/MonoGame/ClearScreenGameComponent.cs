@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using SadRogue.Primitives;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     public partial class Game
     {

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Color = SadRogue.Primitives.Color;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     public partial class Game
     {

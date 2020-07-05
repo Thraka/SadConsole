@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     /// <summary>
     /// A MonoGame <see cref="Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.

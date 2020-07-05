@@ -37,8 +37,8 @@ namespace SadConsole.Host
         /// <param name="path"></param>
         public GameTexture(string path)
         {
-            using Stream fontStream = Game.Instance.OpenStream(path);
-            _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.MonoGame.Global.GraphicsDevice, fontStream);
+            using Stream fontStream = SadConsole.Game.Instance.OpenStream(path);
+            _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.Host.Global.GraphicsDevice, fontStream);
 
             _resourcePath = path;
         }
@@ -48,7 +48,7 @@ namespace SadConsole.Host
         /// </summary>
         /// <param name="stream">The stream containing the texture data.</param>
         public GameTexture(Stream stream) =>
-            _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.MonoGame.Global.GraphicsDevice, stream);
+            _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.Host.Global.GraphicsDevice, stream);
 
         /// <summary>
         /// Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
@@ -227,24 +227,24 @@ namespace SadConsole.Host
 
         private Microsoft.Xna.Framework.Graphics.RenderTarget2D GetResizedTexture(int width, int height)
         {
-            var resized = new Microsoft.Xna.Framework.Graphics.RenderTarget2D(SadConsole.MonoGame.Global.GraphicsDevice,
+            var resized = new Microsoft.Xna.Framework.Graphics.RenderTarget2D(SadConsole.Host.Global.GraphicsDevice,
                                                                               width,
                                                                               height,
                                                                               false,
-                                                                              SadConsole.MonoGame.Global.GraphicsDevice.DisplayMode.Format,
+                                                                              SadConsole.Host.Global.GraphicsDevice.DisplayMode.Format,
                                                                               Microsoft.Xna.Framework.Graphics.DepthFormat.None);
 
-            SadConsole.MonoGame.Global.GraphicsDevice.SetRenderTarget(resized);
-            SadConsole.MonoGame.Global.GraphicsDevice.Clear(MonoColor.Transparent);
-            SadConsole.MonoGame.Global.SharedSpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
+            SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(resized);
+            SadConsole.Host.Global.GraphicsDevice.Clear(MonoColor.Transparent);
+            SadConsole.Host.Global.SharedSpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
                                                                Microsoft.Xna.Framework.Graphics.BlendState.NonPremultiplied,
                                                                Microsoft.Xna.Framework.Graphics.SamplerState.AnisotropicClamp,
                                                                Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
                                                                Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone);
 
-            SadConsole.MonoGame.Global.SharedSpriteBatch.Draw(_texture, resized.Bounds, MonoColor.White);
-            SadConsole.MonoGame.Global.SharedSpriteBatch.End();
-            SadConsole.MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
+            SadConsole.Host.Global.SharedSpriteBatch.Draw(_texture, resized.Bounds, MonoColor.White);
+            SadConsole.Host.Global.SharedSpriteBatch.End();
+            SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(null);
 
             return resized;
         }

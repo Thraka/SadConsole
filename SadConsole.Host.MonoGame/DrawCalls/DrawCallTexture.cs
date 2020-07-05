@@ -17,6 +17,6 @@ namespace SadConsole.DrawCalls
         }
 
         public void Draw() =>
-            MonoGame.Global.SharedSpriteBatch.Draw(Texture, Position, Color.White);
+            Host.Global.SharedSpriteBatch.Draw(Texture, Position, Color.White);
     }
 }

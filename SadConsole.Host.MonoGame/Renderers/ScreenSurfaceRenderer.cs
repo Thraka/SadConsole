@@ -80,7 +80,7 @@ namespace SadConsole.Renderers
             if (BackingTexture == null || screen.AbsoluteArea.Width != BackingTexture.Width || screen.AbsoluteArea.Height != BackingTexture.Height)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTarget2D(MonoGame.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, MonoGame.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             }
 
             // Update cached drawing rectangles if something is out of size.
@@ -109,15 +109,15 @@ namespace SadConsole.Renderers
 
         protected virtual void RefreshBegin(IScreenSurface screen)
         {
-            MonoGame.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
-            MonoGame.Global.GraphicsDevice.Clear(Color.Transparent);
-            MonoGame.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+            Host.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
+            Host.Global.GraphicsDevice.Clear(Color.Transparent);
+            Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
         }
 
         protected virtual void RefreshEnd(IScreenSurface screen)
         {
-            MonoGame.Global.SharedSpriteBatch.End();
-            MonoGame.Global.GraphicsDevice.SetRenderTarget(null);
+            Host.Global.SharedSpriteBatch.End();
+            Host.Global.GraphicsDevice.SetRenderTarget(null);
         }
 
         protected virtual void RefreshCells(ICellSurface cellSurface, Font font)
@@ -125,7 +125,7 @@ namespace SadConsole.Renderers
             var fontImage = ((SadConsole.Host.GameTexture)font.Image).Texture;
 
             if (cellSurface.DefaultBackground.A != 0)
-                MonoGame.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                Host.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), cellSurface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
             int rectIndex = 0;
 
@@ -142,14 +142,14 @@ namespace SadConsole.Renderers
                     if (!cell.IsVisible) continue;
 
                     if (!cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground)
-                        MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        Host.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                     if (!cell.Foreground.Equals(Color.Transparent))
-                        MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                        Host.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
                     foreach (CellDecorator decorator in cell.Decorators)
                         if (!decorator.Color.Equals(Color.Transparent))
-                            MonoGame.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                            Host.Global.SharedSpriteBatch.Draw(fontImage, _renderRects[rectIndex], font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
 
                     i++;
                     rectIndex++;

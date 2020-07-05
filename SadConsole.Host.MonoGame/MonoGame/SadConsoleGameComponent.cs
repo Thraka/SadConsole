@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SadConsole.MonoGame
+namespace SadConsole.Host
 {
     public partial class Game
     {
@@ -17,7 +17,7 @@ namespace SadConsole.MonoGame
             {
                 if (SadConsole.Settings.DoDraw)
                 {
-                    MonoGame.Game game = (MonoGame.Game)Game;
+                    Host.Game game = (Host.Game)Game;
 
                     SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
 

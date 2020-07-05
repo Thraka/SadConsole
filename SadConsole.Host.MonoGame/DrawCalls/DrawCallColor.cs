@@ -23,7 +23,7 @@ namespace SadConsole.DrawCalls
 
         public void Draw()
         {
-            MonoGame.Global.SharedSpriteBatch.Draw(Texture, TargetRect, FontSolidRect, Color, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
+            Host.Global.SharedSpriteBatch.Draw(Texture, TargetRect, FontSolidRect, Color, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
         }
     }
 }

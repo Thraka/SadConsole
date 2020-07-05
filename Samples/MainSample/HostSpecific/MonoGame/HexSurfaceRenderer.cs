@@ -17,7 +17,7 @@ namespace FeatureDemo.HostSpecific.MonoGame
             if (BackingTexture == null || screen.AbsoluteArea.Width != BackingTexture.Width || screen.AbsoluteArea.Height != BackingTexture.Height)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTarget2D(SadConsole.MonoGame.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, SadConsole.MonoGame.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                BackingTexture = new RenderTarget2D(SadConsole.Host.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, SadConsole.Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
             }
 
             // Update cached drawing rectangles if something is out of size.
