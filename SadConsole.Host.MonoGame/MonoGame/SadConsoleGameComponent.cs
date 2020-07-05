@@ -25,7 +25,7 @@ namespace SadConsole.MonoGame
                     SadConsole.Game.Instance.DrawCalls.Clear();
 
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    SadConsole.GameHost.Instance.Screen?.Draw(SadConsole.GameHost.Instance.DrawFrameDelta);
+                    SadConsole.GameHost.Instance.Screen?.Render(SadConsole.GameHost.Instance.DrawFrameDelta);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
 

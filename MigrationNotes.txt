@@ -11,11 +11,9 @@
 
 - Test if ConnectedLineStyle arrays elements can be modified.
 - (?) Components should have a before/after ability where SortOrder < 5 run before the core code and >=5 run after.
-- (?) Make Layers component for adding multiple layers to a console.
-  - With how nice the screen object system is, do layers matter? just add a new child!
-  - Maybe I can make a new renderer -> target renderer where you can choose another object to render to? this way
-    you can render an object within the bounds of another. Just use the BackingTexture as the render target and skip the 
-    clear call!
+- Test layered console stuff
+- Check fullscreen to and from not setting render sizes correctly in monogame.
+
 
 ====== New Features
 

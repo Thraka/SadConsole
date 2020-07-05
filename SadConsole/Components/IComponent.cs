@@ -19,9 +19,9 @@ namespace SadConsole.Components
         bool IsUpdate { get; }
 
         /// <summary>
-        /// When <see langword="true"/>, indicates that this component calls the <see cref="Draw(IScreenObject, TimeSpan)"/> method.
+        /// When <see langword="true"/>, indicates that this component calls the <see cref="Render(IScreenObject, TimeSpan)"/> method.
         /// </summary>
-        bool IsDraw { get; }
+        bool IsRender { get; }
 
         /// <summary>
         /// When <see langword="true"/>, indicates that this component calls the <see cref="ProcessMouse(IScreenObject, MouseScreenObjectState, out bool)"/> method.
@@ -41,11 +41,11 @@ namespace SadConsole.Components
         void Update(IScreenObject host, TimeSpan delta);
 
         /// <summary>
-        /// Called by a host on the draw frame.
+        /// Called by a host on the render frame.
         /// </summary>
         /// <param name="host">The host calling the component.</param>
         /// <param name="delta">The time that has elapsed from the last call to this component.</param>
-        void Draw(IScreenObject host, TimeSpan delta);
+        void Render(IScreenObject host, TimeSpan delta);
 
         /// <summary>
         /// Called by a host when the mouse is being processed.
@@ -103,13 +103,13 @@ namespace SadConsole.Components
 
         bool IComponent.IsUpdate => true;
 
-        bool IComponent.IsDraw => false;
+        bool IComponent.IsRender => false;
 
         bool IComponent.IsMouse => false;
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(IScreenObject host, TimeSpan delta) { }
+        void IComponent.Render(IScreenObject host, TimeSpan delta) { }
 
         void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             handled = false;
@@ -122,9 +122,9 @@ namespace SadConsole.Components
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.Draw(IScreenObject, TimeSpan)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.Render(IScreenObject, TimeSpan)"/> of <see cref="IComponent"/>.
     /// </summary>
-    public abstract class DrawComponent : IComponent
+    public abstract class RenderComponent : IComponent
     {
         /// <summary>
         /// Indicates priority to other components.
@@ -136,7 +136,7 @@ namespace SadConsole.Components
         /// </summary>
         /// <param name="host">The host calling the component.</param>
         /// <param name="delta">The time that has elapsed from the last call to this component.</param>
-        public abstract void Draw(IScreenObject host, TimeSpan delta);
+        public abstract void Render(IScreenObject host, TimeSpan delta);
 
         /// <inheritdoc />
         public virtual void OnAdded(IScreenObject host) { }
@@ -148,14 +148,14 @@ namespace SadConsole.Components
 
         bool IComponent.IsUpdate => false;
 
-        bool IComponent.IsDraw => true;
+        bool IComponent.IsRender => true;
 
         bool IComponent.IsMouse => false;
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(IScreenObject host, TimeSpan delta) =>
-            Draw(host, delta);
+        void IComponent.Render(IScreenObject host, TimeSpan delta) =>
+            Render(host, delta);
 
         void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             handled = false;
@@ -194,13 +194,13 @@ namespace SadConsole.Components
 
         bool IComponent.IsUpdate => false;
 
-        bool IComponent.IsDraw => false;
+        bool IComponent.IsRender => false;
 
         bool IComponent.IsMouse => true;
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(IScreenObject host, TimeSpan delta) { }
+        void IComponent.Render(IScreenObject host, TimeSpan delta) { }
 
         void IComponent.ProcessKeyboard(IScreenObject host, Keyboard info, out bool handled) =>
             handled = false;
@@ -239,13 +239,13 @@ namespace SadConsole.Components
 
         bool IComponent.IsUpdate => false;
 
-        bool IComponent.IsDraw => false;
+        bool IComponent.IsRender => false;
 
         bool IComponent.IsMouse => false;
 
         bool IComponent.IsKeyboard => true;
 
-        void IComponent.Draw(IScreenObject host, TimeSpan delta) { }
+        void IComponent.Render(IScreenObject host, TimeSpan delta) { }
 
         void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             ProcessKeyboard(host, keyboard, out handled);
@@ -292,13 +292,13 @@ namespace SadConsole.Components
 
         bool IComponent.IsUpdate => false;
 
-        bool IComponent.IsDraw => false;
+        bool IComponent.IsRender => false;
 
         bool IComponent.IsMouse => true;
 
         bool IComponent.IsKeyboard => true;
 
-        void IComponent.Draw(IScreenObject host, TimeSpan delta) { }
+        void IComponent.Render(IScreenObject host, TimeSpan delta) { }
 
         void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             ProcessKeyboard(host, keyboard, out handled);
@@ -310,7 +310,7 @@ namespace SadConsole.Components
     }
 
     /// <summary>
-    /// A base class that implements <see cref="IComponent.Update(IScreenObject, TimeSpan)"/> and <see cref="IComponent.Draw(IScreenObject, TimeSpan)"/> of <see cref="IComponent"/>.
+    /// A base class that implements <see cref="IComponent.Update(IScreenObject, TimeSpan)"/> and <see cref="IComponent.Render(IScreenObject, TimeSpan)"/> of <see cref="IComponent"/>.
     /// </summary>
     public abstract class LogicComponent : IComponent
     {
@@ -324,7 +324,7 @@ namespace SadConsole.Components
         /// </summary>
         /// <param name="host">The host calling the component.</param>
         /// <param name="delta">The time that has elapsed from the last call to this component.</param>
-        public abstract void Draw(IScreenObject host, TimeSpan delta);
+        public abstract void Render(IScreenObject host, TimeSpan delta);
 
         /// <summary>
         /// Called by a host on the update frame.
@@ -343,14 +343,14 @@ namespace SadConsole.Components
 
         bool IComponent.IsUpdate => true;
 
-        bool IComponent.IsDraw => true;
+        bool IComponent.IsRender => true;
 
         bool IComponent.IsMouse => false;
 
         bool IComponent.IsKeyboard => false;
 
-        void IComponent.Draw(IScreenObject host, TimeSpan delta) =>
-            Draw(host, delta);
+        void IComponent.Render(IScreenObject host, TimeSpan delta) =>
+            Render(host, delta);
 
         void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
             handled = false;
@@ -374,7 +374,7 @@ namespace SadConsole.Components
         public bool IsUpdate => true;
 
         /// <inheritdoc />
-        public bool IsDraw => true;
+        public bool IsRender => true;
 
         /// <inheritdoc />
         public bool IsMouse => true;
@@ -383,7 +383,7 @@ namespace SadConsole.Components
         public bool IsKeyboard => true;
 
         /// <inheritdoc />
-        public abstract void Draw(IScreenObject host, TimeSpan delta);
+        public abstract void Render(IScreenObject host, TimeSpan delta);
 
         /// <inheritdoc />
         public abstract void Update(IScreenObject host, TimeSpan delta);

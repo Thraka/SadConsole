@@ -17,7 +17,7 @@ namespace FeatureDemo.CustomConsoles
 
         public bool IsUpdate => false;
 
-        public bool IsDraw => false;
+        public bool IsRender => false;
 
         public bool IsMouse => false;
 
@@ -70,7 +70,7 @@ namespace FeatureDemo.CustomConsoles
             _borderConsole = null;
         }
 
-        public void Draw(IScreenObject console, TimeSpan delta) => throw new NotImplementedException();
+        public void Render(IScreenObject console, TimeSpan delta) => throw new NotImplementedException();
 
         public void ProcessKeyboard(IScreenObject console, Keyboard info, out bool handled) => throw new NotImplementedException();
 

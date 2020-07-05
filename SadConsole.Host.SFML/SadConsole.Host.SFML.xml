@@ -39,7 +39,7 @@
         <member name="M:SadConsole.Components.DrawImage.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Components.DrawImage.Draw(SadConsole.IScreenObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.DrawImage.Render(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Draws the image.
             </summary>

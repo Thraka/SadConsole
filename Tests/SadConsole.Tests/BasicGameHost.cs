@@ -14,11 +14,6 @@ namespace SadConsole.Tests
             Instance = this;
         }
 
-        public override IRenderer GetDefaultRenderer(IScreenSurface screenObject)
-        {
-            return null;
-        }
-
         public override IKeyboardState GetKeyboardState()
         {
             throw new NotImplementedException();
@@ -29,6 +24,11 @@ namespace SadConsole.Tests
             throw new NotImplementedException();
         }
 
+        public override IRenderer GetRenderer(string name)
+        {
+            return null;
+        }
+
         public override ITexture GetTexture(string resourcePath)
         {
             throw new NotImplementedException();
@@ -37,11 +37,6 @@ namespace SadConsole.Tests
         public override ITexture GetTexture(Stream textureStream)
         {
             throw new NotImplementedException();
-        }
-
-        public override IRenderer GetRenderer(string name)
-        {
-            return null;
         }
 
         public override void Run()

@@ -8,7 +8,7 @@ namespace SadConsole.Components
     /// <summary>
     /// Draws an image on top of a console.
     /// </summary>
-    public class DrawImage : DrawComponent, IDisposable
+    public class DrawImage : RenderComponent, IDisposable
     {
         private bool _hasFont;
         private PositionModes _positionMode = PositionModes.Pixels;
@@ -73,7 +73,7 @@ namespace SadConsole.Components
         /// </summary>
         /// <param name="host">The host of the component.</param>
         /// <param name="delta">Unused.</param>
-        public override void Draw(IScreenObject host, TimeSpan delta)
+        public override void Render(IScreenObject host, TimeSpan delta)
         {
             if (PositionMode == PositionModes.Cells)
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(_image.Texture, (host.AbsolutePosition + ((IScreenSurface)host).Font.GetWorldPosition(PositionOffset, ((IScreenSurface)host).FontSize)).ToMonoPoint().ToVector2()));

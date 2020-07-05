@@ -2021,9 +2021,9 @@
             When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> method.
             </summary>
         </member>
-        <member name="P:SadConsole.Components.IComponent.IsDraw">
+        <member name="P:SadConsole.Components.IComponent.IsRender">
             <summary>
-            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)"/> method.
+            When <see langword="true"/>, indicates that this component calls the <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Components.IComponent.IsMouse">
@@ -2043,9 +2043,9 @@
             <param name="host">The host calling the component.</param>
             <param name="delta">The time that has elapsed from the last call to this component.</param>
         </member>
-        <member name="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
-            Called by a host on the draw frame.
+            Called by a host on the render frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">The time that has elapsed from the last call to this component.</param>
@@ -2101,27 +2101,27 @@
         <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.Components.DrawComponent">
+        <member name="T:SadConsole.Components.RenderComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Components.DrawComponent.SortOrder">
+        <member name="P:SadConsole.Components.RenderComponent.SortOrder">
             <summary>
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.RenderComponent.Render(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the draw frame.
             </summary>
             <param name="host">The host calling the component.</param>
             <param name="delta">The time that has elapsed from the last call to this component.</param>
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.OnAdded(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.RenderComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.DrawComponent.OnRemoved(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.RenderComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.MouseConsoleComponent">
@@ -2206,7 +2206,7 @@
         </member>
         <member name="T:SadConsole.Components.LogicComponent">
             <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> and <see cref="M:SadConsole.Components.IComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> and <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.LogicComponent.SortOrder">
@@ -2214,7 +2214,7 @@
             Indicates priority to other components.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.LogicComponent.Draw(SadConsole.IScreenObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.LogicComponent.Render(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Called by a host on the draw frame.
             </summary>
@@ -2245,7 +2245,7 @@
         <member name="P:SadConsole.Components.ComponentBase.IsUpdate">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.Components.ComponentBase.IsDraw">
+        <member name="P:SadConsole.Components.ComponentBase.IsRender">
             <inheritdoc />
         </member>
         <member name="P:SadConsole.Components.ComponentBase.IsMouse">
@@ -2254,7 +2254,7 @@
         <member name="P:SadConsole.Components.ComponentBase.IsKeyboard">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Components.ComponentBase.Draw(SadConsole.IScreenObject,System.TimeSpan)">
+        <member name="M:SadConsole.Components.ComponentBase.Render(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.IScreenObject,System.TimeSpan)">
@@ -3005,7 +3005,7 @@
         <member name="M:SadConsole.Entities.Hotspot.OnVisibleChanged">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Entities.Hotspot.Draw(System.TimeSpan)">
+        <member name="M:SadConsole.Entities.Hotspot.Render(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Entities.Zone">
@@ -3042,7 +3042,7 @@
         <member name="M:SadConsole.Entities.Zone.OnVisibleChanged">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Entities.Zone.Draw(System.TimeSpan)">
+        <member name="M:SadConsole.Entities.Zone.Render(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,System.Int32,System.Int32)">
@@ -5637,7 +5637,7 @@
             When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.IScreenObject.Draw(System.TimeSpan)">
+        <member name="M:SadConsole.IScreenObject.Render(System.TimeSpan)">
             <summary>
             Draws all <see cref="P:SadConsole.IScreenObject.SadComponents"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
             </summary>
@@ -5966,7 +5966,7 @@
             <param name="layer">The layer in the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/> collection.</param>
             <remarks>This object always points to a specific layer through the <see cref="P:SadConsole.ScreenSurface.Surface"/> property. This object doesn't have it's own surface.</remarks>
         </member>
-        <member name="M:SadConsole.LayeredScreenSurface.Draw(System.TimeSpan)">
+        <member name="M:SadConsole.LayeredScreenSurface.Render(System.TimeSpan)">
             <summary>
             Draws the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/>.
             </summary>
@@ -6253,9 +6253,9 @@
             A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsUpdate"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObject.ComponentsDraw">
+        <member name="F:SadConsole.ScreenObject.ComponentsRender">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsDraw"/> is <see langword="true"/>.
+            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> where <see cref="P:SadConsole.Components.IComponent.IsRender"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsMouse">
@@ -6270,7 +6270,7 @@
         </member>
         <member name="F:SadConsole.ScreenObject.ComponentsEmpty">
             <summary>
-            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> that is not set for update, draw, mouse, or keyboard.
+            A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> that is not set for update, render, mouse, or keyboard.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenObject.SadComponents">
@@ -6314,7 +6314,7 @@
             Creates a new instance of this class.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObject.Draw(System.TimeSpan)">
+        <member name="M:SadConsole.ScreenObject.Render(System.TimeSpan)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.ScreenObject.Update(System.TimeSpan)">
@@ -6579,7 +6579,7 @@
         <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.ScreenSurface.Draw(System.TimeSpan)">
+        <member name="M:SadConsole.ScreenSurface.Render(System.TimeSpan)">
             <summary>
             Draws the <see cref="P:SadConsole.ScreenSurface.Surface"/> and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
@@ -6769,7 +6769,7 @@
         </member>
         <member name="F:SadConsole.Settings.DoDraw">
             <summary>
-            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Draw(System.TimeSpan)"/> on each object in <see cref="P:SadConsole.GameHost.Screen"/>.
+            When true, indicates that the game loop should call <see cref="M:SadConsole.IScreenObject.Render(System.TimeSpan)"/> on each object in <see cref="P:SadConsole.GameHost.Screen"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoFinalDraw">

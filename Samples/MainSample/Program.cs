@@ -79,8 +79,6 @@ namespace FeatureDemo
             con.Print(0, 0, "hello", Color.Green, Color.White);
 
             //GameHost.Instance.Screen = con;
-            SadConsole.UI.ControlHost a;
-
 
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();

@@ -128,11 +128,11 @@ namespace FeatureDemo.CustomConsoles
         }
 
 
-        public override void Draw(TimeSpan delta)
+        public override void Render(TimeSpan delta)
         {
             // Draw the logo console...
             if (IsVisible)
-                base.Draw(delta);
+                base.Render(delta);
         }
 
         private bool MoveGradient(IScreenObject console)

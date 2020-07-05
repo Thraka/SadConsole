@@ -1,3 +1,16 @@
+## v9.0 Alpha 7
+
+- Various `ControlHost` control management bugs fixed (thanks coldwarrl).
+- Rendering of Fonts improved.
+- Start of `Font` system overhaul.
+- Fixed bug `DrawString` instruction with cursors.
+- Improved `ITexture` from GameHosts. Has more methods like `Get/SetPixel` and `ToSurface`.
+- Improved `Cursor` usability.
+- Draw method on objects changed to Render to communicate intent.
+- LayeredScreenSurface completely rewritten.
+- Hosts now use strings to define renderers and allow you to redefine them in the host.
+- 
+
 ## v9.0 Alpha 6
 
 - Revamped control rendering. `ControlConsole` renderer now has a 2nd surface which only controls are rendered to. This way the control layer system can update independently of the actual console.

@@ -74,7 +74,7 @@ namespace Game
 
         public bool IsUpdate => true;
 
-        public bool IsDraw => false;
+        public bool IsRender => false;
 
         public bool IsMouse => false;
 
@@ -191,7 +191,7 @@ namespace Game
             throw new System.NotImplementedException();
 
         
-        public void Draw(IScreenObject host, System.TimeSpan delta) { }
+        public void Render(IScreenObject host, System.TimeSpan delta) { }
 
 
 

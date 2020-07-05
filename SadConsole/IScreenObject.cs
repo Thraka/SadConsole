@@ -107,7 +107,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="delta">The time that has elapsed since the last call.</param>
         /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
-        void Draw(TimeSpan delta);
+        void Render(TimeSpan delta);
 
         /// <summary>
         /// Called when this object is focused.

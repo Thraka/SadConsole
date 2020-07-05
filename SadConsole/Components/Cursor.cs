@@ -174,7 +174,7 @@ namespace SadConsole.Components
 
         bool IComponent.IsUpdate => true;
 
-        bool IComponent.IsDraw => false;
+        bool IComponent.IsRender => false;
 
         bool IComponent.IsMouse => true;
 
@@ -715,7 +715,7 @@ namespace SadConsole.Components
             }
         }
 
-        void IComponent.Draw(IScreenObject host, TimeSpan delta)
+        void IComponent.Render(IScreenObject host, TimeSpan delta)
         {
             throw new NotImplementedException();
         }

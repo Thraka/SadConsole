@@ -69,7 +69,7 @@ namespace SadConsole.Entities
         protected override void OnVisibleChanged() => Rebuild();
 
         /// <inheritdoc />
-        public override void Draw(TimeSpan delta)
+        public override void Render(TimeSpan delta)
         {
             //if (IsVisible && _parentSurface != null)
             //{
@@ -83,7 +83,7 @@ namespace SadConsole.Entities
             //    }
             //}
 
-            base.Draw(delta);
+            base.Render(delta);
         }
 
 

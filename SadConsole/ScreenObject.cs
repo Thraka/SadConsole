@@ -55,9 +55,9 @@ namespace SadConsole
         protected List<IComponent> ComponentsUpdate;
 
         /// <summary>
-        /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsDraw"/> is <see langword="true"/>.
+        /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsRender"/> is <see langword="true"/>.
         /// </summary>
-        protected List<IComponent> ComponentsDraw;
+        protected List<IComponent> ComponentsRender;
 
         /// <summary>
         /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsMouse"/> is <see langword="true"/>.
@@ -70,7 +70,7 @@ namespace SadConsole
         protected List<IComponent> ComponentsKeyboard;
 
         /// <summary>
-        /// A filtered list from <see cref="SadComponents"/> that is not set for update, draw, mouse, or keyboard.
+        /// A filtered list from <see cref="SadComponents"/> that is not set for update, render, mouse, or keyboard.
         /// </summary>
         protected List<IComponent> ComponentsEmpty;
 
@@ -215,7 +215,7 @@ namespace SadConsole
             UseKeyboard = Settings.DefaultScreenObjectUseKeyboard;
             SadComponents = new ObservableCollection<IComponent>();
             ComponentsUpdate = new List<IComponent>();
-            ComponentsDraw = new List<IComponent>();
+            ComponentsRender = new List<IComponent>();
             ComponentsKeyboard = new List<IComponent>();
             ComponentsMouse = new List<IComponent>();
             ComponentsEmpty = new List<IComponent>();
@@ -224,15 +224,15 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public virtual void Draw(TimeSpan delta)
+        public virtual void Render(TimeSpan delta)
         {
             if (!IsVisible) return;
 
-            foreach (IComponent component in ComponentsDraw.ToArray())
-                component.Draw(this, delta);
+            foreach (IComponent component in ComponentsRender.ToArray())
+                component.Render(this, delta);
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Draw(delta);
+                child.Render(delta);
         }
 
         /// <inheritdoc/>
@@ -377,10 +377,10 @@ namespace SadConsole
 
             void FilterAddItem(IComponent component)
             {
-                if (component.IsDraw)
+                if (component.IsRender)
                 {
-                    if (!ComponentsDraw.Contains(component))
-                        ComponentsDraw.Add(component);
+                    if (!ComponentsRender.Contains(component))
+                        ComponentsRender.Add(component);
                 }
 
                 if (component.IsUpdate)
@@ -401,13 +401,13 @@ namespace SadConsole
                         ComponentsMouse.Add(component);
                 }
 
-                if (!component.IsDraw && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
+                if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
                 {
                     if (!ComponentsEmpty.Contains(component))
                         ComponentsEmpty.Add(component);
                 }
 
-                ComponentsDraw.Sort(CompareComponent);
+                ComponentsRender.Sort(CompareComponent);
                 ComponentsUpdate.Sort(CompareComponent);
                 ComponentsKeyboard.Sort(CompareComponent);
                 ComponentsMouse.Sort(CompareComponent);
@@ -415,10 +415,10 @@ namespace SadConsole
 
             void FilterRemoveItem(IComponent component)
             {
-                if (component.IsDraw)
+                if (component.IsRender)
                 {
-                    if (ComponentsDraw.Contains(component))
-                        ComponentsDraw.Remove(component);
+                    if (ComponentsRender.Contains(component))
+                        ComponentsRender.Remove(component);
                 }
 
                 if (component.IsUpdate)
@@ -439,13 +439,13 @@ namespace SadConsole
                         ComponentsMouse.Remove(component);
                 }
 
-                if (!component.IsDraw && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
+                if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
                 {
                     if (!ComponentsEmpty.Contains(component))
                         ComponentsEmpty.Remove(component);
                 }
 
-                ComponentsDraw.Sort(CompareComponent);
+                ComponentsRender.Sort(CompareComponent);
                 ComponentsUpdate.Sort(CompareComponent);
                 ComponentsKeyboard.Sort(CompareComponent);
                 ComponentsMouse.Sort(CompareComponent);
@@ -500,7 +500,7 @@ namespace SadConsole
         /// </summary>
         public void SortComponents()
         {
-            ComponentsDraw.Sort(CompareComponent);
+            ComponentsRender.Sort(CompareComponent);
             ComponentsUpdate.Sort(CompareComponent);
             ComponentsKeyboard.Sort(CompareComponent);
             ComponentsMouse.Sort(CompareComponent);

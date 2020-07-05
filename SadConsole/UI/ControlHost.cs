@@ -24,7 +24,7 @@ namespace SadConsole.UI
 
         bool Components.IComponent.IsUpdate => true;
 
-        bool Components.IComponent.IsDraw => false;
+        bool Components.IComponent.IsRender => false;
 
         bool Components.IComponent.IsMouse => true;
 
@@ -236,7 +236,7 @@ namespace SadConsole.UI
             }
         }
 
-        void Components.IComponent.Draw(IScreenObject host, TimeSpan delta) { }
+        void Components.IComponent.Render(IScreenObject host, TimeSpan delta) { }
 
         /// <summary>
         /// Adds an existing control to this console.

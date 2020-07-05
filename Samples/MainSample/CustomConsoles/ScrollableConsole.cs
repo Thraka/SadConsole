@@ -60,11 +60,11 @@ namespace FeatureDemo.CustomConsoles
         }
 
         /// <inheritdoc />
-        public override void Draw(TimeSpan delta)
+        public override void Render(TimeSpan delta)
         {
             // Draw our console and then draw the scroll bar.
-            base.Draw(delta);
-            _controlsContainer.Draw(delta);
+            base.Render(delta);
+            _controlsContainer.Render(delta);
         }
 
         public override void Update(TimeSpan delta)

@@ -215,7 +215,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="delta">The time that has elapsed since the last call.</param>
         /// <remarks>Only processes if <see cref="ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
-        public override void Draw(TimeSpan delta)
+        public override void Render(TimeSpan delta)
         {
             if (!IsVisible) return;
 
@@ -226,11 +226,11 @@ namespace SadConsole
                 ForceRendererRefresh = false;
             }
 
-            foreach (IComponent component in ComponentsDraw.ToArray())
-                component.Draw(this, delta);
+            foreach (IComponent component in ComponentsRender.ToArray())
+                component.Render(this, delta);
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Draw(delta);
+                child.Render(delta);
         }
 
         /// <summary>

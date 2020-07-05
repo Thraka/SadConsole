@@ -49,7 +49,7 @@ namespace SadConsole
         public static bool UnlimitedFPS = false;
 
         /// <summary>
-        /// When true, indicates that the game loop should call <see cref="IScreenObject.Draw"/> on each object in <see cref="GameHost.Screen"/>.
+        /// When true, indicates that the game loop should call <see cref="IScreenObject.Render"/> on each object in <see cref="GameHost.Screen"/>.
         /// </summary>
         public static bool DoDraw = true;
 

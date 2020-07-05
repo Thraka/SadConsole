@@ -48,7 +48,7 @@ namespace SadConsole.MonoGame
                 frameCounter++;
                 surface.Clear();
                 surface.Print(0, 0, $"fps: {frameRate}", Color.White, Color.Black);
-                surface.Draw(gameTime.ElapsedGameTime);
+                surface.Render(gameTime.ElapsedGameTime);
                 
                 Game.GraphicsDevice.SetRenderTarget(null);
                 Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);

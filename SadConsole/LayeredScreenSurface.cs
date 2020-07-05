@@ -117,12 +117,12 @@ namespace SadConsole
         /// Draws the <see cref="Layers"/>.
         /// </summary>
         /// <param name="delta"></param>
-        public override void Draw(TimeSpan delta)
+        public override void Render(TimeSpan delta)
         {
             if (!IsVisible) return;
 
             foreach (var item in Layers)
-                item.Draw(delta);
+                item.Render(delta);
 
             if (Renderer != null)
             {
@@ -131,11 +131,11 @@ namespace SadConsole
                 ForceRendererRefresh = false;
             }
 
-            foreach (Components.IComponent component in ComponentsDraw.ToArray())
-                component.Draw(this, delta);
+            foreach (Components.IComponent component in ComponentsRender.ToArray())
+                component.Render(this, delta);
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Draw(delta);
+                child.Render(delta);
         }
     }
 }
