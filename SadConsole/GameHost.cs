@@ -13,6 +13,11 @@ namespace SadConsole
     /// </summary>
     public abstract partial class GameHost : IDisposable
     {
+        /// <summary>
+        /// Holds all of the renderer types.
+        /// </summary>
+        protected Dictionary<string, System.Type> _renderers = new Dictionary<string, Type>(5);
+
         private DateTime _gameStartedAt = DateTime.Now;
 
         /// <summary>
@@ -105,26 +110,25 @@ namespace SadConsole
         public abstract ITexture GetTexture(Stream textureStream);
 
         /// <summary>
-        /// Gets the default <see cref="IRenderer"/> implemented by the host.
-        /// </summary>
-        /// <param name="screenObject">The object to get a renderer for.</param>
-        /// <returns>A renderer.</returns>
-        public abstract IRenderer GetDefaultRenderer(IScreenSurface screenObject);
-
-        /// <summary>
         /// Creates and returns a renderer by name.
         /// </summary>
         /// <param name="name">The name of the renderer.</param>
         /// <returns>A new renderer.</returns>
-        public abstract IRenderer GetRenderer(string name);
+        public virtual IRenderer GetRenderer(string name)
+        {
+            if (_renderers.TryGetValue(name, out Type objType))
+                return (IRenderer)Activator.CreateInstance(objType);
 
-        ///// <summary>
-        ///// Sets the default <see cref="IRenderer"/> for a type.
-        ///// </summary>
-        ///// <param name="surfaceType">The type of <see cref="IScreenSurface"/> to add a renderer for.</param>
-        ///// <param name="rendererType">The renderer to use.</param>
-        ///// <returns>A renderer.</returns>
-        //public abstract IRenderer SetDefaultRenderer(System.Type surfaceType, System.Type rendererType);
+            return (IRenderer)Activator.CreateInstance(_renderers["default"]);
+        }
+
+        /// <summary>
+        /// Sets the default <see cref="IRenderer"/> for a type.
+        /// </summary>
+        /// <param name="name">The name to register the renderer as.</param>
+        /// <param name="rendererType">The renderer type.</param>
+        public void SetRenderer(string name, System.Type rendererType) =>
+            _renderers[name] = rendererType;
 
         /// <summary>
         /// Gets the state of the keyboard from the implemented host.
@@ -139,7 +143,7 @@ namespace SadConsole
         public abstract IMouseState GetMouseState();
 
         /// <summary>
-        /// Loads a font from a file and adds it to the <see cref="GameHost.Instance.Fonts"/> collection.
+        /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.
         /// </summary>
         /// <param name="font">The font file to load.</param>
         /// <returns>A master font that you can generate a usable font from.</returns>

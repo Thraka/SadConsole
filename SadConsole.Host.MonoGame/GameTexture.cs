@@ -31,15 +31,23 @@ namespace SadConsole.Host
         /// <inheritdoc />
         public int Width => _texture.Width;
 
-        internal GameTexture(string path)
+        /// <summary>
+        /// Loads a <see cref="Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file path.
+        /// </summary>
+        /// <param name="path"></param>
+        public GameTexture(string path)
         {
-            using (Stream fontStream = Microsoft.Xna.Framework.TitleContainer.OpenStream(path))
-                _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.MonoGame.Global.GraphicsDevice, fontStream);
+            using Stream fontStream = Game.Instance.OpenStream(path);
+            _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.MonoGame.Global.GraphicsDevice, fontStream);
 
             _resourcePath = path;
         }
 
-        internal GameTexture(Stream stream) =>
+        /// <summary>
+        /// Loads a <see cref="Microsoft.Xna.Framework.Graphics.Texture2D"/> from a stream.
+        /// </summary>
+        /// <param name="stream">The stream containing the texture data.</param>
+        public GameTexture(Stream stream) =>
             _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.MonoGame.Global.GraphicsDevice, stream);
 
         /// <summary>

@@ -200,7 +200,7 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             ControlHostComponent = new ControlHost();
             SadComponents.Add(ControlHostComponent);
-            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+            Renderer = GameHost.Instance.GetRenderer("window");
 
 
             // todo: Perhaps a new design with windows.

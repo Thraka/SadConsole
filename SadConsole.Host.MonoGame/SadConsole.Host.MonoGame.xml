@@ -83,6 +83,18 @@
         <member name="P:SadConsole.Host.GameTexture.Width">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.String)">
+            <summary>
+            Loads a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file path.
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.IO.Stream)">
+            <summary>
+            Loads a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a stream.
+            </summary>
+            <param name="stream">The stream containing the texture data.</param>
+        </member>
         <member name="M:SadConsole.Host.GameTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>
             Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
@@ -111,6 +123,11 @@
         </member>
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Game.UseTitleContainer">
+            <summary>
+            When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
+            </summary>
         </member>
         <member name="P:SadConsole.Game.MonoGameInstance">
             <summary>
@@ -144,12 +161,6 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Game.GetRenderer(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Game.GetDefaultRenderer(SadConsole.IScreenSurface)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetKeyboardState">
@@ -259,8 +270,13 @@
              <remarks>
              This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
             
-             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
+             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenSurfaceRenderer"/>.
              </remarks>
+        </member>
+        <member name="F:SadConsole.Renderers.ControlsConsole.BackingTextureControls">
+            <summary>
+            The cached texture of the drawn controls layer.
+            </summary>
         </member>
         <member name="P:SadConsole.Renderers.ControlsConsole.Name">
             <summary>
@@ -279,7 +295,7 @@
         <member name="M:SadConsole.Renderers.ControlsConsole.Refresh(SadConsole.IScreenSurface,System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.LayeredScreenObject">
+        <member name="T:SadConsole.Renderers.LayeredScreenSurface">
             <summary>
             Draws a <see cref="T:SadConsole.LayeredScreenSurface"/>.
             </summary>
@@ -287,18 +303,21 @@
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
         </member>
-        <member name="P:SadConsole.Renderers.LayeredScreenObject.Name">
+        <member name="P:SadConsole.Renderers.LayeredScreenSurface.Name">
             <summary>
             Name of this renderer type.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.LayeredScreenObject.Attach(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.LayeredScreenSurface.Attach(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.LayeredScreenObject.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.LayeredScreenSurface.Render(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.ScreenObjectRenderer">
+        <member name="M:SadConsole.Renderers.LayeredScreenSurface.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/>.
             </summary>
@@ -306,21 +325,21 @@
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
         </member>
-        <member name="P:SadConsole.Renderers.ScreenObjectRenderer.Name">
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
             <summary>
             Name of this renderer type.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenObjectRenderer.Attach(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Attach(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenObjectRenderer.Detatch(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Detatch(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenObjectRenderer.Render(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenObjectRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
              <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.Window">
@@ -330,7 +349,7 @@
              <remarks>
              This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.Window.Render(SadConsole.IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
             
-             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenObjectRenderer"/>.
+             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenSurfaceRenderer"/>.
              </remarks>
         </member>
         <member name="P:SadConsole.Renderers.Window.Name">

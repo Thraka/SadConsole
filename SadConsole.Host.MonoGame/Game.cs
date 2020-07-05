@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 
 namespace SadConsole
@@ -12,6 +9,11 @@ namespace SadConsole
         protected int _preFullScreenWidth;
         protected int _preFullScreenHeight;
         protected bool _handleResizeNone;
+
+        /// <summary>
+        /// When <see langword="true"/>, forces the <see cref="OpenStream"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
+        /// </summary>
+        public bool UseTitleContainer { get; set; } = true;
 
         /// <summary>
         /// The <see cref="Microsoft.Xna.Framework.Game"/> instance.
@@ -67,6 +69,11 @@ namespace SadConsole
 
             MonoGameInstance.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
 
+            SetRenderer("window", typeof(Renderers.Window));
+            SetRenderer("controls", typeof(Renderers.ControlsConsole));
+            SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
+            SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
+
             SadConsole.GameHost.Instance.Screen = new Console(ScreenCellsX, ScreenCellsY);
 
             OnStart?.Invoke();
@@ -89,26 +96,6 @@ namespace SadConsole
             new Host.GameTexture(textureStream);
 
         /// <inheritdoc/>
-        public override Renderers.IRenderer GetRenderer(string name) =>
-            name switch
-            {
-                "window" => new Renderers.Window(),
-                "controls" => new Renderers.ControlsConsole(),
-                "layered" => new Renderers.LayeredScreenObject(),
-                _ => new Renderers.ScreenObjectRenderer(),
-            };
-
-
-        /// <inheritdoc/>
-        public override Renderers.IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
-            screenObject switch
-            {
-                UI.Window _ => new Renderers.Window(),
-                LayeredScreenSurface _ => new Renderers.LayeredScreenObject(),
-                _ => new Renderers.ScreenObjectRenderer(),
-            };
-
-        /// <inheritdoc/>
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
             new Host.Keyboard();
 
@@ -128,8 +115,8 @@ namespace SadConsole
         {
             if (mode == FileMode.Create || mode == FileMode.CreateNew || mode == FileMode.OpenOrCreate)
                 return System.IO.File.OpenWrite(file);
-            
-            return Microsoft.Xna.Framework.TitleContainer.OpenStream(file);
+
+            return UseTitleContainer ? Microsoft.Xna.Framework.TitleContainer.OpenStream(file) : File.OpenRead(file);
         }
 
         /// <summary>

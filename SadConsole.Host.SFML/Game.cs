@@ -18,8 +18,8 @@ namespace SadConsole
         protected bool _handleResizeNone;
         protected bool _isResizing;
 
-        protected Keyboard _keyboard;
-        protected Mouse _mouse;
+        Keyboard _keyboard;
+        Mouse _mouse;
 
         /// <summary>
         /// Static instance to the game after the <see cref="Create(int, int, string, RenderWindow)"/> method has been called.
@@ -97,8 +97,14 @@ namespace SadConsole
 
             _keyboard = new Keyboard(window);
             _mouse = new Mouse(window);
+
             Host.Global.UpdateTimer = new SFML.System.Clock();
             Host.Global.DrawTimer = new SFML.System.Clock();
+
+            SetRenderer("window", typeof(Renderers.Window));
+            SetRenderer("controls", typeof(Renderers.ControlsConsole));
+            SetRenderer("layered", typeof(Renderers.LayeredScreenObject));
+            SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
 
             // Create the default console.
             SadConsole.GameHost.Instance.Screen = new Console(ScreenCellsX, ScreenCellsY);
@@ -199,26 +205,6 @@ namespace SadConsole
         /// <inheritdoc/> 
         public override ITexture GetTexture(Stream textureStream) =>
             new SadConsole.Host.GameTexture(textureStream);
-
-        /// <inheritdoc/>
-        public override Renderers.IRenderer GetRenderer(string name) =>
-            name switch
-            {
-                "window" => new Renderers.Window(),
-                "controls" => new Renderers.ControlsConsole(),
-                "layered" => new Renderers.LayeredScreenObject(),
-                _ => new Renderers.ScreenObjectRenderer(),
-            };
-
-        /// <inheritdoc/> 
-        public override Renderers.IRenderer GetDefaultRenderer(IScreenSurface screenObject) =>
-            screenObject switch
-            {
-                UI.Window _ => new Renderers.Window(),
-                LayeredScreenSurface _ => new Renderers.LayeredScreenObject(),
-                _ => new Renderers.ScreenObjectRenderer(),
-            };
-
 
         /// <inheritdoc/> 
         public override SadConsole.Input.IKeyboardState GetKeyboardState() =>

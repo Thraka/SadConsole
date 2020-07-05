@@ -1,8 +1,13 @@
 ﻿using System;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
-using SadConsole.Host;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
+using Color = Microsoft.Xna.Framework.Color;
+using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
+using SadRectangle = SadRogue.Primitives.Rectangle;
+using SadConsole.Host.MonoGame;
 
 namespace SadConsole.Renderers
 {
@@ -12,7 +17,7 @@ namespace SadConsole.Renderers
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
     /// </remarks>
-    public class LayeredScreenObject : ScreenSurfaceRenderer
+    public class LayeredScreenSurface : ScreenSurfaceRenderer
     {
         /// <summary>
         /// Name of this renderer type.
@@ -27,7 +32,7 @@ namespace SadConsole.Renderers
 
             // Create backing texture.
             if (layeredObject.RenderClipped)
-                BackingTexture = new RenderTexture((uint)layeredObject.RenderClippedWidth, (uint)layeredObject.RenderClippedHeight);
+                BackingTexture = new RenderTarget2D(MonoGame.Global.GraphicsDevice, layeredObject.RenderClippedWidth, layeredObject.RenderClippedHeight, false, MonoGame.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
         }
 
         ///  <inheritdoc/>
@@ -36,7 +41,7 @@ namespace SadConsole.Renderers
             var layeredObject = (SadConsole.LayeredScreenSurface)screen;
 
             if (layeredObject.RenderClipped)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsolutePosition.X, screen.AbsolutePosition.Y)));
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(screen.AbsolutePosition.X, screen.AbsolutePosition.Y)));
 
             else
                 foreach (SadConsole.LayeredScreenSurface.Layer item in layeredObject.Layers)
@@ -55,23 +60,13 @@ namespace SadConsole.Renderers
 
                 foreach (SadConsole.LayeredScreenSurface.Layer item in layeredObject.Layers)
                 {
-                    RenderTexture layerTexture;
-
                     if (item.Renderer != null)
                     {
                         // Layers are parented, when rendering clipped, we need an relative position in pixels.
                         SadRogue.Primitives.Point transformedPosition = item.AbsolutePosition - screen.AbsolutePosition;
-
-                        layerTexture = ((ScreenSurfaceRenderer)item.Renderer).BackingTexture;
-
-                        Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(transformedPosition.X, transformedPosition.Y,
-                                                                           transformedPosition.X + (int)layerTexture.Size.X,
-                                                                           transformedPosition.Y + (int)layerTexture.Size.Y),
-                                                               new IntRect(0, 0, (int)layerTexture.Size.X, (int)layerTexture.Size.Y),
-                                                               Color.White,
-                                                               layerTexture.Texture);
+                        MonoGame.Global.SharedSpriteBatch.Draw(((ScreenSurfaceRenderer)item.Renderer).BackingTexture, new Vector2(transformedPosition.X, transformedPosition.Y), Color.White);
                     }
-                }
+                } 
 
                 RefreshEnd(screen);
             }

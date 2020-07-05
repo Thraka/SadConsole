@@ -17,7 +17,7 @@ namespace SadConsole.Renderers
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
     /// </remarks>
-    public class ScreenObjectRenderer : IRenderer
+    public class ScreenSurfaceRenderer : IRenderer
     {
         /// <summary>
         /// Name of this renderer type.
@@ -174,7 +174,7 @@ namespace SadConsole.Renderers
             }
         }
 
-        ~ScreenObjectRenderer()
+        ~ScreenSurfaceRenderer()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(false);

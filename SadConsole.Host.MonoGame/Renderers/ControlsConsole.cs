@@ -17,9 +17,9 @@ namespace SadConsole.Renderers
     /// <remarks>
     /// This renderer only caches drawing of the surface's cells. When the <see cref="Render(IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
     ///
-    /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenObjectRenderer"/>.
+    /// If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="ScreenSurfaceRenderer"/>.
     /// </remarks>
-    public class ControlsConsole : ScreenObjectRenderer
+    public class ControlsConsole : ScreenSurfaceRenderer
     {
         /// <summary>
         /// The cached texture of the drawn controls layer.

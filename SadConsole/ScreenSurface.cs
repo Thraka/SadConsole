@@ -179,7 +179,7 @@ namespace SadConsole
             Surface = surface;
             Font = font ?? GameHost.Instance.DefaultFont;
             FontSize = fontSize ?? Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
-            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+            Renderer = GameHost.Instance.GetRenderer("default");
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace SadConsole
             Surface = new CellSurface(width, height, bufferWidth, bufferHeight, initialCells);
             Font = GameHost.Instance.DefaultFont;
             FontSize = Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
-            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+            Renderer = GameHost.Instance.GetRenderer("default");
         }
 
         /// <inheritdoc />
@@ -277,7 +277,7 @@ namespace SadConsole
         [OnDeserialized]
         protected new void OnDeserializedMethod(StreamingContext context)
         {
-            Renderer = GameHost.Instance.GetDefaultRenderer(this);
+            Renderer = GameHost.Instance.GetRenderer("default");
             UpdateAbsolutePosition();
         }
 

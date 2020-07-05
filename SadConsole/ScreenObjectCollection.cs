@@ -6,12 +6,31 @@ namespace SadConsole
     /// <summary>
     /// Manages the parent and children relationship for <see cref="IScreenObject"/>.
     /// </summary>
-    public class ScreenObjectCollection : IEnumerable<IScreenObject>, System.Collections.IEnumerable
+    public class ScreenObjectCollection: ScreenObjectCollection<IScreenObject>
     {
+
+        /// <summary>
+        /// Creates a new object collection and parents it to the <paramref name="owner"/> object.
+        /// </summary>
+        /// <param name="owner">The owning object of this collection.</param>
+        public ScreenObjectCollection(IScreenObject owner): base(owner) { }
+    } 
+
+    /// <summary>
+    /// Manages the parent and children relationship for <see cref="IScreenObject"/>.
+    /// </summary>
+    public class ScreenObjectCollection<TScreenObject> : IEnumerable<TScreenObject>, System.Collections.IEnumerable
+        where TScreenObject : class, IScreenObject
+    {
+        /// <summary>
+        /// Raised when the itmes in this collection are added, removed, or repositioned.
+        /// </summary>
+        public event EventHandler CollectionChanged;
+
         /// <summary>
         /// Internal list of objects.
         /// </summary>
-        protected List<IScreenObject> objects;
+        protected List<TScreenObject> objects;
 
         /// <summary>
         /// The parent object.
@@ -33,7 +52,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="index">The index of the child object.</param>
         /// <returns>The wanted object.</returns>
-        public IScreenObject this[int index]
+        public TScreenObject this[int index]
         {
             get => objects[index];
             set
@@ -48,10 +67,11 @@ namespace SadConsole
                     return;
                 }
 
-                IScreenObject oldObject = objects[index];
+                TScreenObject oldObject = objects[index];
                 objects[index] = value;
                 RemoveObjParent(oldObject);
                 SetObjParent(value);
+                CollectionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -61,7 +81,7 @@ namespace SadConsole
         /// <param name="owner">The owning object of this collection.</param>
         public ScreenObjectCollection(IScreenObject owner)
         {
-            objects = new List<IScreenObject>();
+            objects = new List<TScreenObject>();
             owningObject = owner;
         }
 
@@ -76,6 +96,7 @@ namespace SadConsole
             }
 
             objects.Clear();
+            CollectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -83,7 +104,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="obj">The console to search for.</param>
         /// <returns></returns>
-        public bool Contains(IScreenObject obj) =>
+        public bool Contains(TScreenObject obj) =>
             objects.Contains(obj);
 
         /// <summary>
@@ -91,7 +112,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="obj">The obj object to check.</param>
         /// <returns>True when the object is on top.</returns>
-        public bool IsTop(IScreenObject obj)
+        public bool IsTop(TScreenObject obj)
         {
             if (objects.Contains(obj))
             {
@@ -106,7 +127,7 @@ namespace SadConsole
         /// </summary>
         /// <exception cref="Exception">Thrown when the <see cref="IsLocked"/> property is set to true.</exception>
         /// <param name="obj">The child object.</param>
-        public void Add(IScreenObject obj)
+        public void Add(TScreenObject obj)
         {
             if (IsLocked)
             {
@@ -119,6 +140,7 @@ namespace SadConsole
             }
 
             SetObjParent(obj);
+            CollectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -127,7 +149,7 @@ namespace SadConsole
         /// <exception cref="Exception">Thrown when the <see cref="IsLocked"/> property is set to true.</exception>
         /// <param name="index">The 0-based index to insert the object at.</param>
         /// <param name="obj">The child object.</param>
-        public void Insert(int index, IScreenObject obj)
+        public void Insert(int index, TScreenObject obj)
         {
             if (IsLocked)
             {
@@ -140,6 +162,7 @@ namespace SadConsole
             }
 
             SetObjParent(obj);
+            CollectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -147,7 +170,7 @@ namespace SadConsole
         /// </summary>
         /// <exception cref="Exception">Thrown when the <see cref="IsLocked"/> property is set to true.</exception>
         /// <param name="obj">The child object.</param>
-        public void Remove(IScreenObject obj)
+        public void Remove(TScreenObject obj)
         {
             if (IsLocked)
             {
@@ -160,18 +183,20 @@ namespace SadConsole
             }
 
             RemoveObjParent(obj);
+            CollectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// Moves the specified <paramref name="obj"/>  to the top of the collection.
         /// </summary>
         /// <param name="obj">The child object.</param>
-        public void MoveToTop(IScreenObject obj)
+        public void MoveToTop(TScreenObject obj)
         {
             if (objects.Contains(obj))
             {
                 objects.Remove(obj);
                 objects.Add(obj);
+                CollectionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -179,12 +204,13 @@ namespace SadConsole
         /// Moves the specified <paramref name="obj"/>  to the bottom of the collection.
         /// </summary>
         /// <param name="obj">The child object.</param>
-        public void MoveToBottom(IScreenObject obj)
+        public void MoveToBottom(TScreenObject obj)
         {
             if (objects.Contains(obj))
             {
                 objects.Remove(obj);
                 objects.Insert(0, obj);
+                CollectionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -192,20 +218,20 @@ namespace SadConsole
         /// Gets the 0-based index of the <paramref name="obj"/>.
         /// </summary>
         /// <param name="obj">The child object.</param>
-        public int IndexOf(IScreenObject obj) =>
+        public int IndexOf(TScreenObject obj) =>
             objects.IndexOf(obj);
 
-        private void SetObjParent(IScreenObject obj) =>
+        private void SetObjParent(TScreenObject obj) =>
             obj.Parent = owningObject;
 
-        private void RemoveObjParent(IScreenObject obj) =>
+        private void RemoveObjParent(TScreenObject obj) =>
             obj.Parent = null;
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
             objects.GetEnumerator();
 
         /// <inheritdoc />
-        public IEnumerator<IScreenObject> GetEnumerator() =>
+        public IEnumerator<TScreenObject> GetEnumerator() =>
             objects.GetEnumerator();
     }
 }

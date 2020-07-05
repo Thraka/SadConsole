@@ -1551,6 +1551,14 @@
             </summary>
             <returns>A copy of this <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/>.</returns>
         </member>
+        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.FromColoredGlyph(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> from a <see cref="T:SadConsole.ColoredGlyph"/> with the specified effect.
+            </summary>
+            <param name="glyph">The glyph.</param>
+            <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredString.ColoredGlyphEffect.Effect"/>.</param>
+            <returns></returns>
+        </member>
         <member name="F:SadConsole.ColoredString.CustomProcessor">
             <summary>
             Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
@@ -1644,6 +1652,12 @@
         <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredString.ColoredGlyphEffect[])">
             <summary>
             Combines a <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> array into a <see cref="T:SadConsole.ColoredString"/>.
+            </summary>
+            <param name="glyphs">The glyphs to combine.</param>
+        </member>
+        <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredGlyph[])">
+            <summary>
+            Combines a <see cref="T:SadConsole.ColoredGlyph"/> array into a <see cref="T:SadConsole.ColoredString"/>.
             </summary>
             <param name="glyphs">The glyphs to combine.</param>
         </member>
@@ -2441,6 +2455,18 @@
         </member>
         <member name="M:SadConsole.Console.GetEnumerator">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.Font,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
         </member>
         <member name="P:SadConsole.DoubleAnimation.EasingFunction">
             <summary>
@@ -3312,7 +3338,7 @@
         </member>
         <member name="P:SadConsole.Font.Name">
             <summary>
-            The name of the font used when it is registered with the <see cref="!:GameHost.Instance.Fonts"/> collection.
+            The name of the font used when it is registered with the <see cref="P:SadConsole.GameHost.Fonts"/> collection.
             </summary>
         </member>
         <member name="P:SadConsole.Font.FilePath">
@@ -3377,6 +3403,7 @@
             <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
             <param name="image">The texture for of the font.</param>
             <param name="name">A font identifier used for serialization of resources using this font.</param>
+            <param name="glyphRectangles">Glyph mapping dictionary.</param>
         </member>
         <member name="M:SadConsole.Font.GetGlyphSourceRectangle(System.Int32)">
             <summary>
@@ -3423,7 +3450,7 @@
         </member>
         <member name="M:SadConsole.Font.ConfigureRects">
             <summary>
-            Builds the <see cref="!:GlyphRects"/> array based on the current font settings.
+            Builds the <see cref="P:SadConsole.Font.GlyphRectangles"/> array based on the current font settings.
             </summary>
         </member>
         <member name="M:SadConsole.Font.GetRenderRect(System.Int32,System.Int32,SadRogue.Primitives.Point)">
@@ -3449,6 +3476,11 @@
             </summary>
             <summary>
             Represents the SadConsole game engine.
+            </summary>
+        </member>
+        <member name="F:SadConsole.GameHost._renderers">
+            <summary>
+            Holds all of the renderer types.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.Instance">
@@ -3535,19 +3567,19 @@
             <param name="textureStream">A stream containing the texture.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.GameHost.GetDefaultRenderer(SadConsole.IScreenSurface)">
-            <summary>
-            Gets the default <see cref="T:SadConsole.Renderers.IRenderer"/> implemented by the host.
-            </summary>
-            <param name="screenObject">The object to get a renderer for.</param>
-            <returns>A renderer.</returns>
-        </member>
         <member name="M:SadConsole.GameHost.GetRenderer(System.String)">
             <summary>
             Creates and returns a renderer by name.
             </summary>
             <param name="name">The name of the renderer.</param>
             <returns>A new renderer.</returns>
+        </member>
+        <member name="M:SadConsole.GameHost.SetRenderer(System.String,System.Type)">
+            <summary>
+            Sets the default <see cref="T:SadConsole.Renderers.IRenderer"/> for a type.
+            </summary>
+            <param name="name">The name to register the renderer as.</param>
+            <param name="rendererType">The renderer type.</param>
         </member>
         <member name="M:SadConsole.GameHost.GetKeyboardState">
             <summary>
@@ -3563,7 +3595,7 @@
         </member>
         <member name="M:SadConsole.GameHost.LoadFont(System.String)">
             <summary>
-            Loads a font from a file and adds it to the <see cref="!:GameHost.Instance.Fonts"/> collection.
+            Loads a font from a file and adds it to the <see cref="P:SadConsole.GameHost.Fonts"/> collection.
             </summary>
             <param name="font">The font file to load.</param>
             <returns>A master font that you can generate a usable font from.</returns>
@@ -5879,57 +5911,84 @@
         </member>
         <member name="T:SadConsole.LayeredScreenSurface">
             <summary>
-            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
-            </summary>
-            <summary>
-            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            Represents a layered surface.
             </summary>
         </member>
-        <member name="P:SadConsole.LayeredScreenSurface.LayerCount">
+        <member name="P:SadConsole.LayeredScreenSurface.RenderClippedWidth">
             <summary>
-            Gets the number of layers.
+            When <see cref="P:SadConsole.LayeredScreenSurface.RenderClipped"/> is <see langword="true"/>, the renderer will create a texture of this width to draw all layers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LayeredScreenSurface.RenderClippedHeight">
+            <summary>
+            When <see cref="P:SadConsole.LayeredScreenSurface.RenderClipped"/> is <see langword="true"/>, the renderer will create a texture of this height to draw all layers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LayeredScreenSurface.RenderClipped">
+            <summary>
+            When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.
             </summary>
         </member>
         <member name="P:SadConsole.LayeredScreenSurface.Layers">
             <summary>
-            A read-only collection of layers.
+            The layers of this surface.
             </summary>
         </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(SadConsole.LayeredScreenSurface.Layer,System.Boolean)">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new layered screen surface with an initial layer.
             </summary>
-            <param name="width">The width of the surface in cells.</param>
-            <param name="height">The height of the surface in cells.</param>
-            <param name="layers">The number of layers to add to this surface.</param>
+            <param name="layer">The initial layer.</param>
+            <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Collections.Generic.IEnumerable{SadConsole.LayeredScreenSurface.Layer},System.Boolean)">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new layered screen surface with the specified layers.
             </summary>
-            <param name="width">The visible width of the surface in cells.</param>
-            <param name="height">The visible height of the surface in cells.</param>
-            <param name="bufferWidth">The total width of the surface in cells.</param>
-            <param name="bufferHeight">The total height of the surface in cells.</param>
-            <param name="layers">The number of layers to add to this surface.</param>
+            <param name="layers">A collection of layers.</param>
+            <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+        <member name="M:SadConsole.LayeredScreenSurface.SetActiveLayer(System.Int32)">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Sets a layer as the <see cref="P:SadConsole.ScreenSurface.Surface"/> used by this object.
             </summary>
-            <param name="width">The width of the surface in cells.</param>
-            <param name="height">The height of the surface in cells.</param>
-            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+            <param name="index">The index of the layer in the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/> collection.</param>
+            <remarks>This object always points to a specific layer through the <see cref="P:SadConsole.ScreenSurface.Surface"/> property. This object doesn't have it's own surface.</remarks>
         </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[][])">
+        <member name="M:SadConsole.LayeredScreenSurface.SetActiveLayer(SadConsole.LayeredScreenSurface.Layer)">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Sets a layer as the <see cref="P:SadConsole.ScreenSurface.Surface"/> used by this object.
             </summary>
-            <param name="width">The width of the surface in cells.</param>
-            <param name="height">The height of the surface in cells.</param>
-            <param name="bufferWidth">The total width of the surface in cells.</param>
-            <param name="bufferHeight">The total height of the surface in cells.</param>
-            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+            <param name="layer">The layer in the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/> collection.</param>
+            <remarks>This object always points to a specific layer through the <see cref="P:SadConsole.ScreenSurface.Surface"/> property. This object doesn't have it's own surface.</remarks>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.Draw(System.TimeSpan)">
+            <summary>
+            Draws the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/>.
+            </summary>
+            <param name="delta"></param>
+        </member>
+        <member name="T:SadConsole.LayeredScreenSurface.Layer">
+            <summary>
+            Represents a <see cref="T:SadConsole.ICellSurface"/> with position, visibility, and a friendly-name.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LayeredScreenSurface.Layer.Name">
+            <summary>
+            A friendly-name for the layer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LayeredScreenSurface.Layer.HasPositionChanged">
+            <summary>
+            Internal use only. A flag used by renderers.
+            </summary>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.Layer.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.NewOldValueEventArgs`1">
             <summary>
@@ -6081,7 +6140,7 @@
             </summary>
             <param name="layer">The layer.</param>
         </member>
-        <member name="M:SadConsole.Readers.REXPaintImage.ToLayeredCellSurface">
+        <member name="M:SadConsole.Readers.REXPaintImage.ToLayersComponent">
             <summary>
             Converts this REXPaint image to a <see cref="T:SadConsole.LayeredScreenSurface"/>.
             </summary>
@@ -6322,99 +6381,115 @@
             Manages the parent and children relationship for <see cref="T:SadConsole.IScreenObject"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectCollection.objects">
-            <summary>
-            Internal list of objects.
-            </summary>
-        </member>
-        <member name="F:SadConsole.ScreenObjectCollection.owningObject">
-            <summary>
-            The parent object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectCollection.Count">
-            <summary>
-            Returns the total number of objects in this collection.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectCollection.IsLocked">
-            <summary>
-            When true, the collection cannot be modified.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ScreenObjectCollection.Item(System.Int32)">
-            <summary>
-            Gets or sets a child object for this collection.
-            </summary>
-            <param name="index">The index of the child object.</param>
-            <returns>The wanted object.</returns>
-        </member>
         <member name="M:SadConsole.ScreenObjectCollection.#ctor(SadConsole.IScreenObject)">
             <summary>
             Creates a new object collection and parents it to the <paramref name="owner"/> object.
             </summary>
             <param name="owner">The owning object of this collection.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Clear">
+        <member name="T:SadConsole.ScreenObjectCollection`1">
+            <summary>
+            Manages the parent and children relationship for <see cref="T:SadConsole.IScreenObject"/>.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ScreenObjectCollection`1.CollectionChanged">
+            <summary>
+            Raised when the itmes in this collection are added, removed, or repositioned.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectCollection`1.objects">
+            <summary>
+            Internal list of objects.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ScreenObjectCollection`1.owningObject">
+            <summary>
+            The parent object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectCollection`1.Count">
+            <summary>
+            Returns the total number of objects in this collection.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectCollection`1.IsLocked">
+            <summary>
+            When true, the collection cannot be modified.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectCollection`1.Item(System.Int32)">
+            <summary>
+            Gets or sets a child object for this collection.
+            </summary>
+            <param name="index">The index of the child object.</param>
+            <returns>The wanted object.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection`1.#ctor(SadConsole.IScreenObject)">
+            <summary>
+            Creates a new object collection and parents it to the <paramref name="owner"/> object.
+            </summary>
+            <param name="owner">The owning object of this collection.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection`1.Clear">
             <summary>
             Removes all consoles.
             </summary>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Contains(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.Contains(`0)">
             <summary>
             Returns true if this console list contains the specified <paramref name="obj"/>.
             </summary>
             <param name="obj">The console to search for.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.IsTop(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.IsTop(`0)">
             <summary>
             When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
             </summary>
             <param name="obj">The obj object to check.</param>
             <returns>True when the object is on top.</returns>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Add(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.Add(`0)">
             <summary>
             Adds a new child object to this collection.
             </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection`1.IsLocked"/> property is set to true.</exception>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Insert(System.Int32,SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.Insert(System.Int32,`0)">
             <summary>
             Inserts a child object at the specified <paramref name="index"/>.
             </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection`1.IsLocked"/> property is set to true.</exception>
             <param name="index">The 0-based index to insert the object at.</param>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.Remove(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.Remove(`0)">
             <summary>
             Removes a new child object from this collection.
             </summary>
-            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection.IsLocked"/> property is set to true.</exception>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection`1.IsLocked"/> property is set to true.</exception>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.MoveToTop(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.MoveToTop(`0)">
             <summary>
             Moves the specified <paramref name="obj"/>  to the top of the collection.
             </summary>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.MoveToBottom(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.MoveToBottom(`0)">
             <summary>
             Moves the specified <paramref name="obj"/>  to the bottom of the collection.
             </summary>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.IndexOf(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.ScreenObjectCollection`1.IndexOf(`0)">
             <summary>
             Gets the 0-based index of the <paramref name="obj"/>.
             </summary>
             <param name="obj">The child object.</param>
         </member>
-        <member name="M:SadConsole.ScreenObjectCollection.GetEnumerator">
+        <member name="M:SadConsole.ScreenObjectCollection`1.GetEnumerator">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.ScreenSurface">

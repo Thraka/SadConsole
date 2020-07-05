@@ -79,7 +79,9 @@ namespace SadConsole.UI.Themes
         /// </summary>
         public Library()
         {
-            Colors = new Colors() { IsLibrary = true };
+            Colors = Themes.Colors.CreateAnsi();
+            Colors.IsLibrary = true;
+
             _controlThemes = new Dictionary<Type, ThemeBase>(15);
         }
 
