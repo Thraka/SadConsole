@@ -7,7 +7,7 @@ using SadConsole;
 
 namespace FeatureDemo.HostSpecific.MonoGame
 {
-    class HexSurfaceRenderer: SadConsole.Renderers.ScreenObjectRenderer
+    class HexSurfaceRenderer: SadConsole.Renderers.ScreenSurfaceRenderer
     {
         public override void Refresh(IScreenSurface screen, bool force = false)
         {

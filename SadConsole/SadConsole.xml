@@ -3842,17 +3842,17 @@
         </member>
         <member name="P:SadConsole.ICellSurface.Buffer">
             <summary>
-            Returns a rectangle that represents the size of the buffer.
+            Returns a rectangle that represents the maximum size of the surface.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.BufferHeight">
             <summary>
-            Height of the surface buffer.
+            Maximum height of the surface buffer.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.BufferWidth">
             <summary>
-            Width of the surface buffer.
+            Maximum width of the surface buffer.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.Cells">
@@ -3887,7 +3887,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.View">
             <summary>
-            The view presented by the surface.
+            The visible portion of the surface.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.ViewHeight">
@@ -3897,7 +3897,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.ViewPosition">
             <summary>
-            The position of the buffer.
+            The position of the view within the buffer.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.ViewWidth">
@@ -7085,6 +7085,16 @@
             Gets or sets the control that has keyboard focus.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.ControlHost.ClearOnAdded">
+            <summary>
+            When <see langword="true"/>, the component will clear the console it's attached to with the theme color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.DisableCursorOnAdded">
+            <summary>
+            When <see langword="true"/>, the component will disable the cursor of the console it's attached to.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.ControlHost.CanTabToNextConsole">
             <summary>
             When true, allows the tab command to move to the next console (when there is a parent) instead of cycling back to the first control on this console.
@@ -7102,7 +7112,7 @@
         </member>
         <member name="P:SadConsole.UI.ControlHost.DisableControlFocusing">
             <summary>
-            When set to true, child controls are not alerted to (non-)focused states.
+            When set to true, child controls are not alerted to focused and non-focused states.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlHost.Add(SadConsole.UI.Controls.ControlBase)">
