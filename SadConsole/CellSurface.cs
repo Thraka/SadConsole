@@ -311,7 +311,7 @@ namespace SadConsole
                 throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
             }
 
-            _viewArea = new BoundedRectangle(rect, rect);
+            _viewArea = new BoundedRectangle(new Rectangle(0, 0, rect.Width, rect.Height), new Rectangle(0, 0, rect.Width, rect.Height));
             Cells = new ColoredGlyph[rect.Width * rect.Height];
 
             int index = 0;
