@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using System.Runtime.Serialization;
+using SadRogue.Primitives;
 
 namespace SadConsole
 {
@@ -12,6 +13,7 @@ namespace SadConsole
             /// <summary>
             /// A friendly-name for the layer.
             /// </summary>
+            [DataMember]
             public string Name { get; set; }
 
             /// <summary>
@@ -33,6 +35,8 @@ namespace SadConsole
 
             public Layer(string name, int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells) =>
                 Name = name;
+
+            private Layer() : base(1, 1) { }
 
             /// <inheritdoc/>
             protected override void OnPositionChanged(Point oldPosition, Point newPosition)

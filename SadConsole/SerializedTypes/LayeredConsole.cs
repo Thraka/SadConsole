@@ -2,56 +2,52 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 
 namespace SadConsole.SerializedTypes
 {
-    public class LayeredJsonConverter : JsonConverter<LayeredConsole>
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public class LayeredJsonConverter : JsonConverter<LayeredScreenSurface>
     {
-        public override void WriteJson(JsonWriter writer, LayeredConsole value, JsonSerializer serializer) => serializer.Serialize(writer, (LayeredConsoleSerialized)value);
+        public override void WriteJson(JsonWriter writer, LayeredScreenSurface value, JsonSerializer serializer) => serializer.Serialize(writer, (LayeredScreenSurfaceSerialized)value);
 
-        public override LayeredConsole ReadJson(JsonReader reader, Type objectType, LayeredConsole existingValue, bool hasExistingValue, JsonSerializer serializer) => serializer.Deserialize<LayeredConsoleSerialized>(reader);
+        public override LayeredScreenSurface ReadJson(JsonReader reader, Type objectType, LayeredScreenSurface existingValue, bool hasExistingValue, JsonSerializer serializer) => serializer.Deserialize<LayeredScreenSurfaceSerialized>(reader);
     }
 
     [DataContract]
-    public class LayeredConsoleSerialized : ScrollingConsoleSerialized
+    public class LayeredScreenSurfaceSerialized
     {
-        [DataMember] public CellSurfaceLayerSerialized[] Layers;
+        [DataMember] public int RenderClippedWidth;
+        [DataMember] public int RenderClippedHeight;
+        [DataMember] public bool RenderClipped;
+        [DataMember] public LayeredScreenSurface.Layer[] Layers;
+        [DataMember] public Color Tint;
+        [DataMember] public bool UsePixelPositioning;
+        [DataMember] public bool TintBeforeDrawCall;
+        [DataMember] public Point Position;
+        [DataMember] public bool UseKeyboard;
+        [DataMember] public bool UseMouse;
+        [DataMember] public bool FocusOnMouseClick;
+        [DataMember] public bool MoveToFrontOnMouseClick;
+        
 
-        public static implicit operator LayeredConsoleSerialized(LayeredConsole surface) => new LayeredConsoleSerialized()
+        public static implicit operator LayeredScreenSurfaceSerialized(LayeredScreenSurface surface) => new LayeredScreenSurfaceSerialized()
         {
-            ViewPort = surface.ViewPort,
-            Font = surface.Font,
-            Width = surface.Width,
-            Height = surface.Height,
-            DefaultForeground = surface.DefaultForeground,
-            DefaultBackground = surface.DefaultBackground,
+            RenderClipped = surface.RenderClipped,
+            RenderClippedWidth = surface.RenderClippedWidth,
+            RenderClippedHeight = surface.RenderClippedHeight,
+            Layers = surface.Layers.ToArray(),
             Tint = surface.Tint,
             UsePixelPositioning = surface.UsePixelPositioning,
-            UseMouse = surface.UseMouse,
+            TintBeforeDrawCall = surface.TintBeforeDrawCall,
             UseKeyboard = surface.UseKeyboard,
-            Position = surface.Position,
-            IsVisible = surface.IsVisible,
-            IsPaused = surface.IsPaused,
-
-            Layers = surface._layers.Count != 0 ? surface._layers.Select(c => (CellSurfaceLayerSerialized)c).ToArray() : null,
+            UseMouse = surface.UseMouse,
+            FocusOnMouseClick = surface.FocusOnMouseClick,
+            MoveToFrontOnMouseClick = surface.MoveToFrontOnMouseClick
         };
 
-        public static implicit operator LayeredConsole(LayeredConsoleSerialized surface)
-        {
-            System.Collections.Generic.IEnumerable<CellSurfaceLayer> layers = surface.Layers != null ? surface.Layers.Select(l => (CellSurfaceLayer)l) : null;
-
-            return new LayeredConsole(surface.Width, surface.Height, layers, surface.Font, surface.ViewPort)
-            {
-                Tint = surface.Tint,
-                DefaultForeground = surface.DefaultForeground,
-                DefaultBackground = surface.DefaultBackground,
-                Position = surface.Position,
-                IsVisible = surface.IsVisible,
-                IsPaused = surface.IsPaused,
-                UsePixelPositioning = surface.UsePixelPositioning,
-                UseMouse = surface.UseMouse,
-                UseKeyboard = surface.UseKeyboard,
-            };
-        }
+        public static implicit operator LayeredScreenSurface(LayeredScreenSurfaceSerialized surface) =>
+            new LayeredScreenSurface(surface.Layers, surface.RenderClipped, surface.RenderClippedWidth, surface.RenderClippedHeight);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

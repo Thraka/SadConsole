@@ -38,50 +38,63 @@ namespace SadConsole
         /// </summary>
         /// <param name="layer">The initial layer.</param>
         /// <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
-        /// <param name="font">The font to use with the surface.</param>
-        /// <param name="fontSize">The font size.</param>
-        public LayeredScreenSurface(Layer layer, bool renderClipped) : base(new CellSurface(1, 1))
+        public LayeredScreenSurface(Layer layer, bool renderClipped) : base(null)
         {
             RenderClipped = renderClipped;
             RenderClippedWidth = layer.AbsoluteArea.Width;
             RenderClippedHeight = layer.AbsoluteArea.Height;
+
             Layers = new ScreenObjectCollection<Layer>(this);
             Layers.Add(layer);
+            Layers.CollectionChanged += Layers_CollectionChanged;
+
             Renderer = GameHost.Instance.GetRenderer("layered");
             SetActiveLayer(0);
         }
 
         /// <summary>
         /// Creates a new layered screen surface with the specified layers.
+        public LayeredScreenSurface(IEnumerable<Layer> layers, bool renderClipped) : base(new CellSurface(1, 1))
         /// </summary>
         /// <param name="layers">A collection of layers.</param>
         /// <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
-        /// <param name="font">The font to use with the surface.</param>
-        /// <param name="fontSize">The font size.</param>
-        public LayeredScreenSurface(IEnumerable<Layer> layers, bool renderClipped) : base(new CellSurface(1, 1))
         {
             RenderClipped = renderClipped;
             
             Layers = new ScreenObjectCollection<Layer>(this);
+
             foreach (var item in layers)
                 Layers.Add(item);
+
+            Layers.CollectionChanged += Layers_CollectionChanged;
+
             RenderClippedWidth = Layers[0].AbsoluteArea.Width;
             RenderClippedHeight = Layers[0].AbsoluteArea.Height;
             Renderer = GameHost.Instance.GetRenderer("layered");
             SetActiveLayer(0);
         }
 
-        [JsonConstructor]
-        private LayeredScreenSurface(IEnumerable<Layer> layers, bool renderClipped, int renderClippedWidth, int renderClippedHeight) : base(new CellSurface(1, 1))
+        /// <summary>
+        /// Internal use only; for serialization.
+        /// </summary>
+        /// <param name="layers"></param>
+        /// <param name="renderClipped"></param>
+        /// <param name="renderClipWidth"></param>
+        /// <param name="renderClipHeight"></param>
+        protected internal LayeredScreenSurface(IEnumerable<Layer> layers, bool renderClipped, int renderClipWidth, int renderClipHeight) : base(new CellSurface(1, 1))
         {
-            Layers = new ScreenObjectCollection<Layer>(this);
             RenderClipped = renderClipped;
-            RenderClippedWidth = renderClippedWidth;
-            RenderClippedHeight = renderClippedHeight;
+
+            Layers = new ScreenObjectCollection<Layer>(this);
 
             foreach (var item in layers)
                 Layers.Add(item);
 
+            Layers.CollectionChanged += Layers_CollectionChanged;
+
+            RenderClippedWidth = renderClipWidth;
+            RenderClippedHeight = renderClipHeight;
+            Renderer = GameHost.Instance.GetRenderer("layered");
             SetActiveLayer(0);
         }
 
@@ -111,6 +124,20 @@ namespace SadConsole
             Surface = layer.Surface;
             Font = layer.Font;
             FontSize = layer.FontSize;
+        }
+
+        private void Layers_CollectionChanged(object sender, EventArgs e)
+        {
+            if (Surface != null)
+            {
+                if (!Layers.Contains((Layer)Surface))
+                {
+                    if (Layers.Count == 0)
+                        Surface = null;
+                    else
+                        SetActiveLayer(0);
+                }
+            }
         }
 
         /// <summary>
