@@ -15,6 +15,8 @@ namespace FeatureDemo
         {
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
+            //SadConsole.Host.Settings.UseHardwareFullScreen = true;
+
             SadConsole.Game.Create(80, 25); //, "Res/Fonts/C64.font");
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
@@ -44,7 +46,7 @@ namespace FeatureDemo
                 }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F5))
                 {
-                    //SadConsole.Settings.ToggleFullScreen();
+                    SadConsole.Game.Instance.ToggleFullScreen();
                 }
 
             }
@@ -63,6 +65,7 @@ namespace FeatureDemo
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
+
 
             //GameHost.Instance.MouseState.ProcessMouseWhenOffScreen = true;
             MainConsole = new Container();

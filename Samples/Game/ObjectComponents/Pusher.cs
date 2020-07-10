@@ -22,7 +22,7 @@ namespace Game.ObjectComponents
                 if (obj.HasComponent<ObjectComponents.Movable>())
                 {
                     var movable = obj.GetComponent<ObjectComponents.Movable>();
-                    movable.RequestMove(SadRogue.Primitives.Direction.ToDirection(Direction), board, obj);
+                    movable.RequestMove((SadRogue.Primitives.Direction)Direction, board, obj);
                 }
 
                 _tickCounter = 0;
