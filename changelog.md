@@ -9,7 +9,7 @@
 - Draw method on objects changed to Render to communicate intent.
 - LayeredScreenSurface completely rewritten.
 - Hosts now use strings to define renderers and allow you to redefine them in the host.
-- 
+- Surface now have a TintBeforeDrawCall which when false tints the screen draw call to allow transparent surfaces.
 
 ## v9.0 Alpha 6
 
