@@ -6,17 +6,23 @@ namespace SadConsole.DrawCalls
     {
         public Texture Texture;
         public SFML.System.Vector2i Position;
+        public Color Tint;
 
-        public DrawCallTexture(Texture texture, SFML.System.Vector2i position)
+        public DrawCallTexture(Texture texture, SFML.System.Vector2i position, Color? tint = null)
         {
             Texture = texture;
             Position = position;
+
+            if (tint.HasValue)
+                Tint = tint.Value;
+            else
+                Tint = Color.White;
         }
 
         public void Draw() =>
             Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(Position.X, Position.Y, Position.X + (int)Texture.Size.X, Position.Y + (int)Texture.Size.Y),
                                                    new IntRect(0, 0, (int)Texture.Size.X, (int)Texture.Size.Y),
-                                                   Color.White,
+                                                   Tint,
                                                    Texture);
     }
 }
