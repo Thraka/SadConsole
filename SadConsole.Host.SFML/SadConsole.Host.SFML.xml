@@ -171,6 +171,11 @@
             <param name="access">Read or write access.</param>
             <returns>The stream.</returns>
         </member>
+        <member name="M:SadConsole.Game.ToggleFullScreen">
+            <summary>
+            Toggles between windowed and fullscreen rendering for SadConsole.
+            </summary>
+        </member>
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
             <summary>
             Resizes the game window.

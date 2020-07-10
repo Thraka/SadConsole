@@ -226,6 +226,14 @@ namespace SadConsole
              File.Open(file, mode, access);
 
         /// <summary>
+        /// Toggles between windowed and fullscreen rendering for SadConsole.
+        /// </summary>
+        public void ToggleFullScreen()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Resizes the game window.
         /// </summary>
         /// <param name="width">The width of the window in pixels.</param>
