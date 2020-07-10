@@ -22,6 +22,8 @@ namespace SadConsole
         private Point _fontSize;
         [DataMember(Name = "Tint")]
         private Color _tint = Color.Transparent;
+        [DataMember(Name = "TintBeforeDrawCall")]
+        private bool _tintBeforeDraw = false;
         [DataMember(Name = "UsePixelPositioning")]
         private bool _usePixelPositioning;
         [DataMember(Name = "Surface")]
@@ -56,11 +58,16 @@ namespace SadConsole
             get => _surface;
             protected set
             {
+                if (value == null) throw new NullReferenceException("Surface cannot be set to null.");
                 ICellSurface old = _surface;
+
                 _surface = value;
+
                 if (old != null)
                     old.IsDirtyChanged -= _isDirtyChangedEventHadler;
+
                 _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+
                 OnSurfaceChanged(old);
             }
         }
@@ -108,6 +115,17 @@ namespace SadConsole
             set
             {
                 _tint = value;
+                IsDirty = true;
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool TintBeforeDrawCall
+        {
+            get => _tintBeforeDraw;
+            set
+            {
+                _tintBeforeDraw = value;
                 IsDirty = true;
             }
         }
@@ -275,7 +293,7 @@ namespace SadConsole
 
         /// <inheritdoc/>
         [OnDeserialized]
-        protected new void OnDeserializedMethod(StreamingContext context)
+        private void OnDeserialized(StreamingContext context)
         {
             Renderer = GameHost.Instance.GetRenderer("default");
             UpdateAbsolutePosition();

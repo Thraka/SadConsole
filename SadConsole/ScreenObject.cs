@@ -525,14 +525,14 @@ namespace SadConsole
         }
 
         [OnSerialized]
-        protected void OnSerializedMethod(StreamingContext context)
+        private void OnSerialized(StreamingContext context)
         {
             _childrenSerialized = null;
             _componentsSerialized = null;
         }
 
         [OnDeserialized]
-        protected void OnDeserializedMethod(StreamingContext context)
+        private void OnDeserialized(StreamingContext context)
         {
             foreach (var item in _childrenSerialized)
                 Children.Add(item);

@@ -8,7 +8,6 @@ namespace SadConsole
     /// <summary>
     /// Represents an individual piece of a <see cref="ICellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(SerializedTypes.ColoredGlyphJsonConverter))]
     public class ColoredGlyph
     {
         private Color _foreground;

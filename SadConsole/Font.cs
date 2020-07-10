@@ -8,6 +8,7 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
+    // TODO
     public interface IFont
     {
         Rectangle SolidGlyphRectangle { get; }
@@ -79,11 +80,6 @@ namespace SadConsole
         public Rectangle SolidGlyphRectangle { get; private set; }
 
         /// <summary>
-        /// A cached array of rectangles of individual glyphs.
-        /// </summary>
-        //public Rectangle[] GlyphRects { get; private set; }
-
-        /// <summary>
         /// How many columns are in the this font.
         /// </summary>
         [DataMember]
@@ -96,7 +92,7 @@ namespace SadConsole
         public int Rows { get; private set; }
 
         /// <summary>
-        /// The name of the font used when it is registered with the <see cref="GameHost.Instance.Fonts"/> collection.
+        /// The name of the font used when it is registered with the <see cref="GameHost.Fonts"/> collection.
         /// </summary>
         [DataMember]
         public string Name { get; private set; }
@@ -177,7 +173,8 @@ namespace SadConsole
         /// <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
         /// <param name="image">The texture for of the font.</param>
         /// <param name="name">A font identifier used for serialization of resources using this font.</param>
-        public Font(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle> glyphRectangles)
+        /// <param name="glyphRectangles">Glyph mapping dictionary.</param>
+        public Font(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle> glyphRectangles = null)
         {
             Columns = columns;
             Rows = rows;
@@ -274,7 +271,7 @@ namespace SadConsole
         public bool HasGlyphDefinition(string name) => GlyphDefinitions.ContainsKey(name);
 
         /// <summary>
-        /// Builds the <see cref="GlyphRects"/> array based on the current font settings.
+        /// Builds the <see cref="GlyphRectangles"/> array based on the current font settings.
         /// </summary>
         public void ConfigureRects()
         {
@@ -323,6 +320,7 @@ namespace SadConsole
             ConfigureRects();
         }
 
+        // TODO
         public static Font LoadBMFont(string file, int baseWidth, int baseHeight)
         {
             var bmFont = SharpFNT.BitmapFont.FromFile(file);

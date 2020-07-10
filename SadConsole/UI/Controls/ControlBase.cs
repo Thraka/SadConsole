@@ -396,7 +396,7 @@ namespace SadConsole.UI.Controls
             if (control.Parent != null && Parent != control.Parent)
                 Parent = control.Parent;
 
-            Point calculatedDirection = (0, 0) + Direction.ToDirection(direction);
+            Point calculatedDirection = (0, 0) + (Direction)direction;
             Position = control.Position + (calculatedDirection.X * padding, calculatedDirection.Y * padding);
 
             switch (direction)

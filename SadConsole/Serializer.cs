@@ -27,17 +27,23 @@ namespace SadConsole
             {
                 JsonContract contract = base.CreateContract(objectType);
 
-                if (objectType == typeof(SadRogue.Primitives.Rectangle))
-                    contract.Converter = new SadConsole.SerializedTypes.RectangleJsonConverter();
+                //if (objectType == typeof(SadRogue.Primitives.Rectangle))
+                //    contract.Converter = new SadConsole.SerializedTypes.RectangleJsonConverter();
 
-                else if (objectType == typeof(SadRogue.Primitives.BoundedRectangle))
-                    contract.Converter = new SadConsole.SerializedTypes.BoundedRectangleJsonConverter();
+                //else if (objectType == typeof(SadRogue.Primitives.BoundedRectangle))
+                //    contract.Converter = new SadConsole.SerializedTypes.BoundedRectangleJsonConverter();
 
-                else if (objectType == typeof(SadRogue.Primitives.Color))
-                    contract.Converter = new SadConsole.SerializedTypes.ColorJsonConverter();
+                //else if (objectType == typeof(SadRogue.Primitives.Color))
+                //    contract.Converter = new SadConsole.SerializedTypes.ColorJsonConverter();
 
-                else if (objectType == typeof(Font))
+                if (objectType == typeof(Font))
                     contract.Converter = new SerializedTypes.FontJsonConverter();
+
+                else if (objectType == typeof(ColoredGlyph))
+                    contract.Converter = new SerializedTypes.ColoredGlyphJsonConverter();
+
+                else if (objectType == typeof(LayeredScreenSurface))
+                    contract.Converter = new SerializedTypes.LayeredJsonConverter();
 
                 return contract;
             }

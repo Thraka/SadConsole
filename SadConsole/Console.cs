@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using SadConsole.Components;
-using SadConsole.Input;
 using SadRogue.Primitives;
+using System.Linq;
 
 namespace SadConsole
 {
     /// <summary>
     /// A surface that has a cursor.
     /// </summary>
+    [DataContract]
     public partial class Console: ScreenSurface
     {
         /// <summary>
@@ -27,11 +27,12 @@ namespace SadConsole
         /// <summary>
         /// The virtual cursor reference.
         /// </summary>
-        public Cursor Cursor { get; }
+        public Cursor Cursor { get; protected set; }
 
         /// <summary>
         /// Toggles the cursor as visible\hidden when the console if focused\unfocused.
         /// </summary>
+        [DataMember]
         public bool AutoCursorOnFocus { get; set; }
 
         /// <summary>
@@ -85,7 +86,9 @@ namespace SadConsole
             SadComponents.Add(Cursor);
             UseKeyboard = Settings.DefaultConsoleUseKeyboard;
         }
-        
+
+        private Console(): base(1, 1) { }
+
         /// <inheritdoc/>
         protected override void OnVisibleChanged()
         {
@@ -113,6 +116,13 @@ namespace SadConsole
                 Cursor.IsVisible = true;
         }
 
-        
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            Cursor = SadComponents.OfType<Cursor>().FirstOrDefault();
+
+            if (Cursor == null)
+                throw new System.Exception("Cursor not deserialized. Perhaps it was removed? A cursor should always be available on the console.");
+        }
     }
 }
