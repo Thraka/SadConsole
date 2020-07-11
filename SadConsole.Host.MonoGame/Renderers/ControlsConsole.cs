@@ -126,7 +126,7 @@ namespace SadConsole.Renderers
             {
                 Host.Global.GraphicsDevice.SetRenderTarget(BackingTextureControls);
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
                 if (screen.Tint.A != 255)
                 {

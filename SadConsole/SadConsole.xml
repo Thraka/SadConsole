@@ -253,7 +253,7 @@
         <member name="M:SadConsole.AnimatedScreenSurface.UpdateAbsolutePosition">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double)">
+        <member name="M:SadConsole.AnimatedScreenSurface.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color})">
             <summary>
             Creates an animated surface that looks like static.
             </summary>
@@ -261,6 +261,8 @@
             <param name="height">The height of the surface.</param>
             <param name="frames">How many frames the animation should have.</param>
             <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="M:System.Random.NextDouble"/>.</param>
+            <param name="background">The background color of the animation. Defaults to transparent.</param>
+            <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.Save(System.String)">
