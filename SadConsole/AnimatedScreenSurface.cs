@@ -343,11 +343,15 @@ namespace SadConsole
         /// <param name="height">The height of the surface.</param>
         /// <param name="frames">How many frames the animation should have.</param>
         /// <param name="blankChance">Chance a character will be blank. Characters are between index 48-158. Chance is evaluated versus <see cref="System.Random.NextDouble"/>.</param>
+        /// <param name="background">The background color of the animation. Defaults to transparent.</param>
+        /// <param name="foreground">The foreground color of the animation. Defaults to white.</param>
         /// <returns>An animation.</returns>
-        public static AnimatedScreenSurface CreateStatic(int width, int height, int frames, double blankChance)
+        public static AnimatedScreenSurface CreateStatic(int width, int height, int frames, double blankChance, Color? background = null, Color? foreground = null)
         {
             var animation = new AnimatedScreenSurface("default", width, height);
-            animation.Surface.DefaultBackground = Color.Black;
+            animation.Surface.DefaultBackground = background ?? Color.Black;
+
+            var foregroundColor = foreground ?? Color.White;
             for (int f = 0; f < frames; f++)
             {
                 ICellSurface frame = animation.CreateFrame();
@@ -364,7 +368,7 @@ namespace SadConsole
                         }
 
                         frame.SetGlyph(x, y, character);
-                        frame.SetForeground(x, y, Color.White * (float)(GameHost.Instance.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
+                        frame.SetForeground(x, y, foregroundColor * (float)(GameHost.Instance.Random.NextDouble() * (1.0d - 0.5d) + 0.5d));
                     }
                 }
 
