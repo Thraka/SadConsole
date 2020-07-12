@@ -7,13 +7,13 @@ namespace FeatureDemo
         public string Title;
         public string Summary;
 
-        public IScreenSurface Console
+        public IScreenObject Console
         {
             get;
             set;
         }
 
-        public CustomConsole(IScreenSurface console, string title, string summary)
+        public CustomConsole(IScreenObject console, string title, string summary)
         {
             Console = console;
             Title = title;

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
@@ -10,9 +10,7 @@
     <Compile Remove="CustomConsoles\FadeConsole.cs" />
     <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />
     <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
-    <Compile Remove="CustomConsoles\SubConsoleCursor.cs" />
     <Compile Remove="CustomConsoles\TextCursorConsole.cs" />
-    <Compile Remove="CustomConsoles\ViewsAndSubViews.cs" />
     <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
   </ItemGroup>
 
