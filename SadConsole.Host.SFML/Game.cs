@@ -103,7 +103,7 @@ namespace SadConsole
 
             SetRenderer("window", typeof(Renderers.Window));
             SetRenderer("controls", typeof(Renderers.ControlsConsole));
-            SetRenderer("layered", typeof(Renderers.LayeredScreenObject));
+            SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
             SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
 
             // Create the default console.

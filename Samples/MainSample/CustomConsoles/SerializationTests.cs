@@ -6,6 +6,7 @@ using SadConsole.UI;
 using SadConsole.UI.Controls;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace FeatureDemo.CustomConsoles
 {
@@ -228,24 +229,34 @@ namespace FeatureDemo.CustomConsoles
 
         private void MakeLayeredSurface()
         {
-            int width = 35;
+            int width = 34;
             int height = 15;
 
-            LayeredScreenSurface.Layer[] layers = new LayeredScreenSurface.Layer[3];
+            var layers = new List<LayeredScreenSurface.Layer>();
 
-            layers[0] = new LayeredScreenSurface.Layer("1", width, height);
-            layers[0].Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Gray, SadConsole.UI.Themes.Library.Default.Colors.GrayDark, 0);
-            layers[0].Surface.Print(14, 4, "Layer 0");
+            var layer = new LayeredScreenSurface.Layer("1", width, height);
+            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Gray, SadConsole.UI.Themes.Library.Default.Colors.GrayDark, 0);
+            layer.Surface.Print(14, 4, "Layer 0");
+            layers.Add(layer);
 
-            layers[1] = new LayeredScreenSurface.Layer("2", width, height);
-            layers[1].Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Green, SadConsole.UI.Themes.Library.Default.Colors.GreenDark, 0);
-            layers[1].Surface.Fill(new Rectangle(10, 4, 34 - 20, 15 - 8), Color.White, Color.Transparent, 0);
-            layers[1].Surface.Print(14, 2, "Layer 1");
+            layer = new LayeredScreenSurface.Layer("2", width, height);
+            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Green, SadConsole.UI.Themes.Library.Default.Colors.GreenDark, 0);
+            layer.Surface.Fill(new Rectangle(10, 4, 34 - 20, 15 - 8), Color.White, Color.Transparent, 0);
+            layer.Surface.Print(14, 2, "Layer 1");
+            layers.Add(layer);
 
-            layers[2] = new LayeredScreenSurface.Layer("3", width, height);
-            layers[2].Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Brown, SadConsole.UI.Themes.Library.Default.Colors.BrownDark, 0);
-            layers[2].Surface.Fill(new Rectangle(5, 2, 34 - 10, 15 - 4), Color.White, Color.Transparent, 0);
-            layers[2].Surface.Print(14, 0, "Layer 2");
+            layer = new LayeredScreenSurface.Layer("3", width, height);
+            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Brown, SadConsole.UI.Themes.Library.Default.Colors.BrownDark, 0);
+            layer.Surface.Fill(new Rectangle(5, 2, 34 - 10, 15 - 4), Color.White, Color.Transparent, 0);
+            layer.Surface.Print(14, 0, "Layer 2");
+            layers.Add(layer);
+
+            layer = new LayeredScreenSurface.Layer("oob", width + 20, height + 20);
+            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Purple, SadConsole.UI.Themes.Library.Default.Colors.PurpleDark, 0);
+            layer.Surface.Fill(new Rectangle(1, 1, width, height), Color.White, Color.Transparent, 0);
+            layer.Surface.Print(14, 0, "Layer OOB");
+            layer.Position = (-1, -1);
+            layers.Add(layer);
 
             layeredSurface = new LayeredScreenSurface(layers, true);
         }

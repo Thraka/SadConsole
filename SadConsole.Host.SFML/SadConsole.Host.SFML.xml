@@ -220,7 +220,7 @@
         <member name="M:SadConsole.Renderers.ControlsConsole.Refresh(SadConsole.IScreenSurface,System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.LayeredScreenObject">
+        <member name="T:SadConsole.Renderers.LayeredScreenSurface">
             <summary>
             Draws a <see cref="T:SadConsole.LayeredScreenSurface"/>.
             </summary>
@@ -228,18 +228,18 @@
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
         </member>
-        <member name="P:SadConsole.Renderers.LayeredScreenObject.Name">
+        <member name="P:SadConsole.Renderers.LayeredScreenSurface.Name">
             <summary>
             Name of this renderer type.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.LayeredScreenObject.Attach(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.LayeredScreenSurface.Attach(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.LayeredScreenObject.Render(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.LayeredScreenSurface.Render(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.LayeredScreenObject.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.LayeredScreenSurface.Refresh(SadConsole.IScreenSurface,System.Boolean)">
              <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">

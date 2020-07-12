@@ -31,7 +31,11 @@ namespace SadConsole
         /// <summary>
         /// The layers of this surface.
         /// </summary>
-        public ScreenObjectCollection<Layer> Layers { get; }
+        public ObservableCollection<Layer> Layers { get; }
+
+        private Layer _activeLayer;
+
+        private ScreenObject _layerParent;
 
         /// <summary>
         /// Creates a new layered screen surface with an initial layer.
@@ -44,9 +48,13 @@ namespace SadConsole
             RenderClippedWidth = layer.AbsoluteArea.Width;
             RenderClippedHeight = layer.AbsoluteArea.Height;
 
-            Layers = new ScreenObjectCollection<Layer>(this);
-            Layers.Add(layer);
+            if (!RenderClipped)
+                _layerParent = new ScreenObject();
+
+            _activeLayer = layer;
+            Layers = new ObservableCollection<Layer>();
             Layers.CollectionChanged += Layers_CollectionChanged;
+            Layers.Add(layer);
 
             Renderer = GameHost.Instance.GetRenderer("layered");
             SetActiveLayer(0);
@@ -54,19 +62,24 @@ namespace SadConsole
 
         /// <summary>
         /// Creates a new layered screen surface with the specified layers.
-        public LayeredScreenSurface(IEnumerable<Layer> layers, bool renderClipped) : base(new CellSurface(1, 1))
         /// </summary>
         /// <param name="layers">A collection of layers.</param>
         /// <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
+        public LayeredScreenSurface(IEnumerable<Layer> layers, bool renderClipped) : base(new CellSurface(1, 1))
         {
             RenderClipped = renderClipped;
-            
-            Layers = new ScreenObjectCollection<Layer>(this);
+
+            if (!RenderClipped)
+                _layerParent = new ScreenObject();
+
+            Layers = new ObservableCollection<Layer>();
+            Layers.CollectionChanged += Layers_CollectionChanged;
 
             foreach (var item in layers)
+            {
+                if (_activeLayer == null) _activeLayer = item;
                 Layers.Add(item);
-
-            Layers.CollectionChanged += Layers_CollectionChanged;
+            }
 
             RenderClippedWidth = Layers[0].AbsoluteArea.Width;
             RenderClippedHeight = Layers[0].AbsoluteArea.Height;
@@ -84,13 +97,17 @@ namespace SadConsole
         protected internal LayeredScreenSurface(IEnumerable<Layer> layers, bool renderClipped, int renderClipWidth, int renderClipHeight) : base(new CellSurface(1, 1))
         {
             RenderClipped = renderClipped;
+            if (!RenderClipped)
+                _layerParent = new ScreenObject();
 
-            Layers = new ScreenObjectCollection<Layer>(this);
+            Layers = new ObservableCollection<Layer>();
+            Layers.CollectionChanged += Layers_CollectionChanged;
 
             foreach (var item in layers)
+            {
+                if (_activeLayer == null) _activeLayer = item;
                 Layers.Add(item);
-
-            Layers.CollectionChanged += Layers_CollectionChanged;
+            }
 
             RenderClippedWidth = renderClipWidth;
             RenderClippedHeight = renderClipHeight;
@@ -106,7 +123,8 @@ namespace SadConsole
         public void SetActiveLayer(int index)
         {
             if (index < 0 || index > Layers.Count - 1) throw new ArgumentOutOfRangeException(nameof(index));
-            
+
+            _activeLayer = Layers[index];
             Surface = Layers[index].Surface;
             Font = Layers[index].Font;
             FontSize = Layers[index].FontSize;
@@ -121,6 +139,7 @@ namespace SadConsole
         {
             if (!Layers.Contains(layer)) throw new Exception("The specified layer doesn't exist in this surface.");
 
+            _activeLayer = layer;
             Surface = layer.Surface;
             Font = layer.Font;
             FontSize = layer.FontSize;
@@ -128,16 +147,17 @@ namespace SadConsole
 
         private void Layers_CollectionChanged(object sender, EventArgs e)
         {
-            if (Surface != null)
+            if (!Layers.Contains(_activeLayer))
             {
-                if (!Layers.Contains((Layer)Surface))
-                {
-                    if (Layers.Count == 0)
-                        Surface = null;
-                    else
-                        SetActiveLayer(0);
-                }
+                if (Layers.Count == 0)
+                    Surface = null;
+                else
+                    SetActiveLayer(0);
             }
+
+            if (!RenderClipped)
+               foreach (var item in Layers)
+                    item.Parent = _layerParent;
         }
 
         /// <summary>
@@ -147,9 +167,6 @@ namespace SadConsole
         public override void Render(TimeSpan delta)
         {
             if (!IsVisible) return;
-
-            foreach (var item in Layers)
-                item.Render(delta);
 
             if (Renderer != null)
             {
@@ -163,6 +180,15 @@ namespace SadConsole
 
             foreach (IScreenObject child in new List<IScreenObject>(Children))
                 child.Render(delta);
+        }
+
+        /// <inheritdoc/>
+        public override void UpdateAbsolutePosition()
+        {
+            base.UpdateAbsolutePosition();
+
+            if (!RenderClipped)
+                _layerParent.Position = AbsolutePosition;
         }
     }
 }

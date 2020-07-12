@@ -56,16 +56,15 @@ namespace SadConsole.Renderers
             // Clipped mode
             if (layeredObject.RenderClipped)
             {
+                foreach (SadConsole.LayeredScreenSurface.Layer item in layeredObject.Layers)
+                    item.Renderer?.Refresh(item, force | item.ForceRendererRefresh);
+
                 RefreshBegin(screen);
 
                 foreach (SadConsole.LayeredScreenSurface.Layer item in layeredObject.Layers)
                 {
                     if (item.Renderer != null && item.IsVisible)
-                    {
-                        // Layers are parented, when rendering clipped, we need an relative position in pixels.
-                        SadRogue.Primitives.Point transformedPosition = item.AbsolutePosition - screen.AbsolutePosition;
-                        Host.Global.SharedSpriteBatch.Draw(((ScreenSurfaceRenderer)item.Renderer).BackingTexture, new Vector2(transformedPosition.X, transformedPosition.Y), Color.White);
-                    }
+                        Host.Global.SharedSpriteBatch.Draw(((ScreenSurfaceRenderer)item.Renderer).BackingTexture, new Vector2(item.AbsolutePosition.X, item.AbsolutePosition.Y), Color.White);
                 }
 
                 RefreshEnd(screen);

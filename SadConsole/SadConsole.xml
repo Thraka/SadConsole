@@ -5799,11 +5799,6 @@
             A tint used in rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.IScreenSurface.TintBeforeDrawCall">
-            <summary>
-            When <see langword="true"/>, the <see cref="P:SadConsole.IScreenSurface.Tint"/> is applied prior to the draw call; otherwise <see cref="P:SadConsole.IScreenSurface.Tint"/> is applied with the draw call which allows transparent consoles.
-            </summary>
-        </member>
         <member name="T:SadConsole.ITexture">
             <summary>
             Represents a texture provided by a game host.
@@ -5948,7 +5943,13 @@
             <param name="layer">The initial layer.</param>
             <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:SadConsole.LayeredScreenSurface.#ctor(System.Collections.Generic.IEnumerable{SadConsole.LayeredScreenSurface.Layer},System.Boolean)" -->
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Collections.Generic.IEnumerable{SadConsole.LayeredScreenSurface.Layer},System.Boolean)">
+            <summary>
+            Creates a new layered screen surface with the specified layers.
+            </summary>
+            <param name="layers">A collection of layers.</param>
+            <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
+        </member>
         <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Collections.Generic.IEnumerable{SadConsole.LayeredScreenSurface.Layer},System.Boolean,System.Int32,System.Int32)">
             <summary>
             Internal use only; for serialization.
@@ -5977,6 +5978,9 @@
             Draws the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/>.
             </summary>
             <param name="delta"></param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.UpdateAbsolutePosition">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.LayeredScreenSurface.Layer">
             <summary>
@@ -6526,9 +6530,6 @@
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenSurface.Tint">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.TintBeforeDrawCall">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenSurface.AbsoluteArea">

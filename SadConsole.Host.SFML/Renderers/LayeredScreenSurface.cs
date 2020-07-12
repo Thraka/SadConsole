@@ -12,7 +12,7 @@ namespace SadConsole.Renderers
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
     /// </remarks>
-    public class LayeredScreenObject : ScreenSurfaceRenderer
+    public class LayeredScreenSurface : ScreenSurfaceRenderer
     {
         /// <summary>
         /// Name of this renderer type.
@@ -51,6 +51,10 @@ namespace SadConsole.Renderers
             // Clipped mode
             if (layeredObject.RenderClipped)
             {
+
+                foreach (SadConsole.LayeredScreenSurface.Layer item in layeredObject.Layers)
+                    item.Renderer?.Refresh(item, force | item.ForceRendererRefresh);
+
                 RefreshBegin(screen);
 
                 foreach (SadConsole.LayeredScreenSurface.Layer item in layeredObject.Layers)
@@ -59,14 +63,11 @@ namespace SadConsole.Renderers
 
                     if (item.Renderer != null && item.IsVisible)
                     {
-                        // Layers are parented, when rendering clipped, we need an relative position in pixels.
-                        SadRogue.Primitives.Point transformedPosition = item.AbsolutePosition - screen.AbsolutePosition;
-
                         layerTexture = ((ScreenSurfaceRenderer)item.Renderer).BackingTexture;
 
-                        Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(transformedPosition.X, transformedPosition.Y,
-                                                                           transformedPosition.X + (int)layerTexture.Size.X,
-                                                                           transformedPosition.Y + (int)layerTexture.Size.Y),
+                        Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(item.AbsolutePosition.X, item.AbsolutePosition.Y,
+                                                                           item.AbsolutePosition.X + (int)layerTexture.Size.X,
+                                                                           item.AbsolutePosition.Y + (int)layerTexture.Size.Y),
                                                                new IntRect(0, 0, (int)layerTexture.Size.X, (int)layerTexture.Size.Y),
                                                                Color.White,
                                                                layerTexture.Texture);
