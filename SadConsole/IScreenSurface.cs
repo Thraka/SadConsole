@@ -94,10 +94,5 @@ namespace SadConsole
         /// A tint used in rendering.
         /// </summary>
         Color Tint { get; set; }
-
-        /// <summary>
-        /// When <see langword="true"/>, the <see cref="Tint"/> is applied prior to the draw call; otherwise <see cref="Tint"/> is applied with the draw call which allows transparent consoles.
-        /// </summary>
-        bool TintBeforeDrawCall { get; set; }
     }
 }

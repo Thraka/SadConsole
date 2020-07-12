@@ -39,7 +39,6 @@ namespace SadConsole.SerializedTypes
             Layers = surface.Layers.ToArray(),
             Tint = surface.Tint,
             UsePixelPositioning = surface.UsePixelPositioning,
-            TintBeforeDrawCall = surface.TintBeforeDrawCall,
             UseKeyboard = surface.UseKeyboard,
             UseMouse = surface.UseMouse,
             FocusOnMouseClick = surface.FocusOnMouseClick,

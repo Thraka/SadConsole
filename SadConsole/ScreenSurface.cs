@@ -22,8 +22,6 @@ namespace SadConsole
         private Point _fontSize;
         [DataMember(Name = "Tint")]
         private Color _tint = Color.Transparent;
-        [DataMember(Name = "TintBeforeDrawCall")]
-        private bool _tintBeforeDraw = false;
         [DataMember(Name = "UsePixelPositioning")]
         private bool _usePixelPositioning;
         [DataMember(Name = "Surface")]
@@ -115,17 +113,6 @@ namespace SadConsole
             set
             {
                 _tint = value;
-                IsDirty = true;
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool TintBeforeDrawCall
-        {
-            get => _tintBeforeDraw;
-            set
-            {
-                _tintBeforeDraw = value;
                 IsDirty = true;
             }
         }
