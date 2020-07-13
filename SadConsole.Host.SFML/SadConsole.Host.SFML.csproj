@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
     <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
-    <Version>9.0.0-alpha7</Version>
+    <Version>9.0.0-alpha8</Version>
     <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -27,7 +27,7 @@
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <PackageTags>sfml;roguelike;cli;game;development;console;ansi;ascii;textmode</PackageTags>
+    <PackageTags>sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

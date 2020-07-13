@@ -1,10 +1,11 @@
-## v9.0 Alpha 9
+## v9.0 Alpha 8
 
 - Fixed a lot of LayeredScreenSurface bugs.
 - **SFML**: Renamed `Renderers.LayeredScreenObject` to `Renderers.LayeredScreenSurface`
 - Removed `TintBeforeDrawCall`. Not a good design.
 - Added `SadConsole.Instructions.AnimatedValue` to animate a value over a duration.
 - Updated `SadConsole.Instructions.FadeTextSurfaceTint` to use `AnimatedValue`.
+- `Renderers.ScreenSurfaceRenderer` has an `Opaqueness` setting to render a console surface transparent.
 
 ## v9.0 Alpha 7
 
