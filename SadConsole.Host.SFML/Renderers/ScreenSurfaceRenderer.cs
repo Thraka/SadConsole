@@ -1,7 +1,6 @@
 ﻿using System;
 using SFML.Graphics;
 using Color = SFML.Graphics.Color;
-using SadConsole.Host;
 using SadRogue.Primitives;
 
 namespace SadConsole.Renderers
@@ -15,31 +14,54 @@ namespace SadConsole.Renderers
     public class ScreenSurfaceRenderer : IRenderer
     {
         /// <summary>
+        /// Color used with drawing the texture to the screen. Let's a surface become transparent.
+        /// </summary>
+        protected Color _finalDrawColor = SadRogue.Primitives.Color.White.ToSFMLColor();
+
+        /// <summary>
         /// Name of this renderer type.
         /// </summary>
         public static string Name => "screenobject";
 
+        /// <summary>
+        /// A 0 to 255 value represening how opaque the <see cref="BackingTexture"/> is when drawn to the screen. 255 represents full visibility.
+        /// </summary>
+        public byte Opaqueness
+        {
+            get => _finalDrawColor.A;
+            set => _finalDrawColor = new Color(_finalDrawColor.R, _finalDrawColor.G, _finalDrawColor.B, value);
+        }
+
+        /// <summary>
+        /// The texture the surface is drawn to.
+        /// </summary>
         public RenderTexture BackingTexture;
 
+        /// <summary>
+        /// Cached set of rectangles used in rendering each cell.
+        /// </summary>
         protected IntRect[] _renderRects;
 
+        ///  <inheritdoc/>
         public virtual void Attach(IScreenSurface screen)
         {
         }
 
+        ///  <inheritdoc/>
         public virtual void Detatch(IScreenSurface screen)
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
         }
 
+        ///  <inheritdoc/>
         public virtual void Render(IScreenSurface screen)
         {
             // If the tint isn't covering everything
             if (screen.Tint.A != 255)
             {
                 // Draw call for surface
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y)));
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y), _finalDrawColor));
 
                 // Draw any cursors
                 foreach (var cursor in screen.GetSadComponents<Components.Cursor>())
@@ -63,6 +85,7 @@ namespace SadConsole.Renderers
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToIntRect(), screen.Font.SolidGlyphRectangle.ToIntRect()));
         }
 
+        ///  <inheritdoc/>
         public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
             if (!force && !screen.IsDirty && BackingTexture != null) return;
@@ -98,38 +121,51 @@ namespace SadConsole.Renderers
         }
 
 
+        /// <summary>
+        /// Starts the sprite batch with the <see cref="BackingTexture"/>.
+        /// </summary>
+        /// <param name="surface">Object being used with the sprite batch.</param>
         protected virtual void RefreshBegin(IScreenSurface surface)
         {
             BackingTexture.Clear(Color.Transparent);
             Host.Global.SharedSpriteBatch.Reset(BackingTexture, RenderStates.Default, Transform.Identity);
         }
 
+        /// <summary>
+        /// Ends the sprite batch.
+        /// </summary>
+        /// <param name="surface">Object being used with the sprite batch.</param>
         protected virtual void RefreshEnd(IScreenSurface surface)
         {
             Host.Global.SharedSpriteBatch.End();
             BackingTexture.Display();
         }
 
-        protected virtual void RefreshCells(ICellSurface cellSurface, Font font)
+        /// <summary>
+        /// Draws each cell with the sprite batch.
+        /// </summary>
+        /// <param name="surface">The surface being drawn.</param>
+        /// <param name="font">The font used with drawing.</param>
+        protected virtual void RefreshCells(ICellSurface surface, Font font)
         {
-            if (cellSurface.DefaultBackground.A != 0)
-                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), cellSurface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+            if (surface.DefaultBackground.A != 0)
+                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
 
             int rectIndex = 0;
 
-            for (int y = 0; y < cellSurface.View.Height; y++)
+            for (int y = 0; y < surface.View.Height; y++)
             {
-                int i = ((y + cellSurface.ViewPosition.Y) * cellSurface.BufferWidth) + cellSurface.ViewPosition.X;
+                int i = ((y + surface.ViewPosition.Y) * surface.BufferWidth) + surface.ViewPosition.X;
 
-                for (int x = 0; x < cellSurface.View.Width; x++)
+                for (int x = 0; x < surface.View.Width; x++)
                 {
-                    ColoredGlyph cell = cellSurface.Cells[i];
+                    ColoredGlyph cell = surface.Cells[i];
 
                     cell.IsDirty = false;
 
                     if (!cell.IsVisible) continue;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, _renderRects[rectIndex], !cell.Background.Equals(Color.Transparent) && cell.Background != cellSurface.DefaultBackground, font);
+                    Host.Global.SharedSpriteBatch.DrawCell(cell, _renderRects[rectIndex], !cell.Background.Equals(Color.Transparent) && cell.Background != surface.DefaultBackground, font);
 
                     i++;
                     rectIndex++;

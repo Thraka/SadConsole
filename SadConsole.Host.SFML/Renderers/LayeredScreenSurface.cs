@@ -36,7 +36,7 @@ namespace SadConsole.Renderers
             var layeredObject = (SadConsole.LayeredScreenSurface)screen;
 
             if (layeredObject.RenderClipped)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsolutePosition.X, screen.AbsolutePosition.Y)));
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsolutePosition.X, screen.AbsolutePosition.Y), _finalDrawColor));
 
             else
                 foreach (SadConsole.LayeredScreenSurface.Layer item in layeredObject.Layers)
