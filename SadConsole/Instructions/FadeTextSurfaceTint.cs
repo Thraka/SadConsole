@@ -4,9 +4,9 @@ using SadRogue.Primitives;
 namespace SadConsole.Instructions
 {
     /// <summary>
-    /// Animates a color change to <see cref="Console.Tint"/>.
+    /// Animates a color change to <see cref="ScreenSurface.Tint"/>.
     /// </summary>
-    public class FadeTextSurfaceTint : InstructionBase
+    public class FadeTextSurfaceTint : AnimatedValue
     {
         private IScreenSurface _objectSurface;
         private ColorGradient _colors;
@@ -21,81 +21,52 @@ namespace SadConsole.Instructions
         }
 
         /// <summary>
-        /// Animation provider.
-        /// </summary>
-        public DoubleAnimation FadeAnimationSettings { get; set; }
-
-        /// <summary>
         /// Creates a new tint fade instruction that targets the specified console.
         /// </summary>
         /// <param name="objectSurface">The <see cref="IScreenSurface.Tint"/> to fade.</param>
         /// <param name="colors">The gradient pattern to fade through.</param>
         /// <param name="duration">How long the fade takes.</param>
-        public FadeTextSurfaceTint(IScreenSurface objectSurface, ColorGradient colors, TimeSpan duration)
+        public FadeTextSurfaceTint(IScreenSurface objectSurface, ColorGradient colors, TimeSpan duration): base(duration, 0d, 1d)
         {
             Colors = colors;
-            FadeAnimationSettings = new DoubleAnimation() { StartingValue = 0d, EndingValue = 1d, Duration = duration };
             _objectSurface = objectSurface;
         }
 
         /// <summary>
-        /// Creates a new tint fade instruction that uses the console passed to <see cref="IConsoleComponent.Update(Console, TimeSpan)"/>.
+        /// Creates a new tint fade instruction that uses the console passed to <see cref="SadConsole.Components.IComponent.Update(IScreenObject, TimeSpan)"/>.
         /// </summary>
         /// <param name="colors">The gradient pattern to fade through.</param>
         /// <param name="duration">How long the fade takes.</param>
-        public FadeTextSurfaceTint(ColorGradient colors, TimeSpan duration)
+        public FadeTextSurfaceTint(ColorGradient colors, TimeSpan duration) : base(duration, 0d, 1d)
         {
             Colors = colors;
-            FadeAnimationSettings = new DoubleAnimation() { StartingValue = 0d, EndingValue = 1d, Duration = duration };
         }
 
         /// <summary>
-        /// Creates a new tint fade instruction with default settings that uses the console passed to <see cref="IConsoleComponent.Update(Console, TimeSpan)"/>.
+        /// Creates a new tint fade instruction with default settings that uses the console passed to <see cref="SadConsole.Components.IComponent.Update(IScreenObject, TimeSpan)"/>.
         /// </summary>
         /// <remarks>
         /// The default settings are:
         /// 
         ///   - <see cref="Colors"/>: <see cref="Color.White"/> to <see cref="Color.Black"/>
-        ///   - <see cref="FadeAnimationSettings"/>: 1 second
+        ///   - Duration: 1 second
         /// </remarks>
-        public FadeTextSurfaceTint()
+        public FadeTextSurfaceTint() : base(TimeSpan.FromSeconds(1), 0d, 1d)
         {
             Colors = new ColorGradient(Color.White, Color.Transparent);
-            FadeAnimationSettings = new DoubleAnimation() { StartingValue = 0d, EndingValue = 1d, Duration = new TimeSpan(0, 0, 1) };
-
         }
 
         /// <inheritdoc />
         public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
-            if (!FadeAnimationSettings.IsStarted)
+            if (!IsFinished)
             {
-                FadeAnimationSettings.Start();
+                base.Update(componentHost, delta);
 
-                if (_objectSurface == null)
-                {
-                    _objectSurface = componentHost as IScreenSurface;
-                }
+                var target = _objectSurface ?? componentHost as IScreenSurface;
+
+                target.Tint = Colors.Lerp((float)Value);
             }
-
-            if (FadeAnimationSettings.IsFinished)
-            {
-                IsFinished = true;
-            }
-
-            _objectSurface.Tint = Colors.Lerp((float)FadeAnimationSettings.CurrentValue);
-
-            base.Update(componentHost, delta);
-        }
-
-        /// <summary>
-        /// Starts the instruction over.
-        /// </summary>
-        public override void Reset()
-        {
-            FadeAnimationSettings.Reset();
-
-            base.Reset();
         }
     }
 }

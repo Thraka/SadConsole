@@ -8,7 +8,11 @@ namespace SadConsole.Instructions
     public class Wait : InstructionBase
     {
         private bool _started = false;
-        private TimeSpan _lastUpdateTime = TimeSpan.Zero;
+
+        /// <summary>
+        /// How much time has passed.
+        /// </summary>
+        protected TimeSpan CountedTime = TimeSpan.Zero;
 
         /// <summary>
         /// The duration of the wait.
@@ -20,33 +24,36 @@ namespace SadConsole.Instructions
         /// </summary>
         /// <param name="duration">How long this instruction waits until it signals <see cref="InstructionBase.IsFinished"/>.</param>
         public Wait(TimeSpan duration)
-            => Duration = duration;
+        {
+            Duration = duration;
+        }
 
         /// <summary>
         /// Creates a new wait timer with a 1-second delay.
         /// </summary>
         public Wait()
-            => Duration = TimeSpan.FromSeconds(1);
+        {
+            Duration = TimeSpan.FromSeconds(1);
+        }
 
         /// <inheritdoc />
         public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
-            if (!_started)
+            if (!IsFinished)
             {
-                _lastUpdateTime = TimeSpan.Zero;
-                _started = true;
-            }
-            else
-            {
-                _lastUpdateTime += delta;
-            }
+                if (!_started)
+                {
+                    CountedTime = TimeSpan.Zero;
+                    _started = true;
+                }
+                else
+                    CountedTime += delta;
 
-            if (_lastUpdateTime > Duration)
-            {
-                IsFinished = true;
-            }
+                if (CountedTime > Duration)
+                    IsFinished = true;
 
-            base.Update(componentHost, delta);
+                base.Update(componentHost, delta);
+            }
         }
 
         /// <inheritdoc />

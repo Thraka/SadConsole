@@ -34,7 +34,7 @@ namespace SadConsole.Instructions
                 item.Reset();
             }
 
-            _currentInstructionNode = null;
+            _currentInstructionNode = Instructions.First;
 
             base.Reset();
         }
