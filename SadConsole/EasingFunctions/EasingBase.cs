@@ -10,7 +10,7 @@ namespace SadConsole.EasingFunctions
 
         public EasingBase() => Mode = EasingMode.None;
 
-        public abstract double Ease(double time, double startingValue, double endingValue, double duration);
+        public abstract double Ease(double elapsedTime, double startingValue, double endingValue, double maxDuration);
     }
 
     public enum EasingMode

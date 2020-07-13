@@ -2470,11 +2470,6 @@
             <param name="font">The font to use the debugging screen.</param>
             <param name="fontSize">The size of the font.</param>
         </member>
-        <member name="P:SadConsole.DoubleAnimation.EasingFunction">
-            <summary>
-            An easing method to apply to the value. The parameters passed in are: calculated value, starting value, ending value, and duration.
-            </summary>
-        </member>
         <member name="T:SadConsole.Effects.Blink">
             <summary>
             Switches between the normal foreground of a cell and a specified color for an amount of time, and then repeats.
@@ -5219,6 +5214,59 @@
             </summary>
             <returns>A copy of this class instance.</returns>
         </member>
+        <member name="T:SadConsole.Instructions.AnimatedValue">
+            <summary>
+            An function that applies an <see cref="T:SadConsole.EasingFunctions.EasingBase"/> function between two values.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Instructions.AnimatedValue.EasingFunction">
+            <summary>
+            The easing function assigned to animate the value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.AnimatedValue.Value">
+            <summary>
+            The current or last value of the animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.AnimatedValue.StartingValue">
+            <summary>
+            The stating value of the animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Instructions.AnimatedValue.EndingValue">
+            <summary>
+            The ending value of the animation.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.AnimatedValue.#ctor(System.TimeSpan,System.Double,System.Double,SadConsole.EasingFunctions.EasingBase)">
+            <summary>
+            Creates a new value animated over time.
+            </summary>
+            <param name="duration">The total time this animation should run.</param>
+            <param name="startingValue">The starting value of the animation.</param>
+            <param name="endingValue">The ending value of the animation.</param>
+            <param name="easingFunction">The easing function used during animation. Defaults to <see cref="T:SadConsole.EasingFunctions.Linear"/>.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.AnimatedValue.Reset(System.TimeSpan,System.Double,System.Double,SadConsole.EasingFunctions.EasingBase)">
+            <summary>
+            Resets this object to new values.
+            </summary>
+            <param name="duration">The total time this animation should run.</param>
+            <param name="startingValue">The starting value of the animation.</param>
+            <param name="endingValue">The ending value of the animation.</param>
+            <param name="easingFunction">The easing function used during animation. Defaults to <see cref="T:SadConsole.EasingFunctions.Linear"/>.</param>
+        </member>
+        <member name="M:SadConsole.Instructions.AnimatedValue.Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Instructions.AnimatedValue.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Updates the timer with the time since the last call.
+            </summary>
+            <param name="console">The parent object.</param>
+            <param name="delta">The time since the last frame update.</param>
+        </member>
         <member name="T:SadConsole.Instructions.CodeInstruction">
             <summary>
             An instruction with a code callback.
@@ -5313,17 +5361,12 @@
         </member>
         <member name="T:SadConsole.Instructions.FadeTextSurfaceTint">
             <summary>
-            Animates a color change to <see cref="!:Console.Tint"/>.
+            Animates a color change to <see cref="P:SadConsole.ScreenSurface.Tint"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Instructions.FadeTextSurfaceTint.Colors">
             <summary>
             The color to fade the tint to.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Instructions.FadeTextSurfaceTint.FadeAnimationSettings">
-            <summary>
-            Animation provider.
             </summary>
         </member>
         <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.IScreenSurface,SadRogue.Primitives.ColorGradient,System.TimeSpan)">
@@ -5336,29 +5379,24 @@
         </member>
         <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadRogue.Primitives.ColorGradient,System.TimeSpan)">
             <summary>
-            Creates a new tint fade instruction that uses the console passed to <see cref="!:IConsoleComponent.Update(Console, TimeSpan)"/>.
+            Creates a new tint fade instruction that uses the console passed to <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/>.
             </summary>
             <param name="colors">The gradient pattern to fade through.</param>
             <param name="duration">How long the fade takes.</param>
         </member>
         <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor">
             <summary>
-            Creates a new tint fade instruction with default settings that uses the console passed to <see cref="!:IConsoleComponent.Update(Console, TimeSpan)"/>.
+            Creates a new tint fade instruction with default settings that uses the console passed to <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/>.
             </summary>
             <remarks>
             The default settings are:
             
               - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.Colors"/>: <see cref="P:SadRogue.Primitives.Color.White"/> to <see cref="P:SadRogue.Primitives.Color.Black"/>
-              - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.FadeAnimationSettings"/>: 1 second
+              - Duration: 1 second
             </remarks>
         </member>
         <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.Reset">
-            <summary>
-            Starts the instruction over.
-            </summary>
         </member>
         <member name="T:SadConsole.Instructions.InstructionBase">
             <summary>
@@ -5520,6 +5558,11 @@
         <member name="T:SadConsole.Instructions.Wait">
             <summary>
             Represents an instruction to pause for a specified duration.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Instructions.Wait.CountedTime">
+            <summary>
+            How much time has passed.
             </summary>
         </member>
         <member name="P:SadConsole.Instructions.Wait.Duration">
@@ -9114,6 +9157,84 @@
             <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
             <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
         </member>
+        <member name="T:SadRogue.Primitives.ColorGradient">
+            <summary>
+            Represents a gradient with multiple color stops.
+            </summary>
+        </member>
+        <member name="P:SadRogue.Primitives.ColorGradient.Stops">
+            <summary>
+            The color stops that define the gradient.
+            </summary>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(System.Collections.Generic.IEnumerable{SadRogue.Primitives.Color},System.Collections.Generic.IEnumerable{System.Single})">
+            <summary>
+            Creates a new color gradient with the defined colors and stops.
+            </summary>
+            <param name="colors">The colors with the gradient.</param>
+            <param name="stops">The gradient stops where the colors are used.</param>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a new color gradient with only two colors, the first at the start, and the second at the end.
+            </summary>
+            <param name="startingColor">The starting color of the gradient.</param>
+            <param name="endingColor">The ending color of the gradient.</param>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(SadRogue.Primitives.Color[])">
+            <summary>
+            Creates a new color gradient, evenly spacing them out. At least one color must be provided.
+            </summary>
+            <param name="colors">The colors to create a gradient from.</param>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.GetEnumerator">
+            <summary>
+            Gets an enumerator with all of the gradient stops.
+            </summary>
+            <returns>An enumerator</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets an enumerator with all of the gradient stops.
+            </summary>
+            <returns>An enumerator.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.ToColoredString(System.String)">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object using the current gradient.
+            </summary>
+            <param name="text">The text to use for the colored string.</param>
+            <returns>A new colored string object.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.ToColorArray(System.Int32)">
+            <summary>
+            Gets an array of colors based from the gradient.
+            </summary>
+            <param name="count">The amount of colors to produce.</param>
+            <returns>An array of colors.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorGradient.Lerp(System.Single)">
+            <summary>
+            Returns a color from this gradient at the specified lerp value.
+            </summary>
+            <param name="amount">The lerp amount.</param>
+            <returns>A color.</returns>
+        </member>
+        <member name="T:SadRogue.Primitives.ColorGradientStop">
+            <summary>
+            A gradient stop. Defines a color and where it is located within the gradient.
+            </summary>
+        </member>
+        <member name="F:SadRogue.Primitives.ColorGradientStop.Color">
+            <summary>
+            The color.
+            </summary>
+        </member>
+        <member name="F:SadRogue.Primitives.ColorGradientStop.Stop">
+            <summary>
+            The color stop in the gradiant this applies to.
+            </summary>
+        </member>
         <member name="T:SadRogue.Primitives.ColorAnsi">
             <summary>
             Classic 16 ansi color values.
@@ -9392,96 +9513,23 @@
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions.ToParser(SadRogue.Primitives.Color)">
             <summary>
-            Converts a color to the format used by <see cref="!:SadConsole.ParseCommandRecolor"/> command.
+            Converts a color to the format used by <see cref="T:SadConsole.StringParser.ParseCommandRecolor"/> command.
             </summary>
             <param name="color">The color to convert.</param>
             <returns>A string in this format R,G,B,A so for <see cref="P:SadRogue.Primitives.Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions.FromParser(SadRogue.Primitives.Color,System.String,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
             <summary>
-            Gets a color in the format of <see cref="!:SadConsole.ParseCommandRecolor"/>.
+            Gets a color in the format of <see cref="T:SadConsole.StringParser.ParseCommandRecolor"/>.
             </summary>
-            <param name="color"></param>
-            <param name="value"></param>
+            <param name="color">The color to use as a base.</param>
+            <param name="value">The string parser color command.</param>
+            <param name="keepR">Indicates that command wanted to keep the Red color channel.</param>
+            <param name="keepG">Indicates that command wanted to keep the Green color channel.</param>
+            <param name="keepB">Indicates that command wanted to keep the Blue color channel.</param>
+            <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
+            <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
             <returns></returns>
-        </member>
-        <member name="T:SadRogue.Primitives.ColorGradient">
-            <summary>
-            Represents a gradient with multiple color stops.
-            </summary>
-        </member>
-        <member name="P:SadRogue.Primitives.ColorGradient.Stops">
-            <summary>
-            The color stops that define the gradient.
-            </summary>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(System.Collections.Generic.IEnumerable{SadRogue.Primitives.Color},System.Collections.Generic.IEnumerable{System.Single})">
-            <summary>
-            Creates a new color gradient with the defined colors and stops.
-            </summary>
-            <param name="colors">The colors with the gradient.</param>
-            <param name="stops">The gradient stops where the colors are used.</param>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Creates a new color gradient with only two colors, the first at the start, and the second at the end.
-            </summary>
-            <param name="startingColor">The starting color of the gradient.</param>
-            <param name="endingColor">The ending color of the gradient.</param>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(SadRogue.Primitives.Color[])">
-            <summary>
-            Creates a new color gradient, evenly spacing them out. At least one color must be provided.
-            </summary>
-            <param name="colors">The colors to create a gradient from.</param>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.GetEnumerator">
-            <summary>
-            Gets an enumerator with all of the gradient stops.
-            </summary>
-            <returns>An enumerator</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            Gets an enumerator with all of the gradient stops.
-            </summary>
-            <returns>An enumerator.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.ToColoredString(System.String)">
-            <summary>
-            Creates a <see cref="T:SadConsole.ColoredString"/> object using the current gradient.
-            </summary>
-            <param name="text">The text to use for the colored string.</param>
-            <returns>A new colored string object.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.ToColorArray(System.Int32)">
-            <summary>
-            Gets an array of colors based from the gradient.
-            </summary>
-            <param name="count">The amount of colors to produce.</param>
-            <returns>An array of colors.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.Lerp(System.Single)">
-            <summary>
-            Returns a color from this gradient at the specified lerp value.
-            </summary>
-            <param name="amount">The lerp amount.</param>
-            <returns>A color.</returns>
-        </member>
-        <member name="T:SadRogue.Primitives.ColorGradientStop">
-            <summary>
-            A gradient stop. Defines a color and where it is located within the gradient.
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorGradientStop.Color">
-            <summary>
-            The color.
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorGradientStop.Stop">
-            <summary>
-            The color stop in the gradiant this applies to.
-            </summary>
         </member>
     </members>
 </doc>

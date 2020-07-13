@@ -433,17 +433,22 @@ namespace SadRogue.Primitives
         }
 
         /// <summary>
-        /// Converts a color to the format used by <see cref="SadConsole.ParseCommandRecolor"/> command.
+        /// Converts a color to the format used by <see cref="SadConsole.StringParser.ParseCommandRecolor"/> command.
         /// </summary>
         /// <param name="color">The color to convert.</param>
         /// <returns>A string in this format R,G,B,A so for <see cref="Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
         public static string ToParser(this Color color) => $"{color.R},{color.G},{color.B},{color.A}";
 
         /// <summary>
-        /// Gets a color in the format of <see cref="SadConsole.ParseCommandRecolor"/>.
+        /// Gets a color in the format of <see cref="SadConsole.StringParser.ParseCommandRecolor"/>.
         /// </summary>
-        /// <param name="color"></param>
-        /// <param name="value"></param>
+        /// <param name="color">The color to use as a base.</param>
+        /// <param name="value">The string parser color command.</param>
+        /// <param name="keepR">Indicates that command wanted to keep the Red color channel.</param>
+        /// <param name="keepG">Indicates that command wanted to keep the Green color channel.</param>
+        /// <param name="keepB">Indicates that command wanted to keep the Blue color channel.</param>
+        /// <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
+        /// <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
         /// <returns></returns>
         public static Color FromParser(this Color color, string value, out bool keepR, out bool keepG, out bool keepB, out bool keepA, out bool useDefault)
         {

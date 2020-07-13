@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>9.0.0-alpha7</Version>
+    <Version>9.0.0-alpha8</Version>
     <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -24,7 +24,7 @@
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <PackageTags>sfml;roguelike;cli;xna;game;development;console;ansi;ascii;textmode</PackageTags>
+    <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode</PackageTags>
     <PackageReleaseNotes>
 A lot of structual changes to split out rendering from SadConsole. You now need to add SadConsole.Host.MonoGame
 or SadConsole.Host SFML to your project.
@@ -40,7 +40,7 @@ you qualify the call with this.Print.
 
 - Font/FontMaster are now merged into a single type: Font.
 
-- Font sizes are always represented in an X,Y value now, and are seperate from the font itself. This means every
+- Font sizes are always represented in an X,Y value now, and are separate from the font itself. This means every
 console has a Font and FontSize property now instead of a single Font property.
 
 - All UI objects were moved into the SadConsole.UI namespace.
