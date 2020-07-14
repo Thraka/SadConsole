@@ -1,8 +1,9 @@
-## 06/XX/2020 V8.99.2
+## 07/13/2020 V8.99.2
 
 - Added DrawImageComponent.
 - Added templates.
 - Fix bug where creating an entity and specifying the font didn't actually set it. (thanks thateye)
+- `AnimatedConsole` defaults to `UseMouse = false` (thanks freiling)
 
 ## 04/11/2020 V8.99.1
 
