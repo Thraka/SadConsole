@@ -146,7 +146,11 @@ namespace SadConsole
         /// <param name="width">The width of each frame this animation will have.</param>
         /// <param name="height">The height of each frame this animation will have.</param>
         /// <param name="font">The font used with this animation.</param>
-        public AnimatedConsole(string name, int width, int height, Font font) : base(width, height, font) => Name = name;
+        public AnimatedConsole(string name, int width, int height, Font font) : base(width, height, font)
+        {
+            UseMouse = false;
+            Name = name;
+        }
         #endregion
 
         /// <summary>
