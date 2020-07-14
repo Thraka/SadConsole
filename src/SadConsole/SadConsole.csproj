@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <AssemblyVersion>8.99.1.0</AssemblyVersion>
-    <Version>8.99.1</Version>
+    <AssemblyVersion>8.99.2.0</AssemblyVersion>
+    <Version>8.99.2</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
