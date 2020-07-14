@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.13" />
-    <PackageReference Include="SadConsole" Version="8.99.1" />
+    <PackageReference Include="SadConsole" Version="8.99.2" />
   </ItemGroup>
 
 </Project>
