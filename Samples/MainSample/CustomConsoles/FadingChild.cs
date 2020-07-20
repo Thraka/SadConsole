@@ -12,7 +12,7 @@ namespace FeatureDemo.CustomConsoles
 
         public FadingChild(): base(80,23)
         {
-            Surface.FillWithRandomGarbage();
+            Surface.FillWithRandomGarbage(Font);
 
             _child = new ScreenSurface(30, 13);
             _child.Surface.DefaultForeground = Color.White;

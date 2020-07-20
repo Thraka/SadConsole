@@ -59,7 +59,7 @@ namespace FeatureDemo.CustomConsoles
                     // Generate the content
                     mainData.Resize(80, 23, 2000, 2000, false);
                     mainData.SadComponents.Add(new InputHandling.MoveViewPortKeyboardHandler());
-                    mainData.FillWithRandomGarbage();
+                    mainData.FillWithRandomGarbage(Font);
                     mainData.IsVisible = true;
 
                     // Clear message data and make it transparent so that it acts as a layer

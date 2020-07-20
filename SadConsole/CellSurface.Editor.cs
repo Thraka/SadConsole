@@ -1969,9 +1969,12 @@ namespace SadConsole
         /// Fills a console with random colors and glyphs.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
+        /// <param name="associatedFont">The font used in assigning glyphs randomly.</param>
         /// <param name="useEffect">Not used.</param>
-        public static void FillWithRandomGarbage(this ICellSurface surface, bool useEffect = false)
+        public static void FillWithRandomGarbage(this ICellSurface surface, Font associatedFont, bool useEffect = false)
         {
+            int fontCellCount = associatedFont.Columns * associatedFont.Rows;
+
             //pulse.Reset();
             int charCounter = 0;
             for (int y = 0; y < surface.BufferHeight; y++)
@@ -1983,11 +1986,10 @@ namespace SadConsole
                     SetBackground(surface, x, y, surface.DefaultBackground);
                     SetBackground(surface, x, y, new Color((byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)255));
                     SetMirror(surface, x, y, (Mirror)GameHost.Instance.Random.Next(0, 4));
-                    charCounter++;
-                    if (charCounter > 255)
-                    {
+
+                    if (charCounter > fontCellCount)
                         charCounter = 0;
-                    }
+                    charCounter++;
                 }
             }
 

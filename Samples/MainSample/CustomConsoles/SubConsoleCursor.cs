@@ -22,7 +22,7 @@ namespace FeatureDemo.CustomConsoles
             UseKeyboard = true;
 
             // Setup main view
-            mainView.FillWithRandomGarbage();
+            mainView.FillWithRandomGarbage(mainView.Font);
             mainView.MouseMove += (s, e) => { if (e.Mouse.LeftButtonDown) e.Cell.Background = Color.Blue; };
 
             // Setup sub view
