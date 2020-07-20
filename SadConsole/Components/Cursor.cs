@@ -267,6 +267,29 @@ namespace SadConsole.Components
             return this;
         }
 
+        /// <summary>
+        /// Sets <see cref="PrintAppearance"/>.
+        /// </summary>
+        /// <param name="foreground">The foreground color.</param>
+        /// <param name="background">The background color</param>
+        /// <returns>This cursor object.</returns>
+        public Cursor SetPrintAppearance(Color foreground, Color background)
+        {
+            PrintAppearance = new ColoredGlyph(foreground, background);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets <see cref="PrintAppearance"/>, only changing the foreground color.
+        /// </summary>
+        /// <param name="foreground">The foreground color.</param>
+        /// <returns>This cursor object.</returns>
+        public Cursor SetPrintAppearance(Color foreground)
+        {
+            PrintAppearance = new ColoredGlyph(foreground, PrintAppearance.Background);
+            return this;
+        }
+
         private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
         {
             ColoredGlyph cell = _editor.Cells[_position.Y * _editor.BufferWidth + _position.X];
