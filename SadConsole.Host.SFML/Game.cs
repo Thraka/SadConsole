@@ -115,6 +115,8 @@ namespace SadConsole
         {
             OnStart?.Invoke();
 
+            SplashScreens.SplashScreenManager.CheckRun();
+
             // Update keyboard/mouse with base info
             SadConsole.GameHost.Instance.Keyboard.Update(TimeSpan.Zero);
             SadConsole.GameHost.Instance.Mouse.Update(TimeSpan.Zero);
@@ -341,7 +343,7 @@ namespace SadConsole
         }
 
         internal void InvokeFrameDraw() =>
-            OnFrameDraw();
+            OnFrameRender();
 
         internal void InvokeFrameUpdate() =>
             OnFrameUpdate();

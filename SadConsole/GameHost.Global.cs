@@ -70,12 +70,48 @@ namespace SadConsole
         /// <summary>
         /// The stack of focused consoles used by the mouse and keyboard.
         /// </summary>
-        public FocusedScreenObjectStack FocusedScreenObjects { get; } = new FocusedScreenObjectStack();
-
+        public FocusedScreenObjectStack FocusedScreenObjects { get; set; } = new FocusedScreenObjectStack();
 
         /// <summary>
         /// A global random number generator.
         /// </summary>
         public Random Random { get; set; } = new Random();
+
+        private GlobalState _state;
+
+        /// <summary>
+        /// Saves the global state, mainly the <see cref="FocusedScreenObjects"/> and <see cref="Screen"/> objects.
+        /// </summary>
+        public void SaveGlobalState()
+        {
+            _state = new GlobalState()
+            {
+                FocusedScreenObjects = FocusedScreenObjects,
+                Screen = Screen,
+                DefaultFont = DefaultFont,
+                DefaultFontSize = DefaultFontSize
+            };
+        }
+
+        /// <summary>
+        /// Restores the global state that was saved with <see cref="SaveGlobalState"/>.
+        /// </summary>
+        public void RestoreGlobalState()
+        {
+            if (_state == null) return;
+
+            FocusedScreenObjects = _state.FocusedScreenObjects;
+            Screen = _state.Screen;
+            DefaultFont = _state.DefaultFont;
+            DefaultFontSize = _state.DefaultFontSize;
+        }
+
+        private class GlobalState
+        {
+            public FocusedScreenObjectStack FocusedScreenObjects;
+            public Console Screen;
+            public Font DefaultFont;
+            public Font.Sizes DefaultFontSize;
+        }
     }
 }

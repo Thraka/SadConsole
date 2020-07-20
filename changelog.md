@@ -1,3 +1,8 @@
+## v9.0 Alpha 9
+
+- RandomGarbage uses the current font.
+- Add `SadConsole.Game.Instance.SetSplashScreens` method for adding startup splash screens to games.
+
 ## v9.0 Alpha 8
 
 - Fixed a lot of LayeredScreenSurface bugs.

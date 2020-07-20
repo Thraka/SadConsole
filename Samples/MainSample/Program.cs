@@ -14,7 +14,7 @@ namespace FeatureDemo
         private static void Main(string[] args)
         {
             //SadConsole.Settings.UseDefaultExtendedFont = true;
-            SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
+            //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
             //SadConsole.Host.Settings.UseHardwareFullScreen = true;
 
             SadConsole.Game.Create(80, 25); //, "Res/Fonts/C64.font");
@@ -66,6 +66,8 @@ namespace FeatureDemo
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove it.
 
+            // Splash screens show up at the start of the game.
+            SadConsole.Game.Instance.SetSplashScreens(new SadConsole.SplashScreens.Simple());
 
             //GameHost.Instance.MouseState.ProcessMouseWhenOffScreen = true;
             MainConsole = new Container();

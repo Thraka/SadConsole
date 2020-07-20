@@ -1387,11 +1387,12 @@
             <param name="destinationX">The x coordinate to copy to.</param>
             <param name="destinationY">The y coordinate to copy to.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.FillWithRandomGarbage(SadConsole.ICellSurface,System.Boolean)">
+        <member name="M:SadConsole.CellSurfaceExtensions.FillWithRandomGarbage(SadConsole.ICellSurface,SadConsole.Font,System.Boolean)">
             <summary>
             Fills a console with random colors and glyphs.
             </summary>
             <param name="surface">The surface being edited.</param>
+            <param name="associatedFont">The font used in assigning glyphs randomly.</param>
             <param name="useEffect">Not used.</param>
         </member>
         <member name="T:SadConsole.ColoredGlyph">
@@ -3480,6 +3481,11 @@
             Holds all of the renderer types.
             </summary>
         </member>
+        <member name="P:SadConsole.GameHost._splashScreens">
+            <summary>
+            The splashs screens to show on game startup.
+            </summary>
+        </member>
         <member name="P:SadConsole.GameHost.Instance">
             <summary>
             Instance of the game host.
@@ -3495,9 +3501,9 @@
             Contains the path to a file being serialized or deserialized.
             </summary>
         </member>
-        <member name="E:SadConsole.GameHost.FrameDraw">
+        <member name="E:SadConsole.GameHost.FrameRender">
             <summary>
-            Raised when the game draws a frame.
+            Raised when the game draws a frame to the screen.
             </summary>
         </member>
         <member name="E:SadConsole.GameHost.FrameUpdate">
@@ -3535,9 +3541,9 @@
             How many cells fit in the render area width used by SadConsole.
             </summary>
         </member>
-        <member name="M:SadConsole.GameHost.OnFrameDraw">
+        <member name="M:SadConsole.GameHost.OnFrameRender">
             <summary>
-            Raises the <see cref="E:SadConsole.GameHost.FrameDraw"/> event.
+            Raises the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
             </summary>
         </member>
         <member name="M:SadConsole.GameHost.OnFrameUpdate">
@@ -3589,6 +3595,12 @@
             Gets the state of the mouse from the implemented host.
             </summary>
             <returns>The state of the mouse.</returns>
+        </member>
+        <member name="M:SadConsole.GameHost.SetSplashScreens(SadConsole.ScreenSurface[])">
+            <summary>
+            The splash screens the game should sequentially show on startup.
+            </summary>
+            <param name="surfaces">The splash screens to show.</param>
         </member>
         <member name="M:SadConsole.GameHost.LoadFont(System.String)">
             <summary>
@@ -3701,6 +3713,16 @@
         <member name="P:SadConsole.GameHost.Random">
             <summary>
             A global random number generator.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.SaveGlobalState">
+            <summary>
+            Saves the global state, mainly the <see cref="P:SadConsole.GameHost.FocusedScreenObjects"/> and <see cref="P:SadConsole.GameHost.Screen"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.RestoreGlobalState">
+            <summary>
+            Restores the global state that was saved with <see cref="M:SadConsole.GameHost.SaveGlobalState"/>.
             </summary>
         </member>
         <member name="T:SadConsole.GlyphDefinition">
@@ -6933,6 +6955,16 @@
         <member name="F:SadConsole.Settings.WindowResizeOptions.None">
             <summary>
             Output always matches the window.
+            </summary>
+        </member>
+        <member name="T:SadConsole.SplashScreens.SplashScreenManager">
+            <summary>
+            GameHost use only. Use the <see cref="M:SadConsole.SplashScreens.SplashScreenManager.CheckRun"/> method to show any splash screens after <see cref="F:SadConsole.GameHost.OnStart"/> was called.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SplashScreens.SplashScreenManager.CheckRun">
+            <summary>
+            Checks if any splash screens have been added with <see cref="M:SadConsole.GameHost.SetSplashScreens(SadConsole.ScreenSurface[])"/>, if so, starts them.
             </summary>
         </member>
         <member name="T:SadConsole.StringParser.CommandTypes">

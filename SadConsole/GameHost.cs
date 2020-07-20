@@ -13,12 +13,17 @@ namespace SadConsole
     /// </summary>
     public abstract partial class GameHost : IDisposable
     {
+        private DateTime _gameStartedAt = DateTime.Now;
+
         /// <summary>
         /// Holds all of the renderer types.
         /// </summary>
         protected Dictionary<string, System.Type> _renderers = new Dictionary<string, Type>(5);
 
-        private DateTime _gameStartedAt = DateTime.Now;
+        /// <summary>
+        /// The splashs screens to show on game startup.
+        /// </summary>
+        protected internal Queue<ScreenSurface> _splashScreens { get; set; } = new Queue<ScreenSurface>();
 
         /// <summary>
         /// Instance of the game host.
@@ -36,9 +41,9 @@ namespace SadConsole
         protected internal static string SerializerPathHint { get; set; }
 
         /// <summary>
-        /// Raised when the game draws a frame.
+        /// Raised when the game draws a frame to the screen.
         /// </summary>
-        public event EventHandler<GameHost> FrameDraw;
+        public event EventHandler<GameHost> FrameRender;
 
         /// <summary>
         /// Raised when the game updates prior to drawing a frame.
@@ -76,10 +81,10 @@ namespace SadConsole
         public int ScreenCellsY { get; protected set; }
 
         /// <summary>
-        /// Raises the <see cref="FrameDraw"/> event.
+        /// Raises the <see cref="FrameRender"/> event.
         /// </summary>
-        protected virtual void OnFrameDraw() =>
-            FrameDraw?.Invoke(this, this);
+        protected virtual void OnFrameRender() =>
+            FrameRender?.Invoke(this, this);
 
         /// <summary>
         /// Raises the <see cref="FrameUpdate"/> event.
@@ -141,6 +146,13 @@ namespace SadConsole
         /// </summary>
         /// <returns>The state of the mouse.</returns>
         public abstract IMouseState GetMouseState();
+
+        /// <summary>
+        /// The splash screens the game should sequentially show on startup.
+        /// </summary>
+        /// <param name="surfaces">The splash screens to show.</param>
+        public void SetSplashScreens(params ScreenSurface[] surfaces) =>
+            _splashScreens = new Queue<ScreenSurface>(surfaces);
 
         /// <summary>
         /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.

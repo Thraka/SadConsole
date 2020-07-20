@@ -74,9 +74,10 @@ namespace SadConsole
             SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
             SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
 
-            SadConsole.GameHost.Instance.Screen = new Console(ScreenCellsX, ScreenCellsY);
+            Screen = new Console(ScreenCellsX, ScreenCellsY);
 
             OnStart?.Invoke();
+            SplashScreens.SplashScreenManager.CheckRun();
         }
 
         /// <inheritdoc/>
@@ -177,7 +178,7 @@ namespace SadConsole
         }
 
         internal void InvokeFrameDraw() =>
-            OnFrameDraw();
+            OnFrameRender();
 
         internal void InvokeFrameUpdate() =>
             OnFrameUpdate();
