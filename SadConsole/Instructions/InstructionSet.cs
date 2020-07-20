@@ -98,7 +98,7 @@ namespace SadConsole.Instructions
         /// </summary>
         /// <param name="expression">The code callback.</param>
         /// <returns>This instruction set.</returns>
-        public InstructionSet Code(Func<IScreenObject, bool> expression)
+        public InstructionSet Code(Func<IScreenObject, TimeSpan, bool> expression)
         {
             Instructions.AddLast(new CodeInstruction(expression));
             return this;
