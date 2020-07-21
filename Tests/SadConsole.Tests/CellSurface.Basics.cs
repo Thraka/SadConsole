@@ -10,7 +10,7 @@ namespace SadConsole.Tests
         {
             var surface1 = new SadConsole.CellSurface(20, 20);
 
-            surface1.FillWithRandomGarbage();
+            surface1.FillWithRandomGarbage(255);
 
             Color cellForeground = surface1[0].Foreground;
             Color newForeground = Color.Blue.GetRandomColor(new System.Random());
@@ -27,7 +27,7 @@ namespace SadConsole.Tests
         {
             var surface1 = new SadConsole.CellSurface(20, 20);
 
-            surface1.FillWithRandomGarbage();
+            surface1.FillWithRandomGarbage(255);
 
             Color newBackground = Color.Blue.GetRandomColor(new System.Random());
 
@@ -43,7 +43,7 @@ namespace SadConsole.Tests
         {
             var surface1 = new SadConsole.CellSurface(20, 20);
 
-            surface1.FillWithRandomGarbage();
+            surface1.FillWithRandomGarbage(255);
 
             int newGlyph = new System.Random().Next(0, 256);
 
@@ -59,7 +59,7 @@ namespace SadConsole.Tests
         {
             var surface1 = new SadConsole.CellSurface(20, 20);
 
-            surface1.FillWithRandomGarbage();
+            surface1.FillWithRandomGarbage(255);
 
             Mirror cellMirror = surface1[0].Mirror;
             Mirror newMirror = cellMirror switch

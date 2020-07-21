@@ -10,7 +10,7 @@ namespace SadConsole.Tests
             var surface1 = new SadConsole.CellSurface(20, 20);
             var surface2 = new SadConsole.CellSurface(20, 20);
 
-            surface1.FillWithRandomGarbage();
+            surface1.FillWithRandomGarbage(255);
             surface1.Copy(surface2);
 
             for (int i = 0; i < surface1.Cells.Length; i++)
@@ -28,7 +28,7 @@ namespace SadConsole.Tests
             ColoredGlyph defaultCell = new ColoredGlyph();
             surface2[0].CopyAppearanceTo(defaultCell);
 
-            surface1.FillWithRandomGarbage();
+            surface1.FillWithRandomGarbage(255);
             surface1.Copy(surface2);
 
             for (int y = 0; y < surface2.BufferHeight; y++)

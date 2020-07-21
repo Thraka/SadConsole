@@ -52,7 +52,7 @@ namespace SadConsole.Tests
             new SadConsole.Tests.BasicGameHost();
 
             ScreenSurface obj = new ScreenSurface(10, 10);
-            obj.Surface.FillWithRandomGarbage();
+            obj.Surface.FillWithRandomGarbage(255);
             obj.Position = (10, 10);
             obj.IsEnabled = false;
             obj.IsVisible = false;
@@ -60,7 +60,7 @@ namespace SadConsole.Tests
             obj.UseMouse = false;
 
             ScreenSurface obj2 = new ScreenSurface(20, 20);
-            obj2.Surface.FillWithRandomGarbage();
+            obj2.Surface.FillWithRandomGarbage(255);
             obj2.Position = (15, 2);
             obj2.IsEnabled = true;
             obj2.IsVisible = false;
