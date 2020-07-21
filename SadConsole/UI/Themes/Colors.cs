@@ -334,6 +334,7 @@ namespace SadConsole.UI.Themes
             colors.TextLight = colors.Gray;
             colors.TextDark = colors.GrayDark;
             colors.TextFocused = colors.White;
+            colors.Lines = colors.CyanDark;
 
             colors.ControlBack = colors.Black;
             colors.ControlBackLight = (colors.ControlBack * 1.3f).FillAlpha();

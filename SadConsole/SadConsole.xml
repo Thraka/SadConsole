@@ -1221,7 +1221,7 @@
             <param name="x">The x position.</param>
             <param name="y">The y position.</param>
             <remarks>
-            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="!:EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurfaceExtensions.Erase(SadConsole.ICellSurface)">
@@ -1230,7 +1230,7 @@
             </summary>
             <param name="surface">The surface being edited.</param>
             <remarks>
-            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="!:EraseGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurfaceExtensions.Clear(SadConsole.ICellSurface)">
@@ -1336,7 +1336,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceExtensions.ConnectLines(SadConsole.ICellSurface)">
             <summary>
-            Connects all lines in a surface for both <see cref="!:ConnectedLineThin"/> and <see cref="!:ConnectedLineThick"/> styles.
+            Connects all lines in a surface for both <see cref="P:SadConsole.ICellSurface.ConnectedLineThin"/> and <see cref="P:SadConsole.ICellSurface.ConnectedLineThick"/> styles.
             </summary>
             <param name="surface">The surface being edited.</param>
         </member>
@@ -1387,13 +1387,19 @@
             <param name="destinationX">The x coordinate to copy to.</param>
             <param name="destinationY">The y coordinate to copy to.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.FillWithRandomGarbage(SadConsole.ICellSurface,SadConsole.Font,System.Boolean)">
+        <member name="M:SadConsole.CellSurfaceExtensions.FillWithRandomGarbage(SadConsole.ICellSurface,SadConsole.Font)">
             <summary>
             Fills a console with random colors and glyphs.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="associatedFont">The font used in assigning glyphs randomly.</param>
-            <param name="useEffect">Not used.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceExtensions.FillWithRandomGarbage(SadConsole.ICellSurface,System.Int32)">
+            <summary>
+            Fills a console with random colors and glyphs.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="maxGlyphValue">The maximum glyph value to use on the surface.</param>
         </member>
         <member name="T:SadConsole.ColoredGlyph">
             <summary>
@@ -1884,6 +1890,21 @@
             Sets <see cref="P:SadConsole.Components.Cursor.PrintAppearance"/>.
             </summary>
             <param name="appearance">The appearance to set.</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.SetPrintAppearance(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Sets <see cref="P:SadConsole.Components.Cursor.PrintAppearance"/>.
+            </summary>
+            <param name="foreground">The foreground color.</param>
+            <param name="background">The background color</param>
+            <returns>This cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.SetPrintAppearance(SadRogue.Primitives.Color)">
+            <summary>
+            Sets <see cref="P:SadConsole.Components.Cursor.PrintAppearance"/>, only changing the foreground color.
+            </summary>
+            <param name="foreground">The foreground color.</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Print(System.String)">
@@ -3958,22 +3979,22 @@
             <param name="bufferWidth">The maximum width of the surface.</param>
             <param name="bufferHeight">The maximum height of the surface.</param>
         </member>
-        <member name="F:SadConsole.ICellSurface.ConnectedLineThin">
+        <member name="P:SadConsole.ICellSurface.ConnectedLineThin">
             <summary>
             Glyph indexes for a thin line.
             </summary>
         </member>
-        <member name="F:SadConsole.ICellSurface.ConnectedLineThick">
+        <member name="P:SadConsole.ICellSurface.ConnectedLineThick">
             <summary>
             Glyph indexes for a thick line.
             </summary>
         </member>
-        <member name="F:SadConsole.ICellSurface.ConnectedLineThinExtended">
+        <member name="P:SadConsole.ICellSurface.ConnectedLineThinExtended">
             <summary>
             Glyph indexes for a thin line using a SadConsole extended font.
             </summary>
         </member>
-        <member name="F:SadConsole.ICellSurface.ConnectedLineEmpty">
+        <member name="P:SadConsole.ICellSurface.ConnectedLineEmpty">
             <summary>
             Glyph indexes for an empty line 0. 
             </summary>
@@ -5299,7 +5320,7 @@
             Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.CodeInstruction.#ctor(System.Func{SadConsole.IScreenObject,System.Boolean})">
+        <member name="M:SadConsole.Instructions.CodeInstruction.#ctor(System.Func{SadConsole.IScreenObject,System.TimeSpan,System.Boolean})">
             <summary>
             Creates a new instruction with the specified callback.
             </summary>
@@ -5308,7 +5329,7 @@
         <member name="M:SadConsole.Instructions.CodeInstruction.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Instructions.CodeInstruction.SetCallback(System.Func{SadConsole.IScreenObject,System.Boolean})">
+        <member name="M:SadConsole.Instructions.CodeInstruction.SetCallback(System.Func{SadConsole.IScreenObject,System.TimeSpan,System.Boolean})">
             <summary>
             Sets the callback used by the instruction.
             </summary>
@@ -5531,7 +5552,14 @@
             <param name="instruction"></param>
             <returns>This instruction set.</returns>
         </member>
-        <member name="M:SadConsole.Instructions.InstructionSet.Code(System.Func{SadConsole.IScreenObject,System.Boolean})">
+        <member name="M:SadConsole.Instructions.InstructionSet.Code(System.Func{SadConsole.IScreenObject,System.TimeSpan,System.Boolean})">
+            <summary>
+            Adds a new <see cref="T:SadConsole.Instructions.CodeInstruction"/> instruction with the specified callback to the end of this set.
+            </summary>
+            <param name="expression">The code callback.</param>
+            <returns>This instruction set.</returns>
+        </member>
+        <member name="M:SadConsole.Instructions.InstructionSet.Code(System.Action)">
             <summary>
             Adds a new <see cref="T:SadConsole.Instructions.CodeInstruction"/> instruction with the specified callback to the end of this set.
             </summary>
@@ -7140,6 +7168,13 @@
             The collection of controls.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.ControlHost.Item(System.Int32)">
+            <summary>
+            Gets a control by index.
+            </summary>
+            <param name="index">The index of the control.</param>
+            <returns>A control.</returns>
+        </member>
         <member name="P:SadConsole.UI.ControlHost.ParentConsole">
             <summary>
             The parent object hosting the controls.
@@ -7153,11 +7188,6 @@
         <member name="P:SadConsole.UI.ControlHost.IsDirty">
             <summary>
             Indicates that the control host needs to be redrawn.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ControlHost.Controls">
-            <summary>
-            Gets an array containing all of the controls this host contains.
             </summary>
         </member>
         <member name="P:SadConsole.UI.ControlHost.CapturedControl">
@@ -7193,6 +7223,11 @@
         <member name="P:SadConsole.UI.ControlHost.PreviousTabConsole">
             <summary>
             Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlHost.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.Count">
+            <summary>
+            The total number of controls in this component.
             </summary>
         </member>
         <member name="P:SadConsole.UI.ControlHost.DisableControlFocusing">
@@ -7243,6 +7278,11 @@
         <member name="M:SadConsole.UI.ControlHost.RemoveAll">
             <summary>
             Removes all controls from this console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.GetControlsArray">
+            <summary>
+            Gets an array containing all of the controls this host contains.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlHost.Contains(SadConsole.UI.Controls.ControlBase)">
@@ -7303,7 +7343,7 @@
             A basic console that can contain controls.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.ControlsConsole.ControlHostComponent">
+        <member name="P:SadConsole.UI.ControlsConsole.Controls">
             <summary>
             The controls host holding all the controls.
             </summary>
@@ -8663,15 +8703,15 @@
         </member>
         <member name="F:SadConsole.UI.Themes.ListBoxTheme.BorderTheme">
             <summary>
-            The drawing theme for the boarder when <see cref="F:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
+            The drawing theme for the boarder when <see cref="P:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
             </summary>
         </member>
         <member name="F:SadConsole.UI.Themes.ListBoxTheme.BorderLineStyle">
             <summary>
-            The line style for the border when <see cref="F:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
+            The line style for the border when <see cref="P:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.ListBoxTheme.DrawBorder">
+        <member name="P:SadConsole.UI.Themes.ListBoxTheme.DrawBorder">
             <summary>
             If false the border will not be drawn.
             </summary>

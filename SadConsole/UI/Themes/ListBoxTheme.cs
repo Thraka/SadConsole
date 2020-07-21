@@ -11,6 +11,9 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class ListBoxTheme : ThemeBase
     {
+        protected bool _reconfigureSrollBar;
+        private bool _drawBorder;
+
         /// <summary>
         /// The drawing theme for the boarder when <see cref="DrawBorder"/> is true.
         /// </summary>
@@ -27,7 +30,11 @@ namespace SadConsole.UI.Themes
         /// If false the border will not be drawn.
         /// </summary>
         [DataMember]
-        public bool DrawBorder;
+        public bool DrawBorder
+        {
+            get => _drawBorder;
+            set { _drawBorder = value; _reconfigureSrollBar = true; }
+        }
 
         /// <summary>
         /// The appearance of the scrollbar used by the listbox control.
@@ -45,16 +52,26 @@ namespace SadConsole.UI.Themes
             BorderTheme = new ThemeStates();
         }
 
+        protected void SetupScrollBar(ListBox listbox)
+        {
+            if (DrawBorder)
+                listbox.SetupScrollBar(Orientation.Vertical, listbox.Height - 2, new Point(listbox.Width - 1, 1));
+            else
+                listbox.SetupScrollBar(Orientation.Vertical, listbox.Height, new Point(listbox.Width - 1, 0));
+        }
+
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
+            if (!(control is ListBox listbox)) throw new Exception("Added ListBoxTheme to a control that isn't a ListBox.");
+
             control.Surface = new CellSurface(control.Width, control.Height)
             {
                 DefaultBackground = Color.Transparent
             };
             control.Surface.Clear();
 
-            base.Attached(control);
+            SetupScrollBar(listbox);
         }
 
         /// <inheritdoc />
@@ -69,6 +86,9 @@ namespace SadConsole.UI.Themes
             {
                 return;
             }
+
+            if (_reconfigureSrollBar)
+                SetupScrollBar(listbox);
 
             RefreshTheme(control.FindThemeColors(), control);
             
@@ -147,12 +167,12 @@ namespace SadConsole.UI.Themes
             {
                 listbox.ScrollBar.IsDirty = true;
                 listbox.ScrollBar.Update(time);
-                int y = listbox.ScrollBarRenderLocation.Y;
+                int y = 0;
 
                 for (int ycell = 0; ycell < listbox.ScrollBar.Height; ycell++)
                 {
-                    listbox.Surface.SetGlyph(listbox.ScrollBarRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell].Glyph);
-                    listbox.Surface.SetCellAppearance(listbox.ScrollBarRenderLocation.X, y, listbox.ScrollBar.Surface[0, ycell]);
+                    listbox.Surface.SetGlyph(listbox.ScrollBarRenderLocation.X, listbox.ScrollBarRenderLocation.Y + y, listbox.ScrollBar.Surface[0, ycell].Glyph);
+                    listbox.Surface.SetCellAppearance(listbox.ScrollBarRenderLocation.X, listbox.ScrollBarRenderLocation.Y + y, listbox.ScrollBar.Surface[0, ycell]);
                     y++;
                 }
             }
@@ -178,7 +198,7 @@ namespace SadConsole.UI.Themes
             ScrollBarTheme?.RefreshTheme(colors, listbox.ScrollBar);
 
             BorderTheme.RefreshTheme(colors, control);
-            BorderTheme.SetForeground(Normal.Foreground);
+            BorderTheme.SetForeground(colors.Lines);
             BorderTheme.SetBackground(Normal.Background);
         }
 

@@ -18,6 +18,7 @@ namespace SadConsole.UI.Controls
         }
 
         protected bool initialized;
+
         [DataMember(Name = "SelectedIndex")]
         protected int selectedIndex;
 
@@ -26,10 +27,14 @@ namespace SadConsole.UI.Controls
         //protected int[] borderLineStyle;
         protected DateTime leftMouseLastClick = DateTime.Now;
 
-        [DataMember(Name = "ScrollBarOffset")]
-        protected Point scrollBarOffset = new Point(0, 0);
-        [DataMember(Name = "ScrollBarSizeAdjust")]
-        protected int scrollBarSizeAdjust = 0;
+        [DataMember]
+        private Orientation _serializedScrollOrientation;
+
+        [DataMember]
+        private Point _serializedScrollPosition;
+
+        [DataMember]
+        private int _serializedScrollSizeValue;
 
         /// <summary>
         /// An event that triggers when the <see cref="SelectedItem"/> changes.
@@ -142,27 +147,13 @@ namespace SadConsole.UI.Controls
                 }
             }
         }
-
-        public Point ScrollBarOffset
-        {
-            get => scrollBarOffset;
-            set { scrollBarOffset = value; SetupScrollBar(); }
-        }
-
-        public int ScrollBarSizeAdjust
-        {
-            get => scrollBarSizeAdjust;
-            set { scrollBarSizeAdjust = value; SetupScrollBar(); }
-        }
-
+        
         /// <summary>
         /// Creates a new instance of the listbox control.
         /// </summary>
         public ListBox(int width, int height) : base(width, height)
         {
             initialized = true;
-            ScrollBarRenderLocation = new Point(width - 1, 0);
-            SetupScrollBar();
 
             Items = new ObservableCollection<object>();
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
@@ -174,25 +165,47 @@ namespace SadConsole.UI.Controls
 
         protected override void OnParentChanged() => ScrollBar.Parent = Parent;
 
+        protected override void OnPositionChanged() => ScrollBar.Position = Position + ScrollBarRenderLocation;
+
         private void _scrollbar_ValueChanged(object sender, EventArgs e) => IsDirty = true;
 
         protected virtual void OnSelectedItemChanged() => SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(selectedItem));
 
         protected virtual void OnItemAction() => SelectedItemExecuted?.Invoke(this, new SelectedItemEventArgs(selectedItem));
 
-        protected override void OnPositionChanged() => ScrollBar.Position = Position + new Point(Width - 1, 0);
-
-        protected void SetupScrollBar()
+        public void SetupScrollBar(Orientation orientation, int sizeValue, Point position)
         {
-            if (!initialized)
+            bool scrollBarExists = false;
+            int value = 0;
+            int max = 0;
+
+            if (ScrollBar != null)
             {
-                return;
+                ScrollBar.ValueChanged -= _scrollbar_ValueChanged;
+                value = ScrollBar.Value;
+                max = ScrollBar.Maximum;
+                scrollBarExists = true;
             }
+
             //_scrollBar.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
-            ScrollBar = new ScrollBar(Orientation.Vertical, Height);
-            ScrollBar.ValueChanged += new EventHandler(_scrollbar_ValueChanged);
+            ScrollBar = new ScrollBar(Orientation.Vertical, sizeValue);
+
+            if (scrollBarExists)
+            {
+                ScrollBar.Maximum = max;
+                ScrollBar.Value = value;
+            }
+
+            ScrollBar.ValueChanged += _scrollbar_ValueChanged;
             ScrollBar.IsVisible = false;
-            ScrollBar.Position = Position + new Point(Width - 1, 0);
+            ScrollBarRenderLocation = position;
+            ScrollBar.Position = position + Position;
+            ScrollBar.Parent = Parent;
+
+            _serializedScrollSizeValue = sizeValue;
+            _serializedScrollPosition = position;
+            _serializedScrollOrientation = orientation;
+
             OnThemeChanged();
             DetermineState();
         }
@@ -415,16 +428,14 @@ namespace SadConsole.UI.Controls
         private void AfterDeserialized(StreamingContext context)
         {
             initialized = true;
+            SetupScrollBar(_serializedScrollOrientation, _serializedScrollSizeValue, _serializedScrollPosition);
 
-            ScrollBar.ValueChanged += new EventHandler(_scrollbar_ValueChanged);
             Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
 
             if (selectedIndex != -1)
             {
                 SelectedItem = Items[selectedIndex];
             }
-
-            SetupScrollBar();
 
             DetermineState();
             IsDirty = true;

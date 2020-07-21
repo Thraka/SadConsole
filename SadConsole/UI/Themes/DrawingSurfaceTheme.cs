@@ -27,8 +27,6 @@ namespace SadConsole.UI.Themes
                 DefaultBackground = Color.Transparent
             };
             control.Surface.Clear();
-
-            base.Attached(control);
         }
 
         /// <inheritdoc />

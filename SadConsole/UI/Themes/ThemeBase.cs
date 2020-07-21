@@ -21,7 +21,7 @@ namespace SadConsole.UI.Themes
         /// Called when the theme is attached to a control.
         /// </summary>
         /// <param name="control">The control that will use this theme instance.</param>
-        public virtual void Attached(ControlBase control) { }
+        public abstract void Attached(ControlBase control);
 
         /// <summary>
         /// Creates a new theme instance based on the current instance.
