@@ -105,6 +105,17 @@ namespace SadConsole.Instructions
         }
 
         /// <summary>
+        /// Adds a new <see cref="CodeInstruction"/> instruction with the specified callback to the end of this set.
+        /// </summary>
+        /// <param name="expression">The code callback.</param>
+        /// <returns>This instruction set.</returns>
+        public InstructionSet Code(Action expression)
+        {
+            Instructions.AddLast(new CodeInstruction((s, d) => { expression.Invoke(); return true; }));
+            return this;
+        }
+
+        /// <summary>
         /// Adds a new <see cref="PredicateInstruction"/> instruction with the specified callback to the end of this set.
         /// </summary>
         /// <param name="expression">The code callback.</param>
