@@ -22,7 +22,7 @@ namespace SadConsole.UI
         /// <summary>
         /// The controls host holding all the controls.
         /// </summary>
-        public ControlHost ControlHostComponent { get; }
+        public ControlHost Controls { get; }
 
         /// <summary>
         /// Creates a new console.
@@ -64,8 +64,8 @@ namespace SadConsole.UI
         /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
         public ControlsConsole(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
         {
-            ControlHostComponent = new ControlHost();
-            SadComponents.Add(ControlHostComponent);
+            Controls = new ControlHost();
+            SadComponents.Add(Controls);
         }
     }
 }

@@ -87,7 +87,7 @@ namespace SadConsole.UI.Controls
                     {
                         if (Parent != null)
                         {
-                            foreach (ControlBase child in Parent.Controls)
+                            foreach (ControlBase child in Parent)
                             {
                                 if (child is RadioButton && child != this)
                                 {

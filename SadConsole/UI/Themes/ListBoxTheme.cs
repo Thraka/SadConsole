@@ -21,7 +21,7 @@ namespace SadConsole.UI.Themes
         /// The line style for the border when <see cref="DrawBorder"/> is true.
         /// </summary>
         [DataMember]
-        public int[] BorderLineStyle = (int[])ICellSurface.ConnectedLineThick.Clone();
+        public int[] BorderLineStyle = (int[])ICellSurface.ConnectedLineThin.Clone();
 
         /// <summary>
         /// If false the border will not be drawn.

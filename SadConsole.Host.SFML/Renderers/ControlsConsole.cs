@@ -121,7 +121,7 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Reset(BackingTextureControls, RenderStates.Default, Transform.Identity);
 
                 if (screen.Tint.A != 255)
-                    foreach (UI.Controls.ControlBase control in screen.GetSadComponent<UI.ControlHost>().Controls)
+                    foreach (UI.Controls.ControlBase control in screen.GetSadComponent<UI.ControlHost>())
                     {
                         if (!control.IsVisible) continue;
 

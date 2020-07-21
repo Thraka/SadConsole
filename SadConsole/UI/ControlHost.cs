@@ -44,6 +44,14 @@ namespace SadConsole.UI
         #region Properties
 
         /// <summary>
+        /// Gets a control by index.
+        /// </summary>
+        /// <param name="index">The index of the control.</param>
+        /// <returns>A control.</returns>
+        public ControlBase this[int index] =>
+            ControlsList[index];
+
+        /// <summary>
         /// The parent object hosting the controls.
         /// </summary>
         public IScreenSurface ParentConsole { get; private set; }
@@ -69,11 +77,6 @@ namespace SadConsole.UI
         /// Indicates that the control host needs to be redrawn.
         /// </summary>
         public bool IsDirty { get; set; }
-
-        /// <summary>
-        /// Gets an array containing all of the controls this host contains.
-        /// </summary>
-        public ControlBase[] Controls => ControlsList.ToArray();
 
         /// <summary>
         /// Gets the control currently capturing mouse events.
@@ -128,6 +131,12 @@ namespace SadConsole.UI
         /// Sets reference to the console to tab to when the <see cref="CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
         /// </summary>
         public IScreenSurface PreviousTabConsole { get; set; }
+
+        /// <summary>
+        /// The total number of controls in this component.
+        /// </summary>
+        public int Count =>
+            ControlsList.Count;
 
         /// <summary>
         /// When set to true, child controls are not alerted to focused and non-focused states.
@@ -595,6 +604,12 @@ namespace SadConsole.UI
 
             IsDirty = true;
         }
+
+        /// <summary>
+        /// Gets an array containing all of the controls this host contains.
+        /// </summary>
+        public ControlBase[] GetControlsArray() =>
+            ControlsList.ToArray();
 
         /// <summary>
         /// Checks if the specified control exists in this console.

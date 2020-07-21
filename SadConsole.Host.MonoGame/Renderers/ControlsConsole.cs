@@ -130,7 +130,7 @@ namespace SadConsole.Renderers
 
                 if (screen.Tint.A != 255)
                 {
-                    foreach (UI.Controls.ControlBase control in uiComponent.Controls)
+                    foreach (UI.Controls.ControlBase control in uiComponent)
                     {
                         if (!control.IsVisible) continue;
                         RenderControlCells(control, screen.Font, screen.FontSize, screen.Surface.View, screen.Surface.BufferWidth);
