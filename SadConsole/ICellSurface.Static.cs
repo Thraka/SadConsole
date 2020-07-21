@@ -7,7 +7,7 @@ namespace SadConsole
         /// <summary>
         /// Glyph indexes for a thin line.
         /// </summary>
-        public static readonly int[] ConnectedLineThin =
+        public static int[] ConnectedLineThin => new[]
           { 218, 196, 191,
             179, 197, 179,
             192, 196, 217,
@@ -19,7 +19,7 @@ namespace SadConsole
         /// <summary>
         /// Glyph indexes for a thick line.
         /// </summary>
-        public static readonly int[] ConnectedLineThick =
+        public static int[] ConnectedLineThick => new[]
           { 201, 205, 187,
             186, 206, 186,
             200, 205, 188,
@@ -31,7 +31,7 @@ namespace SadConsole
         /// <summary>
         /// Glyph indexes for a thin line using a SadConsole extended font.
         /// </summary>
-        public static readonly int[] ConnectedLineThinExtended =
+        public static int[] ConnectedLineThinExtended => new[]
           { 261, 257, 262,
             256, 295, 258,
             264, 259, 263,
@@ -43,7 +43,7 @@ namespace SadConsole
         /// <summary>
         /// Glyph indexes for an empty line 0. 
         /// </summary>
-        public static readonly int[] ConnectedLineEmpty =
+        public static int[] ConnectedLineEmpty => new[]
           { 0, 0, 0,
             0, 0, 0,
             0, 0, 0,
