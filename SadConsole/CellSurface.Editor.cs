@@ -1297,7 +1297,7 @@ namespace SadConsole
         /// <param name="x">The x position.</param>
         /// <param name="y">The y position.</param>
         /// <remarks>
-        /// The cell altered by this method has the <see cref="ColoredGlyph.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
+        /// The cell altered by this method has the <see cref="ColoredGlyph.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
         /// </remarks>
         public static void Erase(this ICellSurface surface, int x, int y)
         {
@@ -1318,7 +1318,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <remarks>
-        /// All cells have <see cref="ColoredGlyph.Glyph"/> set to <see cref="EraseGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
+        /// All cells have <see cref="ColoredGlyph.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
         /// </remarks>
         public static void Erase(this ICellSurface surface)
         {
@@ -1720,7 +1720,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Connects all lines in a surface for both <see cref="ConnectedLineThin"/> and <see cref="ConnectedLineThick"/> styles.
+        /// Connects all lines in a surface for both <see cref="ICellSurface.ConnectedLineThin"/> and <see cref="ICellSurface.ConnectedLineThick"/> styles.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1970,11 +1970,16 @@ namespace SadConsole
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="associatedFont">The font used in assigning glyphs randomly.</param>
-        /// <param name="useEffect">Not used.</param>
-        public static void FillWithRandomGarbage(this ICellSurface surface, Font associatedFont, bool useEffect = false)
-        {
-            int fontCellCount = associatedFont.Columns * associatedFont.Rows;
+        public static void FillWithRandomGarbage(this ICellSurface surface, Font associatedFont) =>
+            FillWithRandomGarbage(surface, associatedFont.Columns * associatedFont.Rows);
 
+        /// <summary>
+        /// Fills a console with random colors and glyphs.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="maxGlyphValue">The maximum glyph value to use on the surface.</param>
+        public static void FillWithRandomGarbage(this ICellSurface surface, int maxGlyphValue)
+        {
             //pulse.Reset();
             int charCounter = 0;
             for (int y = 0; y < surface.BufferHeight; y++)
@@ -1987,7 +1992,7 @@ namespace SadConsole
                     SetBackground(surface, x, y, new Color((byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)255));
                     SetMirror(surface, x, y, (Mirror)GameHost.Instance.Random.Next(0, 4));
 
-                    if (charCounter > fontCellCount)
+                    if (charCounter > maxGlyphValue)
                         charCounter = 0;
                     charCounter++;
                 }
