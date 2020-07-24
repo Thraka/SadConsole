@@ -19,6 +19,11 @@ namespace SadConsole.Renderers
         protected Color _finalDrawColor = SadRogue.Primitives.Color.White.ToSFMLColor();
 
         /// <summary>
+        /// The blend state used by this renderer.
+        /// </summary>
+        public BlendMode SFMLBlendState { get; set; } = SadConsole.Host.Settings.SFMLSurfaceBlendMode;
+
+        /// <summary>
         /// Name of this renderer type.
         /// </summary>
         public static string Name => "screenobject";
@@ -128,7 +133,7 @@ namespace SadConsole.Renderers
         protected virtual void RefreshBegin(IScreenSurface surface)
         {
             BackingTexture.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Reset(BackingTexture, SadConsole.Host.Settings.SFMLSurfaceBlendMode, Transform.Identity);
+            Host.Global.SharedSpriteBatch.Reset(BackingTexture, SFMLBlendState, Transform.Identity);
         }
 
         /// <summary>
