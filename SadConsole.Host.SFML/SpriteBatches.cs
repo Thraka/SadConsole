@@ -15,13 +15,17 @@ namespace SFML.Graphics
 
         private int _maxIndex = 800;
 
-        public void Reset(RenderTarget target, RenderStates state, Matrix renderingTransform)
+        public void Reset(RenderTarget target, BlendMode blend, Matrix renderingTransform, Shader shader = null)
         {
             _transform = renderingTransform;
             _lastDrawCall.VertIndex = 0;
             _target = target;
-            _state = state;
+            _state = RenderStates.Default;
+            _state.BlendMode = blend;
             _state.Transform *= renderingTransform;
+
+            if (shader != null)
+                _state.Shader = shader;
         }
 
         private class BatchDrawCall

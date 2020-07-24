@@ -51,7 +51,7 @@ namespace SadConsole.Host
                 surface.Render(gameTime.ElapsedGameTime);
                 
                 Game.GraphicsDevice.SetRenderTarget(null);
-                Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+                Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
                 Global.SharedSpriteBatch.Draw(((Renderers.ScreenSurfaceRenderer)surface.Renderer).BackingTexture, Vector2.Zero, XnaColor.White);
                 Global.SharedSpriteBatch.End();
             }

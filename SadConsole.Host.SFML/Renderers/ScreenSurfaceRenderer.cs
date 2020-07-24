@@ -128,7 +128,7 @@ namespace SadConsole.Renderers
         protected virtual void RefreshBegin(IScreenSurface surface)
         {
             BackingTexture.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Reset(BackingTexture, RenderStates.Default, Transform.Identity);
+            Host.Global.SharedSpriteBatch.Reset(BackingTexture, SadConsole.Host.Settings.SFMLSurfaceBlendMode, Transform.Identity);
         }
 
         /// <summary>

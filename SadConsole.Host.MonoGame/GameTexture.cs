@@ -237,7 +237,7 @@ namespace SadConsole.Host
             SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(resized);
             SadConsole.Host.Global.GraphicsDevice.Clear(MonoColor.Transparent);
             SadConsole.Host.Global.SharedSpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
-                                                               Microsoft.Xna.Framework.Graphics.BlendState.AlphaBlend,
+                                                               SadConsole.Host.Settings.MonoGameSurfaceBlendState,
                                                                Microsoft.Xna.Framework.Graphics.SamplerState.AnisotropicClamp,
                                                                Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
                                                                Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone);

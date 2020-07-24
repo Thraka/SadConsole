@@ -172,6 +172,16 @@
             Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
             </summary>
         </member>
+        <member name="P:SadConsole.Host.Settings.MonoGameSurfaceBlendState">
+            <summary>
+            The blend state used with <see cref="T:SadConsole.Renderers.IRenderer"/> on surfaces.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.MonoGameScreenBlendState">
+            <summary>
+            The blend state used when drawing surfaces to the screen.
+            </summary>
+        </member>
         <member name="P:SadConsole.Game.UseTitleContainer">
             <summary>
             When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
@@ -324,6 +334,11 @@
             <remarks>
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.MonoGameBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
         </member>
         <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
             <summary>

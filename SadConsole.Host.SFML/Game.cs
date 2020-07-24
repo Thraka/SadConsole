@@ -91,6 +91,8 @@ namespace SadConsole
             SadConsole.Host.Global.GraphicsDevice = window;
             SadConsole.Host.Global.SharedSpriteBatch = new SpriteBatch();
 
+            //SadConsole.Host.Global.RenderStates.BlendMode = BlendMode.Multiply
+
             SadConsole.Settings.Rendering.RenderWidth = WindowSize.X;
             SadConsole.Settings.Rendering.RenderHeight = WindowSize.Y;
             ResetRendering();
@@ -174,7 +176,7 @@ namespace SadConsole
                     Host.Global.RenderOutput.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
 
                     // Render each draw call
-                    Host.Global.SharedSpriteBatch.Reset(Host.Global.RenderOutput, RenderStates.Default, Transform.Identity);
+                    Host.Global.SharedSpriteBatch.Reset(Host.Global.RenderOutput, SadConsole.Host.Settings.SFMLScreenBlendMode, Transform.Identity);
 
                     foreach (DrawCalls.IDrawCall call in SadConsole.Game.Instance.DrawCalls)
                         call.Draw();
@@ -185,7 +187,7 @@ namespace SadConsole
                     // If we're going to draw to the screen, do it.
                     if (SadConsole.Settings.DoFinalDraw)
                     {
-                        Host.Global.SharedSpriteBatch.Reset(Host.Global.GraphicsDevice, RenderStates.Default, Transform.Identity);
+                        Host.Global.SharedSpriteBatch.Reset(Host.Global.GraphicsDevice, SadConsole.Host.Settings.SFMLScreenBlendMode, Transform.Identity, SadConsole.Host.Settings.SFMLScreenShader);
                         Host.Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Host.Global.RenderOutput.Size.X, (int)Host.Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Host.Global.RenderOutput.Texture);
                         Host.Global.SharedSpriteBatch.End();
                     }

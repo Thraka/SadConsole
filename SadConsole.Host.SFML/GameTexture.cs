@@ -223,7 +223,7 @@ namespace SadConsole.Host
             var resized = new RenderTexture((uint)width, (uint)height);
 
             var batcher = new SpriteBatch();
-            batcher.Reset(resized, RenderStates.Default, Transform.Identity);
+            batcher.Reset(resized, SadConsole.Host.Settings.SFMLSurfaceBlendMode, Transform.Identity);
             batcher.DrawQuad(new IntRect(0, 0, (int)resized.Size.X, (int)resized.Size.Y), new IntRect(0, 0, (int)_texture.Size.X, (int)_texture.Size.Y), SFMLColor.White, _texture);
             batcher.End();
 

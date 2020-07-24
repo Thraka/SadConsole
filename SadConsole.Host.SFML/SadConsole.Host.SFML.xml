@@ -128,6 +128,21 @@
             The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
+            <summary>
+            The blend state used with <see cref="T:SadConsole.Renderers.IRenderer"/> on surfaces.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLScreenBlendMode">
+            <summary>
+            The blend state used when drawing surfaces to the final texture and screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLScreenShader">
+            <summary>
+            A shader used when drawing the final texture to the screen.
+            </summary>
+        </member>
         <member name="T:SadConsole.Game">
             <summary>
             The SadConsole game object.

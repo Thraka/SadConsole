@@ -118,7 +118,7 @@ namespace SadConsole.Renderers
             if (force || uiComponent.IsDirty)
             {
                 BackingTextureControls.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Reset(BackingTextureControls, RenderStates.Default, Transform.Identity);
+                Host.Global.SharedSpriteBatch.Reset(BackingTextureControls, SadConsole.Host.Settings.SFMLSurfaceBlendMode, Transform.Identity);
 
                 if (screen.Tint.A != 255)
                     foreach (UI.Controls.ControlBase control in screen.GetSadComponent<UI.ControlHost>())

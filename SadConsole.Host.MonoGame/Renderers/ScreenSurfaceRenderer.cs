@@ -17,6 +17,11 @@ namespace SadConsole.Renderers
     public class ScreenSurfaceRenderer : IRenderer
     {
         /// <summary>
+        /// The blend state used by this renderer.
+        /// </summary>
+        public BlendState MonoGameBlendState { get; set; } = SadConsole.Host.Settings.MonoGameSurfaceBlendState;
+
+        /// <summary>
         /// Color used with drawing the texture to the screen. Let's a surface become transparent.
         /// </summary>
         protected Color _finalDrawColor = SadRogue.Primitives.Color.White.ToMonoColor();
@@ -131,8 +136,8 @@ namespace SadConsole.Renderers
         {
             Host.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
             Host.Global.GraphicsDevice.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-        }
+            Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+        }   
 
         /// <summary>
         /// Ends the sprite batch.
