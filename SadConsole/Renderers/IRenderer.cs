@@ -11,6 +11,11 @@ namespace SadConsole.Renderers
     public interface IRenderer: IDisposable
     {
         /// <summary>
+        /// A 0 to 255 value represening how opaque the surface is when drawn to the screen. 255 represents full visibility.
+        /// </summary>
+        byte Opaqueness { get; set; }
+
+        /// <summary>
         /// Called when the renderer is added to a surface.
         /// </summary>
         /// <param name="surfaceObject">The surface.</param>
