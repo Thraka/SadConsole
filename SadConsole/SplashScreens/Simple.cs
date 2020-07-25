@@ -18,11 +18,11 @@ namespace SadConsole.SplashScreens
             _endAnimation = new Instructions.InstructionSet() { RemoveOnFinished = true }
                 .Instruct(new Instructions.FadeTextSurfaceTint(new ColorGradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))
                 .Wait(System.TimeSpan.FromMilliseconds(0.500))
-                .Code((e) => { IsVisible = false; return true; });
+                .Code((s, d) => { IsVisible = false; return true; });
 
             var endTimeout = new Instructions.InstructionSet() { RemoveOnFinished = true }
                 .Wait(System.TimeSpan.FromSeconds(3))
-                .Code((e) => { _isEnding = true; SadComponents.Add(_endAnimation); return true; });
+                .Code((s, d) => { _isEnding = true; SadComponents.Add(_endAnimation); return true; });
 
             var startAnimation = new Instructions.InstructionSet { RemoveOnFinished = true }
                 .Instruct(new Instructions.FadeTextSurfaceTint(new ColorGradient(Settings.ClearColor.SetAlpha(255), Settings.ClearColor.SetAlpha(0)), System.TimeSpan.FromSeconds(1)))
