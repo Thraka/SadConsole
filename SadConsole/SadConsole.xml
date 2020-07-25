@@ -657,14 +657,14 @@
         </member>
         <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The width of the surface in cells.</param>
             <param name="height">The height of the surface in cells.</param>
         </member>
         <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The width of the surface in cells.</param>
             <param name="height">The height of the surface in cells.</param>
@@ -672,7 +672,7 @@
         </member>
         <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The visible width of the surface in cells.</param>
             <param name="height">The visible height of the surface in cells.</param>
@@ -681,7 +681,7 @@
         </member>
         <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The width of the surface in cells.</param>
             <param name="height">The height of the surface in cells.</param>
@@ -2373,7 +2373,7 @@
         </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a new console with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The visible width of the console in cells.</param>
             <param name="height">The visible height of the console in cells.</param>
@@ -2390,7 +2390,7 @@
         </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
-            Creates a console with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The width of the console in cells.</param>
             <param name="height">The height of the console in cells.</param>
@@ -5434,7 +5434,7 @@
             <remarks>
             The default settings are:
             
-              - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.Colors"/>: <see cref="P:SadRogue.Primitives.Color.White"/> to <see cref="P:SadRogue.Primitives.Color.Black"/>
+              - <see cref="P:SadConsole.Instructions.FadeTextSurfaceTint.Colors"/>: <see cref="F:SadRogue.Primitives.Color.White"/> to <see cref="F:SadRogue.Primitives.Color.Black"/>
               - Duration: 1 second
             </remarks>
         </member>
@@ -6311,9 +6311,9 @@
             Draws a surface.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.IRenderer.Opaqueness">
+        <member name="P:SadConsole.Renderers.IRenderer.Opacity">
             <summary>
-            A 0 to 255 value represening how opaque the surface is when drawn to the screen. 255 represents full visibility.
+            A 0 to 255 value represening how transparent the surface is when drawn to the screen. 255 represents full visibility.
             </summary>
         </member>
         <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenSurface)">
@@ -6670,7 +6670,7 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The visible width of the surface in cells.</param>
             <param name="height">The visible height of the surface in cells.</param>
@@ -6687,7 +6687,7 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
-            Creates a new surface with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The width of the surface in cells.</param>
             <param name="height">The height of the surface in cells.</param>
@@ -7421,7 +7421,7 @@
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a new console with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The visible width of the console in cells.</param>
             <param name="height">The visible height of the console in cells.</param>
@@ -7436,7 +7436,7 @@
         </member>
         <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
-            Creates a console with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The width of the console in cells.</param>
             <param name="height">The height of the console in cells.</param>
@@ -7580,11 +7580,6 @@
             Indicates the rendering location of this control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ControlBase.AbsolutePosition">
-            <summary>
-            Gets the position of this control based on the <see cref="P:SadConsole.UI.Controls.ControlBase.Parent"/>.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsVisible">
             <summary>
             Indicates whether or not this control is visible.
@@ -7645,14 +7640,9 @@
             The area this control covers.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ControlBase.Host">
-            <summary>
-            Gets or sets the parent console of this control.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Parent">
             <summary>
-            A panel grouping this control.
+            Gets or sets the parent console of this control.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.ThemeColors">
@@ -7662,7 +7652,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Theme">
             <summary>
-            The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="P:SadConsole.UI.Controls.ControlBase.Host"/>.
+            The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="P:SadConsole.UI.Controls.ControlBase.Parent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.State">
@@ -7872,40 +7862,6 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
         </member>
-        <member name="T:SadConsole.UI.Controls.IContainer">
-            <summary>
-            A simple container for controls.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.IContainer.AbsolutePosition">
-            <summary>
-            Gets the position of the container based on any parents position.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.IContainer.Host">
-            <summary>
-            The host owning this container.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Adds a control to this container.
-            </summary>
-            <param name="control">The control.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Removes a control from this container.
-            </summary>
-            <param name="control">The control.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.IContainer.Contains(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            <see langword="true"/> when the control exists in the container; otherwise, <see langword="false"/>.
-            </summary>
-            <param name="control">The control to find.</param>
-            <returns>A value to indicate if this control is in this container.</returns>
-        </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
             A simple surface for drawing text that can be moved and sized like a control.
@@ -8000,41 +7956,6 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ListBox.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc />
-        </member>
-        <member name="P:SadConsole.UI.Controls.Panel.Controls">
-            <summary>
-            The controls this panel contains.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Panel.Add(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Adds a control to this panel.
-            </summary>
-            <param name="control">The control to add.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Panel.Remove(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Removes a control from this panel.
-            </summary>
-            <param name="control">The control to remove.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Panel.Contains(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Checks if the specified control exists in this console.
-            </summary>
-            <param name="control">The control to check.</param>
-            <returns>True when the control exists in this console; otherwise false.</returns>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Panel.Clear">
-            <summary>
-            Removes all controls from this panel.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Panel.GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the controls.
-            </summary>
-            <returns>An enumerator.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.ProgressBar">
             <summary>
@@ -8570,12 +8491,12 @@
         </member>
         <member name="P:SadConsole.UI.Themes.Colors.White">
             <summary>
-            The white color. Defaults to <see cref="P:SadRogue.Primitives.Color.White"/>.
+            The white color. Defaults to <see cref="F:SadRogue.Primitives.Color.White"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Themes.Colors.Black">
             <summary>
-            The black color. Defaults to <see cref="P:SadRogue.Primitives.Color.Black"/>.
+            The black color. Defaults to <see cref="F:SadRogue.Primitives.Color.Black"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Themes.Colors.Gray">
@@ -8872,30 +8793,6 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.PanelTheme">
-            <summary>
-            A basic theme for a drawing surface that simply fills the surface based on the state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.PanelTheme.Fill">
-            <summary>
-            When true, fills the panel area with the <see cref="P:SadConsole.UI.Themes.ThemeStates.Normal"/> appearance.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.PanelTheme.Appearance">
-            <summary>
-            The current appearance based on the control state.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.PanelTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.PanelTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.PanelTheme.Clone">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.ProgressBarTheme">
@@ -9270,7 +9167,7 @@
         </member>
         <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a new window with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new window with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The visible width of the window in cells.</param>
             <param name="height">The visible height of the window in cells.</param>
@@ -9285,7 +9182,7 @@
         </member>
         <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
-            Creates a window with the specified width and height, with <see cref="P:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="P:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a window with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
             <param name="width">The width of the window in cells.</param>
             <param name="height">The height of the window in cells.</param>
@@ -9750,7 +9647,7 @@
             Converts a color to the format used by <see cref="T:SadConsole.StringParser.ParseCommandRecolor"/> command.
             </summary>
             <param name="color">The color to convert.</param>
-            <returns>A string in this format R,G,B,A so for <see cref="P:SadRogue.Primitives.Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
+            <returns>A string in this format R,G,B,A so for <see cref="F:SadRogue.Primitives.Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions.FromParser(SadRogue.Primitives.Color,System.String,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
             <summary>

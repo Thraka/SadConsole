@@ -9,7 +9,8 @@
 - Fixed alpha blending on MonoGame. (Thanks DoctorTriagony)
 - Added `Host.Settings` options for both MonoGame and SFML related to blending. (Thanks DoctorTriagony)
 - Renderers can override the blend setting.
-
+- `ListBox` control logic updated to allow better positioning of the `ScrollBar`.
+- Theme for `ListBox` updated to use the `Lines` color.
 
 ## v9.0 Alpha 8
 

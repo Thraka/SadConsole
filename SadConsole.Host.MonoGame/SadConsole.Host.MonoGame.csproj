@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
-    <Version>9.0.0-alpha8</Version>
+    <Version>9.0.0-alpha9</Version>
     <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -15,6 +15,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
     <PackageReleaseNotes>
+      Fixed alpha blending on MonoGame. Added `Host.Settings` options related to blending. (Thanks DoctorTriagony) Renderers can override the blend setting.
     </PackageReleaseNotes>
     <PackageIcon>nugeticon.png</PackageIcon>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
@@ -35,9 +36,9 @@
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-alpha7" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha4-debug" />
-    <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0-alpha2-debug" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-alpha9" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha5-debug" />
+    <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0-alpha3-debug" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1375-develop" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>

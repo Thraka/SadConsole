@@ -280,9 +280,9 @@
             Name of this renderer type.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opaqueness">
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
             <summary>
-            A 0 to 255 value represening how opaque the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTexture"/> is when drawn to the screen. 255 represents full visibility.
+            A 0 to 255 value represening how transparent the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTexture"/> is when drawn to the screen. 255 represents full visibility.
             </summary>
         </member>
         <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTexture">
