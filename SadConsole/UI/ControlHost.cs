@@ -13,7 +13,7 @@ namespace SadConsole.UI
     /// <summary>
     /// Adds the ability for a host to contain and display controls from <see cref="SadConsole.UI.Controls"/>.
     /// </summary>
-    public class ControlHost : Components.IComponent, IEnumerable<ControlBase>
+    public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, IList<ControlBase>
     {
         /// <summary>
         /// Indicates priority to other components.
@@ -133,16 +133,22 @@ namespace SadConsole.UI
         public IScreenSurface PreviousTabConsole { get; set; }
 
         /// <summary>
-        /// The total number of controls in this component.
-        /// </summary>
-        public int Count =>
-            ControlsList.Count;
-
-        /// <summary>
         /// When set to true, child controls are not alerted to focused and non-focused states.
         /// </summary>
         [DataMember]
         public bool DisableControlFocusing { get; set; }
+
+        /// <summary>
+        /// The total number of controls in this component.
+        /// </summary>
+        public int Count => ControlsList.Count;
+
+        /// <summary>
+        /// Always returns <see langword="true"/>.
+        /// </summary>
+        public bool IsReadOnly => false;
+
+        ControlBase IList<ControlBase>.this[int index] { get => ((IList<ControlBase>)ControlsList)[index]; set => ((IList<ControlBase>)ControlsList)[index] = value; }
         #endregion
 
         void Components.IComponent.OnAdded(IScreenObject host)
@@ -171,24 +177,20 @@ namespace SadConsole.UI
                 con.AutoCursorOnFocus = false;
             }
 
-            foreach (ControlBase control in ControlsList)
-                control.Parent = this;
-
             surface.MouseExit += Surface_MouseExit;
             surface.Focused += Surface_Focused;
             surface.FocusLost += Surface_FocusLost;
         }
-
+                
         void Components.IComponent.OnRemoved(IScreenObject host)
         {
-            foreach (var control in ControlsList)
-                control.Parent = null;
-
             ParentConsole.MouseExit -= Surface_MouseExit;
             ParentConsole.Focused -= Surface_Focused;
             ParentConsole.FocusLost -= Surface_FocusLost;
-
+                        
             ParentConsole = null;
+
+            ((IScreenSurface)host).Renderer = GameHost.Instance.GetRenderer(((IScreenSurface)host).DefaultRendererName);
         }
 
         void Components.IComponent.ProcessKeyboard(IScreenObject host, Keyboard info, out bool handled)
@@ -261,58 +263,6 @@ namespace SadConsole.UI
         }
 
         void Components.IComponent.Render(IScreenObject host, TimeSpan delta) { }
-
-        /// <summary>
-        /// Adds an existing control to this console.
-        /// </summary>
-        /// <param name="control">The control to add.</param>
-        public void Add(ControlBase control)
-        {
-            if (!ControlsList.Contains(control))
-                ControlsList.Add(control);
-
-            control.Parent = this;
-            control.TabIndex = ControlsList.Count - 1;
-
-            IsDirty = true;
-
-            ReOrderControls();
-        }
-
-        /// <summary>
-        /// Removes a control from this console.
-        /// </summary>
-        /// <param name="control">The control to remove.</param>
-        public void Remove(ControlBase control)
-        {
-            if (ControlsList.Contains(control))
-            {
-                control.TabIndex = -1;
-
-                if (CapturedControl == control)
-                    ReleaseControl();
-
-                if (FocusedControl == control)
-                {
-                    int index = ControlsList.IndexOf(control);
-                    ControlsList.Remove(control);
-
-                    if (ControlsList.Count == 0)
-                        FocusedControl = null;
-                    else if (index > ControlsList.Count - 1)
-                        FocusedControl = ControlsList[ControlsList.Count - 1];
-                    else
-                        FocusedControl = ControlsList[index];
-                }
-                else
-                    ControlsList.Remove(control);
-
-                control.Parent = null;
-                IsDirty = true;
-
-                ReOrderControls();
-            }
-        }
 
         /// <summary>
         /// Gives the focus to the next control in the tab order.
@@ -590,33 +540,10 @@ namespace SadConsole.UI
             _themeColors ?? Library.Default.Colors;
 
         /// <summary>
-        /// Removes all controls from this console.
-        /// </summary>
-        public void RemoveAll()
-        {
-            FocusedControl = null;
-
-            var controls = ControlsList.ToArray();
-            ControlsList.Clear();
-
-            foreach (ControlBase control in controls)
-                control.Parent = null;
-
-            IsDirty = true;
-        }
-
-        /// <summary>
         /// Gets an array containing all of the controls this host contains.
         /// </summary>
-        public ControlBase[] GetControlsArray() =>
+        public ControlBase[] ToArray() =>
             ControlsList.ToArray();
-
-        /// <summary>
-        /// Checks if the specified control exists in this console.
-        /// </summary>
-        /// <param name="control">The control to check.</param>
-        /// <returns>True when the control exists in this console; otherwise false.</returns>
-        public bool Contains(ControlBase control) => ControlsList.Contains(control);
 
         /// <summary>
         /// When overridden, allows you to prevent a control from taking focus from another control.
@@ -640,44 +567,13 @@ namespace SadConsole.UI
         /// <summary>
         /// Reorders the control collection based on the tab index of each control.
         /// </summary>
-        public void ReOrderControls() => ControlsList.Sort((x, y) =>
-        {
-            if (x.TabIndex == y.TabIndex)
+        public void ReOrderControls() =>
+            ControlsList.Sort((x, y) =>
             {
-                return 0;
-            }
-
-            if (x.TabIndex < y.TabIndex)
-            {
-                return -1;
-            }
-
-            return 1;
-        });
-
-        ///////// <summary>
-        ///////// Called when the console is redrawn. Clears the console and allows custom drawing prior to control drawing.
-        ///////// </summary>
-        //////protected virtual void OnInvalidated()
-        //////{
-        //////    if (RaiseInvalidated()) return;
-
-        //////    var colors = GetThemeColors();
-
-        //////    Surface.DefaultForeground = colors.ControlHostFore;
-        //////    Surface.DefaultBackground = colors.ControlHostBack;
-        //////    Surface.Clear();
-        //////}
-
-        ///////// <summary>
-        ///////// Raises the <see cref="Invalidated"/> event.
-        ///////// </summary>
-        //////protected bool RaiseInvalidated()
-        //////{
-        //////    var args = new HandledEventArgs();
-        //////    Invalidated?.Invoke(this, args);
-        //////    return args.IsHandled;
-        //////}
+                if (x.TabIndex == y.TabIndex) return 0;
+                if (x.TabIndex < y.TabIndex) return -1;
+                return 1;
+            });
 
         /// <inheritdoc />
         private void Surface_MouseExit(object sender, MouseScreenObjectState state)
@@ -739,5 +635,141 @@ namespace SadConsole.UI
         /// </summary>
         /// <returns>The enumerator of the controls collection.</returns>
         IEnumerator IEnumerable.GetEnumerator() => ControlsList.GetEnumerator();
+
+        /// <summary>
+        /// Gets the index of the specified control.
+        /// </summary>
+        /// <param name="item">The control.</param>
+        /// <returns>The index of the control in the backing collection.</returns>
+        public int IndexOf(ControlBase item) =>
+            ControlsList.IndexOf(item);
+
+        /// <summary>
+        /// Inserts an item at the specified index and sets the <see cref="ControlBase.TabIndex"/> to the specified index.
+        /// </summary>
+        /// <remarks>Index within the backing collection is always based on <see cref="ControlBase.TabIndex"/> ranking. There may be conflicts so you're not guaranteed that the control will be available at the specified index.</remarks>
+        /// <param name="index">Index to insert at.</param>
+        /// <param name="item">The control to insert.</param>
+        public void Insert(int index, ControlBase item)
+        {
+            ((IList<ControlBase>)ControlsList).Insert(index, item);
+
+            if (!ControlsList.Contains(item))
+                ControlsList.Insert(index, item);
+
+            item.Host = this;
+            item.TabIndex = index;
+
+            IsDirty = true;
+
+            ReOrderControls();
+        }
+
+        /// <summary>
+        /// Removes a control by index.
+        /// </summary>
+        /// <param name="index"></param>
+        public void RemoveAt(int index)
+        {
+            if (index < 0 || index >= ControlsList.Count) throw new IndexOutOfRangeException();
+            Remove(ControlsList[index]);
+        }
+
+        /// <summary>
+        /// Adds an existing control to this console.
+        /// </summary>
+        /// <param name="control">The control to add.</param>
+        public void Add(ControlBase control)
+        {
+            if (!ControlsList.Contains(control))
+                ControlsList.Add(control);
+
+            if (control.Host != this)
+                control.Host = this;
+
+            control.TabIndex = ControlsList.Count - 1;
+
+            IsDirty = true;
+
+            ReOrderControls();
+        }
+
+        /// <summary>
+        /// Removes all controls from this console.
+        /// </summary>
+        public void Clear()
+        {
+            if (CapturedControl != null) ReleaseControl();
+
+            FocusedControl = null;
+
+            var controls = ControlsList.ToArray();
+            ControlsList.Clear();
+
+            foreach (ControlBase control in controls)
+                control.Host = null;
+
+            IsDirty = true;
+        }
+
+        /// <summary>
+        /// Checks if the specified control exists in this console.
+        /// </summary>
+        /// <param name="control">The control to check.</param>
+        /// <returns>True when the control exists in this console; otherwise false.</returns>
+        public bool Contains(ControlBase control) =>
+            ControlsList.Contains(control);
+
+        /// <summary>
+        /// Copies the controls to a new array.
+        /// </summary>
+        /// <param name="array">The destination array.</param>
+        /// <param name="arrayIndex">The starting index of where to copy the controls in the destination array.</param>
+        public void CopyTo(ControlBase[] array, int arrayIndex) =>
+            ControlsList.CopyTo(array, arrayIndex);
+
+        /// <summary>
+        /// Removes a control from this console.
+        /// </summary>
+        /// <param name="control">The control to remove.</param>
+        /// <returns><see langword="true"/> if item was successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if item is not found.</returns>
+        public bool Remove(ControlBase control)
+        {
+            if (ControlsList.Contains(control))
+            {
+                control.TabIndex = -1;
+
+                if (CapturedControl == control)
+                    ReleaseControl();
+
+                if (FocusedControl == control)
+                {
+                    int index = ControlsList.IndexOf(control);
+                    ControlsList.Remove(control);
+
+                    if (ControlsList.Count == 0)
+                        FocusedControl = null;
+                    else if (index > ControlsList.Count - 1)
+                        FocusedControl = ControlsList[ControlsList.Count - 1];
+                    else
+                        FocusedControl = ControlsList[index];
+                }
+                else
+                    ControlsList.Remove(control);
+
+                control.Host = null;
+                IsDirty = true;
+
+                ReOrderControls();
+                return true;
+            }
+            else
+                return false;
+        }
+
+        bool ICollection<ControlBase>.Remove(ControlBase item)
+        {
+            return ((ICollection<ControlBase>)ControlsList).Remove(item);
+        }
     }
 }
