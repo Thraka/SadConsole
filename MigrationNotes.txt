@@ -51,6 +51,7 @@ Window
 ControlsConsole
 - (CHANGE) No longer a specialized type. The ControlHost component was created and provides the entire controls framework.
   This can be applied to any console. The ControlsConsole is now just a simple Console with this component automatically added.
+- (CHANGE) Controls are added to a ControlsConsole through the Controls property: MyControlsConsole.Add(control) is now MyControlsConsole.Controls.Add(control)
 
 ScrollingConsole
 - (MOVE) All ViewPort stuff is implemented on ICellSurface, meaning all surfaces can scroll.

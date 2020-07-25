@@ -2,6 +2,14 @@
 
 - RandomGarbage uses the current font.
 - Add `SadConsole.Game.Instance.SetSplashScreens` method for adding startup splash screens to games.
+- Add `Cursor.SetPrintAppearance` overloads.
+- `CodeInstruction` now uses a TimeSpan delta parameter.
+- The `ControslConsole.ControlsHostComponent` property was renamed to `Controls`.
+- Rename `ControlsHost.Controls` property to `GetControlsArray` method. `ControlsHost` implements `IEnumerable` to get the controls: `foreach (var control in controlsComponent)`
+- Fixed alpha blending on MonoGame. (Thanks DoctorTriagony)
+- Added `Host.Settings` options for both MonoGame and SFML related to blending. (Thanks DoctorTriagony)
+- Renderers can override the blend setting.
+
 
 ## v9.0 Alpha 8
 
