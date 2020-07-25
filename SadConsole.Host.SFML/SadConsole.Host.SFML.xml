@@ -270,6 +270,11 @@
             Color used with drawing the texture to the screen. Let's a surface become transparent.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
         <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
             <summary>
             Name of this renderer type.

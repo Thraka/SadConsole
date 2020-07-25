@@ -5827,6 +5827,11 @@
             Raised when the mouse moves around the this console.
             </summary>
         </member>
+        <member name="P:SadConsole.IScreenSurface.DefaultRendererName">
+            <summary>
+            The name of the default renderer for this object.
+            </summary>
+        </member>
         <member name="P:SadConsole.IScreenSurface.FocusOnMouseClick">
             <summary>
             When true, this console will set <see cref="P:SadConsole.IScreenObject.IsFocused"/> to true when the mouse is clicked.
@@ -6051,6 +6056,9 @@
             <param name="renderClipped"></param>
             <param name="renderClipWidth"></param>
             <param name="renderClipHeight"></param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.GetDefaultRendererName">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.SetActiveLayer(System.Int32)">
             <summary>
@@ -6301,6 +6309,11 @@
         <member name="T:SadConsole.Renderers.IRenderer">
             <summary>
             Draws a surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IRenderer.Opaqueness">
+            <summary>
+            A 0 to 255 value represening how opaque the surface is when drawn to the screen. 255 represents full visibility.
             </summary>
         </member>
         <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenSurface)">
@@ -6603,6 +6616,9 @@
         <member name="P:SadConsole.ScreenSurface.ForceRendererRefresh">
             <inheritdoc/>
         </member>
+        <member name="P:SadConsole.ScreenSurface.DefaultRendererName">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.ScreenSurface.Renderer">
             <inheritdoc/>
         </member>
@@ -6681,6 +6697,12 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ScreenSurface.GetDefaultRendererName">
+            <summary>
+            Gets the renderer name. Used by the <see cref="P:SadConsole.ScreenSurface.DefaultRendererName"/> propety.
+            </summary>
+            <returns>The default renderer name.</returns>
         </member>
         <member name="M:SadConsole.ScreenSurface.Render(System.TimeSpan)">
             <summary>
@@ -7225,27 +7247,20 @@
             Sets reference to the console to tab to when the <see cref="P:SadConsole.UI.ControlHost.CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.ControlHost.Count">
-            <summary>
-            The total number of controls in this component.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.ControlHost.DisableControlFocusing">
             <summary>
             When set to true, child controls are not alerted to focused and non-focused states.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.ControlHost.Add(SadConsole.UI.Controls.ControlBase)">
+        <member name="P:SadConsole.UI.ControlHost.Count">
             <summary>
-            Adds an existing control to this console.
+            The total number of controls in this component.
             </summary>
-            <param name="control">The control to add.</param>
         </member>
-        <member name="M:SadConsole.UI.ControlHost.Remove(SadConsole.UI.Controls.ControlBase)">
+        <member name="P:SadConsole.UI.ControlHost.IsReadOnly">
             <summary>
-            Removes a control from this console.
+            Always returns <see langword="true"/>.
             </summary>
-            <param name="control">The control to remove.</param>
         </member>
         <member name="M:SadConsole.UI.ControlHost.TabNextControl">
             <summary>
@@ -7275,22 +7290,10 @@
             </summary>
             <returns>The found colors.</returns>
         </member>
-        <member name="M:SadConsole.UI.ControlHost.RemoveAll">
-            <summary>
-            Removes all controls from this console.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlHost.GetControlsArray">
+        <member name="M:SadConsole.UI.ControlHost.ToArray">
             <summary>
             Gets an array containing all of the controls this host contains.
             </summary>
-        </member>
-        <member name="M:SadConsole.UI.ControlHost.Contains(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Checks if the specified control exists in this console.
-            </summary>
-            <param name="control">The control to check.</param>
-            <returns>True when the control exists in this console; otherwise false.</returns>
         </member>
         <member name="M:SadConsole.UI.ControlHost.FocusedControlChanging(SadConsole.UI.Controls.ControlBase,SadConsole.UI.Controls.ControlBase)">
             <summary>
@@ -7337,6 +7340,59 @@
             Gets an enumerator of the controls collection.
             </summary>
             <returns>The enumerator of the controls collection.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.IndexOf(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Gets the index of the specified control.
+            </summary>
+            <param name="item">The control.</param>
+            <returns>The index of the control in the backing collection.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Insert(System.Int32,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Inserts an item at the specified index and sets the <see cref="P:SadConsole.UI.Controls.ControlBase.TabIndex"/> to the specified index.
+            </summary>
+            <remarks>Index within the backing collection is always based on <see cref="P:SadConsole.UI.Controls.ControlBase.TabIndex"/> ranking. There may be conflicts so you're not guaranteed that the control will be available at the specified index.</remarks>
+            <param name="index">Index to insert at.</param>
+            <param name="item">The control to insert.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.RemoveAt(System.Int32)">
+            <summary>
+            Removes a control by index.
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Add(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Adds an existing control to this console.
+            </summary>
+            <param name="control">The control to add.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Clear">
+            <summary>
+            Removes all controls from this console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Contains(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Checks if the specified control exists in this console.
+            </summary>
+            <param name="control">The control to check.</param>
+            <returns>True when the control exists in this console; otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.CopyTo(SadConsole.UI.Controls.ControlBase[],System.Int32)">
+            <summary>
+            Copies the controls to a new array.
+            </summary>
+            <param name="array">The destination array.</param>
+            <param name="arrayIndex">The starting index of where to copy the controls in the destination array.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.Remove(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Removes a control from this console.
+            </summary>
+            <param name="control">The control to remove.</param>
+            <returns><see langword="true"/> if item was successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if item is not found.</returns>
         </member>
         <member name="T:SadConsole.UI.ControlsConsole">
             <summary>
@@ -7524,6 +7580,11 @@
             Indicates the rendering location of this control.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.AbsolutePosition">
+            <summary>
+            Gets the position of this control based on the <see cref="P:SadConsole.UI.Controls.ControlBase.Parent"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsVisible">
             <summary>
             Indicates whether or not this control is visible.
@@ -7584,9 +7645,14 @@
             The area this control covers.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ControlBase.Parent">
+        <member name="P:SadConsole.UI.Controls.ControlBase.Host">
             <summary>
             Gets or sets the parent console of this control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.Parent">
+            <summary>
+            A panel grouping this control.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.ThemeColors">
@@ -7596,7 +7662,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Theme">
             <summary>
-            The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="P:SadConsole.UI.Controls.ControlBase.Parent"/>.
+            The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="P:SadConsole.UI.Controls.ControlBase.Host"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.State">
@@ -7806,6 +7872,40 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
         </member>
+        <member name="T:SadConsole.UI.Controls.IContainer">
+            <summary>
+            A simple container for controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.IContainer.AbsolutePosition">
+            <summary>
+            Gets the position of the container based on any parents position.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.IContainer.Host">
+            <summary>
+            The host owning this container.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Adds a control to this container.
+            </summary>
+            <param name="control">The control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Removes a control from this container.
+            </summary>
+            <param name="control">The control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.Contains(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            <see langword="true"/> when the control exists in the container; otherwise, <see langword="false"/>.
+            </summary>
+            <param name="control">The control to find.</param>
+            <returns>A value to indicate if this control is in this container.</returns>
+        </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
             A simple surface for drawing text that can be moved and sized like a control.
@@ -7900,6 +8000,41 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ListBox.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc />
+        </member>
+        <member name="P:SadConsole.UI.Controls.Panel.Controls">
+            <summary>
+            The controls this panel contains.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Add(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Adds a control to this panel.
+            </summary>
+            <param name="control">The control to add.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Remove(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Removes a control from this panel.
+            </summary>
+            <param name="control">The control to remove.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Contains(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Checks if the specified control exists in this console.
+            </summary>
+            <param name="control">The control to check.</param>
+            <returns>True when the control exists in this console; otherwise false.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Clear">
+            <summary>
+            Removes all controls from this panel.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the controls.
+            </summary>
+            <returns>An enumerator.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.ProgressBar">
             <summary>
@@ -8739,6 +8874,30 @@
         <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.UI.Themes.PanelTheme">
+            <summary>
+            A basic theme for a drawing surface that simply fills the surface based on the state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.Fill">
+            <summary>
+            When true, fills the panel area with the <see cref="P:SadConsole.UI.Themes.ThemeStates.Normal"/> appearance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.Appearance">
+            <summary>
+            The current appearance based on the control state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.PanelTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.PanelTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.PanelTheme.Clone">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.UI.Themes.ProgressBarTheme">
             <summary>
             The theme of a radio button control.
@@ -9133,6 +9292,9 @@
             <param name="bufferWidth">The total width of the window in cells.</param>
             <param name="bufferHeight">The total height of the window in cells.</param>
             <param name="initialCells">The cells to seed the window with. If <see langword="null"/>, creates the cells for you.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.GetDefaultRendererName">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Window.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc />

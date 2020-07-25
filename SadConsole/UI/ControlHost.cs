@@ -657,7 +657,7 @@ namespace SadConsole.UI
             if (!ControlsList.Contains(item))
                 ControlsList.Insert(index, item);
 
-            item.Host = this;
+            item.Parent = this;
             item.TabIndex = index;
 
             IsDirty = true;
@@ -684,8 +684,8 @@ namespace SadConsole.UI
             if (!ControlsList.Contains(control))
                 ControlsList.Add(control);
 
-            if (control.Host != this)
-                control.Host = this;
+            if (control.Parent != this)
+                control.Parent = this;
 
             control.TabIndex = ControlsList.Count - 1;
 
@@ -707,7 +707,7 @@ namespace SadConsole.UI
             ControlsList.Clear();
 
             foreach (ControlBase control in controls)
-                control.Host = null;
+                control.Parent = null;
 
             IsDirty = true;
         }
@@ -757,7 +757,7 @@ namespace SadConsole.UI
                 else
                     ControlsList.Remove(control);
 
-                control.Host = null;
+                control.Parent = null;
                 IsDirty = true;
 
                 ReOrderControls();
