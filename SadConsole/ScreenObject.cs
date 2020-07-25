@@ -367,8 +367,31 @@ namespace SadConsole
                 case NotifyCollectionChangedAction.Move:
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    foreach (var item in SadComponents.ToArray())
-                        SadComponents.Remove(item);
+                    while (ComponentsRender.Count != 0)
+                    {
+                        ComponentsRender[0].OnRemoved(this);
+                        FilterRemoveItem(ComponentsRender[0]);
+                    }
+                    while (ComponentsUpdate.Count != 0)
+                    {
+                        ComponentsUpdate[0].OnRemoved(this);
+                        FilterRemoveItem(ComponentsUpdate[0]);
+                    }
+                    while (ComponentsKeyboard.Count != 0)
+                    {
+                        ComponentsKeyboard[0].OnRemoved(this);
+                        FilterRemoveItem(ComponentsKeyboard[0]);
+                    }
+                    while (ComponentsMouse.Count != 0)
+                    {
+                        ComponentsMouse[0].OnRemoved(this);
+                        FilterRemoveItem(ComponentsMouse[0]);
+                    }
+                    while (ComponentsEmpty.Count != 0)
+                    {
+                        ComponentsEmpty[0].OnRemoved(this);
+                        FilterRemoveItem(ComponentsEmpty[0]);
+                    }
 
                     break;
                 default:
