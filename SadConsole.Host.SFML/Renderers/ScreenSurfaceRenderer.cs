@@ -29,9 +29,9 @@ namespace SadConsole.Renderers
         public static string Name => "screenobject";
 
         /// <summary>
-        /// A 0 to 255 value represening how opaque the <see cref="BackingTexture"/> is when drawn to the screen. 255 represents full visibility.
+        /// A 0 to 255 value represening how transparent the <see cref="BackingTexture"/> is when drawn to the screen. 255 represents full visibility.
         /// </summary>
-        public byte Opaqueness
+        public byte Opacity
         {
             get => _finalDrawColor.A;
             set => _finalDrawColor = new Color(_finalDrawColor.R, _finalDrawColor.G, _finalDrawColor.B, value);
