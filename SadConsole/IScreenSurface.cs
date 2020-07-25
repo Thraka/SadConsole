@@ -8,7 +8,7 @@ namespace SadConsole
     /// <summary>
     /// A screen object that has mouse input, surface, and render information.
     /// </summary>
-    public interface IScreenSurface: IScreenObject
+    public interface IScreenSurface : IScreenObject
     {
         /// <summary>
         /// Raised when the a mouse button is clicked on this console.
@@ -29,6 +29,11 @@ namespace SadConsole
         /// Raised when the mouse moves around the this console.
         /// </summary>
         event EventHandler<MouseScreenObjectState> MouseMove;
+
+        /// <summary>
+        /// The name of the default renderer for this object.
+        /// </summary>
+        public string DefaultRendererName { get; }
 
         /// <summary>
         /// When true, this console will set <see cref="IScreenObject.IsFocused"/> to true when the mouse is clicked.
