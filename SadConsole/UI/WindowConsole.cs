@@ -200,13 +200,17 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             ControlHostComponent = new ControlHost();
             SadComponents.Add(ControlHostComponent);
-            Renderer = GameHost.Instance.GetRenderer("window");
+            Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
 
 
             // todo: Perhaps a new design with windows.
             // A border surface so that the surface of the window contains just the controls and print code.
             //DrawingArea = Surface.GetSubSurface(Surface.Buffer.WithPosition((1, 1)).Expand(-1, -1));
         }
+
+        /// <inheritdoc/>
+        protected override string GetDefaultRendererName() =>
+            "window";
 
         /// <inheritdoc />
         public override bool ProcessMouse(MouseScreenObjectState state)

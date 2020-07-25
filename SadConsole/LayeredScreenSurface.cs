@@ -56,7 +56,7 @@ namespace SadConsole
             Layers.CollectionChanged += Layers_CollectionChanged;
             Layers.Add(layer);
 
-            Renderer = GameHost.Instance.GetRenderer("layered");
+            Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
             SetActiveLayer(0);
         }
 
@@ -83,7 +83,7 @@ namespace SadConsole
 
             RenderClippedWidth = Layers[0].AbsoluteArea.Width;
             RenderClippedHeight = Layers[0].AbsoluteArea.Height;
-            Renderer = GameHost.Instance.GetRenderer("layered");
+            Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
             SetActiveLayer(0);
         }
 
@@ -111,9 +111,13 @@ namespace SadConsole
 
             RenderClippedWidth = renderClipWidth;
             RenderClippedHeight = renderClipHeight;
-            Renderer = GameHost.Instance.GetRenderer("layered");
+            Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
             SetActiveLayer(0);
         }
+
+        /// <inheritdoc/>
+        protected override string GetDefaultRendererName() =>
+            "layered";
 
         /// <summary>
         /// Sets a layer as the <see cref="ScreenSurface.Surface"/> used by this object.
