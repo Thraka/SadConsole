@@ -6,7 +6,7 @@ using SFMLMouse = SFML.Window.Mouse;
 
 namespace SadConsole.Host
 {
-    class Mouse : SadConsole.Input.IMouseState
+    public class Mouse : SadConsole.Input.IMouseState
     {
         private int _mouseWheelValue;
         private RenderWindow _window;

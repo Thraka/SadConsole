@@ -148,9 +148,24 @@
             The SadConsole game object.
             </summary>
         </member>
+        <member name="F:SadConsole.Game._keyboard">
+            <summary>
+            The keyboard translation object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._mouse">
+            <summary>
+            The mouse translation object.
+            </summary>
+        </member>
         <member name="P:SadConsole.Game.Instance">
             <summary>
             Static instance to the game after the <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/> method has been called.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.#ctor">
+            <summary>
+            Creates the game instance.
             </summary>
         </member>
         <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)">
@@ -161,6 +176,12 @@
             <param name="cellCountY">How many cells high the window should be based on the font used.</param>
             <param name="font">An optional font; otherwise a default 8x16 IBM font is used.</param>
             <param name="window">A optional window object; otherwise the window is created for you.</param>
+        </member>
+        <member name="M:SadConsole.Game.Initialize(SFML.Graphics.RenderWindow)">
+            <summary>
+            Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="P:SadConsole.GameHost.ScreenCellsX"/>, <see cref="P:SadConsole.GameHost.ScreenCellsY"/>, and the <see cref="P:SadConsole.GameHost.DefaultFontSize"/>.
+            </summary>
+            <param name="window"></param>
         </member>
         <member name="M:SadConsole.Game.Run">
             <inheritdoc/>

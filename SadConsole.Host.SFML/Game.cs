@@ -13,13 +13,15 @@ namespace SadConsole
     /// </summary>
     public class Game : GameHost
     {
-        protected int _preFullScreenWidth;
-        protected int _preFullScreenHeight;
-        protected bool _handleResizeNone;
-        protected bool _isResizing;
+        /// <summary>
+        /// The keyboard translation object.
+        /// </summary>
+        protected Keyboard _keyboard;
 
-        Keyboard _keyboard;
-        Mouse _mouse;
+        /// <summary>
+        /// The mouse translation object.
+        /// </summary>
+        protected Mouse _mouse;
 
         /// <summary>
         /// Static instance to the game after the <see cref="Create(int, int, string, RenderWindow)"/> method has been called.
@@ -32,7 +34,9 @@ namespace SadConsole
 
         internal string _font;
 
-
+        /// <summary>
+        /// Creates the game instance.
+        /// </summary>
         protected Game() { }
 
         /// <summary>
@@ -53,6 +57,10 @@ namespace SadConsole
             game.Initialize(window);
         }
 
+        /// <summary>
+        /// Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="GameHost.ScreenCellsX"/>, <see cref="GameHost.ScreenCellsY"/>, and the <see cref="GameHost.DefaultFontSize"/>.
+        /// </summary>
+        /// <param name="window"></param>
         protected void Initialize(RenderWindow window)
         {
             LoadEmbeddedFont();
@@ -81,7 +89,6 @@ namespace SadConsole
 
             window.Resized += (o, e) =>
             {
-
                 ResetRendering();
             };
 

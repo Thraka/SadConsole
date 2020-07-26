@@ -6,7 +6,7 @@ using SFML.Graphics;
 
 namespace SadConsole.Host
 {
-    class Keyboard : SadConsole.Input.IKeyboardState
+    public class Keyboard : SadConsole.Input.IKeyboardState
     {
         SadConsole.Input.Keys[] _keys;
         //List<SadConsole.Input.Keys> _keys = new List<Input.Keys>(5);
