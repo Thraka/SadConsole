@@ -183,7 +183,9 @@ namespace SadConsole
             GlyphPadding = glyphPadding;
             Image = image;
             Name = name;
-            GlyphRectangles = glyphRectangles;
+
+            if (glyphRectangles != null)
+                GlyphRectangles = glyphRectangles;
 
             ConfigureRects();
 
@@ -323,18 +325,19 @@ namespace SadConsole
         // TODO
         public static Font LoadBMFont(string file, int baseWidth, int baseHeight)
         {
-            var bmFont = SharpFNT.BitmapFont.FromFile(file);
+            throw new NotSupportedException();
+            //var bmFont = SharpFNT.BitmapFont.FromFile(file);
             
-            var mapping = new Dictionary<int, Rectangle>();
-            var texture = GameHost.Instance.GetTexture(Path.Combine(Path.GetDirectoryName(file), bmFont.Pages[0]));
+            //var mapping = new Dictionary<int, Rectangle>();
+            //var texture = GameHost.Instance.GetTexture(Path.Combine(Path.GetDirectoryName(file), bmFont.Pages[0]));
 
-            foreach (var key in bmFont.Characters.Keys)
-            {
-                var bmRect = bmFont.Characters[key];
-                mapping.Add(key, new Rectangle(bmRect.X, bmRect.Y, bmRect.Width, bmRect.Height));
-            }
+            //foreach (var key in bmFont.Characters.Keys)
+            //{
+            //    var bmRect = bmFont.Characters[key];
+            //    mapping.Add(key, new Rectangle(bmRect.X, bmRect.Y, bmRect.Width, bmRect.Height));
+            //}
 
-            return new Font(baseWidth, baseHeight, 0, 1, 1, 0, texture, bmFont.Info.Face, mapping);
+            //return new Font(baseWidth, baseHeight, 0, 1, 1, 0, texture, bmFont.Info.Face, mapping);
         }
 
         /// <summary>
