@@ -7,6 +7,8 @@
   - ColorAnsi type removed. Ansi colors are defined by the primitives library.
   - ColorMappings is automatically filled with every static color defined by the primitives library (including ansi colors).
   - FromName is a handy method to look up a color in the dictionary.
+- Simplified gamehost startup by moving common default font loading routines into the base class.
+
 
 ## v9.0 Alpha 9
 

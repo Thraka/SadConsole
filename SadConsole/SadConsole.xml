@@ -3490,12 +3490,18 @@
             <returns>A new pixel-positioned point.</returns>
         </member>
         <member name="T:SadConsole.GameHost">
-            <summary>
-            Represents the SadConsole game engine.
-            </summary>
-            <remarks>
-            When a new host is created, the host should conform to the following 
-            </remarks>
+             <summary>
+             Represents the SadConsole game engine.
+             </summary>
+             <remarks>
+             When a new host is created, the host should do the following:
+            
+             - Run `LoadDefaultFonts`.
+             - Run `SetRenderer` for `window`, `controls`, `layered`, and `default` renderers.
+             - Run `LoadMappedColors`.
+             - Configure the `Screen` to a new console with `ScreenCellsX` and `ScreenCellsY`.
+             - Prior to running the game, run `SplashScreens.SplashScreenManager.CheckRun()`.
+             </remarks>
             <summary>
             Represents the SadConsole game engine.
             </summary>
@@ -3656,10 +3662,14 @@
             <param name="file">The file to delete.</param>
             <returns><see langword="true"/> if the file was deleted; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.GameHost.LoadEmbeddedFont">
+        <member name="M:SadConsole.GameHost.LoadDefaultFonts(System.String)">
             <summary>
-            Loads the <c>IBM.font</c> built into the binary.
+            Loads the embedded <c>IBM.font</c> files. Sets the <see cref="P:SadConsole.GameHost.DefaultFont"/> property.
             </summary>
+            <param name="defaultFont">An optional font to load and set as the default.</param>
+            <remarks>
+            If <paramref name="defaultFont"/> is <see langword="null"/>, the <see cref="P:SadConsole.GameHost.EmbeddedFont"/> or <see cref="P:SadConsole.GameHost.EmbeddedFontExtended"/> font is set based on the value of <see cref="P:SadConsole.Settings.UseDefaultExtendedFont"/>.
+            </remarks>
         </member>
         <member name="M:SadConsole.GameHost.LoadMappedColors">
             <summary>
@@ -9625,9 +9635,17 @@
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions.FromName(System.String)">
             <summary>
-            Searches <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/> for a defined color and then fallsback to <see cref="!:primi"/>
+            Searches <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/> for a defined color.
             </summary>
             <param name="name">The name of a color.</param>
+            <returns>A color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.FromName(System.String,SadRogue.Primitives.Color)">
+            <summary>
+            Searches <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/> for a defined color. If color is not defined, the color specified by <paramref name="defaultColor"/> is returned.
+            </summary>
+            <param name="name">The name of a color.</param>
+            <param name="defaultColor">Fallback color.</param>
             <returns>A color.</returns>
         </member>
     </members>

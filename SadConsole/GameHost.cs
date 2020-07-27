@@ -13,6 +13,15 @@ namespace SadConsole
     /// <summary>
     /// Represents the SadConsole game engine.
     /// </summary>
+    /// <remarks>
+    /// When a new host is created, the host should do the following:
+    ///
+    /// - Run `LoadDefaultFonts`.
+    /// - Run `SetRenderer` for `window`, `controls`, `layered`, and `default` renderers.
+    /// - Run `LoadMappedColors`.
+    /// - Configure the `Screen` to a new console with `ScreenCellsX` and `ScreenCellsY`.
+    /// - Prior to running the game, run `SplashScreens.SplashScreenManager.CheckRun()`.
+    /// </remarks>
     public abstract partial class GameHost : IDisposable
     {
         private DateTime _gameStartedAt = DateTime.Now;
@@ -163,14 +172,6 @@ namespace SadConsole
         /// <returns>A master font that you can generate a usable font from.</returns>
         public Font LoadFont(string font)
         {
-            //if (!File.Exists(font))
-            //{
-            //    font = Path.Combine(Path.Combine(Path.GetDirectoryName(Path.GetFullPath(font)), "fonts"), Path.GetFileName(font));
-            //    if (!File.Exists(font))
-            //        throw new Exception($"Font does not exist: {font}");
-            //}                    
-
-            //FontPathHint = Path.GetDirectoryName(Path.GetFullPath(font));
             try
             {
                 var oldSettings = SadConsole.Serializer.Settings;
@@ -235,10 +236,15 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Loads the <c>IBM.font</c> built into the binary.
+        /// Loads the embedded <c>IBM.font</c> files. Sets the <see cref="DefaultFont"/> property.
         /// </summary>
-        protected void LoadEmbeddedFont()
+        /// <param name="defaultFont">An optional font to load and set as the default.</param>
+        /// <remarks>
+        /// If <paramref name="defaultFont"/> is <see langword="null"/>, the <see cref="EmbeddedFont"/> or <see cref="EmbeddedFontExtended"/> font is set based on the value of <see cref="Settings.UseDefaultExtendedFont"/>.
+        /// </remarks>
+        protected void LoadDefaultFonts(string defaultFont)
         {
+            // Load the embedded fonts.
             System.Reflection.Assembly assembly = typeof(SadConsole.Font).Assembly;
 
             Font LoadFont(string fontName)
@@ -259,13 +265,22 @@ namespace SadConsole
                     });
                 LoadingEmbeddedFont = false;
 
-                GameHost.Instance.Fonts.Add(masterFont.Name, masterFont);
+                Fonts.Add(masterFont.Name, masterFont);
 
                 return masterFont;
             }
 
             EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
             EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
+
+            // Configure default font
+            if (string.IsNullOrEmpty(defaultFont))
+                if (Settings.UseDefaultExtendedFont)
+                    DefaultFont = EmbeddedFontExtended;
+                else
+                    DefaultFont = EmbeddedFont;
+            else
+                DefaultFont = this.LoadFont(defaultFont);
         }
 
         /// <summary>

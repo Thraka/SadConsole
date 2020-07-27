@@ -57,18 +57,10 @@ namespace SadConsole
         /// <param name="game">The game instance.</param>
         protected void MonoGameInit(Host.Game game)
         {
-            LoadEmbeddedFont();
-
-            if (string.IsNullOrEmpty(_font))
-                if (Settings.UseDefaultExtendedFont)
-                    DefaultFont = EmbeddedFontExtended;
-                else
-                    DefaultFont = EmbeddedFont;
-            else
-                DefaultFont = LoadFont(_font);
+            LoadDefaultFonts(_font);
 
             MonoGameInstance.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
-
+            
             SetRenderer("window", typeof(Renderers.Window));
             SetRenderer("controls", typeof(Renderers.ControlsConsole));
             SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));

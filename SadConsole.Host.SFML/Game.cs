@@ -63,15 +63,7 @@ namespace SadConsole
         /// <param name="window"></param>
         protected void Initialize(RenderWindow window)
         {
-            LoadEmbeddedFont();
-
-            if (string.IsNullOrEmpty(_font))
-                if (Settings.UseDefaultExtendedFont)
-                    DefaultFont = EmbeddedFontExtended;
-                else
-                    DefaultFont = EmbeddedFont;
-            else
-                DefaultFont = LoadFont(_font);
+            LoadDefaultFonts(_font);
 
             if (window == null)
             {
@@ -118,7 +110,7 @@ namespace SadConsole
             LoadMappedColors();
 
             // Create the default console.
-            SadConsole.GameHost.Instance.Screen = new Console(ScreenCellsX, ScreenCellsY);
+            Screen = new Console(ScreenCellsX, ScreenCellsY);
         }
 
         /// <inheritdoc/>
@@ -129,37 +121,37 @@ namespace SadConsole
             SplashScreens.SplashScreenManager.CheckRun();
 
             // Update keyboard/mouse with base info
-            SadConsole.GameHost.Instance.Keyboard.Update(TimeSpan.Zero);
-            SadConsole.GameHost.Instance.Mouse.Update(TimeSpan.Zero);
+            Keyboard.Update(TimeSpan.Zero);
+            Mouse.Update(TimeSpan.Zero);
 
             while (SadConsole.Host.Global.GraphicsDevice.IsOpen)
             {
                 // Update game loop part
                 if (SadConsole.Settings.DoUpdate)
                 {
-                    SadConsole.GameHost.Instance.UpdateFrameDelta = TimeSpan.FromSeconds(Host.Global.UpdateTimer.ElapsedTime.AsSeconds());
+                    UpdateFrameDelta = TimeSpan.FromSeconds(Host.Global.UpdateTimer.ElapsedTime.AsSeconds());
 
                     if (SadConsole.Host.Global.GraphicsDevice.HasFocus())
                     {
                         if (SadConsole.Settings.Input.DoKeyboard)
                         {
-                            SadConsole.GameHost.Instance.Keyboard.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
+                            Keyboard.Update(UpdateFrameDelta);
 
-                            if (SadConsole.GameHost.Instance.FocusedScreenObjects.ScreenObject != null && SadConsole.GameHost.Instance.FocusedScreenObjects.ScreenObject.UseKeyboard)
+                            if (FocusedScreenObjects.ScreenObject != null && FocusedScreenObjects.ScreenObject.UseKeyboard)
                             {
-                                SadConsole.GameHost.Instance.FocusedScreenObjects.ScreenObject.ProcessKeyboard(SadConsole.GameHost.Instance.Keyboard);
+                                FocusedScreenObjects.ScreenObject.ProcessKeyboard(Keyboard);
                             }
 
                         }
 
                         if (SadConsole.Settings.Input.DoMouse)
                         {
-                            SadConsole.GameHost.Instance.Mouse.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
-                            SadConsole.GameHost.Instance.Mouse.Process();
+                            Mouse.Update(UpdateFrameDelta);
+                            Mouse.Process();
                         }
                     }
 
-                    SadConsole.GameHost.Instance.Screen?.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
+                    Screen?.Update(UpdateFrameDelta);
                     
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
 
@@ -171,13 +163,13 @@ namespace SadConsole
                 {
                     SadConsole.Host.Global.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
 
-                    SadConsole.GameHost.Instance.DrawFrameDelta = TimeSpan.FromSeconds(Host.Global.DrawTimer.ElapsedTime.AsSeconds());
+                    DrawFrameDelta = TimeSpan.FromSeconds(Host.Global.DrawTimer.ElapsedTime.AsSeconds());
 
                     // Clear draw calls for next run
                     SadConsole.Game.Instance.DrawCalls.Clear();
 
                     // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    SadConsole.GameHost.Instance.Screen?.Render(SadConsole.GameHost.Instance.DrawFrameDelta);
+                    Screen?.Render(DrawFrameDelta);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
 
