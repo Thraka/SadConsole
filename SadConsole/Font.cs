@@ -187,9 +187,9 @@ namespace SadConsole
             if (glyphRectangles != null)
                 GlyphRectangles = glyphRectangles;
 
-            ConfigureRects();
+            _solidGlyphIndex = solidGlyphIndex;
 
-            SolidGlyphIndex = solidGlyphIndex;
+            ConfigureRects();
         }
 
         [Newtonsoft.Json.JsonConstructor]
