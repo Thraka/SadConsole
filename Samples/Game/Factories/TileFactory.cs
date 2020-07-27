@@ -12,7 +12,7 @@ namespace Game.Factories
         {
             // Seed the factory with all the default tiles
             Add(new TileBlueprint("empty"));
-            Add(new TileBlueprint("dead", new TileBlueprint.Config(SadRogue.Primitives.ColorAnsi.WhiteBright, SadRogue.Primitives.ColorAnsi.Red, 'x')));
+            Add(new TileBlueprint("dead", new TileBlueprint.Config(SadRogue.Primitives.Color.AnsiWhiteBright, SadRogue.Primitives.Color.AnsiRed, 'x')));
             Add(new TileBlueprint("wall-solid", new TileBlueprint.Config(null, null, 0xDB), typeof(ObjectComponents.BlockingMove), typeof(ObjectComponents.Touchable)));
             Add(new TileBlueprint("wall-blink", new TileBlueprint.Config(null, null, 0xCE), typeof(ObjectComponents.BlockingMove), typeof(ObjectComponents.Touchable)));
             Add(new TileBlueprint("wall-normal", new TileBlueprint.Config(null, null, 0xB2), typeof(ObjectComponents.BlockingMove), typeof(ObjectComponents.Touchable)));

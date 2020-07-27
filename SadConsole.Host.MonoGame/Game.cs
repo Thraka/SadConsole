@@ -74,6 +74,8 @@ namespace SadConsole
             SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
             SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
 
+            LoadMappedColors();
+
             Screen = new Console(ScreenCellsX, ScreenCellsY);
 
             OnStart?.Invoke();

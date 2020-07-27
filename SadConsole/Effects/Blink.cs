@@ -134,6 +134,6 @@ namespace SadConsole.Effects
         //    return false;
         //}
 
-        public override string ToString() => string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.ToInteger(), BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
+        public override string ToString() => string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.PackedValue, BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
     }
 }

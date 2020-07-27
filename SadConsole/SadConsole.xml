@@ -3493,6 +3493,9 @@
             <summary>
             Represents the SadConsole game engine.
             </summary>
+            <remarks>
+            When a new host is created, the host should conform to the following 
+            </remarks>
             <summary>
             Represents the SadConsole game engine.
             </summary>
@@ -3656,6 +3659,11 @@
         <member name="M:SadConsole.GameHost.LoadEmbeddedFont">
             <summary>
             Loads the <c>IBM.font</c> built into the binary.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.LoadMappedColors">
+            <summary>
+            Uses reflection to examine the <see cref="T:SadRogue.Primitives.Color"/> type and add any predefined colors into <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/>.
             </summary>
         </member>
         <member name="M:SadConsole.GameHost.Dispose(System.Boolean)">
@@ -6932,6 +6940,11 @@
             The identifier of the named pipe used to communicate with the in game debugger app.
             </summary>
         </member>
+        <member name="P:SadConsole.Settings.AutomaticAddColorsToMappings">
+            <summary>
+            Automatically adds all of the static color declarations of <see cref="T:SadRogue.Primitives.Color"/> to <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/>.
+            </summary>
+        </member>
         <member name="T:SadConsole.Settings.Input">
             <summary>
             Settings related to input.
@@ -7577,7 +7590,12 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Position">
             <summary>
-            Indicates the rendering location of this control.
+            The relative position of this control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.AbsolutePosition">
+            <summary>
+            Gets the position of this control based on the control's <see cref="P:SadConsole.UI.Controls.ControlBase.Position"/> and the position of the <see cref="P:SadConsole.UI.Controls.ControlBase.Parent"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsVisible">
@@ -7861,6 +7879,41 @@
             </summary>
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.IContainer">
+            <summary>
+            A simple container for controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.IContainer.AbsolutePosition">
+            <summary>
+            Gets the position of the container based on any parents position.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.IContainer.Host">
+            <summary>
+            The host owning this container.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Adds a control to this container.
+            </summary>
+            <param name="control">The control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Removes a control from this container.
+            </summary>
+            <param name="control">The control.</param>
+            <returns><see langword="true"/> if item was successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if item is not found.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.Contains(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            <see langword="true"/> when the control exists in the container; otherwise, <see langword="false"/>.
+            </summary>
+            <param name="control">The control to find.</param>
+            <returns>A value to indicate if this control is in this container.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
@@ -9366,91 +9419,6 @@
             The color stop in the gradiant this applies to.
             </summary>
         </member>
-        <member name="T:SadRogue.Primitives.ColorAnsi">
-            <summary>
-            Classic 16 ansi color values.
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.Black">
-            <summary>
-            The black ansi color (0, 0, 0).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.Red">
-            <summary>
-            The Red ansi color (170, 0, 0).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.Green">
-            <summary>
-            The Green ansi color 0, 170, 0).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.Yellow">
-            <summary>
-            The Yellow ansi color (170, 85, 0).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.Blue">
-            <summary>
-            The Blue ansi color (0, 0, 170).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.Magenta">
-            <summary>
-            The Magenta ansi color (170, 0, 170).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.Cyan">
-            <summary>
-            The Cyan ansi color (0, 170, 170).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.White">
-            <summary>
-            The White ansi color (170, 170, 170).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.BlackBright">
-            <summary>
-            The BlackBright ansi color (85, 85, 85).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.RedBright">
-            <summary>
-            The RedBright ansi color (255, 85, 85).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.GreenBright">
-            <summary>
-            The GreenBright ansi color (85, 255, 85).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.YellowBright">
-            <summary>
-            The YellowBright ansi color (255, 255, 85).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.BlueBright">
-            <summary>
-            The BlueBright ansi color (85, 85, 255).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.MagentaBright">
-            <summary>
-            The MagentaBright ansi color (255, 85, 255).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.CyanBright">
-            <summary>
-            The CyanBright ansi color (85, 255, 255).
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorAnsi.WhiteBright">
-            <summary>
-            The WhiteBright ansi color (255, 255, 255).
-            </summary>
-        </member>
         <member name="T:SadRogue.Primitives.ColorExtensions">
             <summary>
             Various extension methods to <see cref="T:SadRogue.Primitives.Color"/> class.
@@ -9458,15 +9426,8 @@
         </member>
         <member name="F:SadRogue.Primitives.ColorExtensions.ColorMappings">
             <summary>
-            Custom color mappings for the <see cref="M:SadRogue.Primitives.ColorExtensions.FromParser(SadRogue.Primitives.Color,System.String,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)"/> method.
+            Custom color mappings for the <see cref="M:SadRogue.Primitives.ColorExtensions.FromName(System.String)"/> and <see cref="M:SadRogue.Primitives.ColorExtensions.FromParser(SadRogue.Primitives.Color,System.String,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)"/> methods. Key names should be lowercase.
             </summary>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorExtensions.ToInteger(SadRogue.Primitives.Color)">
-            <summary>
-            Wrapper for <see cref="P:SadRogue.Primitives.Color.PackedValue"/>.
-            </summary>
-            <param name="color"></param>
-            <returns></returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions.LerpSteps(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
             <summary>
@@ -9661,6 +9622,13 @@
             <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
             <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
             <returns></returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.FromName(System.String)">
+            <summary>
+            Searches <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/> for a defined color and then fallsback to <see cref="!:primi"/>
+            </summary>
+            <param name="name">The name of a color.</param>
+            <returns>A color.</returns>
         </member>
     </members>
 </doc>

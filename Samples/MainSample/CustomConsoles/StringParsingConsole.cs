@@ -11,7 +11,7 @@ namespace FeatureDemo.CustomConsoles
             Surface.UsePrintProcessor = true;
             IsVisible = false;
             UseKeyboard = false;
-            Surface.DefaultForeground = ColorAnsi.White;
+            Surface.DefaultForeground = Color.AnsiWhite;
             Surface.Clear();
             int c = 59;
             int r = 1;
@@ -19,7 +19,7 @@ namespace FeatureDemo.CustomConsoles
             ColoredString.CustomProcessor = CustomParseCommand;
 
             Surface.Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]String parsing supports...                                                    ");
-            Surface.SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
+            Surface.SetGlyph(0, r, 221, Color.Black, Color.AnsiBlue);
 
             r = 2;
             Color a = Color.Green;
@@ -35,7 +35,7 @@ namespace FeatureDemo.CustomConsoles
 
             r += 2;
             Surface.Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]Examples                                                                      ");
-            Surface.SetGlyph(0, r, 221, Color.Black, ColorAnsi.Blue);
+            Surface.SetGlyph(0, r, 221, Color.Black, Color.AnsiBlue);
 
             //var temp = Font.Master.GetDecorator("underline", Color.White);
             //SetDecorator(1, 3, 24, new[] { temp });

@@ -89,6 +89,11 @@ namespace SadConsole
         public static string DebuggerPipeId { get; } = "AE38CE3C-53B8-4FB9-AD7F-11D748590733";
 
         /// <summary>
+        /// Automatically adds all of the static color declarations of <see cref="Color"/> to <see cref="ColorExtensions.ColorMappings"/>.
+        /// </summary>
+        public static bool AutomaticAddColorsToMappings { get; set; } = true;
+
+        /// <summary>
         /// Settings related to input.
         /// </summary>
         public static class Input

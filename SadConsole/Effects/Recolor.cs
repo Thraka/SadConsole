@@ -97,6 +97,6 @@ namespace SadConsole.Effects
         //}
 
         public override string ToString() =>
-            string.Format("RECOLOR-{0}-{1}-{2}-{3}", Foreground.ToInteger(), Background.ToInteger(), StartDelay, RemoveOnFinished);
+            string.Format("RECOLOR-{0}-{1}-{2}-{3}", Foreground.PackedValue, Background.PackedValue, StartDelay, RemoveOnFinished);
     }
 }

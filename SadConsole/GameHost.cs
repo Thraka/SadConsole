@@ -5,6 +5,8 @@ using SadRogue.Primitives;
 using SadConsole.Renderers;
 using System.IO;
 using SadConsole.Input;
+using System.Reflection;
+using System.Linq;
 
 namespace SadConsole
 {
@@ -264,6 +266,20 @@ namespace SadConsole
 
             EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
             EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
+        }
+
+        /// <summary>
+        /// Uses reflection to examine the <see cref="Color"/> type and add any predefined colors into <see cref="ColorExtensions.ColorMappings"/>.
+        /// </summary>
+        protected void LoadMappedColors()
+        {
+            if (Settings.AutomaticAddColorsToMappings)
+            {
+                //ColorExtensions.ColorMappings.Add
+                var colorType = typeof(Color);
+                foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name))
+                    ColorExtensions.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null));
+            }
         }
 
         #region IDisposable Support

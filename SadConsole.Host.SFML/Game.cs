@@ -115,6 +115,8 @@ namespace SadConsole
             SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
             SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
 
+            LoadMappedColors();
+
             // Create the default console.
             SadConsole.GameHost.Instance.Screen = new Console(ScreenCellsX, ScreenCellsY);
         }

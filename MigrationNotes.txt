@@ -9,10 +9,8 @@
 
 ===== TODO
 
-- Test if ConnectedLineStyle arrays elements can be modified.
 - (?) Components should have a before/after ability where SortOrder < 5 run before the core code and >=5 run after.
 - Check fullscreen to and from not setting render sizes correctly in monogame.
-- Write fullscreen code in SFML Game instance.
 
 ====== New Features
 

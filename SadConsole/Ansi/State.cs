@@ -54,8 +54,8 @@ namespace SadConsole.Ansi
             Bold = false;
             Concealed = false;
             Reverse = false;
-            Foreground = ColorAnsi.White;
-            Background = ColorAnsi.Black;
+            Foreground = Color.AnsiWhite;
+            Background = Color.AnsiBlack;
             AnsiCorrectPrintColor();
         }
     }

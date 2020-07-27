@@ -202,7 +202,7 @@ namespace Game.Factories
         {
             GameObject obj = new GameObject();
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.ColorAnsi.Cyan, Color.Black, 0x84));
+            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiCyan, Color.Black, 0x84));
             obj.AddComponent(BlockingMove.Singleton);
             obj.AddComponent(Movable.Singleton);
             obj.AddComponent(Touchable.Singleton);
@@ -221,7 +221,7 @@ namespace Game.Factories
         {
             GameObject obj = new GameObject();
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.ColorAnsi.Yellow, Color.Black, 0x9D));
+            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiYellow, Color.Black, 0x9D));
             obj.AddComponent(BlockingMove.Singleton);
             obj.AddComponent(Movable.Singleton);
             obj.AddComponent(Touchable.Singleton);
@@ -240,7 +240,7 @@ namespace Game.Factories
         {
             GameObject obj = new GameObject();
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.ColorAnsi.White, Color.Black, 0x04));
+            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x04));
             obj.AddComponent(BlockingMove.Singleton);
             obj.AddComponent(Movable.Singleton);
             obj.AddComponent(Touchable.Singleton);
@@ -259,7 +259,7 @@ namespace Game.Factories
         {
             GameObject obj = new GameObject();
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.ColorAnsi.White, Color.Black, 0x0C));
+            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x0C));
             obj.AddComponent(BlockingMove.Singleton);
             obj.AddComponent(Movable.Singleton);
             obj.AddComponent(Touchable.Singleton);
@@ -278,7 +278,7 @@ namespace Game.Factories
         {
             GameObject obj = new GameObject();
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.ColorAnsi.White, Color.Black, 0x0A));
+            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x0A));
             obj.AddComponent(BlockingMove.Singleton);
             obj.AddComponent(Movable.Singleton);
             obj.AddComponent(Touchable.Singleton);

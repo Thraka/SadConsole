@@ -31,13 +31,13 @@ namespace SadConsole.SplashScreens
                 .Code(() =>
                 {
                     cursor
-                        .SetPrintAppearance(new ColoredGlyph(ColorAnsi.BlueBright))
+                        .SetPrintAppearance(new ColoredGlyph(Color.AnsiBlueBright))
                         .Move(0, 0)
                         .Print($"{(char)222}{(char)219}")
                         .NewLine()
                         .Print($"{(char)219}{(char)221}")
                         .Move(3, 0)
-                        .SetPrintAppearance(new ColoredGlyph(ColorAnsi.White))
+                        .SetPrintAppearance(new ColoredGlyph(Color.AnsiWhite))
                         .Print("Aw0rd Modular BIoS v.4.50G, An En3rgy Star Ally")
                         .Move(3, 1)
                         .Print("Copyright (C) 1984-85, Award Softcare, Inc.")

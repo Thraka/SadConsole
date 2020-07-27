@@ -13,7 +13,7 @@ namespace SadConsole.SplashScreens
         {
             UsePixelPositioning = true;
             Position = (Settings.Rendering.RenderWidth / 2 - AbsoluteArea.Width / 2, Settings.Rendering.RenderHeight / 2 - AbsoluteArea.Height / 2);
-            Surface.Print(0, 0, _title, Color.Black, ColorAnsi.White);
+            Surface.Print(0, 0, _title, Color.Black, Color.AnsiWhite);
 
             _endAnimation = new Instructions.InstructionSet() { RemoveOnFinished = true }
                 .Instruct(new Instructions.FadeTextSurfaceTint(new ColorGradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))

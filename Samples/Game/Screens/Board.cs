@@ -95,13 +95,13 @@ namespace Game.Screens
                 ZElement.Types.FakeWall => ("wall-fake", config),
                 ZElement.Types.NormalWall => ("wall-normal", config),
                 ZElement.Types.Line => ("line", config),
-                ZElement.Types.TextBlack => ("wall-solid", new Factories.TileBlueprint.Config(ColorAnsi.WhiteBright, ColorAnsi.Black, data)),
-                ZElement.Types.TextBlue => ("wall-solid", new Factories.TileBlueprint.Config(ColorAnsi.WhiteBright, ColorAnsi.Blue, data)),
-                ZElement.Types.TextBrown => ("wall-solid", new Factories.TileBlueprint.Config(ColorAnsi.WhiteBright, ColorAnsi.Yellow, data)),
-                ZElement.Types.TextCyan => ("wall-solid", new Factories.TileBlueprint.Config(ColorAnsi.WhiteBright, ColorAnsi.Cyan, data)),
-                ZElement.Types.TextGreen => ("wall-solid", new Factories.TileBlueprint.Config(ColorAnsi.WhiteBright, ColorAnsi.Green, data)),
-                ZElement.Types.TextPurple => ("wall-solid", new Factories.TileBlueprint.Config(ColorAnsi.WhiteBright, ColorAnsi.Magenta, data)),
-                ZElement.Types.TextRed => ("wall-solid", new Factories.TileBlueprint.Config(ColorAnsi.WhiteBright, ColorAnsi.Red, data)),
+                ZElement.Types.TextBlack => ("wall-solid", new Factories.TileBlueprint.Config(Color.AnsiWhiteBright, Color.AnsiBlack, data)),
+                ZElement.Types.TextBlue => ("wall-solid", new Factories.TileBlueprint.Config(Color.AnsiWhiteBright, Color.AnsiBlue, data)),
+                ZElement.Types.TextBrown => ("wall-solid", new Factories.TileBlueprint.Config(Color.AnsiWhiteBright, Color.AnsiYellow, data)),
+                ZElement.Types.TextCyan => ("wall-solid", new Factories.TileBlueprint.Config(Color.AnsiWhiteBright, Color.AnsiCyan, data)),
+                ZElement.Types.TextGreen => ("wall-solid", new Factories.TileBlueprint.Config(Color.AnsiWhiteBright, Color.AnsiGreen, data)),
+                ZElement.Types.TextPurple => ("wall-solid", new Factories.TileBlueprint.Config(Color.AnsiWhiteBright, Color.AnsiMagenta, data)),
+                ZElement.Types.TextRed => ("wall-solid", new Factories.TileBlueprint.Config(Color.AnsiWhiteBright, Color.AnsiRed, data)),
                 _ => ("dead", Factories.TileBlueprint.Config.Empty)
             };
 

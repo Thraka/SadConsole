@@ -17,37 +17,37 @@ namespace SadConsole.Ansi
         {
             Color color = input;
 
-            if (input == ColorAnsi.BlackBright || input == ColorAnsi.Black)
+            if (input == Color.AnsiBlackBright || input == Color.AnsiBlack)
             {
-                color = ColorAnsi.Black;
+                color = Color.AnsiBlack;
             }
-            else if (input == ColorAnsi.RedBright || input == ColorAnsi.Red)
+            else if (input == Color.AnsiRedBright || input == Color.AnsiRed)
             {
-                color = ColorAnsi.Red;
+                color = Color.AnsiRed;
             }
-            else if (input == ColorAnsi.GreenBright || input == ColorAnsi.Green)
+            else if (input == Color.AnsiGreenBright || input == Color.AnsiGreen)
             {
-                color = ColorAnsi.Green;
+                color = Color.AnsiGreen;
             }
-            else if (input == ColorAnsi.YellowBright || input == ColorAnsi.Yellow)
+            else if (input == Color.AnsiYellowBright || input == Color.AnsiYellow)
             {
-                color = ColorAnsi.Yellow;
+                color = Color.AnsiYellow;
             }
-            else if (input == ColorAnsi.BlueBright || input == ColorAnsi.Blue)
+            else if (input == Color.AnsiBlueBright || input == Color.AnsiBlue)
             {
-                color = ColorAnsi.Blue;
+                color = Color.AnsiBlue;
             }
-            else if (input == ColorAnsi.MagentaBright || input == ColorAnsi.Magenta)
+            else if (input == Color.AnsiMagentaBright || input == Color.AnsiMagenta)
             {
-                color = ColorAnsi.Magenta;
+                color = Color.AnsiMagenta;
             }
-            else if (input == ColorAnsi.CyanBright || input == ColorAnsi.Cyan)
+            else if (input == Color.AnsiCyanBright || input == Color.AnsiCyan)
             {
-                color = ColorAnsi.Cyan;
+                color = Color.AnsiCyan;
             }
-            else if (input == ColorAnsi.WhiteBright || input == ColorAnsi.White)
+            else if (input == Color.AnsiWhiteBright || input == Color.AnsiWhite)
             {
-                color = ColorAnsi.White;
+                color = Color.AnsiWhite;
             }
 
             return color;
@@ -63,37 +63,37 @@ namespace SadConsole.Ansi
         {
             Color color = input;
 
-            if (input == ColorAnsi.BlackBright || input == ColorAnsi.Black)
+            if (input == Color.AnsiBlackBright || input == Color.AnsiBlack)
             {
-                color = bold ? ColorAnsi.BlackBright : ColorAnsi.Black;
+                color = bold ? Color.AnsiBlackBright : Color.AnsiBlack;
             }
-            else if (input == ColorAnsi.RedBright || input == ColorAnsi.Red)
+            else if (input == Color.AnsiRedBright || input == Color.AnsiRed)
             {
-                color = bold ? ColorAnsi.RedBright : ColorAnsi.Red;
+                color = bold ? Color.AnsiRedBright : Color.AnsiRed;
             }
-            else if (input == ColorAnsi.GreenBright || input == ColorAnsi.Green)
+            else if (input == Color.AnsiGreenBright || input == Color.AnsiGreen)
             {
-                color = bold ? ColorAnsi.GreenBright : ColorAnsi.Green;
+                color = bold ? Color.AnsiGreenBright : Color.AnsiGreen;
             }
-            else if (input == ColorAnsi.YellowBright || input == ColorAnsi.Yellow)
+            else if (input == Color.AnsiYellowBright || input == Color.AnsiYellow)
             {
-                color = bold ? ColorAnsi.YellowBright : ColorAnsi.Yellow;
+                color = bold ? Color.AnsiYellowBright : Color.AnsiYellow;
             }
-            else if (input == ColorAnsi.BlueBright || input == ColorAnsi.Blue)
+            else if (input == Color.AnsiBlueBright || input == Color.AnsiBlue)
             {
-                color = bold ? ColorAnsi.BlueBright : ColorAnsi.Blue;
+                color = bold ? Color.AnsiBlueBright : Color.AnsiBlue;
             }
-            else if (input == ColorAnsi.MagentaBright || input == ColorAnsi.Magenta)
+            else if (input == Color.AnsiMagentaBright || input == Color.AnsiMagenta)
             {
-                color = bold ? ColorAnsi.MagentaBright : ColorAnsi.Magenta;
+                color = bold ? Color.AnsiMagentaBright : Color.AnsiMagenta;
             }
-            else if (input == ColorAnsi.CyanBright || input == ColorAnsi.Cyan)
+            else if (input == Color.AnsiCyanBright || input == Color.AnsiCyan)
             {
-                color = bold ? ColorAnsi.CyanBright : ColorAnsi.Cyan;
+                color = bold ? Color.AnsiCyanBright : Color.AnsiCyan;
             }
-            else if (input == ColorAnsi.WhiteBright || input == ColorAnsi.White)
+            else if (input == Color.AnsiWhiteBright || input == Color.AnsiWhite)
             {
-                color = bold ? ColorAnsi.WhiteBright : ColorAnsi.White;
+                color = bold ? Color.AnsiWhiteBright : Color.AnsiWhite;
             }
 
             return color;
@@ -111,39 +111,39 @@ namespace SadConsole.Ansi
 
             if (code == 0)
             {
-                color = ansiState.Bold ? ColorAnsi.BlackBright : ColorAnsi.Black;
+                color = ansiState.Bold ? Color.AnsiBlackBright : Color.AnsiBlack;
             }
             else if (code == 1)
             {
-                color = ansiState.Bold ? ColorAnsi.RedBright : ColorAnsi.Red;
+                color = ansiState.Bold ? Color.AnsiRedBright : Color.AnsiRed;
             }
             else if (code == 2)
             {
-                color = ansiState.Bold ? ColorAnsi.GreenBright : ColorAnsi.Green;
+                color = ansiState.Bold ? Color.AnsiGreenBright : Color.AnsiGreen;
             }
             else if (code == 3)
             {
-                color = ansiState.Bold ? ColorAnsi.YellowBright : ColorAnsi.Yellow;
+                color = ansiState.Bold ? Color.AnsiYellowBright : Color.AnsiYellow;
             }
             else if (code == 4)
             {
-                color = ansiState.Bold ? ColorAnsi.BlueBright : ColorAnsi.Blue;
+                color = ansiState.Bold ? Color.AnsiBlueBright : Color.AnsiBlue;
             }
             else if (code == 5)
             {
-                color = ansiState.Bold ? ColorAnsi.MagentaBright : ColorAnsi.Magenta;
+                color = ansiState.Bold ? Color.AnsiMagentaBright : Color.AnsiMagenta;
             }
             else if (code == 6)
             {
-                color = ansiState.Bold ? ColorAnsi.CyanBright : ColorAnsi.Cyan;
+                color = ansiState.Bold ? Color.AnsiCyanBright : Color.AnsiCyan;
             }
             else if (code == 7)
             {
-                color = ansiState.Bold ? ColorAnsi.WhiteBright : ColorAnsi.White;
+                color = ansiState.Bold ? Color.AnsiWhiteBright : Color.AnsiWhite;
             }
             else
             {
-                color = ColorAnsi.Black;
+                color = Color.AnsiBlack;
             }
 
             if (isBackground)

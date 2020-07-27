@@ -1,3 +1,13 @@
+## v9.0 Alpha 9a
+
+- Removed accidental dependency on SharpFNT.
+- Fixed font init bug. (thanks bepis)
+- ColorExtension additions.
+  - ToInteger removed. The PackedValue property is suitable.
+  - ColorAnsi type removed. Ansi colors are defined by the primitives library.
+  - ColorMappings is automatically filled with every static color defined by the primitives library (including ansi colors).
+  - FromName is a handy method to look up a color in the dictionary.
+
 ## v9.0 Alpha 9
 
 - RandomGarbage uses the current font.
