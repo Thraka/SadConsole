@@ -457,7 +457,7 @@ namespace SadRogue.Primitives
             }
             else
             {
-                value = value.ToLower();
+                value = value.ToLowerInvariant();
 
                 if (ColorMappings.ContainsKey(value))
                     return ColorMappings[value];
@@ -473,6 +473,7 @@ namespace SadRogue.Primitives
         /// <returns>A color.</returns>
         public static Color FromName(string name)
         {
+            name = name.ToLowerInvariant();
             if (ColorMappings.ContainsKey(name))
                 return ColorMappings[name];
             throw new ArgumentException($"Unable to find a color with the name {name}.");
@@ -486,6 +487,7 @@ namespace SadRogue.Primitives
         /// <returns>A color.</returns>
         public static Color FromName(string name, Color defaultColor)
         {
+            name = name.ToLowerInvariant();
             if (ColorMappings.ContainsKey(name))
                 return ColorMappings[name];
             return defaultColor;
