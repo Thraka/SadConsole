@@ -36,33 +36,23 @@ namespace SadConsole
                 if (alignment == HorizontalAlignment.Left)
                 {
                     if (value.Length > totalWidth)
-                    {
-                        adjustedText = adjustedText = value.Substring(0, totalWidth);
-                    }
+                        adjustedText = value.Substring(0, totalWidth);
                     else
-                    {
                         adjustedText = value.PadRight(totalWidth, fillCharacter);
-                    }
                 }
 
                 else if (alignment == HorizontalAlignment.Right)
                 {
                     if (value.Length > totalWidth)
-                    {
-                        adjustedText = adjustedText = value.Substring(value.Length - totalWidth);
-                    }
+                        adjustedText = value.Substring(value.Length - totalWidth);
                     else
-                    {
                         adjustedText = value.PadLeft(totalWidth, fillCharacter);
-                    }
                 }
 
                 else
                 {
                     if (value.Length > totalWidth)
-                    {
-                        adjustedText = adjustedText = value.Substring((value.Length - totalWidth) / 2, totalWidth);
-                    }
+                        adjustedText = value.Substring((value.Length - totalWidth) / 2, totalWidth);
                     else
                     {
                         int pad = (totalWidth - value.Length) / 2;
@@ -87,36 +77,24 @@ namespace SadConsole
             var stacks = new ParseCommandStacks();
 
             if (foreground.HasValue)
-            {
                 stacks.AddSafe(new ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = CommandTypes.Foreground });
-            }
 
             if (background.HasValue)
-            {
                 stacks.AddSafe(new ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = CommandTypes.Background });
-            }
 
             if (mirror.HasValue)
-            {
                 stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror.Value, CommandType = CommandTypes.Mirror });
-            }
 
             ColoredString newString = ColoredString.Parse(value, initialBehaviors: stacks);
 
             if (!foreground.HasValue)
-            {
                 newString.IgnoreForeground = true;
-            }
 
             if (!background.HasValue)
-            {
                 newString.IgnoreBackground = true;
-            }
 
             if (!mirror.HasValue)
-            {
                 newString.IgnoreMirror = true;
-            }
 
             return newString;
         }
@@ -133,9 +111,7 @@ namespace SadConsole
             ColoredString newString = new ColoredString(value);
 
             for (int i = 0; i < value.Length; i++)
-            {
                 newString[i].Foreground = Color.Lerp(startingForeground, endingForeground, i / (float)value.Length);
-            }
 
             newString.IgnoreBackground = true;
             newString.IgnoreMirror = true;
@@ -175,14 +151,10 @@ namespace SadConsole
         public static bool ToBool(this string item)
         {
             if (int.TryParse(item, out int intValue))
-            {
                 return System.Convert.ToBoolean(intValue);
-            }
 
             if (bool.TryParse(item, out bool boolValue))
-            {
                 return bool.Parse(item);
-            }
 
             return false;
         }
