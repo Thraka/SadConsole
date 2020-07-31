@@ -132,17 +132,17 @@ namespace SadConsole.Components
         /// <summary>
         /// When true, prevents the any print method from breaking words up by spaces when wrapping lines.
         /// </summary>
-        public bool DisableWordBreak = false;
+        public bool DisableWordBreak { get; set; } = false;
 
         /// <summary>
         /// Enables linux-like string parsing where a \n behaves like a \r\n.
         /// </summary>
-        public bool UseLinuxLineEndings = false;
+        public bool UseLinuxLineEndings { get; set; } = false;
 
         /// <summary>
-        /// Calls <see cref="ColoredString.Parse"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, Cell, ICellEffect)"/>
+        /// Calls <see cref="ColoredString.Parse"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
         /// </summary>
-        public bool UseStringParser = false;
+        public bool UseStringParser { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the row of the cursor postion.
@@ -365,8 +365,12 @@ namespace SadConsole.Components
             else
             {
                 coloredString = text.CreateColored(template.Foreground, template.Background, template.Mirror);
-                coloredString.IgnoreEffect = !UsePrintEffect;
-                coloredString.SetEffect(templateEffect);
+
+                if (UsePrintEffect)
+                {
+                    coloredString.IgnoreEffect = false;
+                    coloredString.SetEffect(templateEffect);
+                }
             }
 
             return Print(coloredString);
