@@ -12,6 +12,12 @@ namespace SadConsole.Input
     {
         private TimeSpan _leftLastClickedTime;
         private TimeSpan _rightLastClickedTime;
+        private TimeSpan _middleLastClickedTime;
+
+        private bool _leftPressedLastFrame;
+        private bool _rightPressedLastFrame;
+        private bool _middlePressedLastFrame;
+
         private IScreenObject _lastMouseScreenObject;
 
         /// <summary>
@@ -79,6 +85,11 @@ namespace SadConsole.Input
         /// </summary>
         public bool IsOnScreen => Settings.Rendering.RenderRect.Contains(ScreenPosition + Settings.Rendering.RenderRect.Position);
 
+        public Mouse()
+        {
+
+        }
+
         /// <summary>
         /// Reads the mouse state from <see cref="GameHost.GetMouseState"/>.
         /// </summary>
@@ -96,48 +107,73 @@ namespace SadConsole.Input
             ScrollWheelValue = currentState.MouseWheel;
 
             ScreenPosition = new Point((int)(currentState.ScreenPosition.X * Settings.Rendering.RenderScale.X), (int)(currentState.ScreenPosition.Y * Settings.Rendering.RenderScale.Y)) - new Point((int)(Settings.Rendering.RenderRect.X * Settings.Rendering.RenderScale.X), (int)(Settings.Rendering.RenderRect.Y * Settings.Rendering.RenderScale.Y));
+
+            // Count time for full clicks
+            if (!_leftPressedLastFrame && leftDown)
+                _leftPressedLastFrame = true;
+            else if (leftDown)
+                _leftLastClickedTime += elapsedSeconds;
+
+            if (!_rightPressedLastFrame && leftDown)
+                _rightPressedLastFrame = true;
+            else if (rightDown)
+                _rightLastClickedTime += elapsedSeconds;
+
+            if (!_middlePressedLastFrame && leftDown)
+                _middlePressedLastFrame = true;
+            else if (middleDown)
+                _middleLastClickedTime += elapsedSeconds;
+
+            // Get the mouse button state change
             bool newLeftClicked = LeftButtonDown && !leftDown;
             bool newRightClicked = RightButtonDown && !rightDown;
             bool newMiddleClicked = MiddleButtonDown && !middleDown;
 
+            // Set state of double clicks
             if (!newLeftClicked)
-            {
                 LeftDoubleClicked = false;
-            }
 
             if (!newRightClicked)
-            {
                 RightDoubleClicked = false;
-            }
 
             if (!newMiddleClicked)
-            {
                 MiddleDoubleClicked = false;
-            }
 
-            if (LeftClicked && newLeftClicked && elapsedSeconds.TotalSeconds < 1000)
-            {
+            if (LeftClicked && newLeftClicked && _leftLastClickedTime < Settings.Input.MouseDoubleClickTime)
                 LeftDoubleClicked = true;
-            }
 
-            if (RightClicked && newRightClicked && elapsedSeconds.TotalSeconds < 1000)
-            {
+            if (RightClicked && newRightClicked && _rightLastClickedTime < Settings.Input.MouseDoubleClickTime)
                 RightDoubleClicked = true;
-            }
 
-            if (MiddleClicked && newMiddleClicked && elapsedSeconds.TotalSeconds < 1000)
-            {
+            if (MiddleClicked && newMiddleClicked && _middleLastClickedTime < Settings.Input.MouseDoubleClickTime)
                 MiddleDoubleClicked = true;
-            }
 
-            LeftClicked = newLeftClicked;
-            RightClicked = newRightClicked;
-            MiddleClicked = newMiddleClicked;
-            _leftLastClickedTime = elapsedSeconds;
-            _rightLastClickedTime = elapsedSeconds;
+            // Set state of click and mouse down
+            LeftClicked = newLeftClicked && _leftLastClickedTime < Settings.Input.MouseClickTime;
+            RightClicked = newRightClicked && _rightLastClickedTime < Settings.Input.MouseClickTime;
+            MiddleClicked = newMiddleClicked && _middleLastClickedTime < Settings.Input.MouseClickTime;
             LeftButtonDown = leftDown;
             RightButtonDown = rightDown;
             MiddleButtonDown = middleDown;
+
+            // Clear any click frame tracking
+            if (_leftPressedLastFrame && !leftDown)
+            {
+                _leftPressedLastFrame = false;
+                _leftLastClickedTime = TimeSpan.Zero;
+            }
+
+            if (_rightPressedLastFrame && !rightDown)
+            {
+                _rightPressedLastFrame = false;
+                _rightLastClickedTime = TimeSpan.Zero;
+            }
+
+            if (_middlePressedLastFrame && !middleDown)
+            {
+                _middlePressedLastFrame = false;
+                _middleLastClickedTime = TimeSpan.Zero;
+            }
         }
 
         /// <summary>
@@ -157,6 +193,9 @@ namespace SadConsole.Input
             ScrollWheelValue = 0;
             ScrollWheelValueChange = 0;
             ScreenPosition = new Point(0, 0);
+
+            _leftLastClickedTime = TimeSpan.Zero;
+            _leftPressedLastFrame = false;
         }
 
         /// <summary>
