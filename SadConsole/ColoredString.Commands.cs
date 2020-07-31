@@ -18,7 +18,7 @@
         /// <param name="surfaceIndex">Index of where this string will be printed.</param>
         /// <param name="surface">The surface the string will be printed to.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
-        /// <returns></returns>
+        /// <returns>The finalized string.</returns>
         public static ColoredString Parse(string value, int surfaceIndex = -1, ICellSurface surface = null, ParseCommandStacks initialBehaviors = null)
         {
             ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
@@ -29,9 +29,7 @@
                 ColoredGlyphEffect[] existingGlyphs = glyphs.ToArray();
 
                 if (value[i] == '`' && i + 1 < value.Length && value[i + 1] == '[')
-                {
                     continue;
-                }
 
                 if (value[i] == '[' && (i == 0 || value[i - 1] != '`'))
                 {
@@ -82,6 +80,10 @@
                                     case "sg":
                                         commandObject = new ParseCommandSetGlyph(commandParams);
                                         break;
+                                    case "ceffect":
+                                    case "ce":
+                                        commandObject = new ParseCommandClearEffect(commandParams, commandStacks);
+                                        break;
                                     default:
                                         break;
                                 }
@@ -108,13 +110,9 @@
                 int fixedSurfaceIndex;
 
                 if (surfaceIndex == -1 || surface == null)
-                {
                     fixedSurfaceIndex = -1;
-                }
                 else
-                {
                     fixedSurfaceIndex = i + surfaceIndex < surface.Cells.Length ? i + surfaceIndex : -1;
-                }
 
                 ColoredGlyphEffect newGlyph;
 
@@ -135,32 +133,23 @@
 
                 // Foreground
                 if (commandStacks.Foreground.Count != 0)
-                {
                     commandStacks.Foreground.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
-                }
 
                 // Background
                 if (commandStacks.Background.Count != 0)
-                {
                     commandStacks.Background.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
-                }
 
+                // Glyph
                 if (commandStacks.Glyph.Count != 0)
-                {
                     commandStacks.Glyph.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
-                }
 
                 // SpriteEffect
                 if (commandStacks.Mirror.Count != 0)
-                {
                     commandStacks.Mirror.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
-                }
 
                 // Effect
                 if (commandStacks.Effect.Count != 0)
-                {
                     commandStacks.Effect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
-                }
 
                 glyphs.Add(newGlyph);
             }
