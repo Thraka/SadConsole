@@ -147,27 +147,27 @@ namespace SadConsole.UI.Themes
         /// </summary>
         public Color ModalBackground { get; set; } = new Color(20, 20, 20, 200);
 
-        public Color TitleText;
-        public Color Lines;
-        public Color TextBright;
-        public Color Text;
-        public Color TextSelected;
-        public Color TextSelectedDark;
-        public Color TextLight;
-        public Color TextDark;
-        public Color TextFocused;
-        public Color ControlBack;
-        public Color ControlBackLight;
-        public Color ControlBackSelected;
-        public Color ControlBackDark;
-        public Color ControlHostBack;
-        public Color ControlHostFore;
-        public ColoredGlyph Appearance_ControlNormal;
-        public ColoredGlyph Appearance_ControlDisabled;
-        public ColoredGlyph Appearance_ControlOver;
-        public ColoredGlyph Appearance_ControlSelected;
-        public ColoredGlyph Appearance_ControlMouseDown;
-        public ColoredGlyph Appearance_ControlFocused;
+        public Color TitleText { get; set; }
+        public Color Lines { get; set; }
+        public Color TextBright { get; set; }
+        public Color Text { get; set; }
+        public Color TextSelected { get; set; }
+        public Color TextSelectedDark { get; set; }
+        public Color TextLight { get; set; }
+        public Color TextDark { get; set; }
+        public Color TextFocused { get; set; }
+        public Color ControlBack { get; set; }
+        public Color ControlBackLight { get; set; }
+        public Color ControlBackSelected { get; set; }
+        public Color ControlBackDark { get; set; }
+        public Color ControlHostBack { get; set; }
+        public Color ControlHostFore { get; set; }
+        public ColoredGlyph Appearance_ControlNormal { get; set; }
+        public ColoredGlyph Appearance_ControlDisabled { get; set; }
+        public ColoredGlyph Appearance_ControlOver { get; set; }
+        public ColoredGlyph Appearance_ControlSelected { get; set; }
+        public ColoredGlyph Appearance_ControlMouseDown { get; set; }
+        public ColoredGlyph Appearance_ControlFocused { get; set; }
 
 
         public Colors()
@@ -269,6 +269,63 @@ namespace SadConsole.UI.Themes
         }
 
         /// <summary>
+        /// Adds each color here to the <see cref="ColorExtensions.ColorMappings"/> dictionary. Uses the format of "theme.property-name".
+        /// </summary>
+        public void AddToColorMappings()
+        {
+            ColorExtensions.ColorMappings["theme.white"] = White;
+            ColorExtensions.ColorMappings["theme.black"] = Black;
+            ColorExtensions.ColorMappings["theme.gray"] = Gray;
+            ColorExtensions.ColorMappings["theme.graydark"] = GrayDark;
+
+            ColorExtensions.ColorMappings["theme.red"] = Red;
+            ColorExtensions.ColorMappings["theme.green"] = Green;
+            ColorExtensions.ColorMappings["theme.blue"] = Blue;
+            ColorExtensions.ColorMappings["theme.purple"] = Purple;
+            ColorExtensions.ColorMappings["theme.yellow"] = Yellow;
+            ColorExtensions.ColorMappings["theme.orange"] = Orange;
+            ColorExtensions.ColorMappings["theme.cyan"] = Cyan;
+            ColorExtensions.ColorMappings["theme.brown"] = Brown;
+
+            ColorExtensions.ColorMappings["theme.reddark"] = RedDark;
+            ColorExtensions.ColorMappings["theme.greendark"] = GreenDark;
+            ColorExtensions.ColorMappings["theme.bluedark"] = BlueDark;
+            ColorExtensions.ColorMappings["theme.purpledark"] = PurpleDark;
+            ColorExtensions.ColorMappings["theme.yellowdark"] = YellowDark;
+            ColorExtensions.ColorMappings["theme.orangedark"] = OrangeDark;
+            ColorExtensions.ColorMappings["theme.cyandark"] = CyanDark;
+            ColorExtensions.ColorMappings["theme.browndark"] = BrownDark;
+
+            ColorExtensions.ColorMappings["theme.gold"] = Gold;
+            ColorExtensions.ColorMappings["theme.golddark"] = GoldDark;
+            ColorExtensions.ColorMappings["theme.silver"] = Silver;
+            ColorExtensions.ColorMappings["theme.silverdark"] = SilverDark;
+            ColorExtensions.ColorMappings["theme.bronze"] = Bronze;
+            ColorExtensions.ColorMappings["theme.bronzedark"] = BronzeDark;
+
+            ColorExtensions.ColorMappings["theme.modalbackground"] = ModalBackground;
+
+            ColorExtensions.ColorMappings["theme.titletext"] = TitleText;
+
+            ColorExtensions.ColorMappings["theme.lines"] = Lines;
+
+            ColorExtensions.ColorMappings["theme.textbright"] = TextBright;
+            ColorExtensions.ColorMappings["theme.text"] = Text;
+            ColorExtensions.ColorMappings["theme.textselected"] = TextSelected;
+            ColorExtensions.ColorMappings["theme.textselecteddark"] = TextSelectedDark;
+            ColorExtensions.ColorMappings["theme.textlight"] = TextLight;
+            ColorExtensions.ColorMappings["theme.textdark"] = TextDark;
+            ColorExtensions.ColorMappings["theme.textfocused"] = TextFocused;
+
+            ColorExtensions.ColorMappings["theme.controlback"] = ControlBack;
+            ColorExtensions.ColorMappings["theme.controlbacklight"] = ControlBackLight;
+            ColorExtensions.ColorMappings["theme.controlbackselected"] = ControlBackSelected;
+            ColorExtensions.ColorMappings["theme.controlbackdark"] = ControlBackDark;
+            ColorExtensions.ColorMappings["theme.controlhostback"] = ControlHostBack;
+            ColorExtensions.ColorMappings["theme.controlhostfore"] = ControlHostFore;
+        }
+
+        /// <summary>
         /// Returns a clone of this object.
         /// </summary>
         /// <returns>A new Colors object.</returns>
@@ -297,24 +354,24 @@ namespace SadConsole.UI.Themes
             {
                 White = Color.White,
                 Black = Color.Black,
-                Gray = ColorAnsi.White,
-                GrayDark = (ColorAnsi.White * 0.50f).FillAlpha(),
-                Red = ColorAnsi.RedBright,
-                Green = ColorAnsi.GreenBright,
-                Blue = ColorAnsi.BlueBright,
-                Purple = ColorAnsi.MagentaBright,
-                Yellow = ColorAnsi.YellowBright,
+                Gray = Color.AnsiWhite,
+                GrayDark = (Color.AnsiWhite * 0.50f).FillAlpha(),
+                Red = Color.AnsiRedBright,
+                Green = Color.AnsiGreenBright,
+                Blue = Color.AnsiBlueBright,
+                Purple = Color.AnsiMagentaBright,
+                Yellow = Color.AnsiYellowBright,
                 Orange = Color.Orange,
-                Cyan = ColorAnsi.CyanBright,
-                Brown = ColorAnsi.Yellow,
-                RedDark = ColorAnsi.Red,
-                GreenDark = ColorAnsi.Green,
-                BlueDark = ColorAnsi.Blue,
-                PurpleDark = ColorAnsi.Magenta,
-                YellowDark = (ColorAnsi.YellowBright * 0.50f).FillAlpha(),
+                Cyan = Color.AnsiCyanBright,
+                Brown = Color.AnsiYellow,
+                RedDark = Color.AnsiRed,
+                GreenDark = Color.AnsiGreen,
+                BlueDark = Color.AnsiBlue,
+                PurpleDark = Color.AnsiMagenta,
+                YellowDark = (Color.AnsiYellowBright * 0.50f).FillAlpha(),
                 OrangeDark = Color.DarkOrange,
-                CyanDark = ColorAnsi.Cyan,
-                BrownDark = (ColorAnsi.Yellow * 0.50f).FillAlpha(),
+                CyanDark = Color.AnsiCyan,
+                BrownDark = (Color.AnsiYellow * 0.50f).FillAlpha(),
                 Gold = Color.Goldenrod,
                 GoldDark = Color.DarkGoldenrod,
                 Silver = Color.Silver,

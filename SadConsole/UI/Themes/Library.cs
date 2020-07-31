@@ -16,6 +16,8 @@ namespace SadConsole.UI.Themes
         [DataMember(Name = "ControlThemes")]
         private Dictionary<System.Type, ThemeBase> _controlThemes;
 
+        private Colors _colors;
+
         /// <summary>
         /// If a control does not specify its own theme, the theme from this property will be used.
         /// </summary>
@@ -27,6 +29,7 @@ namespace SadConsole.UI.Themes
 
                 _libraryInstance = new Library();
                 _libraryInstance.ApplyDefaults();
+                _libraryInstance.Colors.AddToColorMappings();
 
                 return _libraryInstance;
             }
@@ -39,6 +42,8 @@ namespace SadConsole.UI.Themes
                 }
                 else
                     _libraryInstance = value;
+
+                _libraryInstance.Colors.AddToColorMappings();
             }
         }
 
@@ -46,7 +51,17 @@ namespace SadConsole.UI.Themes
         /// Colors for the theme library.
         /// </summary>
         [DataMember]
-        public Colors Colors { get; protected set; }
+        public Colors Colors
+        {
+            get => _colors;
+            set
+            {
+                _colors = value;
+
+                if (this == _libraryInstance)
+                    _colors.AddToColorMappings();
+            }
+        }
 
         static Library()
         {
