@@ -112,6 +112,16 @@ namespace SadConsole
             /// Indicates that the <see cref="GameHost"/> should process keyboard input.
             /// </summary>
             public static bool DoKeyboard { get; set; } = true;
+
+            /// <summary>
+            /// The maximum amount of time to trigger a mouse click.
+            /// </summary>
+            public static System.TimeSpan MouseClickTime { get; set; } = System.TimeSpan.FromSeconds(0.3);
+
+            /// <summary>
+            /// The maximum amount of time to trigger a mouse double click.
+            /// </summary>
+            public static System.TimeSpan MouseDoubleClickTime { get; set; } = System.TimeSpan.FromSeconds(0.7);
         }
 
         /// <summary>
