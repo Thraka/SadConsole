@@ -1,14 +1,25 @@
-## v9.0 Alpha 9a
+## v9.0 Beta 1
 
 - Removed accidental dependency on SharpFNT.
 - Fixed font init bug. (thanks bepis)
 - ColorExtension additions.
-  - ToInteger removed. The PackedValue property is suitable.
-  - ColorAnsi type removed. Ansi colors are defined by the primitives library.
-  - ColorMappings is automatically filled with every static color defined by the primitives library (including ansi colors).
-  - FromName is a handy method to look up a color in the dictionary.
+  - `ToInteger` removed. The PackedValue property is suitable.
+  - `ColorAnsi` type removed. Ansi colors are defined by the primitives library.
+  - `ColorMappings` is automatically filled with every static color defined by the primitives library (including ansi colors).
+  - `FromName` is a handy method to look up a color in the dictionary.
 - Simplified gamehost startup by moving common default font loading routines into the base class.
-
+- `Cursor.Print` handles `IgnoreEffect` better and allows the parsed string to set effects. (Thanks axoeu)
+- Add new ClearEffect command for string parser: [c:ceffect] or [c:ce]. (Thanks regulark)
+- Fixed mouse click and double click!
+- Control changes
+  - Recoded the way controls are hosted. The `Parent` property now points an `IContainer` which is generally the host component.
+  - New `CompositeControl` base type which is an `IContainer` and allows you to create a single control from multiple controls.
+  - `ListBox` converted to a `CompositeControl`.
+  - `ControlHost.FocusedControl` loses it's focus state when the host loses focus. The state is restored when the host gets focus.
+  - `ControlBase` has more accurate mouse processing. For example, pressing a button down on a different control and releasing it on a new control doesn't trigger a click.
+  - Added new `Panel` control. 
+- Controls handle mouse interactions better.
+- The theme library (when set and at start) will add the library colors to the `ColorExtensions.ColorMappings` dictionary with the format of **theme.color-name**.
 
 ## v9.0 Alpha 9
 
