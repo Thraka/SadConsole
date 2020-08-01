@@ -1581,7 +1581,7 @@
             <param name="surfaceIndex">Index of where this string will be printed.</param>
             <param name="surface">The surface the string will be printed to.</param>
             <param name="initialBehaviors">Any initial defaults.</param>
-            <returns></returns>
+            <returns>The finalized string.</returns>
         </member>
         <member name="P:SadConsole.ColoredString.Item(System.Int32)">
             <summary>
@@ -1821,19 +1821,19 @@
             Gets or sets the location of the cursor on the console.
             </summary>
         </member>
-        <member name="F:SadConsole.Components.Cursor.DisableWordBreak">
+        <member name="P:SadConsole.Components.Cursor.DisableWordBreak">
             <summary>
             When true, prevents the any print method from breaking words up by spaces when wrapping lines.
             </summary>
         </member>
-        <member name="F:SadConsole.Components.Cursor.UseLinuxLineEndings">
+        <member name="P:SadConsole.Components.Cursor.UseLinuxLineEndings">
             <summary>
             Enables linux-like string parsing where a \n behaves like a \r\n.
             </summary>
         </member>
-        <member name="F:SadConsole.Components.Cursor.UseStringParser">
+        <member name="P:SadConsole.Components.Cursor.UseStringParser">
             <summary>
-            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="!:Print(string, Cell, ICellEffect)"/>
+            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
@@ -6975,6 +6975,16 @@
             Indicates that the <see cref="T:SadConsole.GameHost"/> should process keyboard input.
             </summary>
         </member>
+        <member name="P:SadConsole.Settings.Input.MouseClickTime">
+            <summary>
+            The maximum amount of time to trigger a mouse click.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Settings.Input.MouseDoubleClickTime">
+            <summary>
+            The maximum amount of time to trigger a mouse double click.
+            </summary>
+        </member>
         <member name="T:SadConsole.Settings.Rendering">
             <summary>
             Rendering options generally set by a game host.
@@ -7105,6 +7115,11 @@
         <member name="T:SadConsole.StringParser.ParseCommandBlink">
             <summary>
             Blinks characters.
+            </summary>
+        </member>
+        <member name="T:SadConsole.StringParser.ParseCommandClearEffect">
+            <summary>
+            Clears the cell effect for the glyph.
             </summary>
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandSetGlyph">
@@ -7515,7 +7530,7 @@
             </summary>
             <param name="info"></param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ButtonBase.OnLeftMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.UI.Controls.ButtonBase.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
             Called when the left-mouse button is clicked.
             </summary>
@@ -7573,17 +7588,39 @@
             <param name="info">The keyboard information.</param>
             <returns>True if the keyboard was handled by this control.</returns>
         </member>
+        <member name="P:SadConsole.UI.Controls.CompositeControl.Controls">
+            <summary>
+            The controls this composite control is hosting. Use <see cref="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)"/> and <see cref="M:SadConsole.UI.Controls.CompositeControl.RemoveControl(SadConsole.UI.Controls.ControlBase)"/> to manage the collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.CreateChildControls">
+            <summary>
+            Create each control and add it to <see cref="P:SadConsole.UI.Controls.CompositeControl.Controls"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Adds a child control to this control. <see cref="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)"/> does't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
+            </summary>
+            <param name="control">The control to add.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.RemoveControl(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Removes a child control from this control. <see cref="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)"/> does't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
+            </summary>
+            <param name="control">The control to remove.</param>
+        </member>
         <member name="T:SadConsole.UI.Controls.ControlBase">
             <summary>
             Base class for all controls.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ControlBase.isMouseLeftDown">
+        <member name="F:SadConsole.UI.Controls.ControlBase._isMouseLeftDown">
             <summary>
             <see langword="true"/> when the left mouse button is down.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ControlBase.isMouseRightDown">
+        <member name="F:SadConsole.UI.Controls.ControlBase._isMouseRightDown">
             <summary>
             <see langword="true"/> when the right mouse button is down.
             </summary>
@@ -7593,10 +7630,18 @@
             The cell data to render the control. Controlled by a theme.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ControlBase.MouseBounds">
+        <member name="P:SadConsole.UI.Controls.ControlBase.MouseArea">
             <summary>
-            The region the of the control used for mouse input.
+            The relative region the of the control used for mouse input.
             </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.IsMouseButtonStateClean">
+            <summary>
+            When <see langword="true"/>, indicates the mouse button state can be relied on; othwerise <see langword="false"/>.
+            </summary>
+            <remarks>
+            This property is only set when the mouse enters the control with the buttons pressed. Once the buttons are let go, the mouse is considered clean for this control.
+            </remarks>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Position">
             <summary>
@@ -7786,47 +7831,80 @@
             </summary>
             <returns>The found colors.</returns>
         </member>
-        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseEnter(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
             Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
             </summary>
             <param name="state">The current mouse data</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseExit(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
             Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
             </summary>
             <param name="state">The current mouse data</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseIn(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
             Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
             </summary>
             <param name="state">The current mouse data</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ControlBase.OnLeftMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
             Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
             </summary>
             <param name="state">The current mouse data</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ControlBase.OnRightMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnRightMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
             Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
             </summary>
             <param name="state">The current mouse data</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ControlBase.TransformConsolePositionByControlPosition(SadRogue.Primitives.Point)">
-            <summary>
-            Helper method that returns the mouse x,y position for the control.
-            </summary>
-            <param name="consolePosition">Position of the console to get the relative control position from.</param>
-            <returns>The x,y position of the mouse over the control.</returns>
-        </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.Update(System.TimeSpan)">
             <summary>
             Update the control appearance based on <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/>.
             </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ControlBase.ControlMouseState">
+            <summary>
+            Mouse state based on a specific control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.ControlMouseState.Control">
+            <summary>
+            The control this mouse state is associated with.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.ControlMouseState.MousePosition">
+            <summary>
+            The relative position of the mouse to the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.ControlMouseState.OriginalMouseState">
+            <summary>
+            The original mouse state used to generate the event.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.ControlMouseState.IsMouseOver">
+            <summary>
+            When <see langword="true"/>, indicates the mouse is over the <see cref="P:SadConsole.UI.Controls.ControlBase.ControlMouseState.Control"/>; othwerise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.ControlMouseState.#ctor(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Point,SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Creates an instance of the mouse control state class.
+            </summary>
+            <param name="control">The control.</param>
+            <param name="mousePosition">The position of the mouse relative to the control.</param>
+            <param name="originalMouseState">The original mouse state sent to the control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.ControlMouseState.#ctor(SadConsole.UI.Controls.ControlBase,SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Creates an instance of the mouse control state class and infers the <see cref="P:SadConsole.UI.Controls.ControlBase.ControlMouseState.MousePosition"/> from the control and state.
+            </summary>
+            <param name="control">The control.</param>
+            <param name="originalMouseState">The original mouse state sent to the control.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.ControlStates">
             <summary>
@@ -7992,11 +8070,6 @@
             Used in rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.ScrollBarRenderLocation">
-            <summary>
-            Used in rendering.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.Controls.ListBox.RelativeIndexMouseOver">
             <summary>
             Used in rendering.
@@ -8017,8 +8090,46 @@
             Creates a new instance of the listbox control.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
-            <inheritdoc />
+        <member name="T:SadConsole.UI.Controls.Panel">
+            <summary>
+            A simple surface for drawing text that can be moved and sized like a control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Panel.Controls">
+            <summary>
+            The controls this panel contains.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Panel.Host">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new drawing surface control with the specified width and height.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Add(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Remove(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Contains(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.GetEnumerator">
+            <summary>
+            Gets an enumerator that iterates over the controls in this panel.
+            </summary>
+            <returns>The enumerator.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets an enumerator that iterates over the controls in this panel.
+            </summary>
+            <returns>The enumerator.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.ProgressBar">
             <summary>
@@ -8155,6 +8266,11 @@
         <member name="T:SadConsole.UI.Controls.ScrollBar">
             <summary>
             Represents a scrollbar control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.IsSliding">
+            <summary>
+            When <see langword="true"/>, indicates this control is captured and the slider button is being used; otherwise, <see langword="false"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ScrollBar.Value">
@@ -8692,6 +8808,11 @@
             Sets all Appearance* properties based on the existing colors and settings.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.Themes.Colors.AddToColorMappings">
+            <summary>
+            Adds each color here to the <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/> dictionary. Uses the format of "theme.property-name".
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Themes.Colors.Clone">
             <summary>
             Returns a clone of this object.
@@ -8852,10 +8973,48 @@
         <member name="M:SadConsole.UI.Themes.ListBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
         <member name="M:SadConsole.UI.Themes.ListBoxTheme.Clone">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.ShowHideScrollBar(SadConsole.UI.Controls.ListBox)">
+            <summary>
+            Shows the scroll bar when there are too many items to display; otherwise, hides it.
+            </summary>
+            <param name="control">Reference to the listbox being processed.</param>
+        </member>
         <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.PanelTheme">
+            <summary>
+            A basic theme for a drawing surface that simply fills the surface based on the state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.UseNormalStateOnly">
+            <summary>
+            When true, only uses <see cref="P:SadConsole.UI.Themes.ThemeStates.Normal"/> for drawing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.SkipDrawing">
+            <summary>
+            When true, ignores all states and doesn't draw anything.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.Appearance">
+            <summary>
+            The current appearance based on the control state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.PanelTheme.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.PanelTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.PanelTheme.Clone">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.ProgressBarTheme">

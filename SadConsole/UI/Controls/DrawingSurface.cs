@@ -19,7 +19,12 @@ namespace SadConsole.UI.Controls
         /// </summary>
         /// <param name="width">Width of the control.</param>
         /// <param name="height">Height of the control.</param>
-        public DrawingSurface(int width, int height) : base(width, height) => base.TabStop = false;
+        public DrawingSurface(int width, int height) : base(width, height)
+        {
+            UseMouse = false;
+            UseKeyboard = false;
+            TabStop = false;
+        }
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context) => base.TabStop = false;

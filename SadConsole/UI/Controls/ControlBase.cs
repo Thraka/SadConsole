@@ -14,8 +14,9 @@ namespace SadConsole.UI.Controls
     {
         protected Point _position;
         protected bool _isMouseOver = false;
+        protected bool _mouseEnteredWithButtonDown = false;
         protected bool _isEnabled = true;
-        protected ControlHost _parent;
+        protected IContainer _parent;
         protected ControlStates _state;
 
         protected Themes.ThemeBase ActiveTheme;
@@ -25,12 +26,12 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// <see langword="true"/> when the left mouse button is down.
         /// </summary>
-        protected bool isMouseLeftDown;
+        protected bool _isMouseLeftDown;
 
         /// <summary>
         /// <see langword="true"/> when the right mouse button is down.
         /// </summary>
-        protected bool isMouseRightDown;
+        protected bool _isMouseRightDown;
 
         private bool _isDirty;
 
@@ -58,13 +59,21 @@ namespace SadConsole.UI.Controls
         public ICellSurface Surface { get; set; }
 
         /// <summary>
-        /// The region the of the control used for mouse input.
+        /// The relative region the of the control used for mouse input.
         /// </summary>
         [DataMember]
-        public Rectangle MouseBounds { get; set; }
+        public Rectangle MouseArea { get; set; }
 
         /// <summary>
-        /// Indicates the rendering location of this control.
+        /// When <see langword="true"/>, indicates the mouse button state can be relied on; othwerise <see langword="false"/>.
+        /// </summary>
+        /// <remarks>
+        /// This property is only set when the mouse enters the control with the buttons pressed. Once the buttons are let go, the mouse is considered clean for this control.
+        /// </remarks>
+        public bool IsMouseButtonStateClean => !_mouseEnteredWithButtonDown;
+
+        /// <summary>
+        /// The relative position of this control.
         /// </summary>
         [DataMember]
         public Point Position
@@ -72,14 +81,15 @@ namespace SadConsole.UI.Controls
             get => _position;
             set
             {
-                Point oldPosition = _position;
                 _position = value;
-                Bounds = new Rectangle(_position.X, _position.Y, Width, Height);
-                Point mouseBoundsPosition = MouseBounds.Position + value - oldPosition;
-                MouseBounds = new Rectangle(mouseBoundsPosition.X, mouseBoundsPosition.Y, MouseBounds.Width, MouseBounds.Height);
                 OnPositionChanged();
             }
         }
+
+        /// <summary>
+        /// Gets the position of this control based on the control's <see cref="Position"/> and the position of the <see cref="Parent"/>.
+        /// </summary>
+        public Point AbsolutePosition => Position + (Parent != null ? Parent.AbsolutePosition : new Point(0, 0));
 
         /// <summary>
         /// Indicates whether or not this control is visible.
@@ -148,25 +158,31 @@ namespace SadConsole.UI.Controls
         /// </summary>
         public bool IsFocused
         {
-            get => (Parent == null) ? false : Parent.FocusedControl == this;
+            get
+            {
+                if (Parent == null || Parent.Host == null)
+                    return false;
+                else
+                    return Parent.Host.FocusedControl == this;
+            }
             set
             {
-                if (Parent != null)
+                if (Parent != null && Parent.Host != null )
                 {
                     if (value)
                     {
-                        if (Parent.FocusedControl != this)
+                        if (Parent.Host.FocusedControl != this)
                         {
-                            Parent.FocusedControl = this;
+                            Parent.Host.FocusedControl = this;
                         }
                     }
-                    else if (Parent.FocusedControl == this)
+                    else if (Parent.Host.FocusedControl == this)
                     {
-                        Parent.TabNextControl();
+                        Parent.Host.TabNextControl();
 
-                        if (Parent.FocusedControl == this)
+                        if (Parent.Host.FocusedControl == this)
                         {
-                            Parent.FocusedControl = null;
+                            Parent.Host.FocusedControl = null;
                         }
                     }
 
@@ -192,18 +208,18 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// The area this control covers.
         /// </summary>
-        public Rectangle Bounds { get; private set; }
+        public Rectangle Bounds => new Rectangle(_position.X, _position.Y, Width, Height);
 
         /// <summary>
         /// Gets or sets the parent console of this control.
         /// </summary>
-        public ControlHost Parent
+        public IContainer Parent
         {
             get => _parent;
             set
             {
                 if (_parent == value) return;
-                ControlHost temp = _parent;
+                IContainer temp = _parent;
                 _parent = null;
                 temp?.Remove(this);
                 _parent = value;
@@ -260,22 +276,22 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// Raised when the mouse enters this control.
         /// </summary>
-        public event EventHandler<Input.MouseScreenObjectState> MouseEnter;
+        public event EventHandler<ControlMouseState> MouseEnter;
 
         /// <summary>
         /// Raised when the mouse exits this control.
         /// </summary>
-        public event EventHandler<Input.MouseScreenObjectState> MouseExit;
+        public event EventHandler<ControlMouseState> MouseExit;
 
         /// <summary>
         /// Raised when the mouse is moved over this control.
         /// </summary>
-        public event EventHandler<Input.MouseScreenObjectState> MouseMove;
+        public event EventHandler<ControlMouseState> MouseMove;
 
         /// <summary>
         /// Raised when a mouse button is clicked while the mouse is over this control.
         /// </summary>
-        public event EventHandler<Input.MouseScreenObjectState> MouseButtonClicked;
+        public event EventHandler<ControlMouseState> MouseButtonClicked;
 
         #region Constructors
         /// <inheritdoc />
@@ -294,8 +310,7 @@ namespace SadConsole.UI.Controls
             _position = new Point();
             UseMouse = true;
             UseKeyboard = true;
-            Bounds = new Rectangle(0, 0, width, height);
-            MouseBounds = new Rectangle(0, 0, width, height);
+            MouseArea = new Rectangle(0, 0, width, height);
             Theme = Library.Default.GetControlTheme(GetType());
             if (Theme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
         }
@@ -333,33 +348,35 @@ namespace SadConsole.UI.Controls
         {
             if (IsEnabled && UseMouse)
             {
-
-                if (state.IsOnScreenObject && state.ScreenObject == _parent.ParentConsole && MouseBounds.Contains(state.CellPosition))
+                var newState = new ControlMouseState(this, state);
+                var absolutePosition = AbsolutePosition;
+                var mouseArea = MouseArea;
+                
+                if (newState.IsMouseOver)
                 {
                     if (_isMouseOver != true)
                     {
                         _isMouseOver = true;
-                        OnMouseEnter(state);
+                        OnMouseEnter(newState);
                     }
 
-                    OnMouseIn(state);
+                    bool preventClick = _mouseEnteredWithButtonDown;
+                    OnMouseIn(newState);
 
-                    if (state.Mouse.LeftClicked)
-                    {
-                        OnLeftMouseClicked(state);
-                    }
+                    if (!preventClick && state.Mouse.LeftClicked)
+                        OnLeftMouseClicked(newState);
 
-                    if (state.Mouse.RightClicked)
-                    {
-                        OnRightMouseClicked(state);
-                    }
+                    if (!preventClick && state.Mouse.RightClicked)
+                        OnRightMouseClicked(newState);
+
+                    return true;
                 }
                 else
                 {
                     if (_isMouseOver)
                     {
                         _isMouseOver = false;
-                        OnMouseExit(state);
+                        OnMouseExit(newState);
                     }
                 }
             }
@@ -371,7 +388,11 @@ namespace SadConsole.UI.Controls
         /// Called to trigger the state of losing mouse focus.
         /// </summary>
         /// <param name="state">The mouse state.</param>
-        public void LostMouse(MouseScreenObjectState state) => OnMouseExit(state);
+        public void LostMouse(MouseScreenObjectState state)
+        {
+            if (_isMouseOver)
+                OnMouseExit(new ControlMouseState(this, state));
+        }
         #endregion
 
         /// <summary>
@@ -439,30 +460,25 @@ namespace SadConsole.UI.Controls
         {
             ControlStates oldState = _state;
 
-            if (!_isEnabled)
-                _state = (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.Disabled);
-            else
-                _state = (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.Disabled);
+            _state = !_isEnabled
+                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.Disabled)
+                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.Disabled);
 
-            if (_isMouseOver)
-                _state = (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseOver);
-            else
-                _state = (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseOver);
+            _state = _isMouseOver
+                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseOver)
+                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseOver);
 
-            if (IsFocused)
-                _state = (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.Focused);
-            else
-                _state = (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.Focused);
+            _state = IsFocused && Parent.Host.ParentConsole != null && Parent.Host.ParentConsole.IsFocused
+                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.Focused)
+                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.Focused);
 
-            if (isMouseLeftDown)
-                _state = (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseLeftButtonDown);
-            else
-                _state = (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseLeftButtonDown);
+            _state = _isMouseLeftDown && IsMouseButtonStateClean
+                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseLeftButtonDown)
+                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseLeftButtonDown);
 
-            if (isMouseRightDown)
-                _state = (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseRightButtonDown);
-            else
-                _state = (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseRightButtonDown);
+            _state = _isMouseRightDown && IsMouseButtonStateClean
+                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseRightButtonDown)
+                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseRightButtonDown);
 
             if (oldState != _state)
             {
@@ -483,15 +499,19 @@ namespace SadConsole.UI.Controls
         /// </summary>
         /// <returns>The found colors.</returns>
         public Colors FindThemeColors() =>
-            _themeColors ?? _parent?.ThemeColors ?? Library.Default.Colors;
+            _themeColors ?? _parent?.Host.ThemeColors ?? Library.Default.Colors;
 
         /// <summary>
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
-        protected virtual void OnMouseEnter(MouseScreenObjectState state)
+        protected virtual void OnMouseEnter(ControlMouseState state)
         {
             _isMouseOver = true;
+
+            if (state.OriginalMouseState.Mouse.LeftButtonDown || state.OriginalMouseState.Mouse.RightButtonDown)
+                _mouseEnteredWithButtonDown = true;
+
             MouseEnter?.Invoke(this, state);
 
             DetermineState();
@@ -501,11 +521,12 @@ namespace SadConsole.UI.Controls
         /// Called when the mouse exits the area of the control. Raises the MouseExit event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
-        protected virtual void OnMouseExit(MouseScreenObjectState state)
+        protected virtual void OnMouseExit(ControlMouseState state)
         {
-            isMouseLeftDown = false;
-            isMouseRightDown = false;
+            _isMouseLeftDown = false;
+            _isMouseRightDown = false;
             _isMouseOver = false;
+            _mouseEnteredWithButtonDown = false;
             MouseExit?.Invoke(this, state);
 
             DetermineState();
@@ -515,12 +536,15 @@ namespace SadConsole.UI.Controls
         /// Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
-        protected virtual void OnMouseIn(MouseScreenObjectState state)
+        protected virtual void OnMouseIn(ControlMouseState state)
         {
             MouseMove?.Invoke(this, state);
 
-            isMouseLeftDown = state.Mouse.LeftButtonDown;
-            isMouseRightDown = state.Mouse.RightButtonDown;
+            _isMouseLeftDown = state.OriginalMouseState.Mouse.LeftButtonDown;
+            _isMouseRightDown = state.OriginalMouseState.Mouse.RightButtonDown;
+
+            if (_mouseEnteredWithButtonDown && !_isMouseLeftDown && !_isMouseRightDown)
+                _mouseEnteredWithButtonDown = false;
 
             DetermineState();
         }
@@ -529,7 +553,7 @@ namespace SadConsole.UI.Controls
         /// Called when the left mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
-        protected virtual void OnLeftMouseClicked(MouseScreenObjectState state)
+        protected virtual void OnLeftMouseClicked(ControlMouseState state)
         {
             MouseButtonClicked?.Invoke(this, state);
 
@@ -545,20 +569,12 @@ namespace SadConsole.UI.Controls
         /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
-        protected virtual void OnRightMouseClicked(MouseScreenObjectState state)
+        protected virtual void OnRightMouseClicked(ControlMouseState state)
         {
             MouseButtonClicked?.Invoke(this, state);
 
             DetermineState();
         }
-
-        /// <summary>
-        /// Helper method that returns the mouse x,y position for the control.
-        /// </summary>
-        /// <param name="consolePosition">Position of the console to get the relative control position from.</param>
-        /// <returns>The x,y position of the mouse over the control.</returns>
-        protected Point TransformConsolePositionByControlPosition(Point consolePosition) =>
-            consolePosition - _position;
 
         /// <summary>
         /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.
@@ -570,7 +586,57 @@ namespace SadConsole.UI.Controls
         private void AfterDeserialized(StreamingContext context)
         {
             IsDirty = true;
-            Bounds = new Rectangle(_position.X, _position.Y, Width, Height);
+        }
+
+        /// <summary>
+        /// Mouse state based on a specific control.
+        /// </summary>
+        public class ControlMouseState
+        {
+            /// <summary>
+            /// The control this mouse state is associated with.
+            /// </summary>
+            public ControlBase Control { get; set; }
+
+            /// <summary>
+            /// The relative position of the mouse to the control.
+            /// </summary>
+            public Point MousePosition { get; set; }
+
+            /// <summary>
+            /// The original mouse state used to generate the event.
+            /// </summary>
+            public MouseScreenObjectState OriginalMouseState { get; set; }
+
+            /// <summary>
+            /// When <see langword="true"/>, indicates the mouse is over the <see cref="Control"/>; othwerise <see langword="false"/>.
+            /// </summary>
+            public bool IsMouseOver { get; set; }
+
+            /// <summary>
+            /// Creates an instance of the mouse control state class.
+            /// </summary>
+            /// <param name="control">The control.</param>
+            /// <param name="mousePosition">The position of the mouse relative to the control.</param>
+            /// <param name="originalMouseState">The original mouse state sent to the control.</param>
+            public ControlMouseState(ControlBase control, Point mousePosition, MouseScreenObjectState originalMouseState)
+            {
+                Control = control;
+                MousePosition = mousePosition;
+                OriginalMouseState = originalMouseState;
+                IsMouseOver = control.MouseArea.Contains(MousePosition);
+            }
+
+
+            /// <summary>
+            /// Creates an instance of the mouse control state class and infers the <see cref="MousePosition"/> from the control and state.
+            /// </summary>
+            /// <param name="control">The control.</param>
+            /// <param name="originalMouseState">The original mouse state sent to the control.</param>
+            public ControlMouseState(ControlBase control, MouseScreenObjectState originalMouseState): this(control, originalMouseState.SurfaceCellPosition - control.AbsolutePosition, originalMouseState)
+            {
+
+            }
         }
     }
 }

@@ -129,13 +129,7 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
                 if (screen.Tint.A != 255)
-                {
-                    foreach (UI.Controls.ControlBase control in uiComponent)
-                    {
-                        if (!control.IsVisible) continue;
-                        RenderControlCells(control, screen.Font, screen.FontSize, screen.Surface.View, screen.Surface.BufferWidth);
-                    }
-                }
+                    ProcessContainer(uiComponent, screen);
 
                 Host.Global.SharedSpriteBatch.End();
                 Host.Global.GraphicsDevice.SetRenderTarget(null);
@@ -145,6 +139,17 @@ namespace SadConsole.Renderers
             uiComponent.IsDirty = false;
         }
 
+        protected void ProcessContainer(UI.Controls.IContainer controlContainer, IScreenSurface screen)
+        {
+            foreach (UI.Controls.ControlBase control in controlContainer)
+            {
+                if (!control.IsVisible) continue;
+                RenderControlCells(control, screen.Font, screen.FontSize, screen.Surface.View, screen.Surface.BufferWidth);
+
+                if (control is UI.Controls.IContainer container)
+                    ProcessContainer(container, screen);
+            }
+        }
 
         protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, Font font, SadRogue.Primitives.Point fontSize, SadRectangle parentViewRect, int bufferWidth)
         {
@@ -154,7 +159,7 @@ namespace SadConsole.Renderers
 
             if (control.Surface.DefaultBackground.A != 0)
             {
-                (int x, int y) = (control.Position - parentViewRect.Position).SurfaceLocationToPixel(fontSize);
+                (int x, int y) = (control.AbsolutePosition - parentViewRect.Position).SurfaceLocationToPixel(fontSize);
                 (int width, int height) = new SadRogue.Primitives.Point(control.Surface.View.Width, control.Surface.View.Height) * fontSize;
 
                 Host.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, width, height), font.SolidGlyphRectangle.ToMonoRectangle(), control.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
@@ -168,7 +173,7 @@ namespace SadConsole.Renderers
 
                 if (!cell.IsVisible) continue;
 
-                SadRogue.Primitives.Point cellRenderPosition = SadRogue.Primitives.Point.FromIndex(i, control.Surface.View.Width) + control.Position;
+                SadRogue.Primitives.Point cellRenderPosition = SadRogue.Primitives.Point.FromIndex(i, control.Surface.View.Width) + control.AbsolutePosition;
 
                 if (!parentViewRect.Contains(cellRenderPosition)) continue;
 

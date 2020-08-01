@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace SadConsole.UI.Controls
 {
     [DataContract]
-    public class ListBox : ControlBase
+    public class ListBox : CompositeControl
     {
         public class SelectedItemEventArgs : EventArgs
         {
@@ -54,18 +54,17 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// Internal use only; used in rendering.
         /// </summary>
-        public bool IsScrollBarVisible { get; set; }
+        public bool IsScrollBarVisible
+        {
+            get => ScrollBar.IsVisible;
+            set => ScrollBar.IsVisible = value;
+        }
 
         /// <summary>
         /// Used in rendering.
         /// </summary>
         [DataMember(Name = "ScrollBar")]
         public ScrollBar ScrollBar { get; private set; }
-
-        /// <summary>
-        /// Used in rendering.
-        /// </summary>
-        public Point ScrollBarRenderLocation { get; private set; }
 
         /// <summary>
         /// Used in rendering.
@@ -163,15 +162,16 @@ namespace SadConsole.UI.Controls
 
         public ListBox(int width, int height, ListBoxItemTheme itemTheme) : this(width, height) => ItemTheme = itemTheme;
 
-        protected override void OnParentChanged() => ScrollBar.Parent = Parent;
-
-        protected override void OnPositionChanged() => ScrollBar.Position = Position + ScrollBarRenderLocation;
-
         private void _scrollbar_ValueChanged(object sender, EventArgs e) => IsDirty = true;
 
         protected virtual void OnSelectedItemChanged() => SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(selectedItem));
 
         protected virtual void OnItemAction() => SelectedItemExecuted?.Invoke(this, new SelectedItemEventArgs(selectedItem));
+
+        protected override void CreateChildControls()
+        {
+            
+        }
 
         public void SetupScrollBar(Orientation orientation, int sizeValue, Point position)
         {
@@ -184,6 +184,7 @@ namespace SadConsole.UI.Controls
                 ScrollBar.ValueChanged -= _scrollbar_ValueChanged;
                 value = ScrollBar.Value;
                 max = ScrollBar.Maximum;
+                RemoveControl(ScrollBar);
                 scrollBarExists = true;
             }
 
@@ -197,10 +198,8 @@ namespace SadConsole.UI.Controls
             }
 
             ScrollBar.ValueChanged += _scrollbar_ValueChanged;
-            ScrollBar.IsVisible = false;
-            ScrollBarRenderLocation = position;
-            ScrollBar.Position = position + Position;
-            ScrollBar.Parent = Parent;
+            ScrollBar.Position = position;
+            AddControl(ScrollBar);
 
             _serializedScrollSizeValue = sizeValue;
             _serializedScrollPosition = position;
@@ -303,7 +302,7 @@ namespace SadConsole.UI.Controls
             return false;
         }
 
-        protected override void OnMouseIn(Input.MouseScreenObjectState state)
+        protected override void OnMouseIn(ControlMouseState state)
         {
             base.OnMouseIn(state);
 
@@ -311,7 +310,7 @@ namespace SadConsole.UI.Controls
             int rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
             int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(state.CellPosition.X - Position.X, state.CellPosition.Y - Position.Y);
+            Point mouseControlPosition = state.MousePosition;
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
@@ -335,7 +334,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
-        protected override void OnLeftMouseClicked(Input.MouseScreenObjectState state)
+        protected override void OnLeftMouseClicked(ControlMouseState state)
         {
             base.OnLeftMouseClicked(state);
 
@@ -347,7 +346,7 @@ namespace SadConsole.UI.Controls
             int rowOffsetReverse = ((ListBoxTheme)ActiveTheme).DrawBorder ? 0 : 1;
             int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)ActiveTheme).DrawBorder ? 1 : 0;
 
-            Point mouseControlPosition = new Point(state.CellPosition.X - Position.X, state.CellPosition.Y - Position.Y);
+            Point mouseControlPosition = state.MousePosition;
 
             if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
                 mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
@@ -376,39 +375,6 @@ namespace SadConsole.UI.Controls
                     OnItemAction();
                 }
             }
-        }
-
-        /// <inheritdoc />
-        public override bool ProcessMouse(Input.MouseScreenObjectState state)
-        {
-            if (_isEnabled)
-            {
-                if (_isMouseOver)
-                {
-                    Point mouseControlPosition = TransformConsolePositionByControlPosition(state.CellPosition);
-
-                    if (mouseControlPosition.X == ScrollBarRenderLocation.X && IsScrollBarVisible)
-                    {
-                        ScrollBar.ProcessMouse(state);
-                    }
-                    else
-                    {
-                        if (IsScrollBarVisible && state.Mouse.ScrollWheelValueChange != 0)
-                        {
-                            ScrollBar.Value += state.Mouse.ScrollWheelValueChange / 20;
-                            return true;
-                        }
-
-                        base.ProcessMouse(state);
-                    }
-                }
-                else
-                {
-                    base.ProcessMouse(state);
-                }
-            }
-
-            return false;
         }
 
         [OnSerializing]

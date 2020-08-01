@@ -87,6 +87,7 @@ namespace SadConsole.UI.Themes
             SetControlTheme(typeof(DrawingSurface), new DrawingSurfaceTheme());
             SetControlTheme(typeof(Button), new ButtonTheme());
             SetControlTheme(typeof(Label), new LabelTheme());
+            SetControlTheme(typeof(Panel), new PanelTheme());
         }
 
         /// <summary>
@@ -121,6 +122,7 @@ namespace SadConsole.UI.Themes
         /// <returns>A theme that is associated with the control.</returns>
         public void SetControlTheme(Type control, ThemeBase theme)
         {
+            System.Diagnostics.Debug.Print($"Register {control.Name} with {theme.GetType().Name}");
             if (null == control) throw new ArgumentNullException(nameof(control), "Cannot use a null control type");
             _controlThemes[control] = theme ?? throw new ArgumentNullException(nameof(theme), "Cannot set the theme of a control to null");
         }

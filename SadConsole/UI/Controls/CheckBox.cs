@@ -85,21 +85,21 @@ namespace SadConsole.UI.Controls
         {
         }
 
-        protected override void OnMouseIn(Input.MouseScreenObjectState state)
+        protected override void OnMouseIn(ControlMouseState state)
         {
             _isMouseOver = true;
 
             base.OnMouseIn(state);
         }
 
-        protected override void OnMouseExit(Input.MouseScreenObjectState state)
+        protected override void OnMouseExit(ControlMouseState state)
         {
             _isMouseOver = false;
 
             base.OnMouseExit(state);
         }
 
-        protected override void OnLeftMouseClicked(Input.MouseScreenObjectState state)
+        protected override void OnLeftMouseClicked(ControlMouseState state)
         {
             base.OnLeftMouseClicked(state);
 
@@ -126,11 +126,11 @@ namespace SadConsole.UI.Controls
             {
                 if (info.IsKeyReleased(Keys.Up))
                 {
-                    Parent.TabPreviousControl();
+                    Parent.Host.TabPreviousControl();
                 }
                 else if (info.IsKeyReleased(Keys.Down))
                 {
-                    Parent.TabNextControl();
+                    Parent.Host.TabNextControl();
                 }
 
                 return true;

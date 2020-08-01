@@ -29,6 +29,11 @@ namespace SadConsole.UI.Controls
         public int CurrentSliderPosition { get; private set; }
 
         /// <summary>
+        /// When <see langword="true"/>, indicates this control is captured and the slider button is being used; otherwise, <see langword="false"/>.
+        /// </summary>
+        public bool IsSliding { get; set; }
+
+        /// <summary>
         /// Gets or sets the value of the scrollbar between the minimum and maximum values.
         /// </summary>
         [DataMember]
@@ -153,14 +158,13 @@ namespace SadConsole.UI.Controls
             {
                 base.ProcessMouse(state);
 
-
-                var mouseControlPosition = new Point(state.CellPosition.X - Position.X, state.CellPosition.Y - Position.Y);
+                var newState = new ControlMouseState(this, state);
+                var mouseControlPosition = newState.MousePosition;
 
                 // This becomes the active mouse subject when the bar is being dragged.
-                if (Parent.CapturedControl == null)
+                if (Parent.Host.CapturedControl == null)
                 {
-                    if (state.CellPosition.X >= Position.X && state.CellPosition.X < Position.X + Width &&
-                        state.CellPosition.Y >= Position.Y && state.CellPosition.Y < Position.Y + Height)
+                    if (newState.IsMouseOver)
                     {
                         if (state.Mouse.ScrollWheelValueChange != 0)
                         {
@@ -195,7 +199,7 @@ namespace SadConsole.UI.Controls
                                 }
                             }
 
-                            Parent.FocusedControl = this;
+                            Parent.Host.FocusedControl = this;
                         }
 
                         // Need to set a flag signalling that we've locked in a drag.
@@ -208,7 +212,9 @@ namespace SadConsole.UI.Controls
                                 {
                                     if (mouseControlPosition.X == CurrentSliderPosition + 1)
                                     {
-                                        Parent.CaptureControl(this);
+                                        Parent.Host.CaptureControl(this);
+                                        IsSliding = true;
+                                        IsDirty = true;
                                     }
                                 }
                             }
@@ -218,27 +224,30 @@ namespace SadConsole.UI.Controls
                                 {
                                     if (mouseControlPosition.Y == CurrentSliderPosition + 1)
                                     {
-                                        Parent.CaptureControl(this);
+                                        Parent.Host.CaptureControl(this);
+                                        IsSliding = true;
+                                        IsDirty = true;
                                     }
                                 }
                             }
 
-                            Parent.FocusedControl = this;
+                            Parent.Host.FocusedControl = this;
                         }
 
                         return true;
                     }
                 }
-                else if (Parent.CapturedControl == this)
+                else if (Parent.Host.CapturedControl == this)
                 {
                     if (!state.Mouse.LeftButtonDown)
                     {
-                        Parent.ReleaseControl();
+                        Parent.Host.ReleaseControl();
+                        IsSliding = false;
+                        IsDirty = true;
                         return false;
                     }
 
-                    if (state.CellPosition.X >= Position.X - 2 && state.CellPosition.X < Position.X + Width + 2 &&
-                        state.CellPosition.Y >= Position.Y - 3 && state.CellPosition.Y < Position.Y + Height + 3)
+                    if (newState.IsMouseOver)
                     {
 
                         if (Orientation == Orientation.Horizontal)

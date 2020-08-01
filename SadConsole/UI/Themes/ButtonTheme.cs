@@ -142,7 +142,7 @@ namespace SadConsole.UI.Themes
                     appearance.Glyph, null);
 
                 button.Surface.Print(shadowBounds.X, middle, button.Text.Align(button.TextAlignment, button.Width));
-                button.MouseBounds = new Rectangle(button.Position.X, button.Position.Y, button.Width + 2, button.Height + 1);
+                button.MouseArea = new Rectangle(0, 0, button.Width + 2, button.Height + 1);
             }
             else
             {
@@ -169,7 +169,7 @@ namespace SadConsole.UI.Themes
                     new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Foreground, Shade.Background,
                     Shade.Glyph);
 
-                button.MouseBounds = button.Bounds;
+                button.MouseArea = new Rectangle(0, 0, button.Width, button.Height);
             }
 
             button.IsDirty = false;
@@ -300,7 +300,7 @@ namespace SadConsole.UI.Themes
                 textColor = Focused.Foreground;
 
             // Extended font draw
-            if (button.Parent.ParentConsole.Font.IsSadExtended && UseExtended)
+            if (button.Parent.Host.ParentConsole.Font.IsSadExtended && UseExtended)
             {
                 // Redraw the control
                 button.Surface.Fill(appearance.Foreground, appearance.Background,
@@ -313,8 +313,8 @@ namespace SadConsole.UI.Themes
                     button.Surface.SetDecorator(0, button.Surface.BufferWidth,
                                                         new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor),
                                                         new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
-                    button.Surface.AddDecorator(0, 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
-                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(0, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
                 }
                 else if (button.Height == 2)
                 {
@@ -327,10 +327,10 @@ namespace SadConsole.UI.Themes
                     button.Surface.SetDecorator(Point.ToIndex(0,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), button.Surface.BufferWidth,
                                                         new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
 
-                    button.Surface.AddDecorator(0, 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
-                    button.Surface.AddDecorator(Point.ToIndex(0,  1, button.Surface.BufferWidth), 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
-                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
-                    button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  1, button.Surface.BufferWidth), 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(0, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(0,  1, button.Surface.BufferWidth), 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  1, button.Surface.BufferWidth), 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
                 }
                 else
                 {
@@ -340,15 +340,15 @@ namespace SadConsole.UI.Themes
                     button.Surface.SetDecorator(Point.ToIndex(0,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), button.Surface.BufferWidth,
                                                         new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
 
-                    button.Surface.AddDecorator(0, 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
-                    button.Surface.AddDecorator(Point.ToIndex(0,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
-                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
-                    button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(0, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(0,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
+                    button.Surface.AddDecorator(button.Surface.BufferWidth - 1, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                    button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  button.Surface.BufferHeight - 1, button.Surface.BufferWidth), 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
 
                     for (int y = 0; y < button.Surface.BufferHeight - 2; y++)
                     {
-                        button.Surface.AddDecorator(Point.ToIndex(0,  y + 1, button.Surface.BufferWidth), 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
-                        button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  y + 1, button.Surface.BufferWidth), 1, button.Parent.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
+                        button.Surface.AddDecorator(Point.ToIndex(0,  y + 1, button.Surface.BufferWidth), 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
+                        button.Surface.AddDecorator(Point.ToIndex(button.Surface.BufferWidth - 1,  y + 1, button.Surface.BufferWidth), 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
                     }
                 }
             }

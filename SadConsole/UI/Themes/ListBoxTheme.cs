@@ -88,7 +88,10 @@ namespace SadConsole.UI.Themes
             }
 
             if (_reconfigureSrollBar)
+            {
                 SetupScrollBar(listbox);
+                _reconfigureSrollBar = false;
+            }
 
             RefreshTheme(control.FindThemeColors(), control);
             
@@ -107,6 +110,8 @@ namespace SadConsole.UI.Themes
                 appearance.Background,
                 appearance.Glyph);
 
+            ShowHideScrollBar(listbox);
+
             if (DrawBorder)
             {
                 endingRow = listbox.Height - 2;
@@ -120,11 +125,11 @@ namespace SadConsole.UI.Themes
                 endingRow = listbox.Height;
                 startingRow = 0;
                 columnOffset = 0;
-                columnEnd = listbox.Width;
+                columnEnd = listbox.Width - (listbox.IsScrollBarVisible ? 1 : 0);
                 listbox.Surface.Fill(borderAppearance.Foreground, borderAppearance.Background, 0, null);
             }
 
-            ShowHideScrollBar(listbox);
+            listbox.MouseArea = new Rectangle(columnOffset, startingRow, columnEnd, endingRow);
 
             int offset = listbox.IsScrollBarVisible ? listbox.ScrollBar.Value : 0;
             for (int i = 0; i < endingRow; i++)
@@ -135,52 +140,42 @@ namespace SadConsole.UI.Themes
                     ControlStates state = 0;
 
                     if (listbox.State.HasFlag(ControlStates.MouseOver) && listbox.RelativeIndexMouseOver == itemIndexRelative)
-                    {
                         state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.MouseOver);
-                    }
 
                     if (listbox.State.HasFlag(ControlStates.MouseLeftButtonDown))
-                    {
                         state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.MouseLeftButtonDown);
-                    }
 
                     if (listbox.State.HasFlag(ControlStates.MouseRightButtonDown))
-                    {
                         state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.MouseRightButtonDown);
-                    }
 
                     if (listbox.State.HasFlag(ControlStates.Disabled))
-                    {
                         state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.Disabled);
-                    }
 
                     if (itemIndexRelative == listbox.SelectedIndex)
-                    {
                         state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.Selected);
-                    }
 
                     listbox.ItemTheme.Draw(listbox.Surface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
                 }
             }
 
-            if (listbox.IsScrollBarVisible)
-            {
-                listbox.ScrollBar.IsDirty = true;
-                listbox.ScrollBar.Update(time);
-                int y = 0;
+            //if (listbox.IsScrollBarVisible)
+            //{
+            //    listbox.ScrollBar.IsDirty = true;
+            //    listbox.ScrollBar.Update(time);
+            //    int y = 0;
 
-                for (int ycell = 0; ycell < listbox.ScrollBar.Height; ycell++)
-                {
-                    listbox.Surface.SetGlyph(listbox.ScrollBarRenderLocation.X, listbox.ScrollBarRenderLocation.Y + y, listbox.ScrollBar.Surface[0, ycell].Glyph);
-                    listbox.Surface.SetCellAppearance(listbox.ScrollBarRenderLocation.X, listbox.ScrollBarRenderLocation.Y + y, listbox.ScrollBar.Surface[0, ycell]);
-                    y++;
-                }
-            }
-
+            //    for (int ycell = 0; ycell < listbox.ScrollBar.Height; ycell++)
+            //    {
+            //        listbox.Surface.SetGlyph(listbox.ScrollBarRenderLocation.X, listbox.ScrollBarRenderLocation.Y + y, listbox.ScrollBar.Surface[0, ycell].Glyph);
+            //        listbox.Surface.SetCellAppearance(listbox.ScrollBarRenderLocation.X, listbox.ScrollBarRenderLocation.Y + y, listbox.ScrollBar.Surface[0, ycell]);
+            //        y++;
+            //    }
+            //}
 
             listbox.IsDirty = Helpers.HasFlag((int)listbox.State, (int)ControlStates.MouseOver);
         }
 
+        /// <inheritdoc />
         public override void RefreshTheme(Colors colors, ControlBase control)
         {
             if (colors == null) colors = Library.Default.Colors;
@@ -216,6 +211,10 @@ namespace SadConsole.UI.Themes
             DrawBorder = DrawBorder,
         };
 
+        /// <summary>
+        /// Shows the scroll bar when there are too many items to display; otherwise, hides it.
+        /// </summary>
+        /// <param name="control">Reference to the listbox being processed.</param>
         public void ShowHideScrollBar(ListBox control)
         {
             int heightOffset = DrawBorder ? 2 : 0;

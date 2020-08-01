@@ -497,7 +497,7 @@ namespace SadConsole.UI.Controls
             ValidateCursorPosition();
         }
 
-        protected override void OnLeftMouseClicked(Input.MouseScreenObjectState state)
+        protected override void OnLeftMouseClicked(ControlMouseState state)
         {
             if (!DisableMouse)
             {
@@ -507,7 +507,7 @@ namespace SadConsole.UI.Controls
 
                 if (!IsFocused)
                 {
-                    Parent.FocusedControl = this;
+                    Parent.Host.FocusedControl = this;
                 }
 
                 IsDirty = true;

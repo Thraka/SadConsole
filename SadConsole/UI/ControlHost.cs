@@ -7,13 +7,14 @@ using System.Runtime.Serialization;
 using SadConsole.Input;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI
 {
     /// <summary>
     /// Adds the ability for a host to contain and display controls from <see cref="SadConsole.UI.Controls"/>.
     /// </summary>
-    public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, IList<ControlBase>
+    public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, IList<ControlBase>, IContainer
     {
         /// <summary>
         /// Indicates priority to other components.
@@ -40,6 +41,7 @@ namespace SadConsole.UI
         private bool _wasFocusedBeforeCapture;
         private bool _exclusiveBeforeCapture;
         private Themes.Colors _themeColors;
+        private ControlBase _controlWithMouse;
 
         #region Properties
 
@@ -148,6 +150,10 @@ namespace SadConsole.UI
         /// </summary>
         public bool IsReadOnly => false;
 
+        Point IContainer.AbsolutePosition => (0, 0);
+
+        ControlHost IContainer.Host => this;
+
         ControlBase IList<ControlBase>.this[int index] { get => ((IList<ControlBase>)ControlsList)[index]; set => ((IList<ControlBase>)ControlsList)[index] = value; }
         #endregion
 
@@ -158,6 +164,7 @@ namespace SadConsole.UI
             surface.Renderer = SadConsole.GameHost.Instance.GetRenderer("controls");
             surface.UseKeyboard = true;
             surface.UseMouse = true;
+            surface.FocusOnMouseClick = true;
 
             if (ClearOnAdded)
             {
@@ -232,17 +239,25 @@ namespace SadConsole.UI
 
             if (!host.UseMouse) return;
 
-            if (state.IsOnScreenObject || host.IsExclusiveMouse)
+            if ((state.ScreenObject == host && state.IsOnScreenObject) || host.IsExclusiveMouse)
             {
                 if (CapturedControl != null && CapturedControl.Parent == this)
                     CapturedControl.ProcessMouse(state);
                 else
                 {
                     var controls = ControlsList.ToList();
+                    controls.Reverse();
+
                     foreach (ControlBase control in controls)
                     {
                         if (control.IsVisible && control.Parent == this && control.ProcessMouse(state))
+                        {
+                            if (_controlWithMouse != null && _controlWithMouse != control)
+                                _controlWithMouse.LostMouse(state);
+
+                            _controlWithMouse = control;
                             break;
+                        }
                     }
                 }
             }
@@ -582,11 +597,17 @@ namespace SadConsole.UI
                 control.LostMouse(state);
         }
 
-        private void Surface_FocusLost(object sender, EventArgs e) =>
+        private void Surface_FocusLost(object sender, EventArgs e)
+        {
             FocusedControl?.DetermineState();
+        }
+            
 
-        private void Surface_Focused(object sender, EventArgs e) =>
+        private void Surface_Focused(object sender, EventArgs e)
+        {
             FocusedControl?.DetermineState();
+        }
+            
 
 
         /// <summary>
@@ -616,11 +637,10 @@ namespace SadConsole.UI
         public void ReleaseControl()
         {
             if (!_wasFocusedBeforeCapture)
-            {
                 GameHost.Instance.FocusedScreenObjects.Pop(ParentConsole);
-            }
 
             ParentConsole.IsExclusiveMouse = _exclusiveBeforeCapture;
+            CapturedControl.LostMouse(new MouseScreenObjectState(ParentConsole, GameHost.Instance.Mouse));
             CapturedControl = null;
         }
 

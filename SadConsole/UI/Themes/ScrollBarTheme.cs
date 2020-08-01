@@ -169,8 +169,12 @@ namespace SadConsole.UI.Themes
                         scrollbar.Surface.SetGlyph(0, 1 + scrollbar.CurrentSliderPosition, SliderGlyph);
                     }
                 }
-
             }
+
+            if (scrollbar.IsSliding)
+                scrollbar.MouseArea = new Rectangle(-2, -2, scrollbar.Width + 4, scrollbar.Height + 4);
+            else
+                scrollbar.MouseArea = new Rectangle(0, 0, scrollbar.Width, scrollbar.Height);
 
             scrollbar.IsDirty = false;
         }

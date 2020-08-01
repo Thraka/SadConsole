@@ -77,7 +77,7 @@ namespace SadConsole.UI.Controls
         /// Called when the left-mouse button is clicked.
         /// </summary>
         /// <param name="state">The mouse state.</param>
-        protected override void OnLeftMouseClicked(MouseScreenObjectState state)
+        protected override void OnLeftMouseClicked(ControlMouseState state)
         {
             base.OnLeftMouseClicked(state);
 
