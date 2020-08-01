@@ -1,3 +1,7 @@
+## v9.0 Beta 2
+
+- AHHHHH bug in Font with setting UnsupportedGlyphIndex found 1 day after beta 1.........
+
 ## v9.0 Beta 1
 
 - Removed accidental dependency on SharpFNT.

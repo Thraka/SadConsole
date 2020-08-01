@@ -131,7 +131,7 @@ namespace SadConsole
             set
             {
                 _unsupportedGlyphIndex = value;
-                SolidGlyphRectangle = GetGlyphSourceRectangle(value);
+                UnsupportedGlyphRectangle = GetGlyphSourceRectangle(value);
             }
         }
 
