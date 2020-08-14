@@ -1,3 +1,10 @@
+## 08/14/2020 V8.99.3
+
+- Added `Settings.FullScreenPreventScaleChangeForNone` to keep `ToggleFullScreen` in `None` resize mode. (thanks ASCII Guy)
+- Added `ParseCommandClearEffect` with string parser command `ceffect` or `ce`. (thanks regulark)
+- Updated templates.
+- Update to MonoGame 3.8.
+
 ## 07/13/2020 V8.99.2
 
 - Added DrawImageComponent.

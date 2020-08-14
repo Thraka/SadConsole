@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <AssemblyVersion>8.99.2.0</AssemblyVersion>
-    <Version>8.99.2</Version>
+    <AssemblyVersion>8.99.3.0</AssemblyVersion>
+    <Version>8.99.3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -15,7 +15,7 @@
     <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
-    <PackageReleaseNotes>Fix xml docs</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgrade MonoGame to 3.8.</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/SadConsole/SadConsole/d110fc4a0dfdaa25496c973518ea6a14a563e191/images/oD8yyro5.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
@@ -26,6 +26,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii;standard</PackageTags>
   </PropertyGroup>
 
@@ -55,16 +56,16 @@
     <EmbeddedResource Include="Resources\IBM8x16.png" />
     <EmbeddedResource Include="Resources\IBM.font" />
     <None Include="Resources\readme.txt" pack="true" PackagePath="." />
-    <None Include="Resources\icon.png" Pack="true" PackagePath="\"/>
+    <None Include="Resources\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" PrivateAssets="All" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" PrivateAssets="All" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" PrivateAssets="All" />
     <PackageReference Include="newtonsoft.json" Version="11.*" />
   </ItemGroup>
 
