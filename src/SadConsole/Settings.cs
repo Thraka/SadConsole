@@ -77,9 +77,14 @@ namespace SadConsole
         public static bool SerializationIsCompressed { get; set; } = false;
 
         /// <summary>
-        /// When set to true, and a font is not specified with the <see cref="Game.Create(string, int, int, Action{Game})"/> overload, the IBM 8x16 extended SadConsole font will be used.
+        /// When set to true, and a font is not specified with the <see cref="Game.Create(string, int, int, System.Action{Game})"/> overload, the IBM 8x16 extended SadConsole font will be used.
         /// </summary>
         public static bool UseDefaultExtendedFont { get; set; } = false;
+
+        /// <summary>
+        /// When <see langword="true"/> and <see cref="Settings.ResizeMode"/> is <see cref="WindowResizeOptions.None"/>, the <see cref="ToggleFullScreen"/> method will leave the <see cref="Settings.ResizeMode"/> alone.
+        /// </summary>
+        public static bool FullScreenPreventScaleChangeForNone { get; set; } = false;
 
         /// <summary>
         /// Toggles between windowed and fullscreen rendering for SadConsole.
@@ -104,7 +109,7 @@ namespace SadConsole
                 _preFullScreenWidth = Global.GraphicsDevice.PresentationParameters.BackBufferWidth;
                 _preFullScreenHeight = Global.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
-                if (Settings.ResizeMode == WindowResizeOptions.None)
+                if (Settings.ResizeMode == WindowResizeOptions.None && !FullScreenPreventScaleChangeForNone)
                 {
                     _handleResizeNone = true;
                     Settings.ResizeMode = WindowResizeOptions.Scale;

@@ -95,6 +95,10 @@ namespace StarterProject
             // We'll instead use our demo consoles that show various features of SadConsole.
             Global.CurrentScreen = MainConsole;
 
+            //var con = new Console(10, 10);
+            //con.Print("[c:b]test");
+            //Global.CurrentScreen = con;
+
             // Initialize the windows
             _characterWindow = new Windows.CharacterViewer();
         }

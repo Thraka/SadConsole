@@ -82,6 +82,10 @@
                                     case "sg":
                                         commandObject = new ParseCommandSetGlyph(commandParams);
                                         break;
+                                    case "ceffect":
+                                    case "ce":
+                                        commandObject = new ParseCommandClearEffect(commandParams, commandStacks);
+                                        break;
                                     default:
                                         break;
                                 }
