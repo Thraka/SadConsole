@@ -154,7 +154,7 @@ namespace SadConsole.UI.Themes
                     if (itemIndexRelative == listbox.SelectedIndex)
                         state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.Selected);
 
-                    listbox.ItemTheme.Draw(listbox.Surface, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
+                    listbox.ItemTheme.Draw(listbox, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
                 }
             }
 
@@ -253,7 +253,7 @@ namespace SadConsole.UI.Themes
             MouseOver = themeColors.Appearance_ControlOver.Clone();
         }
 
-        public virtual void Draw(ICellSurface surface, Rectangle area, object item, ControlStates itemState)
+        public virtual void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
             string value = item.ToString();
             if (value.Length < area.Width)
@@ -267,11 +267,11 @@ namespace SadConsole.UI.Themes
 
             if (Helpers.HasFlag((int)itemState, (int)ControlStates.Selected) && !Helpers.HasFlag((int)itemState, (int)ControlStates.MouseOver))
             {
-                surface.Print(area.X, area.Y, value, Selected);
+                control.Surface.Print(area.X, area.Y, value, Selected);
             }
             else
             {
-                surface.Print(area.X, area.Y, value, GetStateAppearance(itemState));
+                control.Surface.Print(area.X, area.Y, value, GetStateAppearance(itemState));
             }
         }
 
@@ -288,44 +288,72 @@ namespace SadConsole.UI.Themes
 
     public class ListBoxItemColorTheme : ListBoxItemTheme
     {
+        /// <summary>
+        /// When <see langword="false"/>, colored boxes used when drawing the color for (Color, string) tuple will use two characters; otherwise <see langword="true"/> and only one character is used.
+        /// </summary>
+        public bool UseSingleCharacterForBox { get; set; } = false;
+
         public ListBoxItemColorTheme() { }
 
-        public override void Draw(ICellSurface surface, Rectangle area, object item, ControlStates itemState)
+        public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
-            if (item is Color || item is Tuple<Color, Color, string>)
+            if (item is Color || item is ValueTuple<Color, string> || item is ValueTuple<Color, Color, string>)
             {
                 string value = new string(' ', area.Width - 2);
 
                 ColoredGlyph cellLook = GetStateAppearance(itemState).Clone();
 
-                surface.Print(area.X + 1, area.Y, value, cellLook);
+                control.Surface.Print(area.X + 1, area.Y, value, cellLook);
 
-                surface.Print(area.X, area.Y, " ", cellLook);
-                surface.Print(area.X + area.Width - 1, area.Y, " ", cellLook);
-
+                control.Surface.Print(area.X, area.Y, " ", cellLook);
+                control.Surface.Print(area.X + area.Width - 1, area.Y, " ", cellLook);
+                
 
                 if (item is Color color)
                 {
                     cellLook.Background = color;
-                    surface.Print(area.X + 1, area.Y, value, cellLook);
+                    control.Surface.Print(area.X + 1, area.Y, value, cellLook);
+
+                    if (itemState.HasFlag(ControlStates.Selected))
+                    {
+                        control.Surface.SetGlyph(area.X, area.Y, 16);
+                        control.Surface.SetGlyph(area.X + area.Width - 1, area.Y, 17);
+                    }
+                }
+                else if (item is ValueTuple<Color, string> color2)
+                {
+                    bool useExtended = false;
+
+                    if (control.AlternateFont != null)
+                        useExtended = control.AlternateFont.IsSadExtended;
+                    else if (control.Parent?.Host?.ParentConsole?.Font != null)
+                        useExtended = control.Parent.Host.ParentConsole.Font.IsSadExtended;
+
+                    string colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219:2]mm";
+
+                    if (useExtended)
+                        colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 254]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 301]m[c:sg 302]m";
+
+                    control.Surface.Print(area.X, area.Y, ColoredString.Parse(colorBoxesCommands));
+                    control.Surface.Print(area.X + 3, area.Y, color2.Item2.Align(HorizontalAlignment.Left, area.Width - 3), cellLook);
                 }
                 else
                 {
-                    cellLook.Foreground = ((Tuple<Color, Color, string>)item).Item2;
-                    cellLook.Background = ((Tuple<Color, Color, string>)item).Item1;
-                    value = ((Tuple<Color, Color, string>)item).Item3.Align(HorizontalAlignment.Left, area.Width - 2);
-                    surface.Print(area.X + 1, area.Y, value, cellLook);
-                }
+                    cellLook.Foreground = ((ValueTuple<Color, Color, string>)item).Item2;
+                    cellLook.Background = ((ValueTuple<Color, Color, string>)item).Item1;
+                    value = ((ValueTuple<Color, Color, string>)item).Item3.Align(HorizontalAlignment.Left, area.Width - 2);
+                    control.Surface.Print(area.X + 1, area.Y, value, cellLook);
 
-                if (itemState.HasFlag(ControlStates.Selected))
-                {
-                    surface.SetGlyph(area.X, area.Y, 16);
-                    surface.SetGlyph(area.X + area.Width - 1, area.Y, 17);
+                    if (itemState.HasFlag(ControlStates.Selected))
+                    {
+                        control.Surface.SetGlyph(area.X, area.Y, 16);
+                        control.Surface.SetGlyph(area.X + area.Width - 1, area.Y, 17);
+                    }
                 }
             }
             else
             {
-                base.Draw(surface, area, item, itemState);
+                base.Draw(control, area, item, itemState);
             }
         }
 
