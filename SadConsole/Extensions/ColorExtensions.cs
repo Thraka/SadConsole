@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace SadRogue.Primitives
 {
@@ -125,10 +126,65 @@ namespace SadRogue.Primitives
         public static Color GetRandomColor(this Color color, Random random) => new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
 
         /// <summary>
+        /// Gets a darker version of the color. R,G,B channels are * 0.25f.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A darker color.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color GetDark(this Color color) =>
+            (color * 0.75f).FillAlpha();
+
+        /// <summary>
+        /// Gets a darker version of the color. R,G,B channels are * 0.50f.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A darker color.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color GetDarker(this Color color) =>
+            (color * 0.50f).FillAlpha();
+
+        /// <summary>
+        /// Gets a darker version of the color. R,G,B channels are * 0.75f.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A darker color.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color GetDarkest(this Color color) =>
+            (color * 0.25f).FillAlpha();
+
+        /// <summary>
+        /// Gets a darker version of the color. R,G,B channels are * 1.25f.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A darker color.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color GetBright(this Color color) =>
+            (color * 1.25f).FillAlpha();
+
+        /// <summary>
+        /// Gets a darker version of the color. R,G,B channels are * 1.50f.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A darker color.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color GetBrighter(this Color color) =>
+            (color * 1.50f).FillAlpha();
+
+        /// <summary>
+        /// Gets a darker version of the color. R,G,B channels are * 1.75f.
+        /// </summary>
+        /// <param name="color">Object instance.</param>
+        /// <returns>A darker color.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color GetBrightest(this Color color) =>
+            (color * 1.75f).FillAlpha();
+
+        /// <summary>
         /// Returns a new Color using only the Red value of this color.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with only the red channel set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color RedOnly(this Color color) => new Color(color.R, 0, 0);
 
         /// <summary>
@@ -136,6 +192,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with only the green channel set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GreenOnly(this Color color) => new Color(0, color.G, 0);
 
         /// <summary>
@@ -143,6 +200,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with only the blue channel set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color BlueOnly(this Color color) => new Color(0, 0, color.B);
 
         /// <summary>
@@ -150,6 +208,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with only the alpha channel set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color AlphaOnly(this Color color) => new Color((byte)0, (byte)0, (byte)0, color.A);
 
         /// <summary>
@@ -157,6 +216,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the red channel cleared.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color ClearRed(this Color color) => new Color((byte)0, color.G, color.B, color.A);
 
         /// <summary>
@@ -164,6 +224,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the green channel cleared.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color ClearGreen(this Color color) => new Color(color.R, (byte)0, color.B, color.A);
 
         /// <summary>
@@ -171,6 +232,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the blue channel cleared.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color ClearBlue(this Color color) => new Color(color.R, color.G, (byte)0, color.A);
 
         /// <summary>
@@ -178,6 +240,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the alpha channel cleared.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color ClearAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)0);
 
         /// <summary>
@@ -185,6 +248,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the red channel fully set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color FillRed(this Color color) => new Color((byte)255, color.G, color.B, color.A);
 
         /// <summary>
@@ -192,6 +256,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the green channel fully set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color FillGreen(this Color color) => new Color(color.R, (byte)255, color.B, color.A);
 
         /// <summary>
@@ -199,6 +264,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the blue channel fully set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color FillBlue(this Color color) => new Color(color.R, color.G, (byte)255, color.A);
 
         /// <summary>
@@ -206,6 +272,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A color with the alpha channel fully set.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color FillAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)255);
 
         /// <summary>
@@ -214,6 +281,7 @@ namespace SadRogue.Primitives
         /// <param name="color">Object instance.</param>
         /// <param name="value">The new value for the red channel.</param>
         /// <returns>A color with the red channel altered.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SetRed(this Color color, byte value) => new Color(value, color.G, color.B, color.A);
 
         /// <summary>
@@ -222,6 +290,7 @@ namespace SadRogue.Primitives
         /// <param name="color">Object instance.</param>
         /// <param name="value">The new value for the green channel.</param>
         /// <returns>A color with the green channel altered.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SetGreen(this Color color, byte value) => new Color(color.R, value, color.B, color.A);
 
         /// <summary>
@@ -230,6 +299,7 @@ namespace SadRogue.Primitives
         /// <param name="color">Object instance.</param>
         /// <param name="value">The new value for the blue channel.</param>
         /// <returns>A color with the blue channel altered.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SetBlue(this Color color, byte value) => new Color(color.R, color.G, value, color.A);
 
         /// <summary>
@@ -238,6 +308,7 @@ namespace SadRogue.Primitives
         /// <param name="color">Object instance.</param>
         /// <param name="value">The new value for the alpha channel.</param>
         /// <returns>A color with the alpha channel altered.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SetAlpha(this Color color, byte value) => new Color(color.R, color.G, color.B, value);
 
 
@@ -246,6 +317,7 @@ namespace SadRogue.Primitives
         /// </summary>
         /// <param name="color">The color to calculate the luma from.</param>
         /// <returns>A value based on this code: (color.R + color.R + color.B + color.G + color.G + color.G) / 6f</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetLuma(this Color color) => (color.R + color.R + color.B + color.G + color.G + color.G) / 6f;
 
         /// <summary>
