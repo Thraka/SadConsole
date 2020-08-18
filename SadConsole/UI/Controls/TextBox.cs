@@ -294,9 +294,7 @@ namespace SadConsole.UI.Controls
         private bool TriggerKeyPressEvent(Input.AsciiKey key)
         {
             if (KeyPressed == null)
-            {
                 return false;
-            }
 
             var args = new KeyPressEventArgs(key);
             KeyPressed(this, args);
@@ -319,13 +317,12 @@ namespace SadConsole.UI.Controls
                     if (info.KeysPressed[i].Key == Keys.Enter)
                     {
                         if (TriggerKeyPressEvent(info.KeysPressed[i]))
-                        {
-                            return false;
-                        }
+                            return true;
 
                         IsDirty = true;
                         DisableKeyboard = false;
                         Text = EditingText;
+                        ValidateCursorPosition();
                         return true;
                     }
                 }
@@ -491,10 +488,9 @@ namespace SadConsole.UI.Controls
         public override void Focused()
         {
             base.Focused();
-            DisableKeyboard = false;
+            DisableKeyboard = true;
             EditingText = _text;
             IsDirty = true;
-            ValidateCursorPosition();
         }
 
         protected override void OnLeftMouseClicked(ControlMouseState state)

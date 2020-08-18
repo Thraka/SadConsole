@@ -127,13 +127,13 @@ namespace SadConsole.UI.Controls
                 if (info.IsKeyReleased(Keys.Up))
                 {
                     Parent.Host.TabPreviousControl();
+                    return true;
                 }
                 else if (info.IsKeyReleased(Keys.Down))
                 {
                     Parent.Host.TabNextControl();
+                    return true;
                 }
-
-                return true;
             }
 
             return false;
