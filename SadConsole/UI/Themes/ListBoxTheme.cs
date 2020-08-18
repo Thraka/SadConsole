@@ -334,6 +334,8 @@ namespace SadConsole.UI.Themes
                     if (useExtended)
                         colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 254]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 301]m[c:sg 302]m";
 
+                    colorBoxesCommands = $"[c:r b:{cellLook.Background.ToParser()}]" + colorBoxesCommands;
+
                     control.Surface.Print(area.X, area.Y, ColoredString.Parse(colorBoxesCommands));
                     control.Surface.Print(area.X + 3, area.Y, color2.Item2.Align(HorizontalAlignment.Left, area.Width - 3), cellLook);
                 }

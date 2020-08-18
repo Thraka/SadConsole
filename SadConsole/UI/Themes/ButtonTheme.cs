@@ -59,9 +59,10 @@ namespace SadConsole.UI.Themes
 
             if (ShowEnds && button.Width >= 3)
             {
+                var lines = control.State == ControlStates.Disabled ? appearance.Foreground : _colorsLastUsed.Lines;
                 button.Surface.Print(1, middle, (button.Text).Align(button.TextAlignment, button.Width - 2));
-                button.Surface.SetGlyph(0, middle, EndCharacterLeft);
-                button.Surface.SetGlyph(button.Width - 1, middle, EndCharacterRight);
+                button.Surface.SetGlyph(0, middle, EndCharacterLeft, lines);
+                button.Surface.SetGlyph(button.Width - 1, middle, EndCharacterRight, lines);
             }
             else
             {
@@ -251,8 +252,8 @@ namespace SadConsole.UI.Themes
 
             base.RefreshTheme(colors, control);
 
-            _topLeftLineColorsDefault = new ColoredGlyph(colors.Gray, Color.Transparent);
-            _bottomRightLineColorsDefault = new ColoredGlyph(colors.GrayDark, Color.Transparent);
+            _topLeftLineColorsDefault = new ColoredGlyph(colors.Lines, Color.Transparent);
+            _bottomRightLineColorsDefault = new ColoredGlyph(colors.Lines.GetDarker(), Color.Transparent);
         }
 
         /// <inheritdoc />

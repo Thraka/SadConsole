@@ -178,7 +178,7 @@ namespace SadConsole.UI.Themes
             Text = Blue;
             TextSelected = Yellow;
             TextSelectedDark = Green;
-            TextLight = Gray;
+            TextLight = Gray;  
             TextDark = Green;
             TextFocused = Cyan;
 
@@ -200,7 +200,7 @@ namespace SadConsole.UI.Themes
         public void RebuildAppearances()
         {
             Appearance_ControlNormal = new ColoredGlyph(Text, ControlBack);
-            Appearance_ControlDisabled = new ColoredGlyph(TextLight, ControlBackDark);
+            Appearance_ControlDisabled = new ColoredGlyph(TextDark, ControlBackDark);
             Appearance_ControlOver = new ColoredGlyph(TextSelectedDark, ControlBackSelected);
             Appearance_ControlSelected = new ColoredGlyph(TextSelected, ControlBackSelected);
             Appearance_ControlMouseDown = new ColoredGlyph(ControlBackSelected, TextSelected);
@@ -385,10 +385,10 @@ namespace SadConsole.UI.Themes
             // Overwrite some of the control elements
             colors.TitleText = colors.Orange;
             colors.TextBright = colors.White;
-            colors.Text = colors.Blue;
+            colors.Text = colors.Gray;
             colors.TextSelected = colors.Yellow;
             colors.TextSelectedDark = colors.YellowDark;
-            colors.TextLight = colors.Gray;
+            colors.TextLight = colors.White;
             colors.TextDark = colors.GrayDark;
             colors.TextFocused = colors.White;
             colors.Lines = colors.CyanDark;
