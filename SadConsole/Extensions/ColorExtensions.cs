@@ -436,7 +436,7 @@ namespace SadRogue.Primitives
             keepB = false;
             keepA = false;
 
-            string exceptionMessage = "Cannot parse color string";
+            string exceptionMessage = $"Cannot parse color string: {value}";
 
             byte r = color.R;
             byte g = color.G;
