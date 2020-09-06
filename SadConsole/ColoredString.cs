@@ -262,6 +262,25 @@ namespace SadConsole
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ColoredGlyphEffect>)_characters).GetEnumerator();
 
         /// <summary>
+        /// Creates a new colored string from the specified gradient and text.
+        /// </summary>
+        /// <param name="colors">The gradient of colors to apply to the text.</param>
+        /// <param name="text">The text the colored string contains.</param>
+        /// <returns>A colored string.</returns>
+        public static ColoredString FromGradient(Gradient colors, string text)
+        {
+            var colorArray = colors.ToColorArray(text.Length);
+            var output = new ColoredString(text.Length);
+            for (int i = 0; i < text.Length; i++)
+            {
+                output[i].Foreground = colorArray[i];
+                output[i].Glyph = text[i];
+            }
+
+            return output;
+        }
+
+        /// <summary>
         /// Combines two ColoredString objects into a single ColoredString object. Ignore* values are only copied when both strings Ignore* values match.
         /// </summary>
         /// <param name="string1">The left-side of the string.</param>

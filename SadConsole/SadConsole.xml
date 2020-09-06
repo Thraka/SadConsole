@@ -1727,6 +1727,14 @@
             </summary>
             <returns>The enumerator in the string.</returns>
         </member>
+        <member name="M:SadConsole.ColoredString.FromGradient(SadRogue.Primitives.Gradient,System.String)">
+            <summary>
+            Creates a new colored string from the specified gradient and text.
+            </summary>
+            <param name="colors">The gradient of colors to apply to the text.</param>
+            <param name="text">The text the colored string contains.</param>
+            <returns>A colored string.</returns>
+        </member>
         <member name="M:SadConsole.ColoredString.op_Addition(SadConsole.ColoredString,SadConsole.ColoredString)">
             <summary>
             Combines two ColoredString objects into a single ColoredString object. Ignore* values are only copied when both strings Ignore* values match.
@@ -8988,6 +8996,11 @@
         <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
+        <member name="P:SadConsole.UI.Themes.ListBoxItemColorTheme.UseSingleCharacterForBox">
+            <summary>
+            When <see langword="false"/>, colored boxes used when drawing the color for (Color, string) tuple will use two characters; otherwise <see langword="true"/> and only one character is used.
+            </summary>
+        </member>
         <member name="T:SadConsole.UI.Themes.PanelTheme">
             <summary>
             A basic theme for a drawing surface that simply fills the surface based on the state.
@@ -9624,6 +9637,48 @@
             <param name="color">The color object to start with. Will be overridden.</param>
             <param name="random">A random object to get numbers from.</param>
             <returns>A new color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.GetDark(SadRogue.Primitives.Color)">
+            <summary>
+            Gets a darker version of the color. R,G,B channels are * 0.25f.
+            </summary>
+            <param name="color">Object instance.</param>
+            <returns>A darker color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.GetDarker(SadRogue.Primitives.Color)">
+            <summary>
+            Gets a darker version of the color. R,G,B channels are * 0.50f.
+            </summary>
+            <param name="color">Object instance.</param>
+            <returns>A darker color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.GetDarkest(SadRogue.Primitives.Color)">
+            <summary>
+            Gets a darker version of the color. R,G,B channels are * 0.75f.
+            </summary>
+            <param name="color">Object instance.</param>
+            <returns>A darker color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.GetBright(SadRogue.Primitives.Color)">
+            <summary>
+            Gets a darker version of the color. R,G,B channels are * 1.25f.
+            </summary>
+            <param name="color">Object instance.</param>
+            <returns>A darker color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.GetBrighter(SadRogue.Primitives.Color)">
+            <summary>
+            Gets a darker version of the color. R,G,B channels are * 1.50f.
+            </summary>
+            <param name="color">Object instance.</param>
+            <returns>A darker color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions.GetBrightest(SadRogue.Primitives.Color)">
+            <summary>
+            Gets a darker version of the color. R,G,B channels are * 1.75f.
+            </summary>
+            <param name="color">Object instance.</param>
+            <returns>A darker color.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions.RedOnly(SadRogue.Primitives.Color)">
             <summary>
