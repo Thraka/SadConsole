@@ -1746,9 +1746,9 @@ namespace SadConsole
         /// <param name="area">The area to process.</param>
         public static void ConnectLines(this ICellSurface surface, int[] lineStyle, Rectangle area)
         {
-            for (int x = area.X; x < area.Width; x++)
+            for (int x = area.X; x <= area.MaxExtentX; x++)
             {
-                for (int y = area.Y; y < area.Height; y++)
+                for (int y = area.Y; y <= area.MaxExtentY; y++)
                 {
                     var pos = new Point(x, y);
                     int index = pos.ToIndex(surface.BufferWidth);
@@ -1759,7 +1759,7 @@ namespace SadConsole
 
                     // Get all valid positions and indexes around this point
                     bool[] valids = pos.GetValidDirections(area);
-                    int[] posIndexes = pos.GetDirectionIndexes(area);
+                    int[] posIndexes = pos.GetDirectionIndexes(area, surface.BufferWidth);
                     bool[] roads = new[] { false, false, false, false, false, false, false, false, false };
 
                     for (int i = 1; i < 9; i++)

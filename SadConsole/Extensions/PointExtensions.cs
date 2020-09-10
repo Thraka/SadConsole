@@ -101,23 +101,24 @@ namespace SadConsole
         /// </summary>
         /// <param name="position">The position center.</param>
         /// <param name="area">The area containing the position.</param>
+        /// <param name="width">The width to use in converting each index to a point.</param>
         /// <returns>Returns the an array of values indidcating the index in the area surface of each direction where -1 represents a position outside the bounds of the area. Indexed by a <see cref="Direction.Types"/> enumeration.</returns>
-        public static int[] GetDirectionIndexes(this Point position, Rectangle area)
+        public static int[] GetDirectionIndexes(this Point position, Rectangle area, int width)
         {
             bool[] valids = GetValidDirections(position, area);
             Point[] points = GetDirectionPoints(position);
 
             return new int[]
             {
-                valids[0] ? points[0].ToIndex(area.Width) : -1,
-                valids[1] ? points[1].ToIndex(area.Width) : -1,
-                valids[2] ? points[2].ToIndex(area.Width) : -1,
-                valids[3] ? points[3].ToIndex(area.Width) : -1,
-                valids[4] ? points[4].ToIndex(area.Width) : -1,
-                valids[5] ? points[5].ToIndex(area.Width) : -1,
-                valids[6] ? points[6].ToIndex(area.Width) : -1,
-                valids[7] ? points[7].ToIndex(area.Width) : -1,
-                valids[8] ? points[8].ToIndex(area.Width) : -1
+                valids[0] ? points[0].ToIndex(width) : -1,
+                valids[1] ? points[1].ToIndex(width) : -1,
+                valids[2] ? points[2].ToIndex(width) : -1,
+                valids[3] ? points[3].ToIndex(width) : -1,
+                valids[4] ? points[4].ToIndex(width) : -1,
+                valids[5] ? points[5].ToIndex(width) : -1,
+                valids[6] ? points[6].ToIndex(width) : -1,
+                valids[7] ? points[7].ToIndex(width) : -1,
+                valids[8] ? points[8].ToIndex(width) : -1
             };
         }
 
