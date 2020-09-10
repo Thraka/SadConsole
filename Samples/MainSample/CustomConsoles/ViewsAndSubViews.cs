@@ -19,7 +19,7 @@ namespace FeatureDemo.CustomConsoles
             IsVisible = false;
             UseMouse = true;
 
-            mainView.Surface.DrawLine(new Point(59, 0), new Point(59, 22), Color.White, glyph: SadConsole.ICellSurface.ConnectedLineThin[(int)SadConsole.ICellSurface.ConnectedLineIndex.Left]);
+            mainView.Surface.DrawLine(new Point(59, 0), new Point(59, 22), SadConsole.ICellSurface.ConnectedLineThin[(int)SadConsole.ICellSurface.ConnectedLineIndex.Left], Color.White);
 
             // Setup main view
             mainView.Position = new Point(0, 0);

@@ -13,7 +13,7 @@ namespace FeatureDemo.CustomConsoles
         {
             UseKeyboard = false;
 
-            Surface.DrawLine(new Point(2, 2), new Point(Surface.ViewWidth - 4, 2), Color.Yellow, glyph: '=');
+            Surface.DrawLine(new Point(2, 2), new Point(Surface.ViewWidth - 4, 2), (int)'=', Color.Yellow);
             Surface.DrawBox(new Rectangle(2, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='));
             Surface.DrawBox(new Rectangle(9, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThin);
             Surface.DrawBox(new Rectangle(16, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThick);

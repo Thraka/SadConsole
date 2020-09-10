@@ -137,7 +137,7 @@ namespace FeatureDemo.Windows
             IsDirty = true;
         }
 
-        private void _characterSurface_MouseExit(object sender, SadConsole.Input.MouseScreenObjectState e)
+        private void _characterSurface_MouseExit(object sender, ControlBase.ControlMouseState e)
         {
             var ds = (DrawingSurface)sender;
 
@@ -153,27 +153,27 @@ namespace FeatureDemo.Windows
             DrawSelectedItemString();
         }
 
-        private void _characterSurface_MouseButtonClicked(object sender, SadConsole.Input.MouseScreenObjectState e)
+        private void _characterSurface_MouseButtonClicked(object sender, ControlBase.ControlMouseState e)
         {
-            var state = e.Mouse;
+            var state = e.OriginalMouseState.Mouse;
 
             if (!state.LeftClicked) return;
 
-            var pos = e.CellPosition - _characterSurface.Position;
+            var pos = e.OriginalMouseState.CellPosition - _characterSurface.Position;
 
-            if (e.Cell != null)// && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
+            if (e.OriginalMouseState.Cell != null)// && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
             {
                 SelectedCharacterIndex = _characterSurface.Surface[pos.X, pos.Y].Glyph;
             }
         }
 
-        private void _characterSurface_MouseMove(object sender, SadConsole.Input.MouseScreenObjectState e)
+        private void _characterSurface_MouseMove(object sender, ControlBase.ControlMouseState e)
         {
-            var state = e.Mouse;
+            var state = e.OriginalMouseState.Mouse;
             var ds = (DrawingSurface)sender;
-            var mousePos = e.CellPosition - _characterSurface.Position;
+            var mousePos = e.MousePosition;
 
-            if (e.Cell != null)// && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
+            if (e.OriginalMouseState.Cell != null)// && trackedRegion.Contains(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y))
             {
                 isHover = true;
                 hoverGlyph = ds.Surface[mousePos.X, mousePos.Y].Glyph;
