@@ -204,6 +204,10 @@
             "Glyph": 302,
             "Mirror": 0
         },
+        "box-centered-half-filled+middle": {
+            "Glyph": 303,
+            "Mirror": 0
+        },
         "box-fill+bottom1": {
             "Glyph": 304,
             "Mirror": 0
