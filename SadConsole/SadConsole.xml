@@ -1301,7 +1301,7 @@
             <param name="mirror">Mirror to apply. If null, skips.</param>
             <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
         </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.DrawLine(SadConsole.ICellSurface,SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
+        <member name="M:SadConsole.CellSurfaceExtensions.DrawLine(SadConsole.ICellSurface,SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror})">
             <summary>
             Draws a line from <paramref name="start"/> to <paramref name="end"/>.
             </summary>
@@ -1313,7 +1313,7 @@
             <param name="glyph">Glyph to set. If null, skipped.</param>
             <param name="mirror">Mirror to set. If null, skipped.</param>
             <returns>A list of cells the line touched; ordered from first to last.</returns>
-            <remarks>If no foreground, background, or glyph are specified, then the list of affected cells are returned but nothing is drawn.</remarks>
+            <remarks>To simply return the list of cells that would be drawn to, use <see langword="null"/> for <paramref name="glyph"/>, <paramref name="foreground"/>, <paramref name="background"/>, and <paramref name="mirror"/>.</remarks>
         </member>
         <member name="M:SadConsole.CellSurfaceExtensions.DrawBox(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph,System.Int32[])">
             <summary>
@@ -1346,6 +1346,14 @@
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceExtensions.ConnectLines(SadConsole.ICellSurface,System.Int32[],SadRogue.Primitives.Rectangle)">
+            <summary>
+            Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>.</param>
+            <param name="area">The area to process.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceExtensions.Copy(SadConsole.ICellSurface,SadConsole.ICellSurface)">
             <summary>
@@ -1595,7 +1603,7 @@
             Gets or sets the characters represneting this string. When set, first processes the string through <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.ColoredString.Count">
+        <member name="P:SadConsole.ColoredString.Length">
             <summary>
             The total number of <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> characters in the string.
             </summary>

@@ -61,6 +61,7 @@ namespace SadConsole.Entities
                 _animation.AnimationStateChanged += OnAnimationStateChanged;
                 _animation.State = AnimatedScreenSurface.AnimationState.Activated;
                 Children.Add(_animation);
+                UpdateAbsolutePosition();
             }
         }
 

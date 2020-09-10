@@ -383,7 +383,7 @@ namespace SadConsole.Components
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(ColoredString text)
         {
-            if (text.Count == 0)
+            if (text.Length == 0)
             {
                 return this;
             }
@@ -411,7 +411,7 @@ namespace SadConsole.Components
 
                 if (spaceCount != 0)
                 {
-                    text = text.SubString(spaceCount, text.Count - spaceCount);
+                    text = text.SubString(spaceCount, text.Length - spaceCount);
                 }
 
                 stringText = newStringText;

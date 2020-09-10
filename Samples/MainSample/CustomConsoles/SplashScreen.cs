@@ -66,7 +66,7 @@ namespace FeatureDemo.CustomConsoles
                 RemoveOnFinished = true,
                 CloneOnApply = true
             });
-            
+
             // Configure the animation
             InstructionSet animation = new InstructionSet()
 
@@ -76,7 +76,7 @@ namespace FeatureDemo.CustomConsoles
                     .Code(MoveGradient)
 
                     // Clear the background text so new printing doesn't look bad
-                    .Code((host) =>
+                    .Code((host, delta) =>
                         {
                             ((IScreenSurface)host).Surface.Fill(Color.Black, Color.Transparent, 0);
                             return true;
@@ -90,7 +90,7 @@ namespace FeatureDemo.CustomConsoles
                     })
 
                     // Add the logo to the console children
-                    .Code((o) => { Children.Add(_consoleImage); return true; })
+                    .Code((o, delta) => { Children.Add(_consoleImage); return true; })
 
                     // Fade in the logo
                     .Instruct(new FadeTextSurfaceTint(_consoleImage,
@@ -113,7 +113,7 @@ namespace FeatureDemo.CustomConsoles
                                                       TimeSpan.FromSeconds(1.0d)))
 
                     // Animation has completed, call the callback this console uses to indicate it's complete
-                    .Code((host) => { SplashCompleted?.Invoke(); return true; })
+                    .Code((host, delta) => { SplashCompleted?.Invoke(); return true; })
                 ;
 
             animation.RemoveOnFinished = true;
@@ -135,7 +135,7 @@ namespace FeatureDemo.CustomConsoles
                 base.Render(delta);
         }
 
-        private bool MoveGradient(IScreenObject console)
+        private bool MoveGradient(IScreenObject console, TimeSpan delta)
         {
             _gradientPositionX += 1;
 
@@ -152,7 +152,7 @@ namespace FeatureDemo.CustomConsoles
             return false;
         }
 
-        private bool SetBlinkOnLogoText(IScreenObject console)
+        private bool SetBlinkOnLogoText(IScreenObject console, TimeSpan delta)
         {
             var fadeEffect = new Fade
             {

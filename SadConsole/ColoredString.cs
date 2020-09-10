@@ -54,7 +54,7 @@ namespace SadConsole
         /// <summary>
         /// The total number of <see cref="ColoredGlyphEffect"/> characters in the string.
         /// </summary>
-        public int Count => _characters.Length;
+        public int Length => _characters.Length;
 
         /// <summary>
         /// When true, instructs a caller to not render the glyphs of the string.
@@ -288,16 +288,16 @@ namespace SadConsole
         /// <returns></returns>
         public static ColoredString operator +(ColoredString string1, ColoredString string2)
         {
-            ColoredString returnString = new ColoredString(string1.Count + string2.Count);
+            ColoredString returnString = new ColoredString(string1.Length + string2.Length);
 
-            for (int i = 0; i < string1.Count; i++)
+            for (int i = 0; i < string1.Length; i++)
             {
                 returnString._characters[i] = string1._characters[i].Clone();
             }
 
-            for (int i = 0; i < string2.Count; i++)
+            for (int i = 0; i < string2.Length; i++)
             {
-                returnString._characters[i + string1.Count] = string2._characters[i].Clone();
+                returnString._characters[i + string1.Length] = string2._characters[i].Clone();
             }
 
             returnString.IgnoreGlyph = string1.IgnoreGlyph && string2.IgnoreGlyph;
@@ -317,20 +317,20 @@ namespace SadConsole
         public static ColoredString operator +(ColoredString string1, string string2)
         {
 
-            var returnString = new ColoredString(string1.Count + string2.Length);
+            var returnString = new ColoredString(string1.Length + string2.Length);
 
-            for (int i = 0; i < string1.Count; i++)
+            for (int i = 0; i < string1.Length; i++)
             {
                 returnString._characters[i] = string1._characters[i].Clone();
             }
 
-            ColoredGlyphEffect templateCharacter = string1[string1.Count - 1];
+            ColoredGlyphEffect templateCharacter = string1[string1.Length - 1];
 
             for (int i = 0; i < string2.Length; i++)
             {
                 ColoredGlyphEffect newChar = templateCharacter.Clone();
                 newChar.GlyphCharacter = string2[i];
-                returnString._characters[i + string1.Count] = newChar;
+                returnString._characters[i + string1.Length] = newChar;
             }
 
             returnString.IgnoreGlyph = string1.IgnoreGlyph;

@@ -288,6 +288,8 @@ namespace SadConsole.UI.Themes
 
     public class ListBoxItemColorTheme : ListBoxItemTheme
     {
+        // TODO: Change ValueTyple to specific types
+
         /// <summary>
         /// When <see langword="false"/>, colored boxes used when drawing the color for (Color, string) tuple will use two characters; otherwise <see langword="true"/> and only one character is used.
         /// </summary>

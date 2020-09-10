@@ -777,7 +777,7 @@ namespace SadConsole
 
         private static void PrintNoCheck(this ICellSurface surface, int index, ColoredString text)
         {
-            int end = index + text.Count > surface.Cells.Length ? surface.Cells.Length : index + text.Count;
+            int end = index + text.Length > surface.Cells.Length ? surface.Cells.Length : index + text.Length;
             int charIndex = 0;
 
             for (; index < end; index++)
@@ -1551,8 +1551,8 @@ namespace SadConsole
         /// <param name="glyph">Glyph to set. If null, skipped.</param>
         /// <param name="mirror">Mirror to set. If null, skipped.</param>
         /// <returns>A list of cells the line touched; ordered from first to last.</returns>
-        /// <remarks>If no foreground, background, or glyph are specified, then the list of affected cells are returned but nothing is drawn.</remarks>
-        public static IEnumerable<ColoredGlyph> DrawLine(this ICellSurface surface, Point start, Point end, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
+        /// <remarks>To simply return the list of cells that would be drawn to, use <see langword="null"/> for <paramref name="glyph"/>, <paramref name="foreground"/>, <paramref name="background"/>, and <paramref name="mirror"/>.</remarks>
+        public static IEnumerable<ColoredGlyph> DrawLine(this ICellSurface surface, Point start, Point end, int? glyph, Color ? foreground = null, Color? background = null, Mirror? mirror = null)
         {
             var result = new List<ColoredGlyph>();
             Func<int, int, bool> processor;
@@ -1635,10 +1635,10 @@ namespace SadConsole
             }
 
             // Draw the major sides
-            DrawLine(surface, area.Position, area.Position + new Point(area.Width - 1, 0), border.Foreground, border.Background, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top], border.Mirror);
-            DrawLine(surface, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom], border.Mirror);
-            DrawLine(surface, area.Position, area.Position + new Point(0, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left], border.Mirror);
-            DrawLine(surface, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), border.Foreground, border.Background, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right], border.Mirror);
+            DrawLine(surface, area.Position, area.Position + new Point(area.Width - 1, 0), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top], border.Foreground, border.Background, border.Mirror);
+            DrawLine(surface, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom], border.Foreground, border.Background, border.Mirror);
+            DrawLine(surface, area.Position, area.Position + new Point(0, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left], border.Foreground, border.Background, border.Mirror);
+            DrawLine(surface, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right], border.Foreground, border.Background, border.Mirror);
 
             // Tweak the corners
             surface.SetGlyph(area.X, area.Y, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.TopLeft]);
@@ -1735,13 +1735,20 @@ namespace SadConsole
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="lineStyle">The array of line styles indexed by <see cref="ICellSurface.ConnectedLineIndex"/>.</param>
-        public static void ConnectLines(this ICellSurface surface, int[] lineStyle)
+        public static void ConnectLines(this ICellSurface surface, int[] lineStyle) =>
+            ConnectLines(surface, lineStyle, surface.Buffer);
+
+        /// <summary>
+        /// Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="lineStyle">The array of line styles indexed by <see cref="ICellSurface.ConnectedLineIndex"/>.</param>
+        /// <param name="area">The area to process.</param>
+        public static void ConnectLines(this ICellSurface surface, int[] lineStyle, Rectangle area)
         {
-            var area = new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight);
-            
-            for (int x = 0; x < surface.BufferWidth; x++)
+            for (int x = area.X; x < area.Width; x++)
             {
-                for (int y = 0; y < surface.BufferHeight; y++)
+                for (int y = area.Y; y < area.Height; y++)
                 {
                     var pos = new Point(x, y);
                     int index = pos.ToIndex(surface.BufferWidth);
@@ -1758,14 +1765,10 @@ namespace SadConsole
                     for (int i = 1; i < 9; i++)
                     {
                         if (!valids[i])
-                        {
                             continue;
-                        }
 
                         if (lineStyle.Contains(surface.Cells[posIndexes[i]].Glyph))
-                        {
                             roads[i] = true;
-                        }
                     }
 
                     if (roads[(int)Direction.Types.Up] &&

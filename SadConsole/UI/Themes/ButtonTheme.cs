@@ -157,18 +157,15 @@ namespace SadConsole.UI.Themes
 
                 // Bottom line
                 button.Surface.DrawLine(new Point(shadowBounds.X, shadowBounds.MaxExtentY),
-                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Foreground, Shade.Background,
-                    Shade.Glyph);
+                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Glyph, Shade.Foreground, Shade.Background);
 
                 // Side line 1
                 button.Surface.DrawLine(new Point(shadowBounds.MaxExtentX - 1, shadowBounds.Y),
-                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Foreground, Shade.Background,
-                    Shade.Glyph);
+                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Glyph, Shade.Foreground, Shade.Background);
 
                 // Side line 2
                 button.Surface.DrawLine(new Point(shadowBounds.MaxExtentX, shadowBounds.Y),
-                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Foreground, Shade.Background,
-                    Shade.Glyph);
+                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), Shade.Glyph, Shade.Foreground, Shade.Background);
 
                 button.MouseArea = new Rectangle(0, 0, button.Width, button.Height);
             }
@@ -367,10 +364,10 @@ namespace SadConsole.UI.Themes
 
                 //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
 
-                button.Surface.DrawLine(new Point(0, 0), new Point(button.Width - 1, 0), topleftcolor, appearance.Background);
-                button.Surface.DrawLine(new Point(0, 0), new Point(0, button.Surface.BufferHeight - 1), topleftcolor, appearance.Background);
-                button.Surface.DrawLine(new Point(button.Width - 1, 0), new Point(button.Width - 1, button.Surface.BufferHeight - 1), bottomrightcolor, appearance.Background);
-                button.Surface.DrawLine(new Point(1, button.Surface.BufferHeight - 1), new Point(button.Width - 1, button.Surface.BufferHeight - 1), bottomrightcolor, appearance.Background);
+                button.Surface.DrawLine(new Point(0, 0), new Point(button.Width - 1, 0), null, topleftcolor, appearance.Background);
+                button.Surface.DrawLine(new Point(0, 0), new Point(0, button.Surface.BufferHeight - 1), null, topleftcolor, appearance.Background);
+                button.Surface.DrawLine(new Point(button.Width - 1, 0), new Point(button.Width - 1, button.Surface.BufferHeight - 1), null, bottomrightcolor, appearance.Background);
+                button.Surface.DrawLine(new Point(1, button.Surface.BufferHeight - 1), new Point(button.Width - 1, button.Surface.BufferHeight - 1), null, bottomrightcolor, appearance.Background);
             }
 
             button.IsDirty = false;

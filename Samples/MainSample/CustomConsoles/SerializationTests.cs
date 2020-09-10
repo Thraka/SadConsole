@@ -61,7 +61,7 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(1, 1),
             };
             optionButtonSurface.IsSelectedChanged += OptionButton_IsSelectedChanged;
-            _controlsConsole.ControlHostComponent.Add(optionButtonSurface);
+            _controlsConsole.Controls.Add(optionButtonSurface);
 
             optionButtonView = new SadConsole.UI.Controls.RadioButton(18, 1)
             {
@@ -69,7 +69,7 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(1, 2)
             };
             optionButtonView.IsSelectedChanged += OptionButton_IsSelectedChanged;
-            _controlsConsole.ControlHostComponent.Add(optionButtonView);
+            _controlsConsole.Controls.Add(optionButtonView);
 
             optionButtonLayered = new SadConsole.UI.Controls.RadioButton(21, 1)
             {
@@ -77,7 +77,7 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(optionButtonSurface.Bounds.MaxExtentX + 1, 1)
             };
             optionButtonLayered.IsSelectedChanged += OptionButton_IsSelectedChanged;
-            _controlsConsole.ControlHostComponent.Add(optionButtonLayered);
+            _controlsConsole.Controls.Add(optionButtonLayered);
 
             optionButtonAnimated = new SadConsole.UI.Controls.RadioButton(21, 1)
             {
@@ -85,7 +85,7 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(optionButtonSurface.Bounds.MaxExtentX + 1, 2)
             };
             optionButtonAnimated.IsSelectedChanged += OptionButton_IsSelectedChanged;
-            _controlsConsole.ControlHostComponent.Add(optionButtonAnimated);
+            _controlsConsole.Controls.Add(optionButtonAnimated);
 
             var buttonSave = new SadConsole.UI.Controls.Button(17, 1)
             {
@@ -93,7 +93,7 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(_controlsConsole.Width - 19, 1)
             };
             buttonSave.Click += ButtonSave_Click;
-            _controlsConsole.ControlHostComponent.Add(buttonSave);
+            _controlsConsole.Controls.Add(buttonSave);
 
             basicSurface = new SadConsole.Console(34, 15);
 

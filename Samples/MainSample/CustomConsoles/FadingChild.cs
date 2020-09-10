@@ -41,7 +41,7 @@ namespace FeatureDemo.CustomConsoles
             base.Update(delta);
             
             if (_set.CurrentInstruction is SadConsole.Instructions.AnimatedValue current)
-                ((SadConsole.Renderers.ScreenSurfaceRenderer)_child.Renderer).Opaqueness = (byte)current.Value;
+                ((SadConsole.Renderers.ScreenSurfaceRenderer)_child.Renderer).Opacity = (byte)current.Value;
         }
     }
 }
