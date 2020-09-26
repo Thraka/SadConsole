@@ -244,6 +244,16 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Applies the referenced glyph to every character in the colored string.
+        /// </summary>
+        /// <param name="glyph">The glyph to apply.</param>
+        public void SetGlyph(int glyph)
+        {
+            for (int i = 0; i < _characters.Length; i++)
+                _characters[i].Glyph = glyph;
+        }
+
+        /// <summary>
         /// Returns a string representing the glyphs in this object.
         /// </summary>
         /// <returns>A string composed of each glyph in this object.</returns>
