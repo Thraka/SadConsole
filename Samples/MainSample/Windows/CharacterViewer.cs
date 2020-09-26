@@ -87,7 +87,7 @@ namespace FeatureDemo.Windows
 
 
             // Get the existing colors object
-            var colors = SadConsole.UI.Themes.Colors.CreateAnsi();
+            var colors = SadConsole.UI.Colors.CreateAnsi();
 
             // Use a common background color
             var backgroundColor = Color.Black;
