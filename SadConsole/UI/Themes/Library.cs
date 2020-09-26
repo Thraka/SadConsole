@@ -95,7 +95,7 @@ namespace SadConsole.UI.Themes
         /// </summary>
         public Library()
         {
-            Colors = Themes.Colors.CreateAnsi();
+            Colors = Colors.CreateAnsi();
             Colors.IsLibrary = true;
 
             _controlThemes = new Dictionary<Type, ThemeBase>(15);
@@ -122,7 +122,6 @@ namespace SadConsole.UI.Themes
         /// <returns>A theme that is associated with the control.</returns>
         public void SetControlTheme(Type control, ThemeBase theme)
         {
-            System.Diagnostics.Debug.Print($"Register {control.Name} with {theme.GetType().Name}");
             if (null == control) throw new ArgumentNullException(nameof(control), "Cannot use a null control type");
             _controlThemes[control] = theme ?? throw new ArgumentNullException(nameof(theme), "Cannot set the theme of a control to null");
         }

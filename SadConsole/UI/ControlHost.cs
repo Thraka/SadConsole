@@ -40,7 +40,7 @@ namespace SadConsole.UI
         private ControlBase _focusedControl;
         private bool _wasFocusedBeforeCapture;
         private bool _exclusiveBeforeCapture;
-        private Themes.Colors _themeColors;
+        private Colors _themeColors;
         private ControlBase _controlWithMouse;
 
         #region Properties

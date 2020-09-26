@@ -1,11 +1,12 @@
-﻿using SadRogue.Primitives;
+﻿using System;
+using SadRogue.Primitives;
 
-namespace SadConsole.UI.Themes
+namespace SadConsole.UI
 {
     /// <summary>
     /// Default colors used by control themes.
     /// </summary>
-    public class Colors
+    public partial class Colors
     {
         /// <summary>
         /// Indicates that this color object is set to a library object.
@@ -13,134 +14,134 @@ namespace SadConsole.UI.Themes
         public bool IsLibrary { get; internal set; }
 
         /// <summary>
-        /// The white color. Defaults to <see cref="Color.White"/>.
+        /// The white color.
         /// </summary>
-        public Color White { get; set; } = Color.White;
+        public Color White { get; set; }
 
         /// <summary>
-        /// The black color. Defaults to <see cref="Color.Black"/>.
+        /// The black color.
         /// </summary>
-        public Color Black { get; set; } = Color.Black;
+        public Color Black { get; set; }
 
         /// <summary>
-        /// The gray color. Defaults to (176, 196, 222).
+        /// The gray color.
         /// </summary>
-        public Color Gray { get; set; } = new Color(176, 196, 222);
+        public Color Gray { get; set; }
 
         /// <summary>
-        /// The dark gray color. Defaults to (66, 66, 66).
+        /// The dark gray color.
         /// </summary>
-        public Color GrayDark { get; set; } = new Color(66, 66, 66);
+        public Color GrayDark { get; set; }
 
         /// <summary>
-        /// The red color. Defaults to (255, 0, 51).
+        /// The red color.
         /// </summary>
-        public Color Red { get; set; } = new Color(255, 0, 51);
+        public Color Red { get; set; }
 
         /// <summary>
-        /// The green color. Defaults to (153, 224, 0).
+        /// The green color.
         /// </summary>
-        public Color Green { get; set; } = new Color(153, 224, 0);
+        public Color Green { get; set; }
 
         /// <summary>
-        /// The blue color. Defaults to (102, 204, 255).
+        /// The blue color.
         /// </summary>
-        public Color Blue { get; set; } = new Color(102, 204, 255);
+        public Color Blue { get; set; }
 
         /// <summary>
-        /// The purple color. Defaults to (132, 0, 214).
+        /// The purple color.
         /// </summary>
-        public Color Purple { get; set; } = new Color(132, 0, 214);
+        public Color Purple { get; set; }
 
         /// <summary>
-        /// The yellow color. Defaults to (255, 255, 102).
+        /// The yellow color.
         /// </summary>
-        public Color Yellow { get; set; } = new Color(255, 255, 102);
+        public Color Yellow { get; set; }
 
         /// <summary>
-        /// The orange color. Defaults to (255, 153, 0).
+        /// The orange color.
         /// </summary>
-        public Color Orange { get; set; } = new Color(255, 153, 0);
+        public Color Orange { get; set; }
 
         /// <summary>
-        /// The cyan color. Defaults to (82, 242, 234).
+        /// The cyan color.
         /// </summary>
-        public Color Cyan { get; set; } = new Color(82, 242, 234);
+        public Color Cyan { get; set; }
 
         /// <summary>
-        /// The brown color. Defaults to (100, 59, 15).
+        /// The brown color.
         /// </summary>
-        public Color Brown { get; set; } = new Color(100, 59, 15);
+        public Color Brown { get; set; }
 
         /// <summary>
-        /// The dark red color. Defaults to (153, 51, 51).
+        /// The dark red color.
         /// </summary>
-        public Color RedDark { get; set; } = new Color(153, 51, 51);
+        public Color RedDark { get; set; }
 
         /// <summary>
-        /// The dark green color. Defaults to (110, 166, 23).
+        /// The dark green color.
         /// </summary>
-        public Color GreenDark { get; set; } = new Color(110, 166, 23);
+        public Color GreenDark { get; set; }
 
         /// <summary>
-        /// The dark blue color. Defaults to (51, 102, 153).
+        /// The dark blue color.
         /// </summary>
-        public Color BlueDark { get; set; } = new Color(51, 102, 153);
+        public Color BlueDark { get; set; }
 
         /// <summary>
-        /// The dark purple color. Defaults to (70, 0, 114).
+        /// The dark purple color.
         /// </summary>
-        public Color PurpleDark { get; set; } = new Color(70, 0, 114);
+        public Color PurpleDark { get; set; }
 
         /// <summary>
-        /// The dark yellow color. Defaults to (255, 207, 15).
+        /// The dark yellow color.
         /// </summary>
-        public Color YellowDark { get; set; } = new Color(255, 207, 15);
+        public Color YellowDark { get; set; }
 
         /// <summary>
-        /// The dark orange color. Defaults to (255, 102, 0).
+        /// The dark orange color.
         /// </summary>
-        public Color OrangeDark { get; set; } = new Color(255, 102, 0);
+        public Color OrangeDark { get; set; }
 
         /// <summary>
-        /// The dark cyan color. Defaults to (33, 182, 168).
+        /// The dark cyan color.
         /// </summary>
-        public Color CyanDark { get; set; } = new Color(33, 182, 168);
+        public Color CyanDark { get; set; }
 
         /// <summary>
-        /// The dark brown color. Defaults to (119, 17, 0).
+        /// The dark brown color.
         /// </summary>
-        public Color BrownDark { get; set; } = new Color(119, 17, 0);
+        public Color BrownDark { get; set; }
 
         /// <summary>
-        /// The gold color. Defaults to (255, 215, 0).
+        /// The gold color.
         /// </summary>
-        public Color Gold { get; set; } = new Color(255, 215, 0);
+        public Color Gold { get; set; }
 
         /// <summary>
-        /// The dark gold color. Defaults to (127, 107, 0).
+        /// The dark gold color.
         /// </summary>
-        public Color GoldDark { get; set; } = new Color(127, 107, 0);
+        public Color GoldDark { get; set; }
 
         /// <summary>
-        /// The silver color. Defaults to (192, 192, 192).
+        /// The silver color.
         /// </summary>
-        public Color Silver { get; set; } = new Color(192, 192, 192);
+        public Color Silver { get; set; }
 
         /// <summary>
-        /// The dark silver color. Defaults to (169, 169, 169).
+        /// The dark silver color.
         /// </summary>
-        public Color SilverDark { get; set; } = new Color(169, 169, 169);
+        public Color SilverDark { get; set; }
 
         /// <summary>
-        /// The bronze color. Defaults to (205, 127, 50).
+        /// The bronze color.
         /// </summary>
-        public Color Bronze { get; set; } = new Color(205, 127, 50);
+        public Color Bronze { get; set; }
 
         /// <summary>
-        /// The dark bronze color. Defaults to (144, 89, 35).
+        /// The dark bronze color.
         /// </summary>
-        public Color BronzeDark { get; set; } = new Color(144, 89, 35);
+        public Color BronzeDark { get; set; }
 
         /// <summary>
         /// The color used to darken the background when <see cref="o:UI.Window.Show"/> is called and <see cref="UI.Window.IsModal"/> is <see langword="true"/>. Defaults to (20, 20, 20, 200).
@@ -169,30 +170,22 @@ namespace SadConsole.UI.Themes
         public ColoredGlyph Appearance_ControlMouseDown { get; set; }
         public ColoredGlyph Appearance_ControlFocused { get; set; }
 
-
+        /// <summary>
+        /// Creates a color object based on the <see cref="Colors.CreateAnsi"/> scheme.
+        /// </summary>
         public Colors()
         {
-            TitleText = Orange;
-
-            TextBright = White;
-            Text = Blue;
-            TextSelected = Yellow;
-            TextSelectedDark = Green;
-            TextLight = Gray;  
-            TextDark = Green;
-            TextFocused = Cyan;
-
-            Lines = Gray;
-
-            ControlBack = BlueDark;
-            ControlBackLight = (ControlBack * 1.3f).FillAlpha();
-            ControlBackSelected = GreenDark;
-            ControlBackDark = (ControlBack * 0.7f).FillAlpha();
-            ControlHostBack = BlueDark;
-            ControlHostFore = Text;
+            var colors = CreateAnsi();
+            colors.CopyTo(this);
 
             RebuildAppearances();
         }
+
+        /// <summary>
+        /// Internal constructor to avoid creating any predefined colors.
+        /// </summary>
+        /// <param name="_">Discarded parameter</param>
+        protected Colors(int _) { }
 
         /// <summary>
         /// Sets all Appearance* properties based on the existing colors and settings.
@@ -207,6 +200,10 @@ namespace SadConsole.UI.Themes
             Appearance_ControlFocused = new ColoredGlyph(TextFocused, ControlBackLight);
         }
 
+        /// <summary>
+        /// Copies the colors to another color object.
+        /// </summary>
+        /// <param name="colors">The color object to copy to.</param>
         public void CopyTo(Colors colors)
         {
             colors.White = White;
@@ -266,6 +263,62 @@ namespace SadConsole.UI.Themes
             colors.Appearance_ControlSelected.CopyAppearanceFrom(Appearance_ControlSelected);
             colors.Appearance_ControlMouseDown.CopyAppearanceFrom(Appearance_ControlMouseDown);
             colors.Appearance_ControlFocused.CopyAppearanceFrom(Appearance_ControlFocused);
+        }
+
+        /// <summary>
+        /// Gets a color by enumeration.
+        /// </summary>
+        /// <param name="color">The color to get.</param>
+        /// <returns>A color.</returns>
+        public Color FromColorName(ColorNames color) => color switch
+        {
+            ColorNames.White => White,
+            ColorNames.Black => Black,
+            ColorNames.Gray => Gray,
+            ColorNames.GrayDark => GrayDark,
+            ColorNames.Red => Red,
+            ColorNames.RedDark => RedDark,
+            ColorNames.Green => Green,
+            ColorNames.GreenDark => GreenDark,
+            ColorNames.Cyan => Cyan,
+            ColorNames.CyanDark => CyanDark,
+            ColorNames.Blue => Blue,
+            ColorNames.BlueDark => BlueDark,
+            ColorNames.Purple => Purple,
+            ColorNames.PurpleDark => PurpleDark,
+            ColorNames.Yellow => Yellow,
+            ColorNames.YellowDark => YellowDark,
+            ColorNames.Orange => Orange,
+            ColorNames.OrangeDark => OrangeDark,
+            ColorNames.Brown => Brown,
+            ColorNames.BrownDark => BrownDark,
+            ColorNames.Gold => Gold,
+            ColorNames.GoldDark => GoldDark,
+            ColorNames.Silver => Silver,
+            ColorNames.SilverDark => SilverDark,
+            ColorNames.Bronze => Bronze,
+            ColorNames.BronzeDark => BronzeDark,
+            _ => throw new NotImplementedException()
+        };
+
+        /// <summary>
+        /// Tries to get the color name of the specified color.
+        /// </summary>
+        /// <param name="color">The color to match.</param>
+        /// <param name="colorName">Set to the color enumeration value when the <paramref name="color"/> parameter matches a defined color.</param>
+        /// <returns><see langword="true"/> if the specified color matched a defined color name; otherwise <see langword="false"/>.</returns>
+        public bool TryToColorName(Color color, out ColorNames colorName)
+        {
+            foreach (ColorNames item in (ColorNames[])Enum.GetValues(typeof(ColorNames)))
+            {
+                if (FromColorName(item) == color)
+                {
+                    colorName = item;
+                    return true;
+                }
+            }
+            colorName = ColorNames.Black;
+            return false;
         }
 
         /// <summary>
@@ -334,76 +387,6 @@ namespace SadConsole.UI.Themes
             Colors newColors = new Colors();
             CopyTo(newColors);
             return newColors;
-        }
-
-        /// <summary>
-        /// Creates a new colors object with the default blue colors theme of SadConsole.
-        /// </summary>
-        /// <returns></returns>
-        public static Colors CreateDefault() =>
-            new Colors();
-
-        /// <summary>
-        /// Creates a new colors object with a standard black-based theme.
-        /// </summary>
-        /// <returns></returns>
-        public static Colors CreateAnsi()
-        {
-            // Create a new 
-            var colors = new Colors()
-            {
-                White = Color.White,
-                Black = Color.Black,
-                Gray = Color.AnsiWhite,
-                GrayDark = (Color.AnsiWhite * 0.50f).FillAlpha(),
-                Red = Color.AnsiRedBright,
-                Green = Color.AnsiGreenBright,
-                Blue = Color.AnsiBlueBright,
-                Purple = Color.AnsiMagentaBright,
-                Yellow = Color.AnsiYellowBright,
-                Orange = Color.Orange,
-                Cyan = Color.AnsiCyanBright,
-                Brown = Color.AnsiYellow,
-                RedDark = Color.AnsiRed,
-                GreenDark = Color.AnsiGreen,
-                BlueDark = Color.AnsiBlue,
-                PurpleDark = Color.AnsiMagenta,
-                YellowDark = (Color.AnsiYellowBright * 0.50f).FillAlpha(),
-                OrangeDark = Color.DarkOrange,
-                CyanDark = Color.AnsiCyan,
-                BrownDark = (Color.AnsiYellow * 0.50f).FillAlpha(),
-                Gold = Color.Goldenrod,
-                GoldDark = Color.DarkGoldenrod,
-                Silver = Color.Silver,
-                SilverDark = (Color.Silver * 0.50f).FillAlpha(),
-                Bronze = new Color(205, 127, 50),
-                BronzeDark = (new Color(205, 127, 50) * 0.50f).FillAlpha(),
-            };
-
-            // TODO: Set every color property.
-
-            // Overwrite some of the control elements
-            colors.TitleText = colors.Orange;
-            colors.TextBright = colors.White;
-            colors.Text = colors.Gray;
-            colors.TextSelected = colors.Yellow;
-            colors.TextSelectedDark = colors.YellowDark;
-            colors.TextLight = colors.White;
-            colors.TextDark = colors.GrayDark;
-            colors.TextFocused = colors.White;
-            colors.Lines = colors.CyanDark;
-
-            colors.ControlBack = colors.Black;
-            colors.ControlBackLight = (colors.ControlBack * 1.3f).FillAlpha();
-            colors.ControlBackSelected = colors.GreenDark;
-            colors.ControlBackDark = (colors.ControlBack * 0.7f).FillAlpha();
-            colors.ControlHostBack = colors.Black;
-            colors.ControlHostFore = colors.Text;
-
-            // Rebuild the controls
-            colors.RebuildAppearances();
-
-            return colors;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace SadConsole.UI
         /// <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
         /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
         /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="Themes.Library"/> will be used.</param>
-        public static void Prompt(string message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Themes.Colors colors = null, Themes.ButtonTheme buttonTheme = null) =>
+        public static void Prompt(string message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Colors colors = null, Themes.ButtonTheme buttonTheme = null) =>
             Prompt(new ColoredString(message), yesPrompt, noPrompt, resultCallback, colors, buttonTheme);
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace SadConsole.UI
         /// <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
         /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
         /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the from <see cref="Themes.Library"/> will be used.</param>
-        public static void Prompt(ColoredString message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Themes.Colors colors = null, Themes.ButtonTheme buttonTheme = null)
+        public static void Prompt(ColoredString message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Colors colors = null, Themes.ButtonTheme buttonTheme = null)
         {
             message.IgnoreBackground = true;
 
@@ -91,7 +91,7 @@ namespace SadConsole.UI
         /// <param name="closedCallback">A callback indicating the message was dismissed.</param>
         /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
         /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="Themes.Library"/> will be used.</param>
-        public static void Message(string message, string closeButtonText, Action closedCallback = null, Themes.Colors colors = null, Themes.ButtonTheme buttonTheme = null) =>
+        public static void Message(string message, string closeButtonText, Action closedCallback = null, Colors colors = null, Themes.ButtonTheme buttonTheme = null) =>
             Message(new ColoredString(message), closeButtonText, closedCallback, colors, buttonTheme);
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SadConsole.UI
         /// <param name="closedCallback">A callback indicating the message was dismissed.</param>
         /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
         /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="Themes.Library"/> will be used.</param>
-        public static void Message(ColoredString message, string closeButtonText, Action closedCallback = null, Themes.Colors colors = null, Themes.ButtonTheme buttonTheme = null)
+        public static void Message(ColoredString message, string closeButtonText, Action closedCallback = null, Colors colors = null, Themes.ButtonTheme buttonTheme = null)
         {
             int width = message.ToString().Length + 4;
             int buttonWidth = closeButtonText.Length + 2;

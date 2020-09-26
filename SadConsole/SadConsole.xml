@@ -7236,6 +7236,232 @@
             Restarts the timer; sets <see cref="P:SadConsole.Timer.IsPaused"/> to false.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.AdjustableColor.Title">
+            <summary>
+            The name of the theme color.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Colors">
+            <summary>
+            Default colors used by control themes.
+            </summary>
+            <summary>
+            Default colors used by control themes.
+            </summary>
+            <summary>
+            Default colors used by control themes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.IsLibrary">
+            <summary>
+            Indicates that this color object is set to a library object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.White">
+            <summary>
+            The white color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Black">
+            <summary>
+            The black color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Gray">
+            <summary>
+            The gray color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.GrayDark">
+            <summary>
+            The dark gray color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Red">
+            <summary>
+            The red color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Green">
+            <summary>
+            The green color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Blue">
+            <summary>
+            The blue color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Purple">
+            <summary>
+            The purple color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Yellow">
+            <summary>
+            The yellow color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Orange">
+            <summary>
+            The orange color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Cyan">
+            <summary>
+            The cyan color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Brown">
+            <summary>
+            The brown color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.RedDark">
+            <summary>
+            The dark red color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.GreenDark">
+            <summary>
+            The dark green color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.BlueDark">
+            <summary>
+            The dark blue color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.PurpleDark">
+            <summary>
+            The dark purple color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.YellowDark">
+            <summary>
+            The dark yellow color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.OrangeDark">
+            <summary>
+            The dark orange color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.CyanDark">
+            <summary>
+            The dark cyan color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.BrownDark">
+            <summary>
+            The dark brown color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Gold">
+            <summary>
+            The gold color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.GoldDark">
+            <summary>
+            The dark gold color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Silver">
+            <summary>
+            The silver color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.SilverDark">
+            <summary>
+            The dark silver color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.Bronze">
+            <summary>
+            The bronze color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.BronzeDark">
+            <summary>
+            The dark bronze color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Colors.ModalBackground">
+            <summary>
+            The color used to darken the background when <see cref="o:UI.Window.Show"/> is called and <see cref="P:SadConsole.UI.Window.IsModal"/> is <see langword="true"/>. Defaults to (20, 20, 20, 200).
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Colors.#ctor">
+            <summary>
+            Creates a color object based on the <see cref="M:SadConsole.UI.Colors.CreateAnsi"/> scheme.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Colors.#ctor(System.Int32)">
+            <summary>
+            Internal constructor to avoid creating any predefined colors.
+            </summary>
+            <param name="_">Discarded parameter</param>
+        </member>
+        <member name="M:SadConsole.UI.Colors.RebuildAppearances">
+            <summary>
+            Sets all Appearance* properties based on the existing colors and settings.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Colors.CopyTo(SadConsole.UI.Colors)">
+            <summary>
+            Copies the colors to another color object.
+            </summary>
+            <param name="colors">The color object to copy to.</param>
+        </member>
+        <member name="M:SadConsole.UI.Colors.FromColorName(SadConsole.UI.Colors.ColorNames)">
+            <summary>
+            Gets a color by enumeration.
+            </summary>
+            <param name="color">The color to get.</param>
+            <returns>A color.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Colors.TryToColorName(SadRogue.Primitives.Color,SadConsole.UI.Colors.ColorNames@)">
+            <summary>
+            Tries to get the color name of the specified color.
+            </summary>
+            <param name="color">The color to match.</param>
+            <param name="colorName">Set to the color enumeration value when the <paramref name="color"/> parameter matches a defined color.</param>
+            <returns><see langword="true"/> if the specified color matched a defined color name; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Colors.AddToColorMappings">
+            <summary>
+            Adds each color here to the <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/> dictionary. Uses the format of "theme.property-name".
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Colors.Clone">
+            <summary>
+            Returns a clone of this object.
+            </summary>
+            <returns>A new Colors object.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Colors.ColorNames">
+            <summary>
+            An enumeration of each color name defined by the library colors object.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Colors.Brightness">
+            <summary>
+            A brightness value that can be applied to a color.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Colors.CreateDefault">
+            <summary>
+            Creates a new colors object with the default blue colors theme of SadConsole.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Colors.CreateAnsi">
+            <summary>
+            Creates a new colors object with a standard black-based theme.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:SadConsole.UI.ControlHost">
             <summary>
             Adds the ability for a host to contain and display controls from <see cref="N:SadConsole.UI.Controls"/>.
@@ -8609,7 +8835,7 @@
         <member name="M:SadConsole.UI.Themes.Button3dTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Themes.Button3dTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.Button3dTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.Button3dTheme.Clone">
@@ -8630,7 +8856,7 @@
             The colors to use for the bottom and right lines.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
@@ -8672,7 +8898,7 @@
         <member name="M:SadConsole.UI.Themes.CheckBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.CheckBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
@@ -8680,179 +8906,6 @@
         </member>
         <member name="M:SadConsole.UI.Themes.CheckBoxTheme.Clone">
             <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.Colors">
-            <summary>
-            Default colors used by control themes.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.IsLibrary">
-            <summary>
-            Indicates that this color object is set to a library object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.White">
-            <summary>
-            The white color. Defaults to <see cref="F:SadRogue.Primitives.Color.White"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Black">
-            <summary>
-            The black color. Defaults to <see cref="F:SadRogue.Primitives.Color.Black"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Gray">
-            <summary>
-            The gray color. Defaults to (176, 196, 222).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.GrayDark">
-            <summary>
-            The dark gray color. Defaults to (66, 66, 66).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Red">
-            <summary>
-            The red color. Defaults to (255, 0, 51).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Green">
-            <summary>
-            The green color. Defaults to (153, 224, 0).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Blue">
-            <summary>
-            The blue color. Defaults to (102, 204, 255).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Purple">
-            <summary>
-            The purple color. Defaults to (132, 0, 214).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Yellow">
-            <summary>
-            The yellow color. Defaults to (255, 255, 102).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Orange">
-            <summary>
-            The orange color. Defaults to (255, 153, 0).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Cyan">
-            <summary>
-            The cyan color. Defaults to (82, 242, 234).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Brown">
-            <summary>
-            The brown color. Defaults to (100, 59, 15).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.RedDark">
-            <summary>
-            The dark red color. Defaults to (153, 51, 51).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.GreenDark">
-            <summary>
-            The dark green color. Defaults to (110, 166, 23).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.BlueDark">
-            <summary>
-            The dark blue color. Defaults to (51, 102, 153).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.PurpleDark">
-            <summary>
-            The dark purple color. Defaults to (70, 0, 114).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.YellowDark">
-            <summary>
-            The dark yellow color. Defaults to (255, 207, 15).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.OrangeDark">
-            <summary>
-            The dark orange color. Defaults to (255, 102, 0).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.CyanDark">
-            <summary>
-            The dark cyan color. Defaults to (33, 182, 168).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.BrownDark">
-            <summary>
-            The dark brown color. Defaults to (119, 17, 0).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Gold">
-            <summary>
-            The gold color. Defaults to (255, 215, 0).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.GoldDark">
-            <summary>
-            The dark gold color. Defaults to (127, 107, 0).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Silver">
-            <summary>
-            The silver color. Defaults to (192, 192, 192).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.SilverDark">
-            <summary>
-            The dark silver color. Defaults to (169, 169, 169).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.Bronze">
-            <summary>
-            The bronze color. Defaults to (205, 127, 50).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.BronzeDark">
-            <summary>
-            The dark bronze color. Defaults to (144, 89, 35).
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Colors.ModalBackground">
-            <summary>
-            The color used to darken the background when <see cref="o:UI.Window.Show"/> is called and <see cref="P:SadConsole.UI.Window.IsModal"/> is <see langword="true"/>. Defaults to (20, 20, 20, 200).
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.Colors.RebuildAppearances">
-            <summary>
-            Sets all Appearance* properties based on the existing colors and settings.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.Colors.AddToColorMappings">
-            <summary>
-            Adds each color here to the <see cref="F:SadRogue.Primitives.ColorExtensions.ColorMappings"/> dictionary. Uses the format of "theme.property-name".
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.Colors.Clone">
-            <summary>
-            Returns a clone of this object.
-            </summary>
-            <returns>A new Colors object.</returns>
-        </member>
-        <member name="M:SadConsole.UI.Themes.Colors.CreateDefault">
-            <summary>
-            Creates a new colors object with the default blue colors theme of SadConsole.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.UI.Themes.Colors.CreateAnsi">
-            <summary>
-            Creates a new colors object with a standard black-based theme.
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:SadConsole.UI.Themes.DrawingSurfaceTheme">
             <summary>
@@ -8947,9 +9000,9 @@
             <param name="theme">The theme to associate with the control.</param>
             <returns>A theme that is associated with the control.</returns>
         </member>
-        <member name="M:SadConsole.UI.Themes.Library.SetColors(SadConsole.UI.Themes.Colors)">
+        <member name="M:SadConsole.UI.Themes.Library.SetColors(SadConsole.UI.Colors)">
             <summary>
-            Copies the colors from the specified <see cref="T:SadConsole.UI.Themes.Colors"/> object to <see cref="P:SadConsole.UI.Themes.Library.Colors"/> property.
+            Copies the colors from the specified <see cref="!:SadConsole.UI.Themes.Colors"/> object to <see cref="P:SadConsole.UI.Themes.Library.Colors"/> property.
             </summary>
             <param name="colors">The colors to copy.</param>
         </member>
@@ -8996,7 +9049,7 @@
         <member name="M:SadConsole.UI.Themes.ListBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Themes.ListBoxTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ListBoxTheme.Clone">
@@ -9008,7 +9061,7 @@
             </summary>
             <param name="control">Reference to the listbox being processed.</param>
         </member>
-        <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="P:SadConsole.UI.Themes.ListBoxItemColorTheme.UseSingleCharacterForBox">
@@ -9156,7 +9209,7 @@
         <member name="M:SadConsole.UI.Themes.ScrollBarTheme.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ScrollBarTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
@@ -9183,7 +9236,7 @@
         <member name="M:SadConsole.UI.Themes.TextBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Themes.TextBoxTheme.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.TextBoxTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.TextBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
@@ -9288,7 +9341,7 @@
             </summary>
             <returns>A new instance of the theme.</returns>
         </member>
-        <member name="M:SadConsole.UI.Themes.ThemeStates.RefreshTheme(SadConsole.UI.Themes.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.ThemeStates.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <summary>
             Reloads the theme values based on the colors provided.
             </summary>
@@ -9496,7 +9549,7 @@
             Centers the window within the bounds of <see cref="!:Global.RenderWidth"/> and <see cref="!:Global.RenderHeight"/>
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Window.Prompt(System.String,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Themes.Colors,SadConsole.UI.Themes.ButtonTheme)">
+        <member name="M:SadConsole.UI.Window.Prompt(System.String,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Colors,SadConsole.UI.Themes.ButtonTheme)">
             <summary>
             Shows a window prompt with two buttons for the user to click.
             </summary>
@@ -9507,7 +9560,7 @@
             <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
             <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
         </member>
-        <member name="M:SadConsole.UI.Window.Prompt(SadConsole.ColoredString,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Themes.Colors,SadConsole.UI.Themes.ButtonTheme)">
+        <member name="M:SadConsole.UI.Window.Prompt(SadConsole.ColoredString,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Colors,SadConsole.UI.Themes.ButtonTheme)">
             <summary>
             Shows a window prompt with two buttons for the user to click.
             </summary>
@@ -9518,7 +9571,7 @@
             <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
             <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
         </member>
-        <member name="M:SadConsole.UI.Window.Message(System.String,System.String,System.Action,SadConsole.UI.Themes.Colors,SadConsole.UI.Themes.ButtonTheme)">
+        <member name="M:SadConsole.UI.Window.Message(System.String,System.String,System.Action,SadConsole.UI.Colors,SadConsole.UI.Themes.ButtonTheme)">
             <summary>
             Displays a dialog to the user with a specific message.
             </summary>
@@ -9528,7 +9581,7 @@
             <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
             <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
         </member>
-        <member name="M:SadConsole.UI.Window.Message(SadConsole.ColoredString,System.String,System.Action,SadConsole.UI.Themes.Colors,SadConsole.UI.Themes.ButtonTheme)">
+        <member name="M:SadConsole.UI.Window.Message(SadConsole.ColoredString,System.String,System.Action,SadConsole.UI.Colors,SadConsole.UI.Themes.ButtonTheme)">
             <summary>
             Displays a dialog to the user with a specific message.
             </summary>
