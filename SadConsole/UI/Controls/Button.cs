@@ -11,6 +11,8 @@ namespace SadConsole.UI.Controls
     [DataContract]
     public abstract class ButtonBase : ControlBase
     {
+        bool _mouseDownForClick = false;
+
         /// <summary>
         /// Raised when the button is clicked.
         /// </summary>
@@ -73,18 +75,24 @@ namespace SadConsole.UI.Controls
             return false;
         }
 
-        /// <summary>
-        /// Called when the left-mouse button is clicked.
-        /// </summary>
-        /// <param name="state">The mouse state.</param>
-        protected override void OnLeftMouseClicked(ControlMouseState state)
+        protected override void OnMouseIn(ControlMouseState state)
         {
-            base.OnLeftMouseClicked(state);
+            base.OnMouseIn(state);
 
-            if (_isEnabled)
+            if (_isEnabled && _mouseDownForClick && !state.OriginalMouseState.Mouse.LeftButtonDown)
             {
                 DoClick();
+                _mouseDownForClick = false;
             }
+            else if (!_mouseEnteredWithButtonDown && state.OriginalMouseState.Mouse.LeftButtonDown)
+                _mouseDownForClick = true;
+
+        }
+
+        protected override void OnMouseExit(ControlMouseState state)
+        {
+            base.OnMouseExit(state);
+            _mouseDownForClick = false;
         }
     }
 
