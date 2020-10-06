@@ -37,7 +37,7 @@ namespace SadConsole.Renderers
         public override void Render(IScreenSurface screen)
         {
             var window = (SadConsole.UI.Window)screen;
-            var colors = window.ControlHostComponent.GetThemeColors();
+            var colors = window.Controls.GetThemeColors();
 
             if (window.IsModal && colors.ModalBackground.A != 0)
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToMonoColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, new Microsoft.Xna.Framework.Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), screen.Font.SolidGlyphRectangle.ToMonoRectangle()));

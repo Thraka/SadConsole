@@ -55,9 +55,9 @@ namespace FeatureDemo.Windows
             _charScrollBar.IsEnabled = Font.Rows > 16;
 
             // Add all controls
-            ControlHostComponent.Add(_charScrollBar);
+            Controls.Add(_charScrollBar);
 
-            _closeButton = new Button(6, 1) { Text = "Ok", Position = new Point(19, 1) }; ControlHostComponent.Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
+            _closeButton = new Button(6, 1) { Text = "Ok", Position = new Point(19, 1) }; Controls.Add(_closeButton); _closeButton.Click += (sender, e) => { DialogResult = true; Hide(); };
 
             // Effects
             highlightedEffect = new Recolor
@@ -131,9 +131,9 @@ namespace FeatureDemo.Windows
             _characterSurface.MouseMove += _characterSurface_MouseMove;
             _characterSurface.MouseButtonClicked += _characterSurface_MouseButtonClicked;
             _characterSurface.MouseExit += _characterSurface_MouseExit;
-            ControlHostComponent.Add(_characterSurface);
+            Controls.Add(_characterSurface);
 
-            ControlHostComponent.ThemeColors = colors;
+            Controls.ThemeColors = colors;
             IsDirty = true;
         }
 
@@ -226,7 +226,7 @@ namespace FeatureDemo.Windows
 
         private void DrawHoverItemString()
         {
-            var themeColors = ControlHostComponent.GetThemeColors();
+            var themeColors = Controls.GetThemeColors();
             var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBack, 0);
 
             // Draw the character index and value in the status area
@@ -246,7 +246,7 @@ namespace FeatureDemo.Windows
 
         private void DrawSelectedItemString()
         {
-            var themeColors = ControlHostComponent.GetThemeColors();
+            var themeColors = Controls.GetThemeColors();
             var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBack, 0);
 
             // Clear the information area and redraw

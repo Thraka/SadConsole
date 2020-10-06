@@ -7236,10 +7236,95 @@
             Restarts the timer; sets <see cref="P:SadConsole.Timer.IsPaused"/> to false.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.AdjustableColor.Title">
+        <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
-            The name of the theme color.
+            A color that can be adjusted by brightness and mapped to a <see cref="T:SadConsole.UI.Colors"/> color.
             </summary>
+        </member>
+        <member name="P:SadConsole.UI.AdjustableColor.Name">
+            <summary>
+            The name of the color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.AdjustableColor.BaseColor">
+            <summary>
+            The color without brightness.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.AdjustableColor.ComputedColor">
+            <summary>
+            The color with brightness applied.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.AdjustableColor.IsCustomColor">
+            <summary>
+            <see langword="true"/> when this color is not defined by a <see cref="T:SadConsole.UI.Colors"/> object; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.AdjustableColor.UIColor">
+            <summary>
+            The <see cref="T:SadConsole.UI.Colors"/> mapped color when <see cref="P:SadConsole.UI.AdjustableColor.IsCustomColor"/> is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.AdjustableColor.Brightness">
+            <summary>
+            A brightness to apply to the color.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.#ctor(SadRogue.Primitives.Color,System.String)">
+            <summary>
+            Creates a color that isn't mapped to a <see cref="T:SadConsole.UI.Colors"/> color.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="name">A friendly name of the color.</param>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.#ctor(SadRogue.Primitives.Color,System.String,SadConsole.UI.Colors)">
+            <summary>
+            Creates a color and tries to map it to a <see cref="T:SadConsole.UI.Colors"/> color.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="name">A friendly name of the color.</param>
+            <param name="colors">The colors to try and map to.</param>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.#ctor(SadConsole.UI.Colors.ColorNames,System.String,SadConsole.UI.Colors)">
+            <summary>
+            Creates a color that maps to a <see cref="T:SadConsole.UI.Colors"/> color.
+            </summary>
+            <param name="color">The predefined color.</param>
+            <param name="name">A friendly name of the color.</param>
+            <param name="colors">The colors used setting the <see cref="P:SadConsole.UI.AdjustableColor.BaseColor"/> value.</param>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.SetUIColor(SadConsole.UI.Colors.ColorNames,SadConsole.UI.Colors)">
+            <summary>
+            Maps this adjustable color to a <see cref="T:SadConsole.UI.Colors"/> color.
+            </summary>
+            <param name="color">The predefined color.</param>
+            <param name="colors">The colors used setting the <see cref="P:SadConsole.UI.AdjustableColor.BaseColor"/> value.</param>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.SetColor(SadRogue.Primitives.Color,SadConsole.UI.Colors)">
+            <summary>
+            Tries to map this adjustable color to a <see cref="T:SadConsole.UI.Colors"/> color.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="colors">The colors to try and map to.</param>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.SetColor(SadRogue.Primitives.Color)">
+            <summary>
+            Configures this adjustable color to the specified color.
+            </summary>
+            <param name="color">The color.</param>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.Clone">
+            <summary>
+            Creates a copy of this object.
+            </summary>
+            <returns>A new adjustable color object.</returns>
+        </member>
+        <member name="M:SadConsole.UI.AdjustableColor.op_Implicit(SadConsole.UI.AdjustableColor)~SadRogue.Primitives.Color">
+            <summary>
+            Casts this object to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="color">The adjustable color.</param>
         </member>
         <member name="T:SadConsole.UI.Colors">
             <summary>
@@ -7778,12 +7863,6 @@
             Detects if the SPACE and ENTER keys are pressed and calls the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> method.
             </summary>
             <param name="info"></param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ButtonBase.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
-            <summary>
-            Called when the left-mouse button is clicked.
-            </summary>
-            <param name="state">The mouse state.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.Button">
             <summary>
@@ -9368,7 +9447,7 @@
             Raised when the console has been redrawn.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Window.ControlHostComponent">
+        <member name="P:SadConsole.UI.Window.Controls">
             <summary>
             The controls host holding all the controls.
             </summary>

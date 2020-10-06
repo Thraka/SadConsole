@@ -36,7 +36,7 @@ namespace SadConsole.UI
         /// <summary>
         /// The controls host holding all the controls.
         /// </summary>
-        public ControlHost ControlHostComponent { get; }
+        public ControlHost Controls { get; }
 
         [DataMember(Name = "Title")]
         private string _title;
@@ -198,10 +198,9 @@ namespace SadConsole.UI
             _isVisibleProcessing = false;
             CanDrag = true;
             MoveToFrontOnMouseClick = true;
-            ControlHostComponent = new ControlHost();
-            SadComponents.Add(ControlHostComponent);
+            Controls = new ControlHost();
+            SadComponents.Add(Controls);
             Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
-
 
             // todo: Perhaps a new design with windows.
             // A border surface so that the surface of the window contains just the controls and print code.
@@ -254,7 +253,7 @@ namespace SadConsole.UI
             }
 
             // Left button freshly down and we're not already dragging, check to see if in title
-            if (ControlHostComponent.CapturedControl == null && state.IsOnScreenObject && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
+            if (Controls.CapturedControl == null && state.IsOnScreenObject && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
             {
                 if (state.CellPosition.Y == TitleAreaY && state.CellPosition.X >= TitleAreaX && state.CellPosition.X < TitleAreaX + TitleAreaLength)
                 {
@@ -297,7 +296,7 @@ namespace SadConsole.UI
         {
             if (RaiseInvalidated()) return;
 
-            var themeColors = ControlHostComponent.GetThemeColors();
+            var themeColors = Controls.GetThemeColors();
 
             var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
             var titleStyle = new ColoredGlyph(Color.Orange, fillStyle.Background, fillStyle.Glyph);
