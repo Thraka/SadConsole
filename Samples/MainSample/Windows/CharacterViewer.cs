@@ -205,9 +205,9 @@ namespace FeatureDemo.Windows
             hasDrawn = false;
         }
 
-        protected override void OnInvalidated()
+        protected override void DrawBorder()
         {
-            base.OnInvalidated();
+            base.DrawBorder();
 
             // Draw the border between char sheet area and the text area
             this.SetGlyph(0, Height - 3, 204);
