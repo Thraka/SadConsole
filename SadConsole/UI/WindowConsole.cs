@@ -83,7 +83,7 @@ namespace SadConsole.UI
         protected Point CellAtDragPosition;
 
         /// <summary>
-        /// Temporary value to hold the state of <see cref="ScreenSurface.IsExclusiveMouse"/> prior to dragging.
+        /// Temporary value to hold the state of <see cref="IScreenObject.IsExclusiveMouse"/> prior to dragging.
         /// </summary>
         protected bool PreviousMouseExclusiveDrag;
 
@@ -135,7 +135,7 @@ namespace SadConsole.UI
         public bool DialogResult { get; set; }
 
         /// <summary>
-        /// Indicates that when this window is shown by the <see cref="Show()"/> method or by setting the <see cref="Console.IsVisible"/> property to true, the window will be shown as modal.
+        /// Indicates that when this window is shown by the <see cref="Show()"/> method or by setting the <see cref="IScreenObject.IsVisible"/> property to true, the window will be shown as modal.
         /// </summary>
         [DataMember]
         public bool IsModalDefault { get; set; }
@@ -215,9 +215,7 @@ namespace SadConsole.UI
         public override bool ProcessMouse(MouseScreenObjectState state)
         {
             if (!IsVisible)
-            {
                 return false;
-            }
 
             if (!CanDrag || TitleAreaLength == 0)
             {
@@ -230,13 +228,9 @@ namespace SadConsole.UI
                 if (state.Mouse.IsOnScreen)
                 {
                     if (UsePixelPositioning)
-                    {
                         Position = state.Mouse.ScreenPosition - CellAtDragPosition;
-                    }
                     else
-                    {
                         Position = state.WorldCellPosition - CellAtDragPosition;
-                    }
 
                     PreviousMouseInfo = state;
                     return true;
@@ -264,18 +258,12 @@ namespace SadConsole.UI
                     IsDragging = true;
 
                     if (UsePixelPositioning)
-                    {
                         CellAtDragPosition = state.SurfacePixelPosition;
-                    }
                     else
-                    {
                         CellAtDragPosition = state.SurfaceCellPosition;
-                    }
 
                     if (MoveToFrontOnMouseClick)
-                    {
                         IsFocused = true;
-                    }
                 }
             }
 
@@ -283,6 +271,7 @@ namespace SadConsole.UI
             return base.ProcessMouse(state);
         }
 
+        ///<inheritdoc/>
         public override void Update(TimeSpan delta)
         {
             base.Update(delta);
@@ -320,13 +309,9 @@ namespace SadConsole.UI
             if (!string.IsNullOrEmpty(Title))
             {
                 if (Title.Length > adjustedWidth)
-                {
                     adjustedText = Title.Substring(0, Title.Length - (Title.Length - adjustedWidth));
-                }
                 else
-                {
                     adjustedText = Title;
-                }
             }
 
             if (!string.IsNullOrEmpty(adjustedText))
@@ -334,17 +319,11 @@ namespace SadConsole.UI
                 TitleAreaLength = adjustedText.Length;
 
                 if (TitleAlignment == HorizontalAlignment.Left)
-                {
                     TitleAreaX = 1;
-                }
                 else if (TitleAlignment == HorizontalAlignment.Center)
-                {
                     TitleAreaX = ((adjustedWidth - adjustedText.Length) / 2) + 1;
-                }
                 else
-                {
                     TitleAreaX = Width - 1 - adjustedText.Length;
-                }
 
                 Surface.Print(TitleAreaX, TitleAreaY, adjustedText, titleStyle);
             }
@@ -383,19 +362,14 @@ namespace SadConsole.UI
             base.OnVisibleChanged();
 
             if (_isVisibleProcessing)
-            {
                 return;
-            }
 
             _isVisibleProcessing = true;
+
             if (IsVisible)
-            {
                 Show();
-            }
             else
-            {
                 Hide();
-            }
 
             _isVisibleProcessing = false;
         }
@@ -430,9 +404,7 @@ namespace SadConsole.UI
             }
 
             if (IsVisible && !_isVisibleProcessing)
-            {
                 return;
-            }
 
             _isVisibleProcessing = true;
             IsVisible = true;
@@ -465,23 +437,17 @@ namespace SadConsole.UI
         public virtual void Hide()
         {
             if (!IsVisible && !_isVisibleProcessing)
-            {
                 return;
-            }
 
             _isVisibleProcessing = true;
             IsVisible = false;
             IsExclusiveMouse = false;
 
             if (IsModal)
-            {
                 GameHost.Instance.FocusedScreenObjects.Pop(this);
-            }
 
             if (AddedToParent && Parent != null)
-            {
                 Parent = null;
-            }
 
             Closed?.Invoke(this, new EventArgs());
             OnHidden();
@@ -489,7 +455,7 @@ namespace SadConsole.UI
         }
 
         /// <summary>
-        /// Centers the window within the bounds of <see cref="Global.RenderWidth"/> and <see cref="Global.RenderHeight"/>
+        /// Centers the window within the bounds of <see cref="Settings.Rendering.RenderWidth"/> and <see cref="Settings.Rendering.RenderHeight"/>
         /// </summary>
         public void Center()
         {
@@ -497,13 +463,9 @@ namespace SadConsole.UI
             int screenHeight = Settings.Rendering.RenderHeight;
 
             if (UsePixelPositioning)
-            {
                 Position = new Point((screenWidth / 2) - ((Width * FontSize.X) / 2), (screenHeight / 2) - ((Height * FontSize.Y) / 2));
-            }
             else
-            {
                 Position = new Point(((screenWidth / FontSize.X) / 2) - (Width / 2), ((screenHeight / FontSize.Y) / 2) - (Height / 2));
-            }
         }
 
         [OnDeserialized]
