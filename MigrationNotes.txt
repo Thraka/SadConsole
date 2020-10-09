@@ -10,8 +10,10 @@
 ===== TODO
 
 - (?) Components should have a before/after ability where SortOrder < 5 run before the core code and >=5 run after.
-- Check fullscreen to and from not setting render sizes correctly in monogame.
 - Print for surface can be optimized. Use SetEffect(IEnumerable) to mass update effects instead of individual cells.
+- Themes for controls need to be checked for serializability. The overridable themestate for a control part (such as as
+  button ends) needs to handle a null setting and use proper fields. The backing field is serialized while the default
+  field is not.
 
 ====== New Features
 
@@ -20,6 +22,7 @@
   - Shown event when the window is made visible.
   - OnShown protected virtual method.
   - OnHidden protected virtual method.
+  - DrawBorder replaces Invalidated method.
 - Draw/Update have restored the TimeSpan parameter.
 - ControlHost component can add the GUI framework to any console.
 - SadConsole.Global no longer exists. Properties from this static type now live in SadConsole.GameHost.Instance.
@@ -45,7 +48,9 @@ ControlsConsole/Window
 - (CHANGE) Themes removed
 
 Window
-- (RENAME) Invalidate -> OnInvalidated
+- (RENAME) Invalidate/OnInvalidated -> DrawBorder
+- (CHANGE) DrawBorder is used to draw the border and title.
+- (CHANGE) No longer inherits from ControlsConsole.
 
 ControlsConsole
 - (CHANGE) No longer a specialized type. The ControlHost component was created and provides the entire controls framework.

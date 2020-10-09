@@ -1,6 +1,17 @@
 ## v9.0 Beta 2
 
 - AHHHHH bug in Font with setting UnsupportedGlyphIndex found 1 day after beta 1.........
+- Window title defaults to "Window".
+- Window title alignment defaults to "Center".
+- Invalidated/OnInvalidated removed from Window/ControlsConsole.
+- Window has DrawBorder() method to redraw the border and title.
+- More changes to colors added:
+  - `SadConsole.UI.Themes.Colors` renamed to `SadConsole.UI.Colors`.
+  - `SadConsole.UI.Colors.ColorNames` added as an enum of each color defined by the colors type (such as Red and BlueDark).
+  - `SadConsole.UI.Colors.Brightness` enum that can be used with various extension methods to brighten or darkn a color.
+  - Added new `SadConsole.UI.AdjustableColor` type which allows you to create a color that maps to a `Colors` entry or a custom value. Apply a `Brightness` to it and return a computed color without affecting the original color value.
+- Added `ColoredString.SetGlyph` to set the glyph on all characters in the string.
+- Changed button click logic so a long click still triggers a click.
 
 ## v9.0 Beta 1
 

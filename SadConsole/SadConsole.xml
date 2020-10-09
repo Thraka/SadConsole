@@ -6075,6 +6075,9 @@
             The layers of this surface.
             </summary>
         </member>
+        <member name="P:SadConsole.LayeredScreenSurface.DefaultRendererName">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.LayeredScreenSurface.#ctor(SadConsole.LayeredScreenSurface.Layer,System.Boolean)">
             <summary>
             Creates a new layered screen surface with an initial layer.
@@ -6097,9 +6100,6 @@
             <param name="renderClipped"></param>
             <param name="renderClipWidth"></param>
             <param name="renderClipHeight"></param>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.GetDefaultRendererName">
-            <inheritdoc/>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.SetActiveLayer(System.Int32)">
             <summary>
@@ -6738,12 +6738,6 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
             <inheritdoc />
-        </member>
-        <member name="M:SadConsole.ScreenSurface.GetDefaultRendererName">
-            <summary>
-            Gets the renderer name. Used by the <see cref="P:SadConsole.ScreenSurface.DefaultRendererName"/> propety.
-            </summary>
-            <returns>The default renderer name.</returns>
         </member>
         <member name="M:SadConsole.ScreenSurface.Render(System.TimeSpan)">
             <summary>
@@ -9442,11 +9436,6 @@
             Raised when the window is shown.
             </summary>
         </member>
-        <member name="E:SadConsole.UI.Window.Invalidated">
-            <summary>
-            Raised when the console has been redrawn.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.Window.Controls">
             <summary>
             The controls host holding all the controls.
@@ -9484,7 +9473,7 @@
         </member>
         <member name="F:SadConsole.UI.Window.PreviousMouseExclusiveDrag">
             <summary>
-            Temporary value to hold the state of <see cref="!:ScreenSurface.IsExclusiveMouse"/> prior to dragging.
+            Temporary value to hold the state of <see cref="P:SadConsole.IScreenObject.IsExclusiveMouse"/> prior to dragging.
             </summary>
         </member>
         <member name="F:SadConsole.UI.Window.AddedToParent">
@@ -9496,6 +9485,9 @@
             <summary>
             When <see langword="true"/>, indicates that the window is being dragged; otherwise <see langword="false"/>.
             </summary>
+        </member>
+        <member name="P:SadConsole.UI.Window.DefaultRendererName">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.UI.Window.TitleAlignment">
             <summary>
@@ -9524,7 +9516,7 @@
         </member>
         <member name="P:SadConsole.UI.Window.IsModalDefault">
             <summary>
-            Indicates that when this window is shown by the <see cref="M:SadConsole.UI.Window.Show"/> method or by setting the <see cref="!:Console.IsVisible"/> property to true, the window will be shown as modal.
+            Indicates that when this window is shown by the <see cref="M:SadConsole.UI.Window.Show"/> method or by setting the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property to true, the window will be shown as modal.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Window.Title">
@@ -9572,19 +9564,11 @@
             <param name="bufferHeight">The total height of the window in cells.</param>
             <param name="initialCells">The cells to seed the window with. If <see langword="null"/>, creates the cells for you.</param>
         </member>
-        <member name="M:SadConsole.UI.Window.GetDefaultRendererName">
-            <inheritdoc/>
-        </member>
         <member name="M:SadConsole.UI.Window.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Window.OnInvalidated">
+        <member name="M:SadConsole.UI.Window.DrawBorder">
             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Window.RaiseInvalidated">
-            <summary>
-            Raises the <see cref="E:SadConsole.UI.Window.Invalidated"/> event.
-            </summary>
         </member>
         <member name="M:SadConsole.UI.Window.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
@@ -9625,7 +9609,7 @@
         </member>
         <member name="M:SadConsole.UI.Window.Center">
             <summary>
-            Centers the window within the bounds of <see cref="!:Global.RenderWidth"/> and <see cref="!:Global.RenderHeight"/>
+            Centers the window within the bounds of <see cref="P:SadConsole.Settings.Rendering.RenderWidth"/> and <see cref="P:SadConsole.Settings.Rendering.RenderHeight"/>
             </summary>
         </member>
         <member name="M:SadConsole.UI.Window.Prompt(System.String,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Colors,SadConsole.UI.Themes.ButtonTheme)">
