@@ -33,7 +33,7 @@ namespace SadConsole
         public bool ForceRendererRefresh { get; set; }
 
         /// <inheritdoc/>
-        public string DefaultRendererName => GetDefaultRendererName();
+        public virtual string DefaultRendererName { get; } = "default";
 
         /// <inheritdoc/>
         public Renderers.IRenderer Renderer
@@ -192,6 +192,7 @@ namespace SadConsole
             // derived class uses a different render, and that renderer needs the derived class
             // already configured, ready to accept the new renderer, they should call
             //      Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
+            //
             Renderer = GameHost.Instance.GetRenderer("default");
         }
 
@@ -224,13 +225,6 @@ namespace SadConsole
             foreach (IScreenObject child in Children)
                 child.UpdateAbsolutePosition();
         }
-
-        /// <summary>
-        /// Gets the renderer name. Used by the <see cref="DefaultRendererName"/> propety.
-        /// </summary>
-        /// <returns>The default renderer name.</returns>
-        protected virtual string GetDefaultRendererName() =>
-            "default";
 
         /// <summary>
         /// Draws the <see cref="Surface"/> and all <see cref="ScreenObject.SadComponents"/> and <see cref="ScreenObject.Children"/>.
@@ -299,7 +293,7 @@ namespace SadConsole
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
         {
-            Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
+            Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
             UpdateAbsolutePosition();
         }
 
