@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using SadConsole.Input;
-using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 using Keyboard = SadConsole.Input.Keyboard;
 using Mouse = SadConsole.Input.Mouse;
@@ -29,20 +27,18 @@ namespace SadConsole.UI
         public event EventHandler Shown;
 
         /// <summary>
-        /// Raised when the console has been redrawn.
-        /// </summary>
-        public event EventHandler<HandledEventArgs> Invalidated;
-
-        /// <summary>
         /// The controls host holding all the controls.
         /// </summary>
         public ControlHost Controls { get; }
 
         [DataMember(Name = "Title")]
-        private string _title;
+        private string _title = "Window";
 
         [DataMember(Name = "TitleAlignment")]
-        private HorizontalAlignment _titleAlignment;
+        private HorizontalAlignment _titleAlignment = HorizontalAlignment.Center;
+
+        [DataMember(Name = "BorderLineStyle")]
+        private int[] _borderLineStyle = ICellSurface.ConnectedLineThin;
 
         private bool _isVisibleProcessing;
 
@@ -68,8 +64,15 @@ namespace SadConsole.UI
         /// <summary>
         /// The line sytle for the border.
         /// </summary>
-        [DataMember]
-        public int[] BorderLineStyle { get; set; }
+        public int[] BorderLineStyle
+        {
+            get => _borderLineStyle;
+            set
+            {
+                _borderLineStyle = value;
+                DrawBorder();
+            }
+        }
         #endregion
 
         /// <summary>
@@ -97,6 +100,10 @@ namespace SadConsole.UI
         /// </summary>
         protected bool IsDragging;
 
+
+        /// <inheritdoc/>
+        public override string DefaultRendererName => "window";
+
         /// <summary>
         /// Gets or sets the alignment of the window title.
         /// </summary>
@@ -107,7 +114,7 @@ namespace SadConsole.UI
             set
             {
                 _titleAlignment = value;
-                IsDirty = true;
+                DrawBorder();
             }
         }
 
@@ -149,7 +156,7 @@ namespace SadConsole.UI
             set
             {
                 _title = value;
-                IsDirty = true;
+                DrawBorder();
             }
         }
 
@@ -200,16 +207,14 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             Controls = new ControlHost();
             SadComponents.Add(Controls);
-            Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
+            Renderer = GameHost.Instance.GetRenderer("window");
 
             // todo: Perhaps a new design with windows.
             // A border surface so that the surface of the window contains just the controls and print code.
             //DrawingArea = Surface.GetSubSurface(Surface.Buffer.WithPosition((1, 1)).Expand(-1, -1));
+            DrawBorder();
         }
 
-        /// <inheritdoc/>
-        protected override string GetDefaultRendererName() =>
-            "window";
 
         /// <inheritdoc />
         public override bool ProcessMouse(MouseScreenObjectState state)
@@ -271,29 +276,14 @@ namespace SadConsole.UI
             return base.ProcessMouse(state);
         }
 
-        ///<inheritdoc/>
-        public override void Update(TimeSpan delta)
-        {
-            base.Update(delta);
-
-            if (IsDirty)
-                OnInvalidated();
-        }
-
         /// <inheritdoc/>
-        protected virtual void OnInvalidated()
+        protected virtual void DrawBorder()
         {
-            if (RaiseInvalidated()) return;
-
             var themeColors = Controls.GetThemeColors();
 
             var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
             var titleStyle = new ColoredGlyph(Color.Orange, fillStyle.Background, fillStyle.Glyph);
             var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
-
-            DefaultForeground = fillStyle.Foreground;
-            DefaultBackground = fillStyle.Background;
-            Surface.Fill(DefaultForeground, DefaultBackground, fillStyle.Glyph, null);
 
             if (BorderLineStyle != null)
                 Surface.DrawBox(new Rectangle(0, 0, Width, Height),
@@ -327,16 +317,8 @@ namespace SadConsole.UI
 
                 Surface.Print(TitleAreaX, TitleAreaY, adjustedText, titleStyle);
             }
-        }
 
-        /// <summary>
-        /// Raises the <see cref="Invalidated"/> event.
-        /// </summary>
-        protected bool RaiseInvalidated()
-        {
-            var args = new HandledEventArgs();
-            Invalidated?.Invoke(this, args);
-            return args.IsHandled;
+            IsDirty = true;
         }
 
         /// <summary>
