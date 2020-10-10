@@ -25,7 +25,7 @@ namespace SadConsole.Host
 
         private void Window_MouseWheelScrolled(object sender, MouseWheelScrollEventArgs e)
         {
-            _mouseWheelValue = (int)e.Delta;
+            _mouseWheelValue += (int)e.Delta;
         }
 
         public bool IsLeftButtonDown => SFMLMouse.IsButtonPressed(SFMLMouse.Button.Left);
