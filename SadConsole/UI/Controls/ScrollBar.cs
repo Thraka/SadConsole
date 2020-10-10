@@ -168,7 +168,11 @@ namespace SadConsole.UI.Controls
                     {
                         if (state.Mouse.ScrollWheelValueChange != 0)
                         {
-                            Value += state.Mouse.ScrollWheelValueChange / 20;
+                            if (state.Mouse.ScrollWheelValueChange < 0)
+                                Value -= 1;
+                            else
+                                Value += 1;
+
                             return true;
                         }
 

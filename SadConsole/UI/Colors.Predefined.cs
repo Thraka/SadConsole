@@ -44,23 +44,23 @@ namespace SadConsole.UI
                 BronzeDark = new Color(144, 89, 35)
             };
 
-            // Overwrite some of the control elements
-            colors.TitleText = colors.Orange;
-            colors.TextBright = colors.White;
-            colors.Text = colors.Blue;
-            colors.TextSelected = colors.Yellow;
-            colors.TextSelectedDark = colors.Green;
-            colors.TextLight = colors.Gray;
-            colors.TextDark = colors.Green;
-            colors.TextFocused = colors.Cyan;
-            colors.Lines = colors.Gray;
+            colors.TitleText = new AdjustableColor(ColorNames.Orange, "TitleText", colors);
+            colors.Lines = new AdjustableColor(ColorNames.Gray, "Lines", colors);
+            colors.TextBright = new AdjustableColor(ColorNames.White, "TextBright", colors);
+            colors.Text = new AdjustableColor(ColorNames.Blue, "Text", colors);
+            colors.TextSelected = new AdjustableColor(ColorNames.Yellow, "TextSelected", colors);
+            colors.TextSelectedDark = new AdjustableColor(ColorNames.Green, "TextSelectedDark", colors);
+            colors.TextLight = new AdjustableColor(ColorNames.Gray, "TextLight", colors);
+            colors.TextDark = new AdjustableColor(ColorNames.Green, "TextDark", colors);
+            colors.TextFocused = new AdjustableColor(ColorNames.Cyan, "TextFocused", colors);
 
-            colors.ControlBack = colors.BlueDark;
-            colors.ControlBackLight = (colors.ControlBack * 1.3f).FillAlpha();
-            colors.ControlBackSelected = colors.GreenDark;
-            colors.ControlBackDark = (colors.ControlBack * 0.7f).FillAlpha();
-            colors.ControlHostBack = colors.BlueDark;
-            colors.ControlHostFore = colors.Text;
+            colors.ControlBack = new AdjustableColor(ColorNames.BlueDark, "ControlBack", colors);
+            colors.ControlBackLight = new AdjustableColor(colors.ControlBack, "ControlBackLight", colors) { Brightness = Brightness.Bright };
+            colors.ControlBackMouseOver = new AdjustableColor(ColorNames.Green, "ControlBackMouseOver", colors);
+            colors.ControlBackSelected = new AdjustableColor(ColorNames.GreenDark, "ControlBackSelected", colors);
+            colors.ControlBackDark = new AdjustableColor(colors.ControlBack, "ControlBackDark", colors) { Brightness = Brightness.Darkest };
+            colors.ControlHostBack = new AdjustableColor(ColorNames.BlueDark, "ControlHostBack", colors);
+            colors.ControlHostFore = new AdjustableColor(colors.Text, "ControlHostFore", colors);
 
             // Rebuild the controls
             colors.RebuildAppearances();
@@ -105,25 +105,23 @@ namespace SadConsole.UI
                 BronzeDark = (new Color(205, 127, 50) * 0.50f).FillAlpha(),
             };
 
-            // TODO: Set every color property.
+            colors.TitleText = new AdjustableColor(ColorNames.Orange, "TitleText", colors);
+            colors.Lines = new AdjustableColor(ColorNames.CyanDark, "Lines", colors);
+            colors.TextBright = new AdjustableColor(ColorNames.White, "TextBright", colors);
+            colors.Text = new AdjustableColor(ColorNames.Gray, "Text", colors);
+            colors.TextSelected = new AdjustableColor(ColorNames.Yellow, "TextSelected", colors);
+            colors.TextSelectedDark = new AdjustableColor(ColorNames.YellowDark, "TextSelectedDark", colors);
+            colors.TextLight = new AdjustableColor(ColorNames.White, "TextLight", colors);
+            colors.TextDark = new AdjustableColor(ColorNames.GrayDark, "TextDark", colors);
+            colors.TextFocused = new AdjustableColor(ColorNames.White, "TextFocused", colors);
 
-            // Overwrite some of the control elements
-            colors.TitleText = colors.Orange;
-            colors.TextBright = colors.White;
-            colors.Text = colors.Gray;
-            colors.TextSelected = colors.Yellow;
-            colors.TextSelectedDark = colors.YellowDark;
-            colors.TextLight = colors.White;
-            colors.TextDark = colors.GrayDark;
-            colors.TextFocused = colors.White;
-            colors.Lines = colors.CyanDark;
-
-            colors.ControlBack = colors.Black;
-            colors.ControlBackLight = (colors.ControlBack * 1.3f).FillAlpha();
-            colors.ControlBackSelected = colors.GreenDark;
-            colors.ControlBackDark = (colors.ControlBack * 0.7f).FillAlpha();
-            colors.ControlHostBack = colors.Black;
-            colors.ControlHostFore = colors.Text;
+            colors.ControlBack = new AdjustableColor(ColorNames.Black, "ControlBack", colors);
+            colors.ControlBackLight = new AdjustableColor(colors.ControlBack, "ControlBackLight", colors) { Brightness = Brightness.Bright };
+            colors.ControlBackMouseOver = new AdjustableColor(ColorNames.Green, "ControlBackMouseOver", colors);
+            colors.ControlBackSelected = new AdjustableColor(ColorNames.GreenDark, "ControlBackSelected", colors);
+            colors.ControlBackDark = new AdjustableColor(colors.ControlBack, "ControlBackDark", colors) { Brightness = Brightness.Darkest };
+            colors.ControlHostBack = new AdjustableColor(ColorNames.Black, "ControlHostBack", colors);
+            colors.ControlHostFore = new AdjustableColor(colors.Text, "ControlHostFore", colors);
 
             // Rebuild the controls
             colors.RebuildAppearances();

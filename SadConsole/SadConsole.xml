@@ -7288,19 +7288,21 @@
             <param name="name">A friendly name of the color.</param>
             <param name="colors">The colors used setting the <see cref="P:SadConsole.UI.AdjustableColor.BaseColor"/> value.</param>
         </member>
-        <member name="M:SadConsole.UI.AdjustableColor.SetUIColor(SadConsole.UI.Colors.ColorNames,SadConsole.UI.Colors)">
+        <member name="M:SadConsole.UI.AdjustableColor.SetUIColor(SadConsole.UI.Colors.ColorNames,SadConsole.UI.Colors,SadConsole.UI.Colors.Brightness)">
             <summary>
             Maps this adjustable color to a <see cref="T:SadConsole.UI.Colors"/> color.
             </summary>
             <param name="color">The predefined color.</param>
             <param name="colors">The colors used setting the <see cref="P:SadConsole.UI.AdjustableColor.BaseColor"/> value.</param>
+            <param name="brightness">The brightness to apply to the color.</param>
         </member>
-        <member name="M:SadConsole.UI.AdjustableColor.SetColor(SadRogue.Primitives.Color,SadConsole.UI.Colors)">
+        <member name="M:SadConsole.UI.AdjustableColor.SetColor(SadRogue.Primitives.Color,SadConsole.UI.Colors,SadConsole.UI.Colors.Brightness)">
             <summary>
             Tries to map this adjustable color to a <see cref="T:SadConsole.UI.Colors"/> color.
             </summary>
             <param name="color">The color.</param>
             <param name="colors">The colors to try and map to.</param>
+            <param name="brightness">The brightness to apply to the color.</param>
         </member>
         <member name="M:SadConsole.UI.AdjustableColor.SetColor(SadRogue.Primitives.Color)">
             <summary>
@@ -7500,6 +7502,13 @@
             <param name="color">The color to get.</param>
             <returns>A color.</returns>
         </member>
+        <member name="M:SadConsole.UI.Colors.SetColorByName(SadConsole.UI.Colors.ColorNames,SadRogue.Primitives.Color)">
+            <summary>
+            Sets a named color to a specified value.
+            </summary>
+            <param name="name">The name of the color.</param>
+            <param name="color">The color value.</param>
+        </member>
         <member name="M:SadConsole.UI.Colors.TryToColorName(SadRogue.Primitives.Color,SadConsole.UI.Colors.ColorNames@)">
             <summary>
             Tries to get the color name of the specified color.
@@ -7693,6 +7702,11 @@
         <member name="M:SadConsole.UI.ControlHost.ReleaseControl">
             <summary>
             Releases the control from exclusive mouse focus. Sets the ExclusiveMouse property to false and sets the CapturedControl property to null.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.ForceRedrawAllControls">
+            <summary>
+            Forces each control to dirty so that the next frame will redraw each control.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlHost.GetEnumerator">

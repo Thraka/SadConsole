@@ -148,27 +148,31 @@ namespace SadConsole.UI
         /// </summary>
         public Color ModalBackground { get; set; } = new Color(20, 20, 20, 200);
 
-        public Color TitleText { get; set; }
-        public Color Lines { get; set; }
-        public Color TextBright { get; set; }
-        public Color Text { get; set; }
-        public Color TextSelected { get; set; }
-        public Color TextSelectedDark { get; set; }
-        public Color TextLight { get; set; }
-        public Color TextDark { get; set; }
-        public Color TextFocused { get; set; }
-        public Color ControlBack { get; set; }
-        public Color ControlBackLight { get; set; }
-        public Color ControlBackSelected { get; set; }
-        public Color ControlBackDark { get; set; }
-        public Color ControlHostBack { get; set; }
-        public Color ControlHostFore { get; set; }
-        public ColoredGlyph Appearance_ControlNormal { get; set; }
-        public ColoredGlyph Appearance_ControlDisabled { get; set; }
-        public ColoredGlyph Appearance_ControlOver { get; set; }
-        public ColoredGlyph Appearance_ControlSelected { get; set; }
-        public ColoredGlyph Appearance_ControlMouseDown { get; set; }
-        public ColoredGlyph Appearance_ControlFocused { get; set; }
+        //TODO: Change to adjustable color.
+        public AdjustableColor TitleText { get; set; }
+        public AdjustableColor Lines { get; set; }
+        public AdjustableColor TextBright { get; set; }
+        public AdjustableColor Text { get; set; }
+        public AdjustableColor TextSelected { get; set; }
+        public AdjustableColor TextSelectedDark { get; set; }
+        public AdjustableColor TextLight { get; set; }
+        public AdjustableColor TextDark { get; set; }
+        public AdjustableColor TextFocused { get; set; }
+        public AdjustableColor ControlBack { get; set; }
+        public AdjustableColor ControlBackLight { get; set; }
+        public AdjustableColor ControlBackMouseOver { get; set; }
+        public AdjustableColor ControlBackSelected { get; set; }
+        public AdjustableColor ControlBackDark { get; set; }
+        public AdjustableColor ControlHostBack { get; set; }
+        public AdjustableColor ControlHostFore { get; set; }
+
+
+        public ColoredGlyph Appearance_ControlNormal { get; set; } = new ColoredGlyph();
+        public ColoredGlyph Appearance_ControlDisabled { get; set; } = new ColoredGlyph();
+        public ColoredGlyph Appearance_ControlOver { get; set; } = new ColoredGlyph();
+        public ColoredGlyph Appearance_ControlSelected { get; set; } = new ColoredGlyph();
+        public ColoredGlyph Appearance_ControlMouseDown { get; set; } = new ColoredGlyph();
+        public ColoredGlyph Appearance_ControlFocused { get; set; } = new ColoredGlyph();
 
         /// <summary>
         /// Creates a color object based on the <see cref="Colors.CreateAnsi"/> scheme.
@@ -176,9 +180,8 @@ namespace SadConsole.UI
         public Colors()
         {
             var colors = CreateAnsi();
-            colors.CopyTo(this);
 
-            RebuildAppearances();
+            colors.CopyTo(this);
         }
 
         /// <summary>
@@ -194,7 +197,7 @@ namespace SadConsole.UI
         {
             Appearance_ControlNormal = new ColoredGlyph(Text, ControlBack);
             Appearance_ControlDisabled = new ColoredGlyph(TextDark, ControlBackDark);
-            Appearance_ControlOver = new ColoredGlyph(TextSelectedDark, ControlBackSelected);
+            Appearance_ControlOver = new ColoredGlyph(TextSelectedDark, ControlBackMouseOver);
             Appearance_ControlSelected = new ColoredGlyph(TextSelected, ControlBackSelected);
             Appearance_ControlMouseDown = new ColoredGlyph(ControlBackSelected, TextSelected);
             Appearance_ControlFocused = new ColoredGlyph(TextFocused, ControlBackLight);
@@ -238,24 +241,22 @@ namespace SadConsole.UI
 
             colors.ModalBackground = ModalBackground;
 
-            colors.TitleText = TitleText;
-
-            colors.Lines = Lines;
-
-            colors.TextBright = TextBright;
-            colors.Text = Text;
-            colors.TextSelected = TextSelected;
-            colors.TextSelectedDark = TextSelectedDark;
-            colors.TextLight = TextLight;
-            colors.TextDark = TextDark;
-            colors.TextFocused = TextFocused;
-
-            colors.ControlBack = ControlBack;
-            colors.ControlBackLight = ControlBackLight;
-            colors.ControlBackSelected = ControlBackSelected;
-            colors.ControlBackDark = ControlBackDark;
-            colors.ControlHostBack = ControlHostBack;
-            colors.ControlHostFore = ControlHostFore;
+            colors.TitleText = TitleText.Clone();
+            colors.Lines = Lines.Clone();
+            colors.TextBright = TextBright.Clone();
+            colors.Text = Text.Clone();
+            colors.TextSelected = TextSelected.Clone();
+            colors.TextSelectedDark = TextSelectedDark.Clone();
+            colors.TextLight = TextLight.Clone();
+            colors.TextDark = TextDark.Clone();
+            colors.TextFocused = TextFocused.Clone();
+            colors.ControlBack = ControlBack.Clone();
+            colors.ControlBackLight = ControlBackLight.Clone();
+            colors.ControlBackMouseOver = ControlBackMouseOver.Clone();
+            colors.ControlBackSelected = ControlBackSelected.Clone();
+            colors.ControlBackDark = ControlBackDark.Clone();
+            colors.ControlHostBack = ControlHostBack.Clone();
+            colors.ControlHostFore = ControlHostFore.Clone();
 
             colors.Appearance_ControlNormal.CopyAppearanceFrom(Appearance_ControlNormal);
             colors.Appearance_ControlDisabled.CopyAppearanceFrom(Appearance_ControlDisabled);
@@ -300,6 +301,98 @@ namespace SadConsole.UI
             ColorNames.BronzeDark => BronzeDark,
             _ => throw new NotImplementedException()
         };
+
+        /// <summary>
+        /// Sets a named color to a specified value.
+        /// </summary>
+        /// <param name="name">The name of the color.</param>
+        /// <param name="color">The color value.</param>
+        public void SetColorByName(ColorNames name, Color color)
+        {
+            switch (name)
+            {
+                case ColorNames.White:
+                    White = color;
+                    break;
+                case ColorNames.Black:
+                    Black = color;
+                    break;
+                case ColorNames.Gray:
+                    Gray = color;
+                    break;
+                case ColorNames.GrayDark:
+                    GrayDark = color;
+                    break;
+                case ColorNames.Red:
+                    Red = color;
+                    break;
+                case ColorNames.RedDark:
+                    RedDark = color;
+                    break;
+                case ColorNames.Green:
+                    Green = color;
+                    break;
+                case ColorNames.GreenDark:
+                    GreenDark = color;
+                    break;
+                case ColorNames.Cyan:
+                    Cyan = color;
+                    break;
+                case ColorNames.CyanDark:
+                    CyanDark = color;
+                    break;
+                case ColorNames.Blue:
+                    Blue = color;
+                    break;
+                case ColorNames.BlueDark:
+                    BlueDark = color;
+                    break;
+                case ColorNames.Purple:
+                    Purple = color;
+                    break;
+                case ColorNames.PurpleDark:
+                    PurpleDark = color;
+                    break;
+                case ColorNames.Yellow:
+                    Yellow = color;
+                    break;
+                case ColorNames.YellowDark:
+                    YellowDark = color;
+                    break;
+                case ColorNames.Orange:
+                    Orange = color;
+                    break;
+                case ColorNames.OrangeDark:
+                    OrangeDark = color;
+                    break;
+                case ColorNames.Brown:
+                    Brown = color;
+                    break;
+                case ColorNames.BrownDark:
+                    BrownDark = color;
+                    break;
+                case ColorNames.Gold:
+                    Gold = color;
+                    break;
+                case ColorNames.GoldDark:
+                    GoldDark = color;
+                    break;
+                case ColorNames.Silver:
+                    Silver = color;
+                    break;
+                case ColorNames.SilverDark:
+                    SilverDark = color;
+                    break;
+                case ColorNames.Bronze:
+                    Bronze = color;
+                    break;
+                case ColorNames.BronzeDark:
+                    BronzeDark = color;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         /// Tries to get the color name of the specified color.
@@ -372,6 +465,7 @@ namespace SadConsole.UI
 
             ColorExtensions.ColorMappings["theme.controlback"] = ControlBack;
             ColorExtensions.ColorMappings["theme.controlbacklight"] = ControlBackLight;
+            ColorExtensions.ColorMappings["theme.controlbackmouseover"] = ControlBackMouseOver;
             ColorExtensions.ColorMappings["theme.controlbackselected"] = ControlBackSelected;
             ColorExtensions.ColorMappings["theme.controlbackdark"] = ControlBackDark;
             ColorExtensions.ColorMappings["theme.controlhostback"] = ControlHostBack;

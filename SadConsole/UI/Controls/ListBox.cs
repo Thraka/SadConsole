@@ -71,6 +71,9 @@ namespace SadConsole.UI.Controls
         /// </summary>
         public int RelativeIndexMouseOver { get; private set; }
 
+        public int VisibleItemsTotal { get; set; }
+        public int VisibleItemsMax { get; set; }
+
         /// <summary>
         /// When the <see cref="SelectedItem"/> changes, and this property is true, objects will be compared by reference. If false, they will be compared by value.
         /// </summary>
@@ -209,6 +212,19 @@ namespace SadConsole.UI.Controls
             DetermineState();
         }
 
+        public void ScrollToSelectedItem()
+        {
+            if (IsScrollBarVisible)
+            {
+                if (selectedIndex < VisibleItemsMax)
+                    ScrollBar.Value = 0;
+                else if (SelectedIndex > Items.Count - VisibleItemsTotal)
+                    ScrollBar.Value = ScrollBar.Maximum;
+                else
+                    ScrollBar.Value = selectedIndex - VisibleItemsTotal;
+            }
+        }
+
         protected override void OnThemeChanged()
         {
             if (ScrollBar == null) return;
@@ -331,6 +347,14 @@ namespace SadConsole.UI.Controls
             else
             {
                 RelativeIndexMouseOver = -1;
+            }
+
+            if (state.OriginalMouseState.Mouse.ScrollWheelValueChange != 0)
+            {
+                if (state.OriginalMouseState.Mouse.ScrollWheelValueChange < 0)
+                    ScrollBar.Value -= 1;
+                else
+                    ScrollBar.Value += 1;
             }
         }
 

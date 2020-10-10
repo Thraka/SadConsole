@@ -141,10 +141,10 @@ namespace SadConsole.UI.Themes
 
             base.RefreshTheme(themeColors, control);
 
-            CheckedIcon.RefreshTheme(themeColors, control);
-            UncheckedIcon.RefreshTheme(themeColors, control);
-            LeftBracket.RefreshTheme(themeColors, control);
-            RightBracket.RefreshTheme(themeColors, control);
+            CheckedIcon.RefreshTheme(themeColors, control); CheckedIcon.SetForeground(themeColors.Lines);
+            UncheckedIcon.RefreshTheme(themeColors, control); UncheckedIcon.SetForeground(themeColors.Lines);
+            LeftBracket.RefreshTheme(themeColors, control); LeftBracket.SetForeground(themeColors.Lines);
+            RightBracket.RefreshTheme(themeColors, control); RightBracket.SetForeground(themeColors.Lines);
         }
 
         /// <inheritdoc />

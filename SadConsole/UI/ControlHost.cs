@@ -645,6 +645,17 @@ namespace SadConsole.UI
         }
 
         /// <summary>
+        /// Forces each control to dirty so that the next frame will redraw each control.
+        /// </summary>
+        public void ForceRedrawAllControls()
+        {
+            IsDirty = true;
+
+            foreach (var control in ControlsList)
+                control.IsDirty = true;
+        }
+
+        /// <summary>
         /// Gets an enumerator of the controls collection.
         /// </summary>
         /// <returns>The enumerator of the controls collection.</returns>

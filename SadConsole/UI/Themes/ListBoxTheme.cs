@@ -131,6 +131,9 @@ namespace SadConsole.UI.Themes
 
             listbox.MouseArea = new Rectangle(columnOffset, startingRow, columnEnd, endingRow);
 
+            listbox.VisibleItemsTotal = listbox.Items.Count >= endingRow ? endingRow : listbox.Items.Count;
+            listbox.VisibleItemsMax = listbox.MouseArea.Height;
+
             int offset = listbox.IsScrollBarVisible ? listbox.ScrollBar.Value : 0;
             for (int i = 0; i < endingRow; i++)
             {

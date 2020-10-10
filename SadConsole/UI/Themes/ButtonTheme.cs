@@ -250,7 +250,7 @@ namespace SadConsole.UI.Themes
             base.RefreshTheme(colors, control);
 
             _topLeftLineColorsDefault = new ColoredGlyph(colors.Lines, Color.Transparent);
-            _bottomRightLineColorsDefault = new ColoredGlyph(colors.Lines.GetDarker(), Color.Transparent);
+            _bottomRightLineColorsDefault = new ColoredGlyph(colors.Lines.ComputedColor.GetDarker(), Color.Transparent);
         }
 
         /// <inheritdoc />
@@ -275,7 +275,10 @@ namespace SadConsole.UI.Themes
                 mouseDown = true;
 
             if (Helpers.HasFlag((int)button.State, (int)ControlStates.MouseOver))
+            {
                 mouseOver = true;
+                appearance = MouseOver;
+            }
 
             if (Helpers.HasFlag((int)button.State, (int)ControlStates.Focused))
                 focused = true;

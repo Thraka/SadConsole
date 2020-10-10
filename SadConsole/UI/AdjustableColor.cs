@@ -71,7 +71,7 @@ namespace SadConsole.UI
         public AdjustableColor(Color color, string name, Colors colors)
         {
             Name = name;
-            SetColor(color, colors);
+            SetColor(color, colors, Brightness.Normal);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace SadConsole.UI
         public AdjustableColor(ColorNames color, string name, Colors colors)
         {
             UIColor = color;
-            SetUIColor(color, colors);
+            SetUIColor(color, colors, Brightness.Normal);
             Name = name;
         }
 
@@ -94,12 +94,13 @@ namespace SadConsole.UI
         /// </summary>
         /// <param name="color">The predefined color.</param>
         /// <param name="colors">The colors used setting the <see cref="BaseColor"/> value.</param>
-        public void SetUIColor(ColorNames color, Colors colors)
+        /// <param name="brightness">The brightness to apply to the color.</param>
+        public void SetUIColor(ColorNames color, Colors colors, Brightness brightness)
         {
             UIColor = color;
             IsCustomColor = false;
             BaseColor = colors.FromColorName(color);
-            Brightness = Brightness.Normal;
+            Brightness = brightness;
         }
 
         /// <summary>
@@ -107,11 +108,12 @@ namespace SadConsole.UI
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="colors">The colors to try and map to.</param>
-        public void SetColor(Color color, Colors colors)
+        /// <param name="brightness">The brightness to apply to the color.</param>
+        public void SetColor(Color color, Colors colors, Brightness brightness)
         {
             BaseColor = color;
             IsCustomColor = true;
-            Brightness = Brightness.Normal;
+            Brightness = brightness;
 
             if (colors.TryToColorName(color, out ColorNames colorName))
             {

@@ -85,10 +85,10 @@ namespace SadConsole.UI.Themes
 
             base.RefreshTheme(themeColors, control);
 
-            _checkedIconDefault.RefreshTheme(themeColors, control);
-            _uncheckedIconDefault.RefreshTheme(themeColors, control);
-            _leftBracketDefault.RefreshTheme(themeColors, control);
-            _rightBracketDefault.RefreshTheme(themeColors, control);
+            _checkedIconDefault.RefreshTheme(themeColors, control); _checkedIconDefault.SetForeground(themeColors.Lines);
+            _uncheckedIconDefault.RefreshTheme(themeColors, control); _uncheckedIconDefault.SetForeground(themeColors.Lines);
+            _leftBracketDefault.RefreshTheme(themeColors, control); _leftBracketDefault.SetForeground(themeColors.Lines);
+            _rightBracketDefault.RefreshTheme(themeColors, control); _rightBracketDefault.SetForeground(themeColors.Lines);
 
             _checkedIconDefault.SetGlyph(251);
             _uncheckedIconDefault.SetGlyph(0);
