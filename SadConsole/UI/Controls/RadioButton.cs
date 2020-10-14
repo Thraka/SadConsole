@@ -8,50 +8,10 @@ namespace SadConsole.UI.Controls
     /// Represents a button that can be toggled on/off within a group of other buttons.
     /// </summary>
     [DataContract]
-    public class RadioButton : ControlBase
+    public class RadioButton : ToggleButtonBase
     {
-        /// <summary>
-        /// Raised when the selected state of the radio button is changed.
-        /// </summary>
-        public event EventHandler IsSelectedChanged;
-
-        [DataMember(Name = "Group")]
-        protected string _groupName = "";
-        [DataMember(Name = "Text")]
-        protected string _text;
-        [DataMember(Name = "TextAlignment")]
-        protected HorizontalAlignment _textAlignment;
-        [DataMember(Name = "IsSelected")]
-        protected bool _isSelected;
-        protected bool _isMouseDown;
-
-        /// <summary>
-        /// The text displayed on the control.
-        /// </summary>
-        public string Text
-        {
-            get => _text;
-            set
-            {
-                _text = value;
-                DetermineState();
-                IsDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// The alignment of the text, left, center, or right.
-        /// </summary>
-        public HorizontalAlignment TextAlignment
-        {
-            get => _textAlignment;
-            set
-            {
-                _textAlignment = value;
-                DetermineState();
-                IsDirty = true;
-            }
-        }
+        [DataMember(Name = "GroupName")]
+        private string _groupName = "";
 
         /// <summary>
         /// The group of the radio button. All radio buttons with the same group name will work together to keep one radio button selected at a time.
@@ -64,50 +24,7 @@ namespace SadConsole.UI.Controls
                 _groupName = value.Trim();
 
                 if (_groupName == null)
-                {
                     _groupName = string.Empty;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the selected state of the radio button.
-        /// </summary>
-        /// <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (_isSelected != value)
-                {
-                    _isSelected = value;
-
-                    if (_isSelected)
-                    {
-                        if (Parent != null)
-                        {
-                            foreach (ControlBase child in Parent)
-                            {
-                                if (child is RadioButton && child != this)
-                                {
-                                    RadioButton button = (RadioButton)child;
-                                    if (button.GroupName.Equals(GroupName, StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        button.IsSelected = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    IsSelectedChanged?.Invoke(this, EventArgs.Empty);
-
-                    //if (value)
-                    //    OnAction();
-                    DetermineState();
-                    IsDirty = true;
-                }
             }
         }
 
@@ -120,45 +37,35 @@ namespace SadConsole.UI.Controls
         {
         }
 
-        protected override void OnLeftMouseClicked(ControlMouseState state)
+        /// <summary>
+        /// Perfroms a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
+        /// </summary>
+        protected override void OnClick()
         {
-            base.OnLeftMouseClicked(state);
+            base.OnClick();
 
-            if (_isEnabled)
-            {
+            if (!IsSelected)
                 IsSelected = true;
-            }
         }
 
         /// <summary>
-        /// Called when the control should process keyboard information.
+        /// Raises the <see cref="ToggleButtonBase.IsSelectedChanged"/> event and when <see cref="ToggleButtonBase.IsSelected"/> is <see langword="true"/>, deselects any other <see cref="RadioButton"/> with the same <see cref="GroupName"/>.
         /// </summary>
-        /// <param name="info">The keyboard information.</param>
-        /// <returns>True if the keyboard was handled by this control.</returns>
-        public override bool ProcessKeyboard(Input.Keyboard info)
+        protected override void OnIsSelected()
         {
-            if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
+            if (IsSelected && Parent != null)
             {
-                IsSelected = true;
-
-                return true;
-            }
-            else if (Parent != null)
-            {
-                if (info.IsKeyReleased(Keys.Up))
+                foreach (ControlBase child in Parent)
                 {
-                    Parent.Host.TabPreviousControl();
-                    return true;
+                    if (child is RadioButton button && child != this)
+                    {
+                        if (button.GroupName.Equals(GroupName, StringComparison.OrdinalIgnoreCase))
+                            button.IsSelected = false;
+                    }
                 }
-                else if (info.IsKeyReleased(Keys.Down))
-                {
-                    Parent.Host.TabNextControl();
-                    return true;
-                }
-
             }
 
-            return false;
+            base.OnIsSelected();
         }
 
         [OnDeserialized]

@@ -172,18 +172,14 @@ namespace SadConsole.UI.Controls
                     if (value)
                     {
                         if (Parent.Host.FocusedControl != this)
-                        {
                             Parent.Host.FocusedControl = this;
-                        }
                     }
                     else if (Parent.Host.FocusedControl == this)
                     {
                         Parent.Host.TabNextControl();
 
                         if (Parent.Host.FocusedControl == this)
-                        {
                             Parent.Host.FocusedControl = null;
-                        }
                     }
 
                     DetermineState();
@@ -349,8 +345,6 @@ namespace SadConsole.UI.Controls
             if (IsEnabled && UseMouse)
             {
                 var newState = new ControlMouseState(this, state);
-                var absolutePosition = AbsolutePosition;
-                var mouseArea = MouseArea;
                 
                 if (newState.IsMouseOver)
                 {
@@ -558,9 +552,7 @@ namespace SadConsole.UI.Controls
             MouseButtonClicked?.Invoke(this, state);
 
             if (FocusOnClick)
-            {
                 IsFocused = true;
-            }
 
             DetermineState();
         }

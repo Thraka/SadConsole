@@ -7310,6 +7310,12 @@
             </summary>
             <param name="color">The color.</param>
         </member>
+        <member name="M:SadConsole.UI.AdjustableColor.RefreshUIColor(SadConsole.UI.Colors)">
+            <summary>
+            Refreshes <see cref="P:SadConsole.UI.AdjustableColor.BaseColor"/> using <see cref="P:SadConsole.UI.AdjustableColor.UIColor"/> and the provided <see cref="T:SadConsole.UI.Colors" /> object.
+            </summary>
+            <param name="colors">The colors to pull a color value from.</param>
+        </member>
         <member name="M:SadConsole.UI.AdjustableColor.Clone">
             <summary>
             Creates a copy of this object.
@@ -7538,7 +7544,7 @@
             A brightness value that can be applied to a color.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Colors.CreateDefault">
+        <member name="M:SadConsole.UI.Colors.CreateSadConsoleBlue">
             <summary>
             Creates a new colors object with the default blue colors theme of SadConsole.
             </summary>
@@ -7824,6 +7830,18 @@
             <param name="bufferHeight">The total height of the console in cells.</param>
             <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
         </member>
+        <member name="T:SadConsole.UI.Controls.Button">
+            <summary>
+            Simple button control with a height of 1.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Button.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates an instance of the button control with the specified width and height.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control (default is 1).</param>
+        </member>
         <member name="T:SadConsole.UI.Controls.ButtonBase">
             <summary>
             Base class for creating a button type control.
@@ -7861,9 +7879,14 @@
             <param name="width">Width of the button.</param>
             <param name="height">Height of the button.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ButtonBase.DoClick">
+        <member name="M:SadConsole.UI.Controls.ButtonBase.OnClick">
             <summary>
             Raises the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ButtonBase.InvokeClick">
+            <summary>
+            Simulates a mouse click on the button.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ButtonBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
@@ -7872,57 +7895,22 @@
             </summary>
             <param name="info"></param>
         </member>
-        <member name="T:SadConsole.UI.Controls.Button">
-            <summary>
-            Simple button control with a height of 1.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Button.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Creates an instance of the button control with the specified width and height.
-            </summary>
-            <param name="width">Width of the control.</param>
-            <param name="height">Height of the control (default is 1).</param>
-        </member>
         <member name="T:SadConsole.UI.Controls.CheckBox">
             <summary>
             Represents a button that can be toggled on/off within a group of other buttons.
             </summary>
         </member>
-        <member name="E:SadConsole.UI.Controls.CheckBox.IsSelectedChanged">
-            <summary>
-            Raised when the selected state of the radio button is changed.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.CheckBox.Text">
-            <summary>
-            The text displayed on the control.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.CheckBox.TextAlignment">
-            <summary>
-            The alignment of the text, left, center, or right.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.CheckBox.IsSelected">
-            <summary>
-            Gets or sets the selected state of the radio button.
-            </summary>
-            <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
-        </member>
         <member name="M:SadConsole.UI.Controls.CheckBox.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates a new radio button control with the specified width and height.
+            Creates a new checkbox control with the specified width and height.
             </summary>
-            <param name="width">Width of the control.</param>
-            <param name="height">Height of the control.</param>
+            <param name="width">The width of the control.</param>
+            <param name="height">The height of the control.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.CheckBox.ProcessKeyboard(SadConsole.Input.Keyboard)">
+        <member name="M:SadConsole.UI.Controls.CheckBox.OnClick">
             <summary>
-            Called when the control should process keyboard information.
+            Perfroms a click on the base button and also toggles the <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> property.
             </summary>
-            <param name="info">The keyboard information.</param>
-            <returns>True if the keyboard was handled by this control.</returns>
         </member>
         <member name="P:SadConsole.UI.Controls.CompositeControl.Controls">
             <summary>
@@ -8559,31 +8547,10 @@
             Represents a button that can be toggled on/off within a group of other buttons.
             </summary>
         </member>
-        <member name="E:SadConsole.UI.Controls.RadioButton.IsSelectedChanged">
-            <summary>
-            Raised when the selected state of the radio button is changed.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.RadioButton.Text">
-            <summary>
-            The text displayed on the control.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.RadioButton.TextAlignment">
-            <summary>
-            The alignment of the text, left, center, or right.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.Controls.RadioButton.GroupName">
             <summary>
             The group of the radio button. All radio buttons with the same group name will work together to keep one radio button selected at a time.
             </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.RadioButton.IsSelected">
-            <summary>
-            Gets or sets the selected state of the radio button.
-            </summary>
-            <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
         </member>
         <member name="M:SadConsole.UI.Controls.RadioButton.#ctor(System.Int32,System.Int32)">
             <summary>
@@ -8592,12 +8559,15 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.RadioButton.ProcessKeyboard(SadConsole.Input.Keyboard)">
+        <member name="M:SadConsole.UI.Controls.RadioButton.OnClick">
             <summary>
-            Called when the control should process keyboard information.
+            Perfroms a click on the base button and also toggles the <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> property.
             </summary>
-            <param name="info">The keyboard information.</param>
-            <returns>True if the keyboard was handled by this control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.RadioButton.OnIsSelected">
+            <summary>
+            Raises the <see cref="E:SadConsole.UI.Controls.ToggleButtonBase.IsSelectedChanged"/> event and when <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> is <see langword="true"/>, deselects any other <see cref="T:SadConsole.UI.Controls.RadioButton"/> with the same <see cref="P:SadConsole.UI.Controls.RadioButton.GroupName"/>.
+            </summary>
         </member>
         <member name="T:SadConsole.UI.Controls.ScrollBar">
             <summary>
@@ -8658,6 +8628,7 @@
             Creates a new Selection Button with a specific width and height.
             </summary>
             <param name="width">The width of the selection button.</param>
+            <param name="height">The height of the selection button.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.SelectionButton.SetNextSelection(SadConsole.UI.Controls.SelectionButton@,System.Boolean)">
             <summary>
@@ -8876,44 +8847,37 @@
             </summary>
             <param name="key">The key being pressed.</param>
         </member>
-        <member name="T:SadConsole.UI.Themes.ButtonTheme">
+        <member name="T:SadConsole.UI.Controls.ToggleButtonBase">
             <summary>
-            The theme of the button control
+            Base class for toggle button controls, such as <see cref="T:SadConsole.UI.Controls.CheckBox"/> and <see cref="T:SadConsole.UI.Controls.RadioButton"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.ButtonTheme.ShowEnds">
+        <member name="E:SadConsole.UI.Controls.ToggleButtonBase.IsSelectedChanged">
             <summary>
-            When true, renders the <see cref="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterLeft"/> 
-            and <see cref="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterRight"/> on the button.
+            Raised when the selected state of the radio button is changed.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterLeft">
+        <member name="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected">
             <summary>
-            The character on the left side of the button. Defaults to '&lt;'.
+            Gets or sets the selected state of the radio button.
+            </summary>
+            <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ToggleButtonBase.OnIsSelected">
+            <summary>
+            Raises the <see cref="E:SadConsole.UI.Controls.ToggleButtonBase.IsSelectedChanged"/> event.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.ButtonTheme.EndCharacterRight">
+        <member name="M:SadConsole.UI.Controls.ToggleButtonBase.#ctor(System.Int32,System.Int32)">
             <summary>
-            The character on the right side of the button. Defaults to '>'.
+            Creates an instance of the button control with the specified width and height.
             </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.ButtonTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ButtonTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ButtonTheme.Clone">
-            <inheritdoc />
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control (default is 1).</param>
         </member>
         <member name="T:SadConsole.UI.Themes.Button3dTheme">
             <summary>
             A 3D shadow theme of the button control
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.Button3dTheme.Shade">
-            <summary>
-            The shade appearance for the 3D aspect of the button.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.Button3dTheme.Attached(SadConsole.UI.Controls.ControlBase)">
@@ -8933,23 +8897,51 @@
             A 3D theme of the button control using thin lines. Supports the SadConsole extended character set.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.ButtonLinesTheme.TopLeftLineColors">
-            <summary>
-            The colors to use for the top and left lines.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.ButtonLinesTheme.BottomRightLineColors">
-            <summary>
-            The colors to use for the bottom and right lines.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
         <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.ButtonTheme">
+            <summary>
+            The theme of the button control
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonTheme.ShowEnds">
+            <summary>
+            When true, renders the "end" glyphs on the button.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonTheme.LeftEndGlyph">
+            <summary>
+            The theme state used with the left end of the button.Defaults to '&lt;'.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonTheme.RightEndGlyph">
+            <summary>
+            The theme state used with the right end of the button. Defaults to '>'.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ButtonTheme.EndsThemeState">
+            <summary>
+            The theme state used with the left end of the button.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonTheme.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new button theme with the specified left and right brackets.
+            </summary>
+            <param name="leftEndGlyph">Specified the left end. Defaults to '$lt;'.</param>
+            <param name="rightEndGlyph">Specified the right bracket. Defaults to '>'.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonTheme.Clone">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.CheckBoxTheme">
@@ -8957,33 +8949,54 @@
             The theme of a checkbox control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.CheckedIcon">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.LeftBracketGlyph">
             <summary>
-            The icon displayed when the radio button is checked.
+            The glyph for the left-side bracket of the icon.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.UncheckedIcon">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.RightBracketGlyph">
             <summary>
-            The icon displayed when the radio button is checked.
+            The glyph for the right-side bracket of the icon.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.LeftBracket">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.CheckedIconGlyph">
             <summary>
-            The icon displayed for the brack left of the check icon.
+            The glyph of the icon when checked.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.RightBracket">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.UncheckedIconGlyph">
             <summary>
-            The icon displayed for the brack right of the check icon.
+            The glyph of the icon when unchecked.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.#ctor">
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.CheckedIconColor">
             <summary>
-            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.CheckBox"/>.
+            An optional color of the <see cref="P:SadConsole.UI.Themes.CheckBoxTheme.CheckedIconGlyph"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.UncheckedIconColor">
+            <summary>
+            An optional color of the <see cref="P:SadConsole.UI.Themes.CheckBoxTheme.UncheckedIconGlyph"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.BracketsThemeState">
+            <summary>
+            The theme state used with the brackets.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.CheckBoxTheme.IconThemeState">
+            <summary>
+            The theme state used with the icon of the checkbox.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.CheckBoxTheme.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new checkbox theme with an optional bracket and check icon.
+            </summary>
+            <param name="leftBracketGlyph">The left bracket of the checkbox icon. Defaults to '['.</param>
+            <param name="rightBracketGlyph">The right bracket of the checkbox icon. Defaults to ']'.</param>
+            <param name="checkedGlyph">The checkbox checked icon. Defaults to 251'√'.</param>
+            <param name="uncheckedGlyph">The checkbox unchecked icon. Defaults to 0.</param>
         </member>
         <member name="M:SadConsole.UI.Themes.CheckBoxTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
@@ -9008,9 +9021,6 @@
             <summary>
             The current appearance based on the control state.
             </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
@@ -9037,9 +9047,6 @@
             <summary>
             The decorator to use when the <see cref="P:SadConsole.UI.Controls.Label.ShowStrikethrough"/> is <see langword="true"/>.
             </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.LabelTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.LabelTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
@@ -9104,12 +9111,17 @@
             The theme for a ListBox control.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.ListBoxTheme.BorderTheme">
+        <member name="F:SadConsole.UI.Themes.ListBoxTheme._reconfigureSrollBar">
+            <summary>
+            Internal flag to indicate the scroll bar needs to be reconfigured.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ListBoxTheme.BorderTheme">
             <summary>
             The drawing theme for the boarder when <see cref="P:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Themes.ListBoxTheme.BorderLineStyle">
+        <member name="P:SadConsole.UI.Themes.ListBoxTheme.BorderLineStyle">
             <summary>
             The line style for the border when <see cref="P:SadConsole.UI.Themes.ListBoxTheme.DrawBorder"/> is true.
             </summary>
@@ -9130,6 +9142,12 @@
             </summary>
             <param name="scrollBarTheme">The theme to use to draw the scroll bar.</param>
         </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxTheme.SetupScrollBar(SadConsole.UI.Controls.ListBox)">
+            <summary>
+            Sets up the scroll bar for the listbox.
+            </summary>
+            <param name="listbox"></param>
+        </member>
         <member name="M:SadConsole.UI.Themes.ListBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
@@ -9148,13 +9166,44 @@
             </summary>
             <param name="control">Reference to the listbox being processed.</param>
         </member>
-        <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="T:SadConsole.UI.Themes.ListBoxItemTheme">
+            <summary>
+            A generic theme for a <see cref="T:SadConsole.UI.Controls.ListBox"/> item.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Colors)">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.Draw(SadConsole.UI.Controls.ListBox,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+            <summary>
+            Draws the <paramref name="item"/> in the specified <paramref name="area"/> of the listbox.
+            </summary>
+            <param name="control">The listbox that contains the item.</param>
+            <param name="area">The area to draw the item.</param>
+            <param name="item">The item object.</param>
+            <param name="itemState">The state of the item.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.Clone">
+            <summary>
+            Creates a copy of this theme.
+            </summary>
+            <returns>A new theme object.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Themes.ListBoxItemColorTheme">
+            <summary>
+            A theme for a <see cref="T:SadConsole.UI.Controls.ListBox"/> that displays a <see cref="T:SadRogue.Primitives.Color"/> object.
+            </summary>
         </member>
         <member name="P:SadConsole.UI.Themes.ListBoxItemColorTheme.UseSingleCharacterForBox">
             <summary>
             When <see langword="false"/>, colored boxes used when drawing the color for (Color, string) tuple will use two characters; otherwise <see langword="true"/> and only one character is used.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxItemColorTheme.Draw(SadConsole.UI.Controls.ListBox,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ListBoxItemColorTheme.Clone">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.PanelTheme">
             <summary>
@@ -9175,9 +9224,6 @@
             <summary>
             The current appearance based on the control state.
             </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.PanelTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.PanelTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
@@ -9205,9 +9251,6 @@
             Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.ProgressBar"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.ProgressBarTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
         <member name="M:SadConsole.UI.Themes.ProgressBarTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
         </member>
@@ -9219,36 +9262,14 @@
             The theme of a radio button control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.CheckedIcon">
+        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            The icon displayed when the radio button is checked.
+            Creates a new radio button theme with an optional bracket and check icon.
             </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.UncheckedIcon">
-            <summary>
-            The icon displayed when the radio button is checked.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.LeftBracket">
-            <summary>
-            The icon displayed for the brack left of the check icon.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.RadioButtonTheme.RightBracket">
-            <summary>
-            The icon displayed for the brack right of the check icon.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.#ctor">
-            <summary>
-            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.RadioButton"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.RadioButtonTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
+            <param name="leftBracketGlyph">The left bracket of the checkbox icon. Defaults to '('.</param>
+            <param name="rightBracketGlyph">The right bracket of the checkbox icon. Defaults to ')'.</param>
+            <param name="checkedGlyph">The checkbox checked icon. Defaults to 15'☼'.</param>
+            <param name="uncheckedGlyph">The checkbox unchecked icon. Defaults to 0.</param>
         </member>
         <member name="M:SadConsole.UI.Themes.RadioButtonTheme.Clone">
             <inheritdoc />
@@ -9293,9 +9314,6 @@
             Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.ScrollBar"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.ScrollBarTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
         <member name="M:SadConsole.UI.Themes.ScrollBarTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
@@ -9320,9 +9338,6 @@
             Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.TextBox"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.TextBoxTheme.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
         <member name="M:SadConsole.UI.Themes.TextBoxTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
@@ -9333,8 +9348,18 @@
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.ThemeBase">
-            <summary> 
+            <summary>
             The base class for a theme.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Themes.ThemeBase._colorsLastUsed">
+            <summary>
+            The colors last used when <see cref="M:SadConsole.UI.Themes.ThemeBase.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)"/> was called.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ThemeBase.ControlThemeState">
+            <summary>
+            Default theme state of the whole control.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.ThemeBase.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
@@ -9355,6 +9380,13 @@
             Creates a new theme instance based on the current instance.
             </summary>
             <returns>A new theme instance.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeBase.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Reloads the theme values based on the colors provided.
+            </summary>
+            <param name="colors">The colors to create the theme with.</param>
+            <param name="control">The control being drawn with the theme.</param>
         </member>
         <member name="T:SadConsole.UI.Themes.ThemeStates">
             <summary>
@@ -9428,12 +9460,11 @@
             </summary>
             <returns>A new instance of the theme.</returns>
         </member>
-        <member name="M:SadConsole.UI.Themes.ThemeStates.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
+        <member name="M:SadConsole.UI.Themes.ThemeStates.RefreshTheme(SadConsole.UI.Colors)">
             <summary>
             Reloads the theme values based on the colors provided.
             </summary>
             <param name="colors">The colors to create the theme with.</param>
-            <param name="control">The control being drawn with the theme.</param>
         </member>
         <member name="T:SadConsole.UI.Window">
             <summary>

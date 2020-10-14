@@ -148,23 +148,22 @@ namespace SadConsole.UI
         /// </summary>
         public Color ModalBackground { get; set; } = new Color(20, 20, 20, 200);
 
-        //TODO: Change to adjustable color.
-        public AdjustableColor TitleText { get; set; }
+        public AdjustableColor Title { get; set; }
         public AdjustableColor Lines { get; set; }
-        public AdjustableColor TextBright { get; set; }
-        public AdjustableColor Text { get; set; }
-        public AdjustableColor TextSelected { get; set; }
-        public AdjustableColor TextSelectedDark { get; set; }
-        public AdjustableColor TextLight { get; set; }
-        public AdjustableColor TextDark { get; set; }
-        public AdjustableColor TextFocused { get; set; }
-        public AdjustableColor ControlBack { get; set; }
-        public AdjustableColor ControlBackLight { get; set; }
-        public AdjustableColor ControlBackMouseOver { get; set; }
-        public AdjustableColor ControlBackSelected { get; set; }
-        public AdjustableColor ControlBackDark { get; set; }
-        public AdjustableColor ControlHostBack { get; set; }
-        public AdjustableColor ControlHostFore { get; set; }
+        public AdjustableColor ControlForegroundNormal { get; set; }
+        public AdjustableColor ControlForegroundDisabled { get; set; }
+        public AdjustableColor ControlForegroundMouseOver { get; set; }
+        public AdjustableColor ControlForegroundMouseDown { get; set; }
+        public AdjustableColor ControlForegroundSelected { get; set; }
+        public AdjustableColor ControlForegroundFocused { get; set; }
+        public AdjustableColor ControlBackgroundNormal { get; set; }
+        public AdjustableColor ControlBackgroundDisabled { get; set; }
+        public AdjustableColor ControlBackgroundMouseOver { get; set; }
+        public AdjustableColor ControlBackgroundMouseDown { get; set; }
+        public AdjustableColor ControlBackgroundSelected { get; set; }
+        public AdjustableColor ControlBackgroundFocused { get; set; }
+        public AdjustableColor ControlHostForeground { get; set; }
+        public AdjustableColor ControlHostBackground { get; set; }
 
 
         public ColoredGlyph Appearance_ControlNormal { get; set; } = new ColoredGlyph();
@@ -193,14 +192,14 @@ namespace SadConsole.UI
         /// <summary>
         /// Sets all Appearance* properties based on the existing colors and settings.
         /// </summary>
-        public void RebuildAppearances()
+        public virtual void RebuildAppearances()
         {
-            Appearance_ControlNormal = new ColoredGlyph(Text, ControlBack);
-            Appearance_ControlDisabled = new ColoredGlyph(TextDark, ControlBackDark);
-            Appearance_ControlOver = new ColoredGlyph(TextSelectedDark, ControlBackMouseOver);
-            Appearance_ControlSelected = new ColoredGlyph(TextSelected, ControlBackSelected);
-            Appearance_ControlMouseDown = new ColoredGlyph(ControlBackSelected, TextSelected);
-            Appearance_ControlFocused = new ColoredGlyph(TextFocused, ControlBackLight);
+            Appearance_ControlNormal = new ColoredGlyph(ControlForegroundNormal, ControlBackgroundNormal);
+            Appearance_ControlDisabled = new ColoredGlyph(ControlForegroundDisabled, ControlBackgroundDisabled);
+            Appearance_ControlOver = new ColoredGlyph(ControlForegroundMouseOver, ControlBackgroundMouseOver);
+            Appearance_ControlMouseDown = new ColoredGlyph(ControlForegroundMouseDown, ControlBackgroundMouseDown);
+            Appearance_ControlSelected = new ColoredGlyph(ControlForegroundSelected, ControlBackgroundSelected);
+            Appearance_ControlFocused = new ColoredGlyph(ControlForegroundFocused, ControlBackgroundFocused);
         }
 
         /// <summary>
@@ -241,22 +240,22 @@ namespace SadConsole.UI
 
             colors.ModalBackground = ModalBackground;
 
-            colors.TitleText = TitleText.Clone();
+            colors.Title = Title.Clone();
             colors.Lines = Lines.Clone();
-            colors.TextBright = TextBright.Clone();
-            colors.Text = Text.Clone();
-            colors.TextSelected = TextSelected.Clone();
-            colors.TextSelectedDark = TextSelectedDark.Clone();
-            colors.TextLight = TextLight.Clone();
-            colors.TextDark = TextDark.Clone();
-            colors.TextFocused = TextFocused.Clone();
-            colors.ControlBack = ControlBack.Clone();
-            colors.ControlBackLight = ControlBackLight.Clone();
-            colors.ControlBackMouseOver = ControlBackMouseOver.Clone();
-            colors.ControlBackSelected = ControlBackSelected.Clone();
-            colors.ControlBackDark = ControlBackDark.Clone();
-            colors.ControlHostBack = ControlHostBack.Clone();
-            colors.ControlHostFore = ControlHostFore.Clone();
+            colors.ControlForegroundNormal = ControlForegroundNormal.Clone();
+            colors.ControlForegroundDisabled = ControlForegroundDisabled.Clone();
+            colors.ControlForegroundMouseOver = ControlForegroundMouseOver.Clone();
+            colors.ControlForegroundMouseDown = ControlForegroundMouseDown.Clone();
+            colors.ControlForegroundSelected = ControlForegroundSelected.Clone();
+            colors.ControlForegroundFocused = ControlForegroundFocused.Clone();
+            colors.ControlBackgroundNormal = ControlBackgroundNormal.Clone();
+            colors.ControlBackgroundDisabled = ControlBackgroundDisabled.Clone();
+            colors.ControlBackgroundMouseOver = ControlBackgroundMouseOver.Clone();
+            colors.ControlBackgroundMouseDown = ControlBackgroundMouseDown.Clone();
+            colors.ControlBackgroundSelected = ControlBackgroundSelected.Clone();
+            colors.ControlBackgroundFocused = ControlBackgroundFocused.Clone();
+            colors.ControlHostForeground = ControlHostForeground.Clone();
+            colors.ControlHostBackground = ControlHostBackground.Clone();
 
             colors.Appearance_ControlNormal.CopyAppearanceFrom(Appearance_ControlNormal);
             colors.Appearance_ControlDisabled.CopyAppearanceFrom(Appearance_ControlDisabled);
@@ -451,25 +450,23 @@ namespace SadConsole.UI
 
             ColorExtensions.ColorMappings["theme.modalbackground"] = ModalBackground;
 
-            ColorExtensions.ColorMappings["theme.titletext"] = TitleText;
-
+            ColorExtensions.ColorMappings["theme.title"] = Title;
             ColorExtensions.ColorMappings["theme.lines"] = Lines;
 
-            ColorExtensions.ColorMappings["theme.textbright"] = TextBright;
-            ColorExtensions.ColorMappings["theme.text"] = Text;
-            ColorExtensions.ColorMappings["theme.textselected"] = TextSelected;
-            ColorExtensions.ColorMappings["theme.textselecteddark"] = TextSelectedDark;
-            ColorExtensions.ColorMappings["theme.textlight"] = TextLight;
-            ColorExtensions.ColorMappings["theme.textdark"] = TextDark;
-            ColorExtensions.ColorMappings["theme.textfocused"] = TextFocused;
-
-            ColorExtensions.ColorMappings["theme.controlback"] = ControlBack;
-            ColorExtensions.ColorMappings["theme.controlbacklight"] = ControlBackLight;
-            ColorExtensions.ColorMappings["theme.controlbackmouseover"] = ControlBackMouseOver;
-            ColorExtensions.ColorMappings["theme.controlbackselected"] = ControlBackSelected;
-            ColorExtensions.ColorMappings["theme.controlbackdark"] = ControlBackDark;
-            ColorExtensions.ColorMappings["theme.controlhostback"] = ControlHostBack;
-            ColorExtensions.ColorMappings["theme.controlhostfore"] = ControlHostFore;
+            ColorExtensions.ColorMappings["theme.controlforegroundnormal"] = ControlForegroundNormal;
+            ColorExtensions.ColorMappings["theme.controlforegrounddisabled"] = ControlForegroundDisabled;
+            ColorExtensions.ColorMappings["theme.controlforegroundmouseover"] = ControlForegroundMouseOver;
+            ColorExtensions.ColorMappings["theme.controlforegroundmousedown"] = ControlForegroundMouseDown;
+            ColorExtensions.ColorMappings["theme.controlforegroundselected"] = ControlForegroundSelected;
+            ColorExtensions.ColorMappings["theme.controlforegroundfocused"] = ControlForegroundFocused;
+            ColorExtensions.ColorMappings["theme.controlbackgroundnormal"] = ControlBackgroundNormal;
+            ColorExtensions.ColorMappings["theme.controlbackgrounddisabled"] = ControlBackgroundDisabled;
+            ColorExtensions.ColorMappings["theme.controlbackgroundmouseover"] = ControlBackgroundMouseOver;
+            ColorExtensions.ColorMappings["theme.controlbackgroundmousedown"] = ControlBackgroundMouseDown;
+            ColorExtensions.ColorMappings["theme.controlbackgroundselected"] = ControlBackgroundSelected;
+            ColorExtensions.ColorMappings["theme.controlbackgroundfocused"] = ControlBackgroundFocused;
+            ColorExtensions.ColorMappings["theme.controlhostforeground"] = ControlHostForeground;
+            ColorExtensions.ColorMappings["theme.controlhostbackground"] = ControlHostBackground;
         }
 
         /// <summary>

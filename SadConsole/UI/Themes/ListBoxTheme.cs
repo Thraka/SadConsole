@@ -11,20 +11,23 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class ListBoxTheme : ThemeBase
     {
-        protected bool _reconfigureSrollBar;
         private bool _drawBorder;
+
+        /// <summary>
+        /// Internal flag to indicate the scroll bar needs to be reconfigured.
+        /// </summary>
+        protected bool _reconfigureSrollBar;
 
         /// <summary>
         /// The drawing theme for the boarder when <see cref="DrawBorder"/> is true.
         /// </summary>
-        [DataMember]
-        public ThemeStates BorderTheme;
+        public ThemeStates BorderTheme { get; protected set; }
 
         /// <summary>
         /// The line style for the border when <see cref="DrawBorder"/> is true.
         /// </summary>
         [DataMember]
-        public int[] BorderLineStyle = (int[])ICellSurface.ConnectedLineThin.Clone();
+        public int[] BorderLineStyle { get; set; } = (int[])ICellSurface.ConnectedLineThin.Clone();
 
         /// <summary>
         /// If false the border will not be drawn.
@@ -52,6 +55,10 @@ namespace SadConsole.UI.Themes
             BorderTheme = new ThemeStates();
         }
 
+        /// <summary>
+        /// Sets up the scroll bar for the listbox.
+        /// </summary>
+        /// <param name="listbox"></param>
         protected void SetupScrollBar(ListBox listbox)
         {
             if (DrawBorder)
@@ -65,11 +72,7 @@ namespace SadConsole.UI.Themes
         {
             if (!(control is ListBox listbox)) throw new Exception("Added ListBoxTheme to a control that isn't a ListBox.");
 
-            control.Surface = new CellSurface(control.Width, control.Height)
-            {
-                DefaultBackground = Color.Transparent
-            };
-            control.Surface.Clear();
+            base.Attached(control);
 
             SetupScrollBar(listbox);
         }
@@ -77,15 +80,8 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is ListBox listbox))
-            {
-                return;
-            }
-
-            if (!listbox.IsDirty)
-            {
-                return;
-            }
+            if (!(control is ListBox listbox)) return;
+            if (!listbox.IsDirty) return;
 
             if (_reconfigureSrollBar)
             {
@@ -100,8 +96,7 @@ namespace SadConsole.UI.Themes
             int startingRow;
             int endingRow;
 
-            ColoredGlyph appearance = GetStateAppearance(listbox.State);
-            ColoredGlyph scrollBarAppearance = ScrollBarTheme.GetStateAppearance(listbox.State);
+            ColoredGlyph appearance = ControlThemeState.GetStateAppearance(listbox.State);
             ColoredGlyph borderAppearance = BorderTheme.GetStateAppearance(listbox.State);
 
             // Redraw the control
@@ -181,34 +176,27 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override void RefreshTheme(Colors colors, ControlBase control)
         {
-            if (colors == null) colors = Library.Default.Colors;
+            base.RefreshTheme(colors, control);
 
             var listbox = (ListBox)control;
 
-            base.RefreshTheme(colors, control);
-
-            SetForeground(Normal.Foreground);
-            SetBackground(Normal.Background);
-            listbox.ItemTheme.RefreshTheme(colors, control);
+            ControlThemeState.SetForeground(ControlThemeState.Normal.Foreground);
+            ControlThemeState.SetBackground(ControlThemeState.Normal.Background);
+            listbox.ItemTheme.RefreshTheme(_colorsLastUsed);
 
             listbox.ScrollBar.Theme = ScrollBarTheme;
 
-            ScrollBarTheme?.RefreshTheme(colors, listbox.ScrollBar);
+            ScrollBarTheme?.RefreshTheme(_colorsLastUsed, listbox.ScrollBar);
 
-            BorderTheme.RefreshTheme(colors, control);
-            BorderTheme.SetForeground(colors.Lines);
-            BorderTheme.SetBackground(Normal.Background);
+            BorderTheme.RefreshTheme(_colorsLastUsed);
+            BorderTheme.SetForeground(_colorsLastUsed.Lines);
+            BorderTheme.SetBackground(ControlThemeState.Normal.Background);
         }
 
         /// <inheritdoc />
         public override ThemeBase Clone() => new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone())
         {
-            Normal = Normal.Clone(),
-            Disabled = Disabled.Clone(),
-            MouseOver = MouseOver.Clone(),
-            MouseDown = MouseDown.Clone(),
-            Selected = Selected.Clone(),
-            Focused = Focused.Clone(),
+            ControlThemeState = ControlThemeState.Clone(),
             BorderTheme = BorderTheme?.Clone(),
             BorderLineStyle = (int[])BorderLineStyle?.Clone(),
             DrawBorder = DrawBorder,
@@ -238,16 +226,15 @@ namespace SadConsole.UI.Themes
         }
     }
 
+    /// <summary>
+    /// A generic theme for a <see cref="ListBox"/> item.
+    /// </summary>
     public class ListBoxItemTheme : ThemeStates
     {
-        public ListBoxItemTheme() { }
-
         /// <inheritdoc />
-        public override void RefreshTheme(Colors themeColors, ControlBase control)
+        public override void RefreshTheme(Colors themeColors)
         {
-            if (themeColors == null) themeColors = Library.Default.Colors;
-
-            base.RefreshTheme(themeColors, control);
+            base.RefreshTheme(themeColors);
 
             SetForeground(Normal.Foreground);
             SetBackground(Normal.Background);
@@ -256,6 +243,13 @@ namespace SadConsole.UI.Themes
             MouseOver = themeColors.Appearance_ControlOver.Clone();
         }
 
+        /// <summary>
+        /// Draws the <paramref name="item"/> in the specified <paramref name="area"/> of the listbox.
+        /// </summary>
+        /// <param name="control">The listbox that contains the item.</param>
+        /// <param name="area">The area to draw the item.</param>
+        /// <param name="item">The item object.</param>
+        /// <param name="itemState">The state of the item.</param>
         public virtual void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
             string value = item.ToString();
@@ -278,7 +272,11 @@ namespace SadConsole.UI.Themes
             }
         }
 
-        public virtual object Clone() => new ListBoxItemTheme()
+        /// <summary>
+        /// Creates a copy of this theme.
+        /// </summary>
+        /// <returns>A new theme object.</returns>
+        public new virtual ListBoxItemTheme Clone() => new ListBoxItemTheme()
         {
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
@@ -289,6 +287,10 @@ namespace SadConsole.UI.Themes
         };
     }
 
+    /// <summary>
+    /// A theme for a <see cref="ListBox"/> that displays a <see cref="Color"/> object.
+    /// </summary>
+    [DataContract]
     public class ListBoxItemColorTheme : ListBoxItemTheme
     {
         // TODO: Change ValueTyple to specific types
@@ -298,8 +300,7 @@ namespace SadConsole.UI.Themes
         /// </summary>
         public bool UseSingleCharacterForBox { get; set; } = false;
 
-        public ListBoxItemColorTheme() { }
-
+        /// <inheritdoc />
         public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
             if (item is Color || item is ValueTuple<Color, string> || item is ValueTuple<Color, Color, string>)
@@ -364,7 +365,8 @@ namespace SadConsole.UI.Themes
             }
         }
 
-        public override object Clone() => new ListBoxItemColorTheme()
+        /// <inheritdoc />
+        public override ListBoxItemTheme Clone() => new ListBoxItemColorTheme()
         {
             Normal = Normal.Clone(),
             Disabled = Disabled.Clone(),
@@ -372,6 +374,7 @@ namespace SadConsole.UI.Themes
             MouseDown = MouseDown.Clone(),
             Selected = Selected.Clone(),
             Focused = Focused.Clone(),
+            UseSingleCharacterForBox = UseSingleCharacterForBox
         };
     }
 }

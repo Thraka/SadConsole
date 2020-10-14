@@ -4,139 +4,29 @@ using System.Runtime.Serialization;
 
 namespace SadConsole.UI.Controls
 {
+
     /// <summary>
     /// Represents a button that can be toggled on/off within a group of other buttons.
     /// </summary>
     [DataContract]
-    public class CheckBox : ControlBase
+    public class CheckBox : ToggleButtonBase
     {
         /// <summary>
-        /// Raised when the selected state of the radio button is changed.
+        /// Creates a new checkbox control with the specified width and height.
         /// </summary>
-        public event EventHandler IsSelectedChanged;
-
-        [DataMember(Name = "Group")]
-        protected string _groupName = "";
-        [DataMember(Name = "Text")]
-        protected string _text;
-        [DataMember(Name = "TextAlignment")]
-        protected HorizontalAlignment _textAlignment;
-        [DataMember(Name = "IsSelected")]
-        protected bool _isSelected;
-        protected bool _isMouseDown;
-
-        /// <summary>
-        /// The text displayed on the control.
-        /// </summary>
-        public string Text
-        {
-            get => _text;
-            set
-            {
-                _text = value;
-                IsDirty = true;
-                DetermineState();
-            }
-        }
-
-        /// <summary>
-        /// The alignment of the text, left, center, or right.
-        /// </summary>
-        public HorizontalAlignment TextAlignment
-        {
-            get => _textAlignment;
-            set
-            {
-                _textAlignment = value;
-                IsDirty = true;
-                DetermineState();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the selected state of the radio button.
-        /// </summary>
-        /// <remarks>Radio buttons within the same group will set their IsSelected property to the opposite of this radio button when you set this property.</remarks>
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (_isSelected != value)
-                {
-                    _isSelected = value;
-
-                    IsSelectedChanged?.Invoke(this, EventArgs.Empty);
-
-                    //if (value)
-                    //    OnAction();
-                    IsDirty = true;
-                    DetermineState();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Creates a new radio button control with the specified width and height.
-        /// </summary>
-        /// <param name="width">Width of the control.</param>
-        /// <param name="height">Height of the control.</param>
+        /// <param name="width">The width of the control.</param>
+        /// <param name="height">The height of the control.</param>
         public CheckBox(int width, int height) : base(width, height)
         {
         }
 
-        protected override void OnMouseIn(ControlMouseState state)
-        {
-            _isMouseOver = true;
-
-            base.OnMouseIn(state);
-        }
-
-        protected override void OnMouseExit(ControlMouseState state)
-        {
-            _isMouseOver = false;
-
-            base.OnMouseExit(state);
-        }
-
-        protected override void OnLeftMouseClicked(ControlMouseState state)
-        {
-            base.OnLeftMouseClicked(state);
-
-            if (_isEnabled)
-            {
-                IsSelected = !IsSelected;
-            }
-        }
-
         /// <summary>
-        /// Called when the control should process keyboard information.
+        /// Perfroms a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
         /// </summary>
-        /// <param name="info">The keyboard information.</param>
-        /// <returns>True if the keyboard was handled by this control.</returns>
-        public override bool ProcessKeyboard(Input.Keyboard info)
+        protected override void OnClick()
         {
-            if (info.IsKeyReleased(Keys.Space) || info.IsKeyReleased(Keys.Enter))
-            {
-                IsSelected = !IsSelected;
-
-                return true;
-            }
-            else if (Parent != null)
-            {
-                if (info.IsKeyReleased(Keys.Up))
-                {
-                    Parent.Host.TabPreviousControl();
-                    return true;
-                }
-                else if (info.IsKeyReleased(Keys.Down))
-                {
-                    Parent.Host.TabNextControl();
-                    return true;
-                }
-            }
-
-            return false;
+            base.OnClick();
+            IsSelected = !IsSelected;
         }
 
         [OnDeserialized]

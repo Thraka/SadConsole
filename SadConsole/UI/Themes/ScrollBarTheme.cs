@@ -62,26 +62,14 @@ namespace SadConsole.UI.Themes
         }
 
         /// <inheritdoc />
-        public override void Attached(ControlBase control)
-        {
-            control.Surface = new CellSurface(control.Width, control.Height)
-            {
-                DefaultBackground = Color.Transparent
-            };
-            control.Surface.Clear();
-        }
-
-        /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            if (themeColors == null) themeColors = Library.Default.Colors;
-
             base.RefreshTheme(themeColors, control);
 
-            SetForeground(Normal.Foreground);
-            SetBackground(Normal.Background);
+            ControlThemeState.SetForeground(ControlThemeState.Normal.Foreground);
+            ControlThemeState.SetBackground(ControlThemeState.Normal.Background);
 
-            Disabled = themeColors.Appearance_ControlDisabled.Clone();
+            ControlThemeState.Disabled = _colorsLastUsed.Appearance_ControlDisabled.Clone();
         }
 
         /// <inheritdoc />
@@ -99,28 +87,7 @@ namespace SadConsole.UI.Themes
 
             RefreshTheme(control.FindThemeColors(), control);
 
-            ColoredGlyph appearance;
-
-            if (Helpers.HasFlag((int)scrollbar.State, (int)ControlStates.Disabled))
-            {
-                appearance = Disabled;
-            }
-            else if (Helpers.HasFlag((int)scrollbar.State, (int)ControlStates.MouseLeftButtonDown) || Helpers.HasFlag((int)scrollbar.State, (int)ControlStates.MouseRightButtonDown))
-            {
-                appearance = MouseDown;
-            }
-            else if (Helpers.HasFlag((int)scrollbar.State, (int)ControlStates.MouseOver))
-            {
-                appearance = MouseOver;
-            }
-            else if (Helpers.HasFlag((int)scrollbar.State, (int)ControlStates.Focused))
-            {
-                appearance = Focused;
-            }
-            else
-            {
-                appearance = Normal;
-            }
+            ColoredGlyph appearance = ControlThemeState.GetStateAppearance(scrollbar.State);
 
             scrollbar.Surface.Clear();
 
@@ -182,12 +149,7 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new ScrollBarTheme()
         {
-            Normal = Normal.Clone(),
-            Disabled = Disabled.Clone(),
-            MouseOver = MouseOver.Clone(),
-            MouseDown = MouseDown.Clone(),
-            Selected = Selected.Clone(),
-            Focused = Focused.Clone(),
+            ControlThemeState = ControlThemeState.Clone(),
             StartButtonVerticalGlyph = StartButtonVerticalGlyph,
             EndButtonVerticalGlyph = EndButtonVerticalGlyph,
             StartButtonHorizontalGlyph = StartButtonHorizontalGlyph,

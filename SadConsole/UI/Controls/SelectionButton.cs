@@ -24,6 +24,7 @@ namespace SadConsole.UI.Controls
         /// Creates a new Selection Button with a specific width and height.
         /// </summary>
         /// <param name="width">The width of the selection button.</param>
+        /// <param name="height">The height of the selection button.</param>
         public SelectionButton(int width, int height) : base(width, height)
         {
         }
@@ -39,9 +40,7 @@ namespace SadConsole.UI.Controls
             NextSelection = nextSelection;
 
             if (setPreviousOnNext)
-            {
                 nextSelection.PreviousSelection = this;
-            }
 
             return nextSelection;
         }

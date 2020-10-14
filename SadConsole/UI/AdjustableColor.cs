@@ -134,6 +134,16 @@ namespace SadConsole.UI
         }
 
         /// <summary>
+        /// Refreshes <see cref="BaseColor"/> using <see cref="UIColor"/> and the provided <see cref="Colors" /> object.
+        /// </summary>
+        /// <param name="colors">The colors to pull a color value from.</param>
+        public void RefreshUIColor(Colors colors)
+        {
+            if (IsCustomColor)
+                BaseColor = colors.FromColorName(UIColor);
+        }
+
+        /// <summary>
         /// Creates a copy of this object.
         /// </summary>
         /// <returns>A new adjustable color object.</returns>

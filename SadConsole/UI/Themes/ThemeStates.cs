@@ -10,8 +10,6 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class ThemeStates
     {
-        protected Colors _colorsLastUsed;
-
         /// <summary>
         /// The normal appearance of the control.
         /// </summary>
@@ -112,29 +110,19 @@ namespace SadConsole.UI.Themes
         public ColoredGlyph GetStateAppearance(ControlStates state)
         {
             if (Helpers.HasFlag((int)state, (int)ControlStates.Disabled))
-            {
                 return Disabled;
-            }
 
             if (Helpers.HasFlag((int)state, (int)ControlStates.MouseLeftButtonDown) || Helpers.HasFlag((int)state, (int)ControlStates.MouseRightButtonDown))
-            {
                 return MouseDown;
-            }
 
             if (Helpers.HasFlag((int)state, (int)ControlStates.MouseOver))
-            {
                 return MouseOver;
-            }
 
             if (Helpers.HasFlag((int)state, (int)ControlStates.Focused))
-            {
                 return Focused;
-            }
 
             if (Helpers.HasFlag((int)state, (int)ControlStates.Selected))
-            {
                 return Selected;
-            }
 
             return Normal;
         }
@@ -157,19 +145,23 @@ namespace SadConsole.UI.Themes
         /// Reloads the theme values based on the colors provided.
         /// </summary>
         /// <param name="colors">The colors to create the theme with.</param>
-        /// <param name="control">The control being drawn with the theme.</param>
-        public virtual void RefreshTheme(Colors colors, ControlBase control)
+        public virtual void RefreshTheme(Colors colors)
         {
-            if (colors == null) colors = control.FindThemeColors();
+            CopyAppearance(Normal, colors.Appearance_ControlNormal);
+            CopyAppearance(Disabled, colors.Appearance_ControlDisabled);
+            CopyAppearance(MouseOver, colors.Appearance_ControlOver);
+            CopyAppearance(MouseDown, colors.Appearance_ControlMouseDown);
+            CopyAppearance(Selected, colors.Appearance_ControlSelected);
+            CopyAppearance(Focused, colors.Appearance_ControlFocused);
+            CopyAppearance(Normal, colors.Appearance_ControlNormal);
+        }
 
-            Normal = colors.Appearance_ControlNormal.Clone();
-            Disabled = colors.Appearance_ControlDisabled.Clone();
-            MouseOver = colors.Appearance_ControlOver.Clone();
-            MouseDown = colors.Appearance_ControlMouseDown.Clone();
-            Selected = colors.Appearance_ControlSelected.Clone();
-            Focused = colors.Appearance_ControlFocused.Clone();
-
-            _colorsLastUsed = colors;
+        private static void CopyAppearance(ColoredGlyph to, ColoredGlyph from)
+        {
+            to.Foreground = from.Foreground;
+            to.Background = from.Background;
+            to.Mirror = from.Mirror;
+            to.Decorators = from.Decorators;
         }
     }
 }

@@ -11,169 +11,169 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class CheckBoxTheme : ThemeBase
     {
-        private ThemeStates _checkedIcon;
-        private ThemeStates _uncheckedIcon;
-        private ThemeStates _leftBracket;
-        private ThemeStates _rightBracket;
-
-        protected ThemeStates _checkedIconDefault;
-        protected ThemeStates _uncheckedIconDefault;
-        protected ThemeStates _leftBracketDefault;
-        protected ThemeStates _rightBracketDefault;
+        /// <summary>
+        /// The glyph for the left-side bracket of the icon.
+        /// </summary>
+        [DataMember]
+        public int LeftBracketGlyph { get; set; }
 
         /// <summary>
-        /// The icon displayed when the radio button is checked.
+        /// The glyph for the right-side bracket of the icon.
         /// </summary>
-        [DataMember] public ThemeStates CheckedIcon
-        {
-            get => _checkedIcon ?? _checkedIconDefault;
-            set => _checkedIcon = value;
-        }
+        [DataMember]
+        public int RightBracketGlyph { get; set; }
 
         /// <summary>
-        /// The icon displayed when the radio button is checked.
+        /// The glyph of the icon when checked.
         /// </summary>
-        [DataMember] public ThemeStates UncheckedIcon
-        {
-            get => _uncheckedIcon ?? _uncheckedIconDefault;
-            set => _uncheckedIcon = value;
-        }
+        [DataMember]
+        public int CheckedIconGlyph { get; set; }
 
         /// <summary>
-        /// The icon displayed for the brack left of the check icon.
+        /// The glyph of the icon when unchecked.
         /// </summary>
-        [DataMember] public ThemeStates LeftBracket
-        {
-            get => _leftBracket ?? _leftBracketDefault;
-            set => _leftBracket = value;
-        }
+        [DataMember]
+        public int UncheckedIconGlyph { get; set; }
+
 
         /// <summary>
-        /// The icon displayed for the brack right of the check icon.
+        /// An optional color of the <see cref="CheckedIconGlyph"/>.
         /// </summary>
-        [DataMember] public ThemeStates RightBracket
-        {
-            get => _rightBracket ?? _rightBracketDefault;
-            set => _rightBracket = value;
-        }
+        [DataMember]
+        public Color? CheckedIconColor { get; set; }
 
         /// <summary>
-        /// Creates a new theme used by the <see cref="CheckBox"/>.
+        /// An optional color of the <see cref="UncheckedIconGlyph"/>.
         /// </summary>
-        public CheckBoxTheme()
-        {
-            _checkedIconDefault = new ThemeStates();
-            _uncheckedIconDefault = new ThemeStates();
-            _leftBracketDefault = new ThemeStates();
-            _rightBracketDefault = new ThemeStates();
-        }
+        [DataMember]
+        public Color? UncheckedIconColor { get; set; }
 
-        /// <inheritdoc />
-        public override void Attached(ControlBase control)
+        /// <summary>
+        /// The theme state used with the brackets.
+        /// </summary>
+        public ThemeStates BracketsThemeState { get; protected set; }
+
+        /// <summary>
+        /// The theme state used with the icon of the checkbox.
+        /// </summary>
+        public  ThemeStates IconThemeState { get; protected set; }
+
+        /// <summary>
+        /// Creates a new checkbox theme with an optional bracket and check icon.
+        /// </summary>
+        /// <param name="leftBracketGlyph">The left bracket of the checkbox icon. Defaults to '['.</param>
+        /// <param name="rightBracketGlyph">The right bracket of the checkbox icon. Defaults to ']'.</param>
+        /// <param name="checkedGlyph">The checkbox checked icon. Defaults to 251'√'.</param>
+        /// <param name="uncheckedGlyph">The checkbox unchecked icon. Defaults to 0.</param>
+        public CheckBoxTheme(int leftBracketGlyph = '[', int rightBracketGlyph = ']', int checkedGlyph = 251, int uncheckedGlyph = 0)
         {
-            control.Surface = new CellSurface(control.Width, control.Height)
-            {
-                DefaultBackground = Color.Transparent
-            };
-            control.Surface.Clear();
+            BracketsThemeState = new ThemeStates();
+            IconThemeState = new ThemeStates();
+
+            LeftBracketGlyph = leftBracketGlyph;
+            RightBracketGlyph = rightBracketGlyph;
+            CheckedIconGlyph = checkedGlyph;
+            UncheckedIconGlyph = uncheckedGlyph;
         }
 
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            if (themeColors == null) themeColors = Library.Default.Colors;
-
             base.RefreshTheme(themeColors, control);
 
-            _checkedIconDefault.RefreshTheme(themeColors, control); _checkedIconDefault.SetForeground(themeColors.Lines);
-            _uncheckedIconDefault.RefreshTheme(themeColors, control); _uncheckedIconDefault.SetForeground(themeColors.Lines);
-            _leftBracketDefault.RefreshTheme(themeColors, control); _leftBracketDefault.SetForeground(themeColors.Lines);
-            _rightBracketDefault.RefreshTheme(themeColors, control); _rightBracketDefault.SetForeground(themeColors.Lines);
+            BracketsThemeState.RefreshTheme(_colorsLastUsed);
+            IconThemeState.RefreshTheme(_colorsLastUsed);
 
-            _checkedIconDefault.SetGlyph(251);
-            _uncheckedIconDefault.SetGlyph(0);
-            _leftBracketDefault.SetGlyph('[');
-            _rightBracketDefault.SetGlyph(']');
+            BracketsThemeState.SetForeground(_colorsLastUsed.Lines);
+
+            ToggleButtonBase checkbox = (ToggleButtonBase)control;
+
+            if (checkbox.IsSelected)
+            {
+                if (CheckedIconColor != null)
+                {
+                    IconThemeState.Normal.Foreground = CheckedIconColor.Value;
+                    IconThemeState.MouseOver.Foreground = CheckedIconColor.Value;
+                    IconThemeState.MouseDown.Foreground = CheckedIconColor.Value;
+                    IconThemeState.Focused.Foreground = CheckedIconColor.Value;
+                }
+                else
+                {
+                    IconThemeState.Normal.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                    IconThemeState.MouseOver.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                    IconThemeState.MouseDown.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                    IconThemeState.Focused.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                }
+
+                IconThemeState.SetGlyph(CheckedIconGlyph);
+            }
+            else
+            {
+                if (UncheckedIconColor != null)
+                {
+                    IconThemeState.Normal.Foreground = UncheckedIconColor.Value;
+                    IconThemeState.MouseOver.Foreground = UncheckedIconColor.Value;
+                    IconThemeState.MouseDown.Foreground = UncheckedIconColor.Value;
+                    IconThemeState.Focused.Foreground = UncheckedIconColor.Value;
+                }
+                else
+                {
+                    IconThemeState.Normal.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                    IconThemeState.MouseOver.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                    IconThemeState.MouseDown.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                    IconThemeState.Focused.Foreground = _colorsLastUsed.ControlForegroundSelected;
+                }
+
+                IconThemeState.SetGlyph(UncheckedIconGlyph);
+            }
         }
 
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is CheckBox checkbox)) return;
+            if (!(control is ToggleButtonBase checkbox)) return;
             if (!control.IsDirty) return;
 
             RefreshTheme(control.FindThemeColors(), control);
-            ColoredGlyph appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
 
-            if (Helpers.HasFlag((int)checkbox.State, (int)ControlStates.Disabled))
-            {
-                appearance = Disabled;
-                iconAppearance = checkbox.IsSelected ? CheckedIcon.Disabled : UncheckedIcon.Disabled;
-                leftBracketAppearance = LeftBracket.Disabled;
-                rightBracketAppearance = RightBracket.Disabled;
-            }
-
-            else if (Helpers.HasFlag((int)checkbox.State, (int)ControlStates.MouseLeftButtonDown) ||
-                     Helpers.HasFlag((int)checkbox.State, (int)ControlStates.MouseRightButtonDown))
-            {
-                appearance = MouseDown;
-                iconAppearance = checkbox.IsSelected ? CheckedIcon.MouseDown : UncheckedIcon.MouseDown;
-                leftBracketAppearance = LeftBracket.MouseDown;
-                rightBracketAppearance = RightBracket.MouseDown;
-            }
-
-            else if (Helpers.HasFlag((int)checkbox.State, (int)ControlStates.MouseOver))
-            {
-                appearance = MouseOver;
-                iconAppearance = checkbox.IsSelected ? CheckedIcon.MouseOver : UncheckedIcon.MouseOver;
-                leftBracketAppearance = LeftBracket.MouseOver;
-                rightBracketAppearance = RightBracket.MouseOver;
-            }
-
-            else if (Helpers.HasFlag((int)checkbox.State, (int)ControlStates.Focused))
-            {
-                appearance = Focused;
-                iconAppearance = checkbox.IsSelected ? CheckedIcon.Focused : UncheckedIcon.Focused;
-                leftBracketAppearance = LeftBracket.Focused;
-                rightBracketAppearance = RightBracket.Focused;
-            }
-
-            else
-            {
-                appearance = Normal;
-                iconAppearance = checkbox.IsSelected ? CheckedIcon.Normal : UncheckedIcon.Normal;
-                leftBracketAppearance = LeftBracket.Normal;
-                rightBracketAppearance = RightBracket.Normal;
-            }
+            ColoredGlyph appearance = ControlThemeState.GetStateAppearance(checkbox.State);
+            ColoredGlyph bracketAppearance = BracketsThemeState.GetStateAppearance(checkbox.State);
+            ColoredGlyph iconAppearance = IconThemeState.GetStateAppearance(checkbox.State);
 
             checkbox.Surface.Fill(appearance.Foreground, appearance.Background, null);
 
             // If we are doing text, then print it otherwise we're just displaying the button part
-            if (checkbox.Width >= 5)
-            {
-                leftBracketAppearance.CopyAppearanceTo(checkbox.Surface[0, 0]);
-                iconAppearance.CopyAppearanceTo(checkbox.Surface[1, 0]);
-                rightBracketAppearance.CopyAppearanceTo(checkbox.Surface[2, 0]);
+            if (checkbox.Width <= 2)
+                iconAppearance.CopyAppearanceTo(checkbox.Surface[0, 0]);
 
-                checkbox.Surface.Print(4, 0, checkbox.Text.Align(checkbox.TextAlignment, checkbox.Width - 4));
+            if (checkbox.Width >= 3)
+            {
+                bracketAppearance.CopyAppearanceTo(checkbox.Surface[0, 0]);
+                iconAppearance.CopyAppearanceTo(checkbox.Surface[1, 0]);
+                bracketAppearance.CopyAppearanceTo(checkbox.Surface[2, 0]);
+
+                checkbox.Surface[0, 0].Glyph = LeftBracketGlyph;
+                checkbox.Surface[2, 0].Glyph = RightBracketGlyph;
             }
+
+            if (checkbox.Width >= 5)
+                checkbox.Surface.Print(4, 0, checkbox.Text.Align(checkbox.TextAlignment, checkbox.Width - 4));
 
             checkbox.IsDirty = false;
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone() => new CheckBoxTheme()
-        {
-            Normal = Normal.Clone(),
-            Disabled = Disabled.Clone(),
-            MouseOver = MouseOver.Clone(),
-            MouseDown = MouseDown.Clone(),
-            Selected = Selected.Clone(),
-            Focused = Focused.Clone(),
-            _checkedIcon = _checkedIcon?.Clone(),
-            _uncheckedIcon = _uncheckedIcon?.Clone(),
-            _leftBracket = _leftBracket?.Clone(),
-            _rightBracket = _rightBracket?.Clone(),
-        };
+        public override ThemeBase Clone() =>
+            new CheckBoxTheme()
+            {
+                ControlThemeState = ControlThemeState.Clone(),
+                BracketsThemeState = BracketsThemeState.Clone(),
+                IconThemeState = IconThemeState.Clone(),
+                CheckedIconColor = CheckedIconColor,
+                UncheckedIconColor = UncheckedIconColor,
+                CheckedIconGlyph = CheckedIconGlyph,
+                UncheckedIconGlyph = UncheckedIconGlyph
+            };
     }
 }
+

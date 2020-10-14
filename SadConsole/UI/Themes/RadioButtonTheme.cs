@@ -9,157 +9,30 @@ namespace SadConsole.UI.Themes
     /// The theme of a radio button control.
     /// </summary>
     [DataContract]
-    public class RadioButtonTheme : ThemeBase
+    public class RadioButtonTheme : CheckBoxTheme
     {
         /// <summary>
-        /// The icon displayed when the radio button is checked.
+        /// Creates a new radio button theme with an optional bracket and check icon.
         /// </summary>
-        [DataMember] public ThemeStates CheckedIcon { get; protected set; }
-
-        /// <summary>
-        /// The icon displayed when the radio button is checked.
-        /// </summary>
-        [DataMember] public ThemeStates UncheckedIcon { get; protected set; }
-
-        /// <summary>
-        /// The icon displayed for the brack left of the check icon.
-        /// </summary>
-        [DataMember] public ThemeStates LeftBracket { get; protected set; }
-
-        /// <summary>
-        /// The icon displayed for the brack right of the check icon.
-        /// </summary>
-        [DataMember] public ThemeStates RightBracket { get; protected set; }
-
-        /// <summary>
-        /// Creates a new theme used by the <see cref="RadioButton"/>.
-        /// </summary>
-        public RadioButtonTheme()
+        /// <param name="leftBracketGlyph">The left bracket of the checkbox icon. Defaults to '('.</param>
+        /// <param name="rightBracketGlyph">The right bracket of the checkbox icon. Defaults to ')'.</param>
+        /// <param name="checkedGlyph">The checkbox checked icon. Defaults to 15'☼'.</param>
+        /// <param name="uncheckedGlyph">The checkbox unchecked icon. Defaults to 0.</param>
+        public RadioButtonTheme(int leftBracketGlyph = '(', int rightBracketGlyph = ')', int checkedGlyph = 15, int uncheckedGlyph = 0): base (leftBracketGlyph, rightBracketGlyph, checkedGlyph, uncheckedGlyph)
         {
-            CheckedIcon = new ThemeStates();
-            UncheckedIcon = new ThemeStates();
-            LeftBracket = new ThemeStates();
-            RightBracket = new ThemeStates();
-        }
 
-        /// <inheritdoc />
-        public override void Attached(ControlBase control)
-        {
-            control.Surface = new CellSurface(control.Width, control.Height)
-            {
-                DefaultBackground = Color.Transparent
-            };
-            control.Surface.Clear();
-        }
-
-        /// <inheritdoc />
-        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
-        {
-            if (!(control is RadioButton radiobutton))
-            {
-                return;
-            }
-
-            if (!radiobutton.IsDirty)
-            {
-                return;
-            }
-
-            RefreshTheme(control.FindThemeColors(), control);
-
-            //TODO Hardcoded radio button glyphs
-            //CheckedIcon.SetGlyph(251);
-            CheckedIcon.SetGlyph(15);
-            UncheckedIcon.SetGlyph(0);
-            LeftBracket.SetGlyph('(');
-            RightBracket.SetGlyph(')');
-
-            ColoredGlyph appearance, iconAppearance, leftBracketAppearance, rightBracketAppearance;
-
-            if (Helpers.HasFlag((int)radiobutton.State, (int)ControlStates.Disabled))
-            {
-                appearance = Disabled;
-                iconAppearance = radiobutton.IsSelected ? CheckedIcon.Disabled : UncheckedIcon.Disabled;
-                leftBracketAppearance = LeftBracket.Disabled;
-                rightBracketAppearance = RightBracket.Disabled;
-            }
-
-            else if (Helpers.HasFlag((int)radiobutton.State, (int)ControlStates.MouseLeftButtonDown) ||
-                     Helpers.HasFlag((int)radiobutton.State, (int)ControlStates.MouseRightButtonDown))
-            {
-                appearance = MouseDown;
-                iconAppearance = radiobutton.IsSelected ? CheckedIcon.MouseDown : UncheckedIcon.MouseDown;
-                leftBracketAppearance = LeftBracket.MouseDown;
-                rightBracketAppearance = RightBracket.MouseDown;
-            }
-
-            else if (Helpers.HasFlag((int)radiobutton.State, (int)ControlStates.MouseOver))
-            {
-                appearance = MouseOver;
-                iconAppearance = radiobutton.IsSelected ? CheckedIcon.MouseOver : UncheckedIcon.MouseOver;
-                leftBracketAppearance = LeftBracket.MouseOver;
-                rightBracketAppearance = RightBracket.MouseOver;
-            }
-
-            else if (Helpers.HasFlag((int)radiobutton.State, (int)ControlStates.Focused))
-            {
-                appearance = Focused;
-                iconAppearance = radiobutton.IsSelected ? CheckedIcon.Focused : UncheckedIcon.Focused;
-                leftBracketAppearance = LeftBracket.Focused;
-                rightBracketAppearance = RightBracket.Focused;
-            }
-
-            else
-            {
-                appearance = Normal;
-                iconAppearance = radiobutton.IsSelected ? CheckedIcon.Normal : UncheckedIcon.Normal;
-                leftBracketAppearance = LeftBracket.Normal;
-                rightBracketAppearance = RightBracket.Normal;
-            }
-
-            radiobutton.Surface.Clear();
-
-
-            radiobutton.Surface.Fill(appearance.Foreground, appearance.Background, null);
-
-            // If we are doing text, then print it otherwise we're just displaying the button part
-            if (radiobutton.Width >= 5)
-            {
-                leftBracketAppearance.CopyAppearanceTo(radiobutton.Surface[0, 0]);
-                iconAppearance.CopyAppearanceTo(radiobutton.Surface[1, 0]);
-                rightBracketAppearance.CopyAppearanceTo(radiobutton.Surface[2, 0]);
-
-                radiobutton.Surface.Print(4, 0, radiobutton.Text.Align(radiobutton.TextAlignment, radiobutton.Width - 4));
-            }
-
-            radiobutton.IsDirty = false;
-        }
-
-        public override void RefreshTheme(Colors themeColors, ControlBase control)
-        {
-            if (themeColors == null) themeColors = Library.Default.Colors;
-
-            base.RefreshTheme(themeColors, control);
-
-            CheckedIcon.RefreshTheme(themeColors, control); CheckedIcon.SetForeground(themeColors.Lines);
-            UncheckedIcon.RefreshTheme(themeColors, control); UncheckedIcon.SetForeground(themeColors.Lines);
-            LeftBracket.RefreshTheme(themeColors, control); LeftBracket.SetForeground(themeColors.Lines);
-            RightBracket.RefreshTheme(themeColors, control); RightBracket.SetForeground(themeColors.Lines);
         }
 
         /// <inheritdoc />
         public override ThemeBase Clone() => new RadioButtonTheme()
         {
-            Normal = Normal.Clone(),
-            Disabled = Disabled.Clone(),
-            MouseOver = MouseOver.Clone(),
-            MouseDown = MouseDown.Clone(),
-            Selected = Selected.Clone(),
-            Focused = Focused.Clone(),
-            CheckedIcon = CheckedIcon?.Clone(),
-            UncheckedIcon = UncheckedIcon?.Clone(),
-            LeftBracket = LeftBracket?.Clone(),
-            RightBracket = RightBracket?.Clone(),
+            ControlThemeState = ControlThemeState.Clone(),
+            BracketsThemeState = BracketsThemeState.Clone(),
+            IconThemeState = IconThemeState.Clone(),
+            CheckedIconColor = CheckedIconColor,
+            UncheckedIconColor = UncheckedIconColor,
+            CheckedIconGlyph = CheckedIconGlyph,
+            UncheckedIconGlyph = UncheckedIconGlyph
         };
     }
 }

@@ -281,7 +281,7 @@ namespace SadConsole.UI
         {
             var themeColors = Controls.GetThemeColors();
 
-            var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
+            var fillStyle = new ColoredGlyph(themeColors.ControlHostForeground, themeColors.ControlHostBackground);
             var titleStyle = new ColoredGlyph(Color.Orange, fillStyle.Background, fillStyle.Glyph);
             var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
 

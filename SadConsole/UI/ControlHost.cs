@@ -169,8 +169,8 @@ namespace SadConsole.UI
             if (ClearOnAdded)
             {
                 var colors = GetThemeColors();
-                surface.Surface.DefaultBackground = colors.ControlHostBack;
-                surface.Surface.DefaultForeground = colors.ControlHostFore;
+                surface.Surface.DefaultBackground = colors.ControlHostBackground;
+                surface.Surface.DefaultForeground = colors.ControlHostForeground;
                 surface.Surface.Clear();
             }
 

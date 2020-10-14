@@ -24,30 +24,19 @@ namespace SadConsole.UI.Themes
         /// <summary>
         /// Creates a new theme used by the <see cref="TextBox"/>.
         /// </summary>
-        public TextBoxTheme() => CaretEffect = new Effects.BlinkGlyph()
-        {
-            GlyphIndex = 95,
-            BlinkSpeed = 0.4f
-        };
-
-        /// <inheritdoc />
-        public override void Attached(ControlBase control)
-        {
-            control.Surface = new CellSurface(control.Width, control.Height)
+        public TextBoxTheme() =>
+            CaretEffect = new Effects.BlinkGlyph()
             {
-                DefaultBackground = Color.Transparent
+                GlyphIndex = 95,
+                BlinkSpeed = 0.4f
             };
-            control.Surface.Clear();
-        }
 
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
-            if (themeColors == null) themeColors = Library.Default.Colors;
-
             base.RefreshTheme(themeColors, control);
 
-            Normal = new ColoredGlyph(themeColors.Text, themeColors.GrayDark);
+            ControlThemeState.Normal = new ColoredGlyph(_colorsLastUsed.ControlBackgroundNormal, _colorsLastUsed.GrayDark);
         }
 
         /// <inheritdoc />
@@ -70,7 +59,7 @@ namespace SadConsole.UI.Themes
             }
 
             RefreshTheme(control.FindThemeColors(), control);
-            ColoredGlyph appearance = GetStateAppearance(textbox.State);
+            ColoredGlyph appearance = ControlThemeState.GetStateAppearance(textbox.State);
 
             if (textbox.IsFocused && !textbox.DisableKeyboard)
             {
@@ -131,12 +120,7 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override ThemeBase Clone() => new TextBoxTheme()
         {
-            Normal = Normal.Clone(),
-            Disabled = Disabled.Clone(),
-            MouseOver = MouseOver.Clone(),
-            MouseDown = MouseDown.Clone(),
-            Selected = Selected.Clone(),
-            Focused = Focused.Clone(),
+            ControlThemeState = ControlThemeState.Clone(),
             CaretEffect = CaretEffect.Clone()
         };
     }
