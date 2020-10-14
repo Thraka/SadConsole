@@ -68,7 +68,7 @@ namespace SadConsole
             if (window == null)
             {
                 window = new RenderWindow(new SFML.Window.VideoMode((uint)(DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize).X * ScreenCellsX), (uint)(DefaultFont.GetFontSize(DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
-
+                window.SetTitle(Settings.WindowTitle);
                 // SETUP RENDER vars for global screen size data.
             }
 
