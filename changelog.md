@@ -1,3 +1,12 @@
+## v9.0 Beta 3
+
+- Fixed bug in `SadConsole.UI.Colors` when creating a copy.
+- Added mousewheel support to listbox and scroll bar.
+- Changed theme color parts to `AdjustableColor` types.
+- Adjusted all themes to use a different base class.
+- `Checkbox` and `RadioButton` now use `ToggleButtonBase` and use the same theme but configured for each control.
+- `Settings.WindowTitle` works in SFML now.
+
 ## v9.0 Beta 2
 
 - AHHHHH bug in Font with setting UnsupportedGlyphIndex found 1 day after beta 1.........

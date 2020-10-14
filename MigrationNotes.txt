@@ -11,9 +11,10 @@
 
 - (?) Components should have a before/after ability where SortOrder < 5 run before the core code and >=5 run after.
 - Print for surface can be optimized. Use SetEffect(IEnumerable) to mass update effects instead of individual cells.
-- Themes for controls need to be checked for serializability. The overridable themestate for a control part (such as as
-  button ends) needs to handle a null setting and use proper fields. The backing field is serialized while the default
-  field is not.
+- Check ListBox.ScrollToSelectedItem is working.
+- Do all of the Theme.RefreshTheme methods get sent control.FindColors? If so, we can get rid of the base logic that finds them...
+- Textbox doesn't show first character if you write off the end and use backspace to erase back to the start.
+- Shadow button theme needs adjustment as you can't see it anymore as the button back is the same as the host.
 
 ====== New Features
 
@@ -24,9 +25,9 @@
   - OnHidden protected virtual method.
   - DrawBorder replaces Invalidated method.
 - Draw/Update have restored the TimeSpan parameter.
-- ControlHost component can add the GUI framework to any console.
+- Controls are hosted by a ControlHost component, allowing a GUI added to any console.
+- ControlsConsole and Window each derive from Console and have a Controls property of type ControlHost.
 - SadConsole.Global no longer exists. Properties from this static type now live in SadConsole.GameHost.Instance.
-
 
 ====== Migration notes
 
@@ -35,8 +36,8 @@ Core
 - (RENAME) SadConsole.Global -> SadConsole.GameHost
 
 CellSurface/Console
-- (RENAME) Width -> BufferWidth (Console specifically has Width which just forward BufferWidth)
-- (RENAME) Height -> BufferHeight (Console specifically has Height which just forward BufferHeight)
+- (RENAME) Width -> BufferWidth (Console specifically has Width which just forwards BufferWidth)
+- (RENAME) Height -> BufferHeight (Console specifically has Height which just forwards BufferHeight)
 - (RENAME) Components -> SadComponents
 - (CHANGE) Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
 

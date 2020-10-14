@@ -9,9 +9,9 @@ Here is an example program.cs file that let's you get started with SadConsole qu
 
 using System;
 using SadConsole;
+using SadConsole.Input;
+using SadRogue.Primitives;
 using Console = SadConsole.Console;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MyProject
 {
@@ -27,7 +27,7 @@ namespace MyProject
             SadConsole.Game.Create(Width, Height);
 
             // Hook the start event so we can add consoles to the system.
-            SadConsole.Game.OnStart = Init;
+            SadConsole.Game.Instance.OnStart = Init;
                         
             // Start the game.
             SadConsole.Game.Instance.Run();
@@ -38,7 +38,7 @@ namespace MyProject
         {
             // Any startup code for your game. We will use an example console for now
             var startingConsole = GameHost.Instance.Screen;
-            startingConsole.FillWithRandomGarbage();
+            startingConsole.FillWithRandomGarbage(255);
             startingConsole.Fill(new Rectangle(3, 3, 27, 5), null, Color.Black, 0, Mirror.None);
             startingConsole.Print(6, 5, "Hello from SadConsole", ColorAnsi.CyanBright);
         }
@@ -48,8 +48,9 @@ namespace MyProject
 
 Example program.vb:
 
+Imports SadConsole
 Imports Console = SadConsole.Console
-Imports Microsoft.Xna.Framework
+Imports SadRogue.Primitives
 
 Module Module1
 
@@ -59,7 +60,7 @@ Module Module1
         SadConsole.Game.Create(80, 25)
 
         ' Hook the start event so we can add consoles to the system.
-        SadConsole.Game.OnStart = AddressOf Init
+        SadConsole.Game.Instance.OnStart = AddressOf Init
 
         ' Start the game.
         SadConsole.Game.Instance.Run()
@@ -69,11 +70,11 @@ Module Module1
 
     Sub Init()
 
-        Dim Console = GameHost.Instance.Screen
+        Dim startingConsole = GameHost.Instance.Screen
 
-        Console.FillWithRandomGarbage()
-        Console.Fill(New Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, 0)
-        Console.Print(4, 4, "Hello from SadConsole")
+        startingConsole.FillWithRandomGarbage(255)
+        startingConsole.Fill(New Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, 0)
+        startingConsole.Print(4, 4, "Hello from SadConsole")
 
     End Sub
 
