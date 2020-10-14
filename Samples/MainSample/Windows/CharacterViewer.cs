@@ -93,19 +93,19 @@ namespace FeatureDemo.Windows
             var backgroundColor = Color.Black;
 
             // Assign the background color to both the hosts (console) and controls
-            colors.ControlHostBack = backgroundColor;
-            colors.ControlBack = backgroundColor;
+            //colors.ControlHostBackground = backgroundColor;
+            //colors.ControlBack = backgroundColor;
 
             // Build other colors used by themes based on the background color
-            colors.ControlBackLight = (backgroundColor * 1.3f).FillAlpha();
-            colors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
+            //colors.ControlBackLight = (backgroundColor * 1.3f).FillAlpha();
+            //colors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
 
             // When a control is selected, a color indicates it. this is either some other color or a lighter color
             // the colors object also defines a palette of colors, we'll use this.
-            colors.ControlBackSelected = colors.GrayDark;
+            //colors.ControlBackSelected = colors.GrayDark;
 
             // Build the colors into theme objects for control appearance states
-            colors.RebuildAppearances();
+            //colors.RebuildAppearances();
 
             _characterSurface = new DrawingSurface(16, 16);
             _characterSurface.Position = new Point(1, 1);
@@ -133,7 +133,7 @@ namespace FeatureDemo.Windows
             _characterSurface.MouseExit += _characterSurface_MouseExit;
             Controls.Add(_characterSurface);
 
-            Controls.ThemeColors = colors;
+            //Controls.ThemeColors = colors;
             IsDirty = true;
         }
 
@@ -227,7 +227,7 @@ namespace FeatureDemo.Windows
         private void DrawHoverItemString()
         {
             var themeColors = Controls.GetThemeColors();
-            var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBack, 0);
+            var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBackground, 0);
 
             // Draw the character index and value in the status area
             string[] items = new string[] { "Index: ", hoverGlyph.ToString() + " ", ((char)hoverGlyph).ToString() };
@@ -247,7 +247,7 @@ namespace FeatureDemo.Windows
         private void DrawSelectedItemString()
         {
             var themeColors = Controls.GetThemeColors();
-            var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBack, 0);
+            var borderStyle = new ColoredGlyph(themeColors.Lines, themeColors.ControlHostBackground, 0);
 
             // Clear the information area and redraw
             this.Print(1, Height - 2, "".PadRight(Width - 2));

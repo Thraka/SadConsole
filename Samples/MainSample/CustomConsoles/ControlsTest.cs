@@ -199,36 +199,13 @@ namespace FeatureDemo.CustomConsoles
         }
 
 
-        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
-        {
-            if (info.IsKeyReleased(Keys.C))
-            {
-                backIndex++;
-
-                if (backIndex == backgroundcycle.Length)
-                {
-                    backIndex = 0;
-                }
-
-                var colors = Controls.GetThemeColors();
-                colors.ControlBack = backgroundcycle[backIndex];
-                colors.ControlHostBack = colors.ControlBack;
-                colors.RebuildAppearances();
-                IsDirty = true;
-                Controls.ThemeColors = colors;
-                OnInvalidated();
-            }
-
-            return base.ProcessKeyboard(info);
-        }
-
         public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState state) => base.ProcessMouse(state);
 
         protected void OnInvalidated()
         {
             var colors = Controls.GetThemeColors();
 
-            Surface.Fill(colors.ControlHostFore, colors.ControlHostBack, 0, 0);
+            Surface.Fill(colors.ControlHostForeground, colors.ControlHostBackground, 0, 0);
 
             this.Print(1, 1, "BUTTONS", colors.YellowDark);
             this.Print(16, 1, "BARS", colors.YellowDark);
