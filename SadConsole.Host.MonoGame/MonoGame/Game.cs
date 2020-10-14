@@ -95,6 +95,8 @@ namespace SadConsole.Host
                 Global.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
                 IsFixedTimeStep = false;
             }
+            Window.Title = SadConsole.Settings.WindowTitle;
+
 
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
