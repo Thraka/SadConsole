@@ -616,7 +616,7 @@ namespace SadConsole.UI
         /// <param name="control">The control to capture</param>
         public void CaptureControl(ControlBase control)
         {
-            if (GameHost.Instance.FocusedScreenObjects.ScreenObject != this)
+            if (GameHost.Instance.FocusedScreenObjects.ScreenObject != ParentConsole)
             {
                 GameHost.Instance.FocusedScreenObjects.Push(ParentConsole);
                 _wasFocusedBeforeCapture = false;
