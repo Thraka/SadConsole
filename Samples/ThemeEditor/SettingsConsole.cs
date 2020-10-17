@@ -15,13 +15,11 @@ namespace ThemeEditor
         private Rectangle _themePartsArea;
         private int _themePartSelectedIndex;
         private int _themePartSelectedAreaSize = 4;
-        private int _themePartSelectedIndexOld = -1;
 
         private AdjustableColor[] _themeParts;
 
-        private RadioButton _themePartControlCustomRadio;
-        private RadioButton _themePartControlColorRadio;
-        
+        private ListBox _colorsListBox;
+
         private TextField _colorShadeFieldNormal;
         private TextField _colorShadeFieldBrightest;
         private TextField _colorShadeFieldBrighter;
@@ -33,12 +31,6 @@ namespace ThemeEditor
         private RadioButton _themePartSettingIsCustomColor;
         private RadioButton _themePartSettingIsPredefinedColor;
         private Button _themePartSettingColorSet;
-        private Point _themePartSettingShadeBrightestPosition;
-        private Point _themePartSettingShadeBrighterPosition;
-        private Point _themePartSettingShadeNormalPosition;
-        private Point _themePartSettingShadeDarkerPosition;
-        private Point _themePartSettingShadeDarkestPosition;
-
 
         public SettingsConsole(int width, int height) : base(width, height)
         {
@@ -48,33 +40,19 @@ namespace ThemeEditor
 
             // =================================
             // List box for color definitions
-            ListBox lst = new ListBox(17, 8, new SadConsole.UI.Themes.ListBoxItemColorTheme());
-            lst.Position = (2, 3);
-            Controls.Add(lst);
-            ((SadConsole.UI.Themes.ListBoxTheme)lst.Theme).DrawBorder = true;
-            FillListBoxColors(lst);
-            lst.SelectedItemChanged += (s, e) =>
-            {
-                if (e.Item != null)
-                {
-                    _colorShadeText = new ColoredString(new string((char)303, 8));
-                    Color color = ((ValueTuple<Color, string>)e.Item).Item1;
-                    _colorShadeText.SetForeground(color.GetBrightest()); _colorShadeFieldBrightest.Print(_colorShadeText);
-                    _colorShadeText.SetForeground(color.GetBright()); _colorShadeFieldBrighter.Print(_colorShadeText);
-                    _colorShadeText.SetForeground(color); _colorShadeFieldNormal.Print(_colorShadeText);
-                    _colorShadeText.SetForeground(color.GetDark()); _colorShadeFieldDarker.Print(_colorShadeText);
-                    _colorShadeText.SetForeground(color.GetDarkest()); _colorShadeFieldDarkest.Print(_colorShadeText);
-                }
-            };
+            _colorsListBox = new ListBox(17, 8, new SadConsole.UI.Themes.ListBoxItemColorTheme());
+            _colorsListBox.Position = (2, 3);
+            Controls.Add(_colorsListBox);
+            ((SadConsole.UI.Themes.ListBoxTheme)_colorsListBox.Theme).DrawBorder = true;
+            _colorsListBox.SelectedItemChanged += colorsListBox_SelectedItemChanged;
 
             // =================================
             // Shades region
-            Surface.Print(lst.Bounds.MaxExtentX + 2, lst.Position.Y, "Shades", colors.Title);
-            _shadesTextStart = (lst.Bounds.MaxExtentX + 2, lst.Position.Y + 1);
+            Surface.Print(_colorsListBox.Bounds.MaxExtentX + 2, _colorsListBox.Position.Y, "Shades", colors.Title);
+            _shadesTextStart = (_colorsListBox.Bounds.MaxExtentX + 2, _colorsListBox.Position.Y + 1);
 
             Surface.Print(_shadesTextStart.X, _shadesTextStart.Y, "150% ");
             Surface.Print(_shadesTextStart.X, _shadesTextStart.Y + 1, "125% ");
-            //Surface.Print(_shadesTextStart.X, _shadesTextStart.Y + 2, "100% ");
             Surface.Print(_shadesTextStart.X, _shadesTextStart.Y + 3, " 75% ");
             Surface.Print(_shadesTextStart.X, _shadesTextStart.Y + 4, " 50% ");
 
@@ -86,7 +64,6 @@ namespace ThemeEditor
             _colorShadeFieldDarker = new TextField(_shadesTextStart + (5, 3), 3, this.Surface);
             _colorShadeFieldDarkest = new TextField(_shadesTextStart + (5, 4), 3, this.Surface);
 
-            lst.SelectedItem = lst.Items[0];
 
             // =================================
             // Button to edit colors
@@ -95,33 +72,7 @@ namespace ThemeEditor
                 Position = _shadesTextStart + (0, 6),
                 Text = "Edit"
             };
-            btn.Click += (s, e) =>
-            {
-                ColorPickerPopup window = new ColorPickerPopup();
-                window.Center();
-                window.SelectedColor = ((ValueTuple<Color, string>)lst.SelectedItem).Item1;
-                window.Closed += (s, e) =>
-                {
-                    if (window.DialogResult)
-                    {
-                        var selectedColor = window.SelectedColor;
-                        var selectedItem = (ValueTuple<Color, string>)lst.SelectedItem;
-                        var newItem = (selectedColor, selectedItem.Item2);
-
-                        if (!Container.EditingColors.TryToColorName(selectedItem.Item1, out var colorEnumValue))
-                            throw new Exception("How did this happen? Color not in editing colors collection");
-
-                        lst.Items.Insert(lst.SelectedIndex, newItem);
-                        lst.Items.Remove(selectedItem);
-                        lst.SelectedItem = newItem;
-
-                        Container.EditingColors.SetColorByName(colorEnumValue, selectedColor);
-
-                        DrawThemeParts();
-                    }
-                };
-                window.Show(true);
-            };
+            btn.Click += editColorsButton_Click;
             Controls.Add(btn);
 
             // =================================
@@ -146,46 +97,146 @@ namespace ThemeEditor
                 Theme = new SadConsole.UI.Themes.ButtonLinesTheme(),
                 IsVisible = false
             };
-            _themePartSettingColorSet.Click += (s, e) =>
-            {
-                AdjustableColor setting = _themeParts[_themePartSelectedIndex];
-
-                if (setting.IsCustomColor)
-                {
-                    ColorPickerPopup window = new ColorPickerPopup();
-                    window.Center();
-                    window.SelectedColor = _themeParts[_themePartSelectedIndex].BaseColor;
-                    window.Closed += (s, e) =>
-                    {
-                        if (window.DialogResult)
-                        {
-                            _themeParts[_themePartSelectedIndex].SetColor(window.SelectedColor, Container.EditingColors, Colors.Brightness.Normal);
-                            DrawThemeParts();
-                        }
-                    };
-                    window.Show(true);
-                }
-                else
-                {
-                    SelectPaletteColor window = new SelectPaletteColor(setting.UIColor);
-                    window.Center();
-                    window.Closed += (s, e) =>
-                    {
-                        if (window.DialogResult)
-                        {
-                            _themeParts[_themePartSelectedIndex].SetUIColor(window.SelectedColor, Container.EditingColors, Colors.Brightness.Normal);
-                            DrawThemeParts();
-                        }
-                    };
-                    window.Show(true);
-                }
-            };
-
+            _themePartSettingColorSet.Click += themePartSettingColorSet_Click;
+            
             Controls.Add(_themePartSettingIsCustomColor);
             Controls.Add(_themePartSettingIsPredefinedColor);
             Controls.Add(_themePartSettingColorSet);
 
             _themeParts = new AdjustableColor[16];
+            _themePartsArea = new Rectangle(2, _colorsListBox.Bounds.MaxExtentY + 3, width - 4, _themeParts.Length + 5);
+
+            RefreshColors();
+
+            Container.PrintHeader(Surface, colors, (_colorsListBox.Position.X, _themePartsArea.Y - 1), width - 4, "Theme Parts");
+        }
+
+        private void themePartSettingColorSet_Click(object sender, EventArgs e)
+        {
+            AdjustableColor setting = _themeParts[_themePartSelectedIndex];
+
+            if (setting.IsCustomColor)
+            {
+                ColorPickerPopup window = new ColorPickerPopup();
+                window.Center();
+                window.SelectedColor = _themeParts[_themePartSelectedIndex].BaseColor;
+                window.Closed += (s, e) =>
+                {
+                    if (window.DialogResult)
+                    {
+                        _themeParts[_themePartSelectedIndex].SetColor(window.SelectedColor, Container.EditingColors, Colors.Brightness.Normal);
+                        DrawThemeParts();
+                    }
+                };
+                window.Show(true);
+            }
+            else
+            {
+                SelectPaletteColor window = new SelectPaletteColor(setting.UIColor);
+                window.Center();
+                window.Closed += (s, e) =>
+                {
+                    if (window.DialogResult)
+                    {
+                        _themeParts[_themePartSelectedIndex].SetUIColor(window.SelectedColor, Container.EditingColors, Colors.Brightness.Normal);
+                        DrawThemeParts();
+                    }
+                };
+                window.Show(true);
+            }
+        }
+
+        private void editColorsButton_Click(object sender, EventArgs e)
+        {
+            ColorPickerPopup window = new ColorPickerPopup();
+            window.Center();
+            window.SelectedColor = ((ValueTuple<Color, string>)_colorsListBox.SelectedItem).Item1;
+            window.Closed += (s, e) =>
+            {
+                if (window.DialogResult)
+                {
+                    var selectedColor = window.SelectedColor;
+                    var selectedItem = (ValueTuple<Color, string>)_colorsListBox.SelectedItem;
+                    var newItem = (selectedColor, selectedItem.Item2);
+
+                    if (!Container.EditingColors.TryToColorName(selectedItem.Item1, out var colorEnumValue))
+                        throw new Exception("How did this happen? Color not in editing colors collection");
+
+                    _colorsListBox.Items.Insert(_colorsListBox.SelectedIndex, newItem);
+                    _colorsListBox.Items.Remove(selectedItem);
+                    _colorsListBox.SelectedItem = newItem;
+
+                    Container.EditingColors.SetColorByName(colorEnumValue, selectedColor);
+
+                    DrawThemeParts();
+                }
+            };
+            window.Show(true);
+        }
+
+        private void colorsListBox_SelectedItemChanged(object sender, ListBox.SelectedItemEventArgs e)
+        {
+            if (e.Item != null)
+            {
+                _colorShadeText = new ColoredString(new string((char)303, 8));
+                Color color = ((ValueTuple<Color, string>)e.Item).Item1;
+                _colorShadeText.SetForeground(color.GetBrightest()); _colorShadeFieldBrightest.Print(_colorShadeText);
+                _colorShadeText.SetForeground(color.GetBright()); _colorShadeFieldBrighter.Print(_colorShadeText);
+                _colorShadeText.SetForeground(color); _colorShadeFieldNormal.Print(_colorShadeText);
+                _colorShadeText.SetForeground(color.GetDark()); _colorShadeFieldDarker.Print(_colorShadeText);
+                _colorShadeText.SetForeground(color.GetDarkest()); _colorShadeFieldDarkest.Print(_colorShadeText);
+            }
+        }
+
+        private void ThemePartSettingColorRadio_IsSelectedChanged(object sender, EventArgs e)
+        {
+            if (_themePartSettingIsCustomColor.IsSelected && !_themeParts[_themePartSelectedIndex].IsCustomColor)
+            {
+                _themeParts[_themePartSelectedIndex].SetColor(Container.EditingColors.FromColorName(_themeParts[_themePartSelectedIndex].UIColor));
+            }
+            else if (!_themePartSettingIsCustomColor.IsSelected && _themeParts[_themePartSelectedIndex].IsCustomColor)
+            {
+                if (Container.EditingColors.TryToColorName(_themeParts[_themePartSelectedIndex].BaseColor, out var colorName))
+                    _themeParts[_themePartSelectedIndex].SetUIColor(colorName, Container.EditingColors, _themeParts[_themePartSelectedIndex].Brightness);
+                else
+                    _themeParts[_themePartSelectedIndex].SetUIColor(Colors.ColorNames.White, Container.EditingColors, Colors.Brightness.Normal);
+            }
+            DrawThemeParts();
+        }
+
+        public void RefreshColors()
+        {
+            _colorsListBox.Items.Clear();
+
+            _colorsListBox.Items.Add((Container.EditingColors.White, "White"));
+            _colorsListBox.Items.Add((Container.EditingColors.Black, "Black"));
+            _colorsListBox.Items.Add((Container.EditingColors.Gray, "Gray"));
+            _colorsListBox.Items.Add((Container.EditingColors.GrayDark, "GrayDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Red, "Red"));
+            _colorsListBox.Items.Add((Container.EditingColors.RedDark, "RedDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Green, "Green"));
+            _colorsListBox.Items.Add((Container.EditingColors.GreenDark, "GreenDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Cyan, "Cyan"));
+            _colorsListBox.Items.Add((Container.EditingColors.CyanDark, "CyanDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Blue, "Blue"));
+            _colorsListBox.Items.Add((Container.EditingColors.BlueDark, "BlueDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Purple, "Purple"));
+            _colorsListBox.Items.Add((Container.EditingColors.PurpleDark, "PurpleDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Yellow, "Yellow"));
+            _colorsListBox.Items.Add((Container.EditingColors.YellowDark, "YellowDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Orange, "Orange"));
+            _colorsListBox.Items.Add((Container.EditingColors.OrangeDark, "OrangeDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Brown, "Brown"));
+            _colorsListBox.Items.Add((Container.EditingColors.BrownDark, "BrownDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Gold, "Gold"));
+            _colorsListBox.Items.Add((Container.EditingColors.GoldDark, "GoldDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Silver, "Silver"));
+            _colorsListBox.Items.Add((Container.EditingColors.SilverDark, "SilverDark"));
+            _colorsListBox.Items.Add((Container.EditingColors.Bronze, "Bronze"));
+            _colorsListBox.Items.Add((Container.EditingColors.BronzeDark, "BronzeDark"));
+
+            _colorsListBox.SelectedItem = _colorsListBox.Items[0];
+
             _themeParts[0] = Container.EditingColors.Title;
             _themeParts[1] = Container.EditingColors.Lines;
             _themeParts[2] = Container.EditingColors.ControlForegroundNormal;
@@ -203,25 +254,6 @@ namespace ThemeEditor
             _themeParts[14] = Container.EditingColors.ControlHostForeground;
             _themeParts[15] = Container.EditingColors.ControlHostBackground;
 
-            _themePartsArea = new Rectangle(2, lst.Bounds.MaxExtentY + 3, width - 4, _themeParts.Length + 5);
-
-            Container.PrintHeader(Surface, colors, (lst.Position.X, _themePartsArea.Y - 1), width - 4, "Theme Parts");
-            DrawThemeParts();
-        }
-
-        private void ThemePartSettingColorRadio_IsSelectedChanged(object sender, EventArgs e)
-        {
-            if (_themePartSettingIsCustomColor.IsSelected && !_themeParts[_themePartSelectedIndex].IsCustomColor)
-            {
-                _themeParts[_themePartSelectedIndex].SetColor(Container.EditingColors.FromColorName(_themeParts[_themePartSelectedIndex].UIColor));
-            }
-            else if (!_themePartSettingIsCustomColor.IsSelected && _themeParts[_themePartSelectedIndex].IsCustomColor)
-            {
-                if (Container.EditingColors.TryToColorName(_themeParts[_themePartSelectedIndex].BaseColor, out var colorName))
-                    _themeParts[_themePartSelectedIndex].SetUIColor(colorName, Container.EditingColors, _themeParts[_themePartSelectedIndex].Brightness);
-                else
-                    _themeParts[_themePartSelectedIndex].SetUIColor(Colors.ColorNames.White, Container.EditingColors, Colors.Brightness.Normal);
-            }
             DrawThemeParts();
         }
 
@@ -372,36 +404,6 @@ namespace ThemeEditor
 
 
             Controls.IsDirty = true;
-        }
-
-        private void FillListBoxColors(ListBox lst)
-        {
-            lst.Items.Add((Container.EditingColors.White, "White"));
-            lst.Items.Add((Container.EditingColors.Black, "Black"));
-            lst.Items.Add((Container.EditingColors.Gray, "Gray"));
-            lst.Items.Add((Container.EditingColors.GrayDark, "GrayDark"));
-            lst.Items.Add((Container.EditingColors.Red, "Red"));
-            lst.Items.Add((Container.EditingColors.RedDark, "RedDark"));
-            lst.Items.Add((Container.EditingColors.Green, "Green"));
-            lst.Items.Add((Container.EditingColors.GreenDark, "GreenDark"));
-            lst.Items.Add((Container.EditingColors.Cyan, "Cyan"));
-            lst.Items.Add((Container.EditingColors.CyanDark, "CyanDark"));
-            lst.Items.Add((Container.EditingColors.Blue, "Blue"));
-            lst.Items.Add((Container.EditingColors.BlueDark, "BlueDark"));
-            lst.Items.Add((Container.EditingColors.Purple, "Purple"));
-            lst.Items.Add((Container.EditingColors.PurpleDark, "PurpleDark"));
-            lst.Items.Add((Container.EditingColors.Yellow, "Yellow"));
-            lst.Items.Add((Container.EditingColors.YellowDark, "YellowDark"));
-            lst.Items.Add((Container.EditingColors.Orange, "Orange"));
-            lst.Items.Add((Container.EditingColors.OrangeDark, "OrangeDark"));
-            lst.Items.Add((Container.EditingColors.Brown, "Brown"));
-            lst.Items.Add((Container.EditingColors.BrownDark, "BrownDark"));
-            lst.Items.Add((Container.EditingColors.Gold, "Gold"));
-            lst.Items.Add((Container.EditingColors.GoldDark, "GoldDark"));
-            lst.Items.Add((Container.EditingColors.Silver, "Silver"));
-            lst.Items.Add((Container.EditingColors.SilverDark, "SilverDark"));
-            lst.Items.Add((Container.EditingColors.Bronze, "Bronze"));
-            lst.Items.Add((Container.EditingColors.BronzeDark, "BronzeDark"));
         }
 
         protected override void OnMouseMove(MouseScreenObjectState state)

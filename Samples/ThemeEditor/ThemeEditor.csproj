@@ -30,8 +30,4 @@
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
-
 </Project>

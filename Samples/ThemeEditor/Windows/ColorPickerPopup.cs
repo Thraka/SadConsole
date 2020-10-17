@@ -175,8 +175,26 @@ namespace ThemeEditor
             _previousColors.Position = new Point(Width - RideSideX + 2, 8);
             _previousColors.SelectedItemChanged += (sender, e) => { if (_previousColors.SelectedItem != null) SelectedColor = (Color)_previousColors.SelectedItem; };
             Controls.Add(_previousColors);
-            
-            this.CloseOnEscKey = true;
+
+            var colors = Controls.GetThemeColors();
+
+            this.Print(Width - RideSideX + 2, _redInput.Position.Y, "Red", colors.Red);
+            this.Print(Width - RideSideX + 2, _greenInput.Position.Y, "Green", colors.Green);
+            this.Print(Width - RideSideX + 2, _blueInput.Position.Y, "Blue", colors.Blue);
+            this.Print(Width - RideSideX + 2, _alphaInput.Position.Y, "Alpha", colors.Gray);
+
+            // Preview area
+            this.Print(Width - RideSideX + 2, 1, "Selected Color");
+
+            this.Fill(new Rectangle(Width - RideSideX + 2, 2, 14, 3), colors.ControlHostForeground, colors.ControlHostBackground, 219);
+
+            // Current selected gradient colors
+            this.Print(Width - RideSideX + 2, 5, SelectedColor.R.ToString().PadLeft(3, '0'), colors.Red);
+            this.Print(Width - RideSideX + 2, 6, SelectedColor.G.ToString().PadLeft(3, '0'), colors.Green);
+            this.Print(Width - RideSideX + 13, 5, SelectedColor.B.ToString().PadLeft(3, '0'), colors.Blue);
+
+            // Previous Colors
+            this.Print(Width - RideSideX + 2, _previousColors.Position.Y - 1, "Prior Colors");
         }
 
         void _picker_SelectedColorChanged(object sender, EventArgs e)
@@ -189,6 +207,8 @@ namespace ThemeEditor
             this.Print(lineX + 2, 5, SelectedColor.R.ToString().PadLeft(3, '0'), colors.Red);
             this.Print(lineX + 2, 6, SelectedColor.G.ToString().PadLeft(3, '0'), colors.Green);
             this.Print(lineX + 13, 5, SelectedColor.B.ToString().PadLeft(3, '0'), colors.Blue);
+
+            this.Fill(new Rectangle(lineX + 2, 2, 14, 3), SelectedColor, colors.ControlHostBackground, 219);
 
             IsDirty = true;
         }
@@ -256,23 +276,6 @@ namespace ThemeEditor
 
             this.ConnectLines(BorderLineStyle);
 
-            this.Print(lineX + 2, lineY - 4, "Red", colors.Red);
-            this.Print(lineX + 2, lineY - 3, "Green", colors.Green);
-            this.Print(lineX + 2, lineY - 2, "Blue", colors.Blue);
-            this.Print(lineX + 2, lineY - 1, "Alpha", colors.Gray);
-
-            // Preview area
-            this.Print(lineX + 2, 1, "Selected Color");
-
-            this.DrawBox(new Rectangle(lineX + 2, 2, 14, 3), fillStyle, new SadConsole.ColoredGlyph(fillStyle.Foreground, SelectedColor));
-
-            // Current selected gradient colors
-            this.Print(lineX + 2, 5, SelectedColor.R.ToString().PadLeft(3, '0'), colors.Red);
-            this.Print(lineX + 2, 6, SelectedColor.G.ToString().PadLeft(3, '0'), colors.Green);
-            this.Print(lineX + 13, 5, SelectedColor.B.ToString().PadLeft(3, '0'), colors.Blue);
-
-            // Previous Colors
-            this.Print(lineX + 2, 8, "Prior Colors");
         }
         
         public void AddPreviousColor(Color color)

@@ -18,16 +18,22 @@ namespace ThemeEditor
 
         public Container()
         {
-            //EditingColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
-            EditingColors = SadConsole.UI.Colors.CreateSadConsoleBlue();
+            EditingColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
+            //EditingColors = SadConsole.UI.Colors.CreateSadConsoleBlue();
 
             OptionsPanel = new ControlsConsole(6, 2);
             Border.AddToSurface(OptionsPanel, "");
             OptionsPanel.Position = (2, 1);
-            OptionsPanel.Controls.Add(new Button(6) { Text = "Load", Position = (0, 0) });
-            OptionsPanel.Controls.Add(new Button(6) { Text = "Save", Position = (0, 1), IsEnabled = false });
 
-            SettingsPanel = new SettingsConsole(30, 40);
+            Button button = new Button(6, 1) { Text = "Load", Position = (0, 0) };
+            button.Click += ButtonLoad_Click;
+            OptionsPanel.Controls.Add(button);
+
+            button = new Button(6, 1) { Text = "Save", Position = (0, 1) };
+            button.Click += ButtonSave_Click;
+            OptionsPanel.Controls.Add(button);
+
+            SettingsPanel = new SettingsConsole(30, 34);
             Border.AddToSurface(SettingsPanel, "Settings");
             SettingsPanel.Position = (4, 3);
             
@@ -41,8 +47,39 @@ namespace ThemeEditor
             Children.Add(TestingPanel);
         }
 
+        private void ButtonLoad_Click(object sender, EventArgs e)
+        {
+            Windows.SelectEditorFilePopup popup = new Windows.SelectEditorFilePopup();
+            popup.Closed += (s, e) =>
+            {
+                if (popup.DialogResult)
+                {
+                    EditingColors = SadConsole.Serializer.Load<Colors>(popup.SelectedFile, false);
+                    SettingsPanel.RefreshColors();
+                    RefreshTestingPanel();
+                }
+            };
+            popup.Show(true);
+        }
+
+        private void ButtonSave_Click(object sender, EventArgs e)
+        {
+            Windows.SelectEditorFilePopup popup = new Windows.SelectEditorFilePopup();
+            popup.SkipFileExistCheck = true;
+            popup.SelectButtonText = "Save";
+            popup.Closed += (s, e) =>
+            {
+                if (popup.DialogResult)
+                {
+                    SadConsole.Serializer.Save(EditingColors, popup.SelectedFile, false);
+                }
+            };
+            popup.Show(true);
+        }
+
         public void RefreshTestingPanel()
         {
+            TestingPanel.Controls.ThemeColors = EditingColors;
             TestingPanel.RedrawColors();
         }
 
@@ -51,7 +88,7 @@ namespace ThemeEditor
             totalWidth = totalWidth - text.Length - 3;
 
             if (totalWidth < 0)
-                throw new Exception("Header text too big");
+                throw new Exception("Header text too small");
 
             var lineText = ColoredString.FromGradient(
                 new Gradient(

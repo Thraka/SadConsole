@@ -15,12 +15,11 @@ namespace ThemeEditor
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
             //SadConsole.Host.Settings.UseHardwareFullScreen = true;
 
-            SadConsole.Game.Create(160, 50); //, "Res/Fonts/C64.font");
+            SadConsole.Game.Create(122, 40); //, "Res/Fonts/C64.font");
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
         }
-
 
         /// <summary>
         /// <c>test</c>
@@ -42,6 +41,7 @@ namespace ThemeEditor
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorBar), new Controls.ColorBar.ThemeType());
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorPicker), new Controls.ColorPicker.ThemeType());
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.HueBar), new Controls.HueBar.ThemeType());
+            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.FileDirectoryListbox), new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme()));
 
             GameHost.Instance.Screen.Renderer = null;
             GameHost.Instance.Screen.Children.Add(new Container());

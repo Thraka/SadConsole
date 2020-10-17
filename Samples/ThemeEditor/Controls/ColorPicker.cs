@@ -132,9 +132,9 @@ namespace ThemeEditor.Controls
 
         public ColorPicker(int width, int height, Color color): base(width, height)
         {
-            Theme = new ThemeType();
-            Theme.UpdateAndDraw(this, TimeSpan.Zero);
-
+            //Theme = new ThemeType();
+            //Theme.UpdateAndDraw(this, TimeSpan.Zero);
+            CanFocus = false;
             //SelectedHue = hue;
 
             SelectedColor = color;
