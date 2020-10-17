@@ -18,6 +18,7 @@ namespace SadConsole.UI.Controls
         /// <param name="height">The height of the control.</param>
         public CheckBox(int width, int height) : base(width, height)
         {
+            _textAlignment = HorizontalAlignment.Left;
         }
 
         /// <summary>

@@ -7344,6 +7344,11 @@
             Indicates that this color object is set to a library object.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Colors.IsLightTheme">
+            <summary>
+            Status flag to indicate that the primary backgrounds of the controls are considered light rather than dark.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Colors.White">
             <summary>
             The white color.
@@ -7852,14 +7857,14 @@
             Raised when the button is clicked.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ButtonBase.text">
+        <member name="F:SadConsole.UI.Controls.ButtonBase._text">
             <summary>
             The display text of the button.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ButtonBase.textAlignment">
+        <member name="F:SadConsole.UI.Controls.ButtonBase._textAlignment">
             <summary>
-            The alignment of the <see cref="F:SadConsole.UI.Controls.ButtonBase.text"/>.
+            The alignment of the <see cref="F:SadConsole.UI.Controls.ButtonBase._text"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ButtonBase.Text">
@@ -9096,7 +9101,7 @@
         </member>
         <member name="M:SadConsole.UI.Themes.Library.SetColors(SadConsole.UI.Colors)">
             <summary>
-            Copies the colors from the specified <see cref="!:SadConsole.UI.Themes.Colors"/> object to <see cref="P:SadConsole.UI.Themes.Library.Colors"/> property.
+            Copies the colors from the specified <see cref="T:SadConsole.UI.Colors"/> object to <see cref="P:SadConsole.UI.Themes.Library.Colors"/> property.
             </summary>
             <param name="colors">The colors to copy.</param>
         </member>
@@ -9387,6 +9392,21 @@
             </summary>
             <param name="colors">The colors to create the theme with.</param>
             <param name="control">The control being drawn with the theme.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeBase.GetOffColor(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Compares two colors and if they match, returns a color that is lighter or darker based on if <see cref="P:SadConsole.UI.Colors.IsLightTheme"/>.
+            </summary>
+            <param name="inColor">The base color.</param>
+            <param name="compareColor">The color to compare with.</param>
+            <returns>A new color.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeBase.NormalizeBlack(SadRogue.Primitives.Color)">
+            <summary>
+            Normalizes a dark color to at least R:25 G:25 B:25 A:255.
+            </summary>
+            <param name="inColor">The color to check.</param>
+            <returns>A new color.</returns>
         </member>
         <member name="T:SadConsole.UI.Themes.ThemeStates">
             <summary>

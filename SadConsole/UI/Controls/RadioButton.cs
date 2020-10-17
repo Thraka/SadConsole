@@ -35,6 +35,7 @@ namespace SadConsole.UI.Controls
         /// <param name="height">Height of the control.</param>
         public RadioButton(int width, int height) : base(width, height)
         {
+            _textAlignment = HorizontalAlignment.Left;
         }
 
         /// <summary>

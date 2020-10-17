@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Themes
 {
@@ -57,6 +58,35 @@ namespace SadConsole.UI.Themes
             _colorsLastUsed = colors ?? control.FindThemeColors();
 
             ControlThemeState.RefreshTheme(_colorsLastUsed);
+        }
+
+        /// <summary>
+        /// Compares two colors and if they match, returns a color that is lighter or darker based on if <see cref="Colors.IsLightTheme"/>.
+        /// </summary>
+        /// <param name="inColor">The base color.</param>
+        /// <param name="compareColor">The color to compare with.</param>
+        /// <returns>A new color.</returns>
+        protected Color GetOffColor(Color inColor, Color compareColor)
+        {
+            if (inColor == compareColor)
+                inColor = _colorsLastUsed.IsLightTheme ? compareColor.GetDark() : compareColor.GetBright();
+
+            return NormalizeBlack(inColor);
+        }
+
+        /// <summary>
+        /// Normalizes a dark color to at least R:25 G:25 B:25 A:255.
+        /// </summary>
+        /// <param name="inColor">The color to check.</param>
+        /// <returns>A new color.</returns>
+        protected static Color NormalizeBlack(Color inColor)
+        {
+            if (inColor.R < 25
+                && inColor.G < 25
+                && inColor.B < 25)
+                return new Color(25, 25, 25, 255);
+            else
+                return inColor;
         }
     }
 }

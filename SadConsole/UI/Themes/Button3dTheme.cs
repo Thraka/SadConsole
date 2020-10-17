@@ -82,7 +82,15 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override void RefreshTheme(Colors colors, ControlBase control)
         {
+            // Adjust the main theme colors slightly for this control theme
+            //colors.ControlBackgroundNormal = adjustedBackground;
+
             base.RefreshTheme(colors, control);
+
+            ControlThemeState.Normal.Background = GetOffColor(ControlThemeState.Normal.Background, _colorsLastUsed.ControlHostBackground);
+            ControlThemeState.MouseOver.Background = GetOffColor(ControlThemeState.MouseOver.Background, _colorsLastUsed.ControlHostBackground);
+            ControlThemeState.MouseDown.Background = GetOffColor(ControlThemeState.MouseDown.Background, _colorsLastUsed.ControlHostBackground);
+            ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, _colorsLastUsed.ControlHostBackground);
 
             _shade.Foreground = _colorsLastUsed.ControlForegroundNormal;
             _shade.Background = _colorsLastUsed.ControlBackgroundNormal;

@@ -36,16 +36,22 @@ namespace SadConsole.UI.Themes
         {
             base.RefreshTheme(themeColors, control);
 
-            ControlThemeState.Normal = new ColoredGlyph(_colorsLastUsed.ControlBackgroundNormal, _colorsLastUsed.GrayDark);
+            bool isFocsuedSameAsBack = ControlThemeState.Focused.Background == _colorsLastUsed.ControlHostBackground;
+
+            ControlThemeState.Normal.Background = GetOffColor(ControlThemeState.Normal.Background, _colorsLastUsed.ControlHostBackground);
+            ControlThemeState.MouseOver.Background = GetOffColor(ControlThemeState.MouseOver.Background, _colorsLastUsed.ControlHostBackground);
+            ControlThemeState.MouseDown.Background = GetOffColor(ControlThemeState.MouseDown.Background, _colorsLastUsed.ControlHostBackground);
+            ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, _colorsLastUsed.ControlHostBackground);
+
+            // Further alter the color to indicate focus
+            if (isFocsuedSameAsBack)
+                ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, ControlThemeState.Focused.Background);
         }
 
         /// <inheritdoc />
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            if (!(control is TextBox textbox))
-            {
-                return;
-            }
+            if (!(control is TextBox textbox)) return;
 
             if (textbox.Surface.Effects.Count != 0)
             {
@@ -53,10 +59,7 @@ namespace SadConsole.UI.Themes
                 textbox.IsDirty = true;
             }
 
-            if (!textbox.IsDirty)
-            {
-                return;
-            }
+            if (!textbox.IsDirty) return;
 
             RefreshTheme(control.FindThemeColors(), control);
             ColoredGlyph appearance = ControlThemeState.GetStateAppearance(textbox.State);

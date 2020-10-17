@@ -14,6 +14,11 @@ namespace SadConsole.UI
         public bool IsLibrary { get; internal set; }
 
         /// <summary>
+        /// Status flag to indicate that the primary backgrounds of the controls are considered light rather than dark.
+        /// </summary>
+        public bool IsLightTheme { get; set; }
+
+        /// <summary>
         /// The white color.
         /// </summary>
         public Color White { get; set; }
@@ -239,6 +244,8 @@ namespace SadConsole.UI
             colors.BronzeDark = BronzeDark;
 
             colors.ModalBackground = ModalBackground;
+
+            colors.IsLightTheme = IsLightTheme;
 
             colors.Title = Title.Clone();
             colors.Lines = Lines.Clone();

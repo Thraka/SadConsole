@@ -44,6 +44,8 @@ namespace SadConsole.UI
                 BronzeDark = new Color(144, 89, 35)
             };
 
+            colors.IsLightTheme = true;
+
             colors.Title = new AdjustableColor(ColorNames.Orange, "Title", colors);
             colors.Lines = new AdjustableColor(ColorNames.Gray, "Lines", colors);
 
@@ -107,6 +109,8 @@ namespace SadConsole.UI
                 BronzeDark = (new Color(205, 127, 50) * 0.50f).FillAlpha(),
             };
 
+            colors.IsLightTheme = false;
+
             colors.Title = new AdjustableColor(ColorNames.Orange, "Title", colors);
             colors.Lines = new AdjustableColor(ColorNames.CyanDark, "Lines", colors);
 
@@ -115,7 +119,7 @@ namespace SadConsole.UI
             colors.ControlForegroundMouseOver = new AdjustableColor(ColorNames.White, "Control Foreground MouseOver", colors);
             colors.ControlForegroundMouseDown = new AdjustableColor(ColorNames.White, "Control Foreground MouseDown", colors);
             colors.ControlForegroundSelected = new AdjustableColor(ColorNames.Yellow, "Control Foreground Selected", colors);
-            colors.ControlForegroundFocused = new AdjustableColor(ColorNames.Blue, "Control Foreground Focused", colors);
+            colors.ControlForegroundFocused = new AdjustableColor(ColorNames.White, "Control Foreground Focused", colors);
 
             colors.ControlBackgroundNormal = new AdjustableColor(ColorNames.Black, "Control Background Normal", colors);
             colors.ControlBackgroundDisabled = new AdjustableColor(ColorNames.Black, "Control Background Disabled", colors);

@@ -127,7 +127,7 @@ namespace SadConsole.UI.Themes
         }
 
         /// <summary>
-        /// Copies the colors from the specified <see cref="SadConsole.UI.Themes.Colors"/> object to <see cref="Colors"/> property.
+        /// Copies the colors from the specified <see cref="SadConsole.UI.Colors"/> object to <see cref="Colors"/> property.
         /// </summary>
         /// <param name="colors">The colors to copy.</param>
         public void SetColors(Colors colors) =>

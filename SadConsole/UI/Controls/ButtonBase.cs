@@ -21,21 +21,21 @@ namespace SadConsole.UI.Controls
         /// The display text of the button.
         /// </summary>
         [DataMember(Name = "Text")]
-        protected string text;
+        protected string _text;
 
         /// <summary>
-        /// The alignment of the <see cref="text"/>.
+        /// The alignment of the <see cref="_text"/>.
         /// </summary>
         [DataMember(Name = "TextAlignment")]
-        protected HorizontalAlignment textAlignment = HorizontalAlignment.Center;
+        protected HorizontalAlignment _textAlignment = HorizontalAlignment.Center;
 
         /// <summary>
         /// The text displayed on the control.
         /// </summary>
         public string Text
         {
-            get => text;
-            set { text = value; IsDirty = true; }
+            get => _text;
+            set { _text = value; IsDirty = true; }
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace SadConsole.UI.Controls
         /// </summary>
         public HorizontalAlignment TextAlignment
         {
-            get => textAlignment;
-            set { textAlignment = value; IsDirty = true; }
+            get => _textAlignment;
+            set { _textAlignment = value; IsDirty = true; }
         }
 
         /// <summary>
