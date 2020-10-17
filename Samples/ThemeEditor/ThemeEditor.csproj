@@ -30,4 +30,8 @@
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <TrimmerRootAssembly Include="System.IO.FileSystem" />
+  </ItemGroup>
+  
 </Project>

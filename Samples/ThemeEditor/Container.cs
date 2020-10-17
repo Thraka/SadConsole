@@ -33,7 +33,7 @@ namespace ThemeEditor
             button.Click += ButtonSave_Click;
             OptionsPanel.Controls.Add(button);
 
-            SettingsPanel = new SettingsConsole(30, 34);
+            SettingsPanel = new SettingsConsole(30, 36);
             Border.AddToSurface(SettingsPanel, "Settings");
             SettingsPanel.Position = (4, 3);
             

@@ -32,6 +32,8 @@ namespace ThemeEditor
         private RadioButton _themePartSettingIsPredefinedColor;
         private Button _themePartSettingColorSet;
 
+        private CheckBox _isThemeLight;
+
         public SettingsConsole(int width, int height) : base(width, height)
         {
             var colors = Controls.GetThemeColors();
@@ -106,9 +108,30 @@ namespace ThemeEditor
             _themeParts = new AdjustableColor[16];
             _themePartsArea = new Rectangle(2, _colorsListBox.Bounds.MaxExtentY + 3, width - 4, _themeParts.Length + 5);
 
-            RefreshColors();
 
             Container.PrintHeader(Surface, colors, (_colorsListBox.Position.X, _themePartsArea.Y - 1), width - 4, "Theme Parts");
+
+            // =================================
+            // Light theme checkbox
+            _isThemeLight = new CheckBox(_themePartsArea.MaxExtentX, 1)
+            {
+                Text = "Light color scheme",
+                Position = (_themePartsArea.Position.X, _themePartsArea.MaxExtentY + 2)
+            };
+            _isThemeLight.IsSelectedChanged += ThemeLightColor_IsSelectedChanged;
+            Controls.Add(_isThemeLight);
+
+            // Redraw everything
+            RefreshColors();
+        }
+
+        private void ThemeLightColor_IsSelectedChanged(object sender, EventArgs e)
+        {
+            if (Container.EditingColors.IsLightTheme != _isThemeLight.IsSelected)
+            {
+                Container.EditingColors.IsLightTheme = _isThemeLight.IsSelected;
+                RefreshColors();
+            }
         }
 
         private void themePartSettingColorSet_Click(object sender, EventArgs e)
@@ -255,6 +278,8 @@ namespace ThemeEditor
             _themeParts[15] = Container.EditingColors.ControlHostBackground;
 
             DrawThemeParts();
+
+            _isThemeLight.IsSelected = Container.EditingColors.IsLightTheme;
         }
 
         string GetThemePartString(Color color, string part) =>

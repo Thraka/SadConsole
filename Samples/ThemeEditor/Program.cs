@@ -15,7 +15,7 @@ namespace ThemeEditor
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
             //SadConsole.Host.Settings.UseHardwareFullScreen = true;
 
-            SadConsole.Game.Create(122, 40); //, "Res/Fonts/C64.font");
+            SadConsole.Game.Create(122, 42); //, "Res/Fonts/C64.font");
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
