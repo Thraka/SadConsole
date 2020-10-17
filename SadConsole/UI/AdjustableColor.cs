@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using System.Runtime.Serialization;
+using SadRogue.Primitives;
 using static SadConsole.UI.Colors;
 
 namespace SadConsole.UI
@@ -6,16 +7,19 @@ namespace SadConsole.UI
     /// <summary>
     /// A color that can be adjusted by brightness and mapped to a <see cref="Colors"/> color.
     /// </summary>
+    [DataContract]
     public class AdjustableColor
     {
         /// <summary>
         /// The name of the color.
         /// </summary>
+        [DataMember]
         public string Name { get; set; }
 
         /// <summary>
         /// The color without brightness.
         /// </summary>
+        [DataMember]
         public Color BaseColor { get; private set; }
 
         /// <summary>
@@ -39,16 +43,19 @@ namespace SadConsole.UI
         /// <summary>
         /// <see langword="true"/> when this color is not defined by a <see cref="Colors"/> object; otherwise <see langword="false"/>.
         /// </summary>
+        [DataMember]
         public bool IsCustomColor { get; set; }
 
         /// <summary>
         /// The <see cref="Colors"/> mapped color when <see cref="IsCustomColor"/> is <see langword="false"/>.
         /// </summary>
+        [DataMember]
         public ColorNames UIColor { get; private set; }
 
         /// <summary>
         /// A brightness to apply to the color.
         /// </summary>
+        [DataMember]
         public Brightness Brightness { get; set; }
 
         /// <summary>
